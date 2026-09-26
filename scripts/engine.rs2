@@ -420,6 +420,8 @@
 [command,midi_jingle](midi $jingle)
 // info: Play a jingle for the secondary player (advancing levels, completing quests, ...)
 [command,.midi_jingle](midi $jingle)
+// info: Length of a song in ticks, from the cache
+[command,midi_length](midi $track)(int)
 // info: Change the active_player type of minimap displayed
 [command,minimap_toggle](int $type)
 // info: Change the secondary active_player type of minimap displayed
