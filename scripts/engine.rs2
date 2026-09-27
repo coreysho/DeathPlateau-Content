@@ -1127,7 +1127,7 @@
 [command,tp_offer_text](int $offer)(string)
 [command,tp_offer_show](int $offer, inv $inv)(int)
 [command,tp_list](inv $inv, obj $obj, int $count, int $buyout)(string)
-[command,tp_buynow](int $listing, inv $inv)(string)
+[command,tp_buynow](int $listing, int $count, inv $inv)(string)
 [command,tp_makeoffer](int $listing, int $coins, inv $inv, inv $barter)(string)
 [command,tp_accept](int $offer)(string)
 [command,tp_decline](int $offer)(string)

@@ -290,7 +290,12 @@ if ($mine = true) {
     }
 }
 if (%tp_confirm = ^tp_confirm_buynow) {
-    if_settext(tradingpost_listing:buynow, "Click again to confirm");
+    // say what the second click actually buys, since it may be part of the lot
+    def_int $want = %tp_buycount;
+    if ($want <= 0 | $want > $count) {
+        $want = $count;
+    }
+    if_settext(tradingpost_listing:buynow, "Click again: buy <~tp_desc($obj, $want)> for <~tp_coins(~tp_share($buyout, $want, $count))>");
 } else {
     if_settext(tradingpost_listing:buynow, "Buy now");
 }
@@ -387,21 +392,43 @@ if (tp_listing_mine(%tp_listing) = false) {
 ~tp_listing_show;
 
 [if_button,tradingpost_listing:buynow]
+def_int $count = tp_listing_count(%tp_listing);
+def_int $buyout = tp_listing_buyout(%tp_listing);
 if (%tp_confirm ! ^tp_confirm_buynow) {
+    // A lot of more than one is worth asking about: somebody with two imbued hearts up is selling
+    // two things, and a buyer may only want one. The rest of the lot stays on the post.
+    %tp_buycount = $count;
+    if ($count > 1) {
+        p_dialogprompt("How many do you want to buy? (<~tp_gp($count)> up, <~tp_coins($buyout)> for the lot)");
+        p_countdialog;
+        if (last_int <= 0) {
+            return;
+        }
+        %tp_buycount = min(last_int, $count);
+    }
     %tp_confirm = ^tp_confirm_buynow;
     ~tp_listing_show;
     return;
 }
 %tp_confirm = ^tp_confirm_none;
-def_int $price = tp_listing_buyout(%tp_listing);
-def_string $what = ~tp_desc(tp_listing_obj(%tp_listing), tp_listing_count(%tp_listing));
-def_string $err = tp_buynow(%tp_listing, inv);
+def_int $want = %tp_buycount;
+if ($want <= 0 | $want > $count) {
+    $want = $count;
+}
+def_int $price = ~tp_share($buyout, $want, $count);
+def_string $what = ~tp_desc(tp_listing_obj(%tp_listing), $want);
+def_string $err = tp_buynow(%tp_listing, $want, inv);
 if (string_length($err) > 0) {
     mes($err);
     ~tp_listing_show;
     return;
 }
 mes("You buy <$what> for <~tp_coins($price)>.");
+if ($want < $count) {
+    // the rest is still for sale, so stay on it
+    ~tp_listing_show;
+    return;
+}
 ~tp_lists;
 
 [if_button,tradingpost_listing:makeoffer]
@@ -663,6 +690,17 @@ return("<~tp_gp($count)> x <oc_name($obj)>");
 [proc,tp_coins](int $n)(string)
 if ($n = 1) return("1 coin");
 return("<~tp_gp($n)> coins");
+
+// What $n of a lot of $of costs when the whole lot is $total: its share, rounded up, which is what
+// the market charges (TradingPost.buyNow). Worked out in two halves - whole coins per item, then the
+// remainder's share - because $total * $n overflows an int for a big lot at a big price.
+[proc,tp_share](int $total, int $n, int $of)(int)
+if ($n >= $of) {
+    return($total);
+}
+def_int $per = calc($total / $of);
+def_int $rem = calc($total - ($per * $of));
+return(calc(($per * $n) + (($rem * $n + $of - 1) / $of)));
 
 // 1234567 -> "1,234,567"
 [proc,tp_gp](int $n)(string)

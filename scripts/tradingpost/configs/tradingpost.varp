@@ -38,3 +38,9 @@ protect=no
 [tp_window]
 scope=temp
 protect=no
+
+// How many of a lot the buyer asked for, between the question and the second click that buys.
+// 0 means the whole lot, which is what every listing of one is.
+[tp_buycount]
+scope=temp
+protect=no
