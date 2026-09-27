@@ -254,9 +254,13 @@ def_int $damagestyle = ^style_magic_normal;
 if (%damagestyle = ^style_melee_defensive) { // check varp directly
     $damagestyle = ^style_magic_defensive; // casting a spell with defensive on gives mage + def xp
 }
-def_synth $sound = db_getfield($spell_data, magic_spell_table:sound_hit, 0);
-sound_synth($sound, 0, 0);
-.sound_synth($sound, 0, 0);
+// Bind and Snare have no hit sound (magic_combat_spells.dbrow), and sound_synth(null) is a script error -
+// so a hold that landed on a player aborted here, before the freeze. Guarded as player_magic.rs2 does.
+if (db_getfieldcount($spell_data, magic_spell_table:sound_hit) > 0) {
+    def_synth $sound = db_getfield($spell_data, magic_spell_table:sound_hit, 0);
+    sound_synth($sound, 0, 0);
+    .sound_synth($sound, 0, 0);
+}
 
 if ($maxhit = null) {
     ~.pvp_damage(calc($duration / 30 + 1), null); // delayed an extra tick: https://youtu.be/eEdE0mvglM4?t=62
