@@ -26,12 +26,16 @@
 #   ./deploy.sh --dev --engine-branch=feat-x   ...another branch in one repo only
 #   ./deploy.sh --dev --content-branch=feat-x  (the other stays on live's branch)
 #   ./deploy.sh --dev --countdown          ...warn whoever is on dev first (60s, or --countdown=N)
+#   ./deploy.sh --dev --resync-saves       ...and give staff their LIVE characters again, over their dev
+#                                          ones (each old dev save kept as <name>.sav.bak)
 #
 # Unlike live, the dev world is stopped BEFORE its pull and build, not after: NODE_PRODUCTION=false
 # runs a file watcher that rebuilds the packs by itself when content changes, and a pull would set it
 # off in the middle of this script's own build. So dev is down while it builds, and a failed build
 # leaves it down (fix, push, and run --dev again). Every dev deploy also copies the staff accounts
-# (level 3+) from live's database into dev's, and live's login key - see tools/server/copy-staff.ts.
+# (level 3+) from live's database into dev's, and live's login key - see tools/server/copy-staff.ts -
+# and each staff member's live character, the first time only: a character with a dev save already
+# keeps it (so what is done on dev stays on dev) unless --resync-saves is given.
 #
 #   systemctl status deathplateau-dev      journalctl -u deathplateau-dev -f
 #   systemctl stop deathplateau-dev        (an idle dev world still holds most of a GB of RAM)
@@ -74,6 +78,7 @@ FORCE_ENGINE=
 COUNTDOWN=
 DEV=
 DEV_SETUP=
+RESYNC_SAVES=
 ENGINE_BRANCH=
 CONTENT_BRANCH=
 for arg in "$@"; do
@@ -83,6 +88,7 @@ for arg in "$@"; do
         --countdown=*)  COUNTDOWN=${arg#--countdown=} ;;
         --dev)          DEV=1 ;;
         --dev-setup)    DEV_SETUP=1 ;;
+        --resync-saves) RESYNC_SAVES=1 ;;
         --branch=*)     ENGINE_BRANCH=${arg#--branch=}; CONTENT_BRANCH=${arg#--branch=} ;;
         --engine-branch=*)  ENGINE_BRANCH=${arg#--engine-branch=} ;;
         --content-branch=*) CONTENT_BRANCH=${arg#--content-branch=} ;;
@@ -95,6 +101,9 @@ esac
 # the live world only ever deploys its own branch
 if [ -z "$DEV" ] && [ -n "$ENGINE_BRANCH$CONTENT_BRANCH" ]; then
     printf -- '--branch, --engine-branch and --content-branch are for the dev world: add --dev\n' >&2; exit 1
+fi
+if [ -z "$DEV" ] && [ -n "$RESYNC_SAVES" ]; then
+    printf -- '--resync-saves is for the dev world: add --dev\n' >&2; exit 1
 fi
 if [ -n "$DEV_SETUP" ] && [ $# -ne 1 ]; then
     printf -- '--dev-setup takes no other options\n' >&2; exit 1
@@ -438,7 +447,10 @@ if [ -n "$DEV" ]; then
     CHECKPOINT_DISABLE=1 npm run sqlite:migrate
     if [ -f "$LIVE_ENGINE/db.sqlite" ]; then
         # the level: dev .env's NODE_MIN_STAFF_LEVEL (3 if that is 0)
-        npx tsx tools/server/copy-staff.ts "$LIVE_ENGINE/db.sqlite"
+        # and their live characters, where dev has none of its own yet (--resync-saves: over dev's)
+        LIVE_PROFILE=$(env_get "$LIVE_ENGINE/.env" NODE_PROFILE); LIVE_PROFILE=${LIVE_PROFILE:-main}
+        npx tsx tools/server/copy-staff.ts "$LIVE_ENGINE/db.sqlite" \
+            --saves "$LIVE_ENGINE/data/players/$LIVE_PROFILE" ${RESYNC_SAVES:+--refresh-saves}
     else
         printf '  \033[1;33mno %s to copy staff from - nobody can log in until an account is made here:\033[0m\n' "$LIVE_ENGINE/db.sqlite"
         printf '    cd %s && npx tsx tools/server/account.ts set NAME account.staffmodlevel 3\n' "$ENGINE"
