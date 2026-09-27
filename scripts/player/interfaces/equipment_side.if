@@ -1,0 +1,20 @@
+// Equipment Stats' side panel: what you carry, in place of the inventory tab while the window is
+// open, as OSRS's Equipment Stats has its own (interface 85; 474's 336 is the same empty frame its
+// scripts fill). Opened with equipment_stats by if_openmain_side (player/scripts/equipment_screens.rs2).
+//
+// WHY IT EXISTS. With the ordinary inventory tab beside the window, wielding something from it closed
+// the window: an item op on a component outside the open main modal closes that modal
+// (OpHeldHandler), which is what makes clicking an item dismiss a dialogue. An op on an item in the
+// open SIDE modal belongs to that modal and leaves it open, so Wield / Wear here put the item on and
+// the window stays up, its bonuses rewritten by ~update_bonuses and the model redressed by the client.
+//
+// interactable=yes, so every item offers its own ops exactly as in the pack - Wield, Wear, Eat, Drop -
+// through the same [opheld] scripts. Not draggable or usable: the window is for dressing.
+[inv]
+type=inv
+x=16
+y=8
+width=4
+height=7
+interactable=yes
+margin=10,4

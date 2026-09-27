@@ -48,9 +48,9 @@ BLACKDEMON = 'scripts/drop_tables/scripts/black_demon.rs2'
 MUTS = [
  # ---- the drop-rate boost
  (CONST, '^droprate_boost_10x = 0', '^droprate_boost_10x = 5',
-  'realism +25%, 5x +10%, 10x nothing'),
+  'realism +25%, 5x +7%, 10x nothing'),
  (CONST, '^droprate_boost_realism = 25', '^droprate_boost_realism = 50',
-  'realism +25%, 5x +10%, 10x nothing'),
+  'realism +25%, 5x +7%, 10x nothing'),
  (DROPRS, 'scale($percent, 100, $chance)', '$chance',
   "each row at its own chance times the boost"),
  (DROPRS, '        if (~pet_owned($obj) = true) {\n            return;\n        }\n', '',
@@ -122,8 +122,8 @@ MUTS = [
   'and names a font the packer knows, or the client dies unpacking interfaces'),
  (IPACK, '20576=stats:xplock_attack\n', '',
   'every one has an id in interface.pack'),
- (XPLOCK, '            if_settext(stats:com_125, "Next Level At:");',
-          '            if_settext(stats:com_131, "Next Level At:");',
+ (XPLOCK, '            if_settext(stats:com_125, "");',
+          '            if_settext(stats:com_131, "");',
   "and rewrites a label inside its own skill's hover panel"),
  # the build failure this round shipped with, as a mutation
  (XPLOCK, 'if (p_finduid(uid) = true) {\n    if (~xplock_is(^xplock_attack) = true) {',

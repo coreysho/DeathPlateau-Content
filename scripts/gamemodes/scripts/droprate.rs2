@@ -1,6 +1,6 @@
 // Drop-rate boost: the second half of backlog item 6, and the companion to xprate.rs2.
 //
-// A boosted kill makes the monster's OWN drop table pay more often: realism +25%, 5x +10%, 10x
+// A boosted kill makes the monster's OWN drop table pay more often: realism +25%, 5x +7%, 10x
 // nothing (gamemode.constant). A 1/128 drop is about 1/102 on realism. The shared rare drop table is
 // left exactly as it is - an earlier version of this gave the slow modes extra draws on it instead,
 // and that is what this replaced (2026-09-24).

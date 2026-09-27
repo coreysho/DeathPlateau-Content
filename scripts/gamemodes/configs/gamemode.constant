@@ -19,7 +19,7 @@
 
 // ---- the drop-rate boost (droprate.rs2; 2026-09-21, reworked 2026-09-24) ----
 // The second half of backlog item 6. How much more often a monster's OWN drop table pays, in
-// percent: realism +25%, 5x +10%, 10x nothing. The shared rare drop table is never boosted. Like the
+// percent: realism +25%, 5x +7%, 10x nothing. The shared rare drop table is never boosted. Like the
 // xp rates, this is the only place the numbers are written down, and like ^poh_range_xp they are
 // the tunable part rather than anything out of a cache.
 //
@@ -27,7 +27,7 @@
 // character who has never been asked is playing the authentic rate, and it would be a poor trade to
 // hand every existing account the slowest xp and none of the compensation.
 ^droprate_boost_realism = 25
-^droprate_boost_5x = 10
+^droprate_boost_5x = 7
 ^droprate_boost_10x = 0
 // npc_drops:bonus's chances are in ten millionths (tools/gennpcdrops.py, BONUS_UNITS)
 ^droprate_units = 10000000
