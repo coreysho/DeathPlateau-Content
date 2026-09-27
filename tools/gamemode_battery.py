@@ -488,7 +488,7 @@ def const(n):
 
 # the percentages, and which way round they go
 r1, r5, r10 = const('droprate_boost_realism'), const('droprate_boost_5x'), const('droprate_boost_10x')
-check((r1, r5, r10) == (25, 10, 0), 'realism +25%%, 5x +10%%, 10x nothing: %s' % [r1, r5, r10])
+check((r1, r5, r10) == (25, 7, 0), 'realism +25%%, 5x +7%%, 10x nothing: %s' % [r1, r5, r10])
 check('droprate_bonus_' not in CONST and not os.path.exists(os.path.join(C, 'scripts/gamemodes/configs/droprate.enum')),
       'the old rare-table roll counts and their gate are gone')
 

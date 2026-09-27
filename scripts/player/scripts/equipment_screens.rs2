@@ -2,16 +2,24 @@
 
 // ---- EQUIPMENT STATS (equipment_stats.if). The bonuses that used to be on the tab itself, your
 // worn items (Remove works on them as it does on the tab), what you carry, and you in it.
+//
+// What you carry is its own side panel (equipment_side.if), as OSRS's is: wielding from the ordinary
+// inventory tab closed the window, and wielding from this one does not. Either way ~update_all ->
+// ~update_bonuses rewrites the bonuses, and the client redresses the model, while it stays open.
 [if_button,wornitems:stats_button]
 if (p_finduid(uid) = true) {
-    if_openmain(equipment_stats);
+    if_openmain_side(equipment_stats, equipment_side);
     inv_transmit(worn, equipment_stats:worn);
+    inv_transmit(inv, equipment_side:inv);
     ~update_bonuses;
 }
 
 [inv_button1,equipment_stats:worn]
+// No p_clearpendingaction, which the Worn Equipment tab's Remove has: it is closeModal plus
+// clearInteraction, so it shut this window on every Remove. Taking something off here leaves the
+// window up to show what that did, as OSRS's does, and (as for an item op, OpHeldHandler) it does not
+// drop what you were doing either.
 if (p_finduid(uid) = true) {
-    p_clearpendingaction;
     ~unequip(last_slot);
 }
 

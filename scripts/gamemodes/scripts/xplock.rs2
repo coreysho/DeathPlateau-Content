@@ -19,9 +19,9 @@
 // every one of these bodies opens with p_finduid - see claude/rs2-player-pointer-contexts.md, which
 // says so in a table this round did not read until the build refused twenty-two scripts.
 //
-// WHAT THE HOVER PANEL SHOWS. A locked skill's second row says "XP locked" where it said
-// "Next Level At:". That is the whole display: blank is the cache state, so an account with
-// nothing locked pushes nothing at login, and the restore string is the interface's own.
+// WHAT THE HOVER SHOWS. A locked skill's tooltip gains a red "XP locked" line under its numbers:
+// its client-code-332 line, blank in the cache, so an account with nothing locked pushes nothing
+// at login, and the restore string is the interface's own (tools/genxplock.py).
 //
 // WHY THE BUTTONS ARE WHERE THEY ARE. See tools/genxplock.py: a lock button emitted after the
 // guide button would become the box's LEFT-CLICK action, because the last option appended is the
@@ -121,7 +121,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_attack) = true) {
         if (~p_choice2("Unlock Attack experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_attack);
-            if_settext(stats:com_125, "Next Level At:");
+            if_settext(stats:com_125, "");
             mes("Your Attack experience is no longer locked.");
         }
         return;
@@ -144,7 +144,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_hitpoints) = true) {
         if (~p_choice2("Unlock Hitpoints experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_hitpoints);
-            if_settext(stats:com_161, "Next Level At:");
+            if_settext(stats:com_161, "");
             mes("Your Hitpoints experience is no longer locked.");
         }
         return;
@@ -167,7 +167,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_mining) = true) {
         if (~p_choice2("Unlock Mining experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_mining);
-            if_settext(stats:com_197, "Next Level At:");
+            if_settext(stats:com_197, "");
             mes("Your Mining experience is no longer locked.");
         }
         return;
@@ -190,7 +190,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_strength) = true) {
         if (~p_choice2("Unlock Strength experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_strength);
-            if_settext(stats:com_131, "Next Level At:");
+            if_settext(stats:com_131, "");
             mes("Your Strength experience is no longer locked.");
         }
         return;
@@ -213,7 +213,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_agility) = true) {
         if (~p_choice2("Unlock Agility experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_agility);
-            if_settext(stats:com_167, "Next Level At:");
+            if_settext(stats:com_167, "");
             mes("Your Agility experience is no longer locked.");
         }
         return;
@@ -236,7 +236,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_smithing) = true) {
         if (~p_choice2("Unlock Smithing experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_smithing);
-            if_settext(stats:com_203, "Next Level At:");
+            if_settext(stats:com_203, "");
             mes("Your Smithing experience is no longer locked.");
         }
         return;
@@ -259,7 +259,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_defence) = true) {
         if (~p_choice2("Unlock Defence experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_defence);
-            if_settext(stats:com_137, "Next Level At:");
+            if_settext(stats:com_137, "");
             mes("Your Defence experience is no longer locked.");
         }
         return;
@@ -282,7 +282,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_herblore) = true) {
         if (~p_choice2("Unlock Herblore experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_herblore);
-            if_settext(stats:com_173, "Next Level At:");
+            if_settext(stats:com_173, "");
             mes("Your Herblore experience is no longer locked.");
         }
         return;
@@ -305,7 +305,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_fishing) = true) {
         if (~p_choice2("Unlock Fishing experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_fishing);
-            if_settext(stats:com_209, "Next Level At:");
+            if_settext(stats:com_209, "");
             mes("Your Fishing experience is no longer locked.");
         }
         return;
@@ -328,7 +328,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_ranged) = true) {
         if (~p_choice2("Unlock Ranged experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_ranged);
-            if_settext(stats:com_143, "Next Level At:");
+            if_settext(stats:com_143, "");
             mes("Your Ranged experience is no longer locked.");
         }
         return;
@@ -351,7 +351,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_thieving) = true) {
         if (~p_choice2("Unlock Thieving experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_thieving);
-            if_settext(stats:com_179, "Next Level At:");
+            if_settext(stats:com_179, "");
             mes("Your Thieving experience is no longer locked.");
         }
         return;
@@ -374,7 +374,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_cooking) = true) {
         if (~p_choice2("Unlock Cooking experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_cooking);
-            if_settext(stats:com_215, "Next Level At:");
+            if_settext(stats:com_215, "");
             mes("Your Cooking experience is no longer locked.");
         }
         return;
@@ -397,7 +397,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_prayer) = true) {
         if (~p_choice2("Unlock Prayer experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_prayer);
-            if_settext(stats:com_149, "Next Level At:");
+            if_settext(stats:com_149, "");
             mes("Your Prayer experience is no longer locked.");
         }
         return;
@@ -420,7 +420,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_crafting) = true) {
         if (~p_choice2("Unlock Crafting experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_crafting);
-            if_settext(stats:com_185, "Next Level At:");
+            if_settext(stats:com_185, "");
             mes("Your Crafting experience is no longer locked.");
         }
         return;
@@ -443,7 +443,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_firemaking) = true) {
         if (~p_choice2("Unlock Firemaking experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_firemaking);
-            if_settext(stats:com_221, "Next Level At:");
+            if_settext(stats:com_221, "");
             mes("Your Firemaking experience is no longer locked.");
         }
         return;
@@ -466,7 +466,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_magic) = true) {
         if (~p_choice2("Unlock Magic experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_magic);
-            if_settext(stats:com_155, "Next Level At:");
+            if_settext(stats:com_155, "");
             mes("Your Magic experience is no longer locked.");
         }
         return;
@@ -489,7 +489,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_fletching) = true) {
         if (~p_choice2("Unlock Fletching experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_fletching);
-            if_settext(stats:com_191, "Next Level At:");
+            if_settext(stats:com_191, "");
             mes("Your Fletching experience is no longer locked.");
         }
         return;
@@ -512,7 +512,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_woodcutting) = true) {
         if (~p_choice2("Unlock Woodcutting experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_woodcutting);
-            if_settext(stats:com_227, "Next Level At:");
+            if_settext(stats:com_227, "");
             mes("Your Woodcutting experience is no longer locked.");
         }
         return;
@@ -535,7 +535,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_runecraft) = true) {
         if (~p_choice2("Unlock Runecrafting experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_runecraft);
-            if_settext(stats:com_238, "Next Level At:");
+            if_settext(stats:com_238, "");
             mes("Your Runecrafting experience is no longer locked.");
         }
         return;
@@ -558,7 +558,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_slayer) = true) {
         if (~p_choice2("Unlock Slayer experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_slayer);
-            if_settext(stats:com_252, "Next Level At:");
+            if_settext(stats:com_252, "");
             mes("Your Slayer experience is no longer locked.");
         }
         return;
@@ -581,7 +581,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_farming) = true) {
         if (~p_choice2("Unlock Farming experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_farming);
-            if_settext(stats:com_258, "Next Level At:");
+            if_settext(stats:com_258, "");
             mes("Your Farming experience is no longer locked.");
         }
         return;
@@ -604,7 +604,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_construction) = true) {
         if (~p_choice2("Unlock Construction experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_construction);
-            if_settext(stats:construction_hover_next, "Next Level At:");
+            if_settext(stats:construction_hover_next, "");
             mes("Your Construction experience is no longer locked.");
         }
         return;
@@ -627,7 +627,7 @@ if (p_finduid(uid) = true) {
     if (~xplock_is(^xplock_hunter) = true) {
         if (~p_choice2("Unlock Hunter experience?", 1, "No, keep it locked.", 2) = 1) {
             %xp_locked = clearbit(%xp_locked, ^xplock_hunter);
-            if_settext(stats:hunter_hover_next, "Next Level At:");
+            if_settext(stats:hunter_hover_next, "");
             mes("Your Hunter experience is no longer locked.");
         }
         return;

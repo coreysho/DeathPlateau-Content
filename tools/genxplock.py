@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Generate the per-skill XP lock: the stats tab's second right-click option, the hover panel's
-LOCKED marker, and the script behind both.
+LOCKED marker, and the script behind both - and make the hover panels OSRS's tooltips first.
 
 WHY GENERATED. Twenty-two skills times four places each - a button in stats.if, a marker in that
 skill's hover layer, an [if_button] block, and a bit constant - is eighty-eight entries that all
@@ -32,6 +32,37 @@ So the label is what changes: "Next Level At:" becomes "@red@XP locked". 53px ag
 replaces, so it crowds the number LESS than what was there. The restore string is read out of the
 .if rather than written here, so it cannot drift from what the interface actually says.
 
+THE HOVER IS OSRS'S TOOLTIP NOW (2026-09-27, "fix skill hover - change this to how osrs looks").
+474's panel was a black bar across the foot of the tab with yellow text; OSRS's is its tooltip box -
+light yellow, black edge, black text - under the skill you are pointing at, sized to its words:
+
+    Attack XP:        13,034,431          (OSRS script 395, read out of the current cache: the
+    Next level at:    14,391,160           label column left, the numbers right-aligned, with
+    Remaining XP:      1,356,729           thousands commas; at 99 only the first line)
+
+A size that follows the words, and a place that follows the skill, are not things an old-format
+interface can hold, so the CLIENT draws it (Client-Java: "OSRS TOOLTIPS", client code 331) from one
+text component per skill, and this generator writes that component - osrs_tooltips() below turns a
+474 panel into it, and leaves one already turned alone:
+
+  <layer>          the panel, now the whole tab (so the box may land anywhere on it) and still hidden:
+                   the skill box's overlayer raises it exactly as before
+  <first label>    client code 331, at the skill box's own place and size (what the box hangs off):
+                     text       "<Skill> XP:|%2"                                    - at 99
+                     activetext "<Skill> XP:|%2\nNext level at:|%3\nRemaining XP:|%4" - below 99
+                   script1 stat_base_level lt 99 picks between them (a comparator only ever runs on
+                   the first scripts, which is why the level is %1 and goes unshown); %2 stat_xp,
+                   %3 stat_xp_remaining (the next level's XP, 377's name for it), %4 that less stat_xp
+  <second label>   client code 332: a line the box takes in under the others, drawing nothing of its
+                   own. Blank, and it is THE MARKER: "@red@XP locked" while locked - a red line under
+                   the numbers, where OSRS's tooltips put their own red notes (ttip_emph_red)
+  the rect and the two number texts are dropped
+
+The Total level's panel gets the same treatment on client code 329 (the client fills in "Total
+XP:|<every skill's XP summed as a long>", as OSRS's script 396 words it), and its hover target gets
+the overlayer it was written to have - the comment above it says so, but the line was never there,
+so the panel never showed.
+
     python3 tools/genxplock.py
     python3 tools/ifrender.py scripts/interfaces/stats.if /tmp/stats.png
 """
@@ -60,6 +91,8 @@ STAT_ORDER = [
 ]
 
 MARKER_TEXT = '@red@XP locked'
+TIP_CODE, LINE_CODE, TOTAL_CODE = '331', '332', '329'
+TAB_W, TAB_H = 190, 261
 
 
 def read(p):
@@ -94,7 +127,8 @@ def parse(text):
 
 
 def skills(blocks):
-    """Every skill box in stats.if, with the pieces this round needs, in file order."""
+    """Every skill box in stats.if, with the pieces this round needs, in file order. Run on a tab
+    osrs_tooltips() has already turned: the skill is the one its tooltip's stat_xp reads."""
     by = {n: kv for n, kv, _ in blocks if n}
     kids = {}
     for n, kv, _ in blocks:
@@ -107,25 +141,101 @@ def skills(blocks):
         if not n or n.startswith(PREFIX) or kv.get('buttontype') != 'normal' or 'overlayer' not in kv:
             continue
         ov = kv['overlayer']
-        rem = [k for k in kids.get(ov, [])
-               if by[k].get('script1op1', '').startswith('stat_xp_remaining,')]
-        if len(rem) != 1:
-            raise SystemExit('%s: overlayer %s has %d stat_xp_remaining children, expected 1'
-                             % (n, ov, len(rem)))
-        skill = by[rem[0]]['script1op1'].split(',', 1)[1]
-        if skill not in STAT_ORDER:
-            raise SystemExit('%s reads stat_xp_remaining,%s which is not a stat this engine has'
-                             % (n, skill))
-        row = by[rem[0]]['y']
-        lab = [k for k in kids.get(ov, [])
-               if by[k].get('type') == 'text' and by[k].get('y') == row
-               and 'script1op1' not in by[k] and by[k].get('text')]
+        tip = [k for k in kids.get(ov, []) if by[k].get('clientcode') == TIP_CODE]
+        if len(tip) != 1:
+            raise SystemExit('%s: overlayer %s has %d client code %s tooltips, expected 1'
+                             % (n, ov, len(tip), TIP_CODE))
+        op = by[tip[0]].get('script2op1', '')
+        skill = op.split(',', 1)[-1]
+        if not op.startswith('stat_xp,') or skill not in STAT_ORDER:
+            raise SystemExit('%s reads %r, which is not stat_xp of a stat this engine has' % (tip[0], op))
+        lab = [k for k in kids.get(ov, []) if by[k].get('clientcode') == LINE_CODE]
         if len(lab) != 1:
-            raise SystemExit('%s: overlayer %s has %d plain labels on row y=%s, expected 1'
-                             % (n, ov, len(lab), row))
-        out.append(dict(button=n, skill=skill, overlayer=ov, number=rem[0],
-                        label=lab[0], label_text=by[lab[0]]['text'],
+            raise SystemExit('%s: overlayer %s has %d client code %s lines, expected 1'
+                             % (n, ov, len(lab), LINE_CODE))
+        out.append(dict(button=n, skill=skill, overlayer=ov, number=tip[0],
+                        label=lab[0], label_text=by[lab[0]].get('text', ''),
                         x=kv['x'], y=kv['y'], width=kv['width'], height=kv['height']))
+    return out
+
+
+def block(name, kv, old_buf):
+    """A block's lines, keeping the comment lines at the tail of the one it replaces: parse() hands
+    a comment written above the NEXT block to this one."""
+    tail = []
+    for ln in reversed(old_buf[1:]):
+        if ln.startswith('//') or not ln.strip():
+            tail.insert(0, ln)
+        else:
+            break
+    return ['[%s]' % name] + ['%s=%s' % (k, v) for k, v in kv] + tail
+
+
+def osrs_tooltips(blocks):
+    """474's hover panels -> OSRS's tooltip (the docstring's THE HOVER IS OSRS'S TOOLTIP NOW). A
+    panel is 474's while a number in it still reads stat_xp_remaining; one without is left alone."""
+    by = {n: kv for n, kv, _ in blocks if n}
+    kids = {}
+    for n, kv, _ in blocks:
+        if n and 'layer' in kv:
+            kids.setdefault(kv['layer'], []).append(n)
+    anchor = {}
+    for n, kv, _ in blocks:
+        if n and not n.startswith(PREFIX) and kv.get('buttontype') == 'normal' and 'overlayer' in kv:
+            anchor.setdefault(kv['overlayer'], kv)
+    new, drop = {}, set()
+    for ov, box in anchor.items():
+        ch = kids.get(ov, [])
+        rem = [k for k in ch if by[k].get('script1op1', '').startswith('stat_xp_remaining,')]
+        if not rem:
+            continue
+        skill = by[rem[0]]['script1op1'].split(',', 1)[1]
+        labels = sorted((k for k in ch if by[k].get('type') == 'text' and 'script1op1' not in by[k]),
+                        key=lambda k: int(by[k]['y']))
+        if len(labels) != 2:
+            raise SystemExit('%s: expected two labels in a 474 panel, found %s' % (ov, labels))
+        title = by[labels[0]]['text']
+        if not title.endswith(' XP:'):
+            raise SystemExit('%s: %r is not "<Skill> XP:"' % (labels[0], title))
+        at = [('x', box['x']), ('y', box['y'])]
+        size = [('width', box['width']), ('height', box['height'])]
+        new[ov] = [('type', 'layer'), ('x', 0), ('y', 0), ('width', TAB_W), ('height', TAB_H), ('hide', 'yes')]
+        new[labels[0]] = [('layer', ov), ('type', 'text')] + at + [('clientcode', TIP_CODE)] + size + [
+            ('script1op1', 'stat_base_level,%s' % skill), ('script1', 'lt,99'),
+            ('script2op1', 'stat_xp,%s' % skill),
+            ('script3op1', 'stat_xp_remaining,%s' % skill),
+            ('script4op1', 'stat_xp_remaining,%s' % skill), ('script4op2', 'subtract'),
+            ('script4op3', 'stat_xp,%s' % skill),
+            ('font', 'p12_full'), ('text', '%s|%%2' % title),
+            ('activetext', '%s|%%2\\nNext level at:|%%3\\nRemaining XP:|%%4' % title)]
+        # font= although it draws nothing: see rewrite_stats on what a text with no font does
+        new[labels[1]] = [('layer', ov), ('type', 'text')] + at + [('clientcode', LINE_CODE)] + size + [
+            ('font', 'p12_full')]
+        drop.update(k for k in ch if k not in labels)
+    # the Total level's: hung off its own target, client code 329 already on its label
+    if 'total_hover_box' in by:
+        t = by['total_hover_target']
+        at = [('x', t['x']), ('y', t['y'])]
+        size = [('width', t['width']), ('height', t['height'])]
+        new['total_hover'] = [('type', 'layer'), ('x', 0), ('y', 0), ('width', TAB_W), ('height', TAB_H), ('hide', 'yes')]
+        new['total_hover_label'] = [('layer', 'total_hover'), ('type', 'text')] + at + [
+            ('clientcode', TOTAL_CODE)] + size + [('font', 'p12_full')]
+        new['total_hover_target'] = [('type', 'text')] + at + size + [
+            ('overlayer', 'total_hover'), ('font', 'p12_full'), ('shadowed', 'yes')]
+        drop.add('total_hover_box')
+    out = []
+    for n, kv, buf in blocks:
+        if n in drop:
+            tail = block(n, [], buf)[1:]  # a comment that sat above the next block stays
+            if any(ln.startswith('//') for ln in tail) and out:
+                out[-1] = (out[-1][0], out[-1][1], out[-1][2] + tail)
+            continue
+        if n in new:
+            buf = block(n, new[n], buf)
+            kv = {}
+            for k, v in new[n]:
+                kv.setdefault(k, str(v))
+        out.append((n, kv, buf))
     return out
 
 
@@ -230,9 +340,9 @@ RS2_HEAD = '''// The per-skill XP lock.
 // every one of these bodies opens with p_finduid - see claude/rs2-player-pointer-contexts.md, which
 // says so in a table this round did not read until the build refused twenty-two scripts.
 //
-// WHAT THE HOVER PANEL SHOWS. A locked skill's second row says "XP locked" where it said
-// "Next Level At:". That is the whole display: blank is the cache state, so an account with
-// nothing locked pushes nothing at login, and the restore string is the interface's own.
+// WHAT THE HOVER SHOWS. A locked skill's tooltip gains a red "XP locked" line under its numbers:
+// its client-code-332 line, blank in the cache, so an account with nothing locked pushes nothing
+// at login, and the restore string is the interface's own (tools/genxplock.py).
 //
 // WHY THE BUTTONS ARE WHERE THEY ARE. See tools/genxplock.py: a lock button emitted after the
 // guide button would become the box's LEFT-CLICK action, because the last option appended is the
@@ -315,7 +425,7 @@ VARP_BLOCK = '[xp_locked]'
 def main():
     raw = read(STATS)
     nl = nl_of(raw)
-    blocks = parse(raw)
+    blocks = osrs_tooltips(parse(raw))
     sk = skills(blocks)
     if len(sk) != len(STAT_ORDER):
         raise SystemExit('stats.if has %d skill boxes and this engine has %d stats: %s'
@@ -332,8 +442,10 @@ def main():
 
     body = emit_rs2(sk)
     os.makedirs(os.path.dirname(RS2), exist_ok=True)
-    open(RS2, 'wb').write((nl_of(read(RS2)) if os.path.exists(RS2) else nl)
-                          .join(body).rstrip('\r\n').encode('utf-8') + nl.encode('utf-8'))
+    # the file's own line ending, read BEFORE open(..., 'wb') truncates it: read inside the write's
+    # argument it saw an empty file, so every run wrote the file LF
+    rs2_nl = nl_of(read(RS2)) if os.path.exists(RS2) else nl
+    open(RS2, 'wb').write(rs2_nl.join(body).rstrip('\r\n').encode('utf-8') + rs2_nl.encode('utf-8'))
 
     const = [CONST_MARK,
              '// GENERATED by tools/genxplock.py.',
@@ -363,6 +475,9 @@ def main():
                'scope=perm']
         open(VARP, 'wb').write((varp.rstrip('\r\n') + nlv + nlv.join(add) + nlv).encode('utf-8'))
 
+    # osrs_tooltips() dropped the panels' rects and numbers: take their ids back out of the pack
+    import subprocess, sys
+    subprocess.check_call([sys.executable, os.path.join(ROOT, 'tools', 'ifids.py'), IFACE])
     print('xplock: %d skills, %d components, ids %d..%d' % (len(sk), len(names), min(ids), max(ids)))
     print('  ' + ', '.join('%s=%d' % (s['skill'], STAT_ORDER.index(s['skill'])) for s in sk[:6]) + ', ...')
 
