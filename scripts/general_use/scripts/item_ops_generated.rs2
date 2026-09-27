@@ -31,12 +31,9 @@
 // A trigger can only be declared once, so leaving the placeholders would have broken the build.
 // The six vase stubs that used to sit here are gone for the same reason: Peer the Seer's trial
 // owns Shake and Remove-lid now, in quests/quest_viking/scripts/viking_peer.rs2.
-[opheld3,unfinished_saradominbook] mes("Pages still missing: 2, 3, 4.");
-[opheld3,saradominbook_complete] mes("The currency of goodness is honour; It retains its value through scarcity. This is Saradomin's wisdom.");
-[opheld3,unfinished_zamorakbook] mes("Pages still missing: 2, 3, 4.");
-[opheld3,zamorakbook_complete] mes("There is no opinion that cannot be proven true... by crushing those who choose to disagree with it. Zamorak give me strength!");
-[opheld3,unfinished_guthixbook] mes("Pages still missing: 2, 3, 4.");
-[opheld3,guthixbook_complete] mes("The trees, the earth, the sky, the waters; All play their part upon this land. May Guthix bring you balance.");
+// The six god book stubs that sat here (Check always said "Pages still missing: 2, 3, 4.") are gone:
+// Horror from the Deep owns Check, the pages and Preach now, in
+// quests/quest_horror/scripts/horror_godbooks.rs2.
 [opheld1,reinit] mes("Nothing interesting happens.");
 [opheld1,mm_helper] mes("Nothing interesting happens.");
 [opheld1,mm_reinitialisation_hint] ~mesbox("Nothing interesting happens.");

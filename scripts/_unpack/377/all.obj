@@ -45651,6 +45651,7 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=saradominitem,^true
+param=prayerbonus,5
 
 [saradominbook_complete]
 name=Holy book
@@ -45677,6 +45678,12 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=saradominitem,^true
+param=stabdefence,8
+param=slashdefence,8
+param=crushdefence,8
+param=magicdefence,8
+param=rangedefence,8
+param=prayerbonus,5
 
 [unfinished_zamorakbook]
 name=Damaged book
@@ -45702,6 +45709,7 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=zamorakitem,^true
+param=prayerbonus,5
 
 [zamorakbook_complete]
 name=Unholy book
@@ -45727,6 +45735,12 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=zamorakitem,^true
+param=stabattack,8
+param=slashattack,8
+param=crushattack,8
+param=magicattack,8
+param=rangeattack,8
+param=prayerbonus,5
 
 [unfinished_guthixbook]
 name=Damaged book
@@ -45752,6 +45766,7 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=guthixitem,^true
+param=prayerbonus,5
 
 [guthixbook_complete]
 name=Book of balance
@@ -45777,6 +45792,17 @@ cost=200
 weight=1kg
 wearpos=lefthand
 param=guthixitem,^true
+param=stabattack,4
+param=slashattack,4
+param=crushattack,4
+param=magicattack,4
+param=rangeattack,4
+param=stabdefence,4
+param=slashdefence,4
+param=crushdefence,4
+param=magicdefence,4
+param=rangedefence,4
+param=prayerbonus,5
 
 [horror_diary1]
 name=Journal

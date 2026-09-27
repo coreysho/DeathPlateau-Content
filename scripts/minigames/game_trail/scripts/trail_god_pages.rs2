@@ -1,0 +1,30 @@
+// GOD PAGES - the torn pages that complete the damaged books from Horror from the Deep.
+//
+// Every tier of Treasure Trail gives them (OSRS wiki, God page: "possible rewards from all tiers of
+// Treasure Trails except beginner"; RS wiki, God pages: "found in all levels of treasure trails").
+// They were never in the casket tables here, so a player could get a damaged book from Jossik and
+// never a single page for it.
+//
+// THE RATE is the OSRS wiki's own per-roll figure for each page (Saradomin page 1's drop table,
+// confirmed by Mod Tide's 2019 clue rates): easy 11/9,504, medium 10/8,184, hard 1/650. Only the
+// twelve pages of this era are rolled, so the chance that a roll is a page at all is twelve times
+// that, and each page keeps exactly the OSRS rate:
+//
+//   easy    12 x 11/9,504 = 1/72        ~trail_clue_god_page(1, 72)
+//   medium  12 x 10/8,184 = 5/341       ~trail_clue_god_page(5, 341)
+//   hard    12 x  1/650   = 6/325       ~trail_clue_god_page(6, 325)
+//
+// Pages were a scarce reward between 2006 and November 2008, when a hidden update made them "a
+// common reward from Treasure Trails once again" (RS wiki, God pages) - the OSRS figures are that
+// scarce, 2007 state. The roll is taken ahead of each tier's rare and normal tables, not added to
+// them as a case: every existing item keeps its place in its table, and the rare roll's 1/N (the
+// comments above each) still holds for every roll that is not a page - which is all but 1.4% (easy),
+// 1.5% (medium) or 1.8% (hard) of them.
+//
+// Returns true when this roll was a page, so the caller skips its other tables for the roll.
+[proc,trail_clue_god_page](int $in, int $of)(boolean)
+if (random($of) >= $in) {
+    return(false);
+}
+inv_add(trail_rewardinv, enum(int, namedobj, trail_god_pages, random(12)), 1);
+return(true);

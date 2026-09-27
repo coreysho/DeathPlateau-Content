@@ -17,7 +17,10 @@ while ($roll < $rolls) {
     // Rare drop chance was 1/21 in Dec 2006. https://www.reddit.com/r/2007scape/comments/3mxll7/clue_reward_mechanics_and_odds_of_rewards/, 
     // 44 items in 2006, there are 12 in May 04
     // so the chance is 1/77 ((44/12) * 21)
-    if(random(77) = 0) {
+    // A god page first, at its OSRS per-roll rate - see trail_god_pages.rs2.
+    if (~trail_clue_god_page(5, 341) = true) {
+        // the page is in the reward inv already
+    } else if(random(77) = 0) {
         $rare = calc($rare + 1);
         gosub(trail_clue_medium_rare);
     } else {

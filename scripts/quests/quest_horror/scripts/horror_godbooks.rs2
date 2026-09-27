@@ -1,0 +1,237 @@
+// THE GOD BOOKS - the damaged books of Saradomin, Zamorak and Guthix that Horror from the Deep ends
+// with, the four torn pages each one is missing, and the finished holy book, unholy book and book of
+// balance.
+//
+// Before this, Check on every damaged book printed a fixed "Pages still missing: 2, 3, 4." - a
+// placeholder that claimed page 1 was already in a book that had never had one - and the pages
+// themselves were in no reward table, so no book could ever be finished.
+//
+// WHICH PAGES ARE IN WHICH BOOK is the 377 cache's own record: %godbook_multi, with a varbit per page
+// (all.varbit horror_holypage1-4 = bits 3-6, horror_unholypage1-4 = 7-10, horror_balancepage1-4 =
+// 11-14). The pages are the player's, not the book's - the cache has one damaged book per god, not
+// one per page count - so a lost book comes back from Jossik "complete with all pages that have been
+// added" (OSRS wiki, Holy book) and a lost finished book comes back finished.
+//
+// Pages go in in any order, one at a time; a page cannot come back out (OSRS wiki, Damaged book).
+// The messages are 2009scape's (GodBook.java / GodBookPlugin.java, a 2009 reconstruction): "You add
+// the page to the book...", "The book already has that page.", "The book is now complete!", and a
+// Check that goes through all four pages, "The first page is in the book." / "The first page is
+// missing.".
+//
+// The damaged books give +5 Prayer and nothing else; the finished ones keep the +5 Prayer and add
+// +8 to every defence (holy book), +8 to every attack (unholy book) or +4 to both (book of balance) -
+// the OSRS wiki's item pages, set as params in the obj configs (_unpack/377/all.obj).
+
+// --- Check ---
+[opheld3,unfinished_saradominbook] ~horror_godbook_check(1);
+[opheld3,unfinished_zamorakbook] ~horror_godbook_check(2);
+[opheld3,unfinished_guthixbook] ~horror_godbook_check(3);
+
+[proc,horror_godbook_check](int $god)
+~mesbox("<~horror_godbook_pageline($god, 1)>|<~horror_godbook_pageline($god, 2)>|<~horror_godbook_pageline($god, 3)>|<~horror_godbook_pageline($god, 4)>");
+
+[proc,horror_godbook_pageline](int $god, int $page)(string)
+def_string $nth = "first";
+if ($page = 2) {
+    $nth = "second";
+} else if ($page = 3) {
+    $nth = "third";
+} else if ($page = 4) {
+    $nth = "fourth";
+}
+if (~horror_godbook_has_page($god, $page) = true) {
+    return("The <$nth> page is in the book.");
+}
+return("The <$nth> page is missing.");
+
+[proc,horror_godbook_has_page](int $god, int $page)(boolean)
+if (testbit(%godbook_multi, calc(^horror_godbook_page_bit + ($god - 1) * 4 + $page - 1)) = 1) {
+    return(true);
+}
+return(false);
+
+[proc,horror_godbook_pages_in](int $god)(int)
+return(getbit_range(%godbook_multi, calc(^horror_godbook_page_bit + ($god - 1) * 4), calc(^horror_godbook_page_bit + ($god - 1) * 4 + 3)));
+
+// The book Jossik hands back for a lost one: finished if all four pages went in, damaged otherwise.
+[proc,horror_god_book_reclaim](int $god)(namedobj)
+if (~horror_godbook_pages_in($god) = 15) {
+    return(~horror_god_book_complete($god));
+}
+return(~horror_god_book($god));
+
+// A god page's index in trail_god_pages (Saradomin 0-3, Zamorak 4-7, Guthix 8-11), or -1.
+[proc,horror_godpage_index](obj $obj)(int)
+def_int $i = 0;
+while ($i < 12) {
+    def_obj $page = enum(int, namedobj, trail_god_pages, $i);
+    if ($page = $obj) {
+        return($i);
+    }
+    $i = add($i, 1);
+}
+return(-1);
+
+// --- Adding a page ---
+// [opheldu,book] catches both ways round: the engine tries the target's trigger and then the used
+// obj's, swapping last_item/last_useitem (and the slots) so the book is always last_item here.
+[opheldu,unfinished_saradominbook] @horror_godbook_addpage(1);
+[opheldu,unfinished_zamorakbook] @horror_godbook_addpage(2);
+[opheldu,unfinished_guthixbook] @horror_godbook_addpage(3);
+
+[label,horror_godbook_addpage](int $god)
+def_int $index = ~horror_godpage_index(last_useitem);
+if ($index = -1) {
+    mes("Nothing interesting happens.");
+    return;
+}
+if (divide($index, 4) ! calc($god - 1)) {
+    // another god's page: it does not belong in this book
+    mes("Nothing interesting happens.");
+    return;
+}
+def_int $bit = calc(^horror_godbook_page_bit + $index);
+if (testbit(%godbook_multi, $bit) = 1) {
+    mes("The book already has that page.");
+    return;
+}
+def_int $bookslot = last_slot;
+inv_del(inv, last_useitem, 1);
+%godbook_multi = setbit(%godbook_multi, $bit);
+mes("You add the page to the book...");
+if (~horror_godbook_pages_in($god) = 15) {
+    inv_delslot(inv, $bookslot);
+    inv_setslot(inv, $bookslot, ~horror_god_book_complete($god), 1);
+    mes("The book is now complete!");
+}
+
+// --- The finished books ---
+// Preach, the inventory option (the 377 cache's iop3; its horror_preach_* seqs put the book in the
+// left hand, so it is read from the pack, not worn). The menu and the three ceremonies are the OSRS
+// wiki transcripts; Preach picks one of the book's sermons at random - the RS wiki's "historical
+// version" lists (the ones 2009scape also carries) plus the one OSRS kept. One of the RS wiki's
+// Zamorak lines, "Battle is my those who choose to disagree with it", is a garble of the first and is
+// left out.
+[opheld3,saradominbook_complete] @horror_preach(1);
+[opheld3,zamorakbook_complete] @horror_preach(2);
+[opheld3,guthixbook_complete] @horror_preach(3);
+
+[label,horror_preach](int $god)
+def_int $passage = ~p_choice4_header("Wedding Ceremony", 1, "Last Rites", 2, "Blessings", 3, "Preach", 4, "Select a relevant passage");
+if ($god = 2) {
+    anim(horror_preach_zamorak, 0);
+    @horror_preach_zamorak($passage);
+}
+if ($god = 3) {
+    anim(horror_preach_guthix, 0);
+    @horror_preach_guthix($passage);
+}
+anim(horror_preach_saradomin, 0);
+@horror_preach_saradomin($passage);
+
+// The lines of a passage go overhead one after another, as the transcripts give them.
+[label,horror_preach_say3](string $line1, string $line2, string $line3)
+say($line1);
+p_delay(1);
+say($line2);
+p_delay(1);
+say($line3);
+
+[label,horror_preach_saradomin](int $passage)
+if ($passage = 1) {
+    @horror_preach_say3("In the name of Saradomin,", "Protector of us all,", "I now join you in the eyes of Saradomin.");
+}
+if ($passage = 2) {
+    say("Thy cause was false, thy skills did lack;");
+    p_delay(1);
+    say("See you in Lumbridge when you get back.");
+    return;
+}
+if ($passage = 3) {
+    say("Go in peace in the name of Saradomin;");
+    p_delay(1);
+    say("May his glory shine upon you like the sun.");
+    return;
+}
+switch_int (random(5)) {
+    case 0 : @horror_preach_say3("Protect your self, protect your friends.", "Mine is the glory that never ends.", "This is Saradomin's wisdom.");
+    case 1 : @horror_preach_say3("The darkness in life may be avoided,", "by the light of wisdom shining.", "This is Saradomin's wisdom.");
+    case 2 : @horror_preach_say3("Show love to your friends, and mercy to your enemies,", "and know that the wisdom of Saradomin will follow.", "This is Saradomin's wisdom.");
+    case 3 : @horror_preach_say3("A fight begun, when the cause is just,", "will prevail over all others.", "This is Saradomin's wisdom.");
+    case default : @horror_preach_say3("The currency of goodness is honour;", "It retains its value through scarcity.", "This is Saradomin's wisdom.");
+}
+
+[label,horror_preach_zamorak](int $passage)
+if ($passage = 1) {
+    @horror_preach_say3("Two great warriors, joined by hand,", "to spread destruction across the land.", "In Zamorak's name, now two are one.");
+}
+if ($passage = 2) {
+    @horror_preach_say3("The weak deserve to die,", "So the strong may flourish.", "This is the creed of Zamorak.");
+}
+if ($passage = 3) {
+    @horror_preach_say3("May your bloodthirst never be sated,", "and may all your battles be glorious.", "Zamorak bring you strength.");
+}
+switch_int (random(4)) {
+    case 0 : @horror_preach_say3("Battles are not lost and won;", "They simply remove the weak from the equation.", "Zamorak give me strength!");
+    case 1 : @horror_preach_say3("Those who fight, then run away,", "shame Zamorak with their cowardice.", "Zamorak give me strength!");
+    case 2 : @horror_preach_say3("Strike fast, strike hard, strike true:", "The strength of Zamorak will be with you.", "Zamorak give me strength!");
+    case default : @horror_preach_say3("There is no opinion that cannot be proven true...", "by crushing those who choose to disagree with it.", "Zamorak give me strength!");
+}
+
+[label,horror_preach_guthix](int $passage)
+if ($passage = 1) {
+    @horror_preach_say3("Light and dark, day and night,", "Balance arises from contrast.", "I unify thee in the name of Guthix.");
+}
+if ($passage = 2) {
+    @horror_preach_say3("Thy death was not in vain,", "for it brought some balance to the world.", "May Guthix bring you rest.");
+}
+if ($passage = 3) {
+    @horror_preach_say3("May you walk the path, and never fall,", "for Guthix walks beside thee on thy journey.", "May Guthix bring you peace.");
+}
+switch_int (random(6)) {
+    case 0 : @horror_preach_say3("All things must end, as all begin;", "Only Guthix knows the role thou must play.", "May Guthix bring you balance.");
+    case 1 : @horror_preach_say3("In life, in death, in joy, in sorrow:", "May thine experience show thee balance.", "May Guthix bring you balance.");
+    case 2 : @horror_preach_say3("Thou must do as thou must, no matter what.", "Thine actions bring balance to this world.", "May Guthix bring you balance.");
+    case 3 : @horror_preach_say3("The river flows, the sun ignites,", "May you stand with Guthix in thy fights.", "May Guthix bring you balance.");
+    case 4 : @horror_preach_say3("A journey of a single step,", "May take thee over a thousand miles.", "May Guthix bring you balance.");
+    case default : @horror_preach_say3("The trees, the earth, the sky, the waters;", "All play their part upon this land.", "May Guthix bring you balance.");
+}
+
+// Blessing a symbol with a finished book (OSRS wiki, Holy symbol / Unholy symbol): 50 Prayer, and it
+// costs a tenth of the prayer points you have, plus 2. The holy book blesses the unblessed symbol of
+// Saradomin, the unholy book the unpowered symbol of Zamorak, the book of balance either. The
+// messages are 2009scape's.
+[opheldu,saradominbook_complete] @horror_godbook_use_complete(1);
+[opheldu,zamorakbook_complete] @horror_godbook_use_complete(2);
+[opheldu,guthixbook_complete] @horror_godbook_use_complete(3);
+
+[label,horror_godbook_use_complete](int $god)
+def_int $index = ~horror_godpage_index(last_useitem);
+if ($index ! -1 & divide($index, 4) = calc($god - 1)) {
+    mes("The book already has that page.");
+    return;
+}
+def_namedobj $product = null;
+if (last_useitem = stringstar & ($god = 1 | $god = 3)) {
+    $product = blessedstar;
+} else if (last_useitem = stringsnake & ($god = 2 | $god = 3)) {
+    $product = blessedsnake;
+}
+if ($product = null) {
+    mes("Nothing interesting happens.");
+    return;
+}
+if (stat_base(prayer) < 50) {
+    mes("You need a Prayer level of at least 50 in order to do this.");
+    return;
+}
+def_int $cost = calc(stat(prayer) / 10 + 2);
+if (stat(prayer) < $cost) {
+    mes("You need at least <tostring($cost)> prayer points in order to do this.");
+    return;
+}
+stat_sub(prayer, $cost, 0);
+def_string $name = lowercase(oc_name(last_useitem));
+inv_delslot(inv, last_useslot);
+inv_setslot(inv, last_useslot, $product, 1);
+mes("You bless the <$name>.");

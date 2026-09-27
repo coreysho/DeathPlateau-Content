@@ -1,0 +1,4 @@
+// %godbook_multi bit of Saradomin page 1 (all.varbit horror_holypage1). Each god's four pages follow
+// in order, and the gods go Saradomin, Zamorak, Guthix - the same order as the trail_god_pages enum,
+// so a page's index in that enum plus this is its bit (see horror_godbooks.rs2).
+^horror_godbook_page_bit = 3
