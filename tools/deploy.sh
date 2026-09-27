@@ -153,6 +153,15 @@ dev_setup() {
     mkdir -p "$DEV_ROOT"
 
     # 1. the checkouts - cloned from live's (no download), then pointed at GitHub like live's
+    # Live's checkouts belong to the service's user, and root's git refuses to clone from a repo it does
+    # not own ("detected dubious ownership" - a local clone reads <repo>/.git, a path the entry for the
+    # working tree does not cover). Both spellings are trusted, the same way as the dev checkouts below.
+    for repo in engine content; do
+        for dir in "$ROOT/$repo" "$ROOT/$repo/.git"; do
+            git config --global --get-all safe.directory 2>/dev/null | grep -qxF "$dir" \
+                || git config --global --add safe.directory "$dir"
+        done
+    done
     for repo in engine content; do
         if [ -d "$DEV_ROOT/$repo/.git" ]; then
             printf '  %s/%s exists\n' "$DEV_ROOT" "$repo"
