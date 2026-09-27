@@ -908,7 +908,8 @@ while ($god <= 3) {
             ~chatnpc("<p,neutral>I have something of yours, as it happens - but you'll need some room in your pack first.");
             return;
         }
-        inv_add(inv, ~horror_god_book($god), 1);
+        // with every page you had put in it (horror_godbooks.rs2) - finished, if you had finished it
+        inv_add(inv, ~horror_god_book_reclaim($god), 1);
         ~chatnpc("<p,happy>As a matter of fact I have! This book washed up on the beach not long ago, and I knew it for yours straight away. Here you go!");
         return;
     }
@@ -922,7 +923,7 @@ if (getbit_range(%horror_bridges, ^horror_book_owned_bit, calc(^horror_book_owne
     }
     ~chatnpc("<p,happy>As a matter of fact I have! A book washed up on the beach not long ago - one of yours, I'm sure. Which was it?");
     $god = ~p_choice3("Saradomin.", 1, "Zamorak.", 2, "Guthix.", 3);
-    inv_add(inv, ~horror_god_book($god), 1);
+    inv_add(inv, ~horror_god_book_reclaim($god), 1);
     %horror_bridges = setbit(%horror_bridges, calc(^horror_book_owned_bit + $god - 1));
     return;
 }
