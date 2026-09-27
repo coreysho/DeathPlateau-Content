@@ -10,5 +10,6 @@
 // the shore at the west end of Lunar Isle's pier (2113,3892) - the pier itself is 474's plane-1 walkway
 // with no bridge flag, so it cannot be walked onto from the ground and is not landed on
 ^lunar_isle_pier = 0_33_60_1_52
-// the end of Rellekka's long pier (2628,3700), beside the Miscellania sailor
-^lunar_isle_rellekka_pier = 0_41_57_4_52
+// the north end of Rellekka's long pier (2630,3696), beside the Miscellania sailor and Lokar - the
+// pier stops at z 3696; 2628,3700 was open sea, and a player landed there could not move
+^lunar_isle_rellekka_pier = 0_41_57_6_48
