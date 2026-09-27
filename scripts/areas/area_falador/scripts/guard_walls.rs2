@@ -1,0 +1,16 @@
+// Falador's longbow guards: fai_falador_guard4 on the ground by the west bank and the park
+// (m46_52), fai_falador_guard5/6 up on the city walls (m47_52 level 1, where the OSRS wiki puts
+// "Guard - Falador Walls"). Their 377 configs carry damagetype ^ranged_style, a longbow anim and
+// iron arrows but no trigger, and every npc without one gets the default melee AI - a wall guard
+// would try to walk down to you. Same shape as fai_falador_guard2 (guard2.rs2).
+[ai_queue1,fai_falador_guard4] ~npc_default_retaliate_ap;
+[ai_applayer2,fai_falador_guard4] ~npc_rangeattack;
+[ai_opplayer2,fai_falador_guard4] ~npc_rangeattack;
+
+[ai_queue1,fai_falador_guard5] ~npc_default_retaliate_ap;
+[ai_applayer2,fai_falador_guard5] ~npc_rangeattack;
+[ai_opplayer2,fai_falador_guard5] ~npc_rangeattack;
+
+[ai_queue1,fai_falador_guard6] ~npc_default_retaliate_ap;
+[ai_applayer2,fai_falador_guard6] ~npc_rangeattack;
+[ai_opplayer2,fai_falador_guard6] ~npc_rangeattack;

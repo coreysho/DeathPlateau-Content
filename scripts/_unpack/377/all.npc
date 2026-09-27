@@ -70911,6 +70911,10 @@ op2=Attack
 op3=Pickpocket
 vislevel=22
 wanderrange=2
+// attackrange field added - see claude/attackrange-field-vs-param.md: a longbow guard with no
+// attackrange walks up to you and never shoots. 5, the value its crossbow twin fai_falador_guard2
+// already has; guard_walls.rs2 gives it the ranged triggers.
+attackrange=5
 maxrange=4
 respawnrate=100
 hitpoints=22
@@ -70957,6 +70961,10 @@ op2=Attack
 op3=Pickpocket
 vislevel=22
 wanderrange=2
+// attackrange field added - see claude/attackrange-field-vs-param.md: a longbow guard with no
+// attackrange walks up to you and never shoots. 5, the value its crossbow twin fai_falador_guard2
+// already has; guard_walls.rs2 gives it the ranged triggers.
+attackrange=5
 maxrange=4
 respawnrate=100
 hitpoints=22
@@ -70974,6 +70982,8 @@ param=magicdefence,-4
 param=rangedefence,15
 param=damagetype,^ranged_style
 param=attack_anim,human_bow
+// rangeattack_sound added: guard4's (its longbow twin) - ~npc_rangeattack plays it every shot
+param=rangeattack_sound,arrowlaunch2
 param=proj_launch,iron_arrow_launch
 param=proj_travel,iron_arrow_travel
 param=npc_ammo,iron_arrow
@@ -71002,6 +71012,10 @@ op2=Attack
 op3=Pickpocket
 vislevel=22
 wanderrange=2
+// attackrange field added - see claude/attackrange-field-vs-param.md: a longbow guard with no
+// attackrange walks up to you and never shoots. 5, the value its crossbow twin fai_falador_guard2
+// already has; guard_walls.rs2 gives it the ranged triggers.
+attackrange=5
 maxrange=4
 respawnrate=100
 hitpoints=22
@@ -71019,6 +71033,8 @@ param=magicdefence,-4
 param=rangedefence,15
 param=damagetype,^ranged_style
 param=attack_anim,human_bow
+// rangeattack_sound added: guard4's (its longbow twin) - ~npc_rangeattack plays it every shot
+param=rangeattack_sound,arrowlaunch2
 param=proj_launch,iron_arrow_launch
 param=proj_travel,iron_arrow_travel
 param=npc_ammo,iron_arrow
