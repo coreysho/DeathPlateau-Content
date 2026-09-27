@@ -184,13 +184,18 @@ dev_setup() {
     local env=$DEV_ROOT/engine/.env
     if [ -f "$env" ]; then
         printf '  %s exists - left as it is\n' "$env"
+        # a dev .env written before the Wilderness bots existed: switch them on (dev only)
+        if ! grep -qE '^[[:space:]]*NODE_BOTS[[:space:]]*=' "$env"; then
+            printf '\n# the Wilderness bots (src/engine/bot) - dev only, never live\nNODE_BOTS=true\n' >> "$env"
+            printf '  added NODE_BOTS=true to %s\n' "$env"
+        fi
     else
         say "Writing $env from live's"
         local live_env=$LIVE_ENGINE/.env port web mgmt
         port=$(env_get "$live_env" NODE_PORT); port=${port:-43594}
         web=$(env_get "$live_env" WEB_PORT); web=${web:-8888}
         mgmt=$(env_get "$live_env" WEB_MANAGEMENT_PORT); mgmt=${mgmt:-8898}
-        local keys='NODE_ID|NODE_PORT|WEB_PORT|WEB_MANAGEMENT_PORT|NODE_PROFILE|NODE_PRODUCTION|NODE_MIN_STAFF_LEVEL|LOGIN_SERVER|FRIEND_SERVER|LOGGER_SERVER|EASY_STARTUP|DB_BACKEND|DISCORD_TOKEN|DISCORD_GUILD_ID|LOGIN_RSA_KEY_PATH|BUILD_SRC_DIR|BUILD_STARTUP'
+        local keys='NODE_ID|NODE_PORT|WEB_PORT|WEB_MANAGEMENT_PORT|NODE_PROFILE|NODE_PRODUCTION|NODE_MIN_STAFF_LEVEL|LOGIN_SERVER|FRIEND_SERVER|LOGGER_SERVER|EASY_STARTUP|DB_BACKEND|DISCORD_TOKEN|DISCORD_GUILD_ID|LOGIN_RSA_KEY_PATH|BUILD_SRC_DIR|BUILD_STARTUP|NODE_BOTS'
         {
             if [ -f "$live_env" ]; then
                 printf '# ---- from live (%s) on %s\n' "$live_env" "$(date +%F)"
@@ -210,6 +215,8 @@ NODE_PROFILE=dev
 NODE_PRODUCTION=false
 # administrators and up only - everyone else is told "This world is full"
 NODE_MIN_STAFF_LEVEL=$DEV_MIN_STAFF_LEVEL
+# the Wilderness bots (src/engine/bot; ::bots, ::bot spawn ...) - dev only, never live
+NODE_BOTS=true
 # its own db.sqlite in this directory - accounts are copied in by deploy.sh --dev, never shared
 DB_BACKEND=sqlite
 LOGIN_SERVER=false
