@@ -17,6 +17,7 @@ silent one:
     python3 tools/tradingpost_battery.py
 """
 import os
+import sys
 import re
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -120,6 +121,42 @@ for op, trig in (('op1=Browse', '[oploc1,trading_post]'), ('op2=Sell', '[oploc2,
     check(op in loc and trig in RS2, '%s has its trigger' % op)
 check('[oplocu,trading_post]' in RS2, 'an item used on the post searches for it')
 check('~tp_login;' in nocomment(read('scripts/login_logout/scripts/login.rs2')), 'login reads out what happened while the player was away')
+print('the prices fit the lines they are drawn in')
+# Seen in game (Corey, 2026-09-27): "Click again: buy 5 x Armadyl ac" running off the end of its
+# button. Every line that can hold a price is measured here at the widest it can really be, in the
+# font the window draws it in. A lot's price is each x count, so the biggest "each" that can appear
+# beside a total is the one from a lot of two.
+sys.path.insert(0, os.path.join(C, 'tools'))
+import ifrender
+
+LISTING_COM = {}
+for _name, _body in re.findall(r'(?m)^\[(\w+)\]\n((?:(?!\[)[^\n]*\n)*)',
+                               read('scripts/tradingpost/interfaces/tradingpost_listing.if')):
+    LISTING_COM[_name] = dict(re.findall(r'(?m)^(\w+)=(.*)$', _body))
+
+_MAX = '2,147,483,647'
+_HALF = '1,073,741,823'
+WIDEST = [
+    ('info2', 'Buy now: %s (%s ea)' % (_MAX, _HALF)),
+    ('info2', 'Buy now: %s coins' % _MAX),
+    ('info0', '%s x Armadyl godsword' % _MAX),
+    ('info3', 'Offers waiting: %s' % _MAX),
+    ('buynow', 'Click again to confirm'),
+    ('buynow', 'Buy now'),
+    ('cancel', 'Click again to take it down'),
+    ('hint', 'Click Buy now again to pay %s coins for %s.' % (_MAX, _MAX)),
+    ('hint', 'Click again to take it down - every offer goes back to its buyer.')
+]
+_over = []
+for _n, _text in WIDEST:
+    _com = LISTING_COM.get(_n)
+    if _com is None:
+        _over.append('%s: no such component' % _n)
+        continue
+    _w = ifrender.font(_com.get('font', 'p12_full')).width(_text)
+    if _w > int(_com['width']):
+        _over.append('%s: %dpx of %spx - "%s"' % (_n, _w, _com['width'], _text))
+check(not _over, 'every price line fits at its widest%s' % ('' if not _over else ': ' + '; '.join(_over)))
 
 print(fails == 0 and '\nALL PASS' or '\n%d FAILED' % fails)
 raise SystemExit(1 if fails else 0)

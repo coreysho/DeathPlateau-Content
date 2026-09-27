@@ -21,3 +21,7 @@
 ^tp_max_listings = 10
 // the orange every button in these windows is drawn in, for putting a row back after it was white
 ^tp_orange = 0xFF981F
+
+// Coins stop here, and so does a script's int, so a lot's price cannot go past it: the seller is
+// asked for a price EACH now, and each x count has to fit (TradingPost.list refuses it too).
+^tp_max_price = 2147483647

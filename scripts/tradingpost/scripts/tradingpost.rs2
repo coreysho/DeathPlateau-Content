@@ -260,7 +260,10 @@ inv_setslot(tp_item, 0, $obj, $count);
 if_settext(tradingpost_listing:title, oc_name($obj));
 if_settext(tradingpost_listing:info0, ~tp_desc($obj, $count));
 if_settext(tradingpost_listing:info1, "Sold by: <tp_listing_seller(%tp_listing)>");
-if ($buyout > 0) {
+if ($buyout > 0 & $count > 1) {
+    // "coins" is left off the total here so that the pair fits the line at any real price
+    if_settext(tradingpost_listing:info2, "Buy now: <~tp_gp($buyout)> (<~tp_gp(~tp_share($buyout, 1, $count))> ea)");
+} else if ($buyout > 0) {
     if_settext(tradingpost_listing:info2, "Buy now: <~tp_coins($buyout)>");
 } else {
     if_settext(tradingpost_listing:info2, "No buy-now price - offers only");
@@ -289,13 +292,15 @@ if ($mine = true) {
         if_sethide(tradingpost_listing:withdraw_box, false);
     }
 }
+// How many the second click would buy, and what that costs - the hint line below says both, since
+// the button itself is 170 pixels wide and a price and an item name do not fit in it.
+def_int $want = %tp_buycount;
+if ($want <= 0 | $want > $count) {
+    $want = $count;
+}
+def_int $wantprice = ~tp_share($buyout, $want, $count);
 if (%tp_confirm = ^tp_confirm_buynow) {
-    // say what the second click actually buys, since it may be part of the lot
-    def_int $want = %tp_buycount;
-    if ($want <= 0 | $want > $count) {
-        $want = $count;
-    }
-    if_settext(tradingpost_listing:buynow, "Click again: buy <~tp_desc($obj, $want)> for <~tp_coins(~tp_share($buyout, $want, $count))>");
+    if_settext(tradingpost_listing:buynow, "Click again to confirm");
 } else {
     if_settext(tradingpost_listing:buynow, "Buy now");
 }
@@ -345,7 +350,8 @@ if ($shown > 0) {
 }
 
 if (%tp_confirm = ^tp_confirm_buynow) {
-    if_settext(tradingpost_listing:hint, "Click Buy now again to pay <~tp_coins($buyout)>.");
+    // no item name: it is on screen already, and a long one would run off the end of the line
+    if_settext(tradingpost_listing:hint, "Click Buy now again to pay <~tp_coins($wantprice)> for <~tp_gp($want)>.");
 } else if (%tp_confirm = ^tp_confirm_accept) {
     if_settext(tradingpost_listing:hint, "Click Accept again to trade with <tp_offer_buyer(%tp_offer)>.");
 } else if (%tp_confirm = ^tp_confirm_cancel) {
@@ -399,7 +405,7 @@ if (%tp_confirm ! ^tp_confirm_buynow) {
     // two things, and a buyer may only want one. The rest of the lot stays on the post.
     %tp_buycount = $count;
     if ($count > 1) {
-        p_dialogprompt("How many do you want to buy? (<~tp_gp($count)> up, <~tp_coins($buyout)> for the lot)");
+        p_dialogprompt("How many do you want to buy? (<~tp_gp($count)> up, <~tp_coins(~tp_share($buyout, 1, $count))> each)");
         p_countdialog;
         if (last_int <= 0) {
             return;
@@ -654,16 +660,30 @@ if ($have > 1) {
     if (last_int <= 0) return;
     $count = min(last_int, $have);
 }
-p_dialogprompt("Buy-now price in coins (0 = offers only):");
+// The price is asked EACH, not for the lot: a lot can be bought a piece at a time, and "what is
+// one worth" is the question a seller can actually answer. The market stores the lot's price, so
+// each x count is what goes in.
+if ($count > 1) {
+    p_dialogprompt("Buy-now price for EACH, in coins (0 = offers only):");
+} else {
+    p_dialogprompt("Buy-now price in coins (0 = offers only):");
+}
 p_countdialog;
 if (last_int < 0) return;
-def_int $buyout = last_int;
+def_int $each = last_int;
+if ($each > 0 & $count > 1 & $each > calc(^tp_max_price / $count)) {
+    mes("<~tp_coins($each)> each comes to more coins than there are. Try a lower price.");
+    return;
+}
+def_int $buyout = calc($each * $count);
 def_string $err = tp_list(inv, $obj, $count, $buyout);
 if (string_length($err) > 0) {
     mes($err);
     return;
 }
-if ($buyout > 0) {
+if ($buyout > 0 & $count > 1) {
+    mes("You put <~tp_desc($obj, $count)> on the trading post, at <~tp_coins($each)> each - <~tp_coins($buyout)> for the lot.");
+} else if ($buyout > 0) {
     mes("You put <~tp_desc($obj, $count)> on the trading post, to buy now for <~tp_coins($buyout)>.");
 } else {
     mes("You put <~tp_desc($obj, $count)> on the trading post, for offers.");

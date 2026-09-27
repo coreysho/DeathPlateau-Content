@@ -170,7 +170,9 @@ def listing():
     p.title('')
     p.inv('item', 30, TOP + 4, 1, 1, '0,0', [])
     for i in range(5):
-        p.text('info%d' % i, 76, TOP + i * 14, 240, '', colour=WHITE if i else YELLOW)
+        # 244 wide, which is up to the button column at 320: a lot's price line carries what one
+        # costs as well, and the widest that can really be is 244px (tools/tradingpost_battery.py).
+        p.text('info%d' % i, 76, TOP + i * 14, 244, '', colour=WHITE if i else YELLOW)
     # what the viewer can do, right-hand column. They share rows because they never show together:
     # a seller sees only Take down, and a buyer sees Make an offer or Withdraw, never both.
     p.hbutton('buynow', 320, TOP, 170, 'Buy now')
