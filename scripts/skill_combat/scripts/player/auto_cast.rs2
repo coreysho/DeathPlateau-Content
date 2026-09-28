@@ -1,4 +1,13 @@
-[if_button,combat_staff_2:auto_choose] @open_autocast_interface;
+// THE TWO SPELL BOXES on the staff tab (combat_staff_2.if). Old School has both, and so does the
+// 474 tab this one was ported from - it draws the second box's hover text, "(Attack with a
+// spell)(Magic XP)(Defence XP)", right on top of it. Only one of them was ever wired, as a plain
+// autocast on/off toggle, so there was no way to pick between casting for Magic xp and casting
+// defensively. Clicking a box opens the spell picker and puts the tab on that box's style
+// (combat.dbrow's weapon_staff_table: 3 is the plain cast, 4 the defensive one); picking a spell
+// arms it. Autocast is turned off by picking one of the three melee styles, as Old School does it
+// (~set_attackstyle in player_attackstyles.rs2).
+[if_button,combat_staff_2:auto_cast] @open_autocast_interface(3);
+[if_button,combat_staff_2:auto_defensive] @open_autocast_interface(4);
 [if_button,staff_spells:ssb0] @set_autocast_spell(^wind_strike);
 [if_button,staff_spells:ssb1] @set_autocast_spell(^water_strike);
 [if_button,staff_spells:ssb2] @set_autocast_spell(^earth_strike);
@@ -16,12 +25,17 @@
 [if_button,staff_spells:ssb14] @set_autocast_spell(^earth_wave);
 [if_button,staff_spells:ssb15] @set_autocast_spell(^fire_wave);
 
-[label,open_autocast_interface]
+[label,open_autocast_interface](int $style)
 if_close;
 if (p_finduid(uid) = false) { // cant open autocast interface if delayed
     return;
 }
-%autocast_set = 0;
+// The style goes on now rather than when a spell is chosen, so that clicking the other box while
+// already autocasting switches you between plain and defensive casting without having to pick the
+// spell again - and so a cancelled picker leaves the tab where you clicked. A style with no spell
+// armed is caught in player_combat.rs2 and falls back to Bash.
+%com_mode = $style;
+~player_combat_stat;
 if_settab(staff_spells, 0);
 
 [if_button,staff_spells:cancelspell]
@@ -38,13 +52,10 @@ if (p_finduid(uid) = true) {
     }
     // set auto cast varp
     %autocast_spell = $spell;
-    // AND TURN IT ON. Choosing a spell used to leave %autocast_set at the 0 that
-    // @open_autocast_interface above had just written, so the picker showed the spell's name, the
-    // toggle beside it stayed grey, and the next click on an npc was a plain melee swing -
-    // reported from play 2026-09-21 as "ibans staff autocasting fire wave" followed by a melee
-    // script error. Choosing a spell is how Old School arms autocast; the toggle is for turning it
-    // back off. autocast_set is a one-bit varbit on lastcastspell, which the button reads with
-    // testbit,lastcastspell,0, so writing 1 here is what lights it up.
+    // AND TURN IT ON. Choosing a spell is how Old School arms autocast; picking one of the staff's
+    // three melee styles is how it is turned back off. autocast_set is a one-bit varbit on
+    // lastcastspell, and ~player_autocast_enabled is the only thing that reads it now that the
+    // tab's highlight follows %com_mode instead.
     %autocast_set = 1;
     if_settext(combat_staff_2:auto_spell, db_getfield($spell_data, magic_spell_table:name, 0));
 
