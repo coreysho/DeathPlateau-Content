@@ -21,6 +21,14 @@ if (~deserves_pk_skull = true) {
 .%pk_predator2 = .%pk_predator1;
 .%pk_predator1 = uid;
 
+// The PJ timer runs on BOTH sides of a hit, not just the player who took it: "both players' PJ
+// timers are refreshed every time one of the players attacks the other"
+// (https://oldschool.runescape.wiki/w/PJ_timer). Before this only the victim's clock was set, so a
+// third player could walk up and pile the ATTACKER in single-way combat for free.
+// %pvp_opponent is the lock the timer holds the two of them in - see ~pvp_in_combat_check.
+%pvp_opponent = .uid;
+.%pvp_opponent = uid;
+%lastcombat_pvp = map_clock;
 .%lastcombat = map_clock;
 .%lastcombat_pvp = map_clock;
 .%aggressive_npc = null; // prevents npc's from attacking your opponent after you attack them.

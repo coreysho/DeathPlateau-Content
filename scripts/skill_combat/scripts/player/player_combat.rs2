@@ -108,7 +108,8 @@ if (map_multiway(npc_coord) = false) {
     // https://cdn.discordapp.com/attachments/1126857544523063367/1332910417856565249/found-old-drive-with-rsdemon-and-some-screenshots-v0-36uacu7glqzd1.png?ex=67999c0f&is=67984a8f&hm=a4c34a40791a120dba06adebb15a652a722e486fddd6d5a9e47ee9aa2c329fb3&
     // 2006 year / osrs mes I'm already under attack.
     // here's one from 2004: https://youtu.be/IC2n8t76DDY?t=34
-    if (add(%lastcombat_pvp, 8) > map_clock) {
+    // a PvP fight holds you for the full PJ timer, so you cannot duck out of it onto a monster
+    if (add(%lastcombat_pvp, ^pj_timer_pvp) > map_clock) {
         mes("I'm already under attack");
         return(false);
     }
@@ -137,7 +138,8 @@ return(true);
 if (map_multiway(npc_coord) = false) {
     // "I'm already under attack" with no period:
     // - 2004: https://web.archive.org/web/20130303093547/http://img86.exs.cx/img86/271/80mage.jpg
-    if (add(%lastcombat_pvp, 8) > map_clock) {
+    // a PvP fight holds you for the full PJ timer, so you cannot duck out of it onto a monster
+    if (add(%lastcombat_pvp, ^pj_timer_pvp) > map_clock) {
         mes("I'm already under attack");
         return(false);
     }

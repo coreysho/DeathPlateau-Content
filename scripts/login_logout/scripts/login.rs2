@@ -59,6 +59,8 @@ queue(macro_event_login, 0, 0);
 ~xplock_restore;
 // so pk skulls persist after logging back in
 ~set_pk_skull_login;
+// the PJ timer does NOT persist - a stored map_clock means nothing to a restarted world
+~set_pj_timer_login;
 // so antifire persists after logging back in
 ~set_antifire_login;
 // if player is in a duel, they are removed from the duel

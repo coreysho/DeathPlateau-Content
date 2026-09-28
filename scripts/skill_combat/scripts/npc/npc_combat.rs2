@@ -371,7 +371,9 @@ queue(barrows_degrade_entry, 0, 0); // equipment degradation - see degrade/scrip
 
 [proc,npc_check_notcombat]()(boolean)
 if (map_multiway(npc_coord) = false) { // checks npc coord ALWAYS!
-    if (add(%lastcombat_pvp, 8) > map_clock) {
+    // a player in a PvP fight is off limits to monsters for the whole PJ timer, not just 8 ticks:
+    // "monsters or player opponents will be unable to hit you for the next 20 cycles (12 seconds)"
+    if (add(%lastcombat_pvp, ^pj_timer_pvp) > map_clock) {
         return(false);
     }
     if (add(%lastcombat, 8) > map_clock & %aggressive_npc ! null & %aggressive_npc ! npc_uid) {

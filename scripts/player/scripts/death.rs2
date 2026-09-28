@@ -52,6 +52,7 @@ def_obj $prev_wep = inv_getobj(worn, ^wearpos_rhand);
 if (findhero = true) {
     // the killer's Player Statistics count. The same player the items drop for.
     .%player_pvp_kills = add(.%player_pvp_kills, 1);
+    ~pvp_clear_pj_lock; // skill_combat/scripts/pvp/pvp_combat.rs2
     ~pvp_death_lose_items;
     session_log(^log_moderator, "Player died to <.displayname>");
 } else {
