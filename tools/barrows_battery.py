@@ -942,11 +942,20 @@ print('--- the dig ends, and the tunnels pay nothing')
 dig = nocomment(RS2.split('[proc,barrows_mound_dig]', 1)[1].split('\n[', 1)[0])
 # .rindex on a string that is not there RAISES, and a crash is not a catch - ninth time in this
 # project, so the membership test comes first.
-check('anim(human_dig_long, 0);' in dig and 'anim(null, 0);' in dig
+check('anim(human_dig_barrows, 0);' in dig and 'anim(null, 0);' in dig
       and dig.rindex('anim(null, 0);') > dig.index('p_telejump'),
-      'the dig animation is stopped after the telejump - human_dig_long is loops=8 and outlives '
+      'the dig animation is stopped after the telejump - human_dig_barrows is loops=8 and outlives '
       'the script that started it, so without this the player keeps digging inside the crypt')
-DIGSEQ = read('scripts/_unpack/377/all.seq').split('[human_dig_long]', 1)
+# "a tad quicker" (owner, 2026-09-27): four ticks of waiting before the telejump, not five - p_delay(n)
+# holds n + 1; the telejump lands the tick after, so five from the spade to the crypt where it was six
+# (Engine-TS tools/sim/visuals.ts measures it) - and a stroke quicker than human_dig_long's 39 client
+# ticks (its frames' own delays, 4,4,4,4,6,3,4 in anim_84, and its delay8=10)
+check(sum(int(n) + 1 for n in re.findall(r'p_delay\((\d+)\)', dig.split('p_telejump', 1)[0])) == 4,
+      'four ticks of waiting before the telejump (were five)')
+DIGSEQ = read('scripts/areas/area_barrows/configs/barrows.seq').split('[human_dig_barrows]', 1)
+DIGDELAYS = [int(d) for d in re.findall(r'(?m)^delay\d+=(\d+)', DIGSEQ[1].split('\n[', 1)[0])] if len(DIGSEQ) == 2 else []
+check(len(DIGDELAYS) == 8 and sum(DIGDELAYS) < 39,
+      'the Barrows dig strokes are quicker than human_dig_long: %d client ticks a stroke, not 39' % sum(DIGDELAYS))
 check(len(DIGSEQ) == 2 and re.search(r'(?m)^loops=[2-9]', DIGSEQ[1].split('\n[', 1)[0]),
       '...which is worth checking because the seq really does loop: %s'
       % (re.search(r'(?m)^loops=(\d+)', DIGSEQ[1].split('\n[', 1)[0]).group(1)

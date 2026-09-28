@@ -4,8 +4,8 @@
 //   * a venom hit is 6, then 2 more every time it strikes, to 20 ("Damage starts at one hit of 6 per
 //     18 seconds and increases by 2 each time it hits, capping at 20"), every 30 ticks - the poison
 //     timer's own interval;
-//   * the hitsplat is poison's green. OSRS draws venom in a darker green, and this client has only
-//     the five 377 hitmarks (Client.java loads hitmarks 0-4), so it shows as poison does;
+//   * the hitsplat is Old School's own dark teal venom splat (^hitmark_venom, hitmarks 5; an old client
+//     that has no sprite for it is sent poison's green instead - the engine's HitType.legacyHitType);
 //   * on a monster it shares the poison timer ("monsters can not simultaneously be envenomed and
 //     poisoned"): skill_combat/scripts/npc/npc_poison.rs2 hands a venomous monster's tick to here, and
 //     an ordinary poison no longer replaces venom (OSRS since April 2024). Monsters OSRS makes immune
@@ -48,7 +48,7 @@ npc_settimer(^venom_interval);
 if (npc_stat(hitpoints) = 0) { // already dead
     return;
 }
-npc_damage(^hitmark_poison, %npc_venom);
+npc_damage(^hitmark_venom, %npc_venom);
 if (npc_stat(hitpoints) = 0) {
     npc_queue(3, 0, 0);
 }
@@ -74,6 +74,9 @@ mes("You have been envenomed!");
 %venom = ^venom_start;
 settimer(venom, ^venom_interval);
 
+[queue,venom_damage](int $damage)
+~poison_hit($damage, ^hitmark_venom);
+
 [timer,venom]
 if (%venom = 0) {
     cleartimer(venom);
@@ -83,8 +86,8 @@ if (%venom < 0) {
     %venom = add(%venom, 1);
     return;
 }
-// poison's own damage queue: the green hitsplat, the hit sound, the death check
-queue(poison_damage, 0, %venom);
+// poison's hit (the hit sound, the death check) with venom's splat
+queue(venom_damage, 0, %venom);
 %venom = min(add(%venom, ^venom_step), ^venom_max);
 
 // Any antipoison on a venomed player: the venom becomes a poison hitting for what the venom did.

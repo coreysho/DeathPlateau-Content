@@ -1,0 +1,43 @@
+// MAX HIT SPLATS (2026-09-27), Old School's: a hit that rolls the attacker's max hit is drawn with the
+// red splat with the gold rim (hitmarks 7, ^hitmark_max) instead of the plain red one. Old School
+// added it long after 2006 and has a setting to turn it off; here it is always on.
+//
+// "The max hit" is the number the damage was rolled against, after everything that changes it - the
+// slayer mask, Dharok's, the monster's max_dealt cap, the 40% a protection prayer takes off in PvP - so
+// a hit on a player praying against it is a max hit when it is the most the prayer let through. A hit
+// is flagged when it lands at least that high, which also covers a bolt effect that rolls past it.
+//
+// Covered: a player's melee, ranged, magic and toxic blowpipe shots on a monster; a monster's default
+// melee, ranged and magic attacks on a player; and a player's melee, ranged, magic and blowpipe shots
+// on another player. Special attacks, bosses' own attack scripts and the other odd damage sources keep
+// the plain splat - they go through the old calls, which never pass a max.
+//
+// HOW IT RIDES THE QUEUE. The splat is decided where the damage is rolled and drawn where it lands,
+// ticks later, through a queue:
+//   * on a monster, by the engine: npc_queue_maxhit is npc_queue, marked, and the one npc_damage of the
+//     damage type for exactly the queued amount in the ai_queue it runs becomes the max hit splat. That
+//     is what lets every [ai_queue2,...] - the default and the monsters' own - draw it without a change;
+//     one that alters the damage first just draws the plain splat.
+//   * on a player, by the queue itself: [queue,combat_maxhit_player] beside [queue,combat_damage_player],
+//     and [queue,pvp_damage] carries the hitmark as a third argument.
+// An old client, from before these splats, is sent the plain red one instead (the engine's
+// HitType.legacyHitType), so it sees what it always did.
+
+// A player's hit on the active monster, $delay ticks away - npc_queue(2, $damage, $delay) otherwise.
+[proc,npc_queue_hit](int $damage, int $maxhit, int $delay)
+if ($maxhit > 0 & $damage >= $maxhit) {
+    npc_queue_maxhit(2, $damage, $delay);
+} else {
+    npc_queue(2, $damage, $delay);
+}
+
+// The active monster's hit on the active player - queue(combat_damage_player, $delay, $damage) otherwise.
+[proc,queue_combat_damage_player](int $delay, int $damage, int $maxhit)
+if ($maxhit > 0 & $damage >= $maxhit) {
+    queue(combat_maxhit_player, $delay, $damage);
+} else {
+    queue(combat_damage_player, $delay, $damage);
+}
+
+[queue,combat_maxhit_player](int $damage)
+~combat_damage_player_hit($damage, ^hitmark_max);

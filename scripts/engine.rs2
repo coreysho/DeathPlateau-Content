@@ -683,6 +683,11 @@
 [command,spotanim_npc](spotanim $spotanim, int $height, int $delay)
 // info: Play a spotanim on the secondary npc
 [command,.spotanim_npc](spotanim $spotanim, int $height, int $delay)
+// info: custom (2026-09-27) - npc_queue for a hit that rolled the attacker's max hit: the queued script's
+// npc_damage of the damage type for exactly $arg draws Old School's max hit splat (skill_combat/scripts/hitmark_max.rs2)
+[command,npc_queue_maxhit](int $ai_queue, int $arg, int $delay)
+// info: custom (2026-09-27) - npc_queue_maxhit on the secondary npc
+[command,.npc_queue_maxhit](int $ai_queue, int $arg, int $delay)
 // info: Find all NPCs around $coord (limited to the nearest 8x8 zone area)
 [command,npc_findallzone](coord $coord)
 // info: Set the active NPC to the next result from the most recent npc search

@@ -30,11 +30,13 @@ def_int $damage = 0;
 // here means skipping the roll AND the 40% prayer reduction below it. Dharok's scales the max hit
 // with the wearer's missing health. Both are in areas/area_barrows/scripts/barrows_sets.rs2.
 def_boolean $verac = ~barrows_verac_ignores;
+def_int $hit_max = 0; // what $damage was rolled against, for the max hit splat
 if (~pvp_hit_roll(%damagetype) = true | $verac = true) {
     def_int $maxhit = ~barrows_dharok_maxhit(%com_maxhit);
     if (~.check_protect_prayer(^melee_style) = true & $verac = false) {
         $maxhit = scale(6, 10, $maxhit); // reduction of 40%
     }
+    $hit_max = $maxhit;
     $damage = min(randominc($maxhit), .stat(hitpoints)); // tick eating existed! https://oldschool.runescape.wiki/w/Update:The_Wintertodt
     ~give_combat_experience_pvp(%damagestyle, $damage, ~pvp_xp_multiplier(~.player_combat_level));
     both_heropoints($damage);
@@ -47,7 +49,7 @@ sound_synth(%com_attacksound, 0, 0);
 .sound_synth(%com_attacksound, 0, 0);
 
 .queue*(pvp_retaliate, 0)(uid);
-~.pvp_damage(0, $damage);
+~.pvp_damage_max(0, $damage, $hit_max);
 
 .anim(.%com_defendanim, 20);
 // .sound_synth(.%com_defendsound, 0, 20);

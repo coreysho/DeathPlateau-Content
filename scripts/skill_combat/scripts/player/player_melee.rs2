@@ -36,6 +36,7 @@ if (~black_mask_on_task = true) {
 // of which live inside the hit roll - so ignoring them is ignoring the roll.
 // ~barrows_verac_ignores is in areas/area_barrows/scripts/barrows_sets.rs2.
 def_int $damage = 0;
+def_int $hit_max = 0; // what $damage was rolled against, for the max hit splat
 if (~player_npc_hit_roll_boosted(%damagetype, $mask_num, $mask_div) = true
     | ~barrows_verac_ignores = true) {
     def_int $maxhit = %com_maxhit;
@@ -63,7 +64,8 @@ if (~player_npc_hit_roll_boosted(%damagetype, $mask_num, $mask_div) = true
     if (npc_type = horror_dagganoth_air | npc_type = horror_dagganoth_water | npc_type = horror_dagganoth_earth | npc_type = horror_dagganoth_fire | npc_type = horror_dagganoth_ranged) {
         $maxhit = 0;
     }
-    $damage = randominc(min($maxhit, npc_param(max_dealt)));
+    $hit_max = min($maxhit, npc_param(max_dealt));
+    $damage = randominc($hit_max);
     def_int $damage_capped = min($damage, npc_stat(hitpoints));
     ~give_combat_experience(%damagestyle, $damage_capped, %npc_combat_xp_multiplier);
     npc_heropoints($damage_capped);
@@ -85,7 +87,7 @@ if ($weapon ! null) {
 anim(%com_attackanim, 0);
 sound_synth(%com_attacksound, 0, 0);
 ~npc_retaliate(0);
-npc_queue(2, $damage, 0);
+~npc_queue_hit($damage, $hit_max, 0);
 npc_anim(npc_param(defend_anim), 20); 
 if (npc_param(defend_sound) ! null) {
     sound_synth(npc_param(defend_sound), 0, 20); // delay npc this tick

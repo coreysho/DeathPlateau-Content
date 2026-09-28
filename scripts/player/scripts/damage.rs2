@@ -1,11 +1,16 @@
 [proc,damage_self](int $amount)
+~damage_self_hitmark($amount, ^hitmark_damage);
+
+// ~damage_self, drawn with $hitmark when it lands (a miss is always the block splat). The max hit splat
+// comes through here (skill_combat/scripts/hitmark_max.rs2).
+[proc,damage_self_hitmark](int $amount, int $hitmark)
 if (stat(hitpoints) = 0) {
     ~player_die;
     return;
 }
 if_close;
 if ($amount > 0) {
-    damage(uid, 1, $amount);
+    damage(uid, $hitmark, $amount);
     ~human_hit_sound;
     queue(crystal_shield_charge, 0, 0); // crystal shield spends one charge per hit taken
 } else {

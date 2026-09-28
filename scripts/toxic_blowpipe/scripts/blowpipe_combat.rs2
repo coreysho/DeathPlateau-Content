@@ -125,6 +125,7 @@ if ($spec = true) {
 def_boolean $hit = ~player_npc_hit_roll_boosted(^ranged_style, $accuracy_num, $mask_div);
 def_int $roll = 0;
 def_int $damage = 0;
+def_int $hit_max = 0; // what $roll was rolled against, for the max hit splat
 if ($hit = true) {
     def_int $maxhit = %com_maxhit;
     if (npc_type = count_draynor & inv_total(inv, garlic) > 0) {
@@ -134,7 +135,8 @@ if ($hit = true) {
     if ($spec = true) {
         $maxhit = scale(3, 2, $maxhit); // Toxic Siphon: +50% damage
     }
-    $roll = randominc(min($maxhit, npc_param(max_dealt)));
+    $hit_max = min($maxhit, npc_param(max_dealt));
+    $roll = randominc($hit_max);
     $damage = ~blowpipe_npc_resisted($roll);
     def_int $damage_capped = min($damage, npc_stat(hitpoints));
     ~barrows_set_hit_npc($damage_capped, ^ranged_style);
@@ -155,7 +157,7 @@ if ($spec = true) {
 // a dart's flight, and the extra tick every ranged hit here lands after (player_ranged.rs2)
 def_int $delay = add(~npc_projectile(coord, npc_uid, $projectile, 40, 36, 32, 15, 0, 11, 5), 30);
 ~npc_retaliate(calc($delay / 30));
-npc_queue(2, $damage, calc($delay / 30));
+~npc_queue_hit($damage, $hit_max, calc($delay / 30));
 npc_anim(npc_param(defend_anim), sub($delay, 30));
 if (npc_param(defend_sound) ! null) {
     sound_synth(npc_param(defend_sound), 0, sub($delay, 30));
@@ -227,6 +229,7 @@ if ($spec = true) {
 def_int $defence_roll = ~.player_defence_roll_specific(^ranged_style);
 def_int $roll = 0;
 def_int $damage = 0;
+def_int $hit_max = 0; // what $roll was rolled against, for the max hit splat
 if (randominc($attack_roll) > randominc($defence_roll)) {
     def_int $maxhit = %com_maxhit;
     if ($spec = true) {
@@ -235,6 +238,7 @@ if (randominc($attack_roll) > randominc($defence_roll)) {
     if (~.check_protect_prayer(^ranged_style) = true) {
         $maxhit = scale(6, 10, $maxhit); // reduction of 40%
     }
+    $hit_max = $maxhit;
     $roll = randominc($maxhit);
     $damage = min($roll, .stat(hitpoints)); // tick eating
     ~give_combat_experience_pvp(%damagestyle, $damage, ~pvp_xp_multiplier(~.player_combat_level));
@@ -256,7 +260,7 @@ if ($spec = true) {
 }
 def_int $delay = ~player_projectile(coord, .coord, .uid, $projectile, 40, 36, 32, 15, 0, 11, 5);
 .queue*(pvp_retaliate, calc($delay / 30))(uid);
-~.pvp_damage(calc($delay / 30), $damage);
+~.pvp_damage_max(calc($delay / 30), $damage, $hit_max);
 .anim(.%com_defendanim, $delay);
 if ($spec = true) {
     stat_heal(hitpoints, divide($roll, 2), 0);

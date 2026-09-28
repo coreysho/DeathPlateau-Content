@@ -1,3 +1,7 @@
 ^hitmark_block = 0
 ^hitmark_damage = 1
 ^hitmark_poison = 2
+// 3 and 4 are 377's two disease splats and 6 Old School's heal - drawn by the client, sent by nothing yet.
+// sprites/hitmarks.png (tools/genhitmarks.py) and the engine's HitType count on these numbers.
+^hitmark_venom = 5
+^hitmark_max = 7

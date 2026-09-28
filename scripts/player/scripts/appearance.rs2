@@ -71,15 +71,15 @@ headicons_set(or($current, $bit));
 buildappearance(worn);
 
 [proc,headicon_del](int $icon)
-def_int $current = headicons_get;
-def_int $bit = multiply(0x1, pow(2, $icon));
-headicons_set(and($current, sub($current, $bit)));
+// clearbit, not and($current, $current - $bit): that only clears the bit when it is set. The prayers
+// clear every overhead that conflicts with the one being switched on, set or not, and subtracting a
+// bit that is not there borrows from the bits below it - skull 0x1 + duel 0x40, less melee's 0x8,
+// left the skull and dropped the duel icon.
+headicons_set(clearbit(headicons_get, $icon));
 buildappearance(worn);
 
 [proc,.headicon_del](int $icon)
-def_int $current = .headicons_get;
-def_int $bit = multiply(0x1, pow(2, $icon));
-.headicons_set(and($current, sub($current, $bit)));
+.headicons_set(clearbit(.headicons_get, $icon)); // as ~headicon_del
 .buildappearance(worn);
 
 [proc,headicon_exists](int $icon)(boolean)

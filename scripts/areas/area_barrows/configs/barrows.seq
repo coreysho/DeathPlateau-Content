@@ -1,0 +1,25 @@
+// The dig into a Barrows mound (scripts/barrows.rs2 ~barrows_mound_dig): human_dig_long, a quarter
+// quicker. human_dig_long names no delays of its own but the last, so each frame plays for the delay
+// its anim file carries - 4,4,4,4,6,3,4 and then 10, 39 client ticks a stroke. These are three quarters
+// of those, rounded: 29 a stroke, 26% faster. Same frames, same held spade.
+
+[human_dig_barrows]
+replaceheldright=spade
+replaceheldleft=hide
+loops=8
+frame1=anim_1621
+delay1=3
+frame2=anim_1914
+delay2=3
+frame3=anim_2215
+delay3=3
+frame4=anim_500
+delay4=3
+frame5=anim_800
+delay5=5
+frame6=anim_1084
+delay6=2
+frame7=anim_1368
+delay7=3
+frame8=anim_1659
+delay8=7
