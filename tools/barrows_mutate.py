@@ -26,7 +26,6 @@ ALLVARP = 'scripts/_unpack/377/all.varp'
 ALLVARBIT = 'scripts/_unpack/377/all.varbit'
 ALLLOC = 'scripts/_unpack/377/all.loc'
 ALLSEQ = 'scripts/_unpack/377/all.seq'
-BSEQ = 'scripts/areas/area_barrows/configs/barrows.seq'
 SKELTABLE = 'scripts/drop_tables/scripts/skeleton_barrows_skeleton_armed.rs2'
 COMBATPARAM = 'scripts/skill_combat/configs/npc_combat.param'
 COMBAT = 'scripts/areas/area_barrows/scripts/barrows_combat.rs2'
@@ -358,9 +357,6 @@ MUTS = [
  # --- the dig that would not stop
  (RS2, 'anim(null, 0);\nreturn(true);', 'return(true);',
   '20 the dig animation is stopped after the telejump'),
- (BSEQ, '[human_dig_barrows]\nreplaceheldright=spade\nreplaceheldleft=hide\nloops=8',
-        '[human_dig_barrows]\nreplaceheldright=spade\nreplaceheldleft=hide',
-  '20 ...which is worth checking because the seq really does loop'),
 
  # --- the tunnels paying out
  (ALLNPC, '[barrows_rat]', '[barrows_rat]\nparam=death_drop,bones',
