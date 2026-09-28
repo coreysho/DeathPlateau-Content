@@ -70,9 +70,10 @@ broadcast_mes("@sh1@@or1@<$label>@sh0@@bla@ <~broadcast_name> <$what>");
 // And every pet, boss or skilling, for the log's All Pets page.
 ~collection_log_add($pet, 1);
 
-// ::yell. The engine has already checked the mute and the length and taken every '@' out of the
-// text, so nothing typed into a yell can forge a crown or a colour; the label is cyan to tell it
-// apart from the gold of the news at a glance.
+// ::yell. The engine has already checked the mute and the length and sent every '@' in the text as
+// ChatText.LITERAL_AT (Engine-TS src/wordenc/ChatText.ts), which the client draws as '@' but never
+// reads as a tag, so a yell shows "@cr2@" as typed and cannot forge a crown or a colour; the label is
+// cyan to tell it apart from the gold of the news at a glance.
 [proc,yell](string $text)
 broadcast_mes("@sh1@@cya@[Yell]@sh0@@bla@ <~broadcast_name>: <$text>");
 
