@@ -113,6 +113,9 @@ param=crushdefence,6
 param=magicdefence,6
 param=rangedefence,4
 
+// The three helms share ONE chathead pair in the cache - manhead 63 / womanhead 120, the
+// bare head that shows through the hood's open front. The helm itself is head2, and the
+// first import dropped it, so all three drew a bald face and no helmet in the chatbox.
 [void_mage_helm]
 name=Void mage helm
 desc=A gnome-made void mage helm.
@@ -121,6 +124,8 @@ manwear=obj_void_helm_manwear,0
 womanwear=obj_void_helm_womanwear,0
 manhead=obj_void_helm_manhead
 womanhead=obj_void_helm_womanhead
+manhead2=obj_void_mage_helm_manhead2
+womanhead2=obj_void_mage_helm_manhead2
 manwear2=obj_void_helm_manwear2
 womanwear2=obj_void_helm_womanwear2
 2dxof=1
@@ -151,6 +156,8 @@ manwear=obj_void_helm_manwear,0
 womanwear=obj_void_helm_womanwear,0
 manhead=obj_void_helm_manhead
 womanhead=obj_void_helm_womanhead
+manhead2=obj_void_ranger_helm_manhead2
+womanhead2=obj_void_ranger_helm_manhead2
 manwear2=obj_void_ranger_helm_manwear2
 womanwear2=obj_void_ranger_helm_womanwear2
 2dxof=1
@@ -181,6 +188,8 @@ manwear=obj_void_helm_manwear,0
 womanwear=obj_void_helm_womanwear,0
 manhead=obj_void_helm_manhead
 womanhead=obj_void_helm_womanhead
+manhead2=obj_void_melee_helm_manhead2
+womanhead2=obj_void_melee_helm_manhead2
 manwear2=obj_void_melee_helm_manwear2
 womanwear2=obj_void_melee_helm_womanwear2
 2dxof=3

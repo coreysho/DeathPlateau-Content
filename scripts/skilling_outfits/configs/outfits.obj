@@ -380,6 +380,10 @@ manwear=obj_graceful_hood_manwear,0
 womanwear=obj_graceful_hood_womanwear,0
 manhead=obj_graceful_hood_manhead
 womanhead=obj_graceful_hood_womanhead
+// The bare head inside the hood (OSRS models 63/120, the pair the leather cowl already uses).
+// It was left out of the import, so the chathead was a hood with a hole where the face goes.
+manhead2=obj_leather_cowl_manhead2
+womanhead2=obj_leather_cowl_womanhead2
 wearpos=hat
 wearpos2=head
 wearpos3=jaw

@@ -10,6 +10,11 @@ manwear=obj_lumberjack_hat_manwear,0
 womanwear=obj_lumberjack_hat_womanwear,0
 manhead=obj_lumberjack_hat_manhead
 womanhead=obj_lumberjack_hat_manhead
+// head2 is the head the hat sits on - 474 models 53 and 114, which this tree already carries
+// under the names of their first users. Without it the chathead is an empty hat with no face
+// inside, exactly as manwear2 is the head under the worn hat. Granite helm below is the same.
+manhead2=obj_pickpocket_guide_man
+womanhead2=idk_woman_hair_short_head
 manwear2=obj_lumberjack_hat_manwear2
 womanwear2=obj_lumberjack_hat_womanwear2
 2dxof=-3
@@ -143,6 +148,8 @@ manwear=obj_granite_helm_manwear,0
 womanwear=obj_granite_helm_womanwear,0
 manhead=obj_granite_helm_manhead
 womanhead=obj_granite_helm_womanhead
+manhead2=obj_pickpocket_guide_man
+womanhead2=idk_woman_hair_short_head
 manwear2=obj_lumberjack_hat_manwear2
 womanwear2=obj_lumberjack_hat_womanwear2
 2dyof=4
