@@ -235,6 +235,18 @@ check(IFC.get('rate0', {}).get('text') == '%dx' % RATES['realism'],
       "...and it reads the constant's value (%s)" % IFC.get('rate0', {}).get('text'))
 check('two modes share a rate' in GEN and 'never chosen' in GEN,
       'the generator refuses to emit two modes at one rate, or a mode at the unset value')
+# the drop-rate line: empty in the .if and written from the constants on every open, so a change to
+# a boost reaches the chooser and the client (which wipes server-set text) is handed it every show
+for i, mode in enumerate(('realism', '5x', '10x')):
+    check(IFC.get('drops%d' % i, {}).get('text', None) == '',
+          'box %d has a drop-rate line, empty in the .if (the script fills it)' % i)
+    check('if_settext(xprate_choose:drops%d, ~droprate_boost_line(^droprate_boost_%s));' % (i, mode) in ch,
+          '...filled from ^droprate_boost_%s' % mode)
+check(0 <= ch.find('if_openmain(xprate_choose);') < ch.find('if_settext(xprate_choose:drops0')
+      < ch.find('p_pausebutton;'),
+      '...after the window opens and before the script waits on it')
+check('Every rate exactly as' not in IF,
+      'the Realism blurb no longer says EVERY rate is Old School\'s - its drop rates are boosted')
 
 # ============================================================================ 7
 print('7. the test hook')

@@ -610,7 +610,7 @@ height=13
 center=yes
 font=p11_full
 shadowed=yes
-text=Every rate exactly as
+text=Experience exactly as
 colour=0xC8C8C8
 
 [blurb0_1]
@@ -624,6 +624,18 @@ font=p11_full
 shadowed=yes
 text=Old School has it.
 colour=0xC8C8C8
+
+[drops0]
+type=text
+x=29
+y=196
+width=140
+height=14
+center=yes
+font=p12_full
+shadowed=yes
+text=
+colour=0xFF981F
 
 [pick1]
 type=rect
@@ -673,6 +685,18 @@ shadowed=yes
 text=experience.
 colour=0xC8C8C8
 
+[drops1]
+type=text
+x=186
+y=196
+width=140
+height=14
+center=yes
+font=p12_full
+shadowed=yes
+text=
+colour=0xFF981F
+
 [pick2]
 type=rect
 x=343
@@ -720,3 +744,15 @@ font=p11_full
 shadowed=yes
 text=experience.
 colour=0xC8C8C8
+
+[drops2]
+type=text
+x=343
+y=196
+width=140
+height=14
+center=yes
+font=p12_full
+shadowed=yes
+text=
+colour=0xFF981F
