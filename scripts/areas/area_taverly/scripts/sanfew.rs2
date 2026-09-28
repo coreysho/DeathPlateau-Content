@@ -1,5 +1,6 @@
 [opnpc1,sanfew]
-// Eadgar's Ruse starts and ends with him, so it runs before his own dialogue.
+// Eadgar's Ruse, once it is under way, runs before his own dialogue (the goutweed hand-in, the
+// reminder); it STARTS from his "any more work?" option below, after Druidic Ritual.
 if (~eadgar_sanfew = true) {
     return;
 }
@@ -77,4 +78,9 @@ if(%druidquest > ^druid_spoken_sanfew) { // guess they made a label with the exa
 
 [label,sanfew_more_work]
 ~chatplayer("<p,quiz>Have you any more work for me to help reclaim the stone circle?");
+// Druidic Ritual done: the next thing he needs is goutweed - Eadgar's Ruse
+if (%druidquest >= ^druid_complete & %eadgar_quest = ^eadgar_not_started) {
+    ~eadgar_sanfew_offer;
+    return;
+}
 ~chatnpc("<p,neutral>Well, not right now I don't think young 'un. In fact, I need to make some more preparations myself for the ritual. Rest assured, if I need any more help I will ask you again.");

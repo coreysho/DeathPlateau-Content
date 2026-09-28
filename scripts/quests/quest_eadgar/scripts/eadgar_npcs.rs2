@@ -4,14 +4,36 @@
 
 // =========================================================================== Sanfew, Taverley
 
+// Eadgar's Ruse IN PROGRESS takes over Sanfew's talk (the goutweed hand-in, the reminder). Before it
+// has started it did too - the goutweed speech on every talk, whatever else was going on - which left
+// nobody able to do Druidic Ritual through him, the quest Eadgar's Ruse itself needs. The start is
+// now ~eadgar_sanfew_offer below, which his "any more work?" option reaches once Druidic Ritual is
+// done (sanfew.rs2).
 [proc,eadgar_sanfew]()(boolean)
+if (%eadgar_quest = ^eadgar_not_started) {
+    return (false);
+}
+if (%eadgar_quest = ^eadgar_has_goutweed & inv_total(inv, eadgar_goutweed_herb) > 0) {
+    ~eadgar_sanfew_handin;
+    return (true);
+}
+if (%eadgar_quest > ^eadgar_not_started & %eadgar_quest < ^eadgar_complete) {
+    ~chatnpc("<p,quiz>Any luck with the goutweed?");
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>Talk to Eadgar. He has had longer to think about it than I have.");
+    return (true);
+}
+return (false);
+
+// The start of Eadgar's Ruse: Sanfew, out of goutweed.
+[proc,eadgar_sanfew_offer]
 if (%eadgar_quest = ^eadgar_not_started) {
     ~chatnpc("<p,angry>I am out of goutweed. Again.");
     switch_int (~p_choice2("What's goutweed?", 1, "That sounds like your problem.", 2)) {
         case 2 :
             ~chatplayer("<p,neutral>That sounds like your problem.");
             ~chatnpc("<p,angry>It is everyone's problem when the remedies run out.");
-            return (true);
+            return;
         case 1 :
             ~chatplayer("<p,quiz>What's goutweed?");
     }
@@ -25,29 +47,20 @@ if (%eadgar_quest = ^eadgar_not_started) {
     if (%druidquest < ^druid_complete | %troll_quest < ^troll_complete | stat_base(herblore) < 31) {
         ~chatnpc("<p,neutral>Mind you, you would need to know your way around a herb - Druidic Ritual, and a Herblore level of 31 - and around a troll stronghold. Come back when you do.");
         ~mesbox("To start Eadgar's Ruse you need to have completed Druidic Ritual and Troll Stronghold, and to have a Herblore level of 31.");
-        return (true);
+        return;
     }
     %eadgar_quest = ^eadgar_started;
     ~send_quest_progress(questlist:eadgar, %eadgar_quest, ^eadgar_complete);
-    return (true);
 }
-if (%eadgar_quest = ^eadgar_has_goutweed & inv_total(inv, eadgar_goutweed_herb) > 0) {
-    ~chatplayer("<p,happy>Goutweed.");
-    mes("You hand Sanfew the goutweed.");
-    inv_del(inv, eadgar_goutweed_herb, 1);
-    ~chatnpc("<p,shock>You actually got it. Out of a troll storeroom.");
-    ~chatplayer("<p,neutral>Eadgar's plan. Mostly.");
-    ~chatnpc("<p,happy>Then Eadgar is less mad than he looks, and you are braver than you look. Let me show you a few things about preparing herbs - you have earned it.");
-    queue(eadgar_quest_complete, 0, 0);
-    return (true);
-}
-if (%eadgar_quest > ^eadgar_not_started & %eadgar_quest < ^eadgar_complete) {
-    ~chatnpc("<p,quiz>Any luck with the goutweed?");
-    ~chatplayer("<p,sad>Not yet.");
-    ~chatnpc("<p,neutral>Talk to Eadgar. He has had longer to think about it than I have.");
-    return (true);
-}
-return (false);
+
+[proc,eadgar_sanfew_handin]
+~chatplayer("<p,happy>Goutweed.");
+mes("You hand Sanfew the goutweed.");
+inv_del(inv, eadgar_goutweed_herb, 1);
+~chatnpc("<p,shock>You actually got it. Out of a troll storeroom.");
+~chatplayer("<p,neutral>Eadgar's plan. Mostly.");
+~chatnpc("<p,happy>Then Eadgar is less mad than he looks, and you are braver than you look. Let me show you a few things about preparing herbs - you have earned it.");
+queue(eadgar_quest_complete, 0, 0);
 
 // =========================================================================== Mad Eadgar, Trollheim
 
