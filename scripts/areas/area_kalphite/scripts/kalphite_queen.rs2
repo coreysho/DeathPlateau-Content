@@ -18,7 +18,8 @@ if (~npc_check_notcombat_self = false) {
     return;
 }
 def_int $random = random(2);
-if (npc_range(coord) <= 1) {
+// melee only where a melee swing reaches: beside the player, not across a corner (npc_canreach)
+if (npc_canreach = true) {
     $random = random(3);
 }
 switch_int($random) {
@@ -166,7 +167,8 @@ if (~npc_check_notcombat_self = false) {
     return;
 }
 def_int $random = random(2);
-if (npc_range(coord) <= 1) {
+// melee only where a melee swing reaches: beside the player, not across a corner (npc_canreach)
+if (npc_canreach = true) {
     $random = random(3);
 }
 switch_int($random) {

@@ -857,7 +857,8 @@ if (%death = ^true) {
 if (%npc_action_delay > map_clock) {
     return;
 }
-if ($melee_rate > 0 & npc_range(coord) <= 1) {
+// "close" is where a bite reaches: beside the head, not across its corner (npc_canreach)
+if ($melee_rate > 0 & npc_canreach = true) {
     if (~npc_check_notcombat = false) {
         npc_setmode(null);
         return;

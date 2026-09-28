@@ -12,15 +12,6 @@
 //   four tiles around you in four ticks and strikes from each, every strike landing for 15-27 unless
 //   you pray Protect from Melee.
 
-[proc,superior_adjacent](int $size)(boolean)
-// player within one tile of an npc of this size (npc_coord is its south-west corner)
-def_int $dx = sub(coordx(coord), coordx(npc_coord));
-def_int $dz = sub(coordz(coord), coordz(npc_coord));
-if ($dx >= -1 & $dx <= $size & $dz >= -1 & $dz <= $size) {
-    return(true);
-}
-return(false);
-
 // ---------------------------------------------------------------- Marble gargoyle
 
 [ai_queue1,superior_marble_gargoyle] ~npc_default_retaliate_ap;
@@ -43,7 +34,8 @@ if (random(5) = 0) {
     ~marble_gargoyle_stone;
     return;
 }
-if (~superior_adjacent(3) = true & random(2) = 0) {
+// melee range is where a swing reaches: beside it, not across a corner or a wall (npc_canreach)
+if (npc_canreach = true & random(2) = 0) {
     anim(%com_defendanim, 0);
     npc_anim(npc_param(attack_anim), 0);
     sound_synth(npc_param(attack_sound), 0, 0);

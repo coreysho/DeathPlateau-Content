@@ -329,8 +329,8 @@ check(MRS2.count('tzhaar_fightcave_swarm_boss_cleric, ^fightcave_npc_life);') ==
       'and there are %s of them, from one loop' % CONST['fightcave_jad_healers'])
 HUR = MRS2.split('[proc,hurkot_heal_jad]', 1)[-1].split('\n[', 1)[0]
 check('.npc_type = tzhaar_fightcave_swarm_boss' in HUR, 'a Yt-HurKot heals Jad and only Jad')
-check('~fightcave_adjacent(1) = true' in MRS2.split('[proc,hurkot_attack]', 1)[-1].split('\n[', 1)[0],
-      '...and fights back instead when something is next to it')
+check('npc_canreach = true' in MRS2.split('[proc,hurkot_attack]', 1)[-1].split('\n[', 1)[0],
+      '...and fights back instead when something is next to it (where its swing reaches)')
 check('if (~in_fightcave(coord) = true) {' in DEATH and '@fightcave_death;' in DEATH,
       'dying in the cave is caught before the ordinary death')
 FD = RS2.split('[label,fightcave_death]', 1)[-1].split('\n[', 1)[0]

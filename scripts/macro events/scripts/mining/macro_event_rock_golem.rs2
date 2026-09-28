@@ -33,7 +33,7 @@ if (~npc_check_notcombat = false) {
 if (~npc_check_notcombat_self = false) {
     return;
 }
-if (npc_range(coord) < 2) {
+if (npc_canreach = true) { // melee only where the swing reaches
     ~npc_default_attack;
     return;
 }

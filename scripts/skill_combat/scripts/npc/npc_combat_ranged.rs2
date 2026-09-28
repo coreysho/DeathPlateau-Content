@@ -33,8 +33,15 @@ def_int $defence_roll = ~player_defence_roll_specific(npc_param(damagetype));
 def_int $maxhit = ~npc_ranged_maxhit;
 
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(rangeattack_sound), 0, 0);
-spotanim_npc(npc_param(proj_launch), npc_param(proj_height), 0);
+// Not every ranged npc has a sound or a launch spotanim (Tok-Xil, TzTok-Jad, skeletal wyverns, the
+// marble gargoyle): sound_synth(null) and spotanim_npc(null) are script errors, which ended the attack
+// right here - no projectile, no hit.
+if (npc_param(rangeattack_sound) ! null) {
+    sound_synth(npc_param(rangeattack_sound), 0, 0);
+}
+if (npc_param(proj_launch) ! null) {
+    spotanim_npc(npc_param(proj_launch), npc_param(proj_height), 0);
+}
 
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 def_int $duration = 64;

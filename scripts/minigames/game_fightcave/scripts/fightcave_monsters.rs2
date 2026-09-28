@@ -51,7 +51,7 @@ npc_setmode(opplayer2);
 [ai_queue3,tzhaar_fightcave_swarm_3a] @fightcave_monster_death;
 
 [proc,tokxil_attack]
-if (~fightcave_adjacent(3) = true) {
+if (npc_canreach = true) {
     ~fightcave_melee(npc_param(crushattack_anim));
     return;
 }
@@ -110,7 +110,7 @@ npc_statheal(hitpoints, ^fightcave_heal_amount, 0);
 [ai_queue3,tzhaar_fightcave_swarm_5a] @fightcave_monster_death;
 
 [proc,ketzek_attack]
-if (~fightcave_adjacent(5) = true) {
+if (npc_canreach = true) {
     ~fightcave_melee(npc_param(crushattack_anim));
     return;
 }
@@ -141,7 +141,7 @@ if (%fightcave_jad_called = 0 & npc_stat(hitpoints) <= ^fightcave_jad_heal_hp) {
     ~jad_call_healers;
     return;
 }
-if (~fightcave_adjacent(5) = true & random(3) = 0) {
+if (npc_canreach = true & random(3) = 0) {
     ~fightcave_melee(npc_param(crushattack_anim));
     return;
 }
@@ -173,7 +173,7 @@ while ($i < ^fightcave_jad_healers) {
 [ai_queue3,tzhaar_fightcave_swarm_boss_cleric] @fightcave_monster_death;
 
 [proc,hurkot_attack]
-if (~fightcave_adjacent(1) = true) {
+if (npc_canreach = true) {
     ~fightcave_melee(npc_param(attack_anim));
     return;
 }
@@ -207,16 +207,6 @@ if (npc_findhero = ^false) {
     return;
 }
 queue*(fightcave_died, 0)(npc_uid);
-
-// The player within one tile of an npc of this size. npc_coord is its south-west corner, so a
-// five-tile Jad is "adjacent" anywhere from -1 to 5 on both axes.
-[proc,fightcave_adjacent](int $size)(boolean)
-def_int $dx = sub(coordx(coord), coordx(npc_coord));
-def_int $dz = sub(coordz(coord), coordz(npc_coord));
-if ($dx >= -1 & $dx <= $size & $dz >= -1 & $dz <= $size) {
-    return(true);
-}
-return(false);
 
 // A melee swing with a named animation - the standard rolls, just not the standard animation,
 // because three of these monsters have a separate animation for hitting you up close.
