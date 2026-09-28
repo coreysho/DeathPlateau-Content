@@ -58,10 +58,17 @@ check(_set.index('%autocast_set = 1;') > _set.index('if (~check_spell_requiremen
 _vb = block(VARBIT, 'autocast_set')
 check('basevar=lastcastspell' in _vb and 'startbit=0' in _vb and 'endbit=0' in _vb,
       'autocast_set is one bit of lastcastspell')
-check('script1op1=testbit,lastcastspell,0' in STAFFIF,
-      '...which is the bit the toggle button reads, so the lamp matches the state')
-check('%autocast_set = togglebit(%autocast_set, 0);' in STYLES,
-      '...and the toggle still flips that same bit')
+# UPDATED 2026-09-28: the staff tab's single on/off toggle is gone. It is two Spell boxes now, one
+# for a plain cast and one for a defensive one, and they are combat styles like Bash and Pound - so
+# the lamp follows %com_mode (3 and 4, the two rows added to weapon_staff_table) rather than the
+# autocast bit, and autocast is turned off by picking a style that is not a spell.
+check('option=Spell' in block(STAFFIF, 'auto_cast') and 'script1=eq,3' in block(STAFFIF, 'auto_cast'),
+      '...the plain Spell box lights up on com_mode 3')
+check('option=Spell' in block(STAFFIF, 'auto_defensive') and 'script1=eq,4' in block(STAFFIF, 'auto_defensive'),
+      '...the defensive Spell box on com_mode 4')
+check('if (%damagetype ! ^magic_style) {' in block(STYLES, 'proc,set_attackstyle')
+      and '%autocast_set = 0;' in block(STYLES, 'proc,set_attackstyle'),
+      '...and picking a style that is not a spell clears that same bit, as OSRS turns autocast off')
 check('testbit(%autocast_set, 0) = ^true & %autocast_spell > 0' in AUTO,
       'and combat still needs BOTH the bit and a spell before it casts')
 

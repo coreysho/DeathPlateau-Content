@@ -87,18 +87,6 @@
 [if_button,combat_claw:claw2] ~set_attackstyle(2);
 [if_button,combat_claw:claw3] ~set_attackstyle(3);
 
-[if_button,combat_staff_2:auto_toggle]
-if_close;
-if (%autocast_spell = 0) {
-    mes("You need to choose a spell first."); // https://youtu.be/Mo6AcO4rg4A?t=69
-    return;
-}
-if (p_finduid(uid) = true) {
-    p_clearpendingaction; // https://www.youtube.com/watch?v=P_QzMzpaA04&t=12s
-    %autocast_set = togglebit(%autocast_set, 0);
-    return;
-}
-
 // CHANGING STYLE DOES NOT STOP THE FIGHT. This used to call p_clearpendingaction, which is
 // Player.clearPendingAction - it clears the interaction outright, so every tap of the combat tab
 // dropped whatever you were attacking and you stood there until you clicked the target again.
@@ -113,6 +101,14 @@ if_close;
 if (p_finduid(uid) = true) {
     %com_mode = $style;
     ~player_combat_stat;
+    // AND THAT IS HOW AUTOCAST IS TURNED OFF. The staff tab's two Spell boxes are combat styles of
+    // their own now (auto_cast.rs2), so the old on/off toggle beside them is gone: in Old School you
+    // stop autocasting by picking a style that is not a spell, exactly as picking Bash on a staff
+    // does here. ~player_combat_stat has just recomputed %damagetype for the style chosen, so this
+    // reads the NEW style, and the chosen spell itself is kept - clicking a Spell box resumes it.
+    if (%damagetype ! ^magic_style) {
+        %autocast_set = 0;
+    }
     return;
 }
 %com_mode = %com_mode; // resync varp

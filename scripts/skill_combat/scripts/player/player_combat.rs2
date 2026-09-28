@@ -44,6 +44,15 @@ if (%damagetype = ^ranged_style) {
 if (~player_autocast_enabled = true) {
      @player_magic_attack;
 }
+// A staff sitting on one of its two Spell styles with no spell armed - the picker was cancelled, or
+// the runes ran out and ~player_autocast_reset dropped the spell mid-fight. Swinging from there
+// would roll the MAGIC attack roll and a max hit that was never computed for it, so the tab goes
+// back to its first style (Bash) and the swing happens with that. Modes 0-2 are melee on every
+// staff; the trident's tab is magic on all three and never reaches this.
+if (%damagetype = ^magic_style & %com_mode > 2) {
+    %com_mode = 0;
+    ~player_combat_stat;
+}
 @player_melee_attack;
 
 

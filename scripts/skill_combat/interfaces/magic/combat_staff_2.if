@@ -109,19 +109,29 @@ graphic=combatboxes,0
 activegraphic=combatboxes,1
 option=Focus
 
-[auto_choose]
+// 474's two Spell boxes, which this tab always drew but never wired to anything: the TOP one is the
+// DEFENSIVE cast and the lower one the plain cast. The tab's own hover texts say which is which -
+// com_179 sits exactly on this box and reads "(Attack with a spell)(Magic XP)(Defence XP)", com_182
+// sits on the lower one and reads "(Attack with a spell)(Magic XP)".
+// Clicking either opens the spell picker, and which box you clicked is the style you then cast in,
+// as Old School does it: %com_mode 4 here, 3 below - the two style rows added to combat.dbrow's
+// weapon_staff_table. The highlight follows com_mode rather than the old autocast bit, so the box
+// you are casting from is the one lit up.
+[auto_defensive]
 type=graphic
 layer=styles
 x=100
 y=5
-buttontype=normal
+buttontype=select
 width=70
 height=46
+script1op1=pushvar,com_mode
+script1=eq,4
 graphic=i474_653,0
 activegraphic=i474_654,0
-option=Choose Spell
+option=Spell
 
-[auto_toggle]
+[auto_cast]
 type=graphic
 layer=styles
 x=99
@@ -129,8 +139,8 @@ y=65
 buttontype=select
 width=70
 height=46
-script1op1=testbit,lastcastspell,0
-script1=eq,1
+script1op1=pushvar,com_mode
+script1=eq,3
 graphic=i474_653,0
 activegraphic=i474_654,0
 option=Spell

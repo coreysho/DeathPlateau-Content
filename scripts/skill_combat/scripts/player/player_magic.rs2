@@ -183,6 +183,10 @@ if (npc_finduid($target) = false) {
 if (~npc_is_attackable = false) {
     return;
 }
+// nothing splashed onto a corpse either, for the same reason as pvm_combat_spell_checks
+if (npc_stat(hitpoints) = 0) {
+    return;
+}
 // Its own lookup: this is a different proc from the single-target cast above, so that one's
 // $mask_num is not in scope here. Each extra target of a multi-target spell rolls separately, so
 // the mask has to be asked again for each of them anyway.
@@ -204,12 +208,29 @@ if (~player_npc_hit_roll_boosted(^magic_style, $mask_num, $mask_div) = true) {
     ~pvm_spell_fail($spell_data, $duration);
 }
 
-// no 0 hp check for magic: you can attack slayer npcs when they're at 0 hp
+// NOTHING IS CAST AT A MONSTER THAT IS ALREADY DEAD. A monster's death takes several ticks from the
+// hitsplat that caused it - the queued hit takes its hitpoints to 0, its death script runs the tick
+// after, and that waits out an arrive delay of up to two ticks, plays the death animation and then
+// delays one more before it despawns. A cast goes off every five, so the autocast queued up by the
+// cast that killed it came due squarely inside that window, found the corpse still standing and a
+// valid target, and cast at it: an animation, a projectile into thin air, and a set of runes gone.
+// Reported from play as "attacking any npc with magic will sometimes result in your character using
+// the spell again on the npc that's already died/dying".
+//
+// This test sits above the rune check, so nothing is spent and autocast is not dropped for a target
+// that simply died. Melee (player_melee.rs2) and Ranged (player_ranged.rs2) have always had it; the
+// magic path left it out for the slayer monsters that must be finished off with an item, but none
+// of them sits at 0 hitpoints - a rockslug, gargoyle or desert lizard whose death script declines
+// to kill it heals it back to 1 first (skill_slayer/scripts/npcs/), and the item that finishes it is
+// an opnpcu and not a spell either way.
 [proc,pvm_combat_spell_checks](dbrow $spell_data)(boolean)
 if_close;
 p_stopaction;
 if (map_clock < %action_delay) {
     p_opnpct(db_getfield($spell_data, magic_spell_table:spellcom, 0));
+    return(false);
+}
+if (npc_stat(hitpoints) = 0) {
     return(false);
 }
 if (~check_spell_requirements($spell_data) = false) {
@@ -321,9 +342,16 @@ return($duration);
 
 [proc,pvm_spell_success](dbrow $spell_data, int $maxhit, int $duration)
 def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+// Magic xp on its own, unless the staff tab is on its DEFENSIVE Spell box - %com_mode 4, which
+// player_combat_stat turns into %damagestyle ^style_magic_defensive - and then the xp is split
+// between Magic and Defence. This used to read ^style_melee_defensive, Focus, because the staff tab
+// had no spell styles at all to read: defensive casting was something you got by standing on a
+// MELEE style, which is not how Old School has it (oldschool.runescape.wiki/w/Defensive_casting).
+// ~give_combat_experience already knew both splits - 2 Magic per point of damage, or 1.33 Magic and
+// 1 Defence - so only the choice of style was missing.
 def_int $damagestyle = ^style_magic_normal;
-if (%damagestyle = ^style_melee_defensive) { // check varp directly
-    $damagestyle = ^style_magic_defensive; // casting a spell with defensive on gives mage + def xp
+if (%damagestyle = ^style_magic_defensive) {
+    $damagestyle = ^style_magic_defensive;
 }
 // play spell cast sound
 if (db_getfieldcount($spell_data, magic_spell_table:sound_cast) > 0) {
@@ -391,9 +419,20 @@ if ($maxhit ! null) {
     // off the dbrow columns rather than a spell-name switch, so any future spell can opt in via data
     // alone. No existing hook did either of these before this pass - pvm_spell_success previously only
     // had bespoke hooks for splash-damage overrides (Salarin/Chronozon/Dagannoth Mother).
+    //
+    // TWO THINGS WERE WRONG WITH THE HEAL. It was taken from $damage_capped, the damage after it was
+    // trimmed to the monster's remaining hitpoints - so the killing blow, the one cast in every fight
+    // that matters most, healed nothing at all, and a Barrage finishing off four things healed for
+    // four scraps. Old School heals off "the damage the spell would have done", low-health target or
+    // not (oldschool.runescape.wiki/w/Blood_spells), which is the rolled $damage. And it landed at
+    // the CAST rather than with the hit, seconds of flight time early. Both fixed: the roll, queued
+    // to the tick the hitsplat lands on. stat_heal itself caps at the caster's base Hitpoints level.
     def_int $heal_percent = db_getfield($spell_data, magic_spell_table:heal_percent, 0);
-    if ($heal_percent > 0 & $damage_capped > 0) {
-        stat_heal(hitpoints, divide(multiply($damage_capped, $heal_percent), 100), 0);
+    if ($heal_percent > 0 & $damage > 0) {
+        // One less than the hit's own delay on purpose: a monster's queue runs a tick ahead of a
+        // player's, so npc_queue(.., N) and queue(.., N) are a tick apart. N-1 puts the heal on the
+        // same tick as the hitsplat.
+        queue(blood_spell_heal, divide($duration, 30), divide(multiply($damage, $heal_percent), 100));
     }
     // poison_chance is "1 in N" (8 for all 4 smoke spells, per osrs wiki) - randominc(N-1) gives N
     // equally likely outcomes (0..N-1), so checking for exactly 0 is a clean 1-in-N roll.
@@ -408,6 +447,12 @@ if (db_getfieldcount($spell_data, magic_spell_table:sound_hit) > 0) {
 }
 spotanim_npc(db_getfield($spell_data, magic_spell_table:spotanim_target, 0), $duration);
 
+
+// The Blood spells' share of the damage, landing on the tick the hitsplat does rather than on the
+// tick of the cast. A queue and not a plain stat_heal at the cast site because the damage is queued
+// too (~npc_queue_hit) - the heal and the splat it comes from belong on the same tick.
+[queue,blood_spell_heal](int $amount)
+stat_heal(hitpoints, $amount, 0);
 
 [proc,pvm_spell_fail](dbrow $spell_data, int $duration)
 // splash

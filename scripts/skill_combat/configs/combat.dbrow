@@ -145,14 +145,24 @@ data=damagetype,^crush_style
 data=damagetype,^crush_style
 data=damagetype,^crush_style
 
+// A staff has FIVE combat options, not three: Bash, Pound and Focus swing it, and the two Spell
+// boxes cast with it - one for Magic xp alone, one that splits Magic and Defence (defensive
+// casting, oldschool.runescape.wiki/w/Defensive_casting). 474's staff tab (interface 90) draws both
+// Spell boxes and both of their hover texts, "(Attack with a spell)(Magic XP)" and the same with
+// "(Defence XP)" under it; only the two style rows were missing, so the tab had nothing to select.
+// Modes 3 and 4 are what skill_combat/scripts/player/auto_cast.rs2's two Spell buttons write.
 [weapon_staff_table]
 table=combat_style_table
 data=damagestyle,^style_melee_accurate
 data=damagestyle,^style_melee_aggressive
 data=damagestyle,^style_melee_defensive
+data=damagestyle,^style_magic_normal
+data=damagestyle,^style_magic_defensive
 data=damagetype,^crush_style
 data=damagetype,^crush_style
 data=damagetype,^crush_style
+data=damagetype,^magic_style
+data=damagetype,^magic_style
 
 // the trident of the seas: OSRS's powered staff - Accurate, Accurate, Longrange, all magic. Longrange
 // trains Magic and Defence and reaches 2 further (area_kraken_cove/scripts/trident.rs2).

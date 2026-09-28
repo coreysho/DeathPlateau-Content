@@ -129,6 +129,10 @@ if (.finduid($target) = false) {
 if (~pvp_is_attackable = false) {
     return;
 }
+// nothing splashed onto a corpse either, as ~pvm_spell_aoe_target does
+if (.%death = ^true | .stat(hitpoints) = 0) {
+    return;
+}
 if (~pvp_hit_roll(^magic_style) = true) {
     ~pvp_spell_success($spell_data, ~magic_spell_maxhit($spell_data), $duration);
     ~pvp_stat_change_effect($spell_data);
@@ -143,7 +147,12 @@ if (~pvp_hit_roll(^magic_style) = true) {
 [proc,pvp_combat_spell_checks](dbrow $spell_data)(boolean)
 if_close;
 p_stopaction;
-if (.%death = ^true) {
+// Nothing is cast at someone already dead. %death is only set a tick later, by the death script, so
+// on its own it leaves the same window the monster side had (~pvm_combat_spell_checks): the target
+// is on 0 hitpoints, still standing and still a valid target, and the autocast queued up by the
+// cast that killed them goes off into a corpse for a set of runes. Above the rune check, so nothing
+// is spent and autocast is not dropped for a target that simply died.
+if (.%death = ^true | .stat(hitpoints) = 0) {
     p_stopaction;
     return(false);
 }
@@ -250,9 +259,12 @@ if ($freeze_time > 0 & calc(.%frozen + 5) <= map_clock & .getwalktrigger() ! due
 
 [proc,pvp_spell_success](dbrow $spell_data, int $maxhit, int $duration)
 def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+// The staff tab's defensive Spell box, as on the monster side (~pvm_spell_success): Magic xp alone
+// unless %damagestyle is the magic defensive style, which splits Magic and Defence. It used to read
+// the MELEE defensive style, Focus, because the staff tab had no spell styles to select at all.
 def_int $damagestyle = ^style_magic_normal;
-if (%damagestyle = ^style_melee_defensive) { // check varp directly
-    $damagestyle = ^style_magic_defensive; // casting a spell with defensive on gives mage + def xp
+if (%damagestyle = ^style_magic_defensive) {
+    $damagestyle = ^style_magic_defensive;
 }
 // Bind and Snare have no hit sound (magic_combat_spells.dbrow), and sound_synth(null) is a script error -
 // so a hold that landed on a player aborted here, before the freeze. Guarded as player_magic.rs2 does.
@@ -271,9 +283,19 @@ if ($maxhit = null) {
 if (~.check_protect_prayer(^magic_style) = true) {
     $maxhit = scale(6, 10, $maxhit); // reduction of 40%
 }
-def_int $damage = randominc($maxhit); // tick eating existed! https://oldschool.runescape.wiki/w/Update:The_Wintertodt
-$damage = min($damage, .stat(hitpoints));
+def_int $rolled = randominc($maxhit); // tick eating existed! https://oldschool.runescape.wiki/w/Update:The_Wintertodt
+def_int $damage = min($rolled, .stat(hitpoints));
 ~.pvp_damage_max(calc($duration / 30 + 1), $damage, $maxhit); // delayed an extra tick: https://youtu.be/eEdE0mvglM4?t=62
+// Ancient Magicks - the Blood spells heal the caster for a quarter of the damage, capped at their
+// own maximum hitpoints (25% for all four, oldschool.runescape.wiki/w/Blood_spells). This side of
+// combat never had it at all: a Blood Barrage in the wilderness was a worse Ice Barrage. Off the
+// ROLL rather than the damage that landed, so the kill shot heals for what the spell would have
+// done, and queued onto the caster so the heal lands with the hitsplat. Same [queue,blood_spell_heal]
+// and same heal_percent column as the monster side (skill_combat/scripts/player/player_magic.rs2).
+def_int $heal_percent = db_getfield($spell_data, magic_spell_table:heal_percent, 0);
+if ($heal_percent > 0 & $rolled > 0) {
+    queue(blood_spell_heal, calc($duration / 30 + 1), divide(multiply($rolled, $heal_percent), 100));
+}
 // didnt have a flinch anim until sept 20 2006: https://oldschool.runescape.wiki/w/Update:Slug_Menace
 ~give_combat_experience_pvp($damagestyle, $damage, ~pvp_xp_multiplier(~.player_combat_level));
 both_heropoints($damage);
