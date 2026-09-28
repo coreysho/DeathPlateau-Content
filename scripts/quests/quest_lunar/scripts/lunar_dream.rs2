@@ -337,7 +337,7 @@ if (and(%lunar_dream, ~lunar_bit(^lunar_ch_numerator)) ! 0) {
     ~chatnpc("<p,happy>Ok, back you go!");
     return;
 }
-if (%lunar_seq_id = 0 & %lunar_seq_step = 0 & %lunar_seq_score = 0) {
+if (%lunar_seq_state = 0) {
     ~chatnpc("<p,neutral>127369186!");
     ~chatplayer("<p,confused>I'm sorry?");
     ~chatnpc("<p,neutral>Oh sorry. I'm not 7676908 used 768 to speaking 1324719 like this...");
@@ -350,6 +350,7 @@ if (%lunar_seq_id = 0 & %lunar_seq_step = 0 & %lunar_seq_score = 0) {
 [proc,lunar_seq_new]
 %lunar_seq_id = random(16);
 %lunar_seq_step = 0;
+%lunar_seq_state = 1;
 ~lunar_npc_says(ethereal_numerator, "<p,neutral>The sequence is: <~lunar_seq_text(%lunar_seq_id)>");
 mes("The sequence is: <~lunar_seq_text(%lunar_seq_id)>");
 
@@ -370,7 +371,7 @@ if (and(%lunar_dream, ~lunar_bit(^lunar_ch_numerator)) ! 0) {
     mes("You've learned all you need to from this area.");
     return;
 }
-if (%lunar_seq_score = 0 & %lunar_seq_step = 0 & %lunar_seq_id = 0) {
+if (%lunar_seq_state = 0) {
     mes("It would be best to talk to that interesting fellow first.");
     return;
 }
