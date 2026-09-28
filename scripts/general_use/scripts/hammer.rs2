@@ -1,5 +1,8 @@
 [opheldu,hammer]
 switch_obj (last_useitem) {
     case red_topaz, opal, jade, uncut_red_topaz, uncut_opal, uncut_jade : mes("You can't think of any reason to do this.");
+    // Animal Magnetism: the Witch's selected iron becomes a magnet under a hammer blow, in the right
+    // place. quests/quest_animmag/scripts/animmag_magnet.rs2 has the other way round and the rules.
+    case animmag_selected_iron : @animmag_make_magnet;
     case default : ~displaymessage(^dm_default);
 }

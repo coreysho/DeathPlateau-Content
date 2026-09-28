@@ -1,0 +1,149 @@
+// AVA'S DEVICES. What the quest's reward actually does once it is on your back.
+//
+// From the OSRS wiki's Ava's attractor and Ava's accumulator pages. Of every shot fired with one
+// worn:
+//                   breaks on impact   falls on the floor   comes straight back
+//   attractor             20%                20%                   60%
+//   accumulator           20%                 8%                   72%
+// and "approximately every 3.5 minutes, Ava's accumulator will attract an assortment of steel
+// items, provided that the player has moved at least three tiles since the last pickup"; the
+// attractor pulls in iron rather than steel. Metal body armour causes "interference" and stops that
+// attraction (it does not stop the ammo coming back).
+//
+// Both devices are cape-slot items, so they and a Ranging cape are mutually exclusive - which is
+// why ~ranged_ammo_saved below can simply ask the cape slot what is in it. That proc is what
+// skill_combat and the toxic blowpipe call now; skillcapes/scripts/skillcape_perks.rs2's
+// ~skillcape_ammo_saved is untouched and still answers for the Ranging cape, which stood in for an
+// accumulator while this build had none.
+//
+// The attracted metal goes to the quiver when it will stack there and to the pack otherwise, which
+// is the "steel or lower goes in your pack" half of it: nothing the devices pull in is above steel.
+
+// =========================================================================== saving the shot
+
+// True when this shot's ammo is not spent: an Ava's device on the back, or the Ranging cape that
+// used to stand in for one.
+[proc,ranged_ammo_saved]()(boolean)
+def_obj $cape = inv_getobj(worn, ^wearpos_back);
+if ($cape = avas_accumulator) {
+    if (random(100) < ^animmag_accumulator_save) {
+        return(true);
+    }
+    return(false);
+}
+if ($cape = avas_attractor) {
+    if (random(100) < ^animmag_attractor_save) {
+        return(true);
+    }
+    return(false);
+}
+return(~skillcape_ammo_saved);
+
+// =========================================================================== attracting metal
+
+// The timer itself, started at login (login_logout/scripts/login.rs2). It fires every
+// ^animmag_attract_ticks and bails immediately when no device is worn, which is the usual case -
+// the real 3.5-minute clock is ^animmag_attract_interval, checked against map_clock below.
+[softtimer,animmag_attract]
+// A softtimer has no protected access, and this writes protected varps and hands out items, so the
+// work is queued rather than done here.
+queue(animmag_attract, 0, 0);
+
+[queue,animmag_attract]
+~avas_attract;
+
+[proc,avas_attract]
+def_obj $cape = inv_getobj(worn, ^wearpos_back);
+def_namedobj $metal = null;
+if ($cape = avas_accumulator) {
+    $metal = ~avas_steel_item;
+} else if ($cape = avas_attractor) {
+    $metal = ~avas_iron_item;
+} else {
+    return;
+}
+if (map_clock < %animmag_attract_clock) {
+    return;
+}
+// First tick with the device on: start the clock rather than handing out a freebie.
+if (%animmag_attract_clock = 0) {
+    %animmag_attract_clock = add(map_clock, ^animmag_attract_interval);
+    %animmag_attract_coord = coord;
+    return;
+}
+// "provided that the player has moved at least three tiles since the last pickup"
+if (~animmag_distance(%animmag_attract_coord, coord) < ^animmag_attract_distance) {
+    return;
+}
+%animmag_attract_clock = add(map_clock, ^animmag_attract_interval);
+%animmag_attract_coord = coord;
+// Metal torso armour causes interference: the magnet finds your own chest instead.
+if (~avas_interference = true) {
+    return;
+}
+def_int $count = calc(5 + random(20));
+// The quiver first, if what is in it is the same thing, and the pack otherwise.
+if (inv_getobj(worn, ^wearpos_quiver) = $metal) {
+    inv_add(worn, $metal, $count);
+    mes("Your Ava's device attracts some <oc_name($metal)> into your quiver.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    return;
+}
+inv_add(inv, $metal, $count);
+mes("Your Ava's device attracts some <oc_name($metal)>.");
+
+// Chebyshev distance between two coords - tiles moved, as the engine measures everything else.
+[proc,animmag_distance](coord $from, coord $to)(int)
+def_int $dx = sub(coordx($from), coordx($to));
+if ($dx < 0) {
+    $dx = multiply($dx, -1);
+}
+def_int $dz = sub(coordz($from), coordz($to));
+if ($dz < 0) {
+    $dz = multiply($dz, -1);
+}
+if ($dx > $dz) {
+    return($dx);
+}
+return($dz);
+
+// The attractor pulls in iron, the accumulator steel; arrows most of the time, knives and darts the
+// rest ("an assortment of metal ammunition" / "an assortment of steel items").
+[proc,avas_iron_item]()(namedobj)
+switch_int (random(8)) {
+    case 0 : return(iron_knife);
+    case 1 : return(iron_dart);
+    case default : return(iron_arrow);
+}
+
+[proc,avas_steel_item]()(namedobj)
+switch_int (random(8)) {
+    case 0 : return(steel_knife);
+    case 1 : return(steel_dart);
+    case default : return(steel_arrow);
+}
+
+// Metal body armour worn over the magnet - the list is configs/animmag.enum, which says why it is a
+// list and not a category test.
+[proc,avas_interference]()(boolean)
+def_obj $torso = inv_getobj(worn, ^wearpos_torso);
+if ($torso = null) {
+    return(false);
+}
+return(enum(obj, boolean, animmag_interference, $torso));
+
+// =========================================================================== wearing one
+
+// The devices are quest items: they are not worn by somebody who never did the quest (which can
+// only happen through a spawned item or a staff command, but it is cheap to say so).
+[opheld2,avas_attractor] @avas_wear(last_slot);
+[opheld2,avas_accumulator] @avas_wear(last_slot);
+
+[label,avas_wear](int $slot)
+if (%animmag < ^animmag_complete) {
+    mes("You have no idea how this thing is supposed to work.");
+    return;
+}
+~equip($slot);

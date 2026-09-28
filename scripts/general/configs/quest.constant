@@ -105,6 +105,9 @@
 // Icthlarin himself renders at 24 and nowhere else. See the quest's own constant file.
 ^icslittle_complete = 26
 
+// Animal Magnetism (12 December 2006). See quests/quest_animmag/configs/quest_animmag.constant.
+^animmag_complete = 13
+
 ^blackarmgang_questpoints = 1
 ^blackknight_questpoints = 3
 ^cook_questpoints = 1
@@ -214,3 +217,5 @@
 ^fairy_questpoints = 2
 ^mt_questpoints = 2
 ^eaglespeak_questpoints = 2
+// Animal Magnetism (12 December 2006): 1 quest point.
+^animmag_questpoints = 1

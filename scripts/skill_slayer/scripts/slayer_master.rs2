@@ -3,6 +3,14 @@
 // a label so npcs with their own Talk-to (skill cape sellers) can fall through to it
 [label,slayer_master_talk]
 ~chatnpc("<p,quiz>'Ello, and what are you after then?");
+// Animal Magnetism: Turael, and only Turael, trades his blessed axe for a mithril axe and a holy
+// symbol. The extra line is only on the menu while that quest wants it (~animmag_turael_offer), and
+// declining it drops straight back into his ordinary Slayer menu below.
+if (npc_type = slayer_master_1 & ~animmag_turael_offer = true) {
+    if (~p_choice2("I'm here about those trees near Draynor Manor.", 1, "Something else.", 2) = 1) {
+        @animmag_turael_trees;
+    }
+}
 if(%slayer_target = 0) {
     @multi3("Who are you?", slayer_master_who, "Do you have anything for trade?", slayer_master_trade, "Er...nothing...", slayer_master_nothing);
 }

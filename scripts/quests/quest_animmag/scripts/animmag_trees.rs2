@@ -1,0 +1,121 @@
+// Animal Magnetism: the undead trees in the Draynor Manor grounds, and the blessed axe that cuts
+// them. Dialogue from the OSRS wiki's Transcript:Animal Magnetism.
+//
+// The trees are npcs, not scenery - that is how the rev 474 cache has them (npc 5208, op1=Chop) -
+// so they are placed in m48_52's NPC section rather than its LOC section, and answered with
+// [opnpc1] rather than [oploc1].
+//
+// Turael is [slayer_master_1]. The extra line on his menu is added in
+// skill_slayer/scripts/slayer_master.rs2, which asks ~animmag_turael_offer whether to show it, so
+// that the rest of his Slayer dialogue is untouched.
+
+// =========================================================================== the trees
+
+[opnpc1,animmag_undead_tree]
+if (%animmag < ^animmag_magnet_given) {
+    mes("The tree shifts its weight. You decide to leave it alone.");
+    return;
+}
+if (inv_total(inv, animmag_blessed_axe) = 0 & inv_total(worn, animmag_blessed_axe) = 0) {
+    // "You don't have an axe which could possibly affect this wood." if there is no mithril axe or
+    // better in the pack either; otherwise the axe bounces, which is the step Ava wants reported.
+    if (~animmag_has_mithril_axe = false) {
+        mes("You don't have an axe which could possibly affect this wood.");
+        return;
+    }
+    anim(human_woodcutting_mithril_axe, 0);
+    p_delay(2);
+    mes("The axe bounces off the undead wood. You should report this to Ava.");
+    if (%animmag = ^animmag_magnet_given) {
+        %animmag = ^animmag_axe_bounced;
+        ~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+    }
+    return;
+}
+if (%animmag > ^animmag_has_blessed_axe & ~obj_gettotal(animmag_undead_twigs) > 0) {
+    mes("You have all the undead wood Ava asked for.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You don't have room for any more undead twigs.");
+    return;
+}
+anim(human_woodcutting_mithril_axe, 0);
+p_delay(2);
+// A roll rather than a certainty, as in OSRS - "You almoust remove a suitable twig" is the game's
+// own spelling and is kept.
+if (random(3) = 0) {
+    mes("You almoust remove a suitable twig, but you don't quite manage it.");
+    return;
+}
+inv_add(inv, animmag_undead_twigs, 1);
+mes("You cut some undead twigs.");
+
+// A mithril axe or better, held or wielded - what the transcript means by "an axe which could
+// possibly affect this wood".
+[proc,animmag_has_mithril_axe]()(boolean)
+if (inv_total(inv, mithril_axe) > 0 | inv_total(worn, mithril_axe) > 0) {
+    return(true);
+}
+if (inv_total(inv, adamant_axe) > 0 | inv_total(worn, adamant_axe) > 0) {
+    return(true);
+}
+if (inv_total(inv, rune_axe) > 0 | inv_total(worn, rune_axe) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== Turael
+
+// True while Turael has something to say about the trees: from the moment Ava names him until the
+// blessed axe is in the player's hands, and again if the axe is lost afterwards.
+[proc,animmag_turael_offer]()(boolean)
+if (%animmag = ^animmag_turael_told) {
+    return(true);
+}
+if (%animmag >= ^animmag_has_blessed_axe & %animmag < ^animmag_complete & ~obj_gettotal(animmag_blessed_axe) = 0) {
+    return(true);
+}
+return(false);
+
+// Which of the two conversations the transcript records depends on whether the player is carrying
+// the price: without it he explains what he wants, with it he offers the swap. That is also what
+// keeps a second visit from replaying the whole explanation.
+[label,animmag_turael_trees]
+if (inv_total(inv, mithril_axe) = 0 | inv_total(inv, blessedstar) = 0) {
+    ~chatplayer("<p,neutral>I'm here about a quest. Ava said she saw you hanging around the moving trees near Draynor Manor.");
+    ~chatnpc("<p,happy>Ahh, you came to the right man; odd things, those trees. What is it you are needing exactly?");
+    ~chatplayer("<p,neutral>I think I need some of the wood from them, but my axe just bounced off the trunk.");
+    ~chatnpc("<p,neutral>Sounds like you need a blessed axe. No one really makes them, though, these days.");
+    ~chatnpc("<p,neutral>Blessed axes are too soft to cut normal wood since the axe's edge must be replaced by holy silver.");
+    ~chatnpc("<p,happy>I can do you a favour, though.");
+    ~chatnpc("<p,neutral>If you can give me a mithril axe and a holy symbol of Saradomin I can let you have my axe.");
+    ~chatnpc("<p,neutral>I'll make myself a new one when no one is pestering me for Slayer tasks.");
+    ~chatplayer("<p,neutral>Okay, so I'll see whether I can spare an axe and a symbol. Thanks.");
+    return;
+}
+~chatplayer("<p,neutral>Hello, I'm here about those trees again.");
+~chatnpc("<p,neutral>I can make an axe for you now, if you wish.");
+~chatnpc("<p,neutral>Remember, it will be no use for normal woodcutting after I have added the silver edge.");
+if (~p_choice2("I'd love one, thanks.", 1, "Not right now.", 2) ! 1) {
+    ~chatplayer("<p,neutral>Not right now.");
+    ~chatnpc("<p,neutral>Goodbye then. You may, of course, return if you decide you want a new axe.");
+    return;
+}
+~chatplayer("<p,happy>I'd love one, thanks.");
+if (inv_total(inv, mithril_axe) = 0) {
+    ~chatnpc("<p,sad>You'll need to hand over both a mithril axe and holy symbol of Saradomin. You don't have an axe in your pack, so I'm not able to help.");
+    return;
+}
+if (inv_total(inv, blessedstar) = 0) {
+    ~chatnpc("<p,sad>You'll need to hand over both a mithril axe and holy symbol of Saradomin. You don't have a symbol in your pack, so I'm not able to help.");
+    return;
+}
+inv_del(inv, mithril_axe, 1);
+inv_del(inv, blessedstar, 1);
+~animmag_give(animmag_blessed_axe);
+~chatnpc("<p,happy>Here's a new axe; may it serve you well.");
+if (%animmag = ^animmag_turael_told) {
+    %animmag = ^animmag_has_blessed_axe;
+    ~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+}

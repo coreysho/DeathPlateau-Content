@@ -407,6 +407,9 @@ if (%mourning_quest_main >= ^mt_complete) {
 if (%eaglespeak >= ^eaglespeak_complete) {
     $questpoints = add($questpoints, ^eaglespeak_questpoints);
 }
+if (%animmag >= ^animmag_complete) {
+    $questpoints = add($questpoints, ^animmag_questpoints);
+}
 // Recipe for Disaster is ten sub-quests worth one point each, tracked as ten bits in
 // %hundred_subquest_tally, so it counts bits rather than comparing a stage to a completion value.
 $questpoints = add($questpoints, ~hundred_subquests_done);
@@ -457,6 +460,7 @@ $total = add($total, ^swan_questpoints);
 $total = add($total, ^fairy_questpoints);
 $total = add($total, ^mt_questpoints);
 $total = add($total, ^eaglespeak_questpoints);
+$total = add($total, ^animmag_questpoints);
 $total = add($total, ^runemysteries_questpoints);
 $total = add($total, ^doric_questpoints);
 $total = add($total, ^cook_questpoints);
@@ -662,6 +666,7 @@ if (testbit(%ibanmulti, ^upass_started_bit) = ^true & %upass ! ^upass_complete) 
 ~questlist_row(questlist:fairy_farmers, %fairy_farmers_quest, ^fairy_complete, $send);
 ~questlist_row(questlist:mourning2, %mourning_quest_main, ^mt_complete, $send);
 ~questlist_row(questlist:eaglespeak, %eaglespeak, ^eaglespeak_complete, $send);
+~questlist_row(questlist:animmag, %animmag, ^animmag_complete, $send);
 
 [proc,questlist_row](component $component, int $progress, int $complete_progress, boolean $send)
 %questlist_total = add(%questlist_total, 1);

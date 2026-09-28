@@ -1,0 +1,245 @@
+// Animal Magnetism: the farm west of the Ectofuntus, where the undead chickens are.
+//
+// Alice is [farming_shopkeeper_4], the farming shop the map already places at m56_55 (43,6); her
+// husband is [ahoy_ghost_farmer], at (33,8), who until now had op1=Talk-To and no script at all.
+// Neither of them can hear the other: she is alive, he is not, and a ghostspeak amulet only works
+// one way round. The Old Crone east of the Slayer Tower - [ahoy_crone], from Ghosts Ahoy - mirrors
+// the unused essence of a ghostspeak amulet, binds it with one of Alice's golden hairs, and makes
+// an amulet that works for exactly those two people.
+//
+// The order of the errands is the OSRS wiki's Transcript:Animal Magnetism; the player's side of the
+// Old Crone conversation is not in the transcript and is written here in the same voice.
+
+// =========================================================================== Alice
+
+// Her Talk-to is the generic [opnpc1,_shop_keeper] one until the quest gives her something to say,
+// and the shop options stay on the menu throughout - @shop_keeper_talk is shop/scripts/shop.rs2's
+// own label, so op1 keeps working exactly as it did.
+[opnpc1,farming_shopkeeper_4]
+if (%animmag ! ^animmag_started) {
+    @shop_keeper_talk;
+}
+~chatnpc("<p,happy>Hello. How can I help you?");
+switch_int (~p_choice3("I'm here about a quest.", 1, "What are you selling?", 2, "I'm okay, thank you.", 3)) {
+    case 1 : @animmag_alice_quest;
+    case 2 :
+        ~chatplayer("<p,quiz>What are you selling?");
+        ~chatnpc("<p,happy>Take a look at my wares.");
+        ~openshop_activenpc;
+    case default : ~chatplayer("<p,neutral>I'm okay, thank you.");
+}
+
+[label,animmag_alice_quest]
+~chatplayer("<p,neutral>I'm here about a quest.");
+switch_int (%animmag_farm) {
+    case ^animmag_farm_none : @animmag_alice_first;
+    case ^animmag_farm_alice_asked :
+        ~chatnpc("<p,quiz>Have you spoken to my husband yet?");
+        ~chatplayer("<p,neutral>I'm working on it.");
+    case ^animmag_farm_malcolm_message : @animmag_alice_love;
+    case ^animmag_farm_alice_savings :
+        ~chatnpc("<p,quiz>Have you asked him about the savings?");
+        ~chatplayer("<p,neutral>I'm working on it.");
+    case ^animmag_farm_malcolm_bank : @animmag_alice_bank;
+    case ^animmag_farm_alice_pass :
+        ~chatnpc("<p,quiz>Have you asked him about the bank pass?");
+        ~chatplayer("<p,neutral>I'm working on it.");
+    case ^animmag_farm_malcolm_refuse : @animmag_alice_witch;
+    case ^animmag_farm_alice_witch :
+        ~chatnpc("<p,quiz>Have you found a way for me to talk to my husband yet?");
+        ~chatplayer("<p,neutral>Not yet. I'm off to see your witch.");
+    case ^animmag_farm_has_amulet :
+        ~chatnpc("<p,quiz>Have you found a way for me to talk to my husband yet?");
+        ~chatplayer("<p,happy>I have it right here. I'll take it to him now.");
+    case default :
+        ~chatnpc("<p,happy>Hello, friend, and thanks for allowing me to talk to my husband Malcolm. How can I help you?");
+        ~chatplayer("<p,happy>Just passing.");
+}
+
+[label,animmag_alice_first]
+~chatplayer("<p,quiz>I am after one of your, er, unhealthier poultry. Could you help me?");
+~chatnpc("<p,confused>You need those useless, undead chickens? How odd you adventurers are.");
+~chatnpc("<p,sad>You need to talk to my husband, though - not that I can these days.");
+~chatplayer("<p,quiz>Whyever would this be?");
+~chatnpc("<p,sad>Can't you see, he is dead. I can't talk to the dead.");
+~chatnpc("<p,sad>The curse of undeath was so cruel; all the men out here succumbed, but Lyra and I were left alive.");
+%animmag_farm = ^animmag_farm_alice_asked;
+
+[label,animmag_alice_love]
+~chatplayer("<p,neutral>I have a message from your husband. He wants you to know that he still loves you, despite his ghostly state.");
+~chatnpc("<p,sad>Tell him I love him but I can't find our savings. I know he had our collection of gold and 'prize cow' rosettes just before the curse struck.");
+%animmag_farm = ^animmag_farm_alice_savings;
+
+[label,animmag_alice_bank]
+~chatplayer("<p,neutral>He says he put the money in the bank, like you always told him to.");
+~chatnpc("<p,neutral>I'll need his bank pass, in that case.");
+%animmag_farm = ^animmag_farm_alice_pass;
+
+[label,animmag_alice_witch]
+~chatplayer("<p,bored>He says that no one but a fool gives away their pass numbers. He does not entirely trust me.");
+~chatnpc("<p,sad>I tried that once, but all those other ghosts - and even the undead chickens and cows - scared me so much. I wouldn't try it again for all the cash in Varrock bank.");
+~chatplayer("<p,quiz>Then the two of you had better talk to each other, and leave me out of it.");
+~chatnpc("<p,happy>You're so clever; I've overheard passing adventurers say that there's some witch near here who changes ghostspeak amulets.");
+~chatnpc("<p,neutral>I think she lives a bit west of that mad Professor Fenkenstrain, past the Farming patch.");
+~chatplayer("<p,quiz>A mysterious witch. Of course there is.");
+~chatnpc("<p,happy>Mysterious indeed, but in this case she actually looks pretty normal.");
+%animmag_farm = ^animmag_farm_alice_witch;
+
+// =========================================================================== Alice's husband
+
+[opnpc1,ahoy_ghost_farmer]
+if (~ahoy_can_hear = false) {
+    ~chatnpc("<p,confused>Woo woo!");
+    return;
+}
+if (%animmag_farm >= ^animmag_farm_reunited) {
+    @animmag_malcolm_shop;
+}
+if (%animmag ! ^animmag_started) {
+    ~chatnpc("<p,neutral>Your animals don't look too healthy.");
+    ~chatplayer("<p,quiz>They're not my animals.");
+    ~chatnpc("<p,neutral>They ain't anyone's animals no more, mate.");
+    return;
+}
+switch_int (%animmag_farm) {
+    case ^animmag_farm_none :
+        ~chatplayer("<p,quiz>Your animals don't look too healthy.");
+        @animmag_malcolm_curse;
+    case ^animmag_farm_alice_asked : @animmag_malcolm_curse;
+    case ^animmag_farm_malcolm_message :
+        ~chatnpc("<p,quiz>'Ave you talked to my wife for me?");
+        ~chatplayer("<p,neutral>Not yet; I've been distracted by the thought of undead cow milk.");
+    case ^animmag_farm_alice_savings : @animmag_malcolm_savings;
+    case ^animmag_farm_malcolm_bank :
+        ~chatnpc("<p,quiz>Any luck wiv me wife?");
+        ~chatplayer("<p,neutral>I'm on my way to her now.");
+    case ^animmag_farm_alice_pass : @animmag_malcolm_pass;
+    case ^animmag_farm_malcolm_refuse :
+        ~chatnpc("<p,quiz>'Ave you talked to 'er?");
+        ~chatplayer("<p,neutral>I have. She is not impressed with either of us.");
+    case default : @animmag_malcolm_amulet;
+}
+
+[label,animmag_malcolm_curse]
+~chatnpc("<p,sad>It's that fountain thingy in the temple to the east. It's turned them all into zombies.");
+switch_int (~p_choice2("What use are zombie animals?", 1, "But you're a ghost - surely you know something about it.", 2)) {
+    case 1 :
+        ~chatplayer("<p,quiz>What use are zombie animals?");
+        ~chatnpc("<p,bored>None at all, mate, except that those worshippers at that temple keep comin' and killin' 'em all for their bones. Don't ask me why.");
+    case default :
+        ~chatplayer("<p,quiz>But you're a ghost - surely you know something about it.");
+        ~chatnpc("<p,neutral>I don't know nuthin' about nuthin'. Oim a simple ghost with simple needs. All I know is, years ago, that temple started glowing green and, a few months later, I woke up dead. That's all there is to it.");
+}
+~chatplayer("<p,quiz>Would I be able to buy some of your chickens?");
+~chatnpc("<p,sad>I do miss the wife though; tell 'er I still loves her.");
+~chatnpc("<p,neutral>Talk to my wife and I'll think about it.");
+%animmag_farm = ^animmag_farm_malcolm_message;
+
+[label,animmag_malcolm_savings]
+~chatplayer("<p,neutral>She loves you too. She also can't find your savings.");
+~chatnpc("<p,laugh>Tell 'er I spent it on cheap spirits, har har.");
+~chatplayer("<p,bored>I am not telling her that.");
+~chatnpc("<p,laugh>Hah, just trying to lift your spirits.");
+~chatnpc("<p,neutral>Suit yerself, stick-in-the-mud. Anyway, Oim not one o' them yokels. Tell 'er I putted the cash in the bank like she always told me to.");
+~chatnpc("<p,angry>A warning to ya, too: annoy her and I'll haunt ya till yer hair turns white.");
+%animmag_farm = ^animmag_farm_malcolm_bank;
+
+[label,animmag_malcolm_pass]
+~chatplayer("<p,neutral>She says she'll need your bank pass.");
+~chatnpc("<p,shifty>Maybe she said that, maybe she didn't. I think you're just after me savings. Tell 'er that no one but a fool gives away their pass numbers.");
+~chatnpc("<p,neutral>Go tell 'er now, if you're not a double-dealin' scammer, that is.");
+%animmag_farm = ^animmag_farm_malcolm_refuse;
+
+[label,animmag_malcolm_amulet]
+if (inv_total(inv, animmag_crone_amulet) = 0) {
+    ~chatnpc("<p,quiz>'Ave you talked to 'er?");
+    ~chatplayer("<p,neutral>I have. There's a witch making something that will let the two of you talk. I'll be back.");
+    return;
+}
+~chatplayer("<p,happy>Wear this. The Old Crone made it out of one of Alice's hairs, and it means the two of you can hear each other.");
+inv_del(inv, animmag_crone_amulet, 1);
+~chatnpc("<p,happy>Arr, that makes far more sense than I was expecting from a muscle-head like you. My wife's a clever one.");
+~chatnpc("<p,happy>Ta, mate.");
+%animmag_farm = ^animmag_farm_reunited;
+// The moment the amulet goes on, Malcolm gets his farm back and immediately starts losing an
+// argument with a chicken; Cow31337Killer, who was already here, takes his cut. npc_say goes first,
+// because npc_add moves the active npc pointer onto the bird.
+def_coord $spot = movecoord(npc_coord, 1, 0, 0);
+npc_say("Here, chicky chicky!");
+if (npc_find($spot, animmag_sneaky_fowl, 8, 0) = false) {
+    npc_add($spot, animmag_sneaky_fowl, 100);
+}
+~mesbox("Malcolm goes after a chicken that was, a moment ago, standing perfectly still.|'Git 'ere, yer pesky bird! ... Where'd she go?'");
+~mesbox("Cow31337Killer does not look up from the cow he is standing over.|'Buying cowhides and feathers - ahh, that chicken is next; feathers for me!'");
+
+// Once the two of them can talk again he is in business.
+[label,animmag_malcolm_shop]
+~chatnpc("<p,happy>Hello, how can I help you? I'm sellin' if you have ecto-tokens.");
+switch_int (~p_choice3("Can I buy an undead chicken?", 1, "Where do I get ecto-tokens?", 2, "Nothing, thanks.", 3)) {
+    case 1 : @animmag_malcolm_buy;
+    case 2 :
+        ~chatplayer("<p,quiz>Where do I get ecto-tokens?");
+        ~chatnpc("<p,neutral>The ghosts I talk to say that the tokens have something to do with the tower just east of here. If you need to collect some I'd try there.");
+    case default : ~chatplayer("<p,neutral>Nothing, thanks.");
+}
+
+[label,animmag_malcolm_buy]
+~chatplayer("<p,quiz>Can I buy an undead chicken?");
+~chatnpc("<p,neutral>I can hand over a chicken if you give me <tostring(^animmag_chicken_price)> of them ecto-token thingies per bird.");
+if (inv_total(inv, ectotoken) < ^animmag_chicken_price) {
+    ~chatplayer("<p,sad>I don't have that many ecto-tokens.");
+    ~chatnpc("<p,neutral>Then you don't have a chicken, either.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    ~chatplayer("<p,sad>I have nowhere to put a chicken.");
+    return;
+}
+inv_del(inv, ectotoken, ^animmag_chicken_price);
+inv_add(inv, animmag_undead_chicken, 1);
+if (%animmag_farm = ^animmag_farm_reunited) {
+    ~chatnpc("<p,happy>Ta, some day soon I'll be havin' a nice undead bed to kip in.");
+    return;
+}
+~chatnpc("<p,happy>Great! I'm laying away me tokens for some killer cows. That'll learn them bone rustlers.");
+
+// =========================================================================== the Old Crone
+//
+// Called from quest_ahoy.rs2's [opnpc1,ahoy_crone], after its ghostspeak check and before its own
+// petition dialogue: true means this quest handled the conversation, false means she is still the
+// Ghosts Ahoy crone. She only has business here between Alice naming her and the amulet being
+// delivered, so Ghosts Ahoy is never shut out for longer than that.
+[proc,animmag_crone]()(boolean)
+if (%animmag ! ^animmag_started) {
+    return(false);
+}
+if (%animmag_farm = ^animmag_farm_alice_witch) {
+    // Inline rather than a label: a proc cannot @jump to one, and this proc has to report back
+    // whether it answered for her.
+    ~chatplayer("<p,quiz>There's a farmer's wife west of the Ectofuntus who can't talk to her own husband. They say you can do something about a ghostspeak amulet.");
+    ~chatnpc("<p,neutral>Ah, I know them; shame about those cows. Why would they think that I could help?");
+    ~chatplayer("<p,neutral>Because he is dead and she is not, and the amulet only works one way round.");
+    ~chatnpc("<p,sad>Well, the poor young lady has such family problems; I quite feel her pain. I'd be happy to help.");
+    ~chatnpc("<p,happy>You seem to have one of her golden hairs on your shoulder, so I can use that...");
+    ~chatnpc("<p,neutral>I can mirror part of the unused mystical essence of the ghostspeak amulet, bind it with Alice's hair and thus create a second amulet.");
+    ~chatnpc("<p,neutral>The second amulet will be useful for the purpose you desire, though it won't work for any other ghost or human other than the farmer and his wife.");
+    if (inv_freespace(inv) < 1) {
+        ~chatnpc("<p,neutral>Talk to me again with a ghostspeak amulet and some space in your backpack and I'll be ready to work on this little good deed.");
+        return(true);
+    }
+    ~chatnpc("<p,happy>I most certainly am; there you go.");
+    inv_add(inv, animmag_crone_amulet, 1);
+    %animmag_farm = ^animmag_farm_has_amulet;
+    ~chatplayer("<p,happy>Thank you. Why are you helping?");
+    ~chatnpc("<p,happy>Just being a good neighbour.");
+    return(true);
+}
+if (%animmag_farm = ^animmag_farm_has_amulet & ~obj_gettotal(animmag_crone_amulet) = 0) {
+    ~chatnpc("<p,quiz>Yes?");
+    ~chatplayer("<p,sad>I appear to have lost the amulet.");
+    ~chatnpc("<p,angry>Disgraceful! Deliver that amulet; a young lady's happiness depends upon it.");
+    ~chatnpc("<p,neutral>Here you are; luckily, I saved some of Alice's hair in case you were careless. Which you were.");
+    ~animmag_give(animmag_crone_amulet);
+    return(true);
+}
+return(false);

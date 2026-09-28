@@ -1,0 +1,506 @@
+// Animal Magnetism (12 December 2006). Ava, the new resident of Draynor Manor's west wing, cannot
+// sleep on the manor's beds, wants two undead chickens' worth of feathers to fix one, and builds the
+// first Ava's device out of what is left over. Dialogue follows the OSRS wiki's Transcript:Animal
+// Magnetism; where the transcript only records one side of an exchange the missing side is written
+// here in the same voice, and that is noted where it happens.
+//
+// Where each part lives:
+//   quest_animmag.rs2   Ava herself, the reward, the quest journal
+//   animmag_farm.rs2    Alice, her husband, the Old Crone, Cow31337Killer, buying the chickens
+//   animmag_magnet.rs2  the Witch next door, the 5 iron bars, hammering the iron in Rimmington
+//   animmag_trees.rs2   Turael's blessed axe and the undead trees in the manor grounds
+//   animmag_notes.rs2   the research notes, translating them, and making the container
+//   avas_device.rs2     what an attractor or an accumulator actually does once it is worn
+//
+// The 377 cache predates the quest, so every item and every npc in it came out of the rev 474
+// cache - see configs/animmag.obj and configs/animmag.npc.
+
+// =========================================================================== Ava
+
+[opnpc1,animmag_ava]
+if (%animmag = ^animmag_not_started) {
+    @animmag_ava_intro;
+}
+if (%animmag >= ^animmag_complete) {
+    @animmag_ava_done;
+}
+// The hand-ins first: Ava notices what the player is carrying before she asks anything.
+if (%animmag = ^animmag_started & inv_total(inv, animmag_undead_chicken) > 0) {
+    @animmag_ava_chickens;
+}
+if (%animmag = ^animmag_magnet_made & inv_total(inv, animmag_bar_magnet) > 0) {
+    @animmag_ava_magnet;
+}
+if (%animmag = ^animmag_has_blessed_axe & inv_total(inv, animmag_undead_twigs) > 0) {
+    @animmag_ava_twigs;
+}
+if (%animmag = ^animmag_twigs_given & inv_total(inv, animmag_translated_notes) > 0) {
+    @animmag_ava_translated;
+}
+if (%animmag = ^animmag_notes_translated & inv_total(inv, animmag_translated_notes) > 0) {
+    @animmag_ava_translated;
+}
+if (%animmag = ^animmag_pattern_given & inv_total(inv, animmag_container) > 0) {
+    @animmag_ava_container;
+}
+switch_int (%animmag) {
+    case ^animmag_started : @animmag_ava_reminder;
+    case ^animmag_chickens_given : @animmag_ava_magnet_wanted;
+    case ^animmag_witch_asked : @animmag_ava_bars;
+    case ^animmag_iron_given : @animmag_ava_delays;
+    case ^animmag_magnet_made : @animmag_ava_delays;
+    case ^animmag_magnet_given : @animmag_ava_advice;
+    case ^animmag_axe_bounced : @animmag_ava_bounced;
+    case ^animmag_turael_told : @animmag_ava_turael;
+    case ^animmag_has_blessed_axe : @animmag_ava_ready;
+    case ^animmag_twigs_given : @animmag_ava_notes;
+    case ^animmag_notes_translated : @animmag_ava_notes_hint;
+    case default : @animmag_ava_pattern;
+}
+
+// --------------------------------------------------------------------------- starting out
+
+[label,animmag_ava_intro]
+~chatnpc("<p,happy>Hello there and welcome to my humble abode. It's sadly rather more humble than I'd like, to be honest, although perhaps you can help with that?");
+switch_int (~p_choice3("I would be happy to make your home a better place.", 1, "I'm not much into interior design, to tell the truth.", 2, "What's a nice girl like you doing in a place like this?", 3)) {
+    case 1 : @animmag_ava_accept;
+    case 2 :
+        ~chatplayer("<p,neutral>I'm not much into interior design, to tell the truth.");
+        ~chatnpc("<p,bored>Very well, I suppose I'll just have to resort to the Professor's patented sleeping aid in order to get some rest. It does so bruise my head, though.");
+    case default : @animmag_ava_science;
+}
+
+[label,animmag_ava_science]
+~chatplayer("<p,happy>What's a nice girl like you doing in a place like this?");
+~chatnpc("<p,neutral>I'm not a nice girl. I'm a respectable scientist researching the interactions between ghosts and the force of pure science.");
+~chatnpc("<p,neutral>I took over the position of assistant to the Professor upstairs, although, to be honest, his methods are somewhat eccentric. Did you hear about the Ernest scandal?");
+~chatplayer("<p,happy>Ah, yes. I helped sort that out; he did seem a bit odd.");
+~chatnpc("<p,laugh>You don't know the half of it - can you believe that he thinks he has proven Goldbach's First Conjecture using an optimised segmented sieve?");
+~chatplayer("<p,confused>Er, quite. Yes.");
+@animmag_ava_intro;
+
+[label,animmag_ava_accept]
+~chatplayer("<p,happy>I would be happy to make your home a better place.");
+// The requirements are checked here rather than at the first word, so that the player who is short
+// of a level still gets the whole of Ava's introduction. She names what is missing herself.
+if (~animmag_requirements = false) {
+    return;
+}
+~chatnpc("<p,laugh>Yay, I didn't even have to talk about a reward; you're more gullible than most adventurers, that's for sure.");
+~chatnpc("<p,happy>Don't worry, though; I just need you to help fix this vile old bed for me. Then I'll find a suitable reward for you.");
+~chatplayer("<p,quiz>Great, will I be able to take a nap in it?");
+~chatnpc("<p,neutral>Don't be silly; everyone knows that true warriors don't ever sleep...or perform many other bodily functions, for that matter. I'll come up with something, though.");
+~chatplayer("<p,quiz>I'm not convinced by just a vague something; can you be a slight bit more inspiring in your offer?");
+~chatnpc("<p,neutral>What I need is simple: a couple of undead chickens. You should be able to pick some up at the farm near Port Phasmatys. I'll use one for my bed, then see what I can make from the other in the way of a reward. I have some ideas involving infinite feathers.");
+~chatplayer("<p,happy>Very well then, I shall await my mystery prize with bated breath.");
+%animmag = ^animmag_started;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+// The quest's gate. The three quests and the four levels are the OSRS wiki's, and none of the four
+// levels is boostable, so they are read with stat_base.
+[proc,animmag_requirements]()(boolean)
+if (%prieststart < ^priest_complete | %haunted < ^haunted_complete | %priestperil < ^priestperil_complete) {
+    ~chatnpc("<p,neutral>Hold on a moment. A ghost farm is no place for somebody who has never so much as met a ghost, or crossed into Morytania, or had dealings with the Professor's chickens.");
+    ~mesbox("To start Animal Magnetism you need to have completed The Restless Ghost, Ernest the Chicken and Priest in Peril.");
+    return(false);
+}
+if (stat_base(slayer) < ^animmag_slayer_level | stat_base(crafting) < ^animmag_crafting_level | stat_base(ranged) < ^animmag_ranged_level | stat_base(woodcutting) < ^animmag_woodcutting_level) {
+    ~chatnpc("<p,neutral>Hmm. This is delicate work, and some of it is not work at all - it is chopping, and shooting, and knowing what is safe to poke. You are not quite there yet.");
+    ~mesbox("To start Animal Magnetism you need a Slayer level of <tostring(^animmag_slayer_level)>, a Crafting level of <tostring(^animmag_crafting_level)>, a Ranged level of <tostring(^animmag_ranged_level)> and a Woodcutting level of <tostring(^animmag_woodcutting_level)>.");
+    return(false);
+}
+return(true);
+
+[label,animmag_ava_reminder]
+~chatnpc("<p,quiz>Do you need a reminder what you are supposed to do? I know you must have shiny beads distracting you, but it is an important job you are doing for me.");
+switch_int (~p_choice2("Yes, please.", 1, "No thank you; I just came to gossip with you.", 2)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Yes, please.");
+        ~chatnpc("<p,bored>...And people say we scientists are absent minded...");
+        ~chatnpc("<p,neutral>You need to fetch 2 undead chickens for me to use in my redecoration. It's not rocket science.");
+        ~chatplayer("<p,quiz>Rocket?");
+        ~chatnpc("<p,neutral>If they existed, they would be like arrows but much, much bigger. Considering the mess you rangers make with small bits of stick, we scientists have decided they don't exist. Now get chicken hunting.");
+    case default :
+        ~chatplayer("<p,happy>No thank you; I just came to gossip with you.");
+        ~chatnpc("<p,neutral>Well, the Witch next door has been cooking some rather nice gingerbread, but I don't think that counts as gossip.");
+        ~chatnpc("<p,bored>Can you head off and do adventurous stuff, please? I hear the Wilderness is fun this time of year.");
+}
+
+// --------------------------------------------------------------------------- the chickens
+
+[label,animmag_ava_chickens]
+~chatnpc("<p,quiz>My spiritometric devices show that you have been in close contact with ghostly animals. Are we closer to success?");
+if (inv_total(inv, animmag_undead_chicken) < 2) {
+    ~chatplayer("<p,neutral>Here's one.");
+    ~chatnpc("<p,neutral>I can take that one, but I need another for your reward as well. Off you go.");
+    return;
+}
+~chatplayer("<p,happy>Here they are.");
+inv_del(inv, animmag_undead_chicken, 2);
+~chatnpc("<p,happy>Amazing! Success! I can look forward to some good nights' sleep after all.");
+~chatplayer("<p,quiz>Can I ask exactly how an undead chicken will help you sleep?");
+~chatnpc("<p,neutral>Well, I need the feathers to make my bed more comfortable. A comfortable bed will help me sleep. Obvious, really.");
+~chatplayer("<p,quiz>Obvious, yes, but why on Gielinor would you need an undead chicken when there are perfectly good live chickens just down the road?");
+~chatnpc("<p,neutral>Well, for a start, undead feathers are much cleaner than living ones; no dust mites or anything.");
+~chatnpc("<p,sad>Secondly, I always think of Ernest when I see a chicken, so my nerves can't take killing them.");
+~chatplayer("<p,quiz>Then why do I need a chicken for my reward; we already established that I don't use a bed?");
+~chatnpc("<p,happy>Seeing as how you ranger types use so many feathers in your arrows, I was thinking I could harness an undead chicken to make an unending supply of arrow flights for you.");
+~chatplayer("<p,happy>Beats chicken slaying or hanging around in fishing shops, I suppose. So, what next?");
+~chatnpc("<p,neutral>We'll need a magnet next, one with purely natural fields and made from a carefully selected iron bar.");
+~chatnpc("<p,neutral>A firm impact when the iron is parallel to Gielinor's field will stabilise this field in the rod.");
+~chatnpc("<p,neutral>Go and talk to the Witch next door.");
+%animmag = ^animmag_chickens_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+stat_advance(crafting, ^animmag_step_craft_xp);
+
+[label,animmag_ava_magnet_wanted]
+~chatnpc("<p,quiz>I'm thrilled for you. What about my magnet?");
+~chatplayer("<p,neutral>I'm going, I'm going. The Witch next door, you said.");
+
+[label,animmag_ava_bars]
+~chatplayer("<p,neutral>I've talked to the Witch and she has asked me for some iron bars.");
+~chatnpc("<p,bored>Do I resemble an iron-bar merchant?");
+~chatplayer("<p,confused>Er, maybe; I've never met one.");
+
+[label,animmag_ava_delays]
+~chatnpc("<p,quiz>I'm thrilled for you. What about my magnet?");
+~chatplayer("<p,neutral>The process is subject to some unexpected delays.");
+~chatnpc("<p,bored>I can see now why Fenkenstrain prefers to work with dead folk. It can't be more frustrating than working with you.");
+
+// --------------------------------------------------------------------------- the magnet
+
+[label,animmag_ava_magnet]
+~chatplayer("<p,happy>One magnet, as ordered.");
+inv_del(inv, animmag_bar_magnet, 1);
+~chatnpc("<p,happy>Great stuff! With the Witch's influence within the magnet, the undead chicken can use this, I'm sure.");
+~chatnpc("<p,neutral>The plan is that the chicken will operate the magnet to attract bits of iron and steel, maybe even your own recently fired arrows.");
+~chatnpc("<p,neutral>In addition, arrows which you fire should be able to be attracted back to your quiver by the cunning avian.");
+~chatplayer("<p,quiz>I begin to understand your plan. We've covered feathers and arrowheads now; what next?");
+~chatnpc("<p,neutral>We need a source of wood, but one which is spiritually active and can regenerate itself.");
+~chatnpc("<p,neutral>Try using a woodcutting axe on the pesky trees in the garden here, the ones that attack rather than the really dead ones.");
+~chatplayer("<p,shock>They will try to kill me, though, and I can't fight back!");
+~chatnpc("<p,laugh>Now you know how those poor guards feel when you hide behind mushrooms and fences and attack them from afar!");
+%animmag = ^animmag_magnet_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+stat_advance(crafting, ^animmag_step_craft_xp);
+mes("Your work with the magnet increases your Crafting experience slightly.");
+
+// --------------------------------------------------------------------------- the trees
+
+[label,animmag_ava_advice]
+~chatnpc("<p,quiz>Back so soon? What is it now?");
+~chatplayer("<p,neutral>Nothing really; I just decided to talk to you in case you have any great advice for me.");
+~chatnpc("<p,neutral>Well, I've heard that all kinds of dragons and even basilisks can drop mithril axes, if that's why you are delaying.");
+
+[label,animmag_ava_bounced]
+~chatplayer("<p,angry>Well, I tried to hack the trees with my axe, but it just bounced off the trunk!");
+~chatnpc("<p,neutral>Fortunately for you, I've done some research and it seems to suggest that there are two choices open to you.");
+~chatplayer("<p,neutral>Tell me the worst.");
+~chatnpc("<p,happy>The first is more interesting. We cut off your arms, have them reanimated as undead, reattach them and then you should be able to cut the trees normally.");
+~chatnpc("<p,neutral>Of course, you won't be able to pick your nose anymore, so I suppose you'll want to try the second option.");
+~chatplayer("<p,confused>I'm not exactly addicted to picking my nose, but I do think I'll pass on that method.");
+~chatnpc("<p,neutral>Well, in that case, I think it may have something to do with Slayer abilities.");
+~chatnpc("<p,neutral>After all, I did see Turael poking around the trees while I was moving in.");
+~chatnpc("<p,neutral>As he's not known for his random touristic activities, you should try chatting with this Turael.");
+~chatnpc("<p,neutral>He's the Slayer Master near Burthorpe.");
+~chatplayer("<p,sad>Oh dear, I hope he doesn't want me to buy one of his ridiculous fashion accessories.");
+%animmag = ^animmag_turael_told;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+[label,animmag_ava_turael]
+~chatplayer("<p,neutral>Turael, the Slayer Master, told me what to do - with no earmuffs, spiky helmets or other laughable headgear involved.");
+~chatnpc("<p,happy>A pity; you'd look quite cute with rabbit ears. Perhaps I should have bribed him.");
+~chatplayer("<p,shock>You scare me sometimes.");
+
+[label,animmag_ava_ready]
+~chatplayer("<p,happy>I think I'm ready to cut those trees now.");
+~chatnpc("<p,bored>What do you want? A prize? Go and get the wood; it's not as if the trees are wandering about and hard to find.");
+
+// --------------------------------------------------------------------------- research and the end
+
+[label,animmag_ava_twigs]
+~chatplayer("<p,happy>I have that undead wood at last. Well, twigs anyway.");
+inv_del(inv, animmag_undead_twigs, inv_total(inv, animmag_undead_twigs));
+~chatnpc("<p,bored>You certainly took your time.");
+~chatplayer("<p,neutral>I'd say they didn't grow on trees, but I guess you'd just be sarcastic about my sense of humour.");
+~chatnpc("<p,neutral>Quite. Now that we have all the ingredients for infinite arrows, we just need a container in which we can keep the components in the correct mutual alignment.");
+~chatnpc("<p,neutral>I've gathered together some research notes from various sources but I can't quite make out what they mean.");
+~chatnpc("<p,neutral>If you want to have a go at making them out, just ask me for a copy.");
+%animmag = ^animmag_twigs_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+[label,animmag_ava_notes]
+if (inv_total(inv, animmag_research_notes) > 0) {
+    ~chatplayer("<p,quiz>I have the notes but haven't translated them yet. Any hints?");
+    ~chatnpc("<p,bored>I know you have the notes; I gave them to you, in case you forgot.");
+    ~chatnpc("<p,bored>Furthermore, if I had hints, I'd have translated those notes myself.");
+    ~chatnpc("<p,neutral>So, take the hint and go off and translate them.");
+    ~chatnpc("<p,laugh>If it's too hard, you can always go and shoot demons in cages.");
+    return;
+}
+if (~obj_gettotal(animmag_research_notes) > 0) {
+    ~chatplayer("<p,neutral>I've left those notes somewhere safe.");
+    ~chatnpc("<p,bored>Then go and get them out of somewhere safe.");
+    return;
+}
+if (~animmag_had_notes = true) {
+    ~chatplayer("<p,sad>I seem to have lost the research notes.");
+    ~chatnpc("<p,bored>Don't tell me, your cat ate them? You won't get out of the job that easily; here are some copies I made.");
+    ~animmag_give(animmag_research_notes);
+    return;
+}
+~chatplayer("<p,quiz>I'd like to look at those research notes now, unless you have translated them without me?");
+~chatnpc("<p,bored>They are still stumping me. Here are the notes; I really hope your head doesn't explode from reading them.");
+~chatplayer("<p,neutral>I'd find it slightly inconvenient, I'm sure.");
+~chatnpc("<p,happy>It wouldn't be all bad as your body would be useful for research after death.");
+~chatnpc("<p,neutral>What I'd be upset about was if bits of you landed in my nice new bed.");
+~chatplayer("<p,bored>Your concern is touching.");
+%animmag_notes_given = 1;
+~animmag_give(animmag_research_notes);
+
+[label,animmag_ava_notes_hint]
+~chatplayer("<p,sad>I had those translated notes, and now I don't.");
+~chatnpc("<p,bored>Then have some more research notes, and this time try not to eat them.");
+~animmag_give(animmag_research_notes);
+%animmag = ^animmag_twigs_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+[label,animmag_ava_translated]
+~chatplayer("<p,happy>I've translated those notes. See? I'm not just a thuggish moron like you seem to think.");
+inv_del(inv, animmag_translated_notes, inv_total(inv, animmag_translated_notes));
+~chatnpc("<p,bored>For all I know, it was pure luck, so don't jump to any conclusions about your mighty intellect.");
+~chatplayer("<p,angry>I can see why you don't have any assistants; you're not exactly easy to work with.");
+~chatnpc("<p,neutral>Let's get back to the work we're doing, then. Remember, this is all a favour to you; I could have just decided to fob you off with a feather duster.");
+~chatnpc("<p,neutral>I've given you a pattern for the container; you'll need to combine it with some polished buttons and hard leather.");
+~chatnpc("<p,happy>Then we're almost done. Good news, eh?");
+~chatnpc("<p,neutral>If you are having trouble finding buttons, I've heard rumours that the H.A.M. society carry this sort of stuff more than most.");
+~chatplayer("<p,quiz>Really? How would you know this strange detail?");
+~chatnpc("<p,laugh>I hear they lose their clothes a lot to thieves so they have to make do with shoddy goods.");
+~chatnpc("<p,neutral>Whatever the reason, they seem to carry buttons about in their pockets.");
+%animmag = ^animmag_pattern_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+~animmag_give(animmag_pattern);
+
+[label,animmag_ava_pattern]
+if (inv_total(inv, animmag_pattern) > 0 | ~obj_gettotal(animmag_pattern) > 0) {
+    ~chatplayer("<p,quiz>So what do I do with this pattern again?");
+    ~chatnpc("<p,bored>Your short-term memory loss worries me. Combine the pattern with hard leather and some polished buttons, then hand the resulting container to me.");
+    return;
+}
+if (~obj_gettotal(animmag_container) > 0) {
+    ~chatnpc("<p,quiz>You've made the container, I assume?");
+    ~chatplayer("<p,neutral>Well, yes, although I seem to have left it somewhere.");
+    ~chatnpc("<p,bored>Then go and fetch it.");
+    return;
+}
+~chatnpc("<p,quiz>You've made the container, I assume?");
+~chatplayer("<p,sad>Well, yes, although I seem to have mislaid it.");
+~chatnpc("<p,bored>It's only the final, vital step in your quest that you decided to leave who-knows-where. Don't worry, I have plenty of spares.");
+~chatplayer("<p,confused>Why do I sense sarcasm somewhere here?");
+~animmag_give(animmag_pattern);
+
+[label,animmag_ava_container]
+~chatplayer("<p,happy>One container, exactly to pattern.");
+inv_del(inv, animmag_container, 1);
+~chatnpc("<p,happy>Wow, great, now the arrow manufacturer is ready for use...");
+if_close;
+queue(animmag_quest_complete, 0, 0);
+
+// --------------------------------------------------------------------------- after the quest
+
+[label,animmag_ava_done]
+~chatnpc("<p,happy>There you are! Talk to me if you need more information later.");
+switch_int (~p_choice3("How does the device work, exactly?", 1, "I need another device.", 2, "Nothing, thanks.", 3)) {
+    case 1 :
+        ~chatplayer("<p,quiz>How does the device work, exactly?");
+        ~chatnpc("<p,neutral>The chicken works the magnet and the magnet works on your arrowheads. Wear it on your back and most of what you shoot comes home again.");
+        ~chatnpc("<p,neutral>It is fond of loose metal, too. Stand about in the open for a while and it will find you some.");
+    case 2 : @animmag_ava_device;
+    case default : ~chatplayer("<p,neutral>Nothing, thanks.");
+}
+
+// Using an item on Ava. The transcript records four answers and one catch-all, and they are worth
+// having because a feather or a chicken is the obvious thing to try on a woman who wants both.
+[opnpcu,animmag_ava]
+switch_obj (last_useitem) {
+    case feather : ~chatnpc("<p,bored>What are you doing? I'm not ticklish.");
+    case raw_chicken : ~chatnpc("<p,bored>What are you doing? Yuck, dead things.");
+    case cooked_chicken : ~chatnpc("<p,bored>What are you doing? Do I look that thin?");
+    case animmag_undead_chicken : ~chatnpc("<p,bored>What are you doing? Trying to infect me with some vile disease?");
+    case default : ~chatnpc("<p,confused>I'm not sure what you are trying to do, are you sure you aren't slightly deranged?");
+}
+
+// The cache gives Ava op3=Trade. Before the quest it is the brush-off the transcript records for
+// trying to trade her; afterwards it is where a device is replaced or upgraded.
+[opnpc3,animmag_ava]
+if (%animmag < ^animmag_complete) {
+    ~chatnpc("<p,neutral>Hello there, I'm busy with my research. Come back in a bit, could you?");
+    return;
+}
+@animmag_ava_device;
+
+// 999 coins and 75 steel arrows for a device from scratch; 75 steel arrows alone to turn an
+// attractor already owned into an accumulator (OSRS wiki, Ava's accumulator).
+[label,animmag_ava_device]
+if (inv_total(inv, avas_attractor) > 0 | inv_total(worn, avas_attractor) > 0) {
+    if (stat_base(ranged) < ^animmag_accumulator_level) {
+        ~chatnpc("<p,neutral>I can improve that attractor of yours, but not until your Ranged level is <tostring(^animmag_accumulator_level)>. The better model would simply pull your arm off.");
+        return;
+    }
+    ~chatnpc("<p,happy>You've grown into it. Bring me <tostring(^animmag_device_arrows)> steel arrows and I'll wind them into an accumulator for you.");
+    if (inv_total(inv, steel_arrow) < ^animmag_device_arrows) {
+        ~chatplayer("<p,sad>I don't have that many steel arrows on me.");
+        return;
+    }
+    if (~p_choice2("Here you go.", 1, "Maybe later.", 2) ! 1) {
+        ~chatplayer("<p,neutral>Maybe later.");
+        return;
+    }
+    inv_del(inv, steel_arrow, ^animmag_device_arrows);
+    if (inv_total(inv, avas_attractor) > 0) {
+        inv_del(inv, avas_attractor, 1);
+    } else {
+        inv_del(worn, avas_attractor, 1);
+    }
+    ~animmag_give(avas_accumulator);
+    ~chatnpc("<p,happy>There you go. Try not to shoot me with it.");
+    return;
+}
+if (inv_total(inv, avas_accumulator) > 0 | inv_total(worn, avas_accumulator) > 0) {
+    ~chatnpc("<p,happy>You already have the best one I make. Go and use it.");
+    return;
+}
+~chatnpc("<p,neutral>Another one? They don't wind themselves. <tostring(^animmag_device_coins)> coins and <tostring(^animmag_device_arrows)> steel arrows, and you can have one.");
+if (inv_total(inv, coins) < ^animmag_device_coins | inv_total(inv, steel_arrow) < ^animmag_device_arrows) {
+    ~chatplayer("<p,sad>I can't afford that at the moment.");
+    return;
+}
+if (~p_choice2("Here you go.", 1, "Maybe later.", 2) ! 1) {
+    ~chatplayer("<p,neutral>Maybe later.");
+    return;
+}
+inv_del(inv, coins, ^animmag_device_coins);
+inv_del(inv, steel_arrow, ^animmag_device_arrows);
+if (stat_base(ranged) >= ^animmag_accumulator_level) {
+    ~animmag_give(avas_accumulator);
+} else {
+    ~animmag_give(avas_attractor);
+}
+
+// =========================================================================== shared helpers
+
+// Hand an item over, or put it on the floor if there is no room, and say which happened.
+[proc,animmag_give](namedobj $obj)
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, $obj, 1);
+    return;
+}
+obj_add(coord, $obj, 1, ^lootdrop_duration);
+mes("You have no room for it, so it lands at your feet.");
+
+// Has the player ever been given the research notes? %animmag_notes_given is set the first time,
+// and the stage cannot say it: the notes are handed out and lost inside one stage.
+[proc,animmag_had_notes]()(boolean)
+if (%animmag_notes_given = 1) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the reward
+
+// OSRS wiki, Animal Magnetism: 1 quest point, 1,000 Crafting, 1,000 Fletching, 1,000 Slayer and
+// 2,500 Woodcutting experience, and Ava's device - the attractor below 50 Ranged, the accumulator
+// at 50 and above ("You are also skilled enough that I'm rewarding you with the upgraded version
+// right away."). Stat values are xp x10.
+[queue,animmag_quest_complete]
+%animmag = ^animmag_complete;
+stat_advance(crafting, ^animmag_reward_craft_xp);
+stat_advance(fletching, ^animmag_reward_fletch_xp);
+stat_advance(slayer, ^animmag_reward_slayer_xp);
+stat_advance(woodcutting, ^animmag_reward_wc_xp);
+session_log(^log_adventure, "Quest complete: Animal Magnetism");
+if (stat_base(ranged) >= ^animmag_accumulator_level) {
+    ~animmag_give(avas_accumulator);
+    ~send_quest_complete(questlist:animmag, avas_accumulator, 200, ^animmag_questpoints, "You have completed\\nAnimal Magnetism!", "1 Quest Point|1,000 Crafting XP|1,000 Fletching XP|1,000 Slayer XP|2,500 Woodcutting XP");
+    return;
+}
+~animmag_give(avas_attractor);
+~send_quest_complete(questlist:animmag, avas_attractor, 200, ^animmag_questpoints, "You have completed\\nAnimal Magnetism!", "1 Quest Point|1,000 Crafting XP|1,000 Fletching XP|1,000 Slayer XP|2,500 Woodcutting XP");
+
+// =========================================================================== the journal
+
+[if_button,questlist:animmag]
+def_string $text;
+
+switch_int (%animmag) {
+    case ^animmag_not_started :
+        $text = "@dbl@I can start this quest by speaking to @dre@Ava@dbl@ in the west wing of|";
+        $text = append($text, "@dre@Draynor Manor@dbl@.||");
+        $text = append($text, "@dbl@To complete this quest I will need:|");
+        $text = append($text, "@dre@The Restless Ghost@dbl@, @dre@Ernest the Chicken@dbl@ and @dre@Priest in Peril|");
+        $text = append($text, "@dre@Level <tostring(^animmag_slayer_level)> Slayer@dbl@, @dre@Level <tostring(^animmag_crafting_level)> Crafting|");
+        $text = append($text, "@dre@Level <tostring(^animmag_ranged_level)> Ranged@dbl@, @dre@Level <tostring(^animmag_woodcutting_level)> Woodcutting");
+
+    case ^animmag_started :
+        $text = "@str@Ava cannot sleep in Draynor Manor's mouldy beds. She wants two|";
+        $text = append($text, "@str@undead chickens: one for the feathers, one for a reward she|");
+        $text = append($text, "@str@is being mysterious about.||");
+        $text = append($text, "@dbl@I should buy @dre@2 undead chickens@dbl@ at the @dre@farm near Port|@dre@Phasmatys@dbl@. I will need a @dre@ghostspeak amulet@dbl@ and|");
+        $text = append($text, "@dbl@@dre@20 ecto-tokens");
+
+    case ^animmag_chickens_given, ^animmag_witch_asked, ^animmag_iron_given :
+        $text = "@str@Ava has her two undead chickens.||";
+        $text = append($text, "@dbl@She needs a magnet made from a carefully selected iron bar.|");
+        $text = append($text, "@dbl@I should talk to the @dre@Witch@dbl@ in the room north of Ava, and|");
+        $text = append($text, "@dbl@bring her @dre@<tostring(^animmag_iron_bars)> iron bars");
+
+    case ^animmag_magnet_made :
+        $text = "@str@Ava has her two undead chickens. The Witch made me a bar|";
+        $text = append($text, "@str@magnet out of five iron bars and a hammer blow.||");
+        $text = append($text, "@dbl@I should take the @dre@bar magnet@dbl@ to @dre@Ava");
+
+    case ^animmag_magnet_given, ^animmag_axe_bounced :
+        $text = "@str@Ava has the chickens and the magnet.||";
+        $text = append($text, "@dbl@Now she wants wood that is spiritually active: the @dre@undead|@dre@trees@dbl@ in the manor grounds");
+
+    case ^animmag_turael_told :
+        $text = "@str@Ava has the chickens and the magnet. My axe bounces off the|";
+        $text = append($text, "@str@undead trees in the manor grounds.||");
+        $text = append($text, "@dbl@Ava saw @dre@Turael@dbl@, the Slayer Master near @dre@Burthorpe@dbl@, poking|");
+        $text = append($text, "@dbl@around those trees. He will want a @dre@mithril axe@dbl@ and a|@dbl@@dre@holy symbol");
+
+    case ^animmag_has_blessed_axe :
+        $text = "@str@Ava has the chickens and the magnet. Turael swapped his|";
+        $text = append($text, "@str@blessed axe for a mithril axe and a holy symbol.||");
+        $text = append($text, "@dbl@I should chop the @dre@undead trees@dbl@ at @dre@Draynor Manor@dbl@ and take|");
+        $text = append($text, "@dbl@the @dre@undead twigs@dbl@ to @dre@Ava");
+
+    case ^animmag_twigs_given :
+        $text = "@str@Ava has the chickens, the magnet and the undead twigs.||";
+        $text = append($text, "@dbl@All that is left is a container to hold them in the right|");
+        $text = append($text, "@dbl@alignment. @dre@Ava@dbl@ has @dre@research notes@dbl@ she cannot read; I|");
+        $text = append($text, "@dbl@should ask her for a copy and @dre@translate@dbl@ them");
+
+    case ^animmag_notes_translated :
+        $text = "@str@Ava has the chickens, the magnet and the undead twigs, and I|";
+        $text = append($text, "@str@have made sense of her research notes.||");
+        $text = append($text, "@dbl@I should take the @dre@translated notes@dbl@ back to @dre@Ava");
+
+    case ^animmag_pattern_given :
+        $text = "@str@Ava has the chickens, the magnet and the undead twigs, and I|";
+        $text = append($text, "@str@translated her research notes.||");
+        $text = append($text, "@dbl@She has given me a @dre@pattern@dbl@. I should combine it with @dre@hard|@dre@leather@dbl@ and @dre@polished buttons@dbl@ and give her the @dre@container|");
+
+    case default :
+        $text = "@str@Ava of Draynor Manor could not sleep, so I bought her two|";
+        $text = append($text, "@str@undead chickens from a ghost farmer who could not talk to his|");
+        $text = append($text, "@str@own wife until the Old Crone made him an amulet.|");
+        $text = append($text, "@str@The Witch next door magnetised an iron bar for me, Turael|");
+        $text = append($text, "@str@blessed an axe so that I could cut the undead trees in the|");
+        $text = append($text, "@str@manor grounds, and I translated Ava's research notes and|");
+        $text = append($text, "@str@stitched her a container out of hard leather and buttons.|");
+        $text = append($text, "@str@She built me a machine that fetches my own arrows back.||");
+        $text = append($text, "@red@QUEST COMPLETE!");
+}
+
+~quest_journal("Animal Magnetism", $text);

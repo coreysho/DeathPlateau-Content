@@ -241,6 +241,13 @@ if (~ahoy_can_hear = false) {
     ~mesbox("She is saying something and you cannot hear it.");
     return;
 }
+// Animal Magnetism: she is also "some witch near here who changes ghostspeak amulets". The proc
+// returns true only while that quest actually has business with her - between Alice naming her and
+// the crone-made amulet reaching Alice's husband - so the petition below is never shut out for
+// longer than that. See quests/quest_animmag/scripts/animmag_farm.rs2.
+if (~animmag_crone = true) {
+    return;
+}
 if (%ahoy_questvar < ^ahoy_petition) {
     ~chatnpc("<p,angry>I am busy being dead.");
     return;

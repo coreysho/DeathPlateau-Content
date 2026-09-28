@@ -1,0 +1,114 @@
+// Animal Magnetism: the Witch next door, and the magnet.
+//
+// She takes 5 iron bars, picks one of them, and sends the player to the iron mine north-east of
+// Rimmington to hit it with a hammer while facing north. Dialogue from the OSRS wiki's
+// Transcript:Animal Magnetism.
+//
+// A NOTE ON "WHILE FACING NORTH". The rev-377 engine has no command that reads which way a player
+// is facing - there is facesquare to SET it and nothing to read it back - so the half of the
+// Witch's instruction that can be enforced is the place, and the hammer blow itself turns the
+// player north as it lands. The mine is checked as a rectangle in absolute coordinates
+// (^animmag_mine_* in quest_animmag.constant); outside it the player gets the transcript's own
+// "You aren't in the the right area for this to work." (its double "the" is the game's).
+
+[opnpc1,animmag_witch]
+if (%animmag < ^animmag_chickens_given) {
+    ~chatnpc("<p,angry>I'm working on my new recipe for spit-roast adventurer, so disturbing me isn't wise.");
+    return;
+}
+if (%animmag > ^animmag_magnet_made) {
+    ~chatnpc("<p,happy>Hoorah for you, the magnet is made. Go and bother Ava with it instead.");
+    return;
+}
+if (%animmag = ^animmag_magnet_made) {
+    ~chatnpc("<p,happy>Hoorah for you, you have the magnet. Just hand it over to Ava.");
+    return;
+}
+if (%animmag = ^animmag_iron_given) {
+    if (inv_total(inv, animmag_selected_iron) > 0) {
+        ~chatnpc("<p,angry>You were sent to try my patience, weren't you? Go away and make that magnet, then hand it to Ava.");
+        return;
+    }
+    ~chatnpc("<p,bored>I can't say that I didn't expect this; you'd lose your head if it weren't glued on.");
+    ~chatnpc("<p,neutral>Lucky I made some replacements. Take this one and leave me in peace.");
+    ~animmag_give(animmag_selected_iron);
+    return;
+}
+if (%animmag = ^animmag_witch_asked) {
+    @animmag_witch_bars;
+}
+~chatnpc("<p,happy>Hello, hello, my poppet. What brings you to my little room?");
+~chatplayer("<p,neutral>Ava next door needs a magnet, and she says you are the one to ask.");
+~chatnpc("<p,happy>Don't worry, deary, I can tell you just what to do and you won't have to worry your pretty head about the complicated bits.");
+switch_int (~p_choice2("Why are you being so nice about it?", 1, "Just tell me what you need.", 2)) {
+    case 1 :
+        ~chatplayer("<p,quiz>Why are you being so nice about it?");
+        ~chatnpc("<p,happy>I went to anger management classes, my lambkin; that's why I was treating you so kindly.");
+        ~chatnpc("<p,neutral>It's either this way of talking or I'll go back to shoving children into ovens.");
+    case default : ~chatplayer("<p,neutral>Just tell me what you need.");
+}
+~chatnpc("<p,happy>Just bring me <tostring(^animmag_iron_bars)> iron bars, though, and you're well on the way to never having to talk to me again.");
+%animmag = ^animmag_witch_asked;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+[label,animmag_witch_bars]
+if (inv_total(inv, iron_bar) = 0) {
+    ~chatnpc("<p,neutral>Oh, but sugarpie, I need <tostring(^animmag_iron_bars)> iron bars, you don't have any. Come back to me quickly with all <tostring(^animmag_iron_bars)> of them.");
+    return;
+}
+if (inv_total(inv, iron_bar) < ^animmag_iron_bars) {
+    ~chatnpc("<p,neutral>Oh, but sugarpie, I need <tostring(^animmag_iron_bars)> iron bars, you don't have enough. Come back to me quickly with all <tostring(^animmag_iron_bars)> of them.");
+    return;
+}
+if (inv_freespace(inv) < 1 & inv_total(inv, iron_bar) > ^animmag_iron_bars) {
+    ~chatnpc("<p,angry>You have no room for what I would give you back. Off you go.");
+    return;
+}
+switch_int (~p_choice2("Here are the bars.", 1, "I'd rather keep them.", 2)) {
+    case 1 : ~chatplayer("<p,neutral>Here are the bars.");
+    case default :
+        ~chatplayer("<p,neutral>I'd rather keep them.");
+        ~chatnpc("<p,angry>Oh, forget it, then. If you won't react to kindness, I'm back to luring infants into my oven.");
+        ~chatnpc("<p,angry>You'll have it on your conscience.");
+        return;
+}
+inv_del(inv, iron_bar, ^animmag_iron_bars);
+inv_add(inv, animmag_selected_iron, 1);
+~chatnpc("<p,happy>Great, you'll go far! I made some nice painted metal toys for you, snookums.");
+~chatnpc("<p,neutral>Go to the iron mine just north-east of Rimmington and hit the bar with a plain old smithing hammer while facing north.");
+~chatnpc("<p,neutral>Then take your new magnet to Ava. Poor girl, having to deal with whippersnappers like you.");
+%animmag = ^animmag_iron_given;
+~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+
+// =========================================================================== the hammer blow
+
+// Either way round: the hammer on the iron here, and the iron on the hammer through the case added
+// to general_use/scripts/hammer.rs2's existing [opheldu,hammer] - declaring a second one for an item
+// as common as a hammer would take over every other "use something on a hammer" in the game.
+[opheldu,animmag_selected_iron]
+if (last_useitem ! hammer) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@animmag_make_magnet;
+
+[label,animmag_make_magnet]
+if (coordx(coord) < ^animmag_mine_west | coordx(coord) > ^animmag_mine_east | coordz(coord) < ^animmag_mine_south | coordz(coord) > ^animmag_mine_north) {
+    mes("You aren't in the the right area for this to work.");
+    return;
+}
+mes("You think that facing North might work better.");
+facesquare(movecoord(coord, 0, 0, 1));
+anim(human_smithing, 0);
+sound_synth(anvil, 1, 0);
+p_delay(2);
+if (inv_total(inv, animmag_selected_iron) = 0) {
+    return;
+}
+inv_del(inv, animmag_selected_iron, 1);
+inv_add(inv, animmag_bar_magnet, 1);
+mes("You hammer the iron bar and create a magnet.");
+if (%animmag = ^animmag_iron_given) {
+    %animmag = ^animmag_magnet_made;
+    ~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+}

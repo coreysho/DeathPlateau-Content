@@ -11,7 +11,7 @@
 // Passive while worn (hooked where each skill does the work - grep "skillcape_worn(" to find them):
 //   Attack      no tokens for the cyclopes (already in wguild.rs2)
 //   Defence     works as a ring of life, and is not used up     (enchanted_jewellry/ring_of_life.rs2)
-//   Ranged      Ava's accumulator: 72% of ammo comes back       (player_ranged.rs2, pvp_ranged.rs2)
+//   Ranged      Ava's accumulator: 72% of ammo comes back       (~ranged_ammo_saved)
 //   Hitpoints   natural hitpoint regeneration doubled, not with Rapid Heal   (player/scripts/stat.rs2)
 //   Runecraft   every mysterious ruins opens without a talisman or tiara     (~runecraft_sync_no_tally)
 //   Herblore    a grimy herb on a vial of water is cleaned then mixed        (brew_potion.rs2)
@@ -273,6 +273,9 @@ switch_int ($what) {
 // ---- small helpers the skill scripts call ----
 
 // Ranged cape as Ava's accumulator: true = the shot's ammo comes back to the quiver (72%).
+// Since Animal Magnetism this is the fallback rather than the whole story: combat asks
+// ~ranged_ammo_saved (quests/quest_animmag/scripts/avas_device.rs2), which looks for a real Ava's
+// device on the back first and comes here when there is none. The two cannot be worn together.
 [proc,skillcape_ammo_saved]()(boolean)
 if (~skillcape_worn(ranged) = true & random(100) < 72) {
     return(true);

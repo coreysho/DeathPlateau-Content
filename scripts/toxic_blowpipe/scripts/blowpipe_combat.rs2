@@ -6,9 +6,9 @@
 //     Longrange (its attackrange param, through ~player_attackrange);
 //   * each shot spends a scale two times in three ("the blowpipe has a 1/3 chance to not use scales")
 //     and a dart - which never lands on the floor, it is simply used. An Ava's device keeps the dart
-//     72% of the time; this build has no Ava's devices, and its Ranging cape stands in for the
-//     accumulator (skillcapes/scripts/skillcape_perks.rs2 ~skillcape_ammo_saved, 72%), so that is
-//     what saves a dart here;
+//     (the accumulator 72% of the time, the attractor 60%). Animal Magnetism put those devices in
+//     the game, so ~ranged_ammo_saved (quests/quest_animmag/scripts/avas_device.rs2) is
+//     what saves a dart here - and it still answers for the Ranging cape that stood in before;
 //   * a quarter of the hits that do damage envenom the target (scripts/venom.rs2);
 //   * no scales or no darts, no shot.
 //
@@ -51,14 +51,14 @@ if (%damagestyle = ^style_ranged_rapid) {
 }
 return($rate);
 
-// One shot's worth: a scale two times in three, a dart unless the Ranging cape saves it. Returns
+// One shot's worth: a scale two times in three, a dart unless an Ava's device saves it. Returns
 // false when the blowpipe has just run out of either - the caller must not re-target, since the next
 // shot cannot be made. With nothing left in it at all it turns into the empty blowpipe in the hands.
 [proc,blowpipe_spend]()(boolean)
 if (random(3) ! 0) {
     %blowpipe_scales = max(0, sub(%blowpipe_scales, 1));
 }
-if (~skillcape_ammo_saved = false) {
+if (~ranged_ammo_saved = false) {
     %blowpipe_darts = max(0, sub(%blowpipe_darts, 1));
 }
 if (%blowpipe_scales > 0 & %blowpipe_darts > 0) {

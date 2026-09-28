@@ -1,0 +1,33 @@
+// Animal Magnetism. quest_animmag.constant has the values.
+//
+// Not transmitted: nothing in the cache is a multi on this quest (the 377 cache predates it), so
+// the client never needs to see the stage.
+
+[animmag]
+scope=perm
+
+// Alice and her husband, the back-and-forth at the Morytania farm.
+[animmag_farm]
+scope=perm
+
+// Set the first time Ava hands the research notes over, so that a second request is answered with
+// "Don't tell me, your cat ate them?" rather than the whole first-time speech again.
+[animmag_notes_given]
+scope=perm
+
+// The research notes puzzle: which of the five marks is the answer this round, and how many rounds
+// are left. Both are thrown away when the player logs out - the puzzle simply starts again.
+[animmag_notes_mark]
+scope=temp
+
+[animmag_notes_round]
+scope=temp
+
+// Ava's device attracting metal: the map_clock the next pickup is allowed at, and where the player
+// was standing when the last one happened (the "moved at least three tiles" rule).
+[animmag_attract_clock]
+scope=temp
+
+[animmag_attract_coord]
+scope=temp
+type=coord

@@ -1,0 +1,114 @@
+// Animal Magnetism (12 December 2006). Ava, in the west wing of Draynor Manor, wants two undead
+// chickens for her bed; what she builds out of the second one is the first Ava's device.
+//
+// ^animmag_complete lives in general/configs/quest.constant with every other quest's, not here -
+// declaring it twice is "Duplicate constant found".
+//
+// Nothing in all.npc or all.loc carries multivar=animmag (the quest postdates the 377 cache
+// entirely), so the stage var is unconstrained and runs in ones.
+
+^animmag_not_started = 0
+// Ava has asked for two undead chickens from the farm near Port Phasmatys.
+^animmag_started = 1
+// Both chickens handed over. Ava wants a magnet next, and sends the player to the Witch next door.
+^animmag_chickens_given = 2
+// The Witch has asked for 5 iron bars.
+^animmag_witch_asked = 3
+// The bars are hers; the player is carrying the selected iron to the Rimmington mine.
+^animmag_iron_given = 4
+// The bar magnet exists.
+^animmag_magnet_made = 5
+// Ava has the magnet and has sent the player at the undead trees in the garden.
+^animmag_magnet_given = 6
+// The axe bounced off the trunk.
+^animmag_axe_bounced = 7
+// Ava has named Turael, the Slayer Master near Burthorpe.
+^animmag_turael_told = 8
+// Turael has swapped a mithril axe and a holy symbol for his blessed axe.
+^animmag_has_blessed_axe = 9
+// The undead twigs are Ava's. The research notes are hers to hand over on request.
+^animmag_twigs_given = 10
+// The notes are translated.
+^animmag_notes_translated = 11
+// Ava has given the pattern for the container.
+^animmag_pattern_given = 12
+
+// ------------------------------------------------------------------ Alice and her husband
+// The farm thread, tracked separately in %animmag_farm, because it is a back-and-forth between two
+// npcs who each need the other's last answer. The order is the transcript's.
+^animmag_farm_none = 0
+// Alice: you need to talk to my husband - not that I can these days.
+^animmag_farm_alice_asked = 1
+// Malcolm: I do miss the wife though; tell 'er I still loves her.
+^animmag_farm_malcolm_message = 2
+// Alice: tell him I love him but I can't find our savings.
+^animmag_farm_alice_savings = 3
+// Malcolm: tell 'er I putted the cash in the bank like she always told me to.
+^animmag_farm_malcolm_bank = 4
+// Alice: I'll need his bank pass, in that case.
+^animmag_farm_alice_pass = 5
+// Malcolm: no one but a fool gives away their pass numbers.
+^animmag_farm_malcolm_refuse = 6
+// Alice: there's some witch near here who changes ghostspeak amulets.
+^animmag_farm_alice_witch = 7
+// The Old Crone has made the amulet.
+^animmag_farm_has_amulet = 8
+// The amulet is Malcolm's, the two of them can talk, and he will sell chickens.
+^animmag_farm_reunited = 9
+
+// ------------------------------------------------------------------ requirements
+// OSRS wiki, Animal Magnetism: The Restless Ghost, Ernest the Chicken and Priest in Peril, plus
+// 18 Slayer, 19 Crafting, 30 Ranged and 35 Woodcutting, none of them boostable.
+^animmag_slayer_level = 18
+^animmag_crafting_level = 19
+^animmag_ranged_level = 30
+^animmag_woodcutting_level = 35
+
+// ------------------------------------------------------------------ prices and rewards
+// Malcolm's price: 10 ecto-tokens a bird, two birds.
+^animmag_chicken_price = 10
+// The Witch's price for the selected iron.
+^animmag_iron_bars = 5
+// Two 50xp Crafting nudges along the way ("Your work with the magnet increases your Crafting
+// experience slightly"). Stat values are xp x10.
+^animmag_step_craft_xp = 500
+^animmag_reward_craft_xp = 10000
+^animmag_reward_fletch_xp = 10000
+^animmag_reward_slayer_xp = 10000
+^animmag_reward_wc_xp = 25000
+// The Ranged level at which Ava hands over the accumulator instead of the attractor, and at which
+// she will upgrade an attractor already earned.
+^animmag_accumulator_level = 50
+
+// ------------------------------------------------------------------ places
+// Ava, and the Witch in the room north of her, in Draynor Manor's west wing. Ava's tile is the
+// wiki's own start point, (3093,3358).
+^animmag_ava_coord = 0_48_52_21_30
+^animmag_witch_coord = 0_48_52_21_41
+// The iron mine north-east of Rimmington, as a rectangle in absolute coordinates: the Witch's
+// "Go to the iron mine just north-east of Rimmington". The rockslides the map already places sit
+// at (2971-2973, 3244-3246), in the middle of it.
+^animmag_mine_west = 2966
+^animmag_mine_east = 2988
+^animmag_mine_south = 3235
+^animmag_mine_north = 3252
+
+// ------------------------------------------------------------------ Ava's devices
+// OSRS wiki, Ava's attractor / Ava's accumulator. Of every shot fired while one is worn:
+//   attractor    20% breaks, 20% falls on the floor, 60% comes straight back
+//   accumulator  20% breaks,  8% falls on the floor, 72% comes straight back
+^animmag_attractor_save = 60
+^animmag_accumulator_save = 72
+// "Approximately every 3.5 minutes, Ava's accumulator will attract an assortment of steel items,
+// provided that the player has moved at least three tiles since the last pickup." 3.5 minutes is
+// 210 seconds is 350 ticks.
+^animmag_attract_interval = 350
+^animmag_attract_distance = 3
+// The devices' own prices when Ava replaces or upgrades one: 999 coins and 75 steel arrows for a
+// device from scratch, 75 steel arrows alone for the attractor -> accumulator upgrade.
+^animmag_device_coins = 999
+^animmag_device_arrows = 75
+// How often the softtimer that runs the metal attraction fires. It is not the 3.5-minute interval
+// itself (that is ^animmag_attract_interval, checked against map_clock); it only has to be fine
+// enough not to round it up much.
+^animmag_attract_ticks = 25

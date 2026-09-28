@@ -38886,27 +38886,8 @@ op1=Talk-To
 vislevel=hide
 head1=npc_1686_head
 
-[ahoy_ghost_farmer]
-name=Ghost Farmer
-desc=A spooky ghost farmer.
-model1=npc_1686
-model2=npc_1684i2
-model3=npc_1684i3
-model4=npc_1684i4
-model5=npc_1701
-model6=npc_1701i2
-recol1s=14861
-recol1d=15950
-walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
-readyanim=human_ready
-resizev=110
-resizeh=110
-ambient=40
-contrast=40
-op1=Talk-To
-vislevel=hide
-head1=npc_1686_head
-head2=npc_1701_head
+// [ahoy_ghost_farmer] - Alice's husband - moved to
+// quests/quest_animmag/configs/animmag.npc, which gives him his name and a chathead.
 
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /

@@ -193,7 +193,7 @@ if($ammo = holy_water) {
     ~ranged_dropammo_holywater(npc_coord, $delay);
     return;
 }
-if (~skillcape_ammo_saved = true) { // Ranging cape = Ava's accumulator: the ammo stays in the quiver
+if (~ranged_ammo_saved = true) { // Ava's device, or the Ranging cape standing in for one: the ammo stays in the quiver
     return;
 }
 if (random(^dropammo_chance) ! 0) {

@@ -1,0 +1,114 @@
+// Animal Magnetism: translating Ava's research notes, and stitching the container.
+//
+// THE TRANSLATION. In OSRS this is an interface of its own - the wiki calls it "a simple mini-game"
+// and records neither its layout nor its rules, and the 377 cache has no interface for it at all
+// (the quest is three months younger than the cache). Rather than invent a screen, the translation
+// is played out in the chat box: three lines of the notes, each a row of five marks with a scribble
+// in the margin saying which of them the writer meant. Get one wrong and the line starts again;
+// get three right and "It suddenly all makes sense.", which is the game's own line, with its ding.
+// The marks and the margin notes are this build's, and are flagged here as such.
+
+[opheld1,animmag_research_notes]
+%animmag_notes_round = 0;
+@animmag_notes_line;
+
+[label,animmag_notes_line]
+if (inv_total(inv, animmag_research_notes) = 0) {
+    return;
+}
+if (%animmag_notes_round >= 3) {
+    inv_del(inv, animmag_research_notes, 1);
+    inv_add(inv, animmag_translated_notes, 1);
+    sound_synth(100_question_correct, 1, 0);
+    mes("It suddenly all makes sense.");
+    if (%animmag = ^animmag_twigs_given) {
+        %animmag = ^animmag_notes_translated;
+        ~send_quest_progress(questlist:animmag, %animmag, ^animmag_complete);
+    }
+    return;
+}
+%animmag_notes_mark = random(5);
+~mesbox("A line of the notes: a circle, a cross, a wave, a star, a spiral.|In the margin, in Ava's hand: '<~animmag_notes_clue(%animmag_notes_mark)>'.");
+def_int $pick = ~p_choice5_header("A circle.", 0, "A cross.", 1, "A wave.", 2, "A star.", 3, "A spiral.", 4, "Which mark did she mean?");
+if ($pick ! %animmag_notes_mark) {
+    sound_synth(100_question_wrong, 1, 0);
+    mes("That is not what she meant. You lose your place and start the line again.");
+    %animmag_notes_round = 0;
+    return;
+}
+%animmag_notes_round = add(%animmag_notes_round, 1);
+mes("The line comes clear. <tostring(%animmag_notes_round)> of 3.");
+@animmag_notes_line;
+
+[proc,animmag_notes_clue](int $mark)(string)
+switch_int ($mark) {
+    case 0 : return("the mark with no beginning and no end");
+    case 1 : return("the mark that is two strokes, not one");
+    case 2 : return("the mark that is water");
+    case 3 : return("the mark with five points");
+    case default : return("the mark that turns in on itself");
+}
+
+// =========================================================================== the container
+//
+// The pattern, hard leather and polished buttons. Whichever two of the three are put together, the
+// game names the third - those three messages are the transcript's.
+
+[opheldu,animmag_pattern]
+switch_obj (last_useitem) {
+    case hard_leather : @animmag_make_container;
+    case polished_buttons : @animmag_make_container;
+    case default : ~displaymessage(^dm_default);
+}
+
+[opheldu,polished_buttons]
+switch_obj (last_useitem) {
+    case animmag_pattern : @animmag_make_container;
+    case hard_leather : mes("You need a pattern as well as these 2 items.");
+    case default : ~displaymessage(^dm_default);
+}
+
+[label,animmag_make_container]
+if (inv_total(inv, animmag_pattern) = 0) {
+    mes("You need a pattern as well as these 2 items.");
+    return;
+}
+if (inv_total(inv, hard_leather) = 0) {
+    mes("You need hard leather as well as these 2 items.");
+    return;
+}
+if (inv_total(inv, polished_buttons) = 0) {
+    mes("You need polished buttons as well as these 2 items.");
+    return;
+}
+inv_del(inv, animmag_pattern, 1);
+inv_del(inv, hard_leather, 1);
+inv_del(inv, polished_buttons, 1);
+inv_add(inv, animmag_container, 1);
+mes("You stitch the leather around the pattern and fasten it with the buttons.");
+
+// =========================================================================== destroying the lot
+//
+// Every one of these is replaceable - Ava hands out research notes and patterns all day and the
+// Witch keeps spare iron - so Destroy says where the next one comes from rather than refusing.
+
+[opheld5,animmag_research_notes] @animmag_destroy(animmag_research_notes, "Ava has copies of the research notes.");
+[opheld5,animmag_translated_notes] @animmag_destroy(animmag_translated_notes, "Ava has copies of the research notes, if you want to translate them again.");
+[opheld5,animmag_pattern] @animmag_destroy(animmag_pattern, "Ava has spare patterns.");
+[opheld5,animmag_container] @animmag_destroy(animmag_container, "Ava has spare patterns, and you can make another container.");
+[opheld5,animmag_selected_iron] @animmag_destroy(animmag_selected_iron, "The Witch in Draynor Manor keeps replacements.");
+[opheld5,animmag_bar_magnet] @animmag_destroy(animmag_bar_magnet, "The Witch in Draynor Manor keeps replacements for the iron it was made from.");
+[opheld5,animmag_undead_twigs] @animmag_destroy(animmag_undead_twigs, "The undead trees at Draynor Manor have plenty more.");
+[opheld5,animmag_undead_chicken] @animmag_destroy(animmag_undead_chicken, "Alice's husband will sell you another for ecto-tokens.");
+[opheld5,animmag_crone_amulet] @animmag_destroy(animmag_crone_amulet, "The Old Crone saved some of Alice's hair in case you were careless.");
+[opheld5,animmag_blessed_axe] @animmag_destroy(animmag_blessed_axe, "Turael will make another from a mithril axe and a holy symbol.");
+
+[label,animmag_destroy](namedobj $obj, string $again)
+~mesbox($again);
+if (~p_choice2("Destroy it.", 1, "Keep it.", 2) ! 1) {
+    return;
+}
+if (inv_total(inv, $obj) < 1) {
+    return;
+}
+inv_del(inv, $obj, 1);

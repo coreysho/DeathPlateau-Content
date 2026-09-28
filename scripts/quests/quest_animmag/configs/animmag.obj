@@ -1,0 +1,256 @@
+// Animal Magnetism's items. Imported from the rev 474 cache (objs 10487-10500) by
+// tools/models/import474.py - the 377 cache predates the quest (rev 377 is ~September 2006, the
+// quest went live on 12 December 2006), so none of them are in scripts/_unpack/377/all.obj.
+// Models are copied byte-for-byte; 474 uses the same model format the 377 client reads.
+//
+// What the cache does not carry - weight, category, combat params - is filled in here from the
+// OSRS wiki's own item pages.
+
+[animmag_undead_chicken]
+name=Undead chicken
+desc=It's an undead chicken. It doesn't smell great.
+model=obj_animmag_undead_chicken
+manwear=obj_animmag_undead_chicken,0
+womanwear=obj_animmag_undead_chicken,0
+2dxof=-9
+2dyof=24
+2dzoom=1308
+2dxan=2047
+2dyan=1853
+2dzan=1895
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+cost=100
+members=yes
+tradeable=no
+weight=2lb
+// Ava's "Well, I have this one which I can use to club people." - it really is wieldable, and it
+// really is a terrible weapon.
+category=weapon_blunt
+param=crushattack,-5
+param=strengthbonus,-5
+param=attackrate,5
+param=crushattack_anim,human_blunt_pound
+param=crush_sound,staff_hit
+
+[animmag_selected_iron]
+name=Selected iron
+desc=A carefully selected iron bar.
+model=obj_animmag_selected_iron
+2dyof=18
+2dzoom=1178
+2dxan=304
+2dyan=194
+iop5=Destroy
+cost=10
+members=yes
+tradeable=no
+weight=2lb
+
+[animmag_bar_magnet]
+name=Bar magnet
+desc=A very attractive iron bar.
+model=obj_animmag_bar_magnet
+2dyof=18
+2dzoom=1178
+2dxan=286
+2dyan=224
+iop5=Destroy
+cost=15
+members=yes
+tradeable=no
+weight=2lb
+
+[animmag_undead_twigs]
+name=Undead twigs
+desc=Twigs from a tree that would rather I had not.
+model=obj_animmag_undead_twigs
+2dxof=3
+2dyof=-30
+2dzoom=2151
+2dxan=567
+2dyan=146
+2dzan=97
+iop5=Destroy
+cost=1
+members=yes
+tradeable=no
+weight=1oz
+
+// Turael's own axe with its edge replaced by holy silver. It fights exactly as the mithril axe it
+// was, but it has no woodcutting_struct param, so it cuts nothing in skill_woodcutting - "Blessed
+// axes are too soft to cut normal wood since the axe's edge must be replaced by holy silver."
+[animmag_blessed_axe]
+name=Blessed axe
+desc=A mithril axe with an edge of holy silver.
+model=obj_animmag_blessed_axe
+manwear=obj_animmag_blessed_axe_manwear,0
+womanwear=obj_animmag_blessed_axe_manwear,6
+2dxof=-15
+2dzoom=1060
+2dxan=520
+2dyan=1196
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+cost=20
+members=yes
+tradeable=no
+weight=40oz
+category=weapon_axe
+param=stabattack,-2
+param=slashattack,12
+param=crushattack,10
+param=slashdefence,1
+param=strengthbonus,13
+param=levelrequire,21
+param=attackrate,5
+param=slashattack_anim,human_axe_hack
+param=crushattack_anim,human_blunt_pound
+param=slash_sound,baxe_slash
+param=crush_sound,baxe_crush
+
+[animmag_research_notes]
+name=Research notes
+desc=These make no sense at all.
+model=obj_animmag_research_notes
+2dxof=1
+2dyof=-1
+2dzoom=2411
+2dxan=429
+iop1=Translate
+iop5=Destroy
+cost=1
+members=yes
+tradeable=no
+weight=7oz
+
+[animmag_translated_notes]
+name=Translated notes
+desc=Ava's research notes, in a language I can read.
+model=obj_animmag_research_notes
+2dxof=1
+2dyof=-1
+2dzoom=2411
+2dxan=240
+iop5=Destroy
+cost=2
+members=yes
+tradeable=no
+weight=7oz
+
+[animmag_pattern]
+name=A pattern
+desc=A pattern for the container Ava wants.
+model=obj_animmag_pattern
+2dxof=1
+2dyof=4
+2dzoom=1124
+2dxan=462
+2dyan=2024
+iop5=Destroy
+cost=10
+members=yes
+tradeable=no
+weight=7oz
+
+[animmag_container]
+name=A container
+desc=A leather container, held together with polished buttons.
+model=obj_animmag_container
+2dxof=-4
+2dyof=8
+2dzoom=919
+2dxan=360
+2dyan=1231
+2dzan=1923
+iop5=Destroy
+cost=10
+members=yes
+tradeable=no
+weight=8oz
+
+// Polished buttons are a H.A.M. member's pickpocket loot as well as a quest item, so unlike the
+// rest of this file they trade.
+[polished_buttons]
+name=Polished buttons
+desc=Buttons, polished.
+model=obj_polished_buttons
+2dxof=-3
+2dyof=3
+2dzoom=530
+2dxan=235
+2dyan=1936
+cost=1
+weight=1oz
+
+// AVA'S DEVICES. The cape-slot half of the reward. Stats from the OSRS wiki's own item pages:
+// the attractor is +2 ranged attack and +2 magic defence, the accumulator +4 ranged attack,
+// +1 slash defence and +4 magic defence. Their behaviour is in scripts/avas_device.rs2.
+[avas_attractor]
+name=Ava's attractor
+desc=A great tangle of string and magnets. It attracts arrows.
+model=obj_avas_attractor
+manwear=obj_avas_attractor_manwear,0
+womanwear=obj_avas_attractor_womanwear,0
+2dxof=-4
+2dyof=-1
+2dzoom=976
+2dxan=567
+2dyan=1120
+2dzan=1923
+iop2=Wear
+iop5=Destroy
+wearpos=back
+cost=769
+members=yes
+tradeable=no
+weight=8oz
+category=armour_cape
+param=rangeattack,2
+param=magicdefence,2
+
+[avas_accumulator]
+name=Ava's accumulator
+desc=A great tangle of string and magnets. It accumulates arrows.
+model=obj_avas_accumulator
+manwear=obj_avas_accumulator_manwear,0
+womanwear=obj_avas_accumulator_womanwear,0
+2dxof=-4
+2dyof=-1
+2dzoom=976
+2dxan=567
+2dyan=1120
+2dzan=1923
+iop2=Wear
+iop5=Destroy
+wearpos=back
+cost=1000
+members=yes
+tradeable=no
+weight=8oz
+category=armour_cape
+param=rangeattack,4
+param=slashdefence,1
+param=magicdefence,4
+
+// The Old Crone mirrors the unused essence of a ghostspeak amulet and binds it with one of Alice's
+// golden hairs. It only ever works for Alice and her husband, so it has no iop2=Wear gate of its
+// own beyond that - see animmag_farm.rs2.
+[animmag_crone_amulet]
+name=Crone-made amulet
+desc=An amulet the Old Crone made from one of Alice's hairs.
+model=obj_animmag_crone_amulet
+manwear=obj_animmag_crone_amulet_manwear,0
+womanwear=obj_animmag_crone_amulet_womanwear,0
+2dzoom=480
+2dxan=207
+2dyan=97
+iop2=Wear
+iop5=Destroy
+wearpos=front
+cost=20
+members=yes
+tradeable=no
+weight=10g

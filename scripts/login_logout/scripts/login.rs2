@@ -106,6 +106,9 @@ if (%tutorial < ^tutorial_complete & ~in_tutorial_island(coord) = true) {
 ~misc_login;
 // Anything that happened on the trading post while they were away.
 ~tp_login;
+// Animal Magnetism: the timer that lets a worn Ava's device pull in loose metal. It does nothing
+// at all unless one is on the player's back - see quests/quest_animmag/scripts/avas_device.rs2.
+softtimer(animmag_attract, ^animmag_attract_ticks);
 
 ~initalltabs;
 ~update_all(inv_getobj(worn, ^wearpos_rhand));

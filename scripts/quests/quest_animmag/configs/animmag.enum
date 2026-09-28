@@ -1,0 +1,41 @@
+// METAL TORSO ARMOUR, for Ava's device. "The accumulator will not work when metal torso armour
+// (Ahrim's top included) is worn, as this will cause 'interference'" - and the release update notes
+// the RS wiki quotes name the exceptions: granite, Fremennik armour, Bandos, Varrock armour, WHITE
+// armour, Karil's, studded leather, Armadyl, the fighter torso and the proselyte hauberk all leave
+// the magnet alone. So this is a list, not a category test: [armour_body] is worn by studded
+// leather too, and studded leather is explicitly not metal.
+//
+// Only the metal attraction is blocked. Ammo still comes back either way.
+[animmag_interference]
+inputtype=obj
+outputtype=boolean
+default=no
+val=bronze_chainbody,yes
+val=iron_chainbody,yes
+val=steel_chainbody,yes
+val=black_chainbody,yes
+val=mithril_chainbody,yes
+val=adamant_chainbody,yes
+val=rune_chainbody,yes
+val=dragon_chainbody,yes
+val=bronze_platebody,yes
+val=iron_platebody,yes
+val=steel_platebody,yes
+val=black_platebody,yes
+val=black_platebody_trim,yes
+val=black_platebody_gold,yes
+val=mithril_platebody,yes
+val=adamant_platebody,yes
+val=adamant_platebody_trim,yes
+val=adamant_platebody_gold,yes
+val=rune_platebody,yes
+val=rune_platebody_trim,yes
+val=rune_platebody_gold,yes
+val=rune_platebody_goldplate,yes
+val=rune_platebody_zamorak,yes
+val=rune_platebody_guthix,yes
+val=rune_platebody_saradomin,yes
+val=barrows_dharok_body,yes
+val=barrows_guthan_body,yes
+val=barrows_torag_body,yes
+val=barrows_ahrim_body,yes

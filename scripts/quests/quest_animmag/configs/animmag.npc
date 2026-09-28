@@ -1,0 +1,146 @@
+// Animal Magnetism's people. Imported from the rev 474 cache (npcs 5198, 5200, 5208, 5209, 5210)
+// by tools/models/importnpc474.py; the chathead models the importer does not carry were copied out
+// of the same cache by hand. Rev 377 is ~September 2006 and the quest went live on 12 December
+// 2006, so none of these are in scripts/_unpack/377/all.npc.
+//
+// Two of the quest's cast are already here and are NOT re-imported:
+//   Alice                 [farming_shopkeeper_4], the Morytania farming shop, m56_55 (43,6)
+//   Alice's husband       [ahoy_ghost_farmer], below - moved out of _unpack for his chathead
+// and the Old Crone is [ahoy_crone] (Ghosts Ahoy), east of the Slayer Tower on m54_55.
+
+// Ava, in the west wing of Draynor Manor. The cache gives her op1=Talk-to AND op3=Trade; Trade is
+// wired in quest_animmag.rs2 - before the quest it is her "I'm busy with my research" brush-off, and
+// after it, it is where a lost or upgraded device is bought back.
+[animmag_ava]
+name=Ava
+desc=A scientist, researching the interactions between ghosts and the force of pure science.
+model1=npc_animmag_ava_1
+model2=npc_animmag_ava_2
+model3=npc_animmag_ava_3
+model4=npc_animmag_ava_4
+model5=npc_animmag_ava_5
+model6=npc_animmag_ava_6
+head1=npc_animmag_ava_head1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+op3=Trade
+recol1s=2340
+recol1d=7395
+recol2s=6273
+recol2d=25362
+vislevel=hide
+
+// Helda, "the Witch next door" - the north room of the same wing. She is named Witch in the cache
+// and the transcript never uses another name to her face, so Witch is what she is called here.
+[animmag_witch]
+name=Witch
+desc=She went to anger management classes, apparently.
+model1=npc_animmag_witch_1
+model2=npc_animmag_witch_2
+model3=npc_animmag_witch_3
+model4=npc_animmag_witch_4
+model5=npc_animmag_witch_5
+model6=npc_animmag_witch_6
+head1=npc_animmag_witch_head1
+head2=npc_animmag_witch_head2
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+recol1s=455
+recol1d=22091
+recol2s=24075
+recol2d=22091
+recol3s=2340
+recol3d=7333
+recol4s=14724
+recol4d=7332
+recol5s=9583
+recol5d=7332
+recol6s=7469
+recol6d=6275
+vislevel=hide
+
+// The trees in the Draynor Manor grounds are npcs, not scenery - that is how the cache has them,
+// and it is why Ava calls them "the ones that attack rather than the really dead ones". They stand
+// still and only answer Chop.
+[animmag_undead_tree]
+name=Undead tree
+desc=It looks like it would rather I did not.
+model1=npc_animmag_undead_tree_1
+op1=Chop
+moverestrict=nomove
+recol1s=7296
+recol1d=4194
+recol2s=6240
+recol2d=4194
+vislevel=hide
+
+// The chicken Malcolm chases around the farm when the amulet finally lets him talk to his wife.
+// (The cache name has a leading space; it is dropped here.)
+[animmag_sneaky_fowl]
+name=Sneaky undead fowl
+desc=Yep, definitely a chicken...an undead chicken.
+model1=npc_animmag_sneaky_fowl_1
+head1=npc_animmag_sneaky_fowl_head1
+readyanim=chicken_ready
+walkanim=chicken_walk
+resizeh=64
+resizev=64
+vislevel=hide
+
+// The adventurer who is always already there when you arrive.
+[animmag_cowkiller]
+name=Cow31337Killer
+desc=Buying cowhides and feathers.
+model1=npc_animmag_cowkiller_1
+model2=npc_animmag_cowkiller_2
+model3=npc_animmag_cowkiller_3
+model4=npc_animmag_cowkiller_4
+model5=npc_animmag_cowkiller_5
+model6=npc_animmag_cowkiller_6
+model7=npc_animmag_cowkiller_7
+model8=npc_animmag_cowkiller_8
+model9=npc_animmag_cowkiller_9
+head1=npc_animmag_cowkiller_head1
+head2=npc_animmag_cowkiller_head2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+recol1s=15855
+recol1d=6476
+recol2s=10570
+recol2d=3272
+recol3s=14798
+recol3d=17048
+recol4s=2340
+recol4d=3272
+recol5s=9473
+recol5d=131
+vislevel=123
+
+// Alice's husband - moved out of _unpack/377/all.npc, where he was the nameless "Ghost Farmer" with
+// op1=Talk-To and no script at all: a dead click on the farm since the day Ghosts Ahoy went in.
+// The only change is the name the quest gives him (474 npc 5202 calls him Alice's husband); the
+// models, chatheads, recolours, anims and sizes below are his 377 block unchanged.
+[ahoy_ghost_farmer]
+name=Alice's husband
+desc=A spooky ghost farmer.
+model1=npc_1686
+model2=npc_1684i2
+model3=npc_1684i3
+model4=npc_1684i4
+model5=npc_1701
+model6=npc_1701i2
+head1=npc_1686_head
+head2=npc_1701_head
+recol1s=14861
+recol1d=15950
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+readyanim=human_ready
+resizev=110
+resizeh=110
+ambient=40
+contrast=40
+op1=Talk-To
+vislevel=hide
