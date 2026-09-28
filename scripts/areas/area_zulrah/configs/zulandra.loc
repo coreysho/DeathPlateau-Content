@@ -1,0 +1,306 @@
+// OSRS locs imported by tools/models/importosrsmap.py (osrslocimport.py).
+//
+// THREE OPS ARE COMMENTED OUT BELOW, by hand after the import, because this build has nothing
+// behind them and an op with no trigger is a dead click: the chest's Deposit wants a deposit box
+// (a much later feature), the crate's Search wants a searchable-crate table Zul-Andra is not in,
+// and the "Inconspicuous hole" is a Construction hotspot that has no business on a village floor.
+// Re-running the importer puts them back - take them out again.
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+// [osrsloc_816] is NOT repeated here: the Kraken Cove round already imported it
+// (area_kraken_cove/configs/kraken_cove.loc) and a config may be declared once. The loc
+// itself is still placed on this square - the pack id is shared, which is the point.
+[osrsloc_5495]
+// OSRS loc 5495
+name=Bed
+model=osrsloc_5495
+width=2
+length=3
+blockrange=no
+
+[osrsloc_10064]
+// OSRS loc 10064
+model=osrsloc_10064
+blockrange=no
+active=no
+hillskew=yes
+mapscene=6
+ambient=15
+contrast=100
+
+[osrsloc_10065]
+// OSRS loc 10065
+model=osrsloc_10065
+blockrange=no
+active=no
+hillskew=yes
+mapscene=6
+ambient=15
+contrast=100
+
+[osrsloc_10066]
+// OSRS loc 10066
+model=osrsloc_10066
+blockrange=no
+active=no
+hillskew=yes
+mapscene=6
+ambient=15
+contrast=100
+
+[osrsloc_10658]
+// OSRS loc 10658
+name=Torch
+model=osrsloc_10658
+blockrange=no
+anim=osrsloc_anim_473
+
+[osrsloc_10659]
+// OSRS loc 10659
+model=osrsloc_10659
+length=3
+active=no
+offsetz=-96
+anim=osrsloc_anim_1363
+
+[osrsloc_10660]
+// OSRS loc 10660
+name=Fire
+model=osrsloc_10660
+blockrange=no
+ambient=75
+contrast=127
+anim=osrsloc_anim_475
+
+[osrsloc_10661]
+// OSRS loc 10661
+name=Chest
+model=osrsloc_10661
+forceapproach=north
+// op1=Deposit
+
+[osrsloc_10662]
+// OSRS loc 10662
+name=Crate
+model=osrsloc_10662
+blockrange=no
+// op1=Search
+
+[osrsloc_12892]
+// OSRS loc 12892
+name=Table
+model=osrsloc_12892
+blockrange=no
+
+[osrsloc_12940]
+// OSRS loc 12940
+model=osrsloc_12940
+hillskew=yes
+sharelight=yes
+mirror=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_16403]
+// OSRS loc 16403
+model=osrsloc_16403
+active=no
+
+[osrsloc_16412]
+// OSRS loc 16412
+model=osrsloc_16412
+active=no
+
+[osrsloc_16424]
+// OSRS loc 16424
+model=osrsloc_16424
+active=no
+
+[osrsloc_16553]
+// OSRS loc 16553
+model=osrsloc_16553
+active=no
+
+[osrsloc_22350]
+// OSRS loc 22350
+model=osrsloc_22350
+blockrange=no
+active=no
+hillskew=yes
+ambient=20
+contrast=100
+
+[osrsloc_22351]
+// OSRS loc 22351
+model=osrsloc_22351
+blockrange=no
+active=no
+hillskew=yes
+ambient=20
+contrast=100
+
+[osrsloc_28952]
+// OSRS loc 28952
+name=Inconspicuous hole (master)
+model=osrsloc_28952
+active=yes
+// op1=Build
+
+[osrsloc_46242]
+// OSRS loc 46242
+name=Sacrificial boat
+model=osrsloc_46242
+width=3
+length=3
+active=yes
+ambient=246
+contrast=25
+op1=Board
+op2=Quick-Board
+
+[osrsloc_59173]
+// OSRS loc 59173
+name=Lost supplies
+model=osrsloc_59173
+ambient=30
+contrast=100
+
+[osrsloc_59236]
+// OSRS loc 59236
+name=Buoy
+model=osrsloc_59236
+blockwalk=no
+blockrange=no
+shadow=no
+ambient=10
+contrast=100
+anim=osrsloc_anim_13561
+
+[osrsloc_60353]
+// OSRS loc 60353
+name=Strong rapids
+model=osrsloc_60353
+width=5
+length=5
+blockwalk=no
+blockrange=no
+active=yes
+sharelight=yes
+shadow=no
+mapscene=196
+ambient=30
+contrast=127
+anim=osrsloc_anim_13160
+
+[osrsloc_60356]
+// OSRS loc 60356
+model=osrsloc_60356
+width=3
+length=3
+blockwalk=no
+blockrange=no
+active=no
+shadow=no
+mapscene=205
+anim=osrsloc_anim_13537
+
+[osrsloc_60357]
+// OSRS loc 60357
+model=osrsloc_60357
+width=3
+length=3
+blockwalk=no
+blockrange=no
+active=no
+shadow=no
+mapscene=206
+anim=osrsloc_anim_13538
+
+[osrsloc_60358]
+// OSRS loc 60358
+model=osrsloc_60358
+blockwalk=no
+blockrange=no
+active=no
+shadow=no
+mapscene=207
+
+[osrsloc_60436]
+// OSRS loc 60436
+model=osrsloc_60436
+blockrange=no
+active=no
+shadow=no
+mapscene=11
+ambient=20
+contrast=125
+
+[osrsloc_60437]
+// OSRS loc 60437
+model=osrsloc_60437
+blockrange=no
+active=no
+shadow=no
+mapscene=12
+ambient=20
+contrast=125
+
+[osrsloc_60438]
+// OSRS loc 60438
+model=osrsloc_60438
+blockrange=no
+active=no
+shadow=no
+mapscene=11
+ambient=20
+contrast=125
+
+[osrsloc_60440]
+// OSRS loc 60440
+model=osrsloc_60440
+width=2
+length=2
+blockrange=no
+active=no
+shadow=no
+mapscene=11
+ambient=20
+contrast=125
+
+[osrsloc_60441]
+// OSRS loc 60441
+model=osrsloc_60441
+width=4
+length=3
+blockrange=no
+active=no
+shadow=no
+mapscene=11
+ambient=20
+contrast=125
+
+[osrsloc_60443]
+// OSRS loc 60443
+model=osrsloc_60443
+width=4
+length=4
+blockrange=no
+active=no
+shadow=no
+mapscene=11
+ambient=20
+contrast=125
+
+[osrsloc_60452]
+// OSRS loc 60452
+model=osrsloc_60452
+width=2
+length=2
+blockwalk=no
+blockrange=no
+active=no
+shadow=no
+mapscene=26
+ambient=10
+contrast=75
+anim=osrsloc_anim_13564

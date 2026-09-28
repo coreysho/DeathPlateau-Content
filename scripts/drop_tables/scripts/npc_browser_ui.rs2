@@ -26,7 +26,7 @@
 [if_button,npc_browser:letter_w] ~npc_browser_jump(10582);
 [if_button,npc_browser:letter_y] ~npc_browser_jump(11165);
 [if_button,npc_browser:letter_z] ~npc_browser_jump(11238);
-[if_button,npc_browser:letter_num] ~npc_browser_jump(11551);
+[if_button,npc_browser:letter_num] ~npc_browser_jump(11566);
 
 [if_button,npc_browser:m0] ~npc_browser_view(slayer_abberant_spectre_1, 26);
 [if_button,npc_browser:m1] ~npc_browser_view(superior_abhorrent_spectre, 41);
@@ -751,6 +751,7 @@
 [if_button,npc_browser:m720] ~npc_browser_view(deal_zombie_pirates_1, 11470);
 [if_button,npc_browser:m721] ~npc_browser_view(deal_pirate_a, 11485);
 [if_button,npc_browser:m722] ~npc_browser_view(champions_zombie, 11500);
-[if_button,npc_browser:m723] ~npc_browser_view(slayer_mutated_zygomite_adolescent, 11515);
-[if_button,npc_browser:m724] ~npc_browser_view(slayer_mutated_zygomite_adult, 11530);
-[if_button,npc_browser:m725] ~npc_browser_view(falador_doric_area_man1, 11573);
+[if_button,npc_browser:m723] ~npc_browser_view(zulrah, 11515);
+[if_button,npc_browser:m724] ~npc_browser_view(slayer_mutated_zygomite_adolescent, 11530);
+[if_button,npc_browser:m725] ~npc_browser_view(slayer_mutated_zygomite_adult, 11545);
+[if_button,npc_browser:m726] ~npc_browser_view(falador_doric_area_man1, 11588);

@@ -29,6 +29,12 @@ if (~in_fightcave(coord) = true) {
 if (~viking_in_koschei_arena(coord) = true) {
     @viking_koschei_player_death;
 }
+// Zulrah's shrine: not a safe death, but not an ordinary one either - Priestess Zul-Gwenwynig
+// keeps everything you were carrying and hands it back on the dock.
+// area_zulrah/scripts/zulrah_death.rs2.
+if (~in_zulrah_shrine(coord) = true) {
+    @zulrah_player_death;
+}
 
 ~player_death;
 midi_jingle(death2);
@@ -47,6 +53,9 @@ if (.finduid(%duel2accept) = true) {
 }
 
 ~retribution_check;
+// "Any unsafe death will delete all items left inside the deathbank" - and this is the unsafe
+// death. area_zulrah/scripts/zulrah_death.rs2.
+~zulrah_deathbank_lost;
 
 def_obj $prev_wep = inv_getobj(worn, ^wearpos_rhand);
 if (findhero = true) {

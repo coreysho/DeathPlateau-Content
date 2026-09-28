@@ -1,0 +1,230 @@
+// ZULRAH (OSRS, 8 January 2015). Post-2006 content, so the era rule's second half applies: it is
+// ported as Old School has it, numbers off the wiki (oldschool.runescape.wiki /w/Zulrah,
+// /w/Zulrah/Strategies, /w/Zul-Andra, /w/Serpentine_helm, /w/Trident_of_the_Swamp, Sept 2026) and
+// art out of the OSRS cache.
+//
+// WHAT CAME FROM WHERE:
+//   the three colours       OSRS npcs 2042/2043/2044, rendered to find out which is which
+//   the stats               the cache's own array: 1 Attack, 300 Defence, 1 Strength, 500 hitpoints,
+//                           300 Ranged, 300 Magic, level 725
+//   the bonuses and caps    the wiki's infobox: -45 Magic defence, +50 Ranged defence, 0 melee
+//                           defence, 41 max hit, 3-tick attack speed, damage taken capped at 50
+//   the four rotations      the wiki's four rotation tables, phase for phase, in zulrah.enum
+//   the arena               measured off the imported map square, see below
+//   the drop table          the wiki's, at its own rates - scripts/zulrah_drops.rs2
+//   the clouds' damage      OURS. The wiki says only "varying damage per tick which can add up
+//                           quickly" and gives no number, so one was chosen and is stated here.
+
+// ---------------------------------------------------------------------------------------------
+// The shrine, and why it is on a square of its own
+// ---------------------------------------------------------------------------------------------
+// Zulrah's shrine is an island in the Poison Waste lake at OSRS world x 2262-2276, z 3067-3078 -
+// which crosses z = 3072, so half of it is in OSRS's m35_47 and half in m35_48. m35_48 is the
+// Poison Waste this build already has and Regicide reads (the coal tar, the sulphur), and the OSRS
+// map importer rewrites a whole square. So the shrine was lifted out of both squares as one 32x32
+// rectangle and put down on m36_79, an empty square, by tools/importzulrahshrine.py - which is the
+// same thing OSRS does with it in the end, because the fight is instanced and nobody ever stands on
+// the original.
+//
+// The rectangle starts at local (16,16) and is four zones by four, so instance_setzone can copy it
+// whole the way the Fight Cave copies its arena.
+^zulrah_template = 0_36_79_16_16
+^zulrah_zones = 4
+
+// THE ARENA, as the imported square has it: a walkway shaped like a horseshoe open to the north,
+// with a pool inside it. The south lobe is x24-33 z28-31, the two arms run north at x22-24 and
+// x32-34, and the water between them is the pool. Everything below was measured off that, not
+// remembered: the cache carries no spawn points for any of it.
+//
+// Where the boat puts you down - the middle of the south lobe.
+^zulrah_entry = 0_36_79_28_29
+// And where the return boat sits, in the water off the south lobe.
+^zulrah_shrine_boat = 0_36_79_27_25
+
+// THE FOUR PLACES ZULRAH SURFACES. The wiki's rotation tables name them middle, south, west and
+// east; these are the four 5x5 blocks of open water nearest the walkway in each of those
+// directions - 5x5 because that is Zulrah's size, and water because it surfaces in water and is
+// moverestrict=nomove like the Kraken. A coord here is the block's southwest corner.
+^zulrah_pos_middle = 0_36_79_26_33
+^zulrah_pos_south = 0_36_79_26_22
+^zulrah_pos_west = 0_36_79_17_31
+^zulrah_pos_east = 0_36_79_35_31
+^zulrah_pos_count = 4
+^zulrah_p_middle = 0
+^zulrah_p_south = 1
+^zulrah_p_west = 2
+^zulrah_p_east = 3
+
+// ---------------------------------------------------------------------------------------------
+// Zul-Andra
+// ---------------------------------------------------------------------------------------------
+// OSRS's m34_47, imported whole: the village existed nowhere in this build before, which is what
+// quest_regicide.constant meant by "neither Arandar nor Zul-Andra appears anywhere in this cache or
+// in any map file, so there is nothing to open". It does now.
+//
+// The two priestesses and the Sacrificial boat are NOT in the map cache - OSRS carries npc spawns
+// and that boat somewhere else - so all three are placed by hand on the imported square: the
+// priestess and the boat on the east shore where the water starts, the high priestess in the
+// village. m34_47's own NPC section holds the two spawns.
+^zulandra_dock = 0_34_47_29_48
+^zulandra_village = 0_34_47_26_53
+
+// ---------------------------------------------------------------------------------------------
+// The fight
+// ---------------------------------------------------------------------------------------------
+// "Attack speed: 3 ticks (1.8 seconds)" and "Max Hit: 41" - both across all three forms. Every
+// action Zulrah takes runs on that same 3-tick beat: an attack, a venom barrage and a snakeling
+// orb all cost one beat, which is what the wiki's phase tables count in.
+^zulrah_attackrate = 3
+^zulrah_maxhit = 41
+// "Damage at Zulrah is capped at 50" - per hit taken, param=max_dealt on all three records.
+^zulrah_damage_cap = 50
+
+// Submerged between phases. The cache's own animations set these: the dive is 21 frames at delay
+// 2-5 (about 4 ticks) and the rise is 36 frames at delay 5 (about 6 ticks), so the snake is out of
+// the fight for ten ticks between phases, which is the gap Old School leaves.
+// How long the snake itself lives if nothing kills it. NOT ZERO and not small: the engine's
+// DurationValid rejects anything below 1, and npc_changetype_keepall takes the same duration, so
+// every colour change renews it. Five hours is past any fight; the number exists so a leaked
+// instance eventually empties itself rather than holding a snake forever.
+^zulrah_npc_life = 30000
+
+^zulrah_dive_ticks = 4
+^zulrah_rise_ticks = 6
+
+// Rotations are numbered the way the wiki numbers them: 1 "Crimson A", 2 "Crimson B", 3 "Serp",
+// 4 "Tanz". Which one you get is a fresh roll each fight, as it is in Old School, and the fight
+// runs on past the end of a rotation into the start of the next - "Zulrah will then continue on to
+// the starting phase of the next rotation".
+^zulrah_rotations = 4
+
+// The seven things Zulrah can do on a beat. The last two are the "Jad phase": one run of them
+// alternates ranged and magic for its whole count, starting with whichever of the two it is named
+// for, which is how the wiki states it ("10 alternating ranged/magic (starts ranged)").
+^zulrah_act_range = 0
+^zulrah_act_mage = 1
+^zulrah_act_melee = 2
+^zulrah_act_venom = 3
+^zulrah_act_orb = 4
+// One run that alternates the two, starting with the one it is named for - the wiki's "alternating
+// 5 snakeling orbs/venom barrages" and "an alternating series of 6 venom cloud barrages and
+// snakeling orbs".
+^zulrah_act_alt_orb = 5
+^zulrah_act_alt_venom = 6
+^zulrah_act_jad_range = 7
+^zulrah_act_jad_mage = 8
+
+// THE BLUE FORM ATTACKS WITH EITHER. "Blue (Tanzanite): attacks with Ranged and Magic" - it picks
+// one per attack, so this is the chance in eight that a given one is magic. Four in eight: the wiki
+// gives no weighting, and an even coin is the only split it does not overstate.
+^zulrah_mage_form_magic_chance = 4
+^zulrah_mage_form_of = 8
+
+// ---------------------------------------------------------------------------------------------
+// The snakelings
+// ---------------------------------------------------------------------------------------------
+// "Despite their combat level of 90, they have extremely low defence and only 1 Hitpoint" and they
+// make "incredibly accurate attacks, which can hit up to 15". One hitpoint is in the npc config;
+// the 15 is here because the cache cannot carry a max hit.
+^zulrah_snakeling_maxhit = 15
+^zulrah_snakeling_attackrate = 3
+// How long a snakeling lives if nothing kills it. They also all die the moment Zulrah does - "will
+// automatically die off with Zulrah when it is killed" - and when the fight is left or lost.
+^zulrah_snakeling_life = 3000
+// How far from the player an orb puts one down, and how far out to sweep for them when clearing up.
+^zulrah_snakeling_spawn_range = 3
+^zulrah_snakeling_sweep = 30
+
+// ---------------------------------------------------------------------------------------------
+// The venom clouds
+// ---------------------------------------------------------------------------------------------
+// A barrage drops a cloud on the tile you are standing on: "If a player stands within a cloud's
+// 3x3 area, they will be dealt varying damage per tick". So the cloud is 3x3 around where it lands
+// and it hurts every tick you are inside it.
+//
+// FOUR AT A TIME. The longest barrage the wiki lists is four in a row, and a cloud outlives the
+// barrage that made it, so four slots is the most that can ever be burning at once - there is no
+// fifth cloud to drop on the floor.
+^zulrah_cloud_slots = 4
+^zulrah_cloud_radius = 1
+// How long one cloud burns.
+^zulrah_cloud_ticks = 25
+// OURS, and the only number here that is: the wiki states no per-tick damage. One to five a tick
+// for 25 ticks is up to 125 if you stand in one and do nothing, which is fatal and is meant to be,
+// while a step out of it costs a few hitpoints rather than a trip.
+^zulrah_cloud_maxhit = 5
+// The clouds do NOT envenom - "[they] do not envenom players directly" - so nothing here touches
+// the venom timer. Zulrah's own hits and the snakelings' do.
+
+// Zulrah's own attacks envenom, at the venom that already exists in this build
+// (toxic_blowpipe/scripts/venom.rs2). One hit in four, the rate the blowpipe uses.
+^zulrah_venom_chance = 4
+
+// ---------------------------------------------------------------------------------------------
+// Getting there, getting out, and dying there
+// ---------------------------------------------------------------------------------------------
+// OSRS gates Zulrah behind Regicide - you reach Zul-Andra through Tyras, and the High Priestess
+// will not send anyone who has not been. Regicide IS built here (scripts/quests/quest_regicide),
+// so the gate is the real one: ^regicide_complete.
+//
+// "Speak with High Priestess Zul-Harcinqa as sacrifice" first; after that the Priestess will row
+// you. There is no fee for the crossing in Old School and there is none here.
+^zulandra_volunteered = 1
+
+// DYING AT ZULRAH. Old School does not take your items: Priestess Zul-Gwenwynig keeps them and
+// hands them back. "First 50 kills: free recovery. After 50 kills: 100,000 coins per death." And
+// the sting: "Any unsafe death will delete all items left inside the deathbank" - die anywhere
+// else before you have collected and the lot is gone.
+^zulrah_free_recoveries = 50
+^zulrah_recovery_fee = 100000
+
+// ---------------------------------------------------------------------------------------------
+// The drop table
+// ---------------------------------------------------------------------------------------------
+// "the player will also have two rolls on Zulrah's drop table, excluding tertiary items, which
+// have only one roll", and separately "It's 1/256 per roll, you get two rolls per kill" for the
+// uniques (Mod Ash, 26 May 2016). So a roll is: the unique table at 1/256, or else the main table
+// at n/249. Everything below is the wiki's own denominator.
+^zulrah_rolls = 2
+^zulrah_unique_of = 256
+^zulrah_unique_count = 4
+^zulrah_main_of = 249
+// Zulrah's scales, always, 100-299 of them - the 100% drop.
+^zulrah_scales_min = 100
+^zulrah_scales_max = 299
+// The tertiaries, one roll a kill each.
+^zulrah_elite_clue_rate = 75
+^zulrah_jar_rate = 3000
+^zulrah_pet_rate = 4000
+
+// ---------------------------------------------------------------------------------------------
+// The serpentine helm
+// ---------------------------------------------------------------------------------------------
+// 52 Crafting and 120 experience to chisel a visage into one; 75 Defence to wear it; 11,000 scales
+// to fill it; 10 scales the moment you enter combat and 10 more every 90 ticks you stay in it,
+// which is the 16 hours and 30 minutes the wiki quotes. Uncharged it keeps its penalties and loses
+// everything else, and it cannot be worn at all until it holds something.
+^serpentine_helm_crafting_level = 52
+^serpentine_helm_crafting_xp = 1200
+^serpentine_helm_level = 75
+^serpentine_helm_max_charges = 11000
+^serpentine_helm_charge_cost = 10
+^serpentine_helm_charge_interval = 90
+// Envenoming with it on: "1 in 6 chance if using a non-poisoned melee weapon; 1 in 2 if using
+// poisoned weapons; 100% if using the toxic blowpipe, trident of the swamp, or toxic staff of the
+// dead". The third of those is what the blowpipe and the swamp trident already do on their own.
+^serpentine_helm_venom_chance = 6
+^serpentine_helm_venom_chance_poisoned = 2
+
+// ---------------------------------------------------------------------------------------------
+// The trident of the swamp
+// ---------------------------------------------------------------------------------------------
+// 59 Crafting to put a magic fang on an uncharged trident, and it comes apart again. 78 Magic to
+// wield, 2,500 charges, and a charge is one death rune, one chaos rune, five fire runes and one of
+// Zulrah's scales - the scale where the trident of the seas takes ten coins. Max hit
+// floor(Magic / 3) - 2, which is 24 at 78 and 31 at 99; the seas' is floor(Magic / 3) - 5. Four
+// ticks a cast and a reach of 7, the same as the seas'.
+^swamp_trident_crafting_level = 59
+^swamp_trident_level = 78
+^swamp_trident_max_charges = 2500
+^swamp_trident_maxhit_offset = 2

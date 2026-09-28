@@ -739,7 +739,7 @@ height=13
 center=yes
 font=p12_full
 shadowed=yes
-text=726 monsters. Pick one to see what it drops, and how often.
+text=727 monsters. Pick one to see what it drops, and how often.
 colour=0xFF981F
 
 [letters]
@@ -3265,7 +3265,7 @@ x=158
 y=68
 width=312
 height=236
-scroll=11594
+scroll=11609
 
 [head_a]
 layer=list
@@ -3799,7 +3799,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=11553
+y=11568
 width=296
 height=15
 font=b12_full
@@ -3811,7 +3811,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=11569
+y=11584
 width=300
 height=1
 fill=yes
@@ -23216,21 +23216,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zygomite
+text=Zulrah
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zygomite
+option=View drops @lre@Zulrah
 
 [m723_lvl]
 layer=list
 type=text
-x=272
+x=264
 y=11515
-width=32
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 74
+text=Lvl 725
 colour=0xC8C8C8
 
 [m724]
@@ -23251,8 +23251,35 @@ option=View drops @lre@Zygomite
 [m724_lvl]
 layer=list
 type=text
-x=269
+x=272
 y=11530
+width=32
+height=15
+font=p12_full
+shadowed=yes
+text=Lvl 74
+colour=0xC8C8C8
+
+[m725]
+layer=list
+type=text
+x=12
+y=11545
+buttontype=normal
+width=292
+height=15
+font=p12_full
+shadowed=yes
+text=Zygomite
+colour=0xFF981F
+overcolour=0xFFFFFF
+option=View drops @lre@Zygomite
+
+[m725_lvl]
+layer=list
+type=text
+x=269
+y=11545
 width=35
 height=15
 font=p12_full
@@ -23260,11 +23287,11 @@ shadowed=yes
 text=Lvl 86
 colour=0xC8C8C8
 
-[m725]
+[m726]
 layer=list
 type=text
 x=12
-y=11573
+y=11588
 buttontype=normal
 width=292
 height=15
@@ -23275,11 +23302,11 @@ colour=0xFF981F
 overcolour=0xFFFFFF
 option=View drops @lre@'Cuffs'
 
-[m725_lvl]
+[m726_lvl]
 layer=list
 type=text
 x=278
-y=11573
+y=11588
 width=26
 height=15
 font=p12_full

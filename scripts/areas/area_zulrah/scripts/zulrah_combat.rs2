@@ -1,0 +1,75 @@
+// ZULRAH'S THREE ATTACKS. Called a beat at a time by zulrah_fight.rs2's rotation engine, as the
+// npc, with the player as the (unprotected) target.
+//
+// WHY THESE ARE WRITTEN OUT RATHER THAN ~npc_rangeattack AND FRIENDS. Two reasons, and they are the
+// same two the Fight Cave's fireball had:
+//
+//   * THE MAX HIT IS A NUMBER, NOT A DERIVATION. The wiki states one max hit for all three forms -
+//     41 - and no strength bonus that would produce it. Deriving it from 300 Ranged and a bonus
+//     nobody has written down would be inventing the bonus to get the answer.
+//   * THE PACING IS THE ROTATION'S. A phase is a count of beats, and the beat clock belongs to
+//     ~zulrah_tick; the stock procs set %npc_action_delay themselves.
+//
+// ACCURACY IS STILL THE ENGINE'S, and so are the protection prayers: ~npc_ranged_attack_roll,
+// ~npc_magic_attack_roll and ~npc_melee_attack_roll each return 0 when the matching Protect prayer
+// is up, so a prayed-against attack simply cannot beat the defence roll. That is the whole fight:
+// the colour tells you which of those three is coming, and the Jad phase alternates two of them.
+
+// Green, "serpentine": Ranged.
+[proc,zulrah_ranged]
+npc_anim(npc_param(attack_anim), 0);
+def_int $attack_roll = ~npc_ranged_attack_roll;
+def_int $defence_roll = ~player_defence_roll_specific(^ranged_style);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
+def_int $damage = 0;
+if (randominc($attack_roll) > randominc($defence_roll)) {
+    $damage = randominc(^zulrah_maxhit);
+}
+spotanim_pl(zulrah_range_impact, 92, $duration);
+~zulrah_land_hit($damage, ^zulrah_maxhit, $duration);
+
+// Blue, "tanzanite": Magic. (Which of the two a blue beat uses is rolled in ~zulrah_action.)
+[proc,zulrah_magic]
+npc_anim(npc_param(attack_anim), 0);
+def_int $attack_roll = ~npc_magic_attack_roll;
+def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic_travel, 40, 36, 32, 15, 0, 11, 5);
+def_int $damage = 0;
+if (randominc($attack_roll) > randominc($defence_roll)) {
+    $damage = randominc(^zulrah_maxhit);
+}
+spotanim_pl(zulrah_range_impact, 92, $duration);
+~zulrah_land_hit($damage, ^zulrah_maxhit, $duration);
+
+// Red, "magma": the tail swipe. The wiki calls it "a typeless attack wherein it swings its tail",
+// and the strategy the whole game plays is to put Protect from Melee up for the red form - so it
+// is rolled as melee here, which is the only reading under which that strategy works. It lands
+// with no flight time, because the tail arrives when it arrives.
+//
+// NOT IMPLEMENTED: Old School's red attack also stuns for a moment. There is no stun for a player
+// in this build that is not a spell's freeze, and inventing one for a boss is a bigger change than
+// this round should make - it is left out and said so.
+[proc,zulrah_melee]
+npc_anim(npc_param(attack_anim), 0);
+def_int $attack_roll = ~npc_melee_attack_roll;
+// ^crush_style, not ^melee_style: ~player_defence_roll_specific switches on the three melee
+// damage types and errors on anything else, and a tail the size of a boat is a crush.
+def_int $defence_roll = ~player_defence_roll_specific(^crush_style);
+def_int $damage = 0;
+if (randominc($attack_roll) > randominc($defence_roll)) {
+    $damage = randominc(^zulrah_maxhit);
+}
+~zulrah_land_hit($damage, ^zulrah_maxhit, 0);
+
+// The landing half of all three, and the one place venom is dealt. "Venom inflicted by Zulrah and
+// the snakelings: starting at 6 damage per hit and increasing up to 20" - which is exactly the
+// venom the toxic blowpipe already brought (toxic_blowpipe/scripts/venom.rs2), so this is one
+// queue rather than a second mechanic. Only a hit that landed envenoms.
+[proc,zulrah_land_hit](int $damage, int $maxhit, int $duration)
+if_close;
+~queue_combat_damage_player(calc($duration / 30), $damage, $maxhit);
+if ($damage > 0 & random(^zulrah_venom_chance) = 0) {
+    queue(venom_player, calc($duration / 30), 0);
+}
+queue*(playerhit_n_retaliate, calc($duration / 30))(npc_uid);
+~npc_set_attack_vars;

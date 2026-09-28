@@ -8,6 +8,11 @@ if (map_members = ^false) {
     // nothing poisons in f2p
     return;
 }
+// A charged serpentine helm "grants immunity to venom and poison"
+// (area_zulrah/scripts/serpentine_helm.rs2).
+if (~serpentine_helm_immune = true) {
+    return;
+}
 
 if (%venom > 0) {
     return; // venom is not replaced by a poison (toxic_blowpipe/scripts/venom.rs2)

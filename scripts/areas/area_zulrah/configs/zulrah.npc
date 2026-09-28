@@ -1,0 +1,260 @@
+// ZULRAH (OSRS, 8 January 2015 - so it is ported as OSRS has it, not as 2006 would have had it).
+// OSRS npcs imported by tools/models/importosrsnpc.py; models re-encoded by osrs2ob2.py with the
+// npc recolours baked in. Stats and combat level are the cache's own six-value array (1/300/1/500/
+// 300/300 and 725); the bonuses, speeds and caps below are the OSRS wiki's (oldschool.runescape.wiki
+// /w/Zulrah, Sept 2026). Examines are ours - npc examine text is not in a modern OSRS cache.
+//
+// THREE RECORDS FOR ONE SNAKE. OSRS gives each colour its own npc id - 2042 green (serpentine),
+// 2043 red (magma), 2044 blue (tanzanite) - and the colour is the whole fight: it is the only thing
+// that tells you which prayer to use. Which id is which colour was not remembered, it was RENDERED:
+// tools/models/posepreview.py on 2042/2043/2044 with their own ready animation, one picture each.
+//
+// The fight keeps one snake alive across all of them with npc_changetype_keepall, so its hitpoints,
+// its hero points and everything the engine tracks survive a colour change - see
+// scripts/zulrah_fight.rs2.
+//
+// WHICH ANIMATION IS WHICH was derived the way the Fight Cave round derived Jad's three, from frame
+// counts, priorities and frame groups rather than from memory. Zulrah's rig is frame groups
+// 5693-5698 and every seq on them has classic frames, so all of them convert:
+//   5070   9 frames, no priority, group 5698          the idle - the npc record itself names it
+//   5069  15 frames at delay 3 = 0.9s, priority 6     the spit: the only one that fits a 3-tick
+//                                                     attack speed, and the only attack-length one
+//   5068  36 frames, priority 6, group 5694 with 5069 surfacing - the same group as the attack,
+//                                                     which is the group the head and neck live in
+//   5071/5072/5073  21 frames each, group 5696,       diving, ONE PER COLOUR (priorities 9/8/9,
+//                   priorities 9/8/9                  delays 5/2/3) - three of a kind on one group
+//                                                     is what a per-colour animation looks like
+//   5804  49 frames, priority 10, group 5693          the death: priority 10 is the highest on the
+//                                                     rig and nothing else on the model is that long
+// 5806 (55 frames), 5807 (53) and 5808 (9) are the rig's other three. They are NOT converted: we
+// could not say what they are, and a wrong animation on a non-human rig is a picture of a snake
+// folded inside out.
+//
+// moverestrict=nomove on all three, like the Kraken: Zulrah surfaces in water, never walks, and is
+// put where the rotation says with npc_tele.
+
+[zulrah]
+// OSRS npc 2042 - GREEN, "serpentine". Ranged, and weak to Magic.
+name=Zulrah
+desc=The Great One.
+model1=npc_zulrah_1
+size=5
+readyanim=osrs_seq_5070
+walkanim=osrs_seq_5070
+op2=Attack
+vislevel=725
+moverestrict=nomove
+wanderrange=0
+respawnrate=50
+attackrange=15
+maxrange=25
+attack=1
+defence=300
+strength=1
+hitpoints=500
+ranged=300
+magic=300
+param=attackrate,^zulrah_attackrate
+param=attack_anim,osrs_seq_5069
+param=death_anim,osrs_seq_5804
+// "Damage at Zulrah is capped at 50" - the wiki, in so many words.
+param=max_dealt,^zulrah_damage_cap
+// The wiki's defensive block: stab, slash and crush 0, Magic -45, Ranged +50.
+param=magicdefence,-45
+param=stabdefence,0
+param=slashdefence,0
+param=crushdefence,0
+param=rangedefence,50
+// Its own table, in scripts/zulrah_drops.rs2 - not the engine's death_drop.
+param=death_drop,null
+
+[zulrah_magma]
+// OSRS npc 2043 - RED, "magma". A typeless tail swipe that Protect from Melee stops.
+name=Zulrah
+desc=The Great One.
+model1=npc_zulrah_magma_1
+size=5
+readyanim=osrs_seq_5070
+walkanim=osrs_seq_5070
+op2=Attack
+vislevel=725
+moverestrict=nomove
+wanderrange=0
+respawnrate=50
+attackrange=15
+maxrange=25
+attack=1
+defence=300
+strength=1
+hitpoints=500
+ranged=300
+magic=300
+param=attackrate,^zulrah_attackrate
+param=attack_anim,osrs_seq_5069
+param=death_anim,osrs_seq_5804
+param=max_dealt,^zulrah_damage_cap
+param=magicdefence,-45
+param=stabdefence,0
+param=slashdefence,0
+param=crushdefence,0
+param=rangedefence,50
+param=death_drop,null
+
+[zulrah_tanzanite]
+// OSRS npc 2044 - BLUE, "tanzanite". Magic and Ranged, and weak to Ranged.
+name=Zulrah
+desc=The Great One.
+model1=npc_zulrah_tanzanite_1
+size=5
+readyanim=osrs_seq_5070
+walkanim=osrs_seq_5070
+op2=Attack
+vislevel=725
+moverestrict=nomove
+wanderrange=0
+respawnrate=50
+attackrange=15
+maxrange=25
+attack=1
+defence=300
+strength=1
+hitpoints=500
+ranged=300
+magic=300
+param=attackrate,^zulrah_attackrate
+param=attack_anim,osrs_seq_5069
+param=death_anim,osrs_seq_5804
+param=max_dealt,^zulrah_damage_cap
+param=magicdefence,-45
+param=stabdefence,0
+param=slashdefence,0
+param=crushdefence,0
+param=rangedefence,50
+param=death_drop,null
+
+// THE SNAKELINGS. "Despite their combat level of 90, they have extremely low defence and only 1
+// Hitpoint", and they make "incredibly accurate attacks, which can hit up to 15". One hitpoint is
+// the cache's own and the wiki's both, so that is what they have: anything that touches one kills
+// it. The accuracy is the cache's too - 140 Attack on the melee one, 185 Magic on the mage - and
+// the 15 is a max hit no cache and no param in this build can carry, so both snakelings attack
+// through a proc of their own in zulrah_fight.rs2 rather than the engine's, which would derive
+// something near forty out of that 138 Strength.
+//
+// They have no attack animation and no death animation IN THE CACHE: frame groups 5577 and 5578
+// hold exactly one seq each, the walk and the idle, and nothing else on the rig. So they strike
+// without one, which is what OSRS shows.
+
+[zulrah_snakeling]
+// OSRS npc 2045 - the melee one
+name=Snakeling
+desc=A spawn of the Great One.
+model1=npc_zulrah_snakeling_1
+size=1
+readyanim=osrs_seq_1721
+walkanim=osrs_seq_2405
+op2=Attack
+vislevel=90
+huntmode=aggressive_melee
+huntrange=10
+attackrange=1
+maxrange=12
+wanderrange=10
+respawnrate=50
+attack=140
+defence=1
+strength=138
+hitpoints=1
+ranged=1
+magic=1
+param=attackrate,^zulrah_snakeling_attackrate
+param=death_drop,null
+
+[zulrah_snakeling_mage]
+// OSRS npc 2046 - the magic one
+name=Snakeling
+desc=A spawn of the Great One.
+// The same mesh as the melee one - OSRS gives both npcs model 10415, and the importer writes
+// a shared mesh once.
+model1=npc_zulrah_snakeling_1
+size=1
+readyanim=osrs_seq_1721
+walkanim=osrs_seq_2405
+op2=Attack
+vislevel=90
+huntmode=aggressive_ranged
+huntrange=10
+attackrange=8
+maxrange=12
+wanderrange=10
+respawnrate=50
+attack=1
+defence=1
+strength=1
+hitpoints=1
+ranged=1
+magic=185
+param=attackrate,^zulrah_snakeling_attackrate
+param=death_drop,null
+
+// THE PET. OSRS npc 2127, the green Snakeling, wired like every other boss pet in this tree
+// (npc/configs/boss_pets.npc says what each line is for): size=1, vislevel=hide, timer=1 so
+// [ai_timer,_bosspet] can teleport it back to its owner, category=bosspet for the shared ops and
+// follower=yes for the minimap dot and the owner-only right-clicks.
+//
+// OSRS's Pet snakeling has THREE colours and a Metamorphosis right-click (npcs 2130/2131/2132).
+// That is not wired here: a metamorphosis ring lives in the shared npc/configs/pet_forms.npc and
+// npc/configs/pet_forms.constant, and three batteries count what is in those files. The Kraken pet
+// took the same shape for the same reason. The other two colours are a later round's; this one is
+// green, which is the form OSRS gives you.
+
+[bosspet_snakeling]
+name=Pet Snakeling
+desc=A slithering serpent spawn of Zulrah.
+model1=npc_bosspet_snakeling_1
+head1=npc_bosspet_snakeling_head1
+size=1
+readyanim=osrs_seq_1721
+walkanim=osrs_seq_2405
+vislevel=hide
+timer=1
+op1=Pick-up
+op3=Talk-to
+category=bosspet
+follower=yes
+param=pet_item_id,bosspet_snakeling_item
+
+// ZUL-ANDRA'S TWO PRIESTESSES. Both are OSRS's own records; their animations are OSRS's player
+// skeleton, which animconvosrs.py puts on its own base (base_osrs_*) so the client never tries to
+// walk-merge them with a 377 one.
+
+[zulandra_high_priestess]
+// OSRS npc 1616. She is the one you volunteer to.
+name=High Priestess Zul-Harcinqa
+desc=The high priestess of Zul-Andra.
+model1=npc_zulandra_high_priestess_1
+model2=npc_zulandra_high_priestess_2
+model3=npc_zulandra_high_priestess_3
+model4=npc_zulandra_high_priestess_4
+head1=npc_zulandra_high_priestess_head1
+size=1
+readyanim=osrs_seq_7086
+walkanim=osrs_seq_819
+op1=Talk-to
+vislevel=hide
+wanderrange=0
+moverestrict=nomove
+
+[zulandra_priestess]
+// OSRS npc 2033. She rows the boat, and she keeps what you died with.
+name=Priestess Zul-Gwenwynig
+desc=She rows sacrifices out to the shrine.
+model1=npc_zulandra_priestess_1
+head1=npc_zulandra_priestess_head1
+size=1
+readyanim=osrs_seq_808
+walkanim=osrs_seq_819
+op1=Talk-to
+op3=Collect
+vislevel=hide
+wanderrange=0
+moverestrict=nomove

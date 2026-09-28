@@ -1,0 +1,12 @@
+// What Priestess Zul-Gwenwynig is holding for you. See area_zulrah/scripts/zulrah_death.rs2.
+//
+// scope=perm, because the whole point is that it is still there next login.
+//
+// size=42 is 28 inventory slots plus the 14 the worn inventory has - the most a player can be
+// carrying when they die, with nothing to spare and nothing wasted. protect=no for the same reason
+// lostpet_store carries it: this is filled from a death and emptied from a Collect, and neither
+// wants to care which pointer it has.
+[zulrah_deathbank]
+scope=perm
+size=42
+protect=no

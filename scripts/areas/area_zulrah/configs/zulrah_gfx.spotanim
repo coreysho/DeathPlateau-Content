@@ -1,0 +1,28 @@
+// OSRS spot animations imported by tools/models/importosrsspot.py.
+// Models re-encoded by osrs2ob2.py, animations converted by animconvosrs.py.
+
+[zulrah_range_travel]
+// OSRS spotanim 1044
+model=spot_zulrah_range_travel
+anim=zulrah_range_travel
+ambient=20
+
+[zulrah_range_impact]
+// OSRS spotanim 1045
+model=spot_zulrah_range_impact
+anim=zulrah_range_impact
+ambient=30
+
+[zulrah_venom_cloud]
+// OSRS spotanim 1046
+model=spot_zulrah_venom_cloud
+anim=zulrah_venom_cloud
+resizeh=96
+resizev=96
+ambient=60
+
+[zulrah_magic_travel]
+// OSRS spotanim 1047
+model=spot_zulrah_magic_travel
+anim=zulrah_range_travel
+ambient=20

@@ -1,0 +1,51 @@
+// Animations converted from the OSRS cache by tools/models/animconvosrs.py.
+// They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
+// only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+
+[zulrah_range_travel]
+// OSRS seq 5358
+loops=8
+frame1=anim_osrs_4665_1
+delay1=5
+frame2=anim_osrs_4665_2
+delay2=5
+frame3=anim_osrs_4665_3
+delay3=5
+frame4=anim_osrs_4665_4
+delay4=5
+frame5=anim_osrs_4665_5
+delay5=5
+frame6=anim_osrs_4665_4
+delay6=5
+frame7=anim_osrs_4665_3
+delay7=5
+frame8=anim_osrs_4665_2
+delay8=5
+
+[zulrah_range_impact]
+// OSRS seq 3151
+frame1=anim_osrs_4665_1
+delay1=5
+frame2=anim_osrs_4665_2
+delay2=5
+frame3=anim_osrs_4665_3
+delay3=5
+frame4=anim_osrs_4665_4
+delay4=5
+frame5=anim_osrs_4665_5
+delay5=5
+
+[zulrah_venom_cloud]
+// OSRS seq 6648
+frame1=anim_osrs_13182_1
+delay1=2
+frame2=anim_osrs_13182_2
+delay2=2
+frame3=anim_osrs_13182_3
+delay3=2
+frame4=anim_osrs_13182_4
+delay4=2
+frame5=anim_osrs_13182_5
+delay5=2
+frame6=anim_osrs_13182_6
+delay6=2

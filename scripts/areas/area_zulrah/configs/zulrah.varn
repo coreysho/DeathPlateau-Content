@@ -1,0 +1,26 @@
+// Zulrah's own state, on Zulrah (area_zulrah/scripts/zulrah_fight.rs2).
+//
+// NPC VARS RATHER THAN PLAYER VARPS, and fightcave.varn gives the reason: the trigger that drives
+// the fight is [ai_applayer2], which has the target player UNPROTECTED, and a protected player
+// varp cannot be written from there. Zulrah is one snake per instance per player, so its own vars
+// are already per-player - and Npc.resetEntity zeroes every varn, so a respawned snake starts
+// clean.
+
+// Which of the four rotations this fight is on, 1..4 (zulrah.enum).
+[zulrah_rotation]
+type=int
+
+// Where in the flat list of all forty-seven phases it is.
+[zulrah_phase]
+type=int
+
+// Which run of that phase, and how many beats of that run are done.
+[zulrah_run]
+type=int
+
+[zulrah_run_at]
+type=int
+
+// 1 while it is under the water between phases.
+[zulrah_submerged]
+type=int

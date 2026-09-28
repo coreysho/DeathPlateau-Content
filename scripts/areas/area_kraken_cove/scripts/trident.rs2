@@ -10,8 +10,16 @@
 // charged one is untradeable) and why the "(full)" one the Kraken drops IS tradeable: its 2,500
 // charges are its name, and they move into the varp the first time it is wielded or checked.
 
+// The trident of the SWAMP is the same staff with a magic fang in it (area_zulrah/scripts/
+// swamp_trident.rs2) - same speed, same reach, same cast, two harder and paid for in Zulrah's
+// scales. Rather than a second copy of everything below, the four places that have to know which
+// one is in hand ask ~trident_charges_now, ~trident_spend_one and ~trident_maxhit_offset.
 [proc,trident_armed]()(boolean)
-if (inv_getobj(worn, ^wearpos_rhand) = trident_of_the_seas & %trident_charges > 0) {
+def_obj $rhand = inv_getobj(worn, ^wearpos_rhand);
+if ($rhand = trident_of_the_seas & %trident_charges > 0) {
+    return(true);
+}
+if ($rhand = trident_of_the_swamp & %swamp_trident_charges > 0) {
     return(true);
 }
 return(false);
@@ -65,6 +73,13 @@ def_obj $other = $b;
 if ($b = trident_of_the_seas | $b = trident_of_the_seas_uncharged) {
     $slot = $bslot;
     $other = $a;
+}
+// A MAGIC FANG GOES ON THIS TRIDENT RATHER THAN INTO IT. The fang's own [opheldu] cannot catch the
+// pair when the trident is the item that was clicked first, because this trigger is the trident's;
+// so the fang is handed to the round that owns it (area_zulrah/scripts/swamp_trident.rs2).
+if ($other = magic_fang) {
+    ~swamp_trident_join;
+    return;
 }
 if ($other ! deathrune & $other ! chaosrune & $other ! firerune & $other ! coins) {
     mes("Nothing interesting happens.");
@@ -182,9 +197,9 @@ if (~black_mask_imbued_on_task = true) {
 def_boolean $connected = ~player_npc_hit_roll_boosted(^magic_style, $mask_num, $mask_div);
 ~trident_cast_sound($connected);
 def_int $duration = ~npc_projectile(coord, npc_uid, trident_travel, 43, 31, 51, 16, -5, 64, 10);
-%trident_charges = sub(%trident_charges, 1);
+~trident_spend_one;
 if ($connected = true) {
-    def_int $maxhit = scale($mask_num, $mask_div, max(0, sub(divide(stat(magic), 3), 5)));
+    def_int $maxhit = scale($mask_num, $mask_div, max(0, sub(divide(stat(magic), 3), ~trident_maxhit_offset)));
     def_int $damage = randominc(min($maxhit, npc_param(max_dealt)));
     def_int $damage_capped = min($damage, npc_stat(hitpoints));
     ~npc_retaliate(calc($duration / 30 + 1));
@@ -216,6 +231,9 @@ return(^style_magic_normal);
 [proc,trident_uncharged_wielded]()(boolean)
 def_obj $rhand = inv_getobj(worn, ^wearpos_rhand);
 if ($rhand = trident_of_the_seas_uncharged | ($rhand = trident_of_the_seas & %trident_charges <= 0)) {
+    return(true);
+}
+if ($rhand = trident_of_the_swamp_uncharged | ($rhand = trident_of_the_swamp & %swamp_trident_charges <= 0)) {
     return(true);
 }
 return(false);
@@ -255,9 +273,9 @@ def_boolean $connected = ~pvp_hit_roll(^magic_style);
 ~trident_cast_sound($connected);
 .sound_synth(waterwave_cast_and_fire, 0, 0);
 def_int $duration = ~player_projectile(coord, .coord, .uid, trident_travel, 43, 31, 51, 16, -5, 64, 10);
-%trident_charges = sub(%trident_charges, 1);
+~trident_spend_one;
 if ($connected = true) {
-    def_int $maxhit = max(0, sub(divide(stat(magic), 3), 5));
+    def_int $maxhit = max(0, sub(divide(stat(magic), 3), ~trident_maxhit_offset));
     if (~.check_protect_prayer(^magic_style) = true) {
         $maxhit = scale(6, 10, $maxhit); // reduction of 40%
     }
@@ -291,15 +309,21 @@ sound_synth(spellfail, 1, 0);
 // Returns false when the trident just ran dry, because the caller must NOT re-target after that -
 // the staff is uncharged now and the next tick would go looking for an attack it cannot make.
 [proc,trident_spend_charge]()(boolean)
-if (%trident_charges <= 0) {
-    %trident_charges = 0;
-    inv_setslot(worn, ^wearpos_rhand, trident_of_the_seas_uncharged, 1);
-    ~update_all(trident_of_the_seas);
+if (~trident_charges_now <= 0) {
+    if (~swamp_trident_wielded = true) {
+        %swamp_trident_charges = 0;
+        inv_setslot(worn, ^wearpos_rhand, trident_of_the_swamp_uncharged, 1);
+        ~update_all(trident_of_the_swamp);
+    } else {
+        %trident_charges = 0;
+        inv_setslot(worn, ^wearpos_rhand, trident_of_the_seas_uncharged, 1);
+        ~update_all(trident_of_the_seas);
+    }
     mes("@red@Your trident has run out of charges.");
     p_stopaction;
     return(false);
 }
-if (%trident_charges = 100) {
+if (~trident_charges_now = 100) {
     mes("@red@Your trident has 100 charges left.");
 }
 return(true);

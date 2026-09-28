@@ -1,0 +1,197 @@
+// THE TRIDENT OF THE SWAMP - what the magic fang is for. OSRS's, per the wiki
+// (oldschool.runescape.wiki/w/Trident_of_the_Swamp, Sept 2026):
+//   * 59 Crafting to chisel a magic fang onto an uncharged trident, and a chisel takes it apart
+//     again - "a reversible process";
+//   * 78 Magic to wield, 2,500 charges, 4 ticks a cast at a reach of 7 - the seas' trident's speed
+//     and reach;
+//   * a charge is a death rune, a chaos rune, five fire runes and one of Zulrah's scales, which is
+//     the one difference from the seas' trident's charge (that one wants ten coins);
+//   * its spell hits for floor(Magic / 3) - 2, which is 24 at 78 and 31 at 99 - two harder than the
+//     seas' throughout.
+//
+// IT REUSES THE SEAS' TRIDENT'S COMBAT CODE rather than copying it. area_kraken_cove/scripts/
+// trident.rs2 already holds a powered staff's whole PvM and PvP cast, down to the one-sound-a-cast
+// rule that took measuring the wave files to get right; the four places that had to know there are
+// now two tridents ask the three procs at the bottom of this file. Everything a swamp trident does
+// DIFFERENTLY - how it is made, taken apart, charged, checked and uncharged - is here.
+
+// ---------------------------------------------------------------------------------------------
+// Making one, and taking it apart
+// ---------------------------------------------------------------------------------------------
+// THREE WAYS IN, AND NOT ALL OF THEM ARE OURS. The chisel's own [opheldu] belongs to
+// skill_crafting's gem cutting and the uncharged seas trident's belongs to the Kraken round's
+// charging - a trigger is declared once, and both of those were declared first. So the fang's own
+// trigger handles the pairs it can, and ~trident_charge in area_kraken_cove/scripts/trident.rs2
+// hands a magic fang straight here rather than saying "nothing interesting happens" to it.
+
+[opheldu,magic_fang]
+if (last_useitem = chisel | last_useitem = trident_of_the_seas_uncharged) {
+    ~swamp_trident_join;
+    return;
+}
+~displaymessage(^dm_default);
+
+[opheldu,trident_of_the_swamp_uncharged]
+if (last_useitem = chisel) {
+    ~swamp_trident_split(^true);
+    return;
+}
+@swamp_trident_charge(last_item, last_useitem, last_slot, last_useslot);
+
+[proc,swamp_trident_join]
+if (inv_total(inv, magic_fang) < 1 | inv_total(inv, trident_of_the_seas_uncharged) < 1
+    | inv_total(inv, chisel) < 1) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (stat(crafting) < ^swamp_trident_crafting_level) {
+    ~objbox(magic_fang, "You need a Crafting level of <tostring(^swamp_trident_crafting_level)> to attach the fang to a trident.", 250, 0, divide(^objbox_height, 2));
+    return;
+}
+sound_synth(chisel, 1, 0);
+inv_del(inv, magic_fang, 1);
+inv_del(inv, trident_of_the_seas_uncharged, 1);
+inv_add(inv, trident_of_the_swamp_uncharged, 1);
+mes("You fix the fang to the trident.");
+
+// "A reversible process" - and no Crafting level to undo it, as OSRS has it. $chisel is whether
+// one is needed: a chisel on the trident needs the chisel, the Dismantle right-click does not.
+[proc,swamp_trident_split](boolean $chisel)
+if (inv_total(inv, trident_of_the_swamp_uncharged) < 1) {
+    return;
+}
+if ($chisel = ^true & inv_total(inv, chisel) < 1) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need another free inventory space to take the fang off.");
+    return;
+}
+sound_synth(chisel, 1, 0);
+inv_del(inv, trident_of_the_swamp_uncharged, 1);
+inv_add(inv, trident_of_the_seas_uncharged, 1);
+inv_add(inv, magic_fang, 1);
+mes("You prise the fang back off the trident.");
+
+// Dismantle, on the uncharged one: OSRS's own op5, and it takes the fang off without needing a
+// chisel in the pack - the chisel is for putting it on.
+[opheld5,trident_of_the_swamp_uncharged] ~swamp_trident_split(^false);
+
+// The charged one comes apart too, but only once it is empty - its charges are the player's and
+// there is nowhere for them to go.
+[opheld5,trident_of_the_swamp]
+if (%swamp_trident_charges > 0) {
+    mes("Uncharge it first.");
+    return;
+}
+mes("Wield or check it first - the charges only come out of a trident that is holding them.");
+
+// ---------------------------------------------------------------------------------------------
+// Wielding, checking, charging, uncharging
+// ---------------------------------------------------------------------------------------------
+[opheld2,trident_of_the_swamp] @levelrequire_magic(^swamp_trident_level, last_slot);
+[opheld2,trident_of_the_swamp_uncharged] @levelrequire_magic(^swamp_trident_level, last_slot);
+
+[opheld3,trident_of_the_swamp] ~swamp_trident_check;
+[opheld3,trident_of_the_swamp_uncharged] ~swamp_trident_check;
+[label,wearop1_trident_of_the_swamp] ~swamp_trident_check;
+
+[proc,swamp_trident_check]
+if (%swamp_trident_charges = 1) {
+    mes("Your trident has 1 charge.");
+    return;
+}
+mes("Your trident has <tostring(%swamp_trident_charges)> charges.");
+
+[opheldu,trident_of_the_swamp] @swamp_trident_charge(last_item, last_useitem, last_slot, last_useslot);
+
+// Death rune, chaos rune, five fire runes and a scale a charge - the seas' trident's recipe with
+// Zulrah's scales where its ten coins are.
+[label,swamp_trident_charge](obj $a, obj $b, int $aslot, int $bslot)
+def_int $slot = $aslot;
+def_obj $other = $b;
+if ($b = trident_of_the_swamp | $b = trident_of_the_swamp_uncharged) {
+    $slot = $bslot;
+    $other = $a;
+}
+if ($other ! deathrune & $other ! chaosrune & $other ! firerune & $other ! zulrahs_scales) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $room = sub(^swamp_trident_max_charges, %swamp_trident_charges);
+if ($room <= 0) {
+    mes("Your trident can't hold any more charges.");
+    return;
+}
+def_int $n = min($room, min(inv_total(inv, deathrune), inv_total(inv, chaosrune)));
+$n = min($n, min(divide(inv_total(inv, firerune), 5), inv_total(inv, zulrahs_scales)));
+if ($n <= 0) {
+    mes("Each charge needs a death rune, a chaos rune, 5 fire runes and one of Zulrah's scales.");
+    return;
+}
+inv_del(inv, deathrune, $n);
+inv_del(inv, chaosrune, $n);
+inv_del(inv, firerune, multiply($n, 5));
+inv_del(inv, zulrahs_scales, $n);
+%swamp_trident_charges = add(%swamp_trident_charges, $n);
+if (inv_getobj(inv, $slot) = trident_of_the_swamp_uncharged) {
+    inv_setslot(inv, $slot, trident_of_the_swamp, 1);
+}
+sound_synth(waterwave_cast_and_fire, 0, 0);
+mes("You add <tostring($n)> charge<~trident_plural($n)> to the trident. It now has <tostring(%swamp_trident_charges)>.");
+
+// The runes come back and the scales stay spent, which is the seas' trident's own bargain with its
+// coins.
+[opheld4,trident_of_the_swamp]
+def_int $slot = last_slot;
+def_int $n = %swamp_trident_charges;
+if ($n > 0) {
+    def_int $need = 0;
+    if (inv_total(inv, deathrune) = 0) $need = add($need, 1);
+    if (inv_total(inv, chaosrune) = 0) $need = add($need, 1);
+    if (inv_total(inv, firerune) = 0) $need = add($need, 1);
+    if (inv_freespace(inv) < $need) {
+        mes("You need more inventory space to take the runes out of the trident.");
+        return;
+    }
+    inv_add(inv, deathrune, $n);
+    inv_add(inv, chaosrune, $n);
+    inv_add(inv, firerune, multiply($n, 5));
+}
+%swamp_trident_charges = 0;
+inv_setslot(inv, $slot, trident_of_the_swamp_uncharged, 1);
+mes("You uncharge the trident.");
+
+// ---------------------------------------------------------------------------------------------
+// The three things the seas' trident's combat code asks
+// ---------------------------------------------------------------------------------------------
+// These exist so that area_kraken_cove/scripts/trident.rs2 stays one powered staff's worth of code
+// rather than two. Nothing else in the tree should read %swamp_trident_charges.
+
+[proc,swamp_trident_wielded]()(boolean)
+if (inv_getobj(worn, ^wearpos_rhand) = trident_of_the_swamp) {
+    return(true);
+}
+return(false);
+
+// How many charges the trident in hand is holding, whichever one it is.
+[proc,trident_charges_now]()(int)
+if (~swamp_trident_wielded = true) {
+    return(%swamp_trident_charges);
+}
+return(%trident_charges);
+
+// One off that count, whichever trident is in hand.
+[proc,trident_spend_one]
+if (~swamp_trident_wielded = true) {
+    %swamp_trident_charges = sub(%swamp_trident_charges, 1);
+    return;
+}
+%trident_charges = sub(%trident_charges, 1);
+
+// floor(Magic / 3) minus this. The seas' is 5, the swamp's is 2.
+[proc,trident_maxhit_offset]()(int)
+if (~swamp_trident_wielded = true) {
+    return(^swamp_trident_maxhit_offset);
+}
+return(5);

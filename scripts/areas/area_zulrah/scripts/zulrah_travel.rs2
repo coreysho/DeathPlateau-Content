@@ -1,0 +1,171 @@
+// GETTING TO ZULRAH, and back. Zul-Andra is OSRS's m34_47, imported whole for this round - before
+// it there was nothing there at all, which is what quest_regicide.constant meant by "neither
+// Arandar nor Zul-Andra appears anywhere in this cache or in any map file, so there is nothing to
+// open".
+//
+// THE ROUTE, as Old School has it: you volunteer yourself to High Priestess Zul-Harcinqa, and then
+// Priestess Zul-Gwenwynig - "who rows sacrifices to Zulrah's shrine" - will let you use her
+// Sacrificial boat. There is no fee for the crossing there and there is none here. Coming back is
+// the same boat.
+//
+// THE GATE IS REGICIDE, which is what OSRS gates Zul-Andra behind, and Regicide is built in this
+// server (scripts/quests/quest_regicide, finished 2026-09-08) - so it is the real gate and not a
+// stand-in. Reaching the village on foot is the other half of that gate: you walk into m34_47 from
+// the Poison Waste, which Regicide is the reason you can cross at all.
+//
+// WHAT IS NOT HERE. Old School's other five ways into Zul-Andra are the fairy ring BJS, the charter
+// from Port Tyras, the Iorwerth camp teleport, a Lletya teleport crystal and the Prifddinas spirit
+// tree. Every one of those is a later addition to a later game and quest_regicide.constant already
+// says why they were left out of the quest. The Zul-andra teleport is here because Zulrah drops it.
+
+// ---------------------------------------------------------------------------------------------
+// High Priestess Zul-Harcinqa
+// ---------------------------------------------------------------------------------------------
+
+[opnpc1,zulandra_high_priestess] @zulandra_high_priestess_talk;
+
+[label,zulandra_high_priestess_talk]
+~chatnpc("<p,neutral>You are a long way from anywhere, traveller.|Zul-Andra keeps to itself.");
+def_int $choice = ~p_choice3("What is this place?", 1, "I want to face Zulrah.", 2,
+                             "Nothing, sorry.", 3);
+if ($choice = 1) {
+    ~chatplayer("<p,neutral>What is this place?");
+    ~chatnpc("<p,neutral>We are the servants of the Great One. Zulrah|rises from the water out there, and we feed it|what it asks for.");
+    ~chatnpc("<p,neutral>Sacrifices. Volunteers, when we can find them.");
+    return;
+}
+if ($choice = 3) {
+    ~chatplayer("<p,neutral>Nothing, sorry.");
+    return;
+}
+~chatplayer("<p,brave>I want to face Zulrah.");
+if (%regicide_quest < ^regicide_complete) {
+    ~chatnpc("<p,neutral>You came through Tyras land without finishing|what you started there. Go back and finish it.|The Great One does not take the unproven.");
+    ~chatplayer("<p,confused>I have no idea what you mean.");
+    return;
+}
+if (%zulrah_volunteered = ^zulandra_volunteered) {
+    ~chatnpc("<p,neutral>You have already offered yourself. Gwenwynig|is at the water. She will row you out.");
+    return;
+}
+~chatnpc("<p,quiz>Face it? Nobody faces the Great One. They are|given to it.");
+def_int $sure = ~p_choice2("Then give me to it.", 1, "On second thoughts, no.", 2);
+if ($sure = 2) {
+    ~chatplayer("<p,neutral>On second thoughts, no.");
+    ~chatnpc("<p,neutral>Wise. Few say that twice.");
+    return;
+}
+~chatplayer("<p,brave>Then give me to it.");
+%zulrah_volunteered = ^zulandra_volunteered;
+~chatnpc("<p,neutral>So be it. Gwenwynig is at the water. She will|row you out, and she will keep whatever the|Great One leaves of you.");
+mes("You have volunteered yourself to Zulrah.");
+
+// ---------------------------------------------------------------------------------------------
+// Priestess Zul-Gwenwynig, and her boat
+// ---------------------------------------------------------------------------------------------
+
+[opnpc1,zulandra_priestess] @zulandra_priestess_talk;
+
+[label,zulandra_priestess_talk]
+if (%zulrah_volunteered ! ^zulandra_volunteered) {
+    ~chatnpc("<p,neutral>The boat is for sacrifices. Speak to the High|Priestess if you mean to be one.");
+    return;
+}
+~chatnpc("<p,neutral>The Great One is waiting. Step into the boat|when you are ready.");
+def_int $choice = ~p_choice3("Take me across.", 1, "Are you holding anything of mine?", 2,
+                             "Not yet.", 3);
+if ($choice = 1) {
+    ~chatplayer("<p,neutral>Take me across.");
+    ~zulrah_cross;
+    return;
+}
+if ($choice = 2) {
+    ~chatplayer("<p,neutral>Are you holding anything of mine?");
+    ~zulrah_collect;
+    return;
+}
+~chatplayer("<p,neutral>Not yet.");
+
+// The Sacrificial boat - OSRS loc 46241, op1 Board, imported by tools/models/importosrslocs.py and
+// placed by hand on the Zul-Andra shore and in the shrine (neither the boat nor an npc spawn is in
+// the map cache). One handler, two directions: Board it on the dock and you go out, Board it at the
+// shrine and you come back, which is what the one word means in both places.
+[oploc1,osrsloc_46241]
+if (~in_zulrah_shrine(coord) = true) {
+    @zulrah_shrine_leave;
+}
+@zulrah_cross_loc;
+
+// AND THE ONE THE MAP ALREADY HAD. OSRS's m34_47 places loc 46242 - the same boat with a
+// Quick-Board as well - at (38,48), at the end of the village pier. The pier's deck is blocked
+// terrain in the imported square, so nobody can stand next to that one and click it; the boat
+// above is placed on the shore where the walkable ground stops, which is why there are two. Both
+// of 46242's ops go to the same place rather than being left as clicks that do nothing.
+[oploc1,osrsloc_46242]
+if (~in_zulrah_shrine(coord) = true) {
+    @zulrah_shrine_leave;
+}
+@zulrah_cross_loc;
+
+[oploc2,osrsloc_46242] @zulrah_cross_loc;
+
+[label,zulrah_cross_loc]
+if (%zulrah_volunteered ! ^zulandra_volunteered) {
+    mes("Priestess Zul-Gwenwynig will not row you anywhere yet.");
+    return;
+}
+~zulrah_cross;
+
+[proc,zulrah_cross]
+if (p_finduid(uid) = false) {
+    return;
+}
+if (%zulrah_instance ! null) {
+    // Somehow already out there - put them back rather than building a second shrine.
+    p_teleport(~zulrah_at(^zulrah_entry));
+    return;
+}
+if (%zulrah_items_held = ^true) {
+    mes("Collect your things from Priestess Zul-Gwenwynig before you go back out.");
+    return;
+}
+if_close;
+mes("Priestess Zul-Gwenwynig rows you out to the shrine.");
+p_delay(2);
+~zulrah_start;
+
+[label,zulrah_shrine_leave]
+if (p_finduid(uid) = false) {
+    return;
+}
+if_close;
+mes("You row back to Zul-Andra.");
+p_delay(2);
+~zulrah_end;
+
+// ---------------------------------------------------------------------------------------------
+// The Zul-andra teleport
+// ---------------------------------------------------------------------------------------------
+// OSRS obj 12938, four to a drop, op1 Teleport. It lands "in the village centre". The checks are
+// the tablets' (~pre_tele_checks): not a way out of deep wilderness, a duel or the trawler.
+
+[opheld1,zul_andra_teleport]
+if (~wilderness_level(coord) > 20) {
+    mes("A mysterious force blocks your teleport!");
+    mes("You can't use this teleport after level 20 wilderness.");
+    return;
+}
+if (~pre_tele_checks(coord) = false) {
+    return;
+}
+if (inv_total(inv, zul_andra_teleport) < 1) {
+    return;
+}
+inv_del(inv, zul_andra_teleport, 1);
+mes("You read the scroll.");
+if_close;
+p_stopaction;
+sound_synth(teleport_all, 1, 0);
+~poh_tab_breakanim;
+p_delay(2);
+~p_telejump_safe(^zulandra_village);
