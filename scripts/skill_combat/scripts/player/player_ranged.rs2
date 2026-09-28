@@ -46,6 +46,7 @@ if (~black_mask_imbued_on_task = true) {
 // regardless land whatever the accuracy roll says
 def_boolean $hit = ~player_npc_hit_roll_boosted(%damagetype, $mask_num, $mask_div);
 def_int $bolt_effect = ~bolt_effect_roll($rhand, $ammo, $hit);
+def_int $hit_max = 0; // what $damage was rolled against, for the max hit splat
 if ($bolt_effect ! ^bolt_none | $hit = true) {
     def_int $maxhit = %com_maxhit;
     if (npc_type = count_draynor & inv_total(inv, garlic) > 0) {
@@ -75,7 +76,8 @@ if ($bolt_effect ! ^bolt_none | $hit = true) {
     if (npc_type = horror_dagganoth_air | npc_type = horror_dagganoth_water | npc_type = horror_dagganoth_earth | npc_type = horror_dagganoth_fire | npc_type = horror_dagganoth_melee) {
         $maxhit = 0;
     }
-    $damage = randominc(min($maxhit, npc_param(max_dealt)));
+    $hit_max = min($maxhit, npc_param(max_dealt));
+    $damage = randominc($hit_max);
     // not where the target is immune to ranged (a max hit of 0 above)
     if ($bolt_effect ! ^bolt_none & $maxhit > 0) {
         $damage = min(~bolt_effect_damage($bolt_effect, $maxhit), npc_param(max_dealt));
@@ -106,7 +108,7 @@ anim(%com_attackanim, 0);
 sound_synth(%com_attacksound, 0, 0);
 def_int $delay = add(~player_ranged_use_weapon($rhand, $ammo), 30); // osrs it seems to be delayed an extra tick
 ~npc_retaliate(calc($delay / 30));
-npc_queue(2, $damage, calc($delay / 30));
+~npc_queue_hit($damage, $hit_max, calc($delay / 30));
 npc_anim(npc_param(defend_anim), sub($delay, 30)); // delay npc this tick
 if (npc_param(defend_sound) ! null) {
     sound_synth(npc_param(defend_sound), 0, sub($delay, 30)); // delay 1 client tick for the hit queue

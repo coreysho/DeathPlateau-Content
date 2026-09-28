@@ -368,7 +368,7 @@ else if (npc_type = icediamond_icewarrior | npc_type = firediamond_firewarrior) 
 if ($maxhit ! null) {
     // damage npc
     //mes("Duration: <tostring($duration)>, Duration (ticks): <tostring(calc($duration / 30))>");
-    npc_queue(2, $damage, calc($duration / 30 + 1)); // delayed an extra tick in osrs
+    ~npc_queue_hit($damage, min($maxhit, npc_param(max_dealt)), calc($duration / 30 + 1)); // delayed an extra tick in osrs
     // The twinflame staff's second hit: a tick after the first, 40% of it rounded down, no xp.
     if ($damage > 0 & ~twinflame_second_hit(db_getfield($spell_data, magic_spell_table:spell, 0)) = true) {
         npc_queue(2, divide(multiply(min($damage, npc_stat(hitpoints)), 40), 100), calc($duration / 30 + 2));

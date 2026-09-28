@@ -1,12 +1,14 @@
 [proc,combat_clearqueue]
 clearqueue(playerhit_n_retaliate);
 clearqueue(combat_damage_player);
+clearqueue(combat_maxhit_player);
 clearqueue(pvp_damage);
 clearqueue(damage_player);
 clearqueue(pvp_retaliate);
 clearqueue(recoil_damage);
 clearqueue(vengeance_damage);
 clearqueue(poison_damage);
+clearqueue(venom_damage);
 // The arkan blade's burn is damage-over-time on a queue of its own, and a player keeps their queue
 // through death - so without this, a burn landed just before a kill followed the player out of the
 // fight and kept hitting them after they respawned.
@@ -15,10 +17,12 @@ clearqueue(poison_damage);
 [proc,.combat_clearqueue]
 .clearqueue(playerhit_n_retaliate);
 .clearqueue(combat_damage_player);
+.clearqueue(combat_maxhit_player);
 .clearqueue(pvp_damage);
 .clearqueue(damage_player);
 .clearqueue(pvp_retaliate);
 .clearqueue(recoil_damage);
 .clearqueue(vengeance_damage);
 .clearqueue(poison_damage);
+.clearqueue(venom_damage);
 ~.arkan_burn_clear;

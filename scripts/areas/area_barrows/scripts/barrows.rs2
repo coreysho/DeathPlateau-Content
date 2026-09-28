@@ -45,14 +45,19 @@ if ($crypt = null) {
 p_arrivedelay;
 p_stopaction;
 mes("You dig into the mound...");
-anim(human_dig_long, 0);
-p_delay(2);
+// A little quicker than it was (owner's request, 2026-09-27): p_delay(1) where it was p_delay(2) -
+// p_delay(n) holds for n + 1, and the telejump lands the tick after - so the player is in the crypt
+// five ticks after the spade goes in rather than six (tools/sim/visuals.ts measures it). And
+// human_dig_barrows is human_dig_long with every stroke a quarter faster (configs/barrows.seq), so
+// the digging itself looks quicker as well.
+anim(human_dig_barrows, 0);
+p_delay(1);
 mes("You break through into a hollow space...");
 p_delay(1);
 p_telejump($crypt);
 ~barrows_drain_start;
 mes("...and drop into the crypt below.");
-// human_dig_long is loops=8, so it keeps digging long past the two ticks this script waits -
+// human_dig_barrows is loops=8, so it keeps digging long past the ticks this script waits -
 // and the telejump does not stop it, which is why the first version of this had the player
 // still shovelling away inside the crypt until they clicked something else. Ending an animation
 // that outlives its script is anim(null, 0), the way quest_zombiequeen.rs2's own long dig ends.

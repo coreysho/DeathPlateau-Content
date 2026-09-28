@@ -31,6 +31,7 @@ p_opplayer(2);
 ~set_pk_vars;
 
 def_int $damage = 0;
+def_int $hit_max = 0; // what $damage was rolled against, for the max hit splat
 // not sure if xp multipler exists for us or not?!
 // https://oldschool.runescape.wiki/w/Combat#PvP_bonus_experience
 // an enchanted bolt's effect (bolt_effects.rs2): some roll only on a hit, and the ones that change
@@ -44,6 +45,7 @@ if ($hit = true | $bolt_effect ! ^bolt_none) {
     }
     if ($hit = true) {
         $damage = randominc($maxhit);
+        $hit_max = $maxhit;
     }
     if ($bolt_effect ! ^bolt_none) {
         $damage = ~bolt_effect_damage_pvp($bolt_effect, $maxhit, $damage);
@@ -65,7 +67,7 @@ sound_synth(%com_attacksound, 0, 0);
 .sound_synth(%com_attacksound, 0, 0);
 
 .queue*(pvp_retaliate, calc($delay / 30))(uid);
-~.pvp_damage(calc($delay / 30), $damage);
+~.pvp_damage_max(calc($delay / 30), $damage, $hit_max);
 
 .anim(.%com_defendanim, $delay);
 // the bolt effect as the bolt lands, with the flinch

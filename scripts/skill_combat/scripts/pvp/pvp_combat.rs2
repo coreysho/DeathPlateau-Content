@@ -191,6 +191,10 @@ switch_int($damagestyle) {
 stat_advance(hitpoints, scale($multiplier, 1000, scale(133, 100, $base)));
 
 [proc,.pvp_damage](int $delay, int $damage)
+~.pvp_damage_max($delay, $damage, 0);
+
+// ~.pvp_damage knowing the max the hit was rolled against: a hit of it is drawn with the max hit splat
+[proc,.pvp_damage_max](int $delay, int $damage, int $maxhit)
 .if_close;
 if (.p_finduid(.uid) = true) {
     ~.combat_preventlogout;
@@ -201,10 +205,14 @@ if ($damage < 0) {
 ~smite_drain($damage);
 // the attacker's uid rides with the hit, so what it sets off - Vengeance - answers the one who dealt
 // it (skill_magic/scripts/lunar/vengeance.rs2)
-.queue*(pvp_damage, $delay)($damage, uid);
+def_int $hitmark = ^hitmark_damage;
+if ($maxhit > 0 & $damage >= $maxhit) {
+    $hitmark = ^hitmark_max;
+}
+.queue*(pvp_damage, $delay)($damage, uid, $hitmark);
 
 // needs to be a queue
-[queue,pvp_damage](int $damage, player_uid $attacker)
+[queue,pvp_damage](int $damage, player_uid $attacker, int $hitmark)
 if (inv_getobj(worn, ^wearpos_ring) = ring_of_recoil & map_members = ^true & .finduid(%pk_predator1) = true & $damage > 0 & stat(hitpoints) > 0) {
     // https://oldschool.runescape.wiki/w/Update:Clue_Scroll_Step_Counter
     // - "Recoil damage will now always target the entity that caused the initial damage, rather than the most recent entity to deal damage."
@@ -215,7 +223,7 @@ if (inv_getobj(worn, ^wearpos_ring) = ring_of_recoil & map_members = ^true & .fi
     ~ring_of_recoil_lose_charge($recoil_damage);
 }
 ~vengeance_rebound_player($damage, $attacker);
-~damage_self($damage);
+~damage_self_hitmark($damage, $hitmark);
 
 [queue,recoil_damage](int $damage) // seperate queue to avoid infinite recoil loop
 ~damage_self($damage);

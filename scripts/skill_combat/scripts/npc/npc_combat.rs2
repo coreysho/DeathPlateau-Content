@@ -336,6 +336,11 @@ error("style of <tostring($style)> not defined in switch for npc_combat_defenceb
 
 //  this should be strong queued. Some damage is queued, some isnt
 [queue,combat_damage_player](int $damage)
+~combat_damage_player_hit($damage, ^hitmark_damage);
+
+// A monster's hit landing, with the splat it is drawn with - ^hitmark_damage, or ^hitmark_max from
+// [queue,combat_maxhit_player] (skill_combat/scripts/hitmark_max.rs2).
+[proc,combat_damage_player_hit](int $damage, int $hitmark)
 if (inv_getobj(worn, ^wearpos_ring) = ring_of_recoil & map_members = ^true & npc_finduid(%aggressive_npc) = true & npc_hasop(2) = true & %npc_attacking_uid = uid & $damage > 0 & stat(hitpoints) > 0) {
     // https://oldschool.runescape.wiki/w/Update:Clue_Scroll_Step_Counter
     // - "Recoil damage will now always target the entity that caused the initial damage, rather than the most recent entity to deal damage."
@@ -346,7 +351,7 @@ if (inv_getobj(worn, ^wearpos_ring) = ring_of_recoil & map_members = ^true & npc
 }
 ~vengeance_rebound_npc($damage);
 p_preventlogout("You can't log out until 10 seconds after the end of combat.", 16);
-~damage_self($damage);
+~damage_self_hitmark($damage, $hitmark);
 
 [proc,npc_retaliate](int $queue_delay)
 npc_queue(1, 0, $queue_delay);

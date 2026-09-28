@@ -141,13 +141,19 @@ print('4. Vengeance')
 PVP = read('scripts/skill_combat/scripts/pvp/pvp_combat.rs2')
 NPC = read('scripts/skill_combat/scripts/npc/npc_combat.rs2')
 VENG = read('scripts/skill_magic/scripts/lunar/vengeance.rs2')
-check('[queue,pvp_damage](int $damage, player_uid $attacker)' in PVP and '.queue*(pvp_damage, $delay)($damage, uid);' in PVP,
+# (2026-09-27) the hit carries its hitsplat too - ^hitmark_max for a max hit - and lands through
+# ~damage_self_hitmark; a monster's lands in ~combat_damage_player_hit, which [queue,combat_damage_player]
+# and [queue,combat_maxhit_player] both call (skill_combat/scripts/hitmark_max.rs2)
+check('[queue,pvp_damage](int $damage, player_uid $attacker, int $hitmark)' in PVP and '.queue*(pvp_damage, $delay)($damage, uid, $hitmark);' in PVP,
       'a pvp hit carries the uid of whoever dealt it')
 q = PVP.split('[queue,pvp_damage]', 1)[1].split('\n[', 1)[0]
-check('~vengeance_rebound_player($damage, $attacker);' in q and q.index('~vengeance_rebound_player') < q.index('~damage_self($damage);'),
+check('~vengeance_rebound_player($damage, $attacker);' in q and '~damage_self_hitmark($damage, $hitmark);' in q
+      and q.index('~vengeance_rebound_player') < q.index('~damage_self_hitmark($damage, $hitmark);'),
       '...and the queue answers it with vengeance before the damage lands')
-q = NPC.split('[queue,combat_damage_player]', 1)[1].split('\n[', 1)[0]
-check('~vengeance_rebound_npc($damage);' in q and q.index('~vengeance_rebound_npc') < q.index('~damage_self($damage);'),
+q = NPC.split('[proc,combat_damage_player_hit]', 1)[1].split('\n[', 1)[0]
+check('~combat_damage_player_hit($damage, ^hitmark_damage);' in NPC.split('[queue,combat_damage_player]', 1)[1].split('\n[', 1)[0]
+      and '~vengeance_rebound_npc($damage);' in q and '~damage_self_hitmark($damage, $hitmark);' in q
+      and q.index('~vengeance_rebound_npc') < q.index('~damage_self_hitmark($damage, $hitmark);'),
       "an npc's hit is answered the same way, in combat_damage_player")
 q = VENG.split('[queue,vengeance_damage]', 1)[1].split('\n[', 1)[0]
 check('pvp_damage' not in q and 'combat_damage_player' not in q and 'recoil' not in q and '~damage_self($damage);' in q,

@@ -41,15 +41,19 @@ def_int $duration = 64;
 $duration = ~player_projectile(npc_coord, coord, uid, npc_param(proj_travel), 40, 36, 32, 15, 0, 11, 5);
 
 if (randominc($attack_roll) > randominc($defence_roll)) {
-    ~playerhit_n_ranged(randominc($maxhit), $duration, npc_param(attackrate));
+    ~playerhit_n_ranged_max(randominc($maxhit), $maxhit, $duration, npc_param(attackrate));
     return;
 }
 ~playerhit_n_ranged(0, $duration, npc_param(attackrate));
 
 [proc,playerhit_n_ranged](int $damage, int $duration, int $delay)
+~playerhit_n_ranged_max($damage, 0, $duration, $delay);
+
+// ~playerhit_n_ranged knowing the max the hit was rolled against, for the max hit splat
+[proc,playerhit_n_ranged_max](int $damage, int $maxhit, int $duration, int $delay)
 if_close; // close the player interface when taking a hit.
 // not sure if this is correct
-queue(combat_damage_player, calc($duration / 30), $damage);
+~queue_combat_damage_player(calc($duration / 30), $damage, $maxhit);
 if (npc_param(poison_severity) > 0 & $damage > 0) {
     queue(poison_player, 0, npc_param(poison_severity));
 }

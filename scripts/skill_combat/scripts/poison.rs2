@@ -33,11 +33,16 @@ queue(poison_damage,0,calc((%poison + 4)/5));
 %poison = calc(%poison - 1);
 
 [queue,poison_damage](int $damage)
+~poison_hit($damage, ^hitmark_poison);
+
+// A poison tick's hit; venom's ([queue,venom_damage], toxic_blowpipe/scripts/venom.rs2) is the same hit
+// drawn with venom's splat.
+[proc,poison_hit](int $damage, int $hitmark)
 if_close;
 def_synth $sound;
 def_int $rand;
 // not sure if this damage is supposed to be queued or not
-damage(uid, ^hitmark_poison, $damage);
+damage(uid, $hitmark, $damage);
 if (gender() = 0) {
     $rand = random(3);
     switch_int($rand) {
