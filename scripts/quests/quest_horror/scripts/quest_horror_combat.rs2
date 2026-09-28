@@ -54,11 +54,9 @@
 [ai_opplayer2,horror_dagganoth_ranged] ~dagmother_attack;
 
 
-// Melee when the player is touching her, ranged otherwise. npc_range() is the size-aware distance -
-// CoordGrid.distanceTo between the two bounding boxes (NpcOps.ts:167) - which is what this needs,
-// because she is 3x3: a plain coord-to-coord distance from her south-west tile reads 3 for a player
-// standing against her north face and 1 for one standing against her south face, and would call the
-// same contact two different things. npc_range is 1 for every square of contact.
+// Melee when the player is touching her, ranged otherwise. "Touching" is npc_canreach: the reach an
+// opplayer2 swing needs, from any face of her 3x3 - beside her, NOT across one of her corners and not
+// over a wall or fence (npc_range(coord) <= 1 is 1 there too, so she used to claw round corners).
 //
 // She does not chase into melee of her own accord, and that is not a shortcut: aiMode stops moving
 // the moment tryInteract succeeds (Npc.ts:906-928), so ANY npc in applayer2 mode halts at its
@@ -82,7 +80,7 @@ if (~npc_check_notcombat_self = false) {
 // and automatically use the opposite attack type"). Protect from Melee while you stand on her gets
 // you shot point-blank; Protect from Missiles while you keep your distance brings her in to claw you
 // (opplayer2 walks her up; its trigger lands back here once she is touching you).
-if (npc_range(coord) <= 1) {
+if (npc_canreach = true) {
     if (~check_protect_prayer(^melee_style) = true) {
         ~dagmother_range_attack;
         npc_setmode(applayer2);

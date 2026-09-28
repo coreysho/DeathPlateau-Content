@@ -727,6 +727,8 @@
 [command,.npc_hasop](int $op)(boolean)
 // info: check if the npc's target is within the npc's maxrange
 [command,npc_inrange]()(boolean)
+// info: could the npc, where it stands, op (melee) the active player: beside them, not diagonally, no wall or fence between
+[command,npc_canreach]()(boolean)
 
 // Loc ops (3000-3499)
 // info: Spawn a loc at $coord

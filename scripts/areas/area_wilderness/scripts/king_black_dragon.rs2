@@ -14,7 +14,8 @@ if (~npc_check_notcombat_self = false) {
 // kbd can attack from a distance but can also be safespoted
 // - https://imgur.com/9ervTTQ
 // - https://imgur.com/otGvibL
-if (npc_range(coord) > 1) {
+// out of melee reach (npc_canreach: beside it, not across a corner or a safespot's wall), it breathes
+if (npc_canreach = false) {
     ~kbd_dragonfire_far;
 }
 npc_sethuntmode(aggressive_melee);

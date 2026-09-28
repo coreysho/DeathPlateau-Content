@@ -38,7 +38,7 @@ if (%npc_aggressive_player ! uid) {
 if (%npc_action_delay > map_clock) {
     return;
 }
-if (npc_range(coord) > 1) { // if more than 1 tile away after being attacked, nezikchened will use magic
+if (npc_canreach = false) { // out of melee reach after being attacked (not beside him, or across a corner or wall), nezikchened will use magic
     if(~nezikchened_dagger_attack = true) {
         return;
     }
