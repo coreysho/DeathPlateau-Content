@@ -1,1 +1,12 @@
 ^pk_skull_duration = 2000
+
+// Old School's PJ ("pile jumping") timer. Two players who trade blows in single-way combat are
+// closed to everyone else for 20 ticks - 12 seconds - counted from the last hit between them:
+// nobody else can attack either of them, and neither of them can turn on anybody else.
+// "whenever you attack something aggressive, monsters or player opponents will be unable to hit
+// you for the next 20 cycles (12 seconds)" - Jagex, 9 March 2022,
+// https://oldschool.runescape.wiki/w/Update:PJ_Timer_%26_New_Broadcast_Settings
+// https://oldschool.runescape.wiki/w/PJ_timer
+^pj_timer_pvp = 20
+// A monster's hit holds you for the older, shorter 8 ticks (4.8 seconds) - same wiki page.
+^pj_timer_npc = 8

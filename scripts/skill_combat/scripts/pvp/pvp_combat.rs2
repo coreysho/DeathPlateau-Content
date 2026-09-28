@@ -115,38 +115,89 @@ if (~pvp_in_combat_check = false) {
     return(false);
 }
 
+// Old School's PJ timer, single-way combat only. Two players who have traded blows are closed to
+// everyone else for ^pj_timer_pvp (20 ticks, 12 seconds) counted from the last hit between them,
+// and they can keep hitting each other the whole time. A monster's hit closes you for the shorter
+// ^pj_timer_npc (8 ticks). https://oldschool.runescape.wiki/w/PJ_timer
+//
+// Each half is judged on the tile of the player it is about: a multiway area lifts the restriction
+// for whoever is standing in it. Nothing here bites when both of you are in multi.
 [proc,pvp_in_combat_check]()(boolean)
-// if multi, return true
-if (map_multiway(.coord) = false) {
-    // if you have been attacked in the last 8 ticks, and the last person to attack you isnt your opponent
-    // or an npc attacked you
-    // pvp's "I'm already under attack." has a period (most likely):
-    // - 2005: https://storage.googleapis.com/tannerdino/images/owned___1.png
-    // - 2004: https://storage.googleapis.com/tannerdino/images/scubamcm69arrow.jpg
-    if (add(%lastcombat, 8) > map_clock) {
-        if (%pk_predator1 ! .uid & %pk_predator1 ! null) {
-            mes("I'm already under attack.");
-            return(false);
-        }
-        if (npc_finduid(%aggressive_npc) = true) {
-            mes("I'm already under attack.");
-            return(false);
-        }
+// my own side: I am held to whoever I am already fighting
+// pvp's "I'm already under attack." has a period (most likely):
+// - 2005: https://storage.googleapis.com/tannerdino/images/owned___1.png
+// - 2004: https://storage.googleapis.com/tannerdino/images/scubamcm69arrow.jpg
+if (map_multiway(coord) = false) {
+    if (~pj_timer_pvp_running = true & %pvp_opponent ! .uid & %pvp_opponent ! null) {
+        mes("I'm already under attack.");
+        return(false);
     }
-    // if your opponent has been attacked in the last 8 ticks, and the opponents last attacker is not you
-    // or an npc attacked them 
-    if (add(.%lastcombat, 8) > map_clock) {
-        if (.%pk_predator1 ! uid & .%pk_predator1 ! null) {
-            mes("Someone else is already fighting your opponent.");
-            return(false);
-        }
-        if (npc_finduid(.%aggressive_npc) = true) {
-            mes("Someone else is already fighting your opponent.");
-            return(false);
-        }
+    // a monster has me: the shorter hold, and it has to still be around
+    if (add(%lastcombat, ^pj_timer_npc) > map_clock & npc_finduid(%aggressive_npc) = true) {
+        mes("I'm already under attack.");
+        return(false);
+    }
+}
+// my opponent's side: their own timer covers them for the whole 12 seconds whoever they were
+// fighting - after a kill, or after the other one logged out, the lock is gone but the cover is not
+if (map_multiway(.coord) = false) {
+    if (~.pj_timer_pvp_running = true & .%pvp_opponent ! uid) {
+        mes("Someone else is already fighting your opponent.");
+        return(false);
+    }
+    if (add(.%lastcombat, ^pj_timer_npc) > map_clock & npc_finduid(.%aggressive_npc) = true) {
+        mes("Someone else is already fighting your opponent.");
+        return(false);
     }
 }
 return(true);
+
+// Is this player's PvP PJ timer still running? Both sides of a fight refresh it on every hit
+// (~set_pk_vars), so it lapses ^pj_timer_pvp ticks after the last blow either of them landed -
+// which is also what happens when one of them runs off, teleports or is teleblocked and flees:
+// nothing clears the clock, it just runs out, and until it does nobody else may step in.
+[proc,pj_timer_pvp_running]()(boolean)
+if (%lastcombat_pvp > 0 & add(%lastcombat_pvp, ^pj_timer_pvp) > map_clock) {
+    return(true);
+}
+return(false);
+
+[proc,.pj_timer_pvp_running]()(boolean)
+if (.%lastcombat_pvp > 0 & add(.%lastcombat_pvp, ^pj_timer_pvp) > map_clock) {
+    return(true);
+}
+return(false);
+
+// A kill ends the lock for both of them. The killer keeps the rest of their own PJ timer - the 12
+// seconds Old School gives them to log out or teleport away, so nobody may jump them yet - but with
+// nobody left to be loyal to they are free to turn on somebody else.
+[proc,pvp_clear_pj_lock]
+%pvp_opponent = null;
+%lastcombat_pvp = null;
+.%pvp_opponent = null;
+
+// Logging out drops the lock the same way: the fight is over for the leaver, so whoever was holding
+// them is free to pick a new fight - though still nobody else's to jump until their own 12 seconds
+// are up. (p_preventlogout already keeps a player in the world for 16 ticks after a hit, so this
+// can never be used to duck out of a fight in progress.)
+[proc,set_pj_timer_logout]
+if (%pvp_opponent ! null) {
+    if (.finduid(%pvp_opponent) = true) {
+        if (.%pvp_opponent = uid) {
+            .%pvp_opponent = null;
+        }
+    }
+}
+%pvp_opponent = null;
+%lastcombat_pvp = null;
+%lastcombat = null;
+
+// map_clock restarts with the world, so a tick stored in the last session can sit in the future -
+// which would leave a returning player un-attackable, and unable to attack, for hours.
+[proc,set_pj_timer_login]
+%pvp_opponent = null;
+%lastcombat_pvp = null;
+%lastcombat = null;
 
 [proc,pvp_hit_roll](int $damagetype)(boolean)
 def_int $attack_roll = ~player_attack_roll_specific($damagetype);

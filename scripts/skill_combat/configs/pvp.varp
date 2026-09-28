@@ -1,0 +1,8 @@
+// The player this one is locked into a single-way fight with, for the PJ timer in
+// skill_combat/scripts/pvp/pvp_combat.rs2 (~pvp_in_combat_check). ~set_pk_vars writes it on BOTH
+// players every time either of them lands a hit on the other, and it is only read while that
+// player's %lastcombat_pvp is still inside ^pj_timer_pvp - so it needs no clearing when the timer
+// simply lapses. null means "not locked to anyone": a kill and a logout both put it back.
+[pvp_opponent]
+type=player_uid
+protect=no

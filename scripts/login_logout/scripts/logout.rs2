@@ -1,5 +1,6 @@
 [logout,_]
 ~set_pk_skull_logout;
+~set_pj_timer_logout; // the PJ lock dies with the connection - skill_combat/scripts/pvp/pvp_combat.rs2
 ~set_antifire_logout; // TODO: should be timer
 ~follower_logout;
 ~duel_arena_logout;
