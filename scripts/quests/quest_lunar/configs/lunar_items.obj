@@ -1,0 +1,796 @@
+// Imported from the rev 474 cache by tools/models/import474.py
+// Models are copied byte-for-byte; 474 uses the same model format the 377 client reads.
+// Everything the cache does not carry is marked TODO below.
+
+[lunar_seal_of_passage]
+name=Seal of passage
+desc=A seal of passage issued by Brundt the Chieftain of the Fremennik.
+model=obj_lunar_seal_of_passage
+manwear=obj_lunar_seal_of_passage_manwear,0
+womanwear=obj_lunar_seal_of_passage_manwear,6
+2dxof=1
+2dyof=-1
+2dzoom=465
+2dxan=332
+iop2=Wear
+iop5=Destroy
+wearpos=front
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=4535g
+// Always lost on death; Brundt issues another for nothing.
+
+[lunar_staff]
+name=Lunar staff
+desc=A Moonclan staff.
+model=obj_lunar_staff
+manwear=obj_lunar_staff_manwear,0
+womanwear=obj_lunar_staff_manwear,6
+2dxof=-3
+2dzoom=1488
+2dxan=304
+2dyan=1425
+2dzan=55
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+wearpos2=lefthand
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=2267g
+// OSRS: magic attack +13, crush +16, strength +15, prayer +3, and a slower swing than the dramen
+// staff it is made from. It keeps the dramen staff's two tricks - Zanaris and the fairy rings.
+category=weapon_staff
+param=stabattack,3
+param=slashattack,2
+param=crushattack,16
+param=magicattack,13
+param=stabdefence,2
+param=slashdefence,3
+param=crushdefence,2
+param=magicdefence,13
+param=rangedefence,1
+param=strengthbonus,15
+param=prayerbonus,3
+param=attackrate,5
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=crush_sound,staff_hit
+
+[lunar_staff_pt1]
+name=Lunar staff - pt1
+desc=A staff enchanted by air.
+model=obj_lunar_staff_pt1
+manwear=obj_lunar_staff_pt1_manwear,0
+womanwear=obj_lunar_staff_pt1_manwear,6
+2dyof=-23
+2dzoom=1460
+2dxan=196
+2dyan=1416
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+cost=15
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=1814g
+category=weapon_staff
+param=attackrate,5
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=crush_sound,staff_hit
+
+[lunar_staff_pt2]
+name=Lunar staff - pt2
+desc=A staff enchanted by air and fire.
+model=obj_lunar_staff_pt1
+manwear=obj_lunar_staff_pt1_manwear,0
+womanwear=obj_lunar_staff_pt1_manwear,6
+2dyof=-23
+2dzoom=1460
+2dxan=196
+2dyan=1416
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+cost=15
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=1814g
+category=weapon_staff
+param=attackrate,5
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=crush_sound,staff_hit
+
+[lunar_staff_pt3]
+name=Lunar staff - pt3
+desc=A staff enchanted by air, fire and water.
+model=obj_lunar_staff_pt1
+manwear=obj_lunar_staff_pt1_manwear,0
+womanwear=obj_lunar_staff_pt1_manwear,6
+2dyof=-23
+2dzoom=1460
+2dxan=196
+2dyan=1416
+iop2=Wield
+iop5=Destroy
+wearpos=righthand
+cost=15
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=1814g
+category=weapon_staff
+param=attackrate,5
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=crush_sound,staff_hit
+
+[lunar_helm]
+name=Lunar helm
+desc=A mystical helmet.
+model=obj_lunar_helm
+manwear=obj_lunar_helm_manwear,0
+womanwear=obj_lunar_helm_womanwear,0
+manhead=obj_lunar_helm_manhead
+womanhead=obj_lunar_helm_manhead
+2dyof=-5
+2dzoom=854
+2dxan=101
+2dyan=126
+recol1s=16774
+recol1d=3206
+recol2s=8523
+recol2d=3202
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+iop2=Wear
+iop5=Destroy
+wearpos=hat
+wearpos2=head
+wearpos3=jaw
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=907g
+param=magicattack,3
+param=rangeattack,-2
+param=stabdefence,8
+param=slashdefence,7
+param=crushdefence,10
+param=magicdefence,2
+
+[lunar_torso]
+name=Lunar torso
+desc=Provides good protection.
+model=obj_lunar_torso
+manwear=obj_lunar_torso_manwear,0
+womanwear=obj_lunar_torso_womanwear,0
+manwear2=obj_lunar_torso_manwear2
+womanwear2=obj_lunar_torso_womanwear2
+2dyof=-1
+2dzoom=1308
+2dxan=498
+recol1s=16774
+recol1d=3206
+recol2s=8523
+recol2d=3202
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+iop2=Wear
+iop5=Destroy
+wearpos=torso
+wearpos2=arms
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=4535g
+param=magicattack,10
+param=rangeattack,-10
+param=stabdefence,34
+param=slashdefence,22
+param=crushdefence,40
+param=magicdefence,12
+
+[lunar_legs]
+name=Lunar legs
+desc=These should protect my legs.
+model=obj_lunar_legs
+manwear=obj_lunar_legs_manwear,0
+womanwear=obj_lunar_legs_womanwear,0
+2dxof=-1
+2dyof=12
+2dzoom=1704
+2dxan=387
+2dyan=3
+recol1s=16774
+recol1d=3206
+recol2s=8523
+recol2d=3202
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+iop2=Wear
+iop5=Destroy
+wearpos=legs
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=3628g
+param=magicattack,7
+param=stabdefence,20
+param=slashdefence,19
+param=crushdefence,23
+param=magicdefence,9
+
+[lunar_gloves]
+name=Lunar gloves
+desc=These should keep my hands safe.
+model=obj_lunar_gloves
+manwear=obj_lunar_gloves_manwear,0
+womanwear=obj_lunar_gloves_womanwear,0
+2dyof=1
+2dzoom=984
+2dxan=484
+recol1s=16774
+recol1d=3206
+recol2s=8523
+recol2d=3202
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+iop2=Wear
+iop5=Destroy
+wearpos=hands
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=907g
+param=magicattack,4
+param=stabdefence,2
+param=slashdefence,1
+param=crushdefence,1
+param=magicdefence,2
+
+[lunar_boots]
+name=Lunar boots
+desc=Mystical foot protection.
+model=obj_lunar_boots
+manwear=obj_lunar_boots_manwear,0
+womanwear=obj_lunar_boots_womanwear,0
+2dyof=-19
+2dzoom=810
+2dxan=207
+recol1s=16774
+recol1d=3206
+recol2s=8523
+recol2d=3202
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+iop2=Wear
+iop5=Destroy
+wearpos=feet
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=907g
+param=magicattack,2
+param=stabdefence,1
+param=slashdefence,2
+param=crushdefence,2
+param=magicdefence,2
+
+[lunar_cape]
+name=Lunar cape
+desc=Oooo pretty!
+model=obj_lunar_cape
+manwear=obj_lunar_cape_manwear,0
+womanwear=obj_lunar_cape_womanwear,0
+2dxof=-3
+2dzoom=2151
+2dxan=636
+2dzan=83
+recol1s=8386
+recol1d=15424
+recol2s=32736
+recol2d=25925
+recol3s=2312
+recol3d=5285
+recol4s=9348
+recol4d=6244
+recol5s=16774
+recol5d=3206
+recol6s=8523
+recol6d=3202
+iop2=Wear
+iop5=Destroy
+wearpos=back
+cost=2
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=453g
+param=slashdefence,1
+param=crushdefence,1
+param=rangedefence,2
+
+[lunar_amulet]
+name=Lunar amulet
+desc=Awesome.
+model=obj_lunar_amulet
+manwear=obj_lunar_amulet_manwear,0
+womanwear=obj_lunar_amulet_womanwear,0
+2dxof=7
+2dyof=-79
+2dzoom=784
+2dxan=231
+2dyan=147
+recol1s=32576
+recol1d=8523
+recol2s=32576
+recol2d=8523
+recol3s=10570
+recol3d=16774
+iop2=Wear
+iop5=Destroy
+wearpos=front
+cost=30
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=10g
+param=magicattack,1
+param=magicdefence,1
+
+[lunar_ring]
+name=Lunar ring
+desc=A mysterious ring that can fill the wearer with magical power...
+model=obj_lunar_ring
+2dyof=-9
+2dzoom=848
+2dxan=396
+2dyan=213
+recol1s=32576
+recol1d=8523
+iop2=Wear
+iop5=Destroy
+wearpos=ring
+cost=100
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=6g
+param=magicattack,2
+param=magicdefence,2
+
+[lunar_special_tiara]
+name=A special tiara
+desc=I'll be the talk of the town with this... maybe.
+model=obj_lunar_special_tiara
+manwear=obj_lunar_special_tiara_manwear,0
+womanwear=obj_lunar_special_tiara_womanwear,0
+manhead=obj_lunar_special_tiara_manhead
+womanhead=obj_lunar_special_tiara_manhead
+2dzoom=528
+2dxan=177
+2dyan=132
+iop5=Destroy
+wearpos=hat
+wearpos2=head
+cost=30
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=10g
+
+[lunar_ore]
+name=Lunar ore
+desc=This needs refining.
+model=obj_lunar_ore
+2dxof=1
+2dyof=15
+2dzoom=1400
+2dxan=368
+2dyan=1576
+recol1s=13605
+recol1d=15855
+recol2s=11488
+recol2d=11692
+iop5=Destroy
+cost=3
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_bar]
+name=Lunar bar
+desc=It's a bar of magic metal.
+model=obj_lunar_bar
+2dxof=1
+2dyof=-8
+2dzoom=820
+2dxan=196
+2dyan=1180
+recol1s=11488
+recol1d=11659
+iop5=Destroy
+cost=8
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[suqah_tooth]
+name=Suqah tooth
+desc=The tooth, the whole tooth, and nothing but the tooth.
+model=obj_suqah_tooth
+2dxof=1
+2dyof=15
+2dzoom=465
+2dxan=304
+2dyan=415
+recol1s=32760
+recol1d=32767
+cost=20
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_ground_tooth]
+name=Ground tooth
+desc=A ground up Suqah tooth.
+model=obj_lunar_ground_tooth
+2dxof=-6
+2dzoom=1210
+2dxan=264
+2dyan=1892
+recol1s=21140
+recol1d=25190
+cost=20
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[suqah_hide]
+name=Suqah hide
+desc=The hide of a Suqah.
+model=obj_suqah_hide
+2dyof=1
+2dzoom=1584
+2dxan=528
+2dyan=1189
+cost=60
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[suqah_leather]
+name=Suqah leather
+desc=Tanned Suqah hide, ready to be worked.
+model=obj_suqah_hide
+2dyof=1
+2dzoom=1584
+2dxan=528
+2dyan=1189
+recol1s=11626
+recol1d=6341
+recol2s=12683
+recol2d=6341
+recol3s=10569
+recol3d=6341
+recol4s=8455
+recol4d=6341
+cost=60
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_empty_vial]
+param=next_obj_stage,lunar_vial_water
+name=Empty vial
+desc=A special vial, made by Baba Yaga.
+model=obj_lunar_empty_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_vial_water]
+name=Vial of water
+desc=A special vial filled with water.
+model=obj_lunar_empty_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_guam_vial]
+name=Guam vial
+desc=A special vial with guam in it.
+model=obj_lunar_guam_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_marr_vial]
+name=Marr vial
+desc=A special vial with marrentill in it.
+model=obj_lunar_guam_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_guam_marr_vial]
+name=Guam-marr vial
+desc=A special vial with guam and marrentill in it.
+model=obj_lunar_guam_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_waking_sleep_vial]
+name=Waking sleep vial
+desc=A vessel for dreaming while awake!
+model=obj_lunar_guam_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_kindling]
+name=Kindling
+desc=Small bits of wood from the first magic tree!
+model=obj_lunar_kindling
+2dxof=-4
+2dyof=9
+2dzoom=1488
+2dxan=579
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_soaked_kindling]
+name=Soaked kindling
+desc=Magic wood soaked with a potion of waking sleep. Groovy.
+model=obj_lunar_kindling
+2dxof=-4
+2dyof=9
+2dzoom=1488
+2dxan=579
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_emerald_lens]
+name=Emerald lens
+desc=A lens ground from an emerald.
+model=obj_lunar_emerald_lens
+2dxof=-3
+2dyof=3
+2dzoom=610
+2dxan=436
+2dyan=568
+recol1s=22270
+recol1d=18157
+cost=10
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[lunar_emerald_lantern]
+name=Emerald lantern
+desc=A lantern that shines a strange green light.
+model=obj_lunar_emerald_lantern
+2dzoom=1190
+2dxan=28
+2dyan=120
+recol1s=22270
+recol1d=18157
+cost=20
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=1360g
+category=light_source_unlit
+
+[lunar_emerald_lantern_lit]
+name=Emerald lantern
+desc=A lantern shining a strange green light.
+model=obj_lunar_emerald_lantern_lit
+2dzoom=1190
+2dxan=28
+2dyan=120
+recol1s=31530
+recol1d=13993
+iop3=Extinguish
+cost=20
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+weight=1360g
+category=light_source_lit
+
+[moonclan_manual]
+name=Moonclan manual
+desc=A Moonclan manual on the workings of magic.
+model=obj_moonclan_manual
+2dxof=1
+2dyof=-21
+2dzoom=830
+2dxan=244
+2dyan=116
+recol1s=13504
+recol1d=22192
+recol2s=32759
+recol2d=32752
+recol3s=21120
+recol3d=19686
+recol4s=15855
+recol4d=19686
+iop1=Read
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[dream_vial_empty]
+param=next_obj_stage,dream_vial_water
+name=Dream vial (empty)
+desc=A vial for the potion of shared dreaming.
+model=obj_lunar_empty_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+recol1s=2312
+recol1d=16774
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[dream_vial_water]
+name=Dream vial (water)
+desc=A dream vial filled with water.
+model=obj_lunar_empty_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+recol1s=2312
+recol1d=16774
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[dream_vial_herb]
+name=Dream vial (herb)
+desc=A dream vial with goutweed in it.
+model=obj_lunar_empty_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+recol1s=2312
+recol1d=16774
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[dream_potion]
+name=Dream potion
+desc=A potion of shared dreaming.
+model=obj_lunar_guam_vial
+2dxof=-2
+2dyof=-2
+2dzoom=1232
+2dxan=129
+2dyan=174
+recol1s=2312
+recol1d=16774
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[astral_rune_shards]
+name=Astral rune shards
+desc=The shattered remains of an astral rune.
+model=obj_astral_rune_shards
+2dyof=-20
+2dzoom=1730
+2dxan=180
+2dyan=164
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[ground_astral_rune]
+name=Ground astral rune
+desc=A finely ground astral rune.
+model=obj_lunar_ground_tooth
+2dxof=-6
+2dzoom=1210
+2dxan=264
+2dyan=1892
+recol1s=21140
+recol1d=25190
+iop5=Destroy
+cost=20
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[dreamy_lamp]
+name=Dreamy lamp
+desc=A lamp that dreams of making you stronger.
+model=obj_dreamy_lamp
+2dxof=5
+2dyof=-2
+2dzoom=712
+2dxan=70
+2dyan=1841
+iop1=Rub
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement

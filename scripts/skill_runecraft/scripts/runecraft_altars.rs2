@@ -12,8 +12,11 @@ if (oc_category(last_useitem) = talismans) {
 }
 
 // Use specific oplocu's for elemental altars due to combo rune runecrafting
+// Lunar Diplomacy enchants a Dramen staff at all four elemental altars, in the order air, fire,
+// water, earth (quests/quest_lunar/scripts/lunar_island.rs2).
 [oplocu,air_altar]
 switch_obj (last_useitem) {
+    case dramen_staff : ~lunar_enchant_staff(1);
     case blankrune, blankrune_high : @runecraft_runes;
     case waterrune, water_talisman : ~runecraft_combo_rune(waterrune, water_talisman, mistrune, 6, 80, airrune);
     case earthrune, earth_talisman : ~runecraft_combo_rune(earthrune, earth_talisman, dustrune, 10, 83, airrune);
@@ -24,6 +27,7 @@ switch_obj (last_useitem) {
 
 [oplocu,water_altar]
 switch_obj (last_useitem) {
+    case lunar_staff_pt2 : ~lunar_enchant_staff(3);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, mistrune, 6, 85, waterrune);
     case earthrune, earth_talisman : ~runecraft_combo_rune(earthrune, earth_talisman, mudrune, 13, 93, waterrune);
@@ -34,6 +38,7 @@ switch_obj (last_useitem) {
 
 [oplocu,earth_altar]
 switch_obj (last_useitem) {
+    case lunar_staff_pt3 : ~lunar_enchant_staff(4);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, dustrune, 10, 90, earthrune);
     case waterrune, water_talisman : ~runecraft_combo_rune(waterrune, water_talisman, mudrune, 13, 95, earthrune);
@@ -44,6 +49,7 @@ switch_obj (last_useitem) {
 
 [oplocu,fire_altar]
 switch_obj (last_useitem) {
+    case lunar_staff_pt1 : ~lunar_enchant_staff(2);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, smokerune, 15, 85, firerune);
     case waterrune, water_talisman : ~runecraft_combo_rune(waterrune, water_talisman, steamrune, 19, 100, firerune);

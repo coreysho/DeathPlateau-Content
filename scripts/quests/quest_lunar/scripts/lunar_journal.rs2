@@ -1,0 +1,83 @@
+// Lunar Diplomacy - the quest journal.
+[if_button,questlist:lunar]
+def_string $text;
+
+switch_int (%lunar_quest) {
+    case ^lunar_not_started :
+        $text = "@dbl@I can start this quest by speaking to @dre@Lokar Searunner@dbl@ on the|";
+        $text = append($text, "@dre@western dock@dbl@ at @dre@Rellekka|");
+        $text = append($text, "@dbl@I must have completed @dre@The Fremennik Trials@dbl@, @dre@Lost City|");
+        $text = append($text, "@dre@Rune Mysteries@dbl@ and @dre@Shilo Village|");
+        $text = append($text, "@dbl@and have @dre@5 Herblore@dbl@, @dre@61 Crafting@dbl@, @dre@40 Defence|");
+        $text = append($text, "@dre@49 Firemaking@dbl@, @dre@65 Magic@dbl@, @dre@60 Mining@dbl@ and @dre@55 Woodcutting");
+
+    case ^lunar_started :
+        $text = "@str@Lokar Searunner sails to the Moon Clan's island, and they are|";
+        $text = append($text, "@str@the Fremenniks' oldest enemy.|");
+        $text = append($text, "@dbl@I should ask @dre@Brundt the Chieftain@dbl@ in the @dre@Rellekka longhall|");
+        $text = append($text, "@dbl@for a @dre@Seal of Passage");
+
+    case ^lunar_has_seal :
+        $text = "@str@Brundt has given me a Seal of Passage. Without it the Moon|";
+        $text = append($text, "@str@Clan will not suffer me on their island at all.|");
+        $text = append($text, "@dbl@@dre@Lokar@dbl@ will take me to @dre@Pirates' Cove@dbl@, and @dre@Captain Bentley|");
+        $text = append($text, "@dbl@of the @dre@Lady Zay@dbl@ will take me on to @dre@Lunar Isle");
+
+    case ^lunar_arrived :
+        $text = "@str@I am on Lunar Isle. Meteora says the Moon Clan have no|";
+        $text = append($text, "@str@leader, but that the Oneiromancer runs their rituals.|");
+        $text = append($text, "@dbl@I should find the @dre@Oneiromancer@dbl@ in the @dre@south-east@dbl@ of the|");
+        $text = append($text, "@dbl@island, by the @dre@Astral Altar");
+
+    case ^lunar_met_oneiromancer :
+        $text = "@str@The Oneiromancer will let me try the View of Self Dream. I|";
+        $text = append($text, "@str@need a waking sleep potion, a Lunar staff and ceremonial|");
+        $text = append($text, "@str@clothes - the potion first.|");
+        $text = append($text, "@dbl@@dre@Baba Yaga@dbl@, in the walking house, has the @dre@vial|");
+        $text = append($text, "@dbl@I need @dre@guam@dbl@, @dre@marrentill@dbl@ and a ground @dre@Suqah tooth");
+
+    case ^lunar_potion_done :
+        $text = "@str@The Oneiromancer has the potion.|";
+        $text = append($text, "@dbl@Now the staff. I need a @dre@Dramen staff@dbl@ from @dre@Entrana@dbl@, taken|");
+        $text = append($text, "@dbl@to the @dre@air@dbl@, @dre@fire@dbl@, @dre@water@dbl@ and @dre@earth@dbl@ altars, in that order");
+
+    case ^lunar_staff_done :
+        $text = "@str@The Oneiromancer has the potion and the Lunar staff.|";
+        $text = append($text, "@dbl@Eight ceremonial pieces left:|");
+        $text = append($text, "@dbl@@dre@helm@dbl@ - lunar ore from the @dre@mine@dbl@, smelted and hammered|");
+        $text = append($text, "@dbl@@dre@cape@dbl@ - @dre@Pauline Polaris@dbl@ wants her real name|");
+        $text = append($text, "@dbl@@dre@amulet@dbl@ - @dre@Meteora@dbl@ wants her tiara back from a @dre@Suqah|");
+        $text = append($text, "@dbl@@dre@torso, trousers, gloves, boots@dbl@ - @dre@Suqah leather@dbl@, tanned by|");
+        $text = append($text, "@dre@Rimae Sirsalis@dbl@, sewn with a @dre@needle and thread|");
+        $text = append($text, "@dbl@@dre@ring@dbl@ - @dre@Selene@dbl@ has a clue to where it is buried");
+
+    case ^lunar_clothes_done :
+        $text = "@str@The Oneiromancer has given everything back, with magic|";
+        $text = append($text, "@str@kindling from the first magic tree.|");
+        $text = append($text, "@dbl@I should @dre@wear all eight pieces@dbl@ and @dre@hold the staff|");
+        $text = append($text, "@dbl@then @dre@soak the kindling@dbl@ in the potion, @dre@light the brazier|");
+        $text = append($text, "@dbl@in the hall on the west of the village, and @dre@burn the kindling");
+
+    case ^lunar_in_dream :
+        $text = "@str@I have been into the land of dreams. There are six lessons to|";
+        $text = append($text, "@str@learn there, and then one last challenge.|");
+        $text = append($text, "@dbl@Step onto each @dre@platform@dbl@, finish its challenge, and go back to|");
+        $text = append($text, "@dbl@the @dre@Ethereal Being@dbl@ in the middle to tell him what I learnt");
+
+    case ^lunar_dream_done :
+        $text = "@str@I have learnt the six lessons and faced myself.|";
+        $text = append($text, "@dbl@I should tell the @dre@Oneiromancer");
+
+    case ^lunar_complete :
+        $text = "@str@Lokar Searunner told me about the Moon Clan, the Fremenniks'|";
+        $text = append($text, "@str@oldest enemy, and Brundt gave me a Seal of Passage so that|");
+        $text = append($text, "@str@they would not turn me inside out on sight.|");
+        $text = append($text, "@str@The Oneiromancer let me attempt the View of Self Dream: a|");
+        $text = append($text, "@str@potion of waking sleep, a staff made from a Dramen branch at|");
+        $text = append($text, "@str@four altars, and eight pieces of ceremonial clothing.|");
+        $text = append($text, "@str@In the dream I learnt six lessons and fought myself, and woke|");
+        $text = append($text, "@str@up knowing the magic of the Moon Clan.||");
+        $text = append($text, "@red@QUEST COMPLETE!");
+}
+
+~quest_journal("Lunar Diplomacy", $text);

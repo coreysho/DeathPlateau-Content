@@ -1,0 +1,840 @@
+// The people of Lunar Isle, the crew of the Lady Zay, the six Ethereal beings of the
+// Dream World and the five things Cyrisus is afraid of - imported from the rev 474
+// cache by scratchpad/importnpc_lunar.py (tools/models/importnpc474.py, plus chatheads
+// and model sharing). Models are copied byte-for-byte; 474 model files are already in
+// the format the 377 client reads. Combat stats, huntmode and drops are by hand below
+// the import - the cache carries none of them.
+
+[oneiromancer]
+// rev 474 npc 4511
+name=Oneiromancer
+desc=Oneiromancer.
+model1=npc_oneiromancer_1
+model2=npc_oneiromancer_2
+model3=npc_oneiromancer_3
+model4=npc_oneiromancer_4
+model5=npc_oneiromancer_5
+model6=npc_oneiromancer_6
+model7=npc_oneiromancer_7
+model8=npc_oneiromancer_8
+head1=npc_oneiromancer_head1
+head2=npc_oneiromancer_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+resizeh=135
+resizev=135
+op1=Talk-to
+recol1s=14725
+recol1d=24313
+recol2s=14724
+recol2d=24312
+recol3s=13667
+recol3d=23256
+recol4s=2340
+recol4d=23256
+recol5s=9635
+recol5d=30455
+recol6s=10273
+recol6d=31645
+
+[baba_yaga]
+// rev 474 npc 4513
+name=Baba Yaga
+desc=Baba Yaga.
+model1=npc_baba_yaga_1
+model2=npc_baba_yaga_2
+model3=npc_oneiromancer_3
+model4=npc_oneiromancer_4
+model5=npc_baba_yaga_5
+model6=npc_baba_yaga_6
+model7=npc_oneiromancer_7
+model8=npc_oneiromancer_8
+head1=npc_baba_yaga_head1
+head2=npc_baba_yaga_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+resizeh=110
+resizev=110
+op1=Talk-to
+op3=Trade
+recol1s=2340
+recol1d=14725
+recol2s=6273
+recol2d=24311
+recol3s=15681
+recol3d=11560
+recol4s=24075
+recol4d=26223
+
+[pauline_polaris]
+// rev 474 npc 4514
+name=Pauline Polaris
+desc=Pauline Polaris.
+model1=npc_oneiromancer_1
+model2=npc_oneiromancer_2
+model3=npc_oneiromancer_3
+model4=npc_pauline_polaris_4
+model5=npc_pauline_polaris_5
+model6=npc_pauline_polaris_6
+model7=npc_pauline_polaris_7
+model8=npc_oneiromancer_8
+head1=npc_pauline_polaris_head1
+head2=npc_oneiromancer_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+op1=Talk-to
+
+[meteora]
+// rev 474 npc 4515
+name=Meteora
+desc=Meteora.
+model1=npc_meteora_1
+model2=npc_oneiromancer_3
+model3=npc_pauline_polaris_4
+model4=npc_oneiromancer_5
+model5=npc_pauline_polaris_6
+model6=npc_pauline_polaris_7
+model7=npc_meteora_7
+model8=npc_meteora_8
+model9=npc_oneiromancer_8
+head1=npc_meteora_head1
+head2=npc_meteora_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+op1=Talk-to
+recol1s=9635
+recol1d=26312
+recol2s=16838
+recol2d=19098
+recol3s=14725
+recol3d=10542
+recol4s=13667
+recol4d=8428
+
+[melana_moonlander]
+// rev 474 npc 4516
+name=Melana Moonlander
+desc=Melana Moonlander.
+model1=npc_oneiromancer_2
+model2=npc_oneiromancer_3
+model3=npc_oneiromancer_4
+model4=npc_oneiromancer_5
+model5=npc_oneiromancer_7
+model6=npc_meteora_8
+model7=npc_oneiromancer_8
+model8=npc_oneiromancer_1
+head1=npc_pauline_polaris_head1
+head2=npc_oneiromancer_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+op1=Talk-to
+op3=Trade
+recol1s=2340
+recol1d=11660
+recol2s=16838
+recol2d=13970
+recol3s=14725
+recol3d=11660
+recol4s=13667
+recol4d=9579
+
+[selene]
+// rev 474 npc 4517
+name=Selene
+desc=Selene.
+model1=npc_baba_yaga_2
+model2=npc_oneiromancer_3
+model3=npc_pauline_polaris_4
+model4=npc_oneiromancer_5
+model5=npc_pauline_polaris_6
+model6=npc_pauline_polaris_7
+model7=npc_baba_yaga_1
+model8=npc_meteora_8
+model9=npc_oneiromancer_8
+head1=npc_selene_head1
+head2=npc_baba_yaga_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+op1=Talk-to
+recol1s=9635
+recol1d=11771
+recol2s=16838
+recol2d=29482
+recol3s=14725
+recol3d=10636
+recol4s=13667
+recol4d=6474
+
+[rimae_sirsalis]
+// rev 474 npc 4518
+name=Rimae Sirsalis
+desc=Rimae Sirsalis.
+model1=npc_rimae_sirsalis_1
+model2=npc_oneiromancer_3
+model3=npc_pauline_polaris_4
+model4=npc_oneiromancer_5
+model5=npc_oneiromancer_7
+model6=npc_meteora_8
+model7=npc_oneiromancer_8
+head1=npc_rimae_sirsalis_head1
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+resizeh=120
+resizev=120
+op1=Talk-to
+op3=Trade
+recol1s=9635
+recol1d=24982
+recol2s=16838
+recol2d=16109
+recol3s=14725
+recol3d=16939
+recol4s=13667
+recol4d=14826
+recol5s=2340
+recol5d=16939
+
+[sirsal_banker]
+// rev 474 npc 4519
+name=Sirsal Banker
+desc=Sirsal Banker.
+model1=npc_sirsal_banker_1
+model2=npc_sirsal_banker_2
+model3=npc_sirsal_banker_3
+model4=npc_sirsal_banker_4
+model5=npc_sirsal_banker_5
+model6=npc_sirsal_banker_6
+model7=npc_sirsal_banker_7
+model8=npc_sirsal_banker_8
+model9=npc_oneiromancer_8
+head1=npc_sirsal_banker_head1
+head2=npc_sirsal_banker_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4424
+resizeh=120
+resizev=120
+op1=Talk-to
+op3=Bank
+recol1s=6273
+recol1d=29484
+
+[moonclan_guard]
+// rev 474 npc 4520
+name=Clan Guard
+desc=Clan Guard.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_3
+model4=npc_moonclan_guard_4
+model5=npc_moonclan_guard_5
+model6=npc_moonclan_guard_6
+model7=npc_moonclan_guard_7
+model8=npc_oneiromancer_8
+head1=npc_moonclan_guard_head1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+resizeh=120
+resizev=120
+
+[bouquet_mac_hyacinth]
+// rev 474 npc 4526
+name=Bouquet Mac Hyacinth
+desc=Bouquet Mac Hyacinth.
+model1=npc_baba_yaga_2
+model2=npc_oneiromancer_3
+model3=npc_pauline_polaris_4
+model4=npc_oneiromancer_5
+model5=npc_pauline_polaris_6
+model6=npc_pauline_polaris_7
+model7=npc_baba_yaga_1
+model8=npc_bouquet_mac_hyacinth_8
+model9=npc_oneiromancer_8
+head1=npc_selene_head1
+head2=npc_baba_yaga_head2
+size=1
+readyanim=seq_474_4424
+walkanim=seq_474_4426
+op1=Talk-to
+recol1s=9635
+recol1d=11771
+recol2s=16838
+recol2d=29482
+recol3s=14725
+recol3d=10636
+recol4s=13667
+recol4d=6474
+
+[suqah]
+// rev 474 npc 4527
+name=Suqah
+desc=Suqah.
+model1=npc_suqah_1
+model2=npc_suqah_2
+model3=npc_suqah_3
+model4=npc_suqah_4
+size=2
+readyanim=seq_474_4386
+walkanim=seq_474_4383
+resizeh=134
+resizev=128
+op2=Attack
+vislevel=111
+param=attack_anim,seq_474_4384
+param=death_anim,seq_474_4389
+// Combat, from the OSRS wiki: level 111, 105 hitpoints, max hit 10, 6-tick stab attack, and the
+// defences the quest's own strategy pages quote (stab 50, slash 70, crush 70, magic 90, range 50) -
+// the 25 June 2025 earth weakness and the ranged-defence cut are much later and are not here. The
+// magic-casting northern variety is not imported: every Suqah on the island melees.
+hitpoints=105
+attack=95
+strength=95
+defence=95
+param=attackrate,6
+param=damagetype,^stab_style
+param=stabdefence,50
+param=slashdefence,70
+param=crushdefence,70
+param=magicdefence,90
+param=rangedefence,50
+param=death_drop,big_bones
+wanderrange=5
+maxrange=8
+respawnrate=50
+huntmode=aggressive_melee
+huntrange=5
+
+[captain_bentley]
+// rev 474 npc 4540
+name=Captain Bentley
+desc=Captain Bentley.
+model1=npc_captain_bentley_1
+head1=npc_captain_bentley_head1
+head2=npc_captain_bentley_head2
+head3=npc_captain_bentley_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[cabin_boy]
+// rev 474 npc 4539
+name=Cabin boy
+desc=Cabin boy.
+model1=npc_cabin_boy_1
+head1=npc_cabin_boy_head1
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[birdseye_jack]
+// rev 474 npc 4544
+name='Bird's-Eye' Jack
+desc='Bird's-Eye' Jack.
+model1=npc_birdseye_jack_1
+head1=npc_birdseye_jack_head1
+head2=npc_birdseye_jack_head2
+head3=npc_birdseye_jack_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[eagleeye_shultz]
+// rev 474 npc 4542
+name='Eagle-eye' Shultz
+desc='Eagle-eye' Shultz.
+model1=npc_eagleeye_shultz_1
+head1=npc_eagleeye_shultz_head1
+head2=npc_eagleeye_shultz_head2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[beefy_burns]
+// rev 474 npc 4541
+name='Beefy' Burns
+desc='Beefy' Burns.
+model1=npc_beefy_burns_1
+head1=npc_beefy_burns_head1
+head2=npc_beefy_burns_head2
+head3=npc_beefy_burns_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[first_mate_daveyboy]
+// rev 474 npc 4543
+name=First mate 'Davey-boy'
+desc=First mate 'Davey-boy'.
+model1=npc_first_mate_daveyboy_1
+head1=npc_first_mate_daveyboy_head1
+head2=npc_first_mate_daveyboy_head2
+head3=npc_first_mate_daveyboy_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+
+[lecherous_lee]
+// rev 474 npc 4556
+name='Lecherous' Lee
+desc='Lecherous' Lee.
+model1=npc_lecherous_lee_1
+model2=npc_lecherous_lee_2
+model3=npc_lecherous_lee_3
+model4=npc_lecherous_lee_4
+model5=npc_lecherous_lee_5
+model6=npc_lecherous_lee_6
+model7=npc_lecherous_lee_7
+head1=npc_lecherous_lee_head1
+head2=npc_lecherous_lee_head2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+recol1s=22161
+recol1d=23254
+recol2s=21102
+recol2d=22197
+
+[ethereal_being]
+// rev 474 npc 4501
+name=Ethereal Man
+desc=Ethereal Man.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_3
+model4=npc_moonclan_guard_4
+model5=npc_moonclan_guard_5
+model6=npc_moonclan_guard_6
+model7=npc_moonclan_guard_7
+model8=npc_ethereal_being_8
+model9=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+recol1s=198
+recol1d=16819
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=17906
+recol4s=8523
+recol4d=29398
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=12026
+
+[ethereal_numerator]
+// rev 474 npc 4503
+name=Ethereal Numerator
+desc=Ethereal Numerator.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=18896
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=18930
+recol4s=8523
+recol4d=27284
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=18100
+
+[ethereal_expert]
+// rev 474 npc 4504
+name=Ethereal Expert
+desc=Ethereal Expert.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=18896
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=18930
+recol4s=8523
+recol4d=27284
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=18100
+
+[ethereal_perceptive]
+// rev 474 npc 4505
+name=Ethereal Perceptive
+desc=Ethereal Perceptive.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+model8=npc_ethereal_perceptive_8
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=18896
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=18930
+recol4s=8523
+recol4d=27284
+recol5s=16774
+recol5d=28347
+recol6s=15855
+recol6d=18100
+
+[ethereal_guide]
+// rev 474 npc 4506
+name=Ethereal Guide
+desc=Ethereal Guide.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=18896
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=18930
+recol4s=8523
+recol4d=27284
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=18100
+
+[ethereal_fluke]
+// rev 474 npc 4507
+name=Ethereal Fluke
+desc=Ethereal Fluke.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=18896
+recol2s=9348
+recol2d=18100
+recol3s=2312
+recol3d=18930
+recol4s=8523
+recol4d=27284
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=18100
+
+[ethereal_mimic]
+// rev 474 npc 4508
+name=Ethereal Mimic
+desc=Ethereal Mimic.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_4
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_6
+model6=npc_moonclan_guard_7
+model7=npc_ethereal_being_9
+head1=npc_moonclan_guard_head1
+readyanim=human_ready
+walkanim=human_walk_f
+resizeh=127
+resizev=124
+op1=Talk-to
+recol1s=198
+recol1d=22034
+recol2s=9348
+recol2d=17175
+recol3s=2312
+recol3d=24055
+recol4s=8523
+recol4d=20214
+recol5s=16774
+recol5d=28347
+recol6s=2180
+recol6d=17175
+
+[lunar_me]
+// rev 474 npc 4509
+name=Me
+desc=Me.
+model1=npc_moonclan_guard_1
+model2=npc_moonclan_guard_2
+model3=npc_moonclan_guard_6
+model4=npc_moonclan_guard_5
+model5=npc_moonclan_guard_7
+model6=npc_moonclan_guard_3
+model7=npc_ethereal_being_9
+model8=npc_ethereal_being_8
+model9=npc_moonclan_guard_4
+head1=npc_moonclan_guard_head1
+readyanim=human_staffready
+walkanim=human_walk_f
+op2=Attack
+vislevel=79
+param=attack_anim,human_staff_pound
+param=defend_anim,human_staff_block
+param=death_anim,human_death
+// You, wearing your own ceremonial clothes, in negative. Level 79 but weak: 45 hitpoints and a max
+// of 9 with the staff. 474 gives it no Attack op - the dream adds one, because you have to kill it.
+op2=Attack
+hitpoints=45
+attack=75
+strength=78
+defence=74
+param=attackrate,4
+param=damagetype,^crush_style
+param=death_drop,bones
+huntmode=aggressive_melee
+huntrange=8
+
+[cyrisus_fallen]
+// rev 474 npc 5893
+name=Cyrisus
+desc=Cyrisus.
+model1=npc_cyrisus_fallen_1
+model2=npc_cyrisus_fallen_2
+model3=npc_cyrisus_fallen_3
+model4=npc_cyrisus_fallen_4
+model5=npc_cyrisus_fallen_5
+model6=npc_cyrisus_fallen_6
+model7=npc_cyrisus_fallen_7
+model8=npc_cyrisus_fallen_8
+head1=npc_cyrisus_fallen_head1
+head2=npc_cyrisus_fallen_head2
+readyanim=seq_474_6284
+walkanim=seq_474_6284
+op1=Talk-to
+op3=Inspect
+recol1s=7488
+recol1d=24075
+recol2s=5283
+recol2d=5317
+recol3s=15856
+recol3d=24075
+recol4s=7298
+recol4d=6309
+recol5s=24075
+recol5d=23049
+
+[cyrisus]
+// rev 474 npc 5894
+name=Cyrisus
+desc=Cyrisus.
+model1=npc_cyrisus_fallen_1
+model2=npc_cyrisus_fallen_2
+model3=npc_cyrisus_fallen_3
+model4=npc_cyrisus_fallen_4
+model5=npc_cyrisus_fallen_5
+model6=npc_cyrisus_fallen_6
+model7=npc_cyrisus_fallen_7
+model8=npc_cyrisus_fallen_8
+head1=npc_cyrisus_head1
+head2=npc_cyrisus_fallen_head2
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+op3=Inspect
+recol1s=7488
+recol1d=24075
+recol2s=5283
+recol2d=5317
+recol3s=15856
+recol3d=24075
+recol4s=7298
+recol4d=6309
+recol5s=24075
+recol5d=23049
+
+[cyrisus_dream]
+// rev 474 npc 5895
+name=Cyrisus
+desc=Cyrisus.
+model1=npc_cyrisus_dream_1
+model2=npc_cyrisus_dream_2
+model3=npc_cyrisus_fallen_2
+model4=npc_cyrisus_fallen_3
+model5=npc_cyrisus_dream_5
+model6=npc_cyrisus_dream_6
+model7=npc_cyrisus_dream_7
+model8=npc_cyrisus_dream_8
+model9=npc_cyrisus_dream_9
+model10=npc_cyrisus_dream_10
+head1=npc_cyrisus_dream_head1
+head2=npc_cyrisus_fallen_head2
+readyanim=human_ready
+walkanim=human_walk_f
+op1=Talk-to
+op3=Inspect
+recol1s=24075
+recol1d=23049
+recol2s=32767
+recol2d=23443
+recol3s=15855
+recol3d=6438
+
+[the_inadequacy]
+// rev 474 npc 5902
+name=The Inadequacy
+desc=The Inadequacy.
+model1=npc_the_inadequacy_1
+model2=npc_the_inadequacy_2
+model3=npc_the_inadequacy_3
+model4=npc_the_inadequacy_4
+model5=npc_the_inadequacy_5
+model6=npc_the_inadequacy_6
+model7=npc_the_inadequacy_7
+size=5
+readyanim=seq_474_6317
+walkanim=seq_474_6317
+op2=Attack
+vislevel=343
+param=attack_anim,seq_474_6318
+param=defend_anim,seq_474_6324
+param=death_anim,seq_474_6322
+// OSRS: 180 hitpoints, max 18 with crush at 4 ticks, every defence bonus zero. Its ranged attack
+// (max 20+, rolled off Attack rather than Ranged) is not separated out here - it fights in melee.
+hitpoints=180
+attack=564
+strength=170
+defence=240
+param=attackrate,4
+param=damagetype,^crush_style
+huntmode=aggressive_melee
+huntrange=10
+
+[the_everlasting]
+// rev 474 npc 5903
+name=The Everlasting
+desc=The Everlasting.
+model1=npc_the_everlasting_1
+size=3
+readyanim=seq_474_6343
+walkanim=seq_474_6344
+op2=Attack
+vislevel=223
+param=attack_anim,seq_474_6345
+param=defend_anim,seq_474_6346
+param=death_anim,seq_474_6347
+// OSRS: 230 hitpoints - the tankiest of the four - max 24, 6 ticks, crush, all bonuses zero.
+hitpoints=230
+attack=187
+strength=231
+defence=120
+param=attackrate,6
+param=damagetype,^crush_style
+huntmode=aggressive_melee
+huntrange=10
+
+[the_untouchable]
+// rev 474 npc 5904
+name=The Untouchable
+desc=The Untouchable.
+model1=npc_the_untouchable_1
+size=2
+readyanim=seq_474_6328
+walkanim=seq_474_6328
+op2=Attack
+vislevel=274
+param=attack_anim,seq_474_6329
+param=defend_anim,seq_474_6330
+param=death_anim,seq_474_6331
+// OSRS: only 90 hitpoints but the hardest hitter in the quest at 26, and Defence 434 - which is
+// why it is a magic fight. 6 ticks, crush, all bonuses zero.
+hitpoints=90
+attack=187
+strength=255
+defence=434
+param=attackrate,6
+param=damagetype,^crush_style
+huntmode=aggressive_melee
+huntrange=10
+
+[the_illusive]
+// rev 474 npc 5905
+name=The Illusive
+desc=The Illusive.
+model1=npc_the_illusive_1
+size=1
+readyanim=seq_474_6338
+walkanim=seq_474_6339
+op2=Attack
+vislevel=108
+param=attack_anim,seq_474_6340
+param=defend_anim,seq_474_6342
+param=death_anim,seq_474_6349
+// OSRS: 144 hitpoints, max 8, 6 ticks, crush. Harmless; the trouble is that it burrows.
+hitpoints=144
+attack=72
+strength=71
+defence=105
+param=attackrate,6
+param=damagetype,^crush_style
+huntmode=aggressive_melee
+huntrange=10
+

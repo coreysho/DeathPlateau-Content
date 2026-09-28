@@ -69,6 +69,8 @@ inv_setslot(inv, $use_slot, oc_param($used_with, next_obj_stage), 1); //new empt
 [oplocu,_watersource]
 switch_obj (last_useitem) {
     case bucket_empty, jug_empty, vial_empty, bowl_empty, goldbowl_empty, goldbowlbless_empty : @fill_container_water(last_useitem);
+    // Lunar Diplomacy's special vial, and Dream Mentor's dream vial
+    case lunar_empty_vial, dream_vial_empty : @fill_container_water(last_useitem);
     case watering_can_0, watering_can_1, watering_can_2, watering_can_3, watering_can_4, watering_can_5, watering_can_6, watering_can_7 : @fill_watering_can(last_useitem);
     // Recipe for Disaster, Freeing the Mountain Dwarf: Rohak's rock cake comes out of the forge red
     // hot and has to be quenched. @hundred_cool_rockcake is in quest_100/scripts/hundred_dwarf.rs2;

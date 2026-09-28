@@ -1,0 +1,30 @@
+// The Suqah, the level 111 natives of Lunar Isle (Lunar Diplomacy). The OSRS drop table, with the
+// rates the wiki gives: big bones and a hide every time, a tooth 69/129, grimy guam 30/129 and
+// grimy marrentill 25/129 - the three things the waking sleep potion is made of.
+//
+// "A special tiara" is Meteora's, and it is a pre-roll of 1/2 that only exists once she has told
+// you a Suqah took it (Mod Ash) - so it is rolled here, behind %lunar_bits, and only while you
+// still need it.
+[ai_queue3,suqah]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+
+obj_add(npc_coord, big_bones, 1, ^lootdrop_duration);
+obj_add(npc_coord, suqah_hide, 1, ^lootdrop_duration);
+
+def_int $random = random(129);
+if ($random < 69) {
+    obj_add(npc_coord, suqah_tooth, 1, ^lootdrop_duration);
+} else if ($random < 99) {
+    obj_add(npc_coord, unidentified_guam, 1, ^lootdrop_duration);
+} else if ($random < 124) {
+    obj_add(npc_coord, unidentified_marentill, 1, ^lootdrop_duration);
+}
+
+if (p_finduid(uid) = false) return;
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_meteora_tiara)) = 0) return;
+if (~lunar_has_piece(^lunar_piece_amulet) = true) return;
+if (~obj_gettotal(lunar_special_tiara) > 0 | ~obj_gettotal(lunar_amulet) > 0) return;
+if (random(2) = 0) {
+    obj_add(npc_coord, lunar_special_tiara, 1, ^lootdrop_duration);
+}

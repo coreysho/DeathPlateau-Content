@@ -407,6 +407,9 @@ if (%mourning_quest_main >= ^mt_complete) {
 if (%eaglespeak >= ^eaglespeak_complete) {
     $questpoints = add($questpoints, ^eaglespeak_questpoints);
 }
+if (%lunar_quest >= ^lunar_complete) {
+    $questpoints = add($questpoints, ^lunar_questpoints);
+}
 // Recipe for Disaster is ten sub-quests worth one point each, tracked as ten bits in
 // %hundred_subquest_tally, so it counts bits rather than comparing a stage to a completion value.
 $questpoints = add($questpoints, ~hundred_subquests_done);
@@ -511,6 +514,7 @@ $total = add($total, ^deserttreasure_questpoints);
 $total = add($total, ^horror_questpoints);
 $total = add($total, ^regicide_questpoints);
 $total = add($total, ^viking_questpoints);
+$total = add($total, ^lunar_questpoints);
 $total = add($total, ^desertrescue_questpoints);
 $total = add($total, ^itwatchtower_questpoints);
 $total = add($total, ^legends_questpoints);
@@ -620,6 +624,7 @@ if (testbit(%ibanmulti, ^upass_started_bit) = ^true & %upass ! ^upass_complete) 
 ~questlist_row(questlist:horror, %horror, ^horror_complete, $send);
 ~questlist_row(questlist:regicide, %regicide_quest, ^regicide_complete, $send);
 ~questlist_row(questlist:viking, %viking, ^viking_complete, $send);
+~questlist_row(questlist:lunar, %lunar_quest, ^lunar_complete, $send);
 ~questlist_row(questlist:rd, %rd_main, ^recruitmentdrive_complete, $send);
 ~questlist_row(questlist:roving_elves, %roving_elves_quest, ^roving_elves_complete, $send);
 ~questlist_row(questlist:mourning, %mourning_quest, ^mourning_complete, $send);

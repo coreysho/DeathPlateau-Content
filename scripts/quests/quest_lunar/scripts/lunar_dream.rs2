@@ -1,0 +1,850 @@
+// Lunar Diplomacy: the Dream World (474 m27_79 and m28_79, all on plane 2).
+//
+// A central platform with the Ethereal Being on it and a lectern holding the book "My life", which
+// is the way out. Six coloured spring platforms sit round it, one per challenge, and each has a
+// twin at the far end of its own area to bring you back. The challenges can be done in any order,
+// but after each one you must return to the middle and tell the Ethereal Being what you learnt
+// before another platform will take you.
+//
+// Six lessons, then Me. Everything below - the layout, the six challenges, the dice grid, the ten
+// dream-puff patterns and the lines - is the OSRS wiki's quest page, quick guide and transcript.
+
+// =========================================================================== going to sleep
+
+[label,lunar_burn_kindling]
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_brazier_lit)) = 0) {
+    mes("You need to light the brazier first.");
+    return;
+}
+if (inv_total(worn, lunar_helm) = 0 | inv_total(worn, lunar_torso) = 0
+        | inv_total(worn, lunar_legs) = 0 | inv_total(worn, lunar_gloves) = 0
+        | inv_total(worn, lunar_boots) = 0 | inv_total(worn, lunar_cape) = 0
+        | inv_total(worn, lunar_amulet) = 0 | inv_total(worn, lunar_ring) = 0
+        | inv_total(worn, lunar_staff) = 0) {
+    inv_del(inv, lunar_soaked_kindling, 1);
+    ~mesbox("Huh? If I dreamt, I certainly don't remember anything. Wait a minute! I have to wear ALL the ceremonial gear AND be holding the staff.");
+    return;
+}
+inv_del(inv, lunar_soaked_kindling, 1);
+if_close;
+mes("You drop the soaked kindling onto the brazier.");
+anim(human_pickuptable, 0);
+sound_synth(fire_lit, 1, 0);
+p_delay(3);
+p_telejump(^lunar_dream_centre);
+say("Huh? Where am I?");
+if (%lunar_quest = ^lunar_clothes_done) {
+    %lunar_quest = ^lunar_in_dream;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+}
+
+// =========================================================================== waking up
+//
+// The book of your life, on the lectern in the middle. Reading it is the only way out.
+[oploc1,loc474_16599]
+if (~p_choice2("Read and return to reality.", 1, "Not yet.", 2) ! 1) {
+    return;
+}
+if_close;
+~mesbox("Let's see what this says... It seems to be my life story...");
+~mesbox("'It was in the age of the fifth that a child was born of simple beginnings. Even though he started his life with little money to his name, and nothing but a dream of adventure, he began his career by...'");
+p_telejump(^lunar_brazier_coord);
+say("Huh? Was it all a dream?");
+if (%lunar_quest = ^lunar_dream_done) {
+    ~mesbox("You should tell the Oneiromancer what you have learnt.");
+}
+
+// =========================================================================== the Ethereal Being
+
+[opnpc1,ethereal_being]
+if (and(%lunar_dream, ^lunar_dream_all) = ^lunar_dream_all & and(%lunar_dream, ~lunar_bit(^lunar_dream_me_dead)) ! 0) {
+    ~chatnpc("<p,happy>Well done, I think your lesson is complete, best you wake yourself up! Go read the book on the lectern.");
+    return;
+}
+// something finished but not reported? he wants to hear about it
+def_int $told = ~lunar_pending_challenge;
+if ($told ! -1) {
+    @lunar_report($told);
+}
+if (and(%lunar_dream, ^lunar_dream_all) = ^lunar_dream_all) {
+    @lunar_final_challenge;
+}
+if (%lunar_dream = 0) {
+    ~chatplayer("<p,quiz>What's going on?");
+    ~chatnpc("<p,happy>Don't you know, you're in the land of your own dreams!");
+    ~chatplayer("<p,confused>But you can't know you're in a dream whilst dreaming, you'd wake up!");
+    ~chatnpc("<p,neutral>Well, this is a waking sleep.");
+    ~chatplayer("<p,quiz>So how do I get out?");
+    ~chatnpc("<p,neutral>Just use this lectern - it's the book of your life, all that has been, all that is and blank pages for all that will be. In reading this you will return your mind to reality and the conscious world.");
+    ~chatplayer("<p,quiz>And what am I supposed to do here?");
+    ~chatnpc("<p,neutral>That is totally up to you. This is a test, it wouldn't be fair if I gave you the answers now would it? But I can tell you that there is a selection of tasks that you can choose from.");
+    ~chatnpc("<p,neutral>I like to call them, 'A game of chance', 'Communicating in numbers', 'Chop, chop, chop away', 'Where am I?', 'The race is on!', and 'Anything you can do...'.");
+    ~chatplayer("<p,neutral>This is the strangest place I have ever been.");
+    ~chatnpc("<p,happy>Then you don't know your mind too well, do you!");
+    return;
+}
+~chatnpc("<p,quiz>Have you learnt anything?");
+~chatplayer("<p,neutral>Not since I last told you.");
+~chatnpc("<p,neutral>Then step onto another platform and find out.");
+
+// Which challenge is finished but not yet reported, or -1.
+[proc,lunar_pending_challenge]()(int)
+def_int $i = 0;
+while ($i < 6) {
+    if (and(%lunar_dream, ~lunar_bit(calc($i + ^lunar_dream_told_shift))) ! 0) {
+        return($i);
+    }
+    $i = add($i, 1);
+}
+return(-1);
+
+[label,lunar_report](int $challenge)
+~lunar_npc_says(ethereal_being, "<p,quiz>Have you learnt anything?");
+switch_int ($challenge) {
+    case ^lunar_ch_numerator :
+        ~chatplayer("<p,neutral>That I must make sense of others to understand myself.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>Exactly.");
+    case ^lunar_ch_mimic :
+        ~chatplayer("<p,neutral>That I must be able to relate to others.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>Bingo!");
+    case ^lunar_ch_expert :
+        ~chatplayer("<p,neutral>That I must use my abilities to progress.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>Very, very good!");
+    case ^lunar_ch_guide :
+        ~chatplayer("<p,neutral>That I must be aware of my past and present to help me in the future.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>I am very impressed.");
+    case ^lunar_ch_perceptive :
+        ~chatplayer("<p,neutral>That I must harness my confidence.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>Spot on.");
+    case ^lunar_ch_fluke :
+        ~chatplayer("<p,neutral>That I must appreciate the unknown.");
+        ~lunar_npc_says(ethereal_being, "<p,happy>That seems about right to me.");
+}
+%lunar_dream = and(%lunar_dream, ~not(~lunar_bit(calc($challenge + ^lunar_dream_told_shift))));
+%lunar_dream = or(%lunar_dream, ~lunar_bit($challenge));
+if (and(%lunar_dream, ^lunar_dream_all) ! ^lunar_dream_all) {
+    return;
+}
+~lunar_npc_says(ethereal_being, "<p,happy>That's it! You've learnt the 6 core lessons: Make sense of others to understand yourself, you must be able to relate to others, you must use your abilities to progress, you must be aware of your past and present to help you in the future, you must harness your confidence, and you must appreciate the unknown.");
+@lunar_final_challenge;
+
+// RuneScript has and/or but no not or xor, and a challenge's "finished" bit has to be cleared
+// when it is reported and each die's bit flipped when it is rolled.
+// ~chatnpc needs an npc pointer, and a challenge finished by clicking a loc has none. Every line
+// a challenge speaks outside its own [opnpc] goes through here, which finds the speaker first.
+[proc,lunar_npc_says](npc $who, string $line)
+if (npc_find(coord, $who, 15, ^false) = false) {
+    return;
+}
+~chatnpc($line);
+
+[proc,not](int $v)(int)
+return(sub(-1, $v));
+
+[proc,lunar_toggle](int $value, int $bit)(int)
+if (and($value, $bit) ! 0) {
+    return(and($value, ~not($bit)));
+}
+return(or($value, $bit));
+
+[label,lunar_final_challenge]
+if (and(%lunar_dream, ~lunar_bit(^lunar_dream_me_dead)) ! 0) {
+    ~chatnpc("<p,happy>Well done, I think your lesson is complete, best you wake yourself up! Go read the book on the lectern.");
+    return;
+}
+~chatnpc("<p,neutral>Because magic is within, by understanding these lessons you can access the power of the moon clan. You are almost finished here. There is one more challenge which you must face.");
+if (~p_choice2("Of course. I'm ready.", 1, "Give me a moment.", 2) ! 1) {
+    ~chatplayer("<p,neutral>Give me a moment.");
+    return;
+}
+~chatplayer("<p,neutral>Of course. I'm ready.");
+if_close;
+p_telejump(^lunar_dream_arena);
+npc_add(^lunar_me_spawn, lunar_me, 500);
+~mesbox("Something is standing on the far side of the arena. It is wearing your clothes.");
+
+// =========================================================================== Me
+//
+// An exact copy of you in full lunar equipment, colour-inverted: level 79, 45 hitpoints, max 9 with
+// the staff. You cannot teleport out and you cannot change what you are wearing, so the runes you
+// brought in are the fight.
+[ai_queue3,lunar_me]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+obj_add(npc_coord, bones, 1, ^lootdrop_duration);
+if (p_finduid(uid) = false) return;
+// queued rather than run here: a death script holds the npc, not the player, and moving the player
+// and opening a box on them both want the player's own protected access.
+queue(lunar_me_beaten, 0, 0);
+
+[queue,lunar_me_beaten]
+%lunar_dream = or(%lunar_dream, ~lunar_bit(^lunar_dream_me_dead));
+%lunar_quest = ^lunar_dream_done;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+say("I did it! I confronted myself!");
+p_telejump(^lunar_dream_centre);
+~mesbox("The Ethereal Being is waiting for you. Read the book on the lectern to wake up.");
+
+// =========================================================================== the six platforms
+//
+// Each platform is placed twice: once round the middle and once at the far end of its own area.
+// Stepping on one takes you to its twin.
+[oploc1,loc474_16637] ~lunar_platform(^lunar_ch_fluke, ^lunar_dream_fluke, ^lunar_home_fluke);
+[oploc1,loc474_16633] ~lunar_platform(^lunar_ch_numerator, ^lunar_dream_numerator, ^lunar_home_numerator);
+[oploc1,loc474_16634] ~lunar_platform(^lunar_ch_expert, ^lunar_dream_expert, ^lunar_home_expert);
+[oploc1,loc474_16635] ~lunar_platform(^lunar_ch_perceptive, ^lunar_dream_perceptive, ^lunar_home_perceptive);
+[oploc1,loc474_16636] ~lunar_platform(^lunar_ch_guide, ^lunar_dream_guide, ^lunar_home_guide);
+[oploc1,loc474_16632] ~lunar_platform(^lunar_ch_mimic, ^lunar_dream_mimic, ^lunar_home_mimic);
+
+[proc,lunar_platform](int $challenge, coord $area, coord $middle)
+p_arrivedelay;
+// heading back to the middle is always allowed
+if (distance(coord, $area) < distance(coord, $middle)) {
+    %lunar_task = 0;
+    ~lunar_hop($middle);
+    return;
+}
+if (and(%lunar_dream, ~lunar_bit($challenge)) ! 0) {
+    mes("You've learned all you need to from this area.");
+    return;
+}
+if (~lunar_pending_challenge ! -1) {
+    mes("You need to go tell that interesting character in the centre what you have just learned first.");
+    return;
+}
+%lunar_task = 0;
+~lunar_hop($area);
+
+[proc,lunar_hop](coord $to)
+anim(human_spot_jump, 0);
+sound_synth(magical_barrier, 1, 0);
+p_delay(1);
+p_telejump($to);
+
+// =========================================================================== A game of chance
+//
+// Six dice. Opposite faces add to seven, so each die has only two possible tops: the two in the
+// middle 1 or 6, the two western ones 2 or 5, the two eastern ones 3 or 4. They reset to
+// 1+2+3+4+5+6 = 21, which is the twenty-one the wiki quotes, and the Fluke calls numbers from
+// 12 to 30. Five right answers finishes it.
+
+[opnpc1,ethereal_fluke]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_fluke)) ! 0) {
+    ~chatnpc("<p,happy>Ok, back you go!");
+    return;
+}
+if (%lunar_dice_target = 0) {
+    ~chatnpc("<p,neutral>Look around and you'll see a selection of dice. I will call out a number. You must then roll over the dice to get the top faces adding up to create that number.");
+    ~chatnpc("<p,neutral>There are of course many ways to get the number 15, but the dice are perhaps not all that random!");
+    ~lunar_dice_call;
+    return;
+}
+~chatnpc("<p,neutral>The number you want is: <tostring(%lunar_dice_target)>");
+
+[proc,lunar_dice_call]
+%lunar_dice_target = calc(12 + random(19));
+~lunar_npc_says(ethereal_fluke, "<p,neutral>The number you want is: <tostring(%lunar_dice_target)>");
+mes("The number you want is: <tostring(%lunar_dice_target)>");
+
+[oploc1,loc474_16843] ~lunar_dice_roll;
+[oploc1,loc474_16844] ~lunar_dice_roll;
+[oploc1,loc474_16845] ~lunar_dice_roll;
+[oploc1,loc474_16846] ~lunar_dice_roll;
+[oploc1,loc474_16847] ~lunar_dice_roll;
+[oploc1,loc474_16848] ~lunar_dice_roll;
+
+[proc,lunar_dice_roll]
+p_arrivedelay;
+if (%lunar_dice_target = 0) {
+    mes("It would be best to talk to that interesting fellow first.");
+    return;
+}
+def_int $die = ~lunar_dice_index(loc_coord);
+if ($die = -1) {
+    ~displaymessage(^dm_default);
+    return;
+}
+%lunar_dice_flips = ~lunar_toggle(%lunar_dice_flips, ~lunar_bit($die));
+anim(human_pickuptable, 0);
+~lunar_dice_show($die);
+def_int $total = ~lunar_dice_total;
+mes("The dice now show <tostring($total)>.");
+if ($total ! %lunar_dice_target) {
+    return;
+}
+%lunar_dice_score = add(%lunar_dice_score, 1);
+if (%lunar_dice_score < ^lunar_dice_target) {
+    ~lunar_npc_says(ethereal_fluke, "<p,happy>Well Done! The next number is:");
+    ~lunar_dice_call;
+    return;
+}
+~lunar_npc_says(ethereal_fluke, "<p,happy>You've done it! Good work. Remember: It is important to respect that luck plays a part in things, but that doesn't mean there is not reason and logic behind your surroundings. If you look hard enough you can see the reason.");
+~lunar_npc_says(ethereal_fluke, "<p,happy>Ok, back you go!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_fluke + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_fluke);
+
+// Which of the six dice this is, by where it stands.
+[proc,lunar_dice_index](coord $at)(int)
+def_int $x = coordx($at);
+def_int $z = coordz($at);
+if ($x = 1735 & $z = 5064) return(0);
+if ($x = 1732 & $z = 5060) return(1);
+if ($x = 1739 & $z = 5060) return(2);
+if ($x = 1739 & $z = 5067) return(3);
+if ($x = 1732 & $z = 5067) return(4);
+if ($x = 1737 & $z = 5063) return(5);
+return(-1);
+
+// Die n rests on face n+1; flipped it shows 7 - (n+1).
+[proc,lunar_dice_face](int $die)(int)
+def_int $base = add($die, 1);
+if (and(%lunar_dice_flips, ~lunar_bit($die)) ! 0) {
+    return(sub(7, $base));
+}
+return($base);
+
+[proc,lunar_dice_total]()(int)
+def_int $total = 0;
+def_int $i = 0;
+while ($i < 6) {
+    $total = add($total, ~lunar_dice_face($i));
+    $i = add($i, 1);
+}
+return($total);
+
+// The face models are 474 locs 16843-16848, one per pip count, which is how the cache's own
+// transformers show them.
+[proc,lunar_dice_show](int $die)
+def_loc $face = loc474_16843;
+switch_int (~lunar_dice_face($die)) {
+    case 2 : $face = loc474_16844;
+    case 3 : $face = loc474_16845;
+    case 4 : $face = loc474_16846;
+    case 5 : $face = loc474_16847;
+    case 6 : $face = loc474_16848;
+}
+loc_change($face, 2000);
+
+// =========================================================================== Communicating in numbers
+//
+// He speaks with numbers spliced into his sentences and recites a sequence; you press the next two
+// of the floating numbers. The sixteen sequences and their answers are the wiki's table.
+
+[opnpc1,ethereal_numerator]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_numerator)) ! 0) {
+    ~chatnpc("<p,happy>Ok, back you go!");
+    return;
+}
+if (%lunar_seq_id = 0 & %lunar_seq_step = 0 & %lunar_seq_score = 0) {
+    ~chatnpc("<p,neutral>127369186!");
+    ~chatplayer("<p,confused>I'm sorry?");
+    ~chatnpc("<p,neutral>Oh sorry. I'm not 7676908 used 768 to speaking 1324719 like this...");
+    ~chatnpc("<p,neutral>I shall call out a sequence. You press the next two numbers, in order.");
+    ~lunar_seq_new;
+    return;
+}
+~chatnpc("<p,neutral>So far we have the sequence: <~lunar_seq_text(%lunar_seq_id)>");
+
+[proc,lunar_seq_new]
+%lunar_seq_id = random(16);
+%lunar_seq_step = 0;
+~lunar_npc_says(ethereal_numerator, "<p,neutral>The sequence is: <~lunar_seq_text(%lunar_seq_id)>");
+mes("The sequence is: <~lunar_seq_text(%lunar_seq_id)>");
+
+[oploc1,loc474_16619] ~lunar_seq_press(0);
+[oploc1,loc474_16620] ~lunar_seq_press(1);
+[oploc1,loc474_16621] ~lunar_seq_press(2);
+[oploc1,loc474_16622] ~lunar_seq_press(3);
+[oploc1,loc474_16623] ~lunar_seq_press(4);
+[oploc1,loc474_16624] ~lunar_seq_press(5);
+[oploc1,loc474_16625] ~lunar_seq_press(6);
+[oploc1,loc474_16626] ~lunar_seq_press(7);
+[oploc1,loc474_16627] ~lunar_seq_press(8);
+[oploc1,loc474_16628] ~lunar_seq_press(9);
+
+[proc,lunar_seq_press](int $number)
+p_arrivedelay;
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_numerator)) ! 0) {
+    mes("You've learned all you need to from this area.");
+    return;
+}
+if (%lunar_seq_score = 0 & %lunar_seq_step = 0 & %lunar_seq_id = 0) {
+    mes("It would be best to talk to that interesting fellow first.");
+    return;
+}
+say("<tostring($number)>!");
+anim(human_pickuptable, 0);
+def_int $want = ~lunar_seq_answer(%lunar_seq_id, %lunar_seq_step);
+if ($number ! $want) {
+    ~lunar_npc_says(ethereal_numerator, "<p,angry>That's not it, we shall 324234 have to start 324 again. Try a new sequence!");
+    ~lunar_seq_new;
+    return;
+}
+if (%lunar_seq_step = 0) {
+    %lunar_seq_step = 1;
+    ~lunar_npc_says(ethereal_numerator, "<p,happy>That's correct! 96973 Onto the next 112908 number in the sequence!");
+    return;
+}
+%lunar_seq_score = add(%lunar_seq_score, 1);
+if (%lunar_seq_score < ^lunar_numbers_target) {
+    ~lunar_npc_says(ethereal_numerator, "<p,happy>That's it! You've completed <tostring(%lunar_seq_score)> of <tostring(^lunar_numbers_target)> sequences. Time for 324324 the next sequence!");
+    ~lunar_seq_new;
+    return;
+}
+~lunar_npc_says(ethereal_numerator, "<p,happy>That's it! I think 34132421 you've got 12341 the hang of 124151 this now!");
+~lunar_npc_says(ethereal_numerator, "<p,neutral>Please remember this: You must 23235 be able to 23526 communicate and understand 26243 others, they 2627422 have wisdom and 4363472 experiences to 235725 share!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_numerator + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_numerator);
+
+[proc,lunar_seq_text](int $id)(string)
+switch_int ($id) {
+    case 0 : return("0, 1, 3, 4");
+    case 1 : return("1, 1, 1, 2, 1, 3, 1, 4");
+    case 2 : return("1, 1, 2, 2, 3");
+    case 3 : return("1, 1, 2, 3, 1, 1, 4");
+    case 4 : return("1, 2, 3");
+    case 5 : return("1, 3, 5");
+    case 6 : return("1, 4, 2, 5");
+    case 7 : return("1, 6, 2, 5");
+    case 8 : return("1, 9, 2, 8");
+    case 9 : return("2, 3, 5, 6");
+    case 10 : return("2, 6, 3, 7");
+    case 11 : return("3, 4, 2, 5");
+    case 12 : return("7, 3, 6, 2");
+    case 13 : return("8, 6, 4");
+    case 14 : return("9, 7, 5");
+    case 15 : return("9, 8, 7, 6");
+}
+return("1, 2, 3");
+
+[proc,lunar_seq_answer](int $id, int $step)(int)
+switch_int ($id) {
+    case 0 : if ($step = 0) return(6); return(7);
+    case 1 : if ($step = 0) return(1); return(5);
+    case 2 : if ($step = 0) return(3); return(4);
+    case 3 : if ($step = 0) return(5); return(1);
+    case 4 : if ($step = 0) return(4); return(5);
+    case 5 : if ($step = 0) return(7); return(9);
+    case 6 : if ($step = 0) return(3); return(6);
+    case 7 : if ($step = 0) return(3); return(4);
+    case 8 : if ($step = 0) return(3); return(7);
+    case 9 : if ($step = 0) return(8); return(9);
+    case 10 : if ($step = 0) return(4); return(8);
+    case 11 : if ($step = 0) return(1); return(6);
+    case 12 : if ($step = 0) return(5); return(1);
+    case 13 : if ($step = 0) return(2); return(0);
+    case 14 : if ($step = 0) return(3); return(1);
+    case 15 : if ($step = 0) return(5); return(4);
+}
+return(4);
+
+// =========================================================================== Chop, chop, chop away!
+//
+// A woodcutting race against the Ethereal Perceptive. First to twenty logs on their own pile wins;
+// he puts two on at a time and walks, and you can run. Your trees are at one end of the island and
+// his at the other.
+
+[opnpc1,ethereal_perceptive]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_perceptive)) ! 0) {
+    ~chatnpc("<p,happy>Now off ya go!");
+    return;
+}
+if (%lunar_chop_state = 0) {
+    ~chatnpc("<p,neutral>Foirst to twenty logs on their own poile wins. Moi troys are at that end, yourn at t'other.");
+    if (~p_choice2("Ok, let's go!", 1, "Not yet.", 2) ! 1) {
+        return;
+    }
+    if (~lunar_has_axe = false) {
+        ~chatnpc("<p,neutral>Yow'll want an axe. Ere, have moin.");
+        if (inv_freespace(inv) < 1) {
+            ~chatnpc("<p,neutral>And nowhere to put it, neither.");
+            return;
+        }
+        inv_add(inv, bronze_axe, 1);
+    }
+    %lunar_task = 0;
+    %lunar_chop_state = 1;
+    settimer(lunar_chop_timer, 22);
+    if_close;
+    mes("Go, go go!");
+    return;
+}
+~chatnpc("<p,neutral>He's collected: <tostring(%lunar_chop_his)> logs so far!");
+
+[proc,lunar_has_axe]()(boolean)
+if (inv_total(inv, bronze_axe) > 0 | inv_total(inv, iron_axe) > 0 | inv_total(inv, steel_axe) > 0
+        | inv_total(inv, black_axe) > 0 | inv_total(inv, mithril_axe) > 0
+        | inv_total(inv, adamant_axe) > 0 | inv_total(inv, rune_axe) > 0
+        | inv_total(worn, bronze_axe) > 0 | inv_total(worn, iron_axe) > 0
+        | inv_total(worn, steel_axe) > 0 | inv_total(worn, black_axe) > 0
+        | inv_total(worn, mithril_axe) > 0 | inv_total(worn, adamant_axe) > 0
+        | inv_total(worn, rune_axe) > 0) {
+    return(true);
+}
+return(false);
+
+// He deposits two logs every twenty-two ticks - twenty logs in a bit over three minutes - until
+// one of you reaches twenty. He walks and you can run, which is the whole of the race.
+[timer,lunar_chop_timer]
+if (%lunar_chop_state ! 1) {
+    cleartimer(lunar_chop_timer);
+    return;
+}
+%lunar_chop_his = add(%lunar_chop_his, 2);
+mes("He's collected: <tostring(%lunar_chop_his)> logs so far!");
+if (%lunar_chop_his < ^lunar_chop_target) {
+    return;
+}
+cleartimer(lunar_chop_timer);
+%lunar_task = 0;
+mes("Har har, I did beet ya. You ain't gat no skiws.");
+
+// The dream trees. Yours are the eastern four; the western four are his.
+[oploc1,loc474_16604] @lunar_chop_tree;
+[oploc3,loc474_16604] @lunar_chop_tree;
+
+[label,lunar_chop_tree]
+p_arrivedelay;
+if (%lunar_chop_state ! 1) {
+    mes("You should probably talk to that nearby character first.");
+    return;
+}
+if (coordx(loc_coord) < 1760) {
+    mes("You can't chop from his trees. Yours are at the other end of the island. Chop them down instead!");
+    return;
+}
+if (~lunar_has_axe = false) {
+    mes("You need an axe to chop this.");
+    return;
+}
+anim(human_axe_chop, 0);
+sound_synth(woodchop1, 1, 0);
+p_delay(2);
+%lunar_chop_carried = add(%lunar_chop_carried, 1);
+mes("You cut a log from the dream tree. You are carrying <tostring(%lunar_chop_carried)>.");
+
+// The two log piles in the middle: the eastern one is yours.
+[oploc1,loc474_16585]
+p_arrivedelay;
+if (%lunar_chop_state ! 1) {
+    mes("Like a pile of memes.");
+    return;
+}
+if (coordx(loc_coord) < 1760) {
+    mes("That's the woodcutter's pile. Why help him?");
+    return;
+}
+if (%lunar_chop_carried = 0) {
+    mes("You have no logs to put down.");
+    return;
+}
+%lunar_chop_mine = add(%lunar_chop_mine, %lunar_chop_carried);
+mes("You deposited <tostring(%lunar_chop_carried)> logs, giving you <tostring(%lunar_chop_mine)> in total.");
+%lunar_chop_carried = 0;
+if (%lunar_chop_mine < ^lunar_chop_target) {
+    return;
+}
+cleartimer(lunar_chop_timer);
+~lunar_npc_says(ethereal_perceptive, "<p,sad>Wew done. I see you do have a good command ov yur abilitoys.");
+~lunar_npc_says(ethereal_perceptive, "<p,neutral>Remember this, yow need to know wot you can do so ya know what to learn. Now off ya go!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_perceptive + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_perceptive);
+
+// =========================================================================== Where am I?
+//
+// Eight rows of four dream puffs between two ledges. One of ten fixed patterns says which puffs in
+// each row hold; the rest collapse and drop you back on the north ledge. You cannot jump diagonally.
+
+[opnpc1,ethereal_guide]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_guide)) ! 0) {
+    ~chatnpc("<p,happy>I shall send you back!");
+    return;
+}
+~chatnpc("<p,neutral>You know everything is a journey!");
+~chatnpc("<p,neutral>But at every step, it was important that you knew where you had been, where you were and where you were headed.");
+~chatnpc("<p,neutral>Let's see how you fare in here. Try and get to the other side and you'll see what I mean.");
+if (%lunar_guide_pattern = 0 & %lunar_guide_row = 0) {
+    %lunar_guide_pattern = add(random(10), 1);
+}
+
+// Row 0 is the northernmost line of puffs at z 5106 and row 7 the southernmost at z 5085; the
+// columns are x 1731, 1734, 1737 and 1740. %lunar_guide_row is 0 while you are still on the north
+// ledge and (row + 1) once you are out on the puffs.
+//
+// You move ONE puff at a time and you cannot jump diagonally, which means sideways along a row as
+// well as forwards - a row whose only safe puff is three columns over is crossed by walking the
+// row below it, not by a diagonal leap. The ten patterns need that: pattern 1's fifth row holds
+// only its western puff and its fourth row only its eastern one.
+[aploc1,loc474_16638]
+if (distance(coord, loc_coord) > 4) {
+    p_aprange(4);
+    return;
+}
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_guide)) ! 0) {
+    mes("You've learned all you need to from this area.");
+    return;
+}
+if (%lunar_guide_pattern = 0) {
+    mes("You should probably talk to that nearby character first.");
+    return;
+}
+def_int $col = divide(sub(coordx(loc_coord), 1731), 3);
+def_int $row = divide(sub(5106, coordz(loc_coord)), 3);
+if (%lunar_guide_row = 0) {
+    if ($row ! 0) {
+        mes("You can't jump that far!");
+        return;
+    }
+} else {
+    def_int $drow = ~lunar_abs(sub($row, sub(%lunar_guide_row, 1)));
+    def_int $dcol = ~lunar_abs(sub($col, %lunar_guide_col));
+    if (add($drow, $dcol) ! 1) {
+        if ($drow > 0 & $dcol > 0) {
+            mes("You can't jump diagonally!");
+        } else {
+            mes("You can't jump that far!");
+        }
+        return;
+    }
+}
+anim(human_spot_jump, 0);
+p_delay(1);
+p_telejump(loc_coord);
+if (and(~lunar_guide_mask(%lunar_guide_pattern, $row), ~lunar_bit($col)) = 0) {
+    ~lunar_guide_fall;
+    return;
+}
+%lunar_guide_row = add($row, 1);
+%lunar_guide_col = $col;
+if ($row < 7) {
+    return;
+}
+mes("The last puff holds. The far ledge is one step away.");
+
+[proc,lunar_guide_fall]
+mes("The dream puff comes apart under you.");
+anim(human_longjump, 0);
+p_delay(1);
+p_telejump(^lunar_dream_guide);
+%lunar_guide_row = 0;
+%lunar_guide_col = 0;
+
+// The two ledges: the north one starts you off, the south one finishes it.
+[aploc1,loc474_16858]
+if (distance(coord, loc_coord) > 4) {
+    p_aprange(4);
+    return;
+}
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_guide)) ! 0) {
+    mes("You've learned all you need to from this area.");
+    return;
+}
+if (coordz(loc_coord) > 5100) {
+    %lunar_guide_row = 0;
+    %lunar_guide_col = 0;
+    mes("You step up onto the ledge. The puffs start below you.");
+    return;
+}
+if (%lunar_guide_row < 8) {
+    mes("You cannot reach the far ledge from here.");
+    return;
+}
+anim(human_spot_jump, 0);
+p_delay(1);
+p_telejump(movecoord(loc_coord, 0, 0, -2));
+~lunar_npc_says(ethereal_guide, "<p,happy>Well done! So tell me, what have you learned?");
+~chatplayer("<p,neutral>That I need to know where I have been to know where I am going.");
+~lunar_npc_says(ethereal_guide, "<p,happy>Very deep! Excellent, I'm glad you learnt something. I shall send you back!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_guide + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_guide);
+
+[proc,lunar_abs](int $v)(int)
+if ($v < 0) {
+    return(sub(0, $v));
+}
+return($v);
+
+// The ten patterns, as the wiki lists them: one bit per column, bit 0 the western column.
+[proc,lunar_guide_mask](int $pattern, int $row)(int)
+switch_int (calc(multiply($pattern, 8) + $row)) {
+    case 8 : return(2);   case 9 : return(14);  case 10 : return(8);  case 11 : return(8);
+    case 12 : return(15); case 13 : return(1);  case 14 : return(15); case 15 : return(8);
+    case 16 : return(8);  case 17 : return(8);  case 18 : return(12); case 19 : return(4);
+    case 20 : return(12); case 21 : return(8);  case 22 : return(14); case 23 : return(2);
+    case 24 : return(1);  case 25 : return(1);  case 26 : return(15); case 27 : return(8);
+    case 28 : return(14); case 29 : return(2);  case 30 : return(14); case 31 : return(8);
+    case 32 : return(2);  case 33 : return(6);  case 34 : return(12); case 35 : return(8);
+    case 36 : return(14); case 37 : return(2);  case 38 : return(6);  case 39 : return(4);
+    case 40 : return(1);  case 41 : return(15); case 42 : return(8);  case 43 : return(15);
+    case 44 : return(1);  case 45 : return(1);  case 46 : return(7);  case 47 : return(4);
+    case 48 : return(1);  case 49 : return(7);  case 50 : return(4);  case 51 : return(7);
+    case 52 : return(1);  case 53 : return(15); case 54 : return(8);  case 55 : return(8);
+    case 56 : return(2);  case 57 : return(14); case 58 : return(8);  case 59 : return(12);
+    case 60 : return(6);  case 61 : return(2);  case 62 : return(6);  case 63 : return(4);
+    case 64 : return(2);  case 65 : return(6);  case 66 : return(4);  case 67 : return(6);
+    case 68 : return(3);  case 69 : return(1);  case 70 : return(7);  case 71 : return(4);
+    case 72 : return(4);  case 73 : return(7);  case 74 : return(1);  case 75 : return(3);
+    case 76 : return(2);  case 77 : return(3);  case 78 : return(1);  case 79 : return(1);
+    case 80 : return(2);  case 81 : return(14); case 82 : return(8);  case 83 : return(8);
+    case 84 : return(14); case 85 : return(2);  case 86 : return(6);  case 87 : return(4);
+}
+return(15);
+
+// =========================================================================== The race is on!
+//
+// He takes the left, straight route and walks; you take the right, curvy one with four hurdles.
+// A missed hurdle costs eight hitpoints, and three of them lose you the race.
+
+[opnpc1,ethereal_expert]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_expert)) ! 0) {
+    ~chatnpc("<p,happy>Now be gone!");
+    return;
+}
+if (%lunar_race_state = 0) {
+    ~chatnpc("<p,happy>I bet I can beat you to the other end of this island, I'll take the left route and you can take the right.");
+    ~chatplayer("<p,angry>That hardly seems fair!");
+    ~chatnpc("<p,happy>Well, that's life I'm afraid, it's never as easy as you would like, you have to take the path that's dealt!");
+    if (~p_choice2("You're on.", 1, "Another time.", 2) ! 1) {
+        return;
+    }
+    %lunar_task = 0;
+    %lunar_race_state = 2;
+    if_close;
+    say("On your marks!");
+    p_delay(1);
+    say("Get set!");
+    p_delay(1);
+    say("Go !!!");
+    return;
+}
+~chatnpc("<p,neutral>You're still on the wrong side of the island.");
+
+// Four hurdles, south to north up the eastern route.
+[oploc1,loc474_16600]
+p_arrivedelay;
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_expert)) ! 0) {
+    mes("You've learned all you need to from this area.");
+    return;
+}
+if (%lunar_race_state ! 2) {
+    mes("You should probably talk to that nearby character first.");
+    return;
+}
+anim(human_jump_hurdle, 0);
+p_delay(2);
+if (random(4) = 0) {
+    %lunar_race_fallen = add(%lunar_race_fallen, 1);
+    ~damage_self(^lunar_race_damage);
+    mes("You catch a foot on the hurdle and go down hard.");
+    if (%lunar_race_fallen < ^lunar_race_falls) {
+        return;
+    }
+    %lunar_task = 0;
+    ~lunar_npc_says(ethereal_expert, "<p,happy>Woo hoo! Ha ha! You can try again if you want, but you'll never beat me, I'm far too fast!");
+    return;
+}
+%lunar_race_next = add(%lunar_race_next, 1);
+mes("You clear the hurdle.");
+if (%lunar_race_next < ^lunar_race_hurdles) {
+    return;
+}
+~lunar_npc_says(ethereal_expert, "<p,sad>Noooo! How could you beat me?");
+~chatplayer("<p,happy>I'm just making the most of the abilities I worked hard to develop. That's all!");
+~lunar_npc_says(ethereal_expert, "<p,neutral>True. A very important thing to remember! Now be gone!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_expert + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_expert);
+
+// =========================================================================== Anything you can do...
+//
+// He performs one of the emotes everybody has and you perform the same one back; after each right
+// answer he moves and has to be spoken to again. Five right emotes finishes it.
+
+[opnpc1,ethereal_mimic]
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_mimic)) ! 0) {
+    ~chatnpc("<p,happy>Ok, back you go!");
+    return;
+}
+if (%lunar_mime_score = 0 & %lunar_mime_moved = 0) {
+    ~chatnpc("<p,happy>Anything you can do, I can do better. Or is it the other way round?");
+    if (~p_choice2("Suppose I may as well have a go.", 1, "No thanks.", 2) ! 1) {
+        return;
+    }
+    ~chatplayer("<p,neutral>Suppose I may as well have a go.");
+    ~chatnpc("<p,happy>Follow!");
+}
+%lunar_mime_moved = 0;
+%lunar_mime_want = random(10);
+if_close;
+npc_anim(~lunar_mime_emote(%lunar_mime_want), 0);
+mes("Copy him.");
+
+[proc,lunar_mime_emote](int $i)(seq)
+switch_int ($i) {
+    case 0 : return(emote_yes);
+    case 1 : return(emote_no);
+    case 2 : return(emote_bow);
+    case 3 : return(emote_angry);
+    case 4 : return(emote_think);
+    case 5 : return(emote_wave);
+    case 6 : return(emote_cheer);
+    case 7 : return(emote_clap);
+    case 8 : return(emote_dance);
+    case 9 : return(emote_cry);
+}
+return(emote_yes);
+
+// Hooked into [label,emote] in interface_controls/scripts/emotes.rs2, beside Throne of
+// Miscellania's - that trigger may only be declared once.
+[proc,lunar_mime_react](seq $anim)
+if (%lunar_quest ! ^lunar_in_dream & %lunar_quest ! ^lunar_dream_done) {
+    return;
+}
+if (and(%lunar_dream, ~lunar_bit(^lunar_ch_mimic)) ! 0 | %lunar_mime_moved = 1) {
+    return;
+}
+if (npc_find(coord, ethereal_mimic, 8, ^false) = false) {
+    return;
+}
+if ($anim ! ~lunar_mime_emote(%lunar_mime_want)) {
+    ~chatnpc("<p,angry>NO no no!");
+    return;
+}
+%lunar_mime_score = add(%lunar_mime_score, 1);
+%lunar_mime_moved = 1;
+switch_int (%lunar_mime_score) {
+    case 1 : ~chatnpc("<p,happy>Well done!");
+    case 2 : ~chatnpc("<p,happy>Woo hoo!");
+    case 3 : ~chatnpc("<p,happy>That's it!");
+    case 4 : ~chatnpc("<p,happy>Nice one!");
+    case default : ~chatnpc("<p,happy>Yep, you've got it!");
+}
+if (%lunar_mime_score < ^lunar_mime_target) {
+    ~chatnpc("<p,happy>Talk to me again.");
+    return;
+}
+~chatnpc("<p,happy>You soon picked that up! Can you see how important it is to be able to communicate and relate with others? You can gain a lot of knowledge from it.");
+~chatnpc("<p,happy>Ok, back you go!");
+%lunar_task = 0;
+%lunar_dream = or(%lunar_dream, ~lunar_bit(calc(^lunar_ch_mimic + ^lunar_dream_told_shift)));
+if_close;
+~lunar_hop(^lunar_home_mimic);
+
+// =========================================================================== the notes
+//
+// 474 scatters "Note" scenery through the Mimic's corner of the island. They have no ops; this is
+// only here so their examine is not a blank.
+[oploc1,loc474_16601]
+mes("A page torn out of something. The writing runs away when you look at it.");
+
+[oploc1,loc474_16602]
+mes("A page torn out of something. The writing runs away when you look at it.");

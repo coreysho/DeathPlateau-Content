@@ -60,6 +60,7 @@ if (last_useitem = gold_bar & %legendsquest >= ^legends_asked_gujuo_holy_water) 
 else if (oc_category(last_useitem) = category_151) @smithing_anvil_interface(last_useitem);
 else if (last_useitem = dragonshield_a | last_useitem = dragonshield_b) @make_dragon_sq;
 else if (oc_category(last_useitem) = godsword_shard) @godsword_join_at_anvil; // bosses/godwars/scripts/godsword.rs2
+else if (last_useitem = lunar_bar) ~lunar_smith_helm; // Lunar Diplomacy (quests/quest_lunar/scripts/lunar_island.rs2)
 else ~displaymessage(^dm_default);
 
 [if_close,smithing]

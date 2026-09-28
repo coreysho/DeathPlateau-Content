@@ -1,0 +1,26 @@
+// Lunar Diplomacy. 377 predates the quest, so none of these are the cache's - they are new varps,
+// all perm-scoped, because everything they hold has to survive a logout (the wiki is explicit that
+// Dream World puzzle progress is kept if you log out inside it).
+//
+// %lunar_quest   the linear stage (quest_lunar.constant)
+// %lunar_bits    the five jinx symbols, the crew you have questioned, and the island's one-offs
+// %lunar_pieces  one bit per ceremonial piece handed to the Oneiromancer
+// %lunar_dream   one bit per Dream World challenge learnt, one per challenge finished but not yet
+//                reported, and the bit for having beaten Me
+// %lunar_task    whichever challenge is in progress right now: the number the Ethereal Fluke wants,
+//                the sequence the Numerator is reciting, the logs on your pile, and so on. Temp,
+//                because a challenge you walk out of starts again.
+[lunar_quest]
+scope=perm
+
+[lunar_bits]
+scope=perm
+
+[lunar_pieces]
+scope=perm
+
+[lunar_dream]
+scope=perm
+
+[lunar_task]
+scope=temp

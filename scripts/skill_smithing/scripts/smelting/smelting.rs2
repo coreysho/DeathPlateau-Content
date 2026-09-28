@@ -22,6 +22,8 @@ switch_obj (last_useitem)
             mes("This furnace isn't hot enough to burn the limestone into quicklime.");
         }
     case elemental_workshop_ore : mes("This furnace is not hot enough to smelt elemental ore.");
+    // Lunar Diplomacy: the ore from the stalagmites in the Lunar Isle mine
+    case lunar_ore : ~lunar_smelt_ore;
     case default :
         if (oc_category(last_useitem) = category_91) {
             @smelt_ore(last_useitem);

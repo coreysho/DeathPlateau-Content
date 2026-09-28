@@ -40,6 +40,12 @@ if (~barrows_mound_dig = true) {
     return;
 }
 
+// Lunar Diplomacy. Selene's grandfather buried the lunar ring under the blue flowers in the far
+// south-west of Lunar Isle. The flowers are scenery with no ops, so the dig is a coordinate test.
+if (~lunar_dig = true) {
+    return;
+}
+
 // Everything else
 p_arrivedelay;
 p_stopaction;
