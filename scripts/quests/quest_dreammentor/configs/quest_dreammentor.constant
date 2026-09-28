@@ -1,0 +1,65 @@
+// Dream Mentor (5 February 2007). Cyrisus is a man with 99 in every combat skill who has never
+// been able to make himself fight anything, and who has crawled into the Lunar Isle mine to die of
+// it. You feed him, talk him round, fetch his armour out of his bank, and then go into his dream
+// and kill the four things he is afraid of while he watches.
+//
+// The quest is post-2006, so this is OSRS's Dream Mentor as OSRS has it (the era rule): the wiki's
+// requirements, its four bosses' stats, its rewards and its transcript. Everything it needs came
+// out of the rev 474 cache with Lunar Diplomacy's import - Cyrisus in his three states, The
+// Inadequacy, The Everlasting, The Untouchable and The Illusive, with their animation sets.
+
+// =============================================================================== the stages
+^dm_not_started = 0
+// the fallen man in the mine has spoken
+^dm_found_cyrisus = 10
+// health, spirit and armament all full; he has told you who he is and what he is afraid of
+^dm_healed = 20
+// the Oneiromancer has given you a dream vial and the recipe
+^dm_potion_task = 30
+// the potion of shared dreaming is made
+^dm_potion_done = 40
+// you have been into his dream
+^dm_in_dream = 50
+// all four fears beaten
+^dm_dream_done = 60
+^dm_complete = 70
+
+^dm_questpoints = 2
+
+// =============================================================================== requirements
+// OSRS: Lunar Diplomacy, Eadgar's Ruse, and combat level 85. No skill levels.
+^dm_req_combat = 85
+
+// =============================================================================== the three bars
+// Twenty pieces of food, and he will not take the same kind twice running; ten encouraging things
+// said to him; and the five pieces of his own equipment out of his bank.
+^dm_health_full = 20
+^dm_spirit_full = 10
+^dm_armament_full = 31
+
+// bit positions in %dm_armament
+^dm_arm_helmet = 0
+^dm_arm_top = 1
+^dm_arm_legs = 2
+^dm_arm_boots = 3
+^dm_arm_weapon = 4
+
+// which of the three sets is his, by the combat skill you are strongest in
+^dm_set_melee = 0
+^dm_set_ranged = 1
+^dm_set_magic = 2
+
+// =============================================================================== the world
+// the fallen man, in the south-east chamber of the Lunar Isle mine
+^dm_cyrisus_coord = 2_36_161_41_31
+// the mine's ladder, both ends (474 loc_10708 above, loc_10707 below)
+^dm_mine_top = 0_33_61_29_40
+^dm_mine_bottom = 2_36_161_24_48
+// his dream: the round arena on 474's m28_80, with the book "Our lives" at its north end
+^dm_arena = 2_28_80_32_33
+^dm_arena_boss = 2_28_80_32_42
+^dm_arena_cyrisus = 2_28_80_28_33
+
+// =============================================================================== the reward
+^dm_reward_hitpoints_xp = 150000
+^dm_reward_magic_xp = 100000

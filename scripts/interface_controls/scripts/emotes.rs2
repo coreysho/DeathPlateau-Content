@@ -131,6 +131,9 @@ p_stopaction;
 anim($anim, 20);
 // Throne of Miscellania: Prince Brand and Princess Astrid answer emotes (misc_court.rs2)
 ~misc_emote_react($anim);
+// Lunar Diplomacy: the Ethereal Mimic's challenge is copying the emote he just did
+// (quests/quest_lunar/scripts/lunar_dream.rs2)
+~lunar_mime_react($anim);
 
 [label,lockemote_mime_event]
 ~mesbox("This emote can be unlocked during the mime random event.");

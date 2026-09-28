@@ -1,0 +1,236 @@
+// Lunar Diplomacy (24 July 2006). Lokar Searunner, Brundt's Seal of Passage, Captain Bentley's
+// ship, and the end of the quest. All of the talking is the OSRS wiki's transcript.
+//
+// Where each part lives:
+//   quest_lunar.rs2     Lokar, Brundt, Captain Bentley, the Seal of Passage rule, the reward
+//   lunar_island.rs2    the Moon Clan - the Oneiromancer, the waking sleep potion, the Lunar staff
+//                       and the eight pieces of ceremonial clothing
+//   lunar_dream.rs2     the Dream World: the six challenges and Me
+//   lunar_journal.rs2   the quest journal at every stage
+//
+// LEFT OUT, and why: in 2006 Lokar took you to Pirates' Cove and Captain Bentley's Lady Zay was
+// jinxed - five symbols daubed round four decks by a cabin boy, found with an emerald lantern.
+// Every stair and ladder on that ship is a 474 loc with an unhandled "Climb" op, so no deck of it
+// can be walked today and the symbols cannot be reached. The Cove and the ship's map are imported
+// and the crew are in lunar_npcs.npc ready for whoever wires those stairs; until then Bentley
+// meets you on the dock and the crossing is two boats, not a puzzle.
+
+// =========================================================================== Lokar Searunner
+//
+// His opnpc triggers are in area_lunar_isle/scripts/lunar_isle.rs2 with the rest of his boat; this
+// is the conversation that starts the quest, which that file jumps to.
+
+[label,lunar_lokar_start]
+~chatplayer("<p,happy>Hello there.");
+~chatnpc("<p,angry>Don't talk to me outerlander! I don't have time for the likes of you!");
+if (~p_choice2("You've been away from these parts a while?", 1, "Fair enough.", 2) ! 1) {
+    ~chatplayer("<p,neutral>Fair enough.");
+    return;
+}
+~chatplayer("<p,quiz>You've been away from these parts a while?");
+~chatnpc("<p,quiz>Oh, you haven't heard of the infamous Lokar, scourge of the northern seas?");
+~chatplayer("<p,neutral>I can't say that I have.");
+if (~p_choice2("Why did you leave?", 1, "I'll leave you to your ropes.", 2) ! 1) {
+    ~chatplayer("<p,neutral>I'll leave you to your ropes.");
+    return;
+}
+~chatplayer("<p,quiz>Why did you leave?");
+~chatnpc("<p,happy>So I ran away from Rellekka to become a PIRATE! It's way more fun. Plus you get to see the world!");
+~chatnpc("<p,neutral>Well, the rest of the group are at Lunar Isle at the moment. It's where the Moon Clan live.");
+~chatplayer("<p,quiz>The Moon Clan?");
+~chatnpc("<p,neutral>I'd be surprised if you hadn't heard of them, they're the Fremenniks' most hated enemy! They've been at war with them for hundreds of years!");
+~chatnpc("<p,neutral>Yeah, they're a really powerful race of mages. They'd read your mind and see that you're a Fremennik straight away, then probably turn you inside out and feed you to the birds.");
+if (~p_choice2("Why not, I've always wondered what the state of my innards are!", 1, "That settles it, then.", 2) ! 1) {
+    ~chatplayer("<p,neutral>That settles it, then.");
+    return;
+}
+~chatplayer("<p,happy>Why not, I've always wondered what the state of my innards are!");
+if (~lunar_requirements = false) {
+    return;
+}
+~chatnpc("<p,neutral>Well, what you want to do is go and talk to Brundt the Chieftain and get a Seal of Passage from him.");
+~chatplayer("<p,quiz>What does that do?");
+~chatnpc("<p,neutral>Well, it shows that you're a diplomat for the Fremennik, so you'll have immunity from being killed and stuff.");
+~chatnpc("<p,neutral>It's an ancient tradition not to attack anyone bearing a Seal of Passage, because they're probably on a diplomatic mission. Or well connected with powerful allies. Either way, killing them is usually a bad idea.");
+%lunar_quest = ^lunar_started;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+
+// The seven skills and the four quests, all checked here and never again: OSRS flags every level
+// Questreqstart and Boostable|no, so this is the only gate they have.
+[proc,lunar_requirements]()(boolean)
+if (%viking < ^viking_complete) {
+    ~chatnpc("<p,neutral>Hah! You're not even one of us yet. Go and win the council over first - then we'll talk about the Moon Clan.");
+    return(false);
+}
+if (%zanaris < ^zanaris_complete) {
+    ~chatnpc("<p,neutral>You've never even found the lost city. The Moon Clan would eat you.");
+    return(false);
+}
+if (%runemysteries < ^runemysteries_complete) {
+    ~chatnpc("<p,neutral>You don't know the first thing about runes, and the Moon Clan are nothing but.");
+    return(false);
+}
+if (%zombiequeen < ^zombiequeen_complete) {
+    ~chatnpc("<p,neutral>You've not seen the world yet. Come back when you've been further than Karamja.");
+    return(false);
+}
+if (stat(herblore) < ^lunar_req_herblore | stat(crafting) < ^lunar_req_crafting
+        | stat(defence) < ^lunar_req_defence | stat(firemaking) < ^lunar_req_firemaking
+        | stat(magic) < ^lunar_req_magic | stat(mining) < ^lunar_req_mining
+        | stat(woodcutting) < ^lunar_req_woodcutting) {
+    ~chatnpc("<p,neutral>Yar, you'd not last a day out there as you are. You'll need to be handier than that first.");
+    ~mesbox("You need the following before Lokar will take you:|<col=8B0000>Herblore <tostring(^lunar_req_herblore)>, Crafting <tostring(^lunar_req_crafting)>, Defence <tostring(^lunar_req_defence)>, Firemaking <tostring(^lunar_req_firemaking)>,|Magic <tostring(^lunar_req_magic)>, Mining <tostring(^lunar_req_mining)> and Woodcutting <tostring(^lunar_req_woodcutting)></col>");
+    return(false);
+}
+return(true);
+
+// =========================================================================== Brundt's seal
+//
+// Hooked into [opnpc1,viking_brundt] in quest_viking.rs2 the way Mountain Daughter's is: he has no
+// spare op in the cache, and this only answers at its own step.
+[proc,lunar_brundt]()(boolean)
+if (%lunar_quest = ^lunar_not_started | %lunar_quest >= ^lunar_complete) {
+    return(false);
+}
+if (~obj_gettotal(lunar_seal_of_passage) > 0) {
+    if (%lunar_quest > ^lunar_has_seal) {
+        ~chatnpc("<p,quiz>Ah, <~viking_fremennik_name>. How goes the peace talks with the accursed Moon Clan?");
+        ~chatplayer("<p,neutral>Slowly.");
+        ~chatnpc("<p,neutral>I see. Well, I don't hold out for much hope!");
+        return(true);
+    }
+    return(false);
+}
+~chatplayer("<p,quiz>Hi there Brundt the Chieftain. Could you help me out with a Seal of Passage?");
+~chatnpc("<p,quiz>A Seal of Passage? Whatever for?");
+~chatplayer("<p,neutral>I mean to make peace with the Moon Clan.");
+~chatnpc("<p,neutral>Ah <~viking_fremennik_name>, many have tried, but The Moon Clan are by no means a sharing group of people. They do everything by magic, something we never use. But they are so secretive about it. If only they would share, we wouldn't have to kill them all the time!");
+if (inv_freespace(inv) < 1) {
+    ~chatnpc("<p,angry>Yes, but you have no room to carry it. You should have thought of that before, <~viking_fremennik_name>!");
+    return(true);
+}
+~chatnpc("<p,neutral>If you are to bring peace to our two warring clans, then perhaps it is best that you do...");
+inv_add(inv, lunar_seal_of_passage, 1);
+~objbox(lunar_seal_of_passage, "Brundt hands you a Seal of Passage.", 250, 0, 0);
+if (%lunar_quest = ^lunar_started) {
+    %lunar_quest = ^lunar_has_seal;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+}
+return(true);
+
+// The seal is always lost on death, and Brundt replaces it for nothing - which is why the Destroy
+// text says he "will probably have another lying around somewhere anyway".
+[opheld5,lunar_seal_of_passage]
+if (~p_choice2("Destroy the Seal of Passage.", 1, "Keep it.", 2) ! 1) {
+    return;
+}
+inv_del(inv, lunar_seal_of_passage, 1);
+mes("Brundt the Chieftain will probably have another lying around somewhere anyway...");
+
+// =========================================================================== the Seal of Passage
+//
+// "The Seal of Passage must be in inventory or worn at all times" - talking to anyone on Lunar
+// Isle without it, banker included, puts you back in Rellekka. In 2006 there is no exception to
+// this and no diary that lifts it: everyone on the island calls ~lunar_check_seal first.
+[proc,lunar_has_seal]()(boolean)
+if (inv_total(inv, lunar_seal_of_passage) > 0 | inv_total(worn, lunar_seal_of_passage) > 0) {
+    return(true);
+}
+return(false);
+
+[label,lunar_no_seal]
+if_close;
+~mesbox("The Moon Clan read your mind, see a Fremennik, and are not interested in hearing any more about it.");
+anim(human_castteleport, 0);
+sound_synth(teleport_all, 1, 0);
+p_delay(2);
+p_telejump(^lunar_isle_rellekka_pier);
+~mesbox("You wake up on the Rellekka pier with no memory of the crossing.");
+
+// =========================================================================== Captain Bentley
+//
+// The Lady Zay, between Pirates' Cove and Lunar Isle. One Bentley on each dock, both this config.
+[opnpc1,captain_bentley] @lunar_bentley;
+[opnpc3,captain_bentley] @lunar_bentley;
+
+[label,lunar_bentley]
+if (coordz(coord) > ^lunar_isle_north_z) {
+    ~chatnpc("<p,neutral>Yep. You're free to explore the island. Be careful though, the Moon Clan are very powerful, it wouldn't be wise to wrong them.");
+    if (~p_choice2("Take me back to Pirates' Cove.", 1, "I'll stay a while.", 2) = 1) {
+        @lunar_bentley_sail;
+    }
+    return;
+}
+if (%lunar_quest < ^lunar_has_seal) {
+    ~chatnpc("<p,neutral>I'm Captain Bentley of the Lady Zay, and I'm not taking anyone north who has no business up there.");
+    return;
+}
+if (~lunar_has_seal = false) {
+    ~chatnpc("<p,neutral>Not without a Seal of Passage you don't. The Moon Clan would have you inside out before you were off the gangplank. Brundt will give you another.");
+    return;
+}
+~chatnpc("<p,quiz>Aye? What can I do for you?");
+if (~p_choice2("Can we sail to Lunar Isle now?", 1, "Nothing, thanks.", 2) ! 1) {
+    ~chatplayer("<p,neutral>Nothing, thanks.");
+    return;
+}
+~chatplayer("<p,quiz>Can we sail to Lunar Isle now?");
+~chatnpc("<p,happy>Aye. Get aboard and hold on to something.");
+@lunar_bentley_sail;
+
+[label,lunar_bentley_sail]
+if_close;
+if (coordz(coord) > ^lunar_isle_north_z) {
+    mes("You board the Lady Zay, and Captain Bentley sets a course south.");
+    p_delay(4);
+    p_telejump(^lunar_cove_dock);
+    ~mesbox("The Lady Zay ties up at Pirates' Cove.");
+    return;
+}
+mes("You board the Lady Zay, and Captain Bentley sets a course north.");
+p_delay(4);
+p_telejump(^lunar_isle_pier);
+if (%lunar_quest = ^lunar_has_seal) {
+    %lunar_quest = ^lunar_arrived;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+    ~mesbox("The Lady Zay comes alongside a pier of white stone. This is Lunar Isle, and the Moon Clan are watching you from the rocks.");
+    return;
+}
+~mesbox("The Lady Zay ties up at Lunar Isle.");
+
+// 'Birds-Eye' Jack is the navigator. He has nothing to say until Dream Mentor, which makes him
+// the island's other banker (quest_dreammentor/scripts/dream_cyrisus.rs2 has that conversation).
+[opnpc1,birdseye_jack]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,neutral>Navigator of the Lady Zay, that's me. Best eyes on the northern sea, and don't let the captain tell you otherwise.");
+
+// =========================================================================== the reward
+//
+// 2 quest points, 5,000 Magic, 5,000 Runecraft, fifty astral runes, and the Lunar spellbook - which
+// the Oneiromancer does not hand over herself: "Simply pray at the altar behind me to gain the
+// knowledge." %lunar_unlocked is what the Magic cape reads, so it is set here too.
+[label,lunar_finish]
+%lunar_quest = ^lunar_complete;
+%lunar_unlocked = true;
+stat_advance(magic, ^lunar_reward_magic_xp);
+stat_advance(runecraft, ^lunar_reward_runecraft_xp);
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, astralrune, ^lunar_reward_astral_runes, ^lootdrop_duration);
+} else {
+    inv_add(inv, astralrune, ^lunar_reward_astral_runes);
+}
+session_log(^log_adventure, "Quest complete: Lunar Diplomacy");
+~send_quest_complete(questlist:lunar, lunar_staff, 200, ^lunar_questpoints, "You have completed\\nLunar Diplomacy!", "2 Quest Points|5,000 Magic XP|5,000 Runecraft XP|The Lunar spellbook|50 Astral runes");
+
+// Equipping the ceremonial clothes: Magic 65 and Defence 40, unboosted, on every piece.
+[opheld2,lunar_helm] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_torso] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_legs] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_gloves] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_boots] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_cape] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_amulet] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_ring] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);
+[opheld2,lunar_staff] @levelrequire_magic_and_defence(^lunar_req_magic, ^lunar_req_defence, last_slot);

@@ -1,31 +1,28 @@
 // Lunar Isle (2026-09-23): the map is 474's (configs/lunar_isle.loc has how it came in), and three
 // things on it do something - the Astral altar, the bank, and the boat.
 //
-// There is no Lunar Diplomacy here, and no Fremennik Trials in the way. The Moonclan's magic is the
-// Astral altar's to give: pray at it with 65 Magic and the Lunar spellbook is yours for good.
+// 2026-09-28: Lunar Diplomacy arrived (scripts/quests/quest_lunar), and it is the quest the island
+// was always waiting for. Two things changed here:
+//   * the altar no longer hands out the Lunar spellbook for 65 Magic. The Moonclan's magic is the
+//     Oneiromancer's to give, at the end of her quest, exactly as she says: "Simply pray at the
+//     altar behind me to gain the knowledge." Before that the altar says what it says in 2006 -
+//     "You don't have permission yet to use this altar."
+//   * Lokar sails Rellekka to Pirates' Cove, which is where he sailed in 2006, and Captain Bentley
+//     takes it from there. He will not take a passenger who has not started the quest: he has no
+//     reason to, and the Moon Clan would kill anyone arriving without a Seal of Passage.
 
 // ================================================================================ the Astral altar
 //
 // Craft-rune is runecrafting's own (category rc_altar; the astral row of runecraft.dbrow). Pray is
-// the spellbook. The first prayer with 65 Magic sets %lunar_unlocked, which never unsets, and puts
-// the book in your hands; from then on the altar trades Lunar for the normal book and back, as the
-// Desert Treasure altar does with Ancients, and the Magic cape will offer Lunar too. Unlike that
-// altar it asks no Prayer of you: the Moonclan's price was the voyage.
+// the spellbook: once Lunar Diplomacy is done the altar trades Lunar for the normal book and back,
+// as the Desert Treasure altar does with Ancients, and the Magic cape will offer Lunar too.
+// Praying while already on Lunar always returns the standard book.
 
 [oploc2,astral_altar]
-if (%lunar_unlocked ! true) {
-    if (stat(magic) < ^lunar_unlock_magic) {
-        ~mesbox("The altar hums with a power you cannot make sense of.|You need a Magic level of <tostring(^lunar_unlock_magic)> to learn from it.");
-        return;
-    }
-    mes("You kneel at the altar.");
-    anim(human_pray, 0);
-    sound_synth(magical_barrier, 1, 0);
-    p_delay(3);
-    %lunar_unlocked = true;
-    ~set_spellbook(^spellbook_lunar);
-    session_log(^log_adventure, "Unlocked the Lunar spellbook at the Astral altar");
-    ~mesbox("The moon's light fills your mind, and the words of the Moonclan with it.|You can now cast Lunar spells.");
+// %lunar_unlocked as well as the quest: anyone who was given the book by the old 65-Magic altar
+// before Lunar Diplomacy existed keeps the right to switch back and forth here.
+if (%lunar_quest < ^lunar_complete & %lunar_unlocked ! true) {
+    ~mesbox("You don't have permission yet to use this altar.|You have to earn the right to use the altar.");
     return;
 }
 def_int $choice = -1;
@@ -44,44 +41,54 @@ sound_synth(magical_barrier, 1, 0);
 p_delay(3);
 if (%spellbook = ^spellbook_lunar) {
     ~set_spellbook(^spellbook_normal);
-    ~mesbox("The moon's words leave you.|You are back on the normal spellbook.");
+    mes("Lunar spells deactivated!");
     return;
 }
 ~set_spellbook(^spellbook_lunar);
-~mesbox("The moon's light fills your mind.|You can now cast Lunar spells.");
+mes("Lunar spells activated!");
 
 // ================================================================================ the bank
 
 // 474's own booth: 377 never had Lunar Isle, so it came in as a loc of its own and not as a
-// bankbooth. There is no teller behind it (the Sirsal Banker is not imported), so both ops bank,
-// which is what [oploc1,bankbooth] does when it finds no teller either.
-[oploc1,lunar_bankbooth] @openbank;
-[oploc2,lunar_bankbooth] @openbank;
+// bankbooth. The Sirsal Banker stands beside it (quest_lunar/scripts/lunar_island.rs2 has his
+// Seal of Passage check, which is the one thing the Moon Clan never waive).
+[oploc1,lunar_bankbooth] @lunar_isle_bank;
+[oploc2,lunar_bankbooth] @lunar_isle_bank;
+
+[label,lunar_isle_bank]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+@openbank;
 
 // ================================================================================ the boat
 //
-// Lokar Searunner, on both piers. In 2007 he took you from Rellekka to Pirates' Cove, and Lunar
-// Diplomacy's ship went on from there; this build has neither, so he goes the whole way. Free, and
-// no quest, because the island is how the spellbook is reached and nothing else gates that.
-// Which way is his coord's: the island is north of z 3800 and Rellekka south of it.
+// Lokar Searunner, on the Rellekka pier and at Pirates' Cove. Which end he is at is which side of
+// z 3800 his coord falls; the island itself is served by Captain Bentley's ship, not by him.
 
 [opnpc1,lokar_searunner]
 if (coordz(coord) > ^lunar_isle_south_z) {
-    ~chatnpc("<p,neutral>Had your fill of the Moonclan? I'm sailing back to Rellekka whenever you're ready.");
+    ~chatnpc("<p,neutral>Had enough of the Cove? I'm sailing back to Rellekka whenever you're ready.");
     def_int $back = ~p_choice2("Take me to Rellekka.", 1, "Not yet.", 2);
     if ($back = 1) {
         @lunar_isle_sail;
     }
     return;
 }
-~chatnpc("<p,neutral>Ahoy! Lokar Searunner, at your service. Sailed with pirates once - don't ask.");
-~chatnpc("<p,quiz>I run a boat north to Lunar Isle, where the Moonclan live. They say there's an altar there that teaches a whole new kind of magic. Fancy it?");
-def_int $go = ~p_choice2("Take me to Lunar Isle.", 1, "No thanks.", 2);
+if (%lunar_quest = ^lunar_not_started) {
+    @lunar_lokar_start;
+}
+~chatnpc("<p,neutral>Arrr! Yar! Ready to be on our way, yar?");
+def_int $go = ~p_choice2("Take me to Pirates' Cove.", 1, "No thanks.", 2);
 if ($go = 1) {
     @lunar_isle_sail;
 }
 
-[opnpc3,lokar_searunner] @lunar_isle_sail;
+[opnpc3,lokar_searunner]
+if (coordz(coord) < ^lunar_isle_south_z & %lunar_quest = ^lunar_not_started) {
+    @lunar_lokar_start;
+}
+@lunar_isle_sail;
 
 [label,lunar_isle_sail]
 if_close;
@@ -94,5 +101,5 @@ if (coordz(coord) > ^lunar_isle_south_z) {
 }
 mes("You board the boat, and Lokar sets a course north.");
 p_delay(4);
-p_telejump(^lunar_isle_pier);
-~mesbox("The boat arrives at Lunar Isle.");
+p_telejump(^lunar_cove_dock);
+~mesbox("The boat arrives at Pirates' Cove.");

@@ -1,0 +1,158 @@
+// Dream Mentor: the dream itself.
+//
+// The arena is 474's m28_80 - a round floor on plane 2 with the book "Our lives" at its north end,
+// which is the only way out. Cyrisus stands at the edge and watches; four of his fears come at you
+// one after another, in the order the wiki gives: The Inadequacy, The Everlasting, The Untouchable,
+// The Illusive. They are the 474 npcs with OSRS's own stats (lunar_npcs.npc), and all four have
+// zero magic defence, which is what makes this a magic fight.
+//
+// The Illusive is the exception at the end: Cyrisus finishes it himself. It is his fear.
+
+// =========================================================================== going in
+//
+// Cyrisus takes the potion, puts it on the Ceremonial Brazier in the Dream Hall, and you light it.
+[opnpcu,cyrisus]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (last_useitem ! dream_potion) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%dreammentor ! ^dm_potion_done) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, dream_potion, 1);
+%dm_brazier = 1;
+~chatnpc("<p,neutral>Right. On the brazier, and then we find out what I am made of.");
+~mesbox("Cyrisus tips the potion over the Ceremonial Brazier. It needs lighting.");
+
+[opnpc1,cyrisus]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+switch_int (%dreammentor) {
+    case ^dm_potion_done :
+        if (%dm_brazier = 0) {
+            ~chatnpc("<p,neutral>Have you got the potion? Give it here and I will put it on the brazier.");
+            return;
+        }
+        if (and(%lunar_bits, ~lunar_bit(^lunar_bit_brazier_lit)) = 0) {
+            ~chatnpc("<p,neutral>Somebody has to light it. I would, but my hands are shaking.");
+            return;
+        }
+        ~chatnpc("<p,sad>Then this is it. Don't let me wake up until it's done.");
+        if (~p_choice2("Let's go.", 1, "Give me a moment.", 2) ! 1) {
+            return;
+        }
+        if_close;
+        @dm_enter_dream;
+    case ^dm_in_dream, ^dm_dream_done :
+        ~chatnpc("<p,happy>I have seen it done now. That is not nothing.");
+    case default :
+        ~chatnpc("<p,neutral>Thank you. For the food, if nothing else.");
+}
+
+[label,dm_enter_dream]
+mes("The smoke off the brazier goes straight up and does not come down.");
+anim(human_pickuptable, 0);
+p_delay(3);
+p_telejump(^dm_arena);
+%dm_boss = 1;
+%dreammentor = ^dm_in_dream;
+~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+npc_add(^dm_arena_cyrisus, cyrisus_dream, 2000);
+~dm_send_fear;
+~mesbox("Cyrisus is standing at the edge of the arena with his arms folded. Something very large is walking towards you.");
+
+// The fear that is due, by %dm_boss.
+[proc,dm_send_fear]
+switch_int (%dm_boss) {
+    case 1 : npc_add(^dm_arena_boss, the_inadequacy, 2000);
+    case 2 : npc_add(^dm_arena_boss, the_everlasting, 2000);
+    case 3 : npc_add(^dm_arena_boss, the_untouchable, 2000);
+    case 4 : npc_add(^dm_arena_boss, the_illusive, 2000);
+}
+
+// =========================================================================== the four fears
+//
+// Each death queues the next one on the player: an npc death script holds the npc, not the player,
+// and both the message and the next spawn want the player's own turn.
+[ai_queue3,the_inadequacy]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+if (p_finduid(uid) = false) return;
+queue(dm_fear_beaten, 0, 0);
+
+[ai_queue3,the_everlasting]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+if (p_finduid(uid) = false) return;
+queue(dm_fear_beaten, 0, 0);
+
+[ai_queue3,the_untouchable]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+if (p_finduid(uid) = false) return;
+queue(dm_fear_beaten, 0, 0);
+
+[ai_queue3,the_illusive]
+gosub(npc_death);
+if (npc_findhero = ^false) return;
+if (p_finduid(uid) = false) return;
+queue(dm_fear_beaten, 0, 0);
+
+[queue,dm_fear_beaten]
+if (%dreammentor ! ^dm_in_dream) {
+    return;
+}
+switch_int (%dm_boss) {
+    case 1 :
+        ~dm_cyrisus_says("<p,shock>That was the one I could never look at. You just... hit it.");
+    case 2 :
+        ~dm_cyrisus_says("<p,neutral>It would not stop. It never stops. And you kept going anyway.");
+    case 3 :
+        ~dm_cyrisus_says("<p,happy>I have been telling myself for thirty years that some things cannot be hurt.");
+    case 4 :
+        ~dm_cyrisus_says("<p,happy>No. Leave that one. That one is mine.");
+        ~dm_cyrisus_says("<p,happy>I have watched you do this four times. I think I can manage a shadow.");
+        %dm_boss = 5;
+        %dreammentor = ^dm_dream_done;
+        ~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+        ~mesbox("Cyrisus walks past you, puts his boot through the last of it, and laughs.|Read the book at the north end to wake up.");
+        return;
+}
+%dm_boss = add(%dm_boss, 1);
+~dm_send_fear;
+mes("Something else is getting up.");
+
+[proc,dm_cyrisus_says](string $line)
+if (npc_find(coord, cyrisus_dream, 20, ^false) = false) {
+    return;
+}
+~chatnpc($line);
+
+// =========================================================================== waking up
+//
+// "Our lives" on the lectern at the north end of the arena - the only way out, as the wiki says.
+[oploc1,loc474_11398] @dm_read_book;
+[oploc2,loc474_11398] @dm_read_book;
+
+[label,dm_read_book]
+if (%dreammentor < ^dm_in_dream) {
+    mes("A book of two lives, written side by side. Neither of them is yours.");
+    return;
+}
+if (%dreammentor = ^dm_in_dream) {
+    ~mesbox("You cannot leave Cyrisus in here with the rest of them.");
+    return;
+}
+if (~p_choice2("Read and return to reality.", 1, "Not yet.", 2) ! 1) {
+    return;
+}
+if_close;
+~mesbox("'...and in the end there were two of them in the dream, and only one of them had ever been afraid.'");
+p_telejump(^lunar_brazier_coord);
+say("Was that his dream or mine?");
+~mesbox("You should tell the Oneiromancer.");

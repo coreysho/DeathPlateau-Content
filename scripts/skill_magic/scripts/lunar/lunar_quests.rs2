@@ -1,0 +1,34 @@
+// What the Lunar spellbook's spells need beyond a level and some runes (2026-09-28).
+//
+// The book is Lunar Diplomacy's reward: the Oneiromancer sends you to the Astral altar and praying
+// there is what puts it in your hands (%lunar_unlocked). Two of its spells ask for more than that:
+//
+//   Ourania Teleport   has to be unlocked by talking to Baba Yaga while already on the Lunar book -
+//                      she is the one who knows where the cave is (OSRS wiki, Ourania Teleport).
+//   seven spells       arrive with Dream Mentor rather than Lunar Diplomacy - see the switch below.
+//
+// Called from ~check_spell_requirements (skill_magic/scripts/magic.rs2), which is the one gate every
+// spell on every book goes through, so nothing can be reached round the side of it.
+
+[proc,lunar_spell_locked](int $spell)(boolean)
+if (~spell_is_lunar($spell) = false) {
+    return(false);
+}
+if (%lunar_unlocked ! true) {
+    mes("You have not learnt the magic of the Moon Clan.");
+    return(true);
+}
+if ($spell = ^ourania_teleport & and(%lunar_bits, ~lunar_bit(^lunar_bit_ourania)) = 0) {
+    mes("You do not know where the Ourania cave is. Someone on Lunar Isle might.");
+    return(true);
+}
+// The seven Dream Mentor spells, and only these seven (OSRS wiki, Lunar spells): what Cyrisus
+// hands over at the end of that quest, having shared a dream with you.
+switch_int ($spell) {
+    case ^monster_examine, ^humidify, ^hunter_kit, ^stat_spy, ^dream, ^plank_make, ^spellbook_swap :
+        if (%dreammentor < ^dm_complete) {
+            mes("You need to have completed Dream Mentor to cast that spell.");
+            return(true);
+        }
+}
+return(false);

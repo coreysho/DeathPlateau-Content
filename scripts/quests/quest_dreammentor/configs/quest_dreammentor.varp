@@ -1,0 +1,16 @@
+// Dream Mentor. New varps - 377 predates the quest by eight months - all perm.
+//
+// %dreammentor      the linear stage (quest_dreammentor.constant)
+// %dreammentor_bits the three bars that have to be filled before Cyrisus will say who he is, the
+//                   five pieces of his own equipment, and which of his fears is on its feet
+// %dm_lastfood      the last thing he ate: "he rejects a food type he was recently given", so the
+//                   twenty pieces have to be three different kinds, rotated
+[dreammentor]
+scope=perm
+
+[dreammentor_bits]
+scope=perm
+
+[dm_lastfood]
+type=obj
+scope=perm

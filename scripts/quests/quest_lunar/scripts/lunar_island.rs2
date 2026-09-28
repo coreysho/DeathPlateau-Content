@@ -1,0 +1,797 @@
+// Lunar Diplomacy on Lunar Isle: the Moon Clan, the waking sleep potion, the Lunar staff and the
+// eight pieces of ceremonial clothing. All of the talking is the OSRS wiki's transcript.
+//
+// The Seal of Passage rule runs through every conversation here: "The Seal of Passage must be in
+// inventory or worn at all times", and talking to anyone without it puts you back in Rellekka
+// (~lunar_has_seal / @lunar_no_seal in quest_lunar.rs2). In 2006 there is no exception to it -
+// 'Birds-Eye' Jack's banking and the Elite Fremennik Diary are both much later.
+
+// =========================================================================== the Oneiromancer
+
+[opnpc1,oneiromancer]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+// Dream Mentor borrows her once Lunar Diplomacy is over; it only answers at its own steps
+// (quests/quest_dreammentor/scripts/quest_dreammentor.rs2).
+if (~dm_oneiromancer = true) {
+    return;
+}
+switch_int (%lunar_quest) {
+    case ^lunar_arrived : @lunar_oneiro_first;
+    case ^lunar_met_oneiromancer : @lunar_oneiro_potion;
+    case ^lunar_potion_done : @lunar_oneiro_staff;
+    case ^lunar_staff_done : @lunar_oneiro_clothes;
+    case ^lunar_clothes_done, ^lunar_in_dream : @lunar_oneiro_kindling;
+    case ^lunar_dream_done : @lunar_oneiro_finish;
+    case default :
+        ~chatnpc("<p,happy>Why hello, how are you today?");
+        ~chatplayer("<p,neutral>Fine, thank you.");
+        ~chatnpc("<p,happy>I know. I can read minds, remember?");
+}
+
+[label,lunar_oneiro_first]
+~chatnpc("<p,happy>Why hello, how are you today?");
+~chatplayer("<p,neutral>I'm...");
+~chatnpc("<p,happy>Fine. Yes I know.");
+~chatplayer("<p,quiz>How?");
+~chatnpc("<p,neutral>By reading your mind. But that's not important. We have some important things to discuss.");
+~chatnpc("<p,neutral>We are very in tune with magic as you have no doubt observed, but we have yet to meet one Fremennik with the perspective that this is of any value. They are always picking at us to reveal our secrets, but why should we when they view us so.");
+~chatplayer("<p,quiz>Then how would I show you otherwise?");
+~chatnpc("<p,neutral>Well, we have a ritual called 'The View of Self Dream'. It is a ritual that we all have to go through. You see the path to understanding magic is through understanding ourselves.");
+~chatnpc("<p,neutral>One of the best ways to understand ourselves is through our dreams. These are a demonstration of our subconscious, our subconscious being raw and true. But it takes many years to get into a situation where you are ready to attempt it.");
+~chatnpc("<p,neutral>I don't mind you trying, but I really doubt you'll achieve anything. There are also a fair few preparations you'll have to make first too.");
+~chatnpc("<p,neutral>You are going to need to do a few things. You'll need a waking sleep potion, a Lunar staff, and ceremonial traveling clothes. Start with the potion, I suggest you have a word with Baba Yaga in her chicken house, she will be able to help you with the making of the potion.");
+~chatplayer("<p,shock>Her chicken house?");
+~chatnpc("<p,happy>Yes, you can't miss it, it's walking around the north of the town.");
+%lunar_quest = ^lunar_met_oneiromancer;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+
+[label,lunar_oneiro_potion]
+~chatnpc("<p,quiz>Have you got the potion to give me?");
+if (inv_total(inv, lunar_waking_sleep_vial) = 0) {
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>Baba Yaga will tell you how. Guam, marrentill and a ground Suqah tooth, in a vial of water.");
+    return;
+}
+~chatplayer("<p,happy>I have.");
+inv_del(inv, lunar_waking_sleep_vial, 1);
+~chatnpc("<p,happy>Well done, I'll take that for safe keeping.");
+~chatnpc("<p,neutral>Next we will sort you out with the staff before the clothes. You are going to have to get hold of a Dramen staff first. You will need to take it to the air, fire, water and earth altars to imbue it with power to convert it into a Lunar staff. Bring that back to me and then we can get on with the next stage.");
+~chatnpc("<p,happy>And don't worry, you'll be able to do anything you can with the new enchanted version of the Dramen Staff as you could with its ordinary form! Including visiting the lost city!");
+%lunar_quest = ^lunar_potion_done;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+
+[label,lunar_oneiro_staff]
+~chatnpc("<p,quiz>Managed to get the Dramen staff enchanted?");
+if (inv_total(inv, lunar_staff) = 0) {
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>Take it to the air, fire, water and earth altars, in that order.");
+    return;
+}
+~chatplayer("<p,happy>Here it is.");
+inv_del(inv, lunar_staff, 1);
+~chatnpc("<p,happy>Well done, pass it here.");
+%lunar_quest = ^lunar_staff_done;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+@lunar_oneiro_clothes;
+
+// The eight-part suit, on the paginated menu she uses in the transcript.
+[label,lunar_oneiro_clothes]
+~chatnpc("<p,neutral>Now we can get on with the next stage - your suit! There are 8 parts to this. Which would you like to hear about?");
+@lunar_oneiro_menu1;
+
+[label,lunar_oneiro_menu1]
+switch_int (~p_choice5(~lunar_piece_label("The helm", ^lunar_piece_helm), 1, ~lunar_piece_label("The cape", ^lunar_piece_cape), 2, ~lunar_piece_label("The amulet", ^lunar_piece_amulet), 3, "Next...", 4, "Exit.", 5)) {
+    case 1 : ~lunar_piece_hint(^lunar_piece_helm, "This helm needs to be made from an ore you can only get from the mine on this island. You'll see some stalagmites that you can mine from.", "the Lunar helm"); @lunar_oneiro_menu1;
+    case 2 : ~lunar_piece_hint(^lunar_piece_cape, "There should be one of these floating around somewhere. Talk to some of the people in the village and I am sure one of them will be able to help you.", "the Lunar cape"); @lunar_oneiro_menu1;
+    case 3 : ~lunar_piece_hint(^lunar_piece_amulet, "You should go and speak with Meteora, she always seems to be wearing one on her head for some reason. She might give that to you.", "the Lunar amulet"); @lunar_oneiro_menu1;
+    case 4 : @lunar_oneiro_menu2;
+    case 5 : return;
+}
+
+[label,lunar_oneiro_menu2]
+switch_int (~p_choice5("Previous...", 0, ~lunar_piece_label("The torso", ^lunar_piece_torso), 1, ~lunar_piece_label("The gloves", ^lunar_piece_gloves), 2, ~lunar_piece_label("The boots", ^lunar_piece_boots), 3, "Next...", 4)) {
+    case 0 : @lunar_oneiro_menu1;
+    case 1 : ~lunar_piece_hint(^lunar_piece_torso, "You'll find a monster called the Suqah that is indigenous to this island. You'll need one of their hides to make your torso, which you can tan only in this town.", "the Lunar torso"); @lunar_oneiro_menu2;
+    case 2 : ~lunar_piece_hint(^lunar_piece_gloves, "Suqah leather again - Rimae will tan the hides for you, and a needle and thread will do the rest.", "the Lunar gloves"); @lunar_oneiro_menu2;
+    case 3 : ~lunar_piece_hint(^lunar_piece_boots, "Suqah leather again - Rimae will tan the hides for you, and a needle and thread will do the rest.", "the Lunar boots"); @lunar_oneiro_menu2;
+    case 4 : @lunar_oneiro_menu3;
+}
+
+[label,lunar_oneiro_menu3]
+switch_int (~p_choice4("Previous...", 0, ~lunar_piece_label("The trousers", ^lunar_piece_legs), 1, ~lunar_piece_label("The ring", ^lunar_piece_ring), 2, "Exit.", 3)) {
+    case 0 : @lunar_oneiro_menu2;
+    case 1 : ~lunar_piece_hint(^lunar_piece_legs, "Suqah leather again - Rimae will tan the hides for you, and a needle and thread will do the rest.", "the Lunar trousers"); @lunar_oneiro_menu3;
+    case 2 : ~lunar_piece_hint(^lunar_piece_ring, "You should probably go and speak to Selene, she will be able to help you as she always seems to have bits and pieces like that hanging around.", "the Lunar ring"); @lunar_oneiro_menu3;
+    case 3 : return;
+}
+
+[proc,lunar_piece_label](string $name, int $bit)(string)
+if (~lunar_has_piece($bit) = true) {
+    return("<$name> (complete!)");
+}
+return($name);
+
+[proc,lunar_piece_hint](int $bit, string $hint, string $what)
+if (~lunar_has_piece($bit) = true) {
+    ~chatnpc("<p,happy>Why would you want to know that? you've already given me <$what> to look after.");
+    return;
+}
+~chatnpc("<p,neutral><$hint>");
+
+[proc,lunar_has_piece](int $bit)(boolean)
+if (and(%lunar_pieces, ~lunar_bit($bit)) ! 0) {
+    return(true);
+}
+return(false);
+
+// 1 << $bit, which RuneScript has no operator for.
+[proc,lunar_bit](int $bit)(int)
+def_int $v = 1;
+while ($bit > 0) {
+    $v = multiply($v, 2);
+    $bit = sub($bit, 1);
+}
+return($v);
+
+// Handing a finished piece in. Every piece goes through here, so she takes them one at a time and
+// the menu above can say "(complete!)" against the ones she is already holding.
+[opnpcu,oneiromancer]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%lunar_quest ! ^lunar_staff_done) {
+    ~displaymessage(^dm_default);
+    return;
+}
+switch_obj (last_useitem) {
+    case lunar_helm : ~lunar_hand_in(lunar_helm, ^lunar_piece_helm);
+    case lunar_torso : ~lunar_hand_in(lunar_torso, ^lunar_piece_torso);
+    case lunar_legs : ~lunar_hand_in(lunar_legs, ^lunar_piece_legs);
+    case lunar_gloves : ~lunar_hand_in(lunar_gloves, ^lunar_piece_gloves);
+    case lunar_boots : ~lunar_hand_in(lunar_boots, ^lunar_piece_boots);
+    case lunar_cape : ~lunar_hand_in(lunar_cape, ^lunar_piece_cape);
+    case lunar_amulet : ~lunar_hand_in(lunar_amulet, ^lunar_piece_amulet);
+    case lunar_ring : ~lunar_hand_in(lunar_ring, ^lunar_piece_ring);
+    case default : ~displaymessage(^dm_default);
+}
+
+[proc,lunar_hand_in](namedobj $obj, int $bit)
+if (~lunar_has_piece($bit) = true) {
+    ~chatnpc("<p,happy>I have one of those already.");
+    return;
+}
+inv_del(inv, $obj, 1);
+%lunar_pieces = or(%lunar_pieces, ~lunar_bit($bit));
+if (%lunar_pieces ! ^lunar_pieces_all) {
+    ~chatnpc("<p,happy>Good. Bring me the rest.");
+    return;
+}
+~chatnpc("<p,happy>Ah you have everything! Good work!");
+~lunar_oneiro_give_back;
+
+// She gives the whole suit back, with the staff and the kindling, and tells you what to do with it.
+[label,lunar_oneiro_kindling] ~lunar_oneiro_give_back;
+
+[proc,lunar_oneiro_give_back]
+if (%lunar_pieces ! ^lunar_pieces_all) {
+    ~chatnpc("<p,neutral>Bring me the rest of the suit and we can get on.");
+    return;
+}
+if (inv_freespace(inv) < 11) {
+    ~chatnpc("<p,neutral>I can give you back all the items you need now. Ah... you don't have enough space to carry them. There are eleven items in total, perhaps you should come back when you have space?");
+    ~chatplayer("<p,quiz>Er, how do you know how much space I have?");
+    ~chatnpc("<p,happy>You're forgetting I can read your mind.");
+    return;
+}
+~chatnpc("<p,neutral>Now, I'm going to give you some magic kindling from the first magic tree that ever grew. I shall also give you back your ceremonial clothes which I want you to put on, take hold of the Lunar staff, pour your potion on this kindling and burn it on the giant brazier in the centre of town.");
+~chatnpc("<p,neutral>If you've done all this correctly, you'll be transported to the land of dreams. I can't help you from there on, that all depends upon your understanding of your self. Good luck!");
+~lunar_restock(lunar_helm);
+~lunar_restock(lunar_torso);
+~lunar_restock(lunar_legs);
+~lunar_restock(lunar_gloves);
+~lunar_restock(lunar_boots);
+~lunar_restock(lunar_cape);
+~lunar_restock(lunar_amulet);
+~lunar_restock(lunar_ring);
+~lunar_restock(lunar_staff);
+~lunar_restock(lunar_waking_sleep_vial);
+~lunar_restock(lunar_kindling);
+if (%lunar_quest = ^lunar_staff_done) {
+    %lunar_quest = ^lunar_clothes_done;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+}
+
+// "I already knew that. I got one especially." - she replaces anything you lost, for nothing, for
+// as long as the quest runs.
+[proc,lunar_restock](namedobj $obj)
+if (~obj_gettotal($obj) > 0) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, $obj, 1, ^lootdrop_duration);
+    return;
+}
+inv_add(inv, $obj, 1);
+
+[label,lunar_oneiro_finish]
+~chatplayer("<p,happy>I've done it! I understand now!");
+~chatnpc("<p,quiz>You do, I'm not sure I believe you. Tell me what you've learnt.");
+~chatplayer("<p,neutral>That I must make sense of others to understand myself. That I must be able to relate to others. That I must use my abilities to progress. That I must be aware of my past and present to help me in the future. That I must harness my confidence, and that I must appreciate the unknown.");
+~chatnpc("<p,happy>That's great! I would never have imagined someone from mainland could have had such an open mind to learn such things! I shall spread the word among our people. After this I can't see why we can't start to get along.");
+~chatplayer("<p,happy>Excellent. I think if you make contact with the Fremennik, and tell them your willingness to communicate and share, you'll find plenty of eager ears.");
+~chatnpc("<p,happy>Well done! You must be rewarded for this great deed. You're now more than welcome to use the altar behind me to craft the astral runes that we use here on the island. These runes will allow you to use a new set of spells. Simply pray at the altar behind me to gain the knowledge.");
+@lunar_finish;
+
+// =========================================================================== Baba Yaga
+
+[opnpc1,baba_yaga]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,happy>Ah! A visitor from a distant land! How can I help?");
+def_int $op = 2;
+if (%lunar_quest = ^lunar_met_oneiromancer) {
+    $op = ~p_choice3("The Oneiromancer told me you may be able to help...", 1, "Why is your house walking about?", 2, "Nothing, thank you.", 3);
+} else {
+    $op = ~p_choice2("Why is your house walking about?", 2, "Nothing, thank you.", 3);
+}
+switch_int ($op) {
+    case 1 :
+        ~chatplayer("<p,neutral>The Oneiromancer told me you may be able to help...");
+        ~chatnpc("<p,quiz>With a potion?");
+        ~chatplayer("<p,happy>Yes!");
+        ~chatnpc("<p,neutral>Well, some people have gone mad from visiting their dreams.");
+        ~chatnpc("<p,neutral>You'll need 1 guam leaf, 1 Marrentill leaf and a Suqah tooth ground using a pestle and mortar. Combine these in a vial with water and BAM! You've got your potion! You should be able to get the ingredients from the Suqah monsters.");
+        ~chatnpc("<p,happy>You'll also need a special vial, I have one here.");
+        %lunar_bits = or(%lunar_bits, ~lunar_bit(^lunar_bit_baba_vial));
+        ~lunar_give_vial;
+    case 2 :
+        ~chatplayer("<p,quiz>Why is your house walking about?");
+        ~chatnpc("<p,happy>Berty likes to stretch his legs.");
+        ~chatplayer("<p,shock>Berty? Berty the Chicken leg house?");
+        ~chatnpc("<p,happy>It just has that certain ring to it, don't you think? Beeerteeee!");
+        ~chatplayer("<p,neutral>You're ins...");
+        ~chatnpc("<p,happy>Insane? Very.");
+    case 3 :
+        ~chatplayer("<p,neutral>Nothing, thank you.");
+}
+
+// Another vial on request - the quest gives them out freely, and every mixed vial you throw away
+// is one more trip back here.
+[proc,lunar_give_vial]
+if (~obj_gettotal(lunar_empty_vial) > 0 | ~obj_gettotal(lunar_vial_water) > 0
+        | ~obj_gettotal(lunar_guam_vial) > 0 | ~obj_gettotal(lunar_marr_vial) > 0
+        | ~obj_gettotal(lunar_guam_marr_vial) > 0 | ~obj_gettotal(lunar_waking_sleep_vial) > 0) {
+    ~chatnpc("<p,happy>You have one already, dear.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    ~chatnpc("<p,neutral>And nowhere to put it! Come back with a hand free.");
+    return;
+}
+inv_add(inv, lunar_empty_vial, 1);
+~objbox(lunar_empty_vial, "Baba Yaga hands you a strange, heavy vial.", 250, 0, 0);
+
+// The Ourania teleport. "Must be unlocked by talking to Baba Yaga with the Lunar spellbook already
+// active" - so it is this conversation, on the Lunar book, after the quest.
+[opnpc3,baba_yaga]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%lunar_quest < ^lunar_complete | %spellbook ! ^spellbook_lunar) {
+    ~chatnpc("<p,quiz>I'm sorry dear, that means nothing to me.");
+    return;
+}
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_ourania)) ! 0) {
+    ~chatnpc("<p,happy>You know the way to the Ourania cave already, dear.");
+    return;
+}
+~chatplayer("<p,quiz>Do you know anywhere else worth going?");
+~chatnpc("<p,happy>There is a cave under the mountains west of Falador where the runes come out of the rock all mixed together. Hold the thought of it and the moon will take you there.");
+%lunar_bits = or(%lunar_bits, ~lunar_bit(^lunar_bit_ourania));
+mes("You have unlocked the Ourania Teleport.");
+
+// =========================================================================== Meteora
+
+[opnpc1,meteora]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%lunar_quest = ^lunar_arrived) {
+    ~chatplayer("<p,neutral>Take me to your leader.");
+    ~chatnpc("<p,quiz>Wot?");
+    ~chatnpc("<p,neutral>Well mate, we don't av no leader, so I ain't gonna take ya to um. We auw av eqwuw right's un stuff, yeah? But if ya wont an intro go live it up wiv da Onerimancer.");
+    ~chatplayer("<p,quiz>OK. Is he rich and powerful?");
+    ~chatnpc("<p,angry>No man, SHE, is dead-wise yeah? She is responsible for initiation wituals an stuff.");
+    ~chatnpc("<p,neutral>She angs out int souf east of ouw island.");
+    return;
+}
+if (%lunar_quest ! ^lunar_staff_done | ~lunar_has_piece(^lunar_piece_amulet) = true) {
+    ~chatnpc("<p,happy>Yo yo yo. Awlright?");
+    return;
+}
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_meteora_tiara)) = 0) {
+    ~chatplayer("<p,happy>Hi. Say, that's a nice amulet you're wearing.");
+    ~chatnpc("<p,quiz>Wot, on me ed?");
+    ~chatplayer("<p,neutral>On your head.");
+    ~chatnpc("<p,neutral>I ain't gat no amulet on me ed.");
+    ~chatnpc("<p,neutral>Oh ah, is a replacmant for me lucky tiara, yeah?");
+    ~chatplayer("<p,quiz>What happened to it?");
+    ~chatnpc("<p,sad>Ah, is bad, yeah? One o doews Suqah did nick it. Wish I ad it back, yeah.");
+    ~chatplayer("<p,happy>I see wot I cen do, yeah? I mean, I'll see what I can do.");
+    %lunar_bits = or(%lunar_bits, ~lunar_bit(^lunar_bit_meteora_tiara));
+    return;
+}
+if (inv_total(inv, lunar_special_tiara) = 0) {
+    ~chatnpc("<p,quiz>Yo yo yo! You got me tiara yet?");
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>One o doews Suqah did nick it. Hunt em down. Like urry it up yeah?");
+    return;
+}
+@lunar_meteora_trade;
+
+[opnpcu,meteora]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (last_useitem ! lunar_special_tiara | %lunar_quest ! ^lunar_staff_done) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@lunar_meteora_trade;
+
+[label,lunar_meteora_trade]
+if (~lunar_has_piece(^lunar_piece_amulet) = true | inv_total(inv, lunar_amulet) > 0) {
+    ~chatnpc("<p,happy>Yo, you got ya amulet awready.");
+    return;
+}
+~chatnpc("<p,happy>Sure, yeah, gimmie it yo.");
+inv_del(inv, lunar_special_tiara, 1);
+inv_add(inv, lunar_amulet, 1);
+~objbox(lunar_amulet, "Meteora pulls the amulet off her head and drops it into your hand.", 250, 0, 0);
+
+// =========================================================================== Selene
+
+[opnpc1,selene]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,happy>Greetings sweetie. How can I help?");
+if (%lunar_quest ! ^lunar_staff_done | ~lunar_has_piece(^lunar_piece_ring) = true) {
+    ~chatplayer("<p,neutral>Just passing the time.");
+    ~chatnpc("<p,happy>We value knowledge of self because it is this that gives us our strength! It is most important!");
+    return;
+}
+~chatplayer("<p,quiz>I'm looking for a ring.");
+~chatnpc("<p,neutral>Well there are a great many rings darling, try to be more specific.");
+~chatplayer("<p,neutral>A Lunar ring, for the ceremony.");
+~chatnpc("<p,neutral>Ah, I see. I'm afraid to say I don't have one of those. But... I do know that my grandfather had such a ring, but he passed away a long time ago. There is a chance he buried it though.");
+~chatplayer("<p,quiz>Buried it?");
+~chatnpc("<p,happy>He was an archaeologist. Well, more of a treasure hunter. When I was little he always used to bury items around the island and give me clues and maps to find them.");
+~chatnpc("<p,happy>I remember those days fondly, hours of digging around, dodging boulders, pits of snakes...");
+~chatnpc("<p,neutral>The clue I have written down here says: From water's source you should follow, crossing the western-most bridge and travelling further south-westerly to a bloom of blue.");
+%lunar_bits = or(%lunar_bits, ~lunar_bit(^lunar_bit_selene_clue));
+
+// The dig, at the westernmost blue flowers in the far south-west of the island (2078,3863).
+// [opheld1,spade] is general_use/scripts/spade.rs2's and may only be declared once, so the dig is
+// a coordinate test hooked into its chain, the way Ghosts Ahoy and the Barrows mounds are.
+[proc,lunar_dig]()(boolean)
+if (distance(coord, ^lunar_ring_dig) > 1) {
+    return(false);
+}
+if (%lunar_quest ! ^lunar_staff_done | ~lunar_has_piece(^lunar_piece_ring) = true
+        | ~obj_gettotal(lunar_ring) > 0) {
+    return(false);
+}
+p_arrivedelay;
+anim(human_dig, 0);
+sound_synth(digspade, 1, 0);
+p_delay(2);
+if (inv_freespace(inv) < 1) {
+    mes("There appears to be something in the dirt, but you have no space to hold it.");
+    return(true);
+}
+inv_add(inv, lunar_ring, 1);
+~objbox(lunar_ring, "You've found a lunar ring!", 250, 0, 0);
+return(true);
+
+// =========================================================================== Pauline Polaris
+//
+// The name riddle. "Change a letter from the word Dane to get my first name. The first part of my
+// surname rhymes with wood, the third part rhymes with spade and the second rhymes with magic."
+// Jane Blud-Hagic-Maid. The three wrong answers are the transcript's own.
+
+[opnpc1,pauline_polaris]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%lunar_quest ! ^lunar_staff_done | ~lunar_has_piece(^lunar_piece_cape) = true) {
+    ~chatnpc("<p,happy>Lovely day for it.");
+    return;
+}
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_meteora_tiara)) = 0 & %lunar_bits = %lunar_bits) {
+    // no state needed - she will talk to anyone doing the ceremony
+}
+~chatplayer("<p,quiz>I'm after a ceremonial cape.");
+~chatnpc("<p,neutral>Ah, I know the ceremony very well. Maybe I can help. I do have a cape, but why would I want to give it to some random person off the streets?");
+~chatplayer("<p,sad>Because I need it?");
+~chatnpc("<p,happy>Nice try. But I am always glad to help a person in need, if they can demonstrate some insight.");
+~chatnpc("<p,happy>How about you try and guess my name!");
+switch_int (~p_choice3("Pauline?", 1, "Bob?", 2, "Tina?", 3)) {
+    case 2 :
+        ~chatplayer("<p,quiz>Bob?");
+        ~chatnpc("<p,angry>How rude!");
+        ~chatnpc("<p,angry>Get out of my sight!");
+        return;
+    case 3 :
+        ~chatplayer("<p,quiz>Tina?");
+        ~chatnpc("<p,happy>Ha! Nice try, but no.");
+        return;
+}
+~chatplayer("<p,quiz>Pauline?");
+~chatnpc("<p,neutral>Ah, you'd think so, but no. That is my alias. I want you to tell me my REAL name! I have one first name, and a triple barrel surname!");
+~chatnpc("<p,neutral>OK. Change a letter from the word Dane to get my first name. The first part of my surname rhymes with wood, the third part rhymes with spade and the second rhymes with magic.");
+def_int $answer = 1;
+switch_int (random(3)) {
+    case 0 : $answer = ~p_choice4("Jane Blud-Hagic-Maid", 1, "Dave Floob-Raid-Traid", 2, "Jave Nag-Brabik-Faide", 3, "June Slagit-Magic-Aade", 4);
+    case 1 : $answer = ~p_choice4("Dave Flood-Raid-Traid", 2, "Jane Blud-Hagic-Maid", 1, "June Slagic-Lagic-Fade", 3, "Jave Nud-Tragik-Baide", 4);
+    case 2 : $answer = ~p_choice4("June Rlagic-Ladic-Bade", 2, "Dave Rlood-Raid-Thraid", 3, "Jane Blud-Hagic-Maid", 1, "Jave Bud-Tragik-Daide", 4);
+}
+if ($answer ! 1) {
+    ~chatnpc("<p,neutral>Nope. Not even close.");
+    return;
+}
+~chatplayer("<p,happy>Jane Blud-Hagic-Maid.");
+~chatnpc("<p,shock>That's it! Well done.");
+~chatnpc("<p,happy>It's not my fault my parents had an over active imagination.");
+~chatnpc("<p,quiz>Do you want this cape or not?");
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, lunar_cape, 1, ^lootdrop_duration);
+    mes("The cape drops to the ground.");
+    return;
+}
+inv_add(inv, lunar_cape, 1);
+~objbox(lunar_cape, "Jane hands you a Lunar cape.", 250, 0, 0);
+
+// =========================================================================== Rimae Sirsalis
+//
+// The Moon Clan Fine Clothes shop: she tans Suqah hides at 100gp each, and that is the only place
+// in the world they can be tanned.
+
+[opnpc1,rimae_sirsalis]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,happy>Welcome to the clothes store. How might I help you?");
+switch_int (~p_choice3("You know the ceremonial clothes?", 1, "Tell me about the Suqah.", 2, "Nothing, thanks.", 3)) {
+    case 1 :
+        ~chatplayer("<p,quiz>You know the ceremonial clothes?");
+        ~chatnpc("<p,happy>I certainly do! A real tricky set of garments to make.");
+        ~chatnpc("<p,neutral>All I can really help you out with is the tanning of the hides.");
+        ~chatnpc("<p,neutral>The ceremonial clothes are made from the hides of the Suqah monsters. Bring them to me and I will tan them for you. You can then craft them into the top, trousers, gloves and boots.");
+        @lunar_tan;
+    case 2 :
+        ~chatplayer("<p,quiz>Tell me about the Suqah.");
+        ~chatnpc("<p,neutral>It's an interesting creature the Suqah. You see, they have been indigenous to this island since we arrived. They seem to thrive of eating the minerals that exist in the mines below the town.");
+        ~chatnpc("<p,neutral>We try our best to live in harmony with them, because they provide us with a great many materials when they die, and in turn we have given them magic to help protect themselves.");
+    case 3 :
+        ~chatplayer("<p,neutral>Nothing, thanks.");
+}
+
+[opnpcu,rimae_sirsalis]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (last_useitem ! suqah_hide) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@lunar_tan;
+
+[label,lunar_tan]
+def_int $hides = inv_total(inv, suqah_hide);
+if ($hides = 0) {
+    ~chatnpc("<p,quiz>Got any Suqah hides you want me to tan?");
+    ~chatplayer("<p,sad>Not on me.");
+    ~chatnpc("<p,neutral>Just kill some of the Suqah monsters dotted around the outskirts of this island.");
+    return;
+}
+def_int $cost = multiply($hides, 100);
+~chatnpc("<p,neutral>At 100 gold pieces per hide, that'll cost you... <tostring($cost)> gp.");
+if (~p_choice2("That seems like a fair deal.", 1, "That's a bit steep.", 2) ! 1) {
+    ~chatplayer("<p,neutral>That's a bit steep.");
+    return;
+}
+if (inv_total(inv, coins) < $cost) {
+    ~chatplayer("<p,sad>Sorry, I don't seem to have enough money. I'll be right back!");
+    return;
+}
+inv_del(inv, coins, $cost);
+inv_del(inv, suqah_hide, $hides);
+inv_add(inv, suqah_leather, $hides);
+~chatnpc("<p,happy>A pleasure doing business with you!");
+
+// =========================================================================== the other Moon Clan
+
+[opnpc1,melana_moonlander]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,happy>The moon is full tonight. It is always full, of course, but it is nice to say so.");
+
+[opnpc1,bouquet_mac_hyacinth]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,happy>Bouquet Mac Hyacinth, at your service. No, I did not pick the name.");
+
+[opnpc1,moonclan_guard]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+~chatnpc("<p,neutral>Keep that seal where I can see it, outerlander.");
+
+[opnpc1,sirsal_banker] @lunar_banker;
+[opnpc2,sirsal_banker] @lunar_banker;
+[opnpc3,sirsal_banker] @lunar_banker;
+
+[label,lunar_banker]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+@openbank;
+
+// =========================================================================== the waking sleep potion
+//
+// A special vial, water, guam, marrentill and a ground Suqah tooth. 84 Herblore xp for each herb;
+// Herblore 5, which the quest checks at the start and the vial checks again here.
+
+[opheldu,lunar_vial_water]
+switch_obj (last_useitem) {
+    case guam_leaf : ~lunar_add_herb(lunar_vial_water, lunar_guam_vial, guam_leaf);
+    case marentill : ~lunar_add_herb(lunar_vial_water, lunar_marr_vial, marentill);
+    case default : ~displaymessage(^dm_default);
+}
+
+[opheldu,lunar_guam_vial]
+if (last_useitem ! marentill) {
+    ~displaymessage(^dm_default);
+    return;
+}
+~lunar_add_herb(lunar_guam_vial, lunar_guam_marr_vial, marentill);
+
+[opheldu,lunar_marr_vial]
+if (last_useitem ! guam_leaf) {
+    ~displaymessage(^dm_default);
+    return;
+}
+~lunar_add_herb(lunar_marr_vial, lunar_guam_marr_vial, guam_leaf);
+
+[proc,lunar_add_herb](namedobj $from, namedobj $to, namedobj $herb)
+if (stat(herblore) < ^lunar_req_herblore) {
+    mes("You need a Herblore level of <tostring(^lunar_req_herblore)> to do that.");
+    return;
+}
+inv_del(inv, $from, 1);
+inv_del(inv, $herb, 1);
+inv_add(inv, $to, 1);
+anim(human_herbing_vial, 0);
+stat_advance(herblore, 840);
+sound_synth(vial_mix, 1, 0);
+mes("You add the <lowercase(oc_name($herb))> to the vial.");
+
+[opheldu,suqah_tooth]
+if (last_useitem ! pestle_and_mortar) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@lunar_grind_tooth;
+
+[label,lunar_grind_tooth]
+inv_del(inv, suqah_tooth, 1);
+inv_add(inv, lunar_ground_tooth, 1);
+anim(human_herbing_grind, 0);
+mes("You grind the Suqah tooth into a coarse powder.");
+
+[opheldu,lunar_guam_marr_vial]
+if (last_useitem ! lunar_ground_tooth) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, lunar_guam_marr_vial, 1);
+inv_del(inv, lunar_ground_tooth, 1);
+inv_add(inv, lunar_waking_sleep_vial, 1);
+sound_synth(vial_mix, 1, 0);
+~objbox(lunar_waking_sleep_vial, "The powder goes in, and the vial goes very still. This is a potion of waking sleep.", 250, 0, 0);
+
+// =========================================================================== the Lunar staff
+//
+// A dramen staff, taken to the air, fire, water and earth altars in that order. Jumped to from the
+// four [oplocu,*_altar] switches in skill_runecraft/scripts/runecraft_altars.rs2, which already own
+// that trigger.
+[proc,lunar_enchant_staff](int $step)
+if (%lunar_quest < ^lunar_potion_done) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_namedobj $from = dramen_staff;
+def_namedobj $to = lunar_staff_pt1;
+def_string $what = "air";
+switch_int ($step) {
+    case 2 : $from = lunar_staff_pt1; $to = lunar_staff_pt2; $what = "fire";
+    case 3 : $from = lunar_staff_pt2; $to = lunar_staff_pt3; $what = "water";
+    case 4 : $from = lunar_staff_pt3; $to = lunar_staff; $what = "earth";
+}
+if (inv_total(inv, $from) = 0) {
+    switch_int ($step) {
+        case 1 : mes("Nothing happens. The altar has no interest in a staff that is not a Dramen staff.");
+        case default : mes("Nothing happens. This staff has not been to the right altars yet.");
+    }
+    return;
+}
+inv_del(inv, $from, 1);
+inv_add(inv, $to, 1);
+anim(human_castteleport, 0);
+sound_synth(magical_barrier, 1, 0);
+if ($step = 4) {
+    ~objbox(lunar_staff, "The earth altar takes hold of the staff, and lets go of something else. You are holding a Lunar staff.", 250, 0, 0);
+    return;
+}
+mes("The <$what> altar pours its power into the staff.");
+
+// =========================================================================== the eight pieces
+//
+// The helm: mine a stalagmite in the Lunar Isle mine for lunar ore, smelt it, and hammer the bar on
+// an anvil. Mining 60 - boostable here, unlike the gate at the start of the quest.
+[oploc1,loc474_16679] @lunar_mine_stalagmite;
+[oploc3,loc474_16679] @lunar_mine_stalagmite;
+[oploc1,loc474_16680] @lunar_mine_stalagmite;
+[oploc3,loc474_16680] @lunar_mine_stalagmite;
+
+[label,lunar_mine_stalagmite]
+if (%lunar_quest < ^lunar_staff_done | %lunar_quest >= ^lunar_complete) {
+    mes("A stalagmite. The rock is shot through with something pale that is not quite silver.");
+    return;
+}
+if (~lunar_has_piece(^lunar_piece_helm) = true | ~obj_gettotal(lunar_ore) > 0
+        | ~obj_gettotal(lunar_bar) > 0 | ~obj_gettotal(lunar_helm) > 0) {
+    mes("You have all the lunar ore you need.");
+    return;
+}
+def_obj $pickaxe = ~pickaxe_checker;
+if ($pickaxe = null) {
+    mes("You need a pickaxe you have the Mining level to use.");
+    return;
+}
+if (stat(mining) < ^lunar_req_mining) {
+    mes("You need a Mining level of <tostring(^lunar_req_mining)> to mine this stalagmite.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You do not have room for the ore.");
+    return;
+}
+anim(oc_param($pickaxe, mining_animation), 0);
+sound_synth(mine, 1, 0);
+p_delay(3);
+inv_add(inv, lunar_ore, 1);
+stat_advance(mining, 500);
+mes("You mine a lump of lunar ore out of the stalagmite.");
+
+// The ore in a furnace. [oplocu,_smithing_furnace] is smelting's own, so this is reached from
+// there; 6.2 Smithing xp, as the wiki gives for the smelt.
+[proc,lunar_smelt_ore]
+inv_del(inv, lunar_ore, 1);
+inv_add(inv, lunar_bar, 1);
+anim(human_furnace, 0);
+sound_synth(furnace, 1, 0);
+p_delay(4);
+stat_advance(smithing, 62);
+~objbox(lunar_bar, "The ore melts out of the rock as something that is not quite silver.", 250, 0, 0);
+
+// The bar on the anvil. [oplocu,anvil] is smithing's own, so this is reached from there.
+[proc,lunar_smith_helm]
+if (inv_total(inv, hammer) = 0) {
+    mes("You need a hammer to work the metal with.");
+    return;
+}
+inv_del(inv, lunar_bar, 1);
+inv_add(inv, lunar_helm, 1);
+anim(human_smithing, 0);
+sound_synth(anvil, 1, 0);
+p_delay(4);
+stat_advance(smithing, 250);
+~objbox(lunar_helm, "You hammer the lunar bar into a helm. It is lighter than it has any right to be.", 250, 0, 0);
+
+// The four leather pieces: needle and thread on Suqah leather, Crafting 61.
+[opheldu,suqah_leather]
+if (last_useitem ! needle) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (stat(crafting) < ^lunar_req_crafting) {
+    mes("You need a Crafting level of <tostring(^lunar_req_crafting)> to work Suqah leather.");
+    return;
+}
+if (inv_total(inv, thread) = 0) {
+    mes("You need some thread to sew with.");
+    return;
+}
+switch_int (~p_choice4("Lunar torso", 1, "Lunar trousers", 2, "Lunar gloves", 3, "Lunar boots", 4)) {
+    case 1 : ~lunar_craft(lunar_torso, 350);
+    case 2 : ~lunar_craft(lunar_legs, 300);
+    case 3 : ~lunar_craft(lunar_gloves, 250);
+    case 4 : ~lunar_craft(lunar_boots, 250);
+}
+
+[proc,lunar_craft](namedobj $obj, int $xp)
+if (inv_total(inv, suqah_leather) = 0 | inv_total(inv, thread) = 0) {
+    return;
+}
+inv_del(inv, suqah_leather, 1);
+inv_del(inv, thread, 1);
+inv_add(inv, $obj, 1);
+anim(human_leather_crafting, 0);
+p_delay(3);
+stat_advance(crafting, $xp);
+~objbox($obj, "You stitch the Suqah leather into <oc_name($obj)>.", 250, 0, 0);
+
+// =========================================================================== the brazier
+//
+// The Ceremonial Brazier in the long hall on the west of the village (474 loc 16810, already on
+// the island's map at 2072,3911). Firemaking 49 to light it; the soaked kindling on the fire is
+// what puts you into the dream.
+[oplocu,loc474_16810]
+switch_obj (last_useitem) {
+    case tinderbox : @lunar_light_brazier;
+    case lunar_kindling :
+        mes("You need to soak the kindling in the potion of waking sleep first.");
+    case lunar_soaked_kindling : @lunar_burn_kindling;
+    case default : ~displaymessage(^dm_default);
+}
+
+[oploc1,loc474_16810]
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_brazier_lit)) ! 0) {
+    mes("The brazier is burning. Something is meant to go on it.");
+    return;
+}
+mes("A great bronze dish on three legs, black inside with old fires.");
+
+[label,lunar_light_brazier]
+if (and(%lunar_bits, ~lunar_bit(^lunar_bit_brazier_lit)) ! 0) {
+    mes("The brazier is already burning.");
+    return;
+}
+if (stat(firemaking) < ^lunar_req_firemaking) {
+    mes("You need a Firemaking level of <tostring(^lunar_req_firemaking)> to get this alight.");
+    return;
+}
+anim(human_createfire, 0);
+sound_synth(fire_lit, 1, 0);
+p_delay(3);
+%lunar_bits = or(%lunar_bits, ~lunar_bit(^lunar_bit_brazier_lit));
+stat_advance(firemaking, 400);
+mes("The brazier catches, and burns with a cold white flame.");
+
+// Soaking the kindling: the potion of waking sleep on the magic kindling.
+[opheldu,lunar_kindling]
+if (last_useitem ! lunar_waking_sleep_vial) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@lunar_soak_kindling;
+
+[opheldu,lunar_waking_sleep_vial]
+if (last_useitem ! lunar_kindling) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@lunar_soak_kindling;
+
+[label,lunar_soak_kindling]
+inv_del(inv, lunar_kindling, 1);
+inv_del(inv, lunar_waking_sleep_vial, 1);
+inv_add(inv, lunar_soaked_kindling, 1);
+mes("You soak the kindling with the potion.");

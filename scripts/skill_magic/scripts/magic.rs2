@@ -18,6 +18,11 @@ if (db_getfield($spell_data, magic_spell_table:members, 0) = true & map_members 
     mes("You need to be on a members' server to use this spell.");
     return (false);
 }
+// The Lunar book is a quest reward, and two of its spells need more than the quest that gives it
+// (skill_magic/scripts/lunar/lunar_quests.rs2).
+if (~lunar_spell_locked(db_getfield($spell_data, magic_spell_table:spell, 0)) = true) {
+    return (false);
+}
 // check if high enough level
 if (stat(magic) < db_getfield($spell_data, magic_spell_table:levelrequired, 0)) {
     mes("Your Magic level is not high enough for this spell.");

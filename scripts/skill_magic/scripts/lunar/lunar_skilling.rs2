@@ -136,12 +136,14 @@ return(true);
 if (p_finduid(uid) = false) {
     return;
 }
-if (~lunar_humidify_slot = -1) {
-    mes("You have nothing in your inventory that this spell can humidify.");
-    return;
-}
+// The level, the runes and the quest come first: a player who has not done Dream Mentor should be
+// told THAT rather than that they have nothing to fill.
 def_dbrow $spell_data = ~get_spell_data(^humidify);
 if (~check_spell_requirements($spell_data) = false) {
+    return;
+}
+if (~lunar_humidify_slot = -1) {
+    mes("You have nothing in your inventory that this spell can humidify.");
     return;
 }
 ~delete_spell_runes($spell_data);

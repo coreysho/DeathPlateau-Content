@@ -29,6 +29,8 @@ contrast=15
 
 [loc474_16643]
 // rev 474 loc 16643 (import474map.py)
+// category added by hand: imported without one, so nothing on the island could be filled from it
+category=watersource
 name=Water Source
 model=loc474_16643
 width=3
@@ -153,11 +155,13 @@ bgsound=cooking_loop_3,3
 
 [loc474_16704]
 // rev 474 loc 16704 (import474map.py)
+category=watersource
 name=Sink
 model=loc474_16704
 
 [loc474_16705]
 // rev 474 loc 16705 (import474map.py)
+category=watersource
 name=Sink
 model=loc474_16705
 recol1s=13569

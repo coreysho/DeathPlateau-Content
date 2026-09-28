@@ -16,6 +16,11 @@ if (~mdaughter_brundt = true) {
 if (~viking_merchant(4) = true) {
     return;
 }
+// Lunar Diplomacy borrows him for the Seal of Passage, and he replaces it whenever it is lost
+// (quests/quest_lunar/scripts/quest_lunar.rs2). Same reason as Mountain Daughter above: no spare op.
+if (~lunar_brundt = true) {
+    return;
+}
 if (%viking = ^viking_not_started) {
     @viking_brundt_start;
 }

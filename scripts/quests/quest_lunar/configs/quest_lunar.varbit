@@ -1,0 +1,133 @@
+// Lunar Diplomacy - the Dream World challenges' working state, all on %lunar_task.
+//
+// Only ever ONE challenge is in progress: the Ethereal Being's platforms refuse you until you have
+// been back to the middle and told him what you learnt. So the six challenges share the same bits
+// of %lunar_task rather than each having its own slice, and every challenge zeroes %lunar_task
+// when it starts. The names below overlap deliberately - read them a challenge at a time.
+
+// ------------------------------------------------- A game of chance (the Ethereal Fluke)
+// One bit per die: set means that die is showing its other face. The six dice reset to 1,2,3,4,5,6
+// - the twenty-one the wiki describes - and opposite faces of a die add to seven, so each die has
+// only two possible tops: the two in the middle 1 or 6, the two western ones 2 or 5, the two
+// eastern ones 3 or 4.
+[lunar_dice_flips]
+basevar=lunar_task
+startbit=0
+endbit=5
+
+// the number the Fluke has called for, 12 to 30
+[lunar_dice_target]
+basevar=lunar_task
+startbit=6
+endbit=11
+
+// how many numbers have been made so far (five finishes it)
+[lunar_dice_score]
+basevar=lunar_task
+startbit=12
+endbit=14
+
+// ------------------------------------------------- Communicating in numbers (the Numerator)
+// which of the sixteen sequences he is reciting
+[lunar_seq_id]
+basevar=lunar_task
+startbit=16
+endbit=20
+
+// 0 = he wants the first of the two missing numbers, 1 = he wants the second
+[lunar_seq_step]
+basevar=lunar_task
+startbit=21
+endbit=21
+
+// how many sequences have been completed
+[lunar_seq_score]
+basevar=lunar_task
+startbit=22
+endbit=25
+
+// ------------------------------------------------- Chop, chop, chop away! (the Perceptive)
+[lunar_chop_mine]
+basevar=lunar_task
+startbit=0
+endbit=5
+
+[lunar_chop_his]
+basevar=lunar_task
+startbit=6
+endbit=11
+
+[lunar_chop_carried]
+basevar=lunar_task
+startbit=12
+endbit=17
+
+// 1 while the race is on. It cannot borrow lunar_race_state below, which sits on the bits the log
+// counters use: two logs on the woodcutter's pile would read as the race being over.
+[lunar_chop_state]
+basevar=lunar_task
+startbit=18
+endbit=18
+
+// ------------------------------------------------- The race is on! (the Expert)
+// how many hurdles you have fallen at (three and you have lost)
+[lunar_race_fallen]
+basevar=lunar_task
+startbit=0
+endbit=2
+
+// which hurdle comes next, 0-3
+[lunar_race_next]
+basevar=lunar_task
+startbit=3
+endbit=5
+
+// 0 not started, 1 counting down, 2 running
+[lunar_race_state]
+basevar=lunar_task
+startbit=6
+endbit=7
+
+// how far along his straight route the Expert is, 0-16
+[lunar_race_him]
+basevar=lunar_task
+startbit=8
+endbit=13
+
+// ------------------------------------------------- Where am I? (the Guide)
+// which of the ten fixed patterns of dream puffs is up
+[lunar_guide_pattern]
+basevar=lunar_task
+startbit=0
+endbit=3
+
+// the row you have reached, 0-8
+[lunar_guide_row]
+basevar=lunar_task
+startbit=4
+endbit=7
+
+// the column you are standing on, 0-3
+[lunar_guide_col]
+basevar=lunar_task
+startbit=8
+endbit=9
+
+// ------------------------------------------------- Anything you can do... (the Mimic)
+// how many emotes you have copied (five finishes it)
+[lunar_mime_score]
+basevar=lunar_task
+startbit=0
+endbit=3
+
+// which emote he is doing, an index into the mime enum
+[lunar_mime_want]
+basevar=lunar_task
+startbit=4
+endbit=8
+
+// he moves after each right answer; 1 means he is waiting to be spoken to again
+[lunar_mime_moved]
+basevar=lunar_task
+startbit=9
+endbit=9

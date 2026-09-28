@@ -1,0 +1,384 @@
+// Dream Mentor (5 February 2007): the fallen man in the Lunar Isle mine, the potion of shared
+// dreaming, and the end of the quest. The dream itself is dream_mentor_fears.rs2.
+//
+// The seal rule of Lunar Isle applies to everyone here as it does to the Moon Clan
+// (~lunar_has_seal / @lunar_no_seal in quest_lunar/scripts/quest_lunar.rs2) - Cyrisus is a
+// mainlander lying in their mine, but 'Birds-Eye' Jack and the Oneiromancer are not.
+
+// =========================================================================== the fallen man
+
+[opnpc1,cyrisus_fallen]
+if (%dreammentor = ^dm_not_started) {
+    @dm_first_meeting;
+}
+if (%dreammentor > ^dm_found_cyrisus) {
+    ~chatnpc("<p,neutral>I'll be right here. I'm not going anywhere until this is over.");
+    return;
+}
+if (%dm_health < ^dm_health_full) {
+    ~chatnpc("<p,sad>I'm starving. I haven't eaten in... I don't know how long. Have you got anything?");
+    ~chatplayer("<p,quiz>What sort of thing?");
+    ~chatnpc("<p,neutral>Anything. But not the same thing over and over - I can't face that.");
+    return;
+}
+if (%dm_armament < ^dm_armament_full) {
+    ~chatnpc("<p,sad>My equipment. It's all in the bank and I can't face going for it. 'Birds-Eye' Jack keeps my account.");
+    return;
+}
+@dm_spirit_talk;
+
+[label,dm_first_meeting]
+~chatplayer("<p,shock>Are you all right?");
+~chatnpc("<p,sad>Go away. I came in here to die and I would like to get on with it.");
+~chatplayer("<p,quiz>Why would you do that?");
+~chatnpc("<p,sad>Because I am no use to anybody. Look at me. I have never been any use to anybody.");
+if (~dm_requirements = false) {
+    return;
+}
+~chatplayer("<p,neutral>You look half starved, for one thing. Let me get some food into you.");
+~chatnpc("<p,sad>...if you like. It will not change anything.");
+%dreammentor = ^dm_found_cyrisus;
+~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+~mesbox("He needs three things: feeding, telling that he is worth something, and his own equipment out of his bank.");
+
+[proc,dm_requirements]()(boolean)
+if (%lunar_quest < ^lunar_complete) {
+    ~chatnpc("<p,sad>You do not even know the Moonclan's magic. There is nothing you could do for me.");
+    return(false);
+}
+if (%eadgar_quest < ^eadgar_complete) {
+    ~chatnpc("<p,sad>You have never had to think your way round a troll. You would not understand.");
+    return(false);
+}
+if (~player_combat_level < ^dm_req_combat) {
+    ~chatnpc("<p,sad>You are not much of a fighter yourself, are you. No. Leave me be.");
+    ~mesbox("You need a combat level of <tostring(^dm_req_combat)> before Cyrisus will believe you can help him.");
+    return(false);
+}
+return(true);
+
+// -------------------------------------------------------------- feeding him
+//
+// "He rejects a food type he was recently given", so twenty pieces have to be at least three
+// different kinds. The list is the food a player is likely to be carrying on Lunar Isle; anything
+// else he waves away rather than silently doing nothing.
+[opnpcu,cyrisus_fallen]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%dreammentor ! ^dm_found_cyrisus | %dm_health >= ^dm_health_full) {
+    ~displaymessage(^dm_default);
+    return;
+}
+switch_obj (last_useitem) {
+    case bread, cooked_meat, cooked_chicken, trout, salmon, tuna, lobster, bass, swordfish, shark,
+         anchovies, sardine, herring, mackerel, cod, pike, cake, chocolate_cake, meat_pie,
+         apple_pie, stew, plain_pizza, meat_pizza, anchovie_pizza : @dm_feed;
+    case default : ~displaymessage(^dm_default);
+}
+
+[label,dm_feed]
+if (last_useitem = %dm_lastfood) {
+    ~chatnpc("<p,sad>Not that again. I can't. Have you got anything else?");
+    return;
+}
+inv_del(inv, last_useitem, 1);
+%dm_lastfood = last_useitem;
+%dm_health = add(%dm_health, 1);
+if (%dm_health < ^dm_health_full) {
+    mes("Cyrisus eats. He looks a little less like a corpse. (<tostring(%dm_health)>/<tostring(^dm_health_full)>)");
+    return;
+}
+~chatnpc("<p,neutral>...thank you. I can sit up, at least.");
+~mesbox("He has eaten enough. Now he needs his equipment, and somebody to talk sense into him.");
+
+// -------------------------------------------------------------- talking him round
+[label,dm_spirit_talk]
+if (%dm_spirit >= ^dm_spirit_full) {
+    @dm_revealed;
+}
+~chatnpc("<p,sad>Why are you still here? There is nothing here worth your time.");
+switch_int (~p_choice3(~dm_kind_line(%dm_spirit), 1, "You are probably right, you know.", 2, "How did you end up in a mine?", 3)) {
+    case 1 :
+        ~chatplayer("<p,happy><~dm_kind_line(%dm_spirit)>");
+        %dm_spirit = add(%dm_spirit, 1);
+        if (%dm_spirit < ^dm_spirit_full) {
+            ~chatnpc("<p,sad>...hmph.");
+            mes("He is listening. (<tostring(%dm_spirit)>/<tostring(^dm_spirit_full)>)");
+            return;
+        }
+        @dm_revealed;
+    case 2 :
+        ~chatplayer("<p,neutral>You are probably right, you know.");
+        ~chatnpc("<p,sad>There. You see. Even you can see it.");
+        if (%dm_spirit > 0) {
+            %dm_spirit = sub(%dm_spirit, 1);
+        }
+    case 3 :
+        ~chatplayer("<p,quiz>How did you end up in a mine?");
+        ~chatnpc("<p,sad>I walked. It seemed as good a place as any.");
+}
+
+// Ten different things worth saying to a man who thinks he is worthless.
+[proc,dm_kind_line](int $n)(string)
+switch_int ($n) {
+    case 0 : return("Nobody who has come this far is worth nothing.");
+    case 1 : return("You are still breathing. That is a start.");
+    case 2 : return("I have seen better men than you give up sooner.");
+    case 3 : return("Whatever it is, it is not the end of you.");
+    case 4 : return("You have hands and a head. That is all anyone starts with.");
+    case 5 : return("I would not have walked into a mine to die. That took something.");
+    case 6 : return("You are not the first person to be afraid of something.");
+    case 7 : return("You will feel differently once you are on your feet.");
+    case 8 : return("Whoever told you that you were useless was wrong.");
+    case default : return("Get up. I am not leaving you here.");
+}
+
+// -------------------------------------------------------------- who he is
+[label,dm_revealed]
+if (%dreammentor > ^dm_found_cyrisus) {
+    ~chatnpc("<p,neutral>Go and see the Oneiromancer. She will know what to do with me.");
+    return;
+}
+~chatnpc("<p,neutral>My name is Cyrisus.");
+~chatnpc("<p,neutral>I can smith a full set of rune. I bake summer pies. I have grown spirit trees. I got there by killing three hundred chickens a day for thirty years.");
+~chatplayer("<p,shock>Thirty years of chickens?");
+~chatnpc("<p,sad>And in all that time I have never once fought anything that could fight back. I cannot make myself do it. I get as far as drawing the weapon and then I am a child again.");
+~chatplayer("<p,neutral>Then we will do something about that.");
+~chatnpc("<p,quiz>...the Moonclan. They walk in dreams, don't they. Could one of them walk in mine?");
+%dreammentor = ^dm_healed;
+~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+
+// =========================================================================== 'Birds-Eye' Jack
+//
+// He keeps Cyrisus's bank account. Which set is in it depends on the combat skill YOU are strongest
+// in - the joke of the quest is that his kit never matches his fighting style - and the wiki only
+// publishes the three right answers, so each slot is offered as one of those three.
+[opnpc3,birdseye_jack]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%dreammentor ! ^dm_found_cyrisus | %dm_health < ^dm_health_full) {
+    ~chatnpc("<p,neutral>Cyrisus? Aye, I keep his account. He'd have to ask me himself, mind.");
+    return;
+}
+if (%dm_armament >= ^dm_armament_full) {
+    ~chatnpc("<p,happy>His account's empty now, and about time.");
+    return;
+}
+~chatplayer("<p,quiz>Could I get into Cyrisus's bank account?");
+~chatnpc("<p,quiz>Cyrisus? The one who's been lying in the mine? Aye, go on then - he'll not be needing it where he's headed otherwise.");
+~dm_pick(^dm_arm_helmet, "helmet", dragon_med_helm, splitbark_helm, robinhoodhat);
+~dm_pick(^dm_arm_top, "top", barrows_ahrim_body, barrows_karil_body, dragon_chainbody);
+~dm_pick(^dm_arm_legs, "legs", barrows_ahrim_legs, barrows_torag_legs, black_dragonhide_chaps);
+~dm_pick(^dm_arm_boots, "boots", boots_ranger, adamant_armoured_boots, magictraining_infinityboots);
+~dm_pick(^dm_arm_weapon, "weapon", abyssal_whip, magic_shortbow, staff_of_zaros);
+if (%dm_armament ! ^dm_armament_full) {
+    ~chatnpc("<p,neutral>Come back when you've had another think.");
+    return;
+}
+~chatnpc("<p,happy>That's the lot. Take it to him.");
+~mesbox("You have everything of Cyrisus's. He can have it back when he is standing up.");
+
+// One slot of the account. The three options are the three sets' answers for that slot; the one
+// that belongs to Cyrisus is the one that matches whichever of Attack, Ranged and Magic you are
+// highest in. Astral Contact will tell you whether you guessed right (skill_magic/lunar).
+[proc,dm_pick](int $bit, string $slot, namedobj $melee, namedobj $ranged, namedobj $magic)
+if (and(%dm_armament, ~lunar_bit($bit)) ! 0) {
+    return;
+}
+def_namedobj $right = $melee;
+switch_int (~dm_cyrisus_set) {
+    case ^dm_set_ranged : $right = $ranged;
+    case ^dm_set_magic : $right = $magic;
+}
+~chatnpc("<p,quiz>What was his <$slot>?");
+def_int $choice = ~p_choice3(oc_name($melee), 1, oc_name($ranged), 2, oc_name($magic), 3);
+def_namedobj $said = $melee;
+if ($choice = 2) {
+    $said = $ranged;
+} else if ($choice = 3) {
+    $said = $magic;
+}
+~chatplayer("<p,neutral><oc_name($said)>.");
+if ($said ! $right) {
+    ~chatnpc("<p,quiz>Are you sure? There's nothing like that in here.");
+    return;
+}
+~chatnpc("<p,happy>Aye, here it is.");
+%dm_armament = or(%dm_armament, ~lunar_bit($bit));
+
+// Whichever of Attack, Ranged and Magic you are highest in.
+[proc,dm_cyrisus_set]()(int)
+if (stat(ranged) > stat(attack) & stat(ranged) >= stat(magic)) {
+    return(^dm_set_ranged);
+}
+if (stat(magic) > stat(attack) & stat(magic) > stat(ranged)) {
+    return(^dm_set_magic);
+}
+return(^dm_set_melee);
+
+// Astral Contact reaching Cyrisus during the quest: he tells you whether your last guesses were
+// his (skill_magic/scripts/lunar/lunar_contact.rs2 lists whom the spell can reach).
+[proc,dm_contact_cyrisus]()(boolean)
+if (%dreammentor < ^dm_found_cyrisus | %dreammentor > ^dm_healed) {
+    return(false);
+}
+if (%dm_armament = ^dm_armament_full) {
+    ~chatnpc("<p,happy>You have it all. Bring it here.");
+    return(true);
+}
+~chatnpc("<p,neutral>You have <tostring(~dm_armament_count)> of the five right so far.");
+return(true);
+
+[proc,dm_armament_count]()(int)
+def_int $n = 0;
+def_int $b = 0;
+while ($b < 5) {
+    if (and(%dm_armament, ~lunar_bit($b)) ! 0) {
+        $n = add($n, 1);
+    }
+    $b = add($b, 1);
+}
+return($n);
+
+// =========================================================================== the Oneiromancer
+//
+// Her Dream Mentor conversations. [opnpc1,oneiromancer] belongs to Lunar Diplomacy, which calls
+// this first: it only answers at its own steps.
+[proc,dm_oneiromancer]()(boolean)
+switch_int (%dreammentor) {
+    case ^dm_healed :
+        ~chatplayer("<p,neutral>There is a man in your mine who has spent thirty years being afraid of a fight.");
+        ~chatnpc("<p,neutral>I know. I have been listening to him since he came in.");
+        ~chatnpc("<p,neutral>Then we will share his dream, you and he, and you will fight what he is afraid of where he can see you do it. That is the only lesson that has ever worked.");
+        ~chatnpc("<p,neutral>You will need a potion of shared dreaming. Fill this vial with water, put goutweed in it, and grind an astral rune to powder with a hammer and a pestle and mortar.");
+        if (inv_freespace(inv) < 1) {
+            ~chatnpc("<p,neutral>Come back when you have a hand free for the vial.");
+            return(true);
+        }
+        inv_add(inv, dream_vial_empty, 1);
+        ~objbox(dream_vial_empty, "The Oneiromancer hands you a dream vial.", 250, 0, 0);
+        %dreammentor = ^dm_potion_task;
+        ~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+        return(true);
+    case ^dm_potion_task, ^dm_potion_done :
+        ~chatnpc("<p,neutral>Water, goutweed and a ground astral rune. Then take it to him at the brazier and light it.");
+        return(true);
+    case ^dm_in_dream :
+        ~chatnpc("<p,neutral>His fears are in there with you. Beat them where he can see it.");
+        return(true);
+    case ^dm_dream_done :
+        ~dm_finish;
+        return(true);
+}
+return(false);
+
+[proc,dm_finish]
+~chatplayer("<p,happy>It is done. He watched me kill all four of them and then he killed the last one himself.");
+~chatnpc("<p,happy>He did. I felt it from here.");
+~chatnpc("<p,neutral>He has given you something in return - he could hardly help it, sharing a dream. Everything he knows of the Moonclan's deeper magic is yours now.");
+%dreammentor = ^dm_complete;
+stat_advance(hitpoints, ^dm_reward_hitpoints_xp);
+stat_advance(magic, ^dm_reward_magic_xp);
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, dreamy_lamp, 1, ^lootdrop_duration);
+} else {
+    inv_add(inv, dreamy_lamp, 1);
+}
+session_log(^log_adventure, "Quest complete: Dream Mentor");
+~send_quest_complete(questlist:dreammentor, dreamy_lamp, 250, ^dm_questpoints, "You have completed\\nDream Mentor!", "2 Quest Points|15,000 Hitpoints XP|10,000 Magic XP|A dreamy lamp|Seven more Lunar spells");
+
+// The dreamy lamp: 15,000 xp in any combat skill except Attack and Prayer (OSRS).
+[opheld1,dreamy_lamp]
+def_int $choice = ~p_choice5("Strength", 1, "Defence", 2, "Ranged", 3, "Magic", 4, "Hitpoints", 5);
+def_stat $stat = strength;
+switch_int ($choice) {
+    case 2 : $stat = defence;
+    case 3 : $stat = ranged;
+    case 4 : $stat = magic;
+    case 5 : $stat = hitpoints;
+}
+inv_del(inv, dreamy_lamp, 1);
+stat_advance($stat, 150000);
+~mesbox("You rub the lamp, and what Cyrisus knew is suddenly yours.");
+
+// =========================================================================== the potion
+//
+// Dream vial, water, goutweed, and an astral rune smashed with a hammer and ground with a pestle.
+
+[opheldu,dream_vial_water]
+if (last_useitem ! eadgar_goutweed_herb) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, dream_vial_water, 1);
+inv_del(inv, eadgar_goutweed_herb, 1);
+inv_add(inv, dream_vial_herb, 1);
+anim(human_herbing_vial, 0);
+sound_synth(vial_mix, 1, 0);
+mes("You put the goutweed into the dream vial.");
+
+[opheldu,astralrune]
+if (last_useitem ! hammer) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%dreammentor ! ^dm_potion_task) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, astralrune, 1);
+inv_add(inv, astral_rune_shards, 1);
+anim(human_smithing, 0);
+mes("You smash the astral rune with the hammer.");
+
+[opheldu,astral_rune_shards]
+if (last_useitem ! pestle_and_mortar) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, astral_rune_shards, 1);
+inv_add(inv, ground_astral_rune, 1);
+anim(human_herbing_grind, 0);
+mes("You grind the shards into a fine, cold powder.");
+
+[opheldu,dream_vial_herb]
+if (last_useitem ! ground_astral_rune) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, dream_vial_herb, 1);
+inv_del(inv, ground_astral_rune, 1);
+inv_add(inv, dream_potion, 1);
+sound_synth(vial_mix, 1, 0);
+%dreammentor = ^dm_potion_done;
+~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
+~objbox(dream_potion, "The powder goes in and the vial goes cold. This is a potion of shared dreaming.", 250, 0, 0);
+
+// =========================================================================== the Lunar Isle mine
+//
+// 474's own ladders, which came in with the map and had no handler: loc_10708 at 2142,3944 on the
+// surface and loc_10707 at 2330,10353 at the bottom. Both names are shared with a pair in m31_69,
+// so each answers only at its own coordinate.
+[oploc1,loc_10708]
+p_arrivedelay;
+if (distance(coord, ^dm_mine_top) > 3) {
+    mes("You can't climb that.");
+    return;
+}
+mes("You climb down the ladder.");
+anim(human_reachforladder, 0);
+p_delay(1);
+p_telejump(^dm_mine_bottom);
+
+[oploc1,loc_10707]
+p_arrivedelay;
+if (distance(coord, ^dm_mine_bottom) > 3) {
+    mes("You can't climb that.");
+    return;
+}
+mes("You climb up the ladder.");
+anim(human_reachforladder, 0);
+p_delay(1);
+p_telejump(^dm_mine_top);

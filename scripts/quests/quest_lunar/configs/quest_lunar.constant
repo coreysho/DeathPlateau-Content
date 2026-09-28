@@ -1,0 +1,158 @@
+// Lunar Diplomacy (24 July 2006, Mod Tim and Mod James). Quest 108, Fremennik series.
+// "Can you make it to Moonclan Island and make peace between the Moonclan and the Fremenniks?"
+//
+// Nothing in the 377 cache carries a multivar for this quest - 377 predates it, and only the Dream
+// World's point lights are in it - so the stages run in tens, as Eadgar's Ruse and Mountain
+// Daughter do. Everything else (people, places, items, the dream) came out of the rev 474 cache:
+// see lunar_npcs.npc, lunar_items.obj, lunar_dreamworld.loc and lunar_piratescove.loc.
+
+// =============================================================================== the stages
+^lunar_not_started = 0
+// Lokar has told you about the Moon Clan and sent you to Brundt
+^lunar_started = 10
+// Brundt has issued the Seal of Passage
+^lunar_has_seal = 20
+// aboard the Lady Zay at Pirates' Cove; Captain Bentley has tried to sail and gone in a circle
+^lunar_sailed_circle = 30
+// 'Birds-Eye' Jack has worked out that the ship is jinxed
+^lunar_jinxed = 40
+// Bentley has set you to questioning the crew
+^lunar_questioning = 50
+// the cabin boy has confessed and handed over the emerald lens
+^lunar_confessed = 60
+// all five symbols rubbed out
+^lunar_symbols_gone = 70
+// landed on Lunar Isle
+^lunar_arrived = 80
+// the Oneiromancer has named the three things you need
+^lunar_met_oneiromancer = 90
+// the waking sleep potion is hers
+^lunar_potion_done = 100
+// the Lunar staff is hers
+^lunar_staff_done = 110
+// all eight ceremonial pieces handed in; you have them back, with the staff and the kindling
+^lunar_clothes_done = 120
+// you have been into the Dream World at least once
+^lunar_in_dream = 130
+// the six lessons learnt and Me beaten; read the book to wake up
+^lunar_dream_done = 140
+^lunar_complete = 150
+
+^lunar_questpoints = 2
+
+// =============================================================================== requirements
+// All seven skills are checked at the START of the quest and none of them is boostable (OSRS wiki,
+// every one flagged Boostable|no and Questreqstart|yes). Mining 60 is boostable for the ore itself
+// once you are past the gate, which is why the ore's own check is separate and lower down.
+^lunar_req_herblore = 5
+^lunar_req_crafting = 61
+^lunar_req_defence = 40
+^lunar_req_firemaking = 49
+^lunar_req_magic = 65
+^lunar_req_mining = 60
+^lunar_req_woodcutting = 55
+
+// =============================================================================== the eight pieces
+// bit positions in %lunar_pieces - the ceremonial clothes the Oneiromancer collects
+^lunar_piece_helm = 0
+^lunar_piece_torso = 1
+^lunar_piece_legs = 2
+^lunar_piece_gloves = 3
+^lunar_piece_boots = 4
+^lunar_piece_cape = 5
+^lunar_piece_amulet = 6
+^lunar_piece_ring = 7
+^lunar_pieces_all = 255
+
+// =============================================================================== %lunar_bits
+// the five jinx symbols on the Lady Zay
+^lunar_bit_symbol_cannon = 0
+^lunar_bit_symbol_wallchart = 1
+^lunar_bit_symbol_chest = 2
+^lunar_bit_symbol_crate = 3
+^lunar_bit_symbol_support = 4
+// the crew, questioned in the order Bentley sends you round them
+^lunar_bit_asked_shultz = 5
+^lunar_bit_asked_cabinboy = 6
+^lunar_bit_asked_burns = 7
+^lunar_bit_asked_lee = 8
+^lunar_bit_asked_davey = 9
+// the island
+^lunar_bit_meteora_tiara = 10      // Meteora has asked for her tiara back - the Suqah can drop it
+^lunar_bit_selene_clue = 11        // Selene has given the ring clue
+^lunar_bit_baba_vial = 12          // Baba Yaga has handed over the special vial
+^lunar_bit_ourania = 13            // Baba Yaga has unlocked the Ourania teleport
+^lunar_bit_lantern_lit = 14        // unused by the quest; kept so the lantern can say so
+^lunar_bit_brazier_lit = 15        // the ceremonial brazier is burning
+
+// =============================================================================== %lunar_dream
+// The six challenges. Bits 0-5 are "learnt and told the Ethereal Being"; bits 8-13 are "finished,
+// but the Being has not heard about it yet" - which is what stops you stepping onto a second
+// platform before you have been back to the middle.
+^lunar_ch_fluke = 0                // A game of chance
+^lunar_ch_numerator = 1            // Communicating in numbers
+^lunar_ch_expert = 2               // The race is on!
+^lunar_ch_perceptive = 3           // Chop, chop, chop away!
+^lunar_ch_guide = 4                // Where am I?
+^lunar_ch_mimic = 5                // Anything you can do...
+^lunar_dream_all = 63
+^lunar_dream_told_shift = 8
+^lunar_dream_me_dead = 14
+
+// =============================================================================== the world
+// Rellekka's western dock, where Lokar waits (OSRS: 2620,3689)
+^lunar_rellekka_dock = 0_41_57_6_48
+// Pirates' Cove, the Lady Zay's berth (474 m34_59), and how Captain Bentley tells his two ends
+// apart - the Cove is at z 3806, Lunar Isle's pier at z 3892
+^lunar_cove_dock = 0_34_59_26_30
+^lunar_isle_north_z = 3850
+// Lunar Isle's pier
+^lunar_isle_dock = 0_33_60_1_52
+// the Ceremonial Brazier, in the long hall on the west of the Moon Clan village (2072,3911)
+^lunar_brazier_coord = 0_32_61_24_7
+// where the lunar ring is buried - the blue flowers in the far south-west (2078,3863)
+^lunar_ring_dig = 0_32_60_30_23
+
+// The Dream World (474 m27_79, all on plane 2). The middle holds the Ethereal Being and the
+// lectern with "My life" on it; six spring platforms sit round it, one per challenge.
+^lunar_dream_centre = 2_27_79_31_29
+^lunar_dream_lectern = 2_27_79_31_31
+// where each platform puts you down, and where its twin round the middle brings you back
+^lunar_dream_fluke = 2_27_79_7_13
+^lunar_dream_numerator = 2_27_79_59_11
+^lunar_dream_expert = 2_27_79_57_22
+^lunar_dream_perceptive = 2_27_79_40_56
+^lunar_dream_guide = 2_27_79_8_56
+^lunar_dream_mimic = 2_27_79_45_14
+^lunar_home_fluke = 2_27_79_23_24
+^lunar_home_numerator = 2_27_79_40_24
+^lunar_home_expert = 2_27_79_42_32
+^lunar_home_perceptive = 2_27_79_36_42
+^lunar_home_guide = 2_27_79_23_39
+^lunar_home_mimic = 2_27_79_37_23
+// the arena where you meet yourself (474 m28_79), and where Me stands up
+^lunar_dream_arena = 2_28_79_29_32
+^lunar_me_spawn = 2_28_79_31_32
+
+// The Lunar Isle mine (474 m36_161, planes 2 and 3): down the ladder at 2142,3944.
+^lunar_mine_entrance = 0_33_61_30_40
+^lunar_mine_bottom = 2_36_161_30_41
+
+// =============================================================================== the dream trees
+// The Chop challenge: your trees are at the east end of the island, the woodcutter's at the west,
+// and the two log piles are in the middle. 20 logs wins.
+^lunar_chop_target = 20
+// the race: four hurdles, eight hitpoints a fall, three falls and you have lost
+^lunar_race_hurdles = 4
+^lunar_race_damage = 8
+^lunar_race_falls = 3
+// five right answers finishes the dice and five right mimes finish the Mimic
+^lunar_dice_target = 5
+^lunar_mime_target = 5
+// eight sequences of two numbers each finishes the Numerator (the wiki's table has sixteen)
+^lunar_numbers_target = 5
+
+// =============================================================================== the reward
+^lunar_reward_magic_xp = 50000
+^lunar_reward_runecraft_xp = 50000
+^lunar_reward_astral_runes = 50

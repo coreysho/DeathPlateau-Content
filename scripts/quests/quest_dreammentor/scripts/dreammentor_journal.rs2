@@ -1,0 +1,61 @@
+// Dream Mentor - the quest journal.
+[if_button,questlist:dreammentor]
+def_string $text;
+
+switch_int (%dreammentor) {
+    case ^dm_not_started :
+        $text = "@dbl@There is a man lying in the @dre@Lunar Isle mine@dbl@ who does not|";
+        $text = append($text, "@dbl@intend to walk out of it|");
+        $text = append($text, "@dbl@I must have completed @dre@Lunar Diplomacy@dbl@ and @dre@Eadgar's Ruse|");
+        $text = append($text, "@dbl@and be @dre@combat level 85|");
+        $text = append($text, "@dbl@I will need @dre@20 pieces of food@dbl@ of @dre@three kinds@dbl@, some|");
+        $text = append($text, "@dre@goutweed@dbl@, an @dre@astral rune@dbl@, a @dre@hammer@dbl@, a|");
+        $text = append($text, "@dre@pestle and mortar@dbl@ and a @dre@tinderbox");
+
+    case ^dm_found_cyrisus :
+        $text = "@str@The fallen man is half starved, has talked himself into|";
+        $text = append($text, "@str@believing he is worthless, and has left all his equipment|");
+        $text = append($text, "@str@in the bank.|");
+        $text = append($text, "@dbl@@dre@Feed him@dbl@ - not the same thing twice running|");
+        $text = append($text, "@dbl@@dre@Talk sense into him|");
+        $text = append($text, "@dbl@Get his equipment from @dre@'Birds-Eye' Jack@dbl@ at the bank");
+
+    case ^dm_healed :
+        $text = "@str@He is Cyrisus. He has ninety-nine in every combat skill and|";
+        $text = append($text, "@str@has never once fought anything that could fight back.|");
+        $text = append($text, "@dbl@I should tell the @dre@Oneiromancer@dbl@ about him");
+
+    case ^dm_potion_task :
+        $text = "@str@The Oneiromancer will share his dream with me, and I am to|";
+        $text = append($text, "@str@fight his fears where he can watch.|");
+        $text = append($text, "@dbl@The potion: fill the @dre@dream vial@dbl@ with @dre@water@dbl@, add|");
+        $text = append($text, "@dre@goutweed@dbl@, then smash an @dre@astral rune@dbl@ with a @dre@hammer|");
+        $text = append($text, "@dbl@grind it with a @dre@pestle and mortar@dbl@ and add that too");
+
+    case ^dm_potion_done :
+        $text = "@str@The potion of shared dreaming is made.|";
+        $text = append($text, "@dbl@Give it to @dre@Cyrisus@dbl@ at the @dre@Ceremonial Brazier@dbl@ in the|");
+        $text = append($text, "@dbl@hall on the west of the village, @dre@light the brazier@dbl@, and|");
+        $text = append($text, "@dbl@talk to him");
+
+    case ^dm_in_dream :
+        $text = "@str@I am in Cyrisus's dream. Four of his fears are in here with|";
+        $text = append($text, "@str@me and he is watching from the edge.|");
+        $text = append($text, "@dbl@None of them has any @dre@magic defence@dbl@ at all|");
+        $text = append($text, "@dbl@The book at the @dre@north end@dbl@ is the only way out");
+
+    case ^dm_dream_done :
+        $text = "@str@Cyrisus killed the last of them himself.|";
+        $text = append($text, "@dbl@I should tell the @dre@Oneiromancer");
+
+    case ^dm_complete :
+        $text = "@str@Cyrisus had spent thirty years killing chickens because he|";
+        $text = append($text, "@str@could not make himself fight anything that fought back. I fed|");
+        $text = append($text, "@str@him, talked him off the floor of the Lunar Isle mine, fetched|");
+        $text = append($text, "@str@his armour out of his own bank, and went into his dream.|");
+        $text = append($text, "@str@There were four of his fears in there. I killed three of them|");
+        $text = append($text, "@str@while he watched, and he put his boot through the fourth.||");
+        $text = append($text, "@red@QUEST COMPLETE!");
+}
+
+~quest_journal("Dream Mentor", $text);

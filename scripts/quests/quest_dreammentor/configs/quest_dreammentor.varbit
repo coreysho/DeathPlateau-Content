@@ -1,0 +1,33 @@
+// Dream Mentor - the three bars, his equipment and the fight, all on %dreammentor_bits.
+
+// How many of the twenty pieces of food he has eaten.
+[dm_health]
+basevar=dreammentor_bits
+startbit=0
+endbit=4
+
+// How many of the ten encouraging things have been said to him.
+[dm_spirit]
+basevar=dreammentor_bits
+startbit=5
+endbit=9
+
+// One bit per piece of his own equipment fetched out of his bank account: helmet, top, legs, boots
+// and weapon (^dm_arm_*). All five, and he is armed again.
+[dm_armament]
+basevar=dreammentor_bits
+startbit=10
+endbit=14
+
+// Which fear is on its feet: 0 none, 1 The Inadequacy, 2 The Everlasting, 3 The Untouchable,
+// 4 The Illusive, 5 all four beaten.
+[dm_boss]
+basevar=dreammentor_bits
+startbit=15
+endbit=17
+
+// The brazier in the Dream Hall is lit and his potion is on it.
+[dm_brazier]
+basevar=dreammentor_bits
+startbit=18
+endbit=18
