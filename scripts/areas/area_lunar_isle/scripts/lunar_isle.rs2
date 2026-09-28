@@ -19,7 +19,9 @@
 // Praying while already on Lunar always returns the standard book.
 
 [oploc2,astral_altar]
-if (%lunar_quest < ^lunar_complete) {
+// %lunar_unlocked as well as the quest: anyone who was given the book by the old 65-Magic altar
+// before Lunar Diplomacy existed keeps the right to switch back and forth here.
+if (%lunar_quest < ^lunar_complete & %lunar_unlocked ! true) {
     ~mesbox("You don't have permission yet to use this altar.|You have to earn the right to use the altar.");
     return;
 }
