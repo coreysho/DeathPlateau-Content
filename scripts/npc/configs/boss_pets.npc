@@ -17,6 +17,19 @@
 //
 // The op set mirrors the cats: op1=Pick-up, op3=Talk-to. The cats' op4=Interact-with (shoo away) is
 // deliberately left off - a pet you can pick up does not also need a way to lose it permanently.
+//
+// follower=yes is on every record here, and on every other npc in the tree that carries
+// param=pet_item_id - the skilling pets, the metamorphosis forms, the kraken and the cats in
+// _unpack/377/all.npc. It is one flag for the two things Old School does with a pet and this
+// server was doing with neither:
+//
+//   * NO MINIMAP DOT. A follower was drawing the same yellow npc dot as a goblin. OSRS sets the
+//     cache's own "no minimap" flag on all of them (npc 6636 Prince Black Dragon, 6651 Baby Mole,
+//     5591 Kitten ... all carry opcode 93), and follower=yes sets it here.
+//   * THE OPS ARE THE OWNER'S. Every op script in npc/scripts already refused a pet that was not
+//     yours, but the options were still in everyone's right-click menu. OSRS took them out of it
+//     on 15 May 2014: "The options on other players' pets are no longer visible." The client does
+//     that now - see Client.addNpcOptions and the [follower_uid] varp it reads.
 
 [bosspet_kbd]
 name=Prince black dragon
@@ -37,6 +50,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_kbd_item
 
 [bosspet_kalphite_queen]
@@ -57,6 +71,7 @@ op1=Pick-up
 op3=Talk-to
 op4=Metamorphosis
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_kalphite_queen_item
 param=metamorph_next,bosspet_kalphite_queen_green
 
@@ -76,6 +91,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_giant_mole_item
 
 [bosspet_dagannoth_rex]
@@ -93,6 +109,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_dagannoth_rex_item
 
 [bosspet_dagannoth_prime]
@@ -112,6 +129,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_dagannoth_prime_item
 
 [bosspet_dagannoth_supreme]
@@ -130,6 +148,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_dagannoth_supreme_item
 // ---- the god wars four. Same mechanism as the six above; these are the bosses' own meshes at the
 // scales the cache states (20% for K'ril, 30% for Graardor and Kree'arra, 60% for Zilyana), which
@@ -151,6 +170,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_graardor_item
 
 [bosspet_zilyana]
@@ -172,6 +192,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_zilyana_item
 
 [bosspet_kree]
@@ -191,6 +212,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_kree_item
 
 [bosspet_kril]
@@ -212,6 +234,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_kril_item
 
 // TzRek-Jad, from TzTok-Jad in the Fight Cave (OSRS npc 5892, imported by importosrsnpc.py).
@@ -240,6 +263,7 @@ op1=Pick-up
 op3=Talk-to
 op4=Metamorphosis
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_tzrek_jad_item
 param=metamorph_next,bosspet_jalrek_jad
 
@@ -268,5 +292,6 @@ op1=Pick-up
 op3=Talk-to
 op4=Metamorphosis
 category=bosspet
+follower=yes
 param=pet_item_id,bosspet_jalrek_jad_item
 param=metamorph_next,bosspet_tzrek_jad

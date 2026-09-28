@@ -24,6 +24,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_beaver_item
 
 [skillpet_heron]
@@ -40,6 +41,7 @@ op1=Pick-up
 op3=Talk-to
 op4=Metamorphosis
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_heron_item
 param=metamorph_next,skillpet_heron_great_blue
 
@@ -56,6 +58,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_rock_golem_item
 param=metamorph_next,skillpet_rock_golem_clay
 
@@ -74,6 +77,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_rocky_item
 
 [skillpet_squirrel]
@@ -91,6 +95,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_squirrel_item
 
 [skillpet_tangleroot]
@@ -106,6 +111,7 @@ timer=1
 op1=Pick-up
 op3=Talk-to
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_tangleroot_item
 param=metamorph_next,skillpet_tangleroot_herb
 
@@ -125,6 +131,7 @@ op3=Talk-to
 op4=Metamorphosis
 op5=Locking
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_rift_guardian_item
 param=metamorph_next,skillpet_rift_guardian_f2
 
@@ -142,5 +149,6 @@ op1=Pick-up
 op3=Talk-to
 op4=Metamorphosis
 category=bosspet
+follower=yes
 param=pet_item_id,skillpet_chinchompa_item
 param=metamorph_next,skillpet_chinchompa_red

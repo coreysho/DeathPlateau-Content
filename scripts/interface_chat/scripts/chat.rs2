@@ -594,6 +594,19 @@ while ($page < $pagetotal) {
     $page = calc($page + 1);
 }
 
+// THE PANEL CLOSES ON THE CHOICE. Every make-x chooser below - multiobj2..4 and skillmulti1..5
+// - if_closes the moment p_pausebutton wakes, and the nine make-x procs in this file are the
+// only p_pausebutton callers that do: a dialogue proc leaves the chatbox alone because the
+// next line of dialogue takes it over.
+//
+// Nothing else was closing them. mes() does not - the 377 client only drops a chatbox
+// interface on IF_CLOSE or on another interface opening - so the wheel's panel sat over the
+// whole spin (the owner report) and glassblowing, log cutting and the gnome fruit bowls did
+// the same. Worse, "Make X" was unusable everywhere: the client only draws the "Enter
+// amount" chatback input while NO chat interface is open, so the prompt was hidden behind
+// the panel that asked for it. Pottery had already worked around this with an if_close of
+// its own, which is now redundant rather than wrong.
+
 [proc,multiobj2](string $title, namedobj $obj1, int $x1, int $y1, int $scale1, string $string1, int $sx1, int $sy1, namedobj $obj2, int $x2, int $y2, int $scale2, string $string2, int $sx2, int $sy2)(namedobj)
 // reset any positions out of place
 if_setposition(multiobj2:obj1, $x1, $y1);
@@ -614,6 +627,7 @@ if_addresumebutton(multiobj2:obj2);
 if_addresumebutton(multiobj2:objtext1);
 if_addresumebutton(multiobj2:objtext2);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case multiobj2:obj1 : return($obj1);
@@ -649,6 +663,7 @@ if_addresumebutton(multiobj3:com_5);
 if_addresumebutton(multiobj3:com_6);
 if_addresumebutton(multiobj3:com_7);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case multiobj3:com_2 : return($obj1);
@@ -679,6 +694,7 @@ if_addresumebutton(multiobj3_close:com_5);
 if_addresumebutton(multiobj3_close:com_6);
 if_addresumebutton(multiobj3_close:com_8);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case multiobj3_close:com_1 : return($obj1);
@@ -723,6 +739,7 @@ if_addresumebutton(multiobj4:com_7);
 if_addresumebutton(multiobj4:com_8);
 if_addresumebutton(multiobj4:com_9);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case multiobj4:com_2 : return($obj1);
@@ -752,6 +769,7 @@ if_addresumebutton(skillmulti1:com_4);
 if_addresumebutton(skillmulti1:com_5);
 if_addresumebutton(skillmulti1:com_6);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case skillmulti1:com_3 : return($obj1, ^max_32bit_int);
@@ -777,6 +795,7 @@ if_addresumebutton(skillmulti2:com_9);
 if_addresumebutton(skillmulti2:com_10);
 if_addresumebutton(skillmulti2:com_11);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case skillmulti2:com_4 : 
@@ -813,6 +832,7 @@ if_addresumebutton(skillmulti3:com_14);
 if_addresumebutton(skillmulti3:com_15);
 if_addresumebutton(skillmulti3:com_16);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case skillmulti3:com_5 : 
@@ -860,6 +880,7 @@ if_addresumebutton(skillmulti4:com_19);
 if_addresumebutton(skillmulti4:com_20);
 if_addresumebutton(skillmulti4:com_21);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case skillmulti4:com_6 : 
@@ -918,6 +939,7 @@ if_addresumebutton(skillmulti5:com_24);
 if_addresumebutton(skillmulti5:com_25);
 if_addresumebutton(skillmulti5:com_26);
 p_pausebutton;
+if_close;
 
 switch_component (last_com) {
     case skillmulti5:com_7 : 

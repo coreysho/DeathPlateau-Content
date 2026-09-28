@@ -9,9 +9,18 @@ scope=perm
 type=namedobj
 scope=perm
 
+// The npc the player is following, as (npc type << 16) | npc index.
+//
+// TRANSMITTED, because the client needs it: a pet's right-click options belong to its owner
+// and the client can only tell which pet is yours if it is told. clientcode 12 is where it
+// arrives - jagex2/client/Client.java updateVarp() - and Client.addNpcOptions() drops every
+// option from any npc flagged follower=yes that this index does not name. Nothing secret is
+// in it: it is the same npc index the npc info the client already has is keyed on.
 [follower_uid]
 type=npc_uid
 scope=temp
+transmit=yes
+clientcode=12
 
 [cat_growth]
 scope=perm
