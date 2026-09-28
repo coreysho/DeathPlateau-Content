@@ -44547,7 +44547,7 @@ param=rangedefence,250
 param=strengthbonus,75
 param=damagetype,^crush_style
 param=attack_anim,barrows_war_spear_crush
-param=defend_anim,barrow_guthan_defend
+param=defend_anim,human_spear_block
 
 [barrows_karil]
 // His shot uses the OSRS fire animation - 22 frames against the 377 cache's 7, the one
@@ -44638,15 +44638,15 @@ param=rangedefence,221
 param=strengthbonus,72
 param=damagetype,^crush_style
 param=attack_anim,barrow_torag_crush
-param=defend_anim,human_axe_block
+param=defend_anim,human_blunt_block
 
 [barrows_verac]
 name=Verac the Defiled
 desc=A vengeful spirit corrupted by dark magic.
 model1=npc_2030
 model2=npc_2030i2
-walkanim=barrow_guthan_walk
-readyanim=barrow_guthan_ready
+walkanim=barrow_verac_walk
+readyanim=barrow_verac_ready
 op2=Attack
 ambient=50
 contrast=50
@@ -44674,8 +44674,10 @@ param=magicdefence,0
 param=rangedefence,225
 param=strengthbonus,72
 param=damagetype,^stab_style
-param=attack_anim,barrow_dharok_crush
-param=defend_anim,human_axe_block
+// His flail, not his brother's axe: 2062 is the swing that goes with
+// the stance and walk the cache already gives him.
+param=attack_anim,barrow_verac_crush
+param=defend_anim,barrow_verac_defend
 param=attack_sound,verac_attack
 //param=defend_sound,sound_0  dont have osrs to test sound and cant find good vid with sound effect on
 
