@@ -577,11 +577,19 @@ colour=0x3E3529
 overcolour=0x6F6250
 option=Choose Realism
 
+[badge0]
+type=graphic
+x=65
+y=100
+width=13
+height=13
+graphic=mod_icons,2
+
 [name0]
 type=text
-x=29
+x=82
 y=100
-width=140
+width=50
 height=14
 center=yes
 font=b12_full
@@ -649,11 +657,19 @@ colour=0x3E3529
 overcolour=0x6F6250
 option=Choose 5x
 
+[badge1]
+type=graphic
+x=239
+y=100
+width=13
+height=13
+graphic=mod_icons,3
+
 [name1]
 type=text
-x=186
+x=256
 y=100
-width=140
+width=16
 height=14
 center=yes
 font=b12_full
@@ -709,11 +725,19 @@ colour=0x3E3529
 overcolour=0x6F6250
 option=Choose 10x
 
+[badge2]
+type=graphic
+x=392
+y=100
+width=13
+height=13
+graphic=mod_icons,4
+
 [name2]
 type=text
-x=343
+x=409
 y=100
-width=140
+width=24
 height=14
 center=yes
 font=b12_full

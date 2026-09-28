@@ -47,6 +47,13 @@ COL_ON = '0x6F6250'
 # the drop-rate line: ~droprate_boost_line writes "Drop rates: +25%" or "Drop rates: Normal" into it
 DROPS_FONT = 'p12_full'
 DROPS_WIDEST = ('Drop rates: +999%', 'Drop rates: Normal')
+# each mode's badge - the one beside its players' names in chat, broadcasts and menus: mod_icons tiles
+# 2-4 (@cr3@ Realism, @cr4@ 5x, @cr5@ 10x; sprites/meta/mod_icons.opt makes them 13x13), drawn left of
+# the mode's name with the pair centred in the box
+BADGE = 13
+BADGE_GAP = 4
+NAME_FONT = 'b12_full'
+BADGES = {'Realism': 2, '5x': 3, '10x': 4}
 
 
 def read(p):
@@ -85,6 +92,7 @@ def main():
     sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
     import ifrender
     fnt = ifrender.font(DROPS_FONT)
+    namefnt = ifrender.font(NAME_FONT)
     for s in DROPS_WIDEST + tuple('Drop rates: +%d%%' % b for b in boosts):
         if fnt.width(s) > BOX_W - 8:
             raise SystemExit('"%s" is %dpx in %s and the box is %d' % (s, fnt.width(s), DROPS_FONT, BOX_W))
@@ -143,8 +151,12 @@ def main():
         rate = const(cname)
         com('pick%d' % i, type='rect', x=x, y=BOX_Y, buttontype='normal', width=BOX_W,
             height=BOX_H, fill='yes', colour=COL_OFF, overcolour=COL_ON, option='Choose %s' % label)
-        com('name%d' % i, type='text', x=x, y=BOX_Y + 14, width=BOX_W, height=14, center='yes',
-            font='b12_full', shadowed='yes', text=label, colour='0xFFFFFF')
+        nw = namefnt.width(label)
+        left = x + (BOX_W - (BADGE + BADGE_GAP + nw)) // 2
+        com('badge%d' % i, type='graphic', x=left, y=BOX_Y + 14, width=BADGE, height=BADGE,
+            graphic='mod_icons,%d' % BADGES[label])
+        com('name%d' % i, type='text', x=left + BADGE + BADGE_GAP, y=BOX_Y + 14, width=nw, height=14,
+            center='yes', font=NAME_FONT, shadowed='yes', text=label, colour='0xFFFFFF')
         # the rate line only where it ADDS something: on the 5x and 10x boxes the name already is
         # the multiplier, and a box reading "5x" over "5x" is a box that says one thing twice
         if label.lower() != '%dx' % rate:
