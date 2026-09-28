@@ -22,4 +22,13 @@ if ($spell = ^ourania_teleport & and(%lunar_bits, ~lunar_bit(^lunar_bit_ourania)
     mes("You do not know where the Ourania cave is. Someone on Lunar Isle might.");
     return(true);
 }
+// The seven Dream Mentor spells, and only these seven (OSRS wiki, Lunar spells): what Cyrisus
+// hands over at the end of that quest, having shared a dream with you.
+switch_int ($spell) {
+    case ^monster_examine, ^humidify, ^hunter_kit, ^stat_spy, ^dream, ^plank_make, ^spellbook_swap :
+        if (%dreammentor < ^dm_complete) {
+            mes("You need to have completed Dream Mentor to cast that spell.");
+            return(true);
+        }
+}
 return(false);

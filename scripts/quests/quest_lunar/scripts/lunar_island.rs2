@@ -12,6 +12,11 @@
 if (~lunar_has_seal = false) {
     @lunar_no_seal;
 }
+// Dream Mentor borrows her once Lunar Diplomacy is over; it only answers at its own steps
+// (quests/quest_dreammentor/scripts/quest_dreammentor.rs2).
+if (~dm_oneiromancer = true) {
+    return;
+}
 switch_int (%lunar_quest) {
     case ^lunar_arrived : @lunar_oneiro_first;
     case ^lunar_met_oneiromancer : @lunar_oneiro_potion;
