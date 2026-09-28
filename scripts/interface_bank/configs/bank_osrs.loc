@@ -1,0 +1,78 @@
+// OSRS locs imported by tools/models/importosrslocs.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+// Banks OSRS added after 2006 (bank_osrs.rs2 wires them). Their OSRS op3 "Collect" is left out:
+// it collects Grand Exchange offers, and there is no Grand Exchange here.
+
+[osrsloc_14886]
+// OSRS loc 14886
+desc=An open bank chest.
+name=Bank chest
+model=osrsloc_14886
+op1=Use
+
+[osrsloc_53260]
+// OSRS loc 53260
+desc=A handy bank chest.
+name=Bank chest
+model=osrsloc_53260
+op1=Use
+
+[osrsloc_29105]
+// OSRS loc 29105
+desc=Lets you put items into your bank.
+name=Bank deposit box
+model=osrsloc_29105
+ambient=25
+contrast=125
+forceapproach=south
+op1=Deposit
+
+[osrsloc_29106]
+// OSRS loc 29106
+desc=Lets you put items into your bank.
+name=Bank deposit box
+model=osrsloc_29106
+ambient=25
+contrast=125
+forceapproach=south
+op1=Deposit
+
+[osrsloc_26254]
+// OSRS loc 26254
+desc=Lets you put items into your bank.
+name=Bank deposit box
+model=osrsloc_26254
+resizex=100
+resizey=100
+resizez=100
+ambient=10
+contrast=125
+forceapproach=south
+op1=Deposit
+
+[osrsloc_24123]
+// OSRS loc 24123: the Lumbridge Castle bank's open double door (north leaf)
+model=osrsloc_24123
+active=no
+offsety=1
+ambient=20
+raiseobject=no
+
+[osrsloc_24124]
+// OSRS loc 24124: the Lumbridge Castle bank's open double door (south leaf)
+model=osrsloc_24124
+active=no
+mirror=yes
+offsety=1
+ambient=20
+raiseobject=no
+
+[osrsloc_37444]
+// OSRS loc 37444: the log piles north of the Lumbridge Castle bankers. They also keep a click on
+// a banker from walking the player out of the room and round to the far side of the north wall.
+name=Log pile
+model=osrsloc_37444
+blockrange=no
+resizex=88
+resizey=88
+resizez=88

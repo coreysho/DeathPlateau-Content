@@ -1,0 +1,47 @@
+// Lumbridge Castle's top-floor bank (Skill Tutors, 27 September 2006). Its booths are rev 474 locs
+// 18491 / 18492: the Port Phasmatys booth models (ahoy_bankbooth, ahoy_bankboothclosed) with the
+// castle's colours - the 474 HSL recolours written back as the RGB15 values the packer turns into them.
+[lumbridge_bankbooth]
+name=Bank booth
+desc=The bank teller will serve you from here.
+model=ahoy_bankbooth
+recol1s=10598
+recol1d=11491
+recol2s=8484
+recol2d=12581
+recol3s=6370
+recol3d=8352
+recol4s=3235
+recol4d=14694
+recol5s=2244
+recol5d=8352
+ambient=20
+op1=Use
+op2=Use-quickly
+blockrange=no
+
+[lumbridge_bankbooth_closed]
+name=Closed booth
+desc=This booth is closed.
+model=ahoy_bankboothclosed
+recol1s=10598
+recol1d=11491
+recol2s=8484
+recol2d=12581
+recol3s=6370
+recol3d=8352
+recol4s=3235
+recol4d=14694
+recol5s=2244
+recol5d=8352
+ambient=20
+blockrange=no
+
+// The Crafting Guild's deposit box (OSRS 29103, 5 March 2015) - the ordinary deposit box, under its
+// own name because it has the guild bank chest's requirement (bank_osrs.rs2).
+[crafting_guild_depositbox]
+name=Bank Deposit Box
+desc=Lets you put items into your bank.
+model=loc_9398
+forceapproach=south
+op1=Deposit

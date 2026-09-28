@@ -22,7 +22,10 @@ if_settab(inventory, ^tab_inventory);
 if_settab(wornitems, ^tab_wornitems);
 
 // https://youtu.be/HxwZF7ZBGos?si=HfkHOPtJ0vjTEfTW&t=66
-[oploc1,loc_9398]
+[oploc1,loc_9398] @open_deposit_box;
+
+// Every deposit box opens this way (the Warriors' Guild's and bank_osrs.rs2's boxes jump here too).
+[label,open_deposit_box]
 if_openmain(inter_95);
 %hunter_imp_bank = false;
 if_settext(inter_95:com_60, "The Bank of Gielinor - Deposit Box"); // an imp-in-a-box retitles it

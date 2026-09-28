@@ -1,0 +1,74 @@
+// Bank booths, chests and deposit boxes beyond the 2006 set in bank_booth.rs2 / banker.rs2: Lumbridge
+// Castle's top-floor bank, the booths the world has had since 2006 with nothing behind their ops, and
+// the chests and deposit boxes OSRS added at places this world already has. The map placements are
+// OSRS's own tiles, shapes and rotations (maps/*.jm2).
+
+// ------------------------------------------------------------------ booths
+// Port Phasmatys (ahoy_bankbooth), Keldagrim (dwarf_keldagrim_bankbooth) and the Void Knights'
+// Outpost (pest_bankbooth) have stood in the world since 2006 declaring op1=Use / op2=Use-quickly
+// with no trigger behind either, so both clicks did nothing. They now work like every other booth:
+// Use talks to the teller behind the booth (or banks, where there is none), Use-quickly banks.
+[oploc1,ahoy_bankbooth] @bankbooth_use;
+[oploc2,ahoy_bankbooth] @openbank;
+[oploc1,dwarf_keldagrim_bankbooth] @bankbooth_use;
+[oploc2,dwarf_keldagrim_bankbooth] @openbank;
+[oploc1,pest_bankbooth] @bankbooth_use;
+[oploc2,pest_bankbooth] @openbank;
+// Lumbridge Castle, top floor (Skill Tutors, 27 September 2006): a banker and Barb, the Banker
+// tutor (banker_tutor.rs2), behind two open booths.
+[oploc1,lumbridge_bankbooth] @bankbooth_use;
+[oploc2,lumbridge_bankbooth] @openbank;
+
+[label,bankbooth_use]
+if (npc_findcat(loc_coord, bank_teller, 2, 0) = true) {
+    @talk_to_banker;
+}
+@openbank;
+
+// A herb sack, seed box or looting bag used on a booth empties into the bank, as on [bankbooth].
+[oplocu,ahoy_bankbooth] @storage_bank_deposit;
+[oplocu,dwarf_keldagrim_bankbooth] @storage_bank_deposit;
+[oplocu,pest_bankbooth] @storage_bank_deposit;
+[oplocu,lumbridge_bankbooth] @storage_bank_deposit;
+
+// ------------------------------------------------------------------ chests
+// Port Khazard, the Mage Arena's cavern and the Rogues' Den have OSRS's "common" bank chest, the
+// same object as Castle Wars' (castlewars_bankchest, whose [oploc1] in castlewars_bank.rs2 opens the
+// bank) - see the map placements.
+
+// Mage Training Arena, upstairs (OSRS, 8 May 2024).
+[oploc1,osrsloc_53260] @openbank;
+
+// Crafting Guild (OSRS, 5 March 2015): a members' bank chest and deposit box on the east side of the
+// ground floor, for players with the hard Falador Diary or 99 Crafting. There are no Achievement
+// Diaries here, so 99 Crafting is the way in. The wiki gives no refusal message; this one is ours.
+[oploc1,osrsloc_14886]
+if (~crafting_guild_bank_allowed = false) {
+    return;
+}
+@openbank;
+
+[oploc1,crafting_guild_depositbox]
+if (~crafting_guild_bank_allowed = false) {
+    return;
+}
+@open_deposit_box;
+
+[proc,crafting_guild_bank_allowed]()(boolean)
+if (map_members = ^false) {
+    mes(^mes_members_do_that);
+    return(false);
+}
+if (stat_base(crafting) < 99) {
+    mes("You need a Crafting level of 99 to use the guild's bank.");
+    return(false);
+}
+return(true);
+
+// ------------------------------------------------------------------ deposit boxes
+// The plain grey one is the 2006 deposit box (loc_9398, bank_deposit_box.rs2) wherever OSRS put its
+// twin (10529 / 29103 / 29104, the same model). These three are OSRS's newer box: Burgh de Rott's and
+// Port Phasmatys' in Morytania colours, and the one on Port Sarim's pier.
+[oploc1,osrsloc_29105] @open_deposit_box;
+[oploc1,osrsloc_29106] @open_deposit_box;
+[oploc1,osrsloc_26254] @open_deposit_box;

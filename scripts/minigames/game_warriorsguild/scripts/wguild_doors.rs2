@@ -78,11 +78,9 @@ p_arrivedelay;
 [oploc2,osrsloc_10355] @openbank;
 [oploc3,osrsloc_10355] mes("There is nothing waiting to be collected.");
 
-[oploc1,osrsloc_10529]
-if_openmain(inter_95);
-if_settab(null, 3);
-if_settab(null, 4);
-inv_transmit(inv, inter_95:com_62);
+// The shared opener also clears an imp-in-a-box's claim on the interface and resets its title,
+// which this copy of it used to skip.
+[oploc1,osrsloc_10529] @open_deposit_box;
 
 // ------------------------------------------------------------------ information scrolls
 // The OSRS keys (if 412 and if 410) as text.
