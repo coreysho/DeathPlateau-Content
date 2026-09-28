@@ -1,0 +1,36 @@
+// Barb, the Banker tutor (Skill Tutors, 27 September 2006): rev 474 npc 4907. Every model but her
+// skirt is already in the 377 cache byte for byte; the skirt is 474 model 435 (npc_woman3 as Jagex
+// redrew it in 2007). Recolours are the 474 HSL values written back as RGB15.
+[banker_tutor]
+name=Banker tutor
+desc=Ready to teach you about banking.
+model1=idk_woman_hair_cropped
+model2=npc_examiner
+model3=npc_trader_15320
+model4=idk_woman_arms_large_cuffs
+model5=npc_3137i3
+model6=npc_banker_tutor_legs
+head1=idk_woman_hair_cropped_head
+head2=npc_doctor_orbon_head
+head3=npc_lady_pirate_headi2
+recol1s=14724
+recol1d=32767
+recol2s=2340
+recol2d=32767
+recol3s=3072
+recol3d=12756
+recol4s=4160
+recol4d=6347
+recol5s=7328
+recol5d=12756
+recol6s=6144
+recol6d=7471
+vislevel=hide
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+readyanim=human_ready
+op1=Talk-to
+op3=Bank
+wanderrange=0
+maxrange=2
+moverestrict=nomove
+category=bank_teller

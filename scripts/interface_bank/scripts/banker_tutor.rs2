@@ -1,0 +1,55 @@
+// Barb, the Banker tutor (Skill Tutors, 27 September 2006), behind the east booth of the Lumbridge
+// Castle bank. She banks like any teller (category=bank_teller: op3, the booths, platinum tokens), and
+// her Talk-to teaches. Dialogue: the OSRS wiki transcript of the Banker tutor, less the options OSRS
+// added later (collect, bank slots), and less the line about a new PIN waiting out a delay before it
+// is used - this server's PINs take effect at once (bank_pin.rs2).
+[apnpc1,banker_tutor]
+if (npc_range(coord) > 2) {
+    p_aprange(2);
+    return;
+}
+@banker_tutor_talk;
+
+[label,banker_tutor_talk]
+~chatnpcrange("<p,neutral>Good day, how may I help you?");
+switch_int (~p_choice3("How do I use the bank?", 1, "I'd like to access my bank account please.", 2, "I'd like to check my PIN settings.", 3)) {
+    case 1 : @banker_tutor_bank_help;
+    case 2 : @openbank;
+    case 3 : @open_bank_pin_setting;
+}
+
+[label,banker_tutor_bank_help]
+switch_int (~p_choice3("Using the bank itself.", 1, "Using Bank deposit boxes.", 2, "What's this PIN thing that people keep talking about?", 3)) {
+    case 1 :
+        ~chatplayer("<p,quiz>Using the bank itself. I'm not sure how....?");
+        ~chatnpcrange("<p,neutral>Speak to any banker and ask to see your bank account. If you have set a PIN you will be asked for it, then all the belongings you have placed in the bank will appear in the window. To withdraw one item, left-click on it once.");
+        ~chatnpcrange("<p,neutral>To withdraw many, right-click on the item and select from the menu. The same for depositing, left-click on the item in your inventory to deposit it in the bank. Right-click on it to deposit many of the same items.");
+        ~chatnpcrange("<p,neutral>To move things around in your bank: firstly select Swap or Insert as your default moving mode, you can find these buttons on the bank window itself. Then click and drag an item to where you want it to appear.");
+        ~chatnpcrange("<p,neutral>You may withdraw 'notes' or 'certificates' when the items you are trying to withdraw do not stack in your inventory. This will only work for items which are tradable.");
+        ~chatnpcrange("<p,neutral>For instance, if you wanted to sell 100 logs to another player, they would not fit in one inventory and you would need to do multiple trades. Instead, click the Note button to do withdraw the logs as 'certs' or 'notes', then withdraw the items you need.");
+    case 2 :
+        ~chatplayer("<p,quiz>Using Bank deposit boxes.... what are they?");
+        ~chatnpcrange("<p,neutral>They look like grey pillars, there's one just over there, near the desk. Bank deposit boxes save so much time. If you're simply wanting to deposit a single item, 'Use' it on the deposit box.");
+        ~chatnpcrange("<p,neutral>Otherwise, simply click once on the box and it will give you a choice of what to deposit in an interface very similar to the bank itself. Very quick for when you're simply fishing or mining etc.");
+    case 3 :
+        ~chatplayer("<p,quiz>What's this PIN thing that people keep talking about?");
+        ~chatnpcrange("<p,neutral>The PIN - Personal Identification Number - can be set on your bank account to protect the items there in case someone finds out your account password. It consists of four numbers that you remember and tell no one.");
+        ~chatnpcrange("<p,neutral>So if someone did manage to get your password they couldn't steal your items if they were in the bank.");
+        @banker_tutor_pin_help;
+}
+
+[label,banker_tutor_pin_help]
+switch_int (~p_choice5("How do I set my PIN?", 1, "How do I remove my PIN?", 2, "What happens if I forget my PIN?", 3, "I know about the PIN, tell me about the bank.", 4, "Goodbye.", 5)) {
+    case 1 :
+        ~chatplayer("<p,quiz>How do I set my PIN?");
+        ~chatnpcrange("<p,neutral>You can set your PIN by talking to any banker, they will allow you to access your bank pin settings. Here you can choose to set your pin and recovery delay. Remember not to set it to anything personal such as your real life bank PIN or birthday.");
+        ~chatnpcrange("<p,neutral>The recovery delay is to protect your banked items from account thieves. If someone stole your account and asked to have the PIN deleted, they would have to wait a few days before accessing your bank account to steal your items. This will give you time to recover your account.");
+    case 2 :
+        ~chatplayer("<p,quiz>How do I remove my PIN?");
+        ~chatnpcrange("<p,neutral>Talking to any banker will enable you to access your PIN settings. There you can cancel or change your PIN, but you will need to wait for your recovery delay to expire to be able to access your bank. This can be set in the settings page and will protect your items should your account be stolen.");
+    case 3 :
+        ~chatplayer("<p,quiz>What happens if I forget my PIN?");
+        ~chatnpcrange("<p,neutral>If you find yourself faced with the PIN keypad and you don't know the PIN, just look on the right-hand side for a button marked 'I don't know it'. Click this button. Your PIN will be deleted (after a delay of a few days) and you'll be able to use your bank as before. You may still use the bank deposit box without your PIN.");
+    case 4 : @banker_tutor_bank_help;
+    case 5 : ~chatplayer("<p,neutral>Goodbye.");
+}
