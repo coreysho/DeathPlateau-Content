@@ -222,24 +222,6 @@
         "wilderness_sword_3",
         "wilderness_sword_4"
       ]
-    },
-    "tanzanite_fang": {
-      "osrs_source": "Zulrah: the tanzanite fang is a 1/1,024 drop (two rolls a kill), Zulrah's scales come 100-299 a kill, and a toxic blowpipe is only ever fletched from a fang",
-      "why": "Zulrah is not in this build and the owner has said it is not being added yet (2026-09-26): the blowpipe was ported \"item only for now\", fully working and admin-spawnable for testing (toxic_blowpipe/scripts/blowpipe.rs2). The blowpipe's own ways of making scales - Dismantle (20,000 from a fang or an empty blowpipe), Uncharge, the death spill - only give back what went in or turn one sourceless item into another, and fletching a fang is the only way to an empty blowpipe, so none of them is a source. The round that adds Zulrah takes these four off this list",
-      "also": [
-        "toxic_blowpipe_empty",
-        "toxic_blowpipe",
-        "zulrahs_scales"
-      ],
-      "ignore": [
-        "blowpipe.rs2:label,blowpipe_fletch",
-        "blowpipe.rs2:label,blowpipe_dismantle",
-        "blowpipe.rs2:opheld5,toxic_blowpipe",
-        "blowpipe.rs2:proc,blowpipe_death_spill",
-        "blowpipe.rs2:proc,blowpipe_death_spill_pvp",
-        "blowpipe.rs2:label,blowpipe_load_darts",
-        "blowpipe.rs2:opheld4,toxic_blowpipe"
-      ]
     }
   }
 }

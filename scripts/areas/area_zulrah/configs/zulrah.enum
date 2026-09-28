@@ -1,0 +1,607 @@
+// ZULRAH'S FOUR ROTATIONS, and the pieces the fight reads them with. Transcribed from the wiki's
+// own four rotation tables (oldschool.runescape.wiki/w/Zulrah/Strategies, Sept 2026), phase for
+// phase, in the order the tables give them; the comment on each row is that table's own wording,
+// so a row and its source can be read against each other without leaving the file.
+//
+// A ROTATION IS A LIST OF PHASES. A PHASE IS A PLACE, A COLOUR AND A LIST OF RUNS. A RUN is one
+// thing done a number of times - "ranged 5 times", "2 snakeling orbs" - and every repetition of it
+// costs one 3-tick beat, which is the unit the wiki's tables count in. The two "alternating" runs
+// and the two "Jad" runs flip between two actions inside one run rather than needing five or ten
+// rows each.
+//
+// ALL FOUR ROTATIONS ARE HERE IN FULL, not a subset, because a subset is the one thing that would
+// make the fight unlearnable: Old School players read the second phase to tell which rotation they
+// are on and pray the rest of it from memory, and half a table teaches the wrong thing. Once the
+// runs above existed, forty-seven phases were data rather than work.
+//
+// The fight does not stop at the end of a rotation: "Zulrah will then continue on to the starting
+// phase of the next rotation", so zulrah_fight.rs2 rolls a fresh rotation and carries on.
+
+
+// Rotation number (1-4) -> the phase index it begins at, and how many phases it has.
+[zulrah_rotation_start]
+inputtype=int
+outputtype=int
+default=0
+// rotation 1 "Crimson A"
+val=1,0
+// rotation 2 "Crimson B"
+val=2,11
+// rotation 3 "Serp"
+val=3,22
+// rotation 4 "Tanz"
+val=4,34
+
+[zulrah_rotation_length]
+inputtype=int
+outputtype=int
+default=0
+val=1,11
+val=2,11
+val=3,12
+val=4,13
+
+// Every phase of every rotation, end to end. The wiki's phase 1 is this list's entry 0.
+[zulrah_phase_pos]
+inputtype=int
+outputtype=int
+default=0
+// --- rotation 1, "Crimson A" ---
+// phase 1: 4 venom cloud barrages
+val=0,^zulrah_p_middle
+// phase 2: melee twice
+val=1,^zulrah_p_middle
+// phase 3: magic and/or ranged 4 times
+val=2,^zulrah_p_middle
+// phase 4: ranged 5 times, 2 snakeling orbs, 2 venom barrages, 2 snakeling orbs
+val=3,^zulrah_p_south
+// phase 5: melee twice
+val=4,^zulrah_p_middle
+// phase 6: magic and/or ranged 5 times
+val=5,^zulrah_p_west
+// phase 7: 3 venom barrages, 4 snakeling orbs
+val=6,^zulrah_p_south
+// phase 8: magic and/or ranged 5 times, then 5 alternating snakeling orbs and venom barrages
+val=7,^zulrah_p_south
+// phase 9: JAD PHASE: 10 alternating ranged and magic, starting with ranged; then 4 venom barrages
+val=8,^zulrah_p_west
+// phase 10: melee twice
+val=9,^zulrah_p_middle
+// phase 11: ranged 5 times, 4 venom barrages
+val=10,^zulrah_p_middle
+// --- rotation 2, "Crimson B" ---
+// phase 1: 4 venom cloud barrages
+val=11,^zulrah_p_middle
+// phase 2: melee twice
+val=12,^zulrah_p_middle
+// phase 3: magic and/or ranged 4 times
+val=13,^zulrah_p_middle
+// phase 4: 3 venom barrages, 4 snakeling orbs
+val=14,^zulrah_p_west
+// phase 5: magic and/or ranged 5 times, 2 snakeling orbs, 2 venom barrages, 2 snakeling orbs
+val=15,^zulrah_p_south
+// phase 6: melee twice
+val=16,^zulrah_p_middle
+// phase 7: ranged 5 times
+val=17,^zulrah_p_east
+// phase 8: magic and/or ranged 5 times, then 5 alternating snakeling orbs and venom barrages
+val=18,^zulrah_p_south
+// phase 9: JAD PHASE: 10 alternating ranged and magic, starting with ranged; then 4 venom barrages
+val=19,^zulrah_p_west
+// phase 10: melee twice
+val=20,^zulrah_p_middle
+// phase 11: ranged 5 times, 4 venom barrages
+val=21,^zulrah_p_middle
+// --- rotation 3, "Serp" ---
+// phase 1: 4 venom cloud barrages
+val=22,^zulrah_p_middle
+// phase 2: ranged 5 times, then 3 snakeling orbs
+val=23,^zulrah_p_east
+// phase 3: 6 alternating venom barrages and snakeling orbs, then melee twice
+val=24,^zulrah_p_middle
+// phase 4: magic and/or ranged 5 times
+val=25,^zulrah_p_west
+// phase 5: ranged 5 times
+val=26,^zulrah_p_south
+// phase 6: magic and/or ranged 5 times
+val=27,^zulrah_p_east
+// phase 7: 3 venom barrages, then 3 snakeling orbs
+val=28,^zulrah_p_middle
+// phase 8: ranged 5 times
+val=29,^zulrah_p_west
+// phase 9: magic and/or ranged 5 times, 2 venom barrages, 3 snakeling orbs
+val=30,^zulrah_p_middle
+// phase 10: JAD PHASE: 10 alternating magic and ranged, starting with magic
+val=31,^zulrah_p_east
+// phase 11: 4 snakeling orbs
+val=32,^zulrah_p_middle
+// phase 12: ranged 5 times, 4 venom barrages
+val=33,^zulrah_p_middle
+// --- rotation 4, "Tanz" ---
+// phase 1: 4 venom cloud barrages
+val=34,^zulrah_p_middle
+// phase 2: 4 snakeling orbs, then magic and/or ranged 6 times
+val=35,^zulrah_p_east
+// phase 3: ranged 4 times, 2 venom barrages
+val=36,^zulrah_p_south
+// phase 4: 4 snakeling orbs, then magic and/or ranged 4 times
+val=37,^zulrah_p_west
+// phase 5: melee twice, 2 venom barrages
+val=38,^zulrah_p_middle
+// phase 6: ranged 4 times
+val=39,^zulrah_p_east
+// phase 7: 6 snakeling orbs, then 3 venom barrages
+val=40,^zulrah_p_south
+// phase 8: magic and/or ranged 5 times, then 4 snakeling orbs
+val=41,^zulrah_p_west
+// phase 9: ranged 4 times
+val=42,^zulrah_p_middle
+// phase 10: magic and/or ranged 4 times, 3 venom barrages
+val=43,^zulrah_p_middle
+// phase 11: JAD PHASE: 8 alternating magic and ranged, starting with magic
+val=44,^zulrah_p_east
+// phase 12: 4 snakeling orbs
+val=45,^zulrah_p_middle
+// phase 13: ranged 5 times, 4 venom barrages
+val=46,^zulrah_p_middle
+
+// and the colour it surfaces in
+[zulrah_phase_form]
+inputtype=int
+outputtype=npc
+default=zulrah
+val=0,zulrah
+val=1,zulrah_magma
+val=2,zulrah_tanzanite
+val=3,zulrah
+val=4,zulrah_magma
+val=5,zulrah_tanzanite
+val=6,zulrah
+val=7,zulrah_tanzanite
+val=8,zulrah
+val=9,zulrah_magma
+val=10,zulrah
+val=11,zulrah
+val=12,zulrah_magma
+val=13,zulrah_tanzanite
+val=14,zulrah
+val=15,zulrah_tanzanite
+val=16,zulrah_magma
+val=17,zulrah
+val=18,zulrah_tanzanite
+val=19,zulrah
+val=20,zulrah_magma
+val=21,zulrah
+val=22,zulrah
+val=23,zulrah
+val=24,zulrah_magma
+val=25,zulrah_tanzanite
+val=26,zulrah
+val=27,zulrah_tanzanite
+val=28,zulrah
+val=29,zulrah
+val=30,zulrah_tanzanite
+val=31,zulrah
+val=32,zulrah_tanzanite
+val=33,zulrah
+val=34,zulrah
+val=35,zulrah_tanzanite
+val=36,zulrah
+val=37,zulrah_tanzanite
+val=38,zulrah_magma
+val=39,zulrah
+val=40,zulrah
+val=41,zulrah_tanzanite
+val=42,zulrah
+val=43,zulrah_tanzanite
+val=44,zulrah
+val=45,zulrah_tanzanite
+val=46,zulrah
+
+// and where its runs are in the run list below
+[zulrah_phase_run_start]
+inputtype=int
+outputtype=int
+default=0
+val=0,0
+val=1,1
+val=2,2
+val=3,3
+val=4,7
+val=5,8
+val=6,9
+val=7,11
+val=8,13
+val=9,15
+val=10,16
+val=11,18
+val=12,19
+val=13,20
+val=14,21
+val=15,23
+val=16,27
+val=17,28
+val=18,29
+val=19,31
+val=20,33
+val=21,34
+val=22,36
+val=23,37
+val=24,39
+val=25,41
+val=26,42
+val=27,43
+val=28,44
+val=29,46
+val=30,47
+val=31,50
+val=32,51
+val=33,52
+val=34,54
+val=35,55
+val=36,57
+val=37,59
+val=38,61
+val=39,63
+val=40,64
+val=41,66
+val=42,68
+val=43,69
+val=44,71
+val=45,72
+val=46,73
+
+[zulrah_phase_run_count]
+inputtype=int
+outputtype=int
+default=0
+val=0,1
+val=1,1
+val=2,1
+val=3,4
+val=4,1
+val=5,1
+val=6,2
+val=7,2
+val=8,2
+val=9,1
+val=10,2
+val=11,1
+val=12,1
+val=13,1
+val=14,2
+val=15,4
+val=16,1
+val=17,1
+val=18,2
+val=19,2
+val=20,1
+val=21,2
+val=22,1
+val=23,2
+val=24,2
+val=25,1
+val=26,1
+val=27,1
+val=28,2
+val=29,1
+val=30,3
+val=31,1
+val=32,1
+val=33,2
+val=34,1
+val=35,2
+val=36,2
+val=37,2
+val=38,2
+val=39,1
+val=40,2
+val=41,2
+val=42,1
+val=43,2
+val=44,1
+val=45,1
+val=46,2
+
+// THE RUNS, in phase order. Kind and count.
+[zulrah_run_kind]
+inputtype=int
+outputtype=int
+default=0
+// phase 0 (rotation 1 phase 1)
+// 4 x venom barrage
+val=0,^zulrah_act_venom
+// phase 1 (rotation 1 phase 2)
+// 2 x melee
+val=1,^zulrah_act_melee
+// phase 2 (rotation 1 phase 3)
+// 4 x magic/ranged
+val=2,^zulrah_act_mage
+// phase 3 (rotation 1 phase 4)
+// 5 x ranged
+val=3,^zulrah_act_range
+// 2 x snakeling orb
+val=4,^zulrah_act_orb
+// 2 x venom barrage
+val=5,^zulrah_act_venom
+// 2 x snakeling orb
+val=6,^zulrah_act_orb
+// phase 4 (rotation 1 phase 5)
+// 2 x melee
+val=7,^zulrah_act_melee
+// phase 5 (rotation 1 phase 6)
+// 5 x magic/ranged
+val=8,^zulrah_act_mage
+// phase 6 (rotation 1 phase 7)
+// 3 x venom barrage
+val=9,^zulrah_act_venom
+// 4 x snakeling orb
+val=10,^zulrah_act_orb
+// phase 7 (rotation 1 phase 8)
+// 5 x magic/ranged
+val=11,^zulrah_act_mage
+// 5 x alternating orb/venom
+val=12,^zulrah_act_alt_orb
+// phase 8 (rotation 1 phase 9)
+// 10 x jad, ranged first
+val=13,^zulrah_act_jad_range
+// 4 x venom barrage
+val=14,^zulrah_act_venom
+// phase 9 (rotation 1 phase 10)
+// 2 x melee
+val=15,^zulrah_act_melee
+// phase 10 (rotation 1 phase 11)
+// 5 x ranged
+val=16,^zulrah_act_range
+// 4 x venom barrage
+val=17,^zulrah_act_venom
+// phase 11 (rotation 2 phase 1)
+// 4 x venom barrage
+val=18,^zulrah_act_venom
+// phase 12 (rotation 2 phase 2)
+// 2 x melee
+val=19,^zulrah_act_melee
+// phase 13 (rotation 2 phase 3)
+// 4 x magic/ranged
+val=20,^zulrah_act_mage
+// phase 14 (rotation 2 phase 4)
+// 3 x venom barrage
+val=21,^zulrah_act_venom
+// 4 x snakeling orb
+val=22,^zulrah_act_orb
+// phase 15 (rotation 2 phase 5)
+// 5 x magic/ranged
+val=23,^zulrah_act_mage
+// 2 x snakeling orb
+val=24,^zulrah_act_orb
+// 2 x venom barrage
+val=25,^zulrah_act_venom
+// 2 x snakeling orb
+val=26,^zulrah_act_orb
+// phase 16 (rotation 2 phase 6)
+// 2 x melee
+val=27,^zulrah_act_melee
+// phase 17 (rotation 2 phase 7)
+// 5 x ranged
+val=28,^zulrah_act_range
+// phase 18 (rotation 2 phase 8)
+// 5 x magic/ranged
+val=29,^zulrah_act_mage
+// 5 x alternating orb/venom
+val=30,^zulrah_act_alt_orb
+// phase 19 (rotation 2 phase 9)
+// 10 x jad, ranged first
+val=31,^zulrah_act_jad_range
+// 4 x venom barrage
+val=32,^zulrah_act_venom
+// phase 20 (rotation 2 phase 10)
+// 2 x melee
+val=33,^zulrah_act_melee
+// phase 21 (rotation 2 phase 11)
+// 5 x ranged
+val=34,^zulrah_act_range
+// 4 x venom barrage
+val=35,^zulrah_act_venom
+// phase 22 (rotation 3 phase 1)
+// 4 x venom barrage
+val=36,^zulrah_act_venom
+// phase 23 (rotation 3 phase 2)
+// 5 x ranged
+val=37,^zulrah_act_range
+// 3 x snakeling orb
+val=38,^zulrah_act_orb
+// phase 24 (rotation 3 phase 3)
+// 6 x alternating venom/orb
+val=39,^zulrah_act_alt_venom
+// 2 x melee
+val=40,^zulrah_act_melee
+// phase 25 (rotation 3 phase 4)
+// 5 x magic/ranged
+val=41,^zulrah_act_mage
+// phase 26 (rotation 3 phase 5)
+// 5 x ranged
+val=42,^zulrah_act_range
+// phase 27 (rotation 3 phase 6)
+// 5 x magic/ranged
+val=43,^zulrah_act_mage
+// phase 28 (rotation 3 phase 7)
+// 3 x venom barrage
+val=44,^zulrah_act_venom
+// 3 x snakeling orb
+val=45,^zulrah_act_orb
+// phase 29 (rotation 3 phase 8)
+// 5 x ranged
+val=46,^zulrah_act_range
+// phase 30 (rotation 3 phase 9)
+// 5 x magic/ranged
+val=47,^zulrah_act_mage
+// 2 x venom barrage
+val=48,^zulrah_act_venom
+// 3 x snakeling orb
+val=49,^zulrah_act_orb
+// phase 31 (rotation 3 phase 10)
+// 10 x jad, magic first
+val=50,^zulrah_act_jad_mage
+// phase 32 (rotation 3 phase 11)
+// 4 x snakeling orb
+val=51,^zulrah_act_orb
+// phase 33 (rotation 3 phase 12)
+// 5 x ranged
+val=52,^zulrah_act_range
+// 4 x venom barrage
+val=53,^zulrah_act_venom
+// phase 34 (rotation 4 phase 1)
+// 4 x venom barrage
+val=54,^zulrah_act_venom
+// phase 35 (rotation 4 phase 2)
+// 4 x snakeling orb
+val=55,^zulrah_act_orb
+// 6 x magic/ranged
+val=56,^zulrah_act_mage
+// phase 36 (rotation 4 phase 3)
+// 4 x ranged
+val=57,^zulrah_act_range
+// 2 x venom barrage
+val=58,^zulrah_act_venom
+// phase 37 (rotation 4 phase 4)
+// 4 x snakeling orb
+val=59,^zulrah_act_orb
+// 4 x magic/ranged
+val=60,^zulrah_act_mage
+// phase 38 (rotation 4 phase 5)
+// 2 x melee
+val=61,^zulrah_act_melee
+// 2 x venom barrage
+val=62,^zulrah_act_venom
+// phase 39 (rotation 4 phase 6)
+// 4 x ranged
+val=63,^zulrah_act_range
+// phase 40 (rotation 4 phase 7)
+// 6 x snakeling orb
+val=64,^zulrah_act_orb
+// 3 x venom barrage
+val=65,^zulrah_act_venom
+// phase 41 (rotation 4 phase 8)
+// 5 x magic/ranged
+val=66,^zulrah_act_mage
+// 4 x snakeling orb
+val=67,^zulrah_act_orb
+// phase 42 (rotation 4 phase 9)
+// 4 x ranged
+val=68,^zulrah_act_range
+// phase 43 (rotation 4 phase 10)
+// 4 x magic/ranged
+val=69,^zulrah_act_mage
+// 3 x venom barrage
+val=70,^zulrah_act_venom
+// phase 44 (rotation 4 phase 11)
+// 8 x jad, magic first
+val=71,^zulrah_act_jad_mage
+// phase 45 (rotation 4 phase 12)
+// 4 x snakeling orb
+val=72,^zulrah_act_orb
+// phase 46 (rotation 4 phase 13)
+// 5 x ranged
+val=73,^zulrah_act_range
+// 4 x venom barrage
+val=74,^zulrah_act_venom
+
+[zulrah_run_count]
+inputtype=int
+outputtype=int
+default=0
+val=0,4
+val=1,2
+val=2,4
+val=3,5
+val=4,2
+val=5,2
+val=6,2
+val=7,2
+val=8,5
+val=9,3
+val=10,4
+val=11,5
+val=12,5
+val=13,10
+val=14,4
+val=15,2
+val=16,5
+val=17,4
+val=18,4
+val=19,2
+val=20,4
+val=21,3
+val=22,4
+val=23,5
+val=24,2
+val=25,2
+val=26,2
+val=27,2
+val=28,5
+val=29,5
+val=30,5
+val=31,10
+val=32,4
+val=33,2
+val=34,5
+val=35,4
+val=36,4
+val=37,5
+val=38,3
+val=39,6
+val=40,2
+val=41,5
+val=42,5
+val=43,5
+val=44,3
+val=45,3
+val=46,5
+val=47,5
+val=48,2
+val=49,3
+val=50,10
+val=51,4
+val=52,5
+val=53,4
+val=54,4
+val=55,4
+val=56,6
+val=57,4
+val=58,2
+val=59,4
+val=60,4
+val=61,2
+val=62,2
+val=63,4
+val=64,6
+val=65,3
+val=66,5
+val=67,4
+val=68,4
+val=69,4
+val=70,3
+val=71,8
+val=72,4
+val=73,5
+val=74,4
+
+// and the four places, as coordinates in the shrine template (zulrah.constant).
+[zulrah_pos_coord]
+inputtype=int
+outputtype=coord
+default=null
+val=0,^zulrah_pos_middle
+val=1,^zulrah_pos_south
+val=2,^zulrah_pos_west
+val=3,^zulrah_pos_east
+
+// One dive animation per colour - OSRS seqs 5071/5072/5073, three 21-frame animations on
+// the one frame group, which is what a per-colour animation looks like.
+[zulrah_dive_anim]
+inputtype=npc
+outputtype=seq
+default=zulrah_dive_serpentine
+val=zulrah,zulrah_dive_serpentine
+val=zulrah_magma,zulrah_dive_magma
+val=zulrah_tanzanite,zulrah_dive_tanzanite

@@ -1,0 +1,244 @@
+// ZULRAH'S UNIQUES and the things they make. Imported from a modern OSRS cache by
+// tools/models/importosrs.py: objs 12927 (visage), 12929/12931 (the helm, uncharged and charged),
+// 12932 (magic fang), 12900/12899 (the swamp trident, uncharged and charged), 12936 (jar of
+// swamp), 12938 (Zul-andra teleport) and 12921 (the pet). Models are RE-ENCODED from OSRS model
+// format into the 317-family format (tools/models/osrs2ob2.py), every one round-trip verified;
+// wearpos/wearpos2 and the 2d cameras are the cache's. Names, examines, weights and values are the
+// cache's too.
+//
+// The bonuses are the wiki's infoboxes, read as wikitext rather than as a rendered table
+// (/w/Serpentine_helm, /w/Trident_of_the_Swamp, Sept 2026).
+//
+// The fourth unique, the uncut onyx, is already in this cache and already has a use: a chisel cuts
+// it (skill_crafting/scripts/gem/uncut_gem.rs2). Nothing here is needed for it.
+//
+// NOTES: the tradeable ones get theirs, which is what OSRS gives them - the charged helm and the
+// charged trident are untradeable in OSRS and get none, exactly as the charged blowpipe gets none.
+
+[serpentine_visage]
+name=Serpentine visage
+desc=Maybe you could use a chisel to craft this into a helmet.
+model=obj_serpentine_visage
+2dzoom=716
+2dxan=498
+2dzan=1656
+2dxof=-18
+2dyof=7
+weight=1000g
+cost=105000
+members=yes
+
+[cert_serpentine_visage]
+certlink=serpentine_visage
+certtemplate=template_for_cert
+
+// Uncharged: it "cannot be equipped if it is uncharged, except when it's fully degraded while
+// equipped", so it has a wearpos - a helm that runs dry on your head stays there as this - and no
+// Wear. "In its uncharged form it retains the negative bonuses, but loses all positive bonuses and
+// passive effects", which is the -5/-5 below and nothing else.
+[serpentine_helm_uncharged]
+name=Serpentine helm (uncharged)
+desc=Needs to be charged with Zulrah's scales.
+model=obj_serpentine_helm_uncharged
+manwear=obj_serpentine_helm_uncharged_manwear,0
+womanwear=obj_serpentine_helm_uncharged_womanwear,0
+manhead=obj_serpentine_helm_uncharged_manhead
+womanhead=obj_serpentine_helm_uncharged_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dyan=1724
+2dxof=-1
+2dyof=-1
+weight=900g
+cost=110000
+members=yes
+param=magicattack,-5
+param=rangeattack,-5
+
+[cert_serpentine_helm_uncharged]
+certlink=serpentine_helm_uncharged
+certtemplate=template_for_cert
+
+// Charged. 75 Defence to wear (scripts/serpentine_helm.rs2), and while it holds scales it makes the
+// wearer immune to poison and venom and helps them envenom what they hit.
+[serpentine_helm]
+name=Serpentine helm
+desc=Protects the wearer from poison and venom, and helps envenom monsters.
+model=obj_serpentine_helm
+manwear=obj_serpentine_helm_manwear,0
+womanwear=obj_serpentine_helm_womanwear,0
+manhead=obj_serpentine_helm_manhead
+womanhead=obj_serpentine_helm_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dxan=215
+2dyan=1724
+2dyof=-17
+weight=900g
+cost=110000
+members=yes
+tradeable=no
+iop2=Wear
+iop3=Check
+iop5=Uncharge
+wearop1=Check
+param=magicattack,-5
+param=rangeattack,-5
+param=stabdefence,52
+param=slashdefence,55
+param=crushdefence,58
+param=rangedefence,50
+param=strengthbonus,5
+
+[magic_fang]
+name=Magic fang
+desc=This can be attached to a Trident of the Seas.
+model=obj_magic_fang
+2dzoom=1095
+2dxan=579
+2dyan=1832
+2dxof=7
+weight=300g
+cost=102000
+members=yes
+
+[cert_magic_fang]
+certlink=magic_fang
+certtemplate=template_for_cert
+
+// THE TRIDENT OF THE SWAMP. The seas' trident with a magic fang chiselled into it at 59 Crafting,
+// and it comes apart again. 78 Magic to wield, 2,500 charges, and a charge costs a death rune, a
+// chaos rune, five fire runes and one of Zulrah's scales - the scale standing where the seas'
+// trident wants ten coins. Its spell hits for floor(Magic / 3) - 2, two harder than the seas'
+// throughout. Four ticks a cast and a reach of 7, like the seas'.
+[trident_of_the_swamp]
+name=Trident of the Swamp
+desc=A toxic weapon from the deep.
+model=obj_trident_of_the_swamp
+manwear=obj_trident_of_the_swamp_manwear,0
+womanwear=obj_trident_of_the_swamp_womanwear,0
+wearpos=righthand
+2dzoom=2421
+2dxan=1549
+2dyan=1818
+2dzan=377
+2dyof=9
+weight=1814g
+cost=78500
+members=yes
+tradeable=no
+iop2=Wield
+iop3=Check
+iop4=Uncharge
+iop5=Dismantle
+wearop1=Check
+category=weapon_powered_staff
+param=magicattack,25
+param=stabdefence,2
+param=slashdefence,3
+param=crushdefence,1
+param=magicdefence,15
+param=attackrate,4
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_stafforb_pummel
+param=defend_anim,human_stafforb_block
+param=crush_sound,staff_hit
+param=attackrange,7
+
+[trident_of_the_swamp_uncharged]
+name=Uncharged toxic trident
+desc=It needs to be charged with death runes, chaos runes, fire runes and Zulrah's scales.
+model=obj_trident_of_the_swamp_uncharged
+manwear=obj_trident_of_the_swamp_uncharged_manwear,0
+womanwear=obj_trident_of_the_swamp_uncharged_womanwear,0
+wearpos=righthand
+2dzoom=2421
+2dxan=1549
+2dyan=1818
+2dzan=377
+2dyof=9
+weight=1814g
+cost=78000
+members=yes
+iop2=Wield
+iop3=Check
+iop5=Dismantle
+category=weapon_powered_staff
+param=magicattack,25
+param=stabdefence,2
+param=slashdefence,3
+param=crushdefence,1
+param=magicdefence,15
+param=attackrate,4
+param=ready_baseanim,human_staffready
+param=crushattack_anim,human_stafforb_pummel
+param=defend_anim,human_stafforb_block
+param=crush_sound,staff_hit
+param=attackrange,7
+
+[cert_trident_of_the_swamp_uncharged]
+certlink=trident_of_the_swamp_uncharged
+certtemplate=template_for_cert
+
+// The jar. A 1/3,000 tertiary and, in OSRS as here, an ornament: nothing to do with it but own it.
+// Its Open right-click in the cache belongs to a Construction display case this build does not
+// have, so it is not wired - see tools/nosourcespec.json's rule about dead clicks: this obj has a
+// SOURCE, so it is not in that file; what it has no use for is said here.
+[jar_of_swamp]
+name=Jar of Swamp
+desc=This is my Swamp!
+model=obj_jar_of_swamp
+2dzoom=590
+2dxan=280
+2dyan=1756
+2dxof=10
+2dyof=60
+recol1s=9511
+recol1d=193
+weight=20g
+cost=1
+members=yes
+
+[cert_jar_of_swamp]
+certlink=jar_of_swamp
+certtemplate=template_for_cert
+
+// Four to a drop, 15/249 of the main table - which makes it the commonest thing Zulrah gives you
+// after the scales, and the reason you do not walk back.
+[zul_andra_teleport]
+name=Zul-andra teleport
+desc=Teleports you to Zul-Andra.
+model=obj_zul_andra_teleport
+2dzoom=842
+2dxan=566
+2dxof=1
+weight=1g
+cost=10
+members=yes
+stackable=yes
+iop1=Teleport
+
+// The pet item, wired like every other boss pet's (npc/configs/boss_pets.obj says what each line
+// is for): category=bosspet for the shared Drop-to-put-down trigger, param=follower_id for what
+// gets spawned, tradeable=no because a pet is not a commodity.
+[bosspet_snakeling_item]
+name=Pet Snakeling
+desc=A slithering serpent spawn of Zulrah.
+model=obj_bosspet_snakeling_item
+2dzoom=4000
+2dyan=67
+2dyof=-89
+weight=15g
+members=yes
+tradeable=no
+category=bosspet
+param=follower_id,bosspet_snakeling
+
+// A NOTE FOR MAHOGANY LOGS. Zulrah drops 50 of them noted (8/249) and this cache ships mahogany
+// logs with no note at all - teak has one, mahogany does not. Fifty unnoted logs are a pile nobody
+// can pick up, so the note is made here rather than the drop being dropped.
+[cert_mahogany_logs]
+certlink=mahogany_logs
+certtemplate=template_for_cert

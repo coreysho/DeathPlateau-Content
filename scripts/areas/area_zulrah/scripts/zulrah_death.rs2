@@ -1,0 +1,121 @@
+// DYING AT ZULRAH, Old School's way: not a safe death, and not an ordinary one.
+//
+// "Items held by Priestess Zul-Gwenwynig for retrieval. First 50 kills: free recovery. After 50
+// kills: 100,000 coins per death." Nothing falls on the floor of the shrine - the shrine is an
+// instance nobody else can reach, so a pile there would be a pile nobody could ever come back for -
+// and nothing is destroyed. It all goes to the priestess and she gives it back on the dock.
+//
+// AND THE STING, which is the part that makes it a real death: "Any unsafe death will delete all
+// items left inside the deathbank". Die anywhere else before you have collected and the lot is
+// gone - ~zulrah_deathbank_lost, hooked into the ordinary death in player/scripts/death.rs2.
+//
+// The guard that brings a death here is at the top of [queue,player_death_default], beside Castle
+// Wars' and the Fight Cave's.
+
+[label,zulrah_player_death]
+~player_death;
+midi_jingle(death2);
+mes("Oh dear you are dead!");
+~combat_clearqueue;
+clearqueue(player_death_default);
+~prayer_deactivate_all;
+~zulrah_stash_items;
+// The snake, the snakelings and the instance all go, and the player lands on the dock - which is
+// where the priestess is standing with everything they were carrying.
+~zulrah_end;
+~stat_reset_all;
+healenergy(10000);
+~clear_poison;
+~venom_clear;
+anim(null, 0);
+p_stopaction;
+mes("Priestess Zul-Gwenwynig has kept your possessions safe.");
+
+// Everything, worn first so a full pack cannot push the equipment out of the store.
+[proc,zulrah_stash_items]
+def_int $slot = 0;
+while ($slot < inv_size(worn)) {
+    if (inv_getobj(worn, $slot) ! null & inv_freespace(zulrah_deathbank) > 0) {
+        inv_movefromslot(worn, zulrah_deathbank, $slot);
+    }
+    $slot = calc($slot + 1);
+}
+$slot = 0;
+while ($slot < inv_size(inv)) {
+    if (inv_getobj(inv, $slot) ! null & inv_freespace(zulrah_deathbank) > 0) {
+        inv_movefromslot(inv, zulrah_deathbank, $slot);
+    }
+    $slot = calc($slot + 1);
+}
+~update_all(null);
+%zulrah_items_held = ^true;
+
+// The ordinary death, from player/scripts/death.rs2. A player who dies in the world with things
+// still sitting with the priestess loses them, exactly as Old School says.
+[proc,zulrah_deathbank_lost]
+if (%zulrah_items_held = ^false) {
+    return;
+}
+inv_clear(zulrah_deathbank);
+%zulrah_items_held = ^false;
+mes("<col=8f0000>Whatever Priestess Zul-Gwenwynig was keeping for you is gone.</col>");
+
+// ---------------------------------------------------------------------------------------------
+// Collecting it back
+// ---------------------------------------------------------------------------------------------
+// Her Collect right-click is the cache's own op3. The fee is the wiki's: nothing for your first
+// fifty kills, 100,000 coins a death after that - counted on KILLS, not on deaths, which is how
+// Old School counts it.
+
+[opnpc3,zulandra_priestess] ~zulrah_collect;
+
+[proc,zulrah_collect]
+if (%zulrah_items_held = ^false) {
+    ~chatnpc("<p,neutral>I am keeping nothing of yours. Long may that|last.");
+    return;
+}
+if (~zulrah_recovery_fee > 0) {
+    if (inv_total(inv, coins) < ~zulrah_recovery_fee) {
+        ~chatnpc("<p,sad>The Great One's blessing is not free forever.|Bring me <tostring(~zulrah_recovery_fee)> coins and your things are|yours again.");
+        return;
+    }
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>You are carrying too much already.");
+    return;
+}
+if (~zulrah_recovery_fee > 0) {
+    inv_del(inv, coins, ~zulrah_recovery_fee);
+}
+def_int $slot = 0;
+while ($slot < inv_size(zulrah_deathbank)) {
+    if (inv_getobj(zulrah_deathbank, $slot) ! null & inv_freespace(inv) > 0) {
+        inv_movefromslot(zulrah_deathbank, inv, $slot);
+    }
+    $slot = calc($slot + 1);
+}
+if (~zulrah_deathbank_count > 0) {
+    ~chatnpc("<p,neutral>That is all you can carry. Come back for the|rest.");
+    return;
+}
+%zulrah_items_held = ^false;
+~chatnpc("<p,happy>There. Every last thing of yours.");
+
+// What this recovery costs. The fifty is on kills: "First 50 kills: free recovery. After 50 kills:
+// 100,000 coins per death."
+[proc,zulrah_recovery_fee]()(int)
+if (%zulrah_kills < ^zulrah_free_recoveries) {
+    return(0);
+}
+return(^zulrah_recovery_fee);
+
+[proc,zulrah_deathbank_count]()(int)
+def_int $slot = 0;
+def_int $count = 0;
+while ($slot < inv_size(zulrah_deathbank)) {
+    if (inv_getobj(zulrah_deathbank, $slot) ! null) {
+        $count = calc($count + 1);
+    }
+    $slot = calc($slot + 1);
+}
+return($count);

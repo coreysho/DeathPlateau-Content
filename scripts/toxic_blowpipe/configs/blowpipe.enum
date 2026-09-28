@@ -36,6 +36,13 @@ val=kalphite_queen,^venom_immune_poisoned_instead
 val=kalphite_flyingqueen,^venom_immune_poisoned_instead
 val=kraken,^venom_immune_poisoned_instead
 val=tzhaar_fightcave_swarm_boss,^venom_immune_poisoned_instead
+// Zulrah is "Poison (100%), Venom (100%)" immune, and so are the snakelings it spits out
+// (area_zulrah).
+val=zulrah,^venom_immune
+val=zulrah_magma,^venom_immune
+val=zulrah_tanzanite,^venom_immune
+val=zulrah_snakeling,^venom_immune
+val=zulrah_snakeling_mage,^venom_immune
 val=zilyana,^venom_immune
 val=graardor,^venom_immune
 val=kril,^venom_immune

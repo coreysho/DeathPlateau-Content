@@ -1,0 +1,181 @@
+// ZULRAH'S DROP TABLE, at the OSRS wiki's own rates (oldschool.runescape.wiki/w/Zulrah, Sept 2026).
+//
+// HOW OLD SCHOOL ROLLS IT, in the wiki's own words: "In addition to the 100% drops, the player will
+// also have two rolls on Zulrah's drop table, excluding tertiary items, which have only one roll",
+// and for the uniques, Mod Ash: "It's 1/256 per roll, you get two rolls per kill." So a kill is
+//
+//   the 100% drop        100-299 of Zulrah's scales, once
+//   two identical rolls  1/256 the unique table (four items, one each) - otherwise the main table
+//   three tertiaries     one roll each: the clue, the jar, the pet
+//
+// THE MAIN TABLE IS ROLLED OUT OF 498, NOT 249. The wiki's denominator is 249 but the shark table
+// splits into halves of it (4.5/249 twice), so every weight here is doubled and the halves come out
+// exact. The nine groups sum to 249 on the nose - 10 + 14 + 36 + 8 + 31 + 74 + 12 + 54 + 10 - which
+// is how you can tell nothing has been left out of the arithmetic even where an item is missing.
+//
+// WHAT THIS 377 CACHE CANNOT GIVE, left as "nothing" with its weight still in the table so that no
+// listed rate moves - the Kraken round's rule:
+//   snakeskin (22/498)     377 has the five snakeskin ARMOUR pieces and no raw snakeskin at all
+//   shark lure (9/498)     a 2025 item; the shark table's other two halves are here
+//   spirit seed (2/498)    Summoning does not exist, here or in 2006
+// and two that are swapped for what this build does have, which is also the Kraken's rule:
+//   antidote++(4) -> super antipoison(4), noted, same count - the same swap kraken_drops.rs2 made
+//   the elite clue -> a HARD clue at the elite's own 1/75. There is no elite tier in this build
+//     (game_trail has easy, medium and hard); dropping the clue entirely would be worse than
+//     dropping the tier, because the clue is the thing the rate is about.
+// The two mutagens are not here either: they are cosmetic recolours of a serpentine helm, they sit
+// behind the flax table at 10/5264 of it, and they would need two more objs and two more helms for
+// a one-in-13,000 repaint. The flax is dropped at the flax table's whole 10/249, which is what
+// 5244/5264 of it rounds to anyway.
+
+[ai_queue3,zulrah] @zulrah_death_table;
+[ai_queue3,zulrah_magma] @zulrah_death_table;
+[ai_queue3,zulrah_tanzanite] @zulrah_death_table;
+
+// One table for three npc records, because the three are one snake wearing three colours and it can
+// be killed in any of them.
+[label,zulrah_death_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+// Loot goes under the PLAYER. Zulrah dies in the water of its own pool, where nobody can walk.
+def_coord $at = coord;
+// The pet first, so it can never be crowded out - the shape every boss table in this tree uses.
+~bosspet_roll(bosspet_snakeling_item, ^zulrah_pet_rate);
+// The 100% drop.
+obj_add($at, zulrahs_scales, ~random_range(^zulrah_scales_min, ^zulrah_scales_max), ^lootdrop_duration);
+// The tertiaries, one roll each.
+~trail_hardcluedrop(^zulrah_elite_clue_rate, $at);
+if (random(^zulrah_jar_rate) = 0) {
+    ~zulrah_rare_at($at, jar_of_swamp, 1);
+}
+// And the two rolls.
+~zulrah_roll($at);
+~zulrah_roll($at);
+// The kill count - what the first fifty free item recoveries are counted on.
+%zulrah_kills = add(%zulrah_kills, 1);
+// Everything it spat out goes with it: "[the snakelings] will automatically die off with Zulrah
+// when it is killed".
+~zulrah_clear_snakelings;
+
+// ONE ROLL: the unique table at 1/256, or else the main table.
+[proc,zulrah_roll](coord $at)
+if (random(^zulrah_unique_of) = 0) {
+    ~zulrah_unique($at);
+    return;
+}
+~zulrah_main($at);
+
+// The four uniques, one chance in four each - which is the 1/1,024 a roll the wiki lists for each
+// of them, and about 1/512 a kill over the two rolls.
+[proc,zulrah_unique](coord $at)
+def_namedobj $drop = tanzanite_fang;
+def_int $which = random(^zulrah_unique_count);
+if ($which = 1) {
+    $drop = magic_fang;
+} else if ($which = 2) {
+    $drop = serpentine_visage;
+} else if ($which = 3) {
+    $drop = uncut_onyx;
+}
+~zulrah_rare_at($at, $drop, 1);
+session_log(^log_adventure, "Defeated <npc_name> and received a <oc_name($drop)>!");
+
+[proc,zulrah_rare_at](coord $at, namedobj $obj, int $count)
+obj_add($at, $obj, $count, ^lootdrop_duration);
+~broadcast_drop($obj);
+
+// THE MAIN TABLE. Weights are the wiki's, doubled (see the header); the comment on each line is the
+// wiki's own fraction.
+[proc,zulrah_main](coord $at)
+def_int $r = random(498);
+// --- the flax table, 10/249 ---
+if ($r < 20) {
+    obj_add($at, cert_flax, 1000, ^lootdrop_duration);
+// --- weapons and armour, 14/249 ---
+} else if ($r < 40) { // battlestaff, 10 noted, 10/249
+    obj_add($at, cert_battlestaff, 10, ^lootdrop_duration);
+} else if ($r < 44) { // 2/249
+    obj_add($at, dragon_med_helm, 1, ^lootdrop_duration);
+} else if ($r < 48) { // 2/249
+    obj_add($at, dragon_halberd, 1, ^lootdrop_duration);
+// --- runes, 36/249 ---
+} else if ($r < 72) { // 12/249
+    obj_add($at, deathrune, 250, ^lootdrop_duration);
+} else if ($r < 96) { // 12/249
+    obj_add($at, lawrune, 200, ^lootdrop_duration);
+} else if ($r < 120) { // 12/249
+    obj_add($at, chaosrune, 400, ^lootdrop_duration);
+// --- herbs, all noted and all grimy, 8/249 ---
+} else if ($r < 124) { // 2/249
+    obj_add($at, cert_unidentified_snapdragon, 10, ^lootdrop_duration);
+} else if ($r < 128) { // 2/249
+    obj_add($at, cert_unidentified_dwarf_weed, 30, ^lootdrop_duration);
+} else if ($r < 132) { // 2/249
+    obj_add($at, cert_unidentified_toadflax, 25, ^lootdrop_duration);
+} else if ($r < 136) { // 2/249
+    obj_add($at, cert_unidentified_torstol, 10, ^lootdrop_duration);
+// --- seeds, 31/249 ---
+} else if ($r < 148) { // 6/249
+    obj_add($at, palm_tree_seed, 1, ^lootdrop_duration);
+} else if ($r < 160) { // 6/249
+    obj_add($at, papaya_tree_seed, 3, ^lootdrop_duration);
+} else if ($r < 172) { // 6/249
+    obj_add($at, calquat_tree_seed, 2, ^lootdrop_duration);
+} else if ($r < 180) { // magic seed, 4/249
+    obj_add($at, magic_tree_seed, 1, ^lootdrop_duration);
+} else if ($r < 184) { // 2/249
+    obj_add($at, toadflax_seed, 2, ^lootdrop_duration);
+} else if ($r < 188) { // 2/249
+    obj_add($at, snapdragon_seed, 1, ^lootdrop_duration);
+} else if ($r < 192) { // 2/249
+    obj_add($at, dwarf_weed_seed, 2, ^lootdrop_duration);
+} else if ($r < 196) { // 2/249
+    obj_add($at, torstol_seed, 1, ^lootdrop_duration);
+} else if ($r < 198) {
+    // spirit seed, 1/249 - no Summoning here, so nothing
+// --- resources, 74/249 ---
+} else if ($r < 220) {
+    // snakeskin, 35 noted, 11/249 - no raw snakeskin in this cache, so nothing
+} else if ($r < 242) { // runite ore, 2 noted, 11/249
+    obj_add($at, cert_runite_ore, 2, ^lootdrop_duration);
+} else if ($r < 262) { // pure essence, 1500 noted, 10/249 - the 377 cache calls it blankrune_high
+    obj_add($at, cert_blankrune_high, 1500, ^lootdrop_duration);
+} else if ($r < 282) { // yew logs, 35 noted, 10/249
+    obj_add($at, cert_yew_logs, 35, ^lootdrop_duration);
+} else if ($r < 298) { // adamantite bar, 20 noted, 8/249
+    obj_add($at, cert_adamantite_bar, 20, ^lootdrop_duration);
+} else if ($r < 314) { // coal, 200 noted, 8/249
+    obj_add($at, cert_coal, 200, ^lootdrop_duration);
+} else if ($r < 330) { // dragon bones, 12 noted, 8/249
+    obj_add($at, cert_dragon_bones, 12, ^lootdrop_duration);
+} else if ($r < 346) { // mahogany logs, 50 noted, 8/249
+    obj_add($at, cert_mahogany_logs, 50, ^lootdrop_duration);
+// --- the shark drop table, 12/249, in its own 3:3:2 ---
+} else if ($r < 355) { // raw shark, 35 noted, 4.5/249
+    obj_add($at, cert_raw_shark, 35, ^lootdrop_duration);
+} else if ($r < 364) {
+    // shark lure, 70, 4.5/249 - a 2025 item, so nothing
+} else if ($r < 370) { // manta ray, 35 noted, 3/249
+    obj_add($at, cert_mantaray, 35, ^lootdrop_duration);
+// --- other, 54/249 ---
+} else if ($r < 400) { // 15/249
+    obj_add($at, zul_andra_teleport, 4, ^lootdrop_duration);
+} else if ($r < 418) { // antidote++(4), 10 noted, 9/249 -> super antipoison(4), what 377 has
+    obj_add($at, cert_4dose2antipoison, 10, ^lootdrop_duration);
+} else if ($r < 434) { // dragonstone bolt tips, 12, 8/249 - "dragon_bolttips" in this cache, whose
+                       // own examine reads "Dragonstone bolt tips."
+    obj_add($at, dragon_bolttips, 12, ^lootdrop_duration);
+} else if ($r < 446) { // grapes, 250 noted, 6/249
+    obj_add($at, cert_grapes, 250, ^lootdrop_duration);
+} else if ($r < 458) { // coconut, 20 noted, 6/249
+    obj_add($at, cert_coconut, 20, ^lootdrop_duration);
+} else if ($r < 468) { // 5/249
+    obj_add($at, swamp_tar, 1000, ^lootdrop_duration);
+} else if ($r < 478) { // 5/249 - the scales again, on top of the 100% drop
+    obj_add($at, zulrahs_scales, 500, ^lootdrop_duration);
+// --- the rare drop table, 10/249 ---
+} else {
+    obj_add($at, ~ultrarare_getitem, ^lootdrop_duration);
+}

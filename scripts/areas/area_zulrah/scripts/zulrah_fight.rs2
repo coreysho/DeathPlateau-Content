@@ -1,0 +1,422 @@
+// ZULRAH - the shrine instance and the rotation engine. Numbers and coordinates: zulrah.constant.
+// The four rotations: zulrah.enum. What each attack does: zulrah_combat.rs2.
+//
+// THE SHAPE OF THE FIGHT. Zulrah never moves and never chooses: it walks a fixed script of phases,
+// and the player's job is to read which script it is on and pray ahead of it. So the whole thing is
+// a state machine with two states and one clock:
+//
+//   FIGHTING    do the next action of the current run, one every 3 ticks (%npc_action_delay, the
+//               same clock every other monster in this build attacks on), until the phase's runs
+//               are spent
+//   SUBMERGED   play this colour's dive, wait, then surface at the next phase's place in the next
+//               phase's colour and start again
+//
+// and when a rotation runs out it rolls another, because "Zulrah will then continue on to the
+// starting phase of the next rotation".
+//
+// WHERE THE STATE LIVES. All of it is NPC vars on Zulrah itself (zulrah.varn), not player varps,
+// for the reason the Fight Cave's fightcave_jad_called gives: the trigger that drives this is
+// [ai_applayer2], which has the target player UNPROTECTED, and a protected player varp cannot be
+// written from there. Zulrah is one snake per instance per player, so its own vars are already
+// per-player.
+//
+// ONE SNAKE THE WHOLE WAY. The colour change is npc_changetype_keepall, so hitpoints, hero points
+// and everything else the engine tracks carry across a phase. It does change the npc's uid, which
+// means the player has to click Zulrah again after every dive - which is what Old School makes you
+// do anyway, because the snake has moved out of reach.
+
+// ---------------------------------------------------------------------------------------------
+// The instance
+// ---------------------------------------------------------------------------------------------
+// Four zones by four, copied out of m36_79 - the square tools/importzulrahshrine.py put the shrine
+// on. Whole or not at all, like the Fight Cave's: half a shrine is a hole in the floor.
+
+[proc,zulrah_build]()(boolean)
+def_coord $base = instance_create;
+if ($base = null) {
+    return(false);
+}
+def_int $zz = 0;
+while ($zz < ^zulrah_zones) {
+    def_int $zx = 0;
+    while ($zx < ^zulrah_zones) {
+        def_coord $dst = movecoord($base, calc($zx * 8), 0, calc($zz * 8));
+        def_coord $src = movecoord(^zulrah_template, calc($zx * 8), 0, calc($zz * 8));
+        if (instance_setzone($dst, $src, 0) = false) {
+            instance_delete($base);
+            return(false);
+        }
+        $zx = calc($zx + 1);
+    }
+    $zz = calc($zz + 1);
+}
+%zulrah_instance = $base;
+return(true);
+
+// A template coordinate in this player's instance. Nothing in the shrine is ever addressed raw.
+[proc,zulrah_at](coord $tpl)(coord)
+if (%zulrah_instance = null) {
+    return($tpl);
+}
+def_int $dx = sub(coordx($tpl), coordx(^zulrah_template));
+def_int $dz = sub(coordz($tpl), coordz(^zulrah_template));
+return(movecoord(%zulrah_instance, $dx, 0, $dz));
+
+[proc,in_zulrah_shrine](coord $coord)(boolean)
+if (%zulrah_instance = null) {
+    return(false);
+}
+if (instance_find($coord) = %zulrah_instance) {
+    return(true);
+}
+return(false);
+
+// ---------------------------------------------------------------------------------------------
+// Starting and ending
+// ---------------------------------------------------------------------------------------------
+
+[proc,zulrah_start]
+if (~zulrah_build = false) {
+    mes("The shrine is crowded. Try again shortly.");
+    return;
+}
+p_teleport(~zulrah_at(^zulrah_entry));
+mes("<col=8f0000>Zulrah rises from the water.</col>");
+// The rotation is rolled fresh every fight, as it is in Old School. npc_add makes the snake the
+// active npc, so every line below it writes Zulrah's own vars.
+npc_add(~zulrah_at(^zulrah_pos_middle), zulrah, ^zulrah_npc_life);
+%zulrah_rotation = calc(random(^zulrah_rotations) + 1);
+%zulrah_phase = enum(int, int, zulrah_rotation_start, %zulrah_rotation);
+%zulrah_run = enum(int, int, zulrah_phase_run_start, %zulrah_phase);
+%zulrah_run_at = 0;
+%zulrah_submerged = 0;
+npc_anim(zulrah_rise, 0);
+%npc_action_delay = add(map_clock, ^zulrah_rise_ticks);
+npc_setmode(applayer2);
+settimer(zulrah_fight, 1);
+
+// Leaving, dying and logging out all come here: the snake, its snakelings and the instance go, and
+// the player is put back on the dock. An instance left behind is one of 1024 slots nobody can use
+// until the server restarts.
+[proc,zulrah_end]
+if (%zulrah_instance = null) {
+    return;
+}
+cleartimer(zulrah_fight);
+~zulrah_clear_snakelings;
+def_coord $inst = %zulrah_instance;
+%zulrah_instance = null;
+// The player leaves before the instance does - anyone still inside is standing on unallocated
+// collision, which blocks every step they try to take.
+p_teleport(^zulandra_dock);
+instance_delete($inst);
+
+// Everything alive in the instance goes with it: "[the snakelings] will automatically die off with
+// Zulrah when it is killed", and the same when you leave or lose.
+[proc,zulrah_clear_snakelings]
+if (%zulrah_instance = null) {
+    return;
+}
+npc_findallany(~zulrah_at(^zulrah_pos_middle), ^zulrah_snakeling_sweep, ^vis_off);
+while (npc_findnext = true) {
+    if (instance_find(npc_coord) = %zulrah_instance
+        & (npc_type = zulrah_snakeling | npc_type = zulrah_snakeling_mage
+           | npc_type = zulrah | npc_type = zulrah_magma | npc_type = zulrah_tanzanite)) {
+        npc_del;
+    }
+}
+
+// Logging out inside the shrine. The instance is a temp varp and a dead instance is unallocated
+// collision, so a player who logs out in one would come back unable to take a step. They come back
+// on the dock instead, with the fight lost - the Fight Cave's own bargain.
+[proc,zulrah_logout]
+if (%zulrah_instance = null) {
+    return;
+}
+cleartimer(zulrah_fight);
+~zulrah_clear_snakelings;
+def_coord $inst = %zulrah_instance;
+%zulrah_instance = null;
+p_teleport(^zulandra_dock);
+instance_delete($inst);
+
+// ---------------------------------------------------------------------------------------------
+// The beat
+// ---------------------------------------------------------------------------------------------
+// THE FIGHT RUNS OFF THE PLAYER'S OWN TIMER, not off Zulrah's [ai_applayer2], and that is the one
+// structural thing in this round that is not how the Fight Cave does it.
+//
+// An ap trigger only fires while the engine can draw a line from the npc to the player -
+// PathingEntity.inApproachDistance is distance AND line of sight, computed backwards for npcs. The
+// shrine is a horseshoe with a pool in the middle of it, so a player who steps onto one of the two
+// arms while the snake is surfaced to the south is out of that line, and the trigger stops firing.
+// Nothing puts it back: the snake sits there for the rest of the fight. Old School's Zulrah attacks
+// you wherever you are in its shrine and does not care what is between you.
+//
+// So the clock is a timer on the one player whose instance this is, and the snake is looked up
+// rather than pointed at. Everything below runs with Zulrah as the active npc and that player as
+// the active player - the same two pointers the ap trigger would have handed over.
+
+[timer,zulrah_fight]
+if (%zulrah_instance = null) {
+    cleartimer(zulrah_fight);
+    return;
+}
+npc_findallany(~zulrah_at(^zulrah_pos_middle), ^zulrah_snakeling_sweep, ^vis_off);
+while (npc_findnext = true) {
+    if ((npc_type = zulrah | npc_type = zulrah_magma | npc_type = zulrah_tanzanite)
+        & instance_find(npc_coord) = %zulrah_instance) {
+        ~zulrah_tick;
+        return;
+    }
+}
+
+[proc,zulrah_tick]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+// The snake faces and holds the player it is fighting. It cannot walk (moverestrict=nomove) and it
+// has no ap trigger any more, so this is only what it looks at - and it is re-stated every beat
+// because a snakeling orb ends in npc_add, which makes the snakeling the active npc.
+npc_setmode(applayer2);
+if (%zulrah_submerged = 1) {
+    ~zulrah_surface;
+    return;
+}
+def_int $first = enum(int, int, zulrah_phase_run_start, %zulrah_phase);
+def_int $runs = enum(int, int, zulrah_phase_run_count, %zulrah_phase);
+if (%zulrah_run >= add($first, $runs)) {
+    ~zulrah_dive;
+    return;
+}
+def_int $kind = enum(int, int, zulrah_run_kind, %zulrah_run);
+def_int $at = %zulrah_run_at;
+// THE COUNTERS MOVE FIRST. A snakeling orb ends in npc_add, which makes the snakeling the active
+// npc - every var written after it would be written on the snakeling instead of on Zulrah.
+%zulrah_run_at = add(%zulrah_run_at, 1);
+if (%zulrah_run_at >= enum(int, int, zulrah_run_count, %zulrah_run)) {
+    %zulrah_run = add(%zulrah_run, 1);
+    %zulrah_run_at = 0;
+}
+%npc_action_delay = add(map_clock, ^zulrah_attackrate);
+~zulrah_action($kind, $at);
+
+// One beat's worth of whatever this run is. $at is how far into the run we are, which is all the
+// two alternating runs and the two Jad runs need to know.
+[proc,zulrah_action](int $kind, int $at)
+if ($kind = ^zulrah_act_range) {
+    ~zulrah_ranged;
+    return;
+}
+if ($kind = ^zulrah_act_mage) {
+    // "Blue (Tanzanite): attacks with Ranged and Magic" - one or the other, per attack.
+    if (random(^zulrah_mage_form_of) < ^zulrah_mage_form_magic_chance) {
+        ~zulrah_magic;
+        return;
+    }
+    ~zulrah_ranged;
+    return;
+}
+if ($kind = ^zulrah_act_melee) {
+    ~zulrah_melee;
+    return;
+}
+if ($kind = ^zulrah_act_venom) {
+    ~zulrah_venom_barrage;
+    return;
+}
+if ($kind = ^zulrah_act_alt_orb) {
+    // orb, venom, orb, venom, ... starting with the orb
+    if (modulo($at, 2) = 0) {
+        ~zulrah_snakeling_orb;
+        return;
+    }
+    ~zulrah_venom_barrage;
+    return;
+}
+if ($kind = ^zulrah_act_alt_venom) {
+    if (modulo($at, 2) = 0) {
+        ~zulrah_venom_barrage;
+        return;
+    }
+    ~zulrah_snakeling_orb;
+    return;
+}
+if ($kind = ^zulrah_act_jad_range) {
+    // "10 alternating ranged and magic, starting with ranged"
+    if (modulo($at, 2) = 0) {
+        ~zulrah_ranged;
+        return;
+    }
+    ~zulrah_magic;
+    return;
+}
+if ($kind = ^zulrah_act_jad_mage) {
+    if (modulo($at, 2) = 0) {
+        ~zulrah_magic;
+        return;
+    }
+    ~zulrah_ranged;
+    return;
+}
+// ^zulrah_act_orb, and anything a bad enum row could ever produce, is a snakeling. LAST, because
+// it ends in npc_add.
+~zulrah_snakeling_orb;
+
+// ---------------------------------------------------------------------------------------------
+// Diving and surfacing
+// ---------------------------------------------------------------------------------------------
+
+[proc,zulrah_dive]
+npc_anim(enum(npc, seq, zulrah_dive_anim, npc_type), 0);
+%zulrah_submerged = 1;
+%npc_action_delay = add(map_clock, ^zulrah_dive_ticks);
+
+[proc,zulrah_surface]
+%zulrah_submerged = 0;
+%zulrah_phase = add(%zulrah_phase, 1);
+def_int $rot_start = enum(int, int, zulrah_rotation_start, %zulrah_rotation);
+if (%zulrah_phase >= add($rot_start, enum(int, int, zulrah_rotation_length, %zulrah_rotation))) {
+    // Out of phases: a fresh rotation, from its own first phase.
+    %zulrah_rotation = calc(random(^zulrah_rotations) + 1);
+    %zulrah_phase = enum(int, int, zulrah_rotation_start, %zulrah_rotation);
+}
+%zulrah_run = enum(int, int, zulrah_phase_run_start, %zulrah_phase);
+%zulrah_run_at = 0;
+npc_tele(~zulrah_at(enum(int, coord, zulrah_pos_coord,
+                         enum(int, int, zulrah_phase_pos, %zulrah_phase))));
+// keepall, not changetype: the hitpoints it has lost are the fight so far.
+npc_changetype_keepall(enum(int, npc, zulrah_phase_form, %zulrah_phase), ^zulrah_npc_life);
+npc_anim(zulrah_rise, 0);
+%npc_action_delay = add(map_clock, ^zulrah_rise_ticks);
+npc_setmode(applayer2);
+
+// ---------------------------------------------------------------------------------------------
+// The snakelings
+// ---------------------------------------------------------------------------------------------
+// An orb is a projectile that lands beside you and leaves a snakeling standing there. npc_add is
+// the last thing this proc does, for the reason ~zulrah_tick's comment gives.
+
+[proc,zulrah_snakeling_orb]
+npc_anim(npc_param(attack_anim), 0);
+~npc_set_attack_vars;
+def_coord $at = map_findsquare(coord, 1, ^zulrah_snakeling_spawn_range, ^map_findsquare_lineofwalk);
+~player_projectile(npc_coord, $at, uid, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
+// Half melee, half magic - OSRS's snakelings "attack with either magic or melee".
+def_npc $type = zulrah_snakeling;
+if (random(2) = 0) {
+    $type = zulrah_snakeling_mage;
+}
+npc_add($at, $type, ^zulrah_snakeling_life);
+npc_setmode(opplayer2);
+
+[ai_queue1,zulrah_snakeling] ~npc_default_retaliate_ap;
+[ai_queue1,zulrah_snakeling_mage] ~npc_default_retaliate_ap;
+[ai_queue3,zulrah_snakeling] gosub(npc_death);
+[ai_queue3,zulrah_snakeling_mage] gosub(npc_death);
+
+// BOTH of them attack through their own proc rather than the engine's, and the max hit is the
+// reason: "incredibly accurate attacks, which can hit up to 15". The ACCURACY is the engine's -
+// 140 Attack on one, 185 Magic on the other, the cache's own numbers, with the protection prayers
+// working through the same rolls they work through everywhere else - but 15 is a flat cap, and the
+// engine would derive something near forty out of that 138 Strength.
+[ai_applayer2,zulrah_snakeling] ~zulrah_snakeling_bite;
+[ai_opplayer2,zulrah_snakeling] ~zulrah_snakeling_bite;
+[ai_applayer2,zulrah_snakeling_mage] ~zulrah_snakeling_cast;
+[ai_opplayer2,zulrah_snakeling_mage] ~zulrah_snakeling_cast;
+
+[proc,zulrah_snakeling_bite]
+if (%npc_action_delay > map_clock) {
+    npc_setmode(applayer2);
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+if (npc_canreach = false) {
+    npc_setmode(applayer2);
+    return;
+}
+%npc_action_delay = add(map_clock, ^zulrah_snakeling_attackrate);
+def_int $damage = 0;
+if (randominc(~npc_melee_attack_roll) > randominc(~player_defence_roll_specific(^crush_style))) {
+    $damage = randominc(^zulrah_snakeling_maxhit);
+}
+~zulrah_land_hit($damage, ^zulrah_snakeling_maxhit, 0);
+
+[proc,zulrah_snakeling_cast]
+if (%npc_action_delay > map_clock) {
+    npc_setmode(applayer2);
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+%npc_action_delay = add(map_clock, ^zulrah_snakeling_attackrate);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic_travel, 40, 36, 32, 15, 0, 11, 5);
+def_int $damage = 0;
+if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(^magic_style))) {
+    $damage = randominc(^zulrah_snakeling_maxhit);
+}
+~zulrah_land_hit($damage, ^zulrah_snakeling_maxhit, $duration);
+
+// ---------------------------------------------------------------------------------------------
+// The venom clouds
+// ---------------------------------------------------------------------------------------------
+// A barrage drops a cloud where the player is standing and it burns for ^zulrah_cloud_ticks.
+//
+// THE CLOUD CARRIES ITSELF. There is nowhere to keep four cloud coordinates: a queue takes one int,
+// an npc var takes an int and a coord is neither. So the cloud is a queue that re-queues itself
+// with its own position and its own remaining life packed into that one int - the tile as an offset
+// inside the instance (32x32, so ten bits) and the countdown above it. Nothing else has to know a
+// cloud exists, four can burn at once without four slots, and the whole thing ends when its
+// countdown does.
+//
+// -1 is the first tick: "land on wherever I am now", which is what a barrage aimed at the player
+// does.
+[proc,zulrah_venom_barrage]
+npc_anim(npc_param(attack_anim), 0);
+~npc_set_attack_vars;
+queue(zulrah_cloud, 0, -1);
+
+[queue,zulrah_cloud](int $packed)
+if (%zulrah_instance = null) {
+    return;
+}
+def_int $left = ^zulrah_cloud_ticks;
+def_int $tile = $packed;
+if ($packed < 0) {
+    def_int $dx = sub(coordx(coord), coordx(%zulrah_instance));
+    def_int $dz = sub(coordz(coord), coordz(%zulrah_instance));
+    $tile = add(multiply($dx, 32), $dz);
+} else {
+    $left = divide($packed, 1024);
+    $tile = modulo($packed, 1024);
+}
+def_coord $at = movecoord(%zulrah_instance, divide($tile, 32), 0, modulo($tile, 32));
+// The graphic is only 6 frames long, so it is re-played while the cloud is still there.
+if (modulo($left, 5) = 0 | $packed < 0) {
+    spotanim_map(zulrah_venom_cloud, $at, 0, 0);
+}
+// "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
+// The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
+// touches the venom timer.
+if (abs(sub(coordx(coord), coordx($at))) <= ^zulrah_cloud_radius
+    & abs(sub(coordz(coord), coordz($at))) <= ^zulrah_cloud_radius) {
+    // ~poison_hit is this build's "take N damage and die if that was the last of it" -
+    // venom.rs2 and the poison timer both land their damage through it. The splat is the
+    // ordinary one, not poison's green: a cloud is not a poison.
+    ~poison_hit(calc(random(^zulrah_cloud_maxhit) + 1), ^hitmark_damage);
+}
+if ($left <= 1) {
+    return;
+}
+queue(zulrah_cloud, 1, add(multiply(sub($left, 1), 1024), $tile));

@@ -11,6 +11,7 @@ if (($attackrange <= 1 & ~player_in_combat_check = false) | npc_range(coord) > $
 
 [label,player_combat_start]
 ~barrows_combat_entry; // equipment degradation - see degrade/scripts/degrade.rs2
+~serpentine_helm_combat_entry; // ten scales on entering combat - area_zulrah/scripts/serpentine_helm.rs2
 if (~player_in_combat_check = false) {
     return;
 }

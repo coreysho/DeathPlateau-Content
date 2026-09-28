@@ -1,0 +1,39 @@
+// Zulrah (area_zulrah/scripts/*.rs2).
+//
+// THE FIRST TWO ARE TEMP on purpose, for the reason fightcave.varp gives at length: an instance
+// does not survive a restart, so neither may anything pointing into one.
+
+// The instance this player's shrine was built in - its south-west tile, or null outside.
+[zulrah_instance]
+type=coord
+
+// Set once the High Priestess has been told you are volunteering. Perm: she does not forget.
+[zulrah_volunteered]
+scope=perm
+
+// Kills. What the first fifty free item recoveries are counted on - "First 50 kills: free
+// recovery. After 50 kills: 100,000 coins per death."
+//
+// protect=no, and boss_kills.varp explains why at length: this is written from the [ai_queue3]
+// death table, which is npc context, and a protected varp written from there throws "Attempt to
+// access corrupted pointer" whatever npc_findhero returned.
+[zulrah_kills]
+scope=perm
+protect=no
+
+// True while Priestess Zul-Gwenwynig is holding what you died with.
+[zulrah_items_held]
+scope=perm
+
+// The serpentine helm's charges - the player's, not the item's, the way the trident of the seas'
+// are (area_kraken_cove/configs/kraken.varp). 0..11,000 scales.
+[serpentine_helm_charges]
+scope=perm
+
+// map_clock of the next ten-scale tick while the helm is in combat. Temp: a map_clock means
+// nothing to a restarted world.
+[serpentine_helm_clock]
+
+// The trident of the swamp's charges, on the same terms as the seas'. 0..2,500.
+[swamp_trident_charges]
+scope=perm

@@ -1,0 +1,190 @@
+// THE SERPENTINE HELM - what the serpentine visage is for. OSRS's, per the wiki
+// (oldschool.runescape.wiki/w/Serpentine_helm, Sept 2026):
+//   * a chisel turns a visage into an uncharged helm at 52 Crafting for 120 experience;
+//   * 11,000 of Zulrah's scales fill it, and a full one lasts "16 hours and 30 minutes of combat":
+//     10 scales the moment you enter combat, then 10 more every 90 ticks you are still in it;
+//   * charged it is +52/+55/+58 stab/slash/crush defence, +50 Ranged defence and +5 Strength, and
+//     it makes the wearer immune to poison AND venom;
+//   * it envenoms what you hit - one time in six with a plain melee weapon, one in two with a
+//     poisoned one, and always with the toxic blowpipe or the trident of the swamp, which do that
+//     on their own account anyway;
+//   * uncharged it "retains the negative bonuses, but loses all positive bonuses and passive
+//     effects", and "cannot be equipped if it is uncharged, except when it's fully degraded while
+//     equipped" - so the uncharged record has a wearpos and no Wear.
+//
+// THE CHARGES ARE THE PLAYER'S, not the item's, exactly as the trident of the seas' are
+// (area_kraken_cove/scripts/trident.rs2): an obj here carries no per-item state. That is also why
+// the charged helm is tradeable=no, which is what OSRS makes it too.
+
+// ---------------------------------------------------------------------------------------------
+// Making one
+// ---------------------------------------------------------------------------------------------
+[opheldu,serpentine_visage]
+if (last_useitem = chisel) {
+    @serpentine_helm_craft;
+}
+~displaymessage(^dm_default);
+
+// There is no [opheldu,chisel] here and there must not be: skill_crafting/scripts/gem/uncut_gem.rs2
+// already declares it, and a trigger may be declared once. It is not needed either - OpHeldUHandler
+// tries BOTH items' triggers, which is how a chisel on a visage reaches this and why the blowpipe's
+// own fletch only ever declared [opheldu,tanzanite_fang].
+
+[label,serpentine_helm_craft]
+if (inv_total(inv, serpentine_visage) < 1 | inv_total(inv, chisel) < 1) {
+    return;
+}
+if (stat(crafting) < ^serpentine_helm_crafting_level) {
+    ~objbox(serpentine_visage, "You need a Crafting level of <tostring(^serpentine_helm_crafting_level)> to make a serpentine helm.", 250, 0, divide(^objbox_height, 2));
+    return;
+}
+sound_synth(chisel, 1, 0);
+inv_del(inv, serpentine_visage, 1);
+inv_add(inv, serpentine_helm_uncharged, 1);
+stat_advance(crafting, ^serpentine_helm_crafting_xp);
+mes("You carve the visage into a helm.");
+
+// ---------------------------------------------------------------------------------------------
+// Wearing, checking, charging, uncharging
+// ---------------------------------------------------------------------------------------------
+[opheld2,serpentine_helm] @levelrequire_defence(^serpentine_helm_level, last_slot);
+
+[opheld3,serpentine_helm] ~serpentine_helm_check;
+[label,wearop1_serpentine_helm] ~serpentine_helm_check;
+
+[proc,serpentine_helm_check]
+if (%serpentine_helm_charges = 1) {
+    mes("Your serpentine helm has 1 scale in it.");
+    return;
+}
+mes("Your serpentine helm has <tostring(%serpentine_helm_charges)> scales in it.");
+
+// Scales on either helm fill it as far as what is in the pack will go.
+[opheldu,serpentine_helm] @serpentine_helm_charge(last_item, last_useitem, last_slot, last_useslot);
+[opheldu,serpentine_helm_uncharged] @serpentine_helm_charge(last_item, last_useitem, last_slot, last_useslot);
+
+[label,serpentine_helm_charge](obj $a, obj $b, int $aslot, int $bslot)
+def_int $slot = $aslot;
+def_obj $other = $b;
+if ($b = serpentine_helm | $b = serpentine_helm_uncharged) {
+    $slot = $bslot;
+    $other = $a;
+}
+if ($other ! zulrahs_scales) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $room = sub(^serpentine_helm_max_charges, %serpentine_helm_charges);
+if ($room <= 0) {
+    mes("Your serpentine helm can't hold any more scales.");
+    return;
+}
+def_int $n = min($room, inv_total(inv, zulrahs_scales));
+if ($n <= 0) {
+    return;
+}
+inv_del(inv, zulrahs_scales, $n);
+%serpentine_helm_charges = add(%serpentine_helm_charges, $n);
+if (inv_getobj(inv, $slot) = serpentine_helm_uncharged) {
+    inv_setslot(inv, $slot, serpentine_helm, 1);
+}
+mes("You add <tostring($n)> scale<~serpentine_helm_plural($n)> to the helm. It now holds <tostring(%serpentine_helm_charges)>.");
+
+[proc,serpentine_helm_plural](int $n)(string)
+if ($n = 1) return("");
+return("s");
+
+// "Players can retrieve unused scales by uncharging the helm" - all of them, and the helm goes back
+// to the uncharged record.
+[opheld5,serpentine_helm]
+def_int $slot = last_slot;
+def_int $n = %serpentine_helm_charges;
+if ($n > 0) {
+    if (inv_total(inv, zulrahs_scales) = 0 & inv_freespace(inv) < 1) {
+        mes("You need more inventory space to take the scales out of the helm.");
+        return;
+    }
+    inv_add(inv, zulrahs_scales, $n);
+}
+%serpentine_helm_charges = 0;
+inv_setslot(inv, $slot, serpentine_helm_uncharged, 1);
+mes("You uncharge the helm.");
+
+// ---------------------------------------------------------------------------------------------
+// Burning scales
+// ---------------------------------------------------------------------------------------------
+// "The helmet will immediately use 10 scales when the player enters combat and will use another 10
+// if the player is still in combat after 90 ticks (54 seconds) have passed." That is the same
+// mechanic Barrows degradation has, on the same clock, so it hangs off the same combat-entry hook
+// (skill_combat/scripts/player/player_combat.rs2 and player_magic.rs2) and reads the same
+// %barrows_lastcombat, "refreshed from both sides of a fight".
+
+[proc,serpentine_helm_combat_entry]
+if (inv_getobj(worn, ^wearpos_hat) ! serpentine_helm) {
+    return;
+}
+if (gettimer(serpentine_helm) ! -1) {
+    return; // already in combat, the timer is doing the work
+}
+settimer(serpentine_helm, ^serpentine_helm_charge_interval);
+~serpentine_helm_burn; // entering combat costs its ten straight away
+
+[timer,serpentine_helm]
+// The same 8-tick idle window npc_combat.rs2 and pvp_combat.rs2 use to decide whether a player is
+// still fighting, and the same one the Barrows timer reads.
+if (add(%barrows_lastcombat, 8) < map_clock) {
+    cleartimer(serpentine_helm);
+    return;
+}
+~serpentine_helm_burn;
+
+[proc,serpentine_helm_burn]
+if (inv_getobj(worn, ^wearpos_hat) ! serpentine_helm) {
+    cleartimer(serpentine_helm);
+    return;
+}
+%serpentine_helm_charges = max(0, sub(%serpentine_helm_charges, ^serpentine_helm_charge_cost));
+if (%serpentine_helm_charges > 0) {
+    return;
+}
+// Run dry in the hands: it stays on your head as the uncharged one, which is the one case OSRS
+// lets an uncharged helm be worn in.
+inv_setslot(worn, ^wearpos_hat, serpentine_helm_uncharged, 1);
+~update_all(null);
+cleartimer(serpentine_helm);
+mes("@red@Your serpentine helm has run out of scales.");
+
+// ---------------------------------------------------------------------------------------------
+// What a charged helm does
+// ---------------------------------------------------------------------------------------------
+// Worn and holding scales. Everything below is gated on this and nothing else.
+[proc,serpentine_helm_charged]()(boolean)
+if (inv_getobj(worn, ^wearpos_hat) = serpentine_helm & %serpentine_helm_charges > 0) {
+    return(true);
+}
+return(false);
+
+// "Grants immunity to venom and poison." Read by [queue,venom_player] and [queue,poison_player].
+[proc,serpentine_helm_immune]()(boolean)
+return(~serpentine_helm_charged);
+
+// Envenoming what you hit, from the one place that knows a melee hit LANDED
+// (skill_combat/scripts/player/player_melee.rs2, beside the weapon's own poison roll). "1 in 6
+// chance if using a non-poisoned melee weapon; 1 in 2 chance if using poisoned weapons; 100% if
+// using the toxic blowpipe, trident of the swamp, or toxic staff of the dead" - the third of those
+// needs nothing here, because those weapons envenom on their own account.
+[proc,serpentine_helm_melee_venom](int $damage, obj $weapon)
+if ($damage <= 0) {
+    return;
+}
+if (~serpentine_helm_charged = false) {
+    return;
+}
+def_int $chance = ^serpentine_helm_venom_chance;
+if ($weapon ! null & oc_param($weapon, poison_severity) > 0) {
+    $chance = ^serpentine_helm_venom_chance_poisoned;
+}
+if (random($chance) ! 0) {
+    return;
+}
+~npc_venom_start;

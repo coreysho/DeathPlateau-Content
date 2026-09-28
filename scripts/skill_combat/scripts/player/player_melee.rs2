@@ -81,6 +81,9 @@ if ($weapon ! null) {
         // poison npc
         ~npc_poison_start($poison_severity);
     }
+    // A charged serpentine helm envenoms what you hit - one time in six with a plain weapon, one
+    // in two with a poisoned one (area_zulrah/scripts/serpentine_helm.rs2).
+    ~serpentine_helm_melee_venom($damage, $weapon);
 }
 
 //mes("attackstyle: <tostring(%attackstyle)>, damagestyle: <tostring(%damagestyle)>, damage: <tostring($damage)>, damagetype: <tostring(%damagetype)>");
