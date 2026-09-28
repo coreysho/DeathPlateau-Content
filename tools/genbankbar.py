@@ -12,9 +12,9 @@ WHAT IT DRAWS
 
     [Swap][Insert]  [Note]  [1][5][10][X][All]  [Search][Lock]  [Dep inv][Dep worn]
 
-  x 38..470, which is all but five of the 437px the window has between its side frames (38..475).
-  THAT IS THE BUDGET: a thirteenth 36px button does not fit. OSRS has a smaller 31x32 button
-  background at 174/177 if the row ever has to grow.
+  centred on the window, whose width and button row live in tools/bankgeom.py. THAT IS THE BUDGET:
+  a button past the frame is refused below rather than drawn under it. OSRS has a smaller 31x32
+  button background at 174/177 if the row ever has to grow past what the width allows.
 
   Swap/Insert are two components that were already there - com_99 and com_100 - moved onto the row
   and restyled. They keep their ids, their buttontype=select scripts and their [if_button]s.
@@ -48,6 +48,9 @@ the sheet so every index after it keeps its number.
 """
 import os, re, sys
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import bankgeom as G
+
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IF = os.path.join(ROOT, 'scripts/interface_bank/interfaces/bank_main.if')
 PACK = os.path.join(ROOT, 'pack/interface.pack')
@@ -61,9 +64,9 @@ BG_OFF, BG_ON = 0, 1
 ICON_SWAP, ICON_INSERT, ICON_ITEM, ICON_NOTE = 2, 3, 4, 5
 ICON_SEARCH, ICON_DEPINV, ICON_DEPWORN, ICON_LOCK = 6, 7, 8, 9
 
-ROW_Y, BTN = 288, 36
-X0, PITCH = 38, 36
-RIGHT_EDGE = 475          # the window's right-hand steel border starts here
+ROW_Y, BTN = G.BTN_Y, G.BTN
+X0, PITCH = G.BTN_X0, G.BTN_PITCH
+RIGHT_EDGE = G.IN_R       # the window's right-hand steel border starts here
 
 # The existing components this generator restyles in place, as (name, slot, icon, suffix, kind).
 # 'select' keeps the component's own script1op1/script1 lines; 'toggle' is rewritten to flip.
@@ -82,7 +85,7 @@ QTY = [('bankqty1', 3, 0, '1', 'Withdraw 1 at a time'),
 
 SEARCH_CLIENTCODE = 221
 SEARCH_SLOT, LOCK_SLOT, DEPINV_SLOT, DEPWORN_SLOT = 8, 9, 10, 11
-SLOTS = 12
+SLOTS = G.BTN_SLOTS
 
 
 def slot_x(i):

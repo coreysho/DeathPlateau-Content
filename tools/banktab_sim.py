@@ -26,13 +26,17 @@ def _const(name):
         sys.exit('cannot find ^%s in bank.constant' % name)
     return int(m.group(1))
 
-def _grid_rows():
-    """height= on the [bank] inv component, i.e. what tools/genbanktabs.py last wrote."""
+def _grid(key):
+    """width= (columns) or height= (rows) on the [bank] inv component, i.e. what
+    tools/genbanktabs.py last wrote out of tools/bankgeom.py. Both are read rather than written
+    down here, because the padding this file's capacity proof is about is a function of the
+    COLUMN count - a sim carrying its own 8 would have gone on passing after the grid was
+    widened to 12 and the worst-case padding grew from 56 cells to 88."""
     src = open(os.path.join(ROOT, 'scripts/interface_bank/interfaces/bank_main.if'),
                encoding='utf-8').read()
-    m = re.search(r'^\[bank\]\n(?:.*\n)*?height=(\d+)$', src, re.M)
+    m = re.search(r'^\[bank\]\n(?:.*\n)*?%s=(\d+)$' % key, src, re.M)
     if not m:
-        sys.exit('cannot find the bank grid height in bank_main.if')
+        sys.exit('cannot find the bank grid %s in bank_main.if' % key)
     return int(m.group(1))
 
 SIZE = _const('bank_total_slots')
@@ -390,9 +394,9 @@ print('an untabbed deposit lands at the end of the untabbed block, ahead of ever
 # Transcribed from Component.rebuildCellMap in the client. This is the half that can silently HIDE
 # an item: the breaks push everything down, and if the map ran off the end of the grid an item would
 # simply stop being drawn with nothing to say so.
-# The grid needs room for up to 56 padding cells on top of the real slots, so it is taller than
-# the inv. Both numbers are read rather than written down - see _const.
-WIDTH, ROWS = 8, _grid_rows()
+# The grid needs room for up to TABS * (WIDTH - 1) padding cells on top of the real slots, so it
+# is taller than the inv. Every number is read rather than written down - see _const and _grid.
+WIDTH, ROWS = _grid('width'), _grid('height')
 CELLS = WIDTH * ROWS
 SLOTS = SIZE
 assert CELLS >= SLOTS + (TABS * (WIDTH - 1)), (
@@ -492,7 +496,8 @@ print('worst case (8 tabs x 1 item): the untabbed block leads, then 8 rows of on
 # enough to waste the maximum 7 cells. Every one of the slots must still be reachable.
 b = Bank(); b.items = list(range(SLOTS))
 for t in range(1, 9):
-    b.c[t] = 9          # 9 items = 2 rows, 7 cells wasted per tab, 56 wasted in total
+    # one item more than a full row: two rows, WIDTH - 1 cells wasted, the worst a tab can do
+    b.c[t] = WIDTH + 1
 m, _ = all_view(b)
 shown = [s for s in m if s >= 0]
 assert shown[:SLOTS] == list(range(SLOTS)), \
