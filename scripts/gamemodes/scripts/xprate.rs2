@@ -29,6 +29,12 @@ if (%tutorial >= ^tutorial_complete) {
 }
 p_arrivedelay;
 if_openmain(xprate_choose);
+// Each mode's drop-rate boost, from the constants droprate.rs2 rolls by, so the chooser can never
+// promise a number the drops do not pay. Written after the open, every time: the client wipes a
+// main interface's server-set text when it is replaced, and the .if leaves these lines empty.
+if_settext(xprate_choose:drops0, ~droprate_boost_line(^droprate_boost_realism));
+if_settext(xprate_choose:drops1, ~droprate_boost_line(^droprate_boost_5x));
+if_settext(xprate_choose:drops2, ~droprate_boost_line(^droprate_boost_10x));
 if_addresumebutton(xprate_choose:pick0);
 if_addresumebutton(xprate_choose:pick1);
 if_addresumebutton(xprate_choose:pick2);

@@ -6,9 +6,16 @@ pack/interface.pack and pack/interface.order having to agree on every component.
 the repack are tools/genbarrowschest.py's, which took them from tools/genriftpicker.py.
 
 WHAT IT DRAWS. Three columns, one per mode, each a box holding the mode's name, its multiplier in
-large type, two lines saying what it costs you, and a Choose button. The rates come out of
-scripts/gamemodes/configs/gamemode.constant so the picture and the varp cannot disagree - the
-button that says 5x writes the number the constant calls 5x.
+large type, two lines saying what it costs you, the mode's drop-rate boost, and a Choose button.
+The rates come out of scripts/gamemodes/configs/gamemode.constant so the picture and the varp cannot
+disagree - the button that says 5x writes the number the constant calls 5x.
+
+THE DROP-RATE LINE IS EMPTY HERE, on purpose. ~xprate_choose fills it with if_settext every time the
+window opens, straight from ^droprate_boost_realism / _5x / _10x - so changing a boost in
+gamemode.constant changes the chooser with no rerun of this, and the client (which wipes server-set
+text when a main interface is replaced) is handed it afresh on every show. What this does check is
+that the line FITS: the widest thing the script can write, at the widest boost the constants could
+reasonably hold, against the box, with the client's own font metrics (tools/ifrender.py).
 
 NO HIGHLIGHT, AND THE WHOLE BOX IS THE BUTTON. The first version made each box a
 buttontype=select rect over script1op1=pushvar,xp_rate so the chosen mode would light itself up
@@ -22,7 +29,7 @@ overcolour for hover, which a rect honours.
     python3 tools/genxpratechooser.py
     python3 tools/ifrender.py ../scripts/gamemodes/interfaces/xprate_choose.if /tmp/x.png
 """
-import os, re
+import os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 IFACE = 'xprate_choose'
@@ -37,6 +44,9 @@ BOX_W, BOX_H = 140, 140
 BOX_Y = 86
 COL_OFF = '0x3E3529'
 COL_ON = '0x6F6250'
+# the drop-rate line: ~droprate_boost_line writes "Drop rates: +25%" or "Drop rates: Normal" into it
+DROPS_FONT = 'p12_full'
+DROPS_WIDEST = ('Drop rates: +999%', 'Drop rates: Normal')
 
 
 def read(p):
@@ -50,16 +60,19 @@ def const(name):
     return int(m.group(1))
 
 
-# name, the constant holding its rate, and the two lines under the number.
+# name, the constant holding its rate, the two lines under the number, and the constant holding its
+# drop-rate boost (which xprate.rs2 reads - here it is only checked to exist).
 # WORDED AS A TRADE, not as a reward: the whole point of offering a slow mode is that it is worth
 # choosing, and a menu that says "1x" against "10x" with no other information is not a choice.
+# Realism says EXPERIENCE, not "every rate": its drop rates are the boosted ones, and the line under
+# the blurb says so.
 MODES = [
     ('Realism', 'xprate_realism',
-     ['Every rate exactly as', 'Old School has it.']),
+     ['Experience exactly as', 'Old School has it.'], 'droprate_boost_realism'),
     ('5x', 'xprate_5x',
-     ['Five times the', 'experience.']),
+     ['Five times the', 'experience.'], 'droprate_boost_5x'),
     ('10x', 'xprate_10x',
-     ['Ten times the', 'experience.']),
+     ['Ten times the', 'experience.'], 'droprate_boost_10x'),
 ]
 
 
@@ -67,7 +80,14 @@ def main():
     want = const('xprate_modes')
     if want != len(MODES):
         raise SystemExit('^xprate_modes is %d and there are %d modes here' % (want, len(MODES)))
-    rates = [const(c) for _, c, _ in MODES]
+    rates = [const(c) for _, c, _, _ in MODES]
+    boosts = [const(d) for _, _, _, d in MODES]
+    sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+    import ifrender
+    fnt = ifrender.font(DROPS_FONT)
+    for s in DROPS_WIDEST + tuple('Drop rates: +%d%%' % b for b in boosts):
+        if fnt.width(s) > BOX_W - 8:
+            raise SystemExit('"%s" is %dpx in %s and the box is %d' % (s, fnt.width(s), DROPS_FONT, BOX_W))
     if len(set(rates)) != len(rates):
         raise SystemExit('two modes share a rate: %s' % rates)
     if const('xprate_unset') in rates:
@@ -118,7 +138,7 @@ def main():
         overcolour='0xFFFFFF')
 
     gap = (PANEL_W - len(MODES) * BOX_W) // (len(MODES) + 1)
-    for i, (label, cname, lines) in enumerate(MODES):
+    for i, (label, cname, lines, _) in enumerate(MODES):
         x = PANEL_X + gap + i * (BOX_W + gap)
         rate = const(cname)
         com('pick%d' % i, type='rect', x=x, y=BOX_Y, buttontype='normal', width=BOX_W,
@@ -137,6 +157,10 @@ def main():
             com('blurb%d_%d' % (i, j), type='text', x=x, y=BOX_Y + 74 + j * 13, width=BOX_W,
                 height=13, center='yes', font='p11_full', shadowed='yes', text=line,
                 colour='0xC8C8C8')
+        # the drop-rate boost, under the blurb in the hint's orange - no text here, the script
+        # writes it from the constant on every open (see the docstring)
+        com('drops%d' % i, type='text', x=x, y=BOX_Y + 110, width=BOX_W, height=14, center='yes',
+            font=DROPS_FONT, shadowed='yes', text='', colour='0xFF981F')
 
     body = '\n'.join(out)
     os.makedirs(os.path.dirname(IF), exist_ok=True)
@@ -186,8 +210,8 @@ def main():
     open(ORDER, 'w', encoding='utf-8', newline='').write(
         ('\r\n' if order_crlf else '\n').join(ids_order) + ('\r\n' if order_crlf else '\n'))
 
-    print('%s: %d modes at rates %s, %d components, ids %d..%d'
-          % (IFACE, len(MODES), rates, len(names), min(mine), max(mine)))
+    print('%s: %d modes at rates %s, drop boosts %s, %d components, ids %d..%d'
+          % (IFACE, len(MODES), rates, boosts, len(names), min(mine), max(mine)))
 
 
 main()

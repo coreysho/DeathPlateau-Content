@@ -316,12 +316,16 @@ def collection(tabs):
 
 
 # The Player Statistics rows: (key, label). The values are filled by ~questtab_pstats_draw.
-PSTATS = [('mode', 'Game mode'), ('rate', 'XP rate'), ('playtime', 'Time played'), ('age', 'Account age'),
+PSTATS = [('mode', 'Game mode'), ('rate', 'XP rate'), ('drops', 'Drop rates'), ('playtime', 'Time played'),
+          ('age', 'Account age'),
           ('locked', 'XP locked'), ('deaths', 'Deaths'), ('pvp', 'Players killed'), ('npcs', 'Monsters killed'),
           ('clues', 'Clues opened'), ('bosses', 'Boss kills'), ('slayer', 'Slayer tasks'),
           ('slpoints', 'Slayer points'), ('bank', 'Bank value')]
-# thirteen rows at 16px fill the box from its top edge to its bottom one
-PS_Y, PS_PITCH = 49, 16
+# fourteen rows at 15px fill the box from its top edge to its bottom one (thirteen were at 16px until
+# the game mode's drop-rate boost got a row of its own under the XP rate). They start 2px higher than
+# the thirteen did, so the first and last rows each sit 3px inside the box's rim rather than the last
+# row's shadow touching it.
+PS_Y, PS_PITCH = 47, 15
 PS_VALUE_X, PS_VALUE_W = 96, 84
 
 
@@ -335,7 +339,8 @@ def pstats():
         p.text(key + '_label', 10, y, 86, label, ORANGE)
         p.text(key, PS_VALUE_X, y, PS_VALUE_W, '', WHITE)
         if k < len(PSTATS) - 1:
-            p.add(key + '_rule', type='rect', x=9, y=y + 15, width=BOX_W - 10, height=1, fill='yes', colour=RULE)
+            p.add(key + '_rule', type='rect', x=9, y=y + PS_PITCH - 1, width=BOX_W - 10, height=1, fill='yes',
+                  colour=RULE)
     return p
 
 
@@ -434,6 +439,14 @@ def build_constant():
     L.append('// How far right-aligned values reach: each value component starts at x and is this wide.')
     L.append('^questtab_pstats_value_width = %d' % PS_VALUE_W)
     L.append('^questtab_collection_count_width = %d' % CL_COUNT_W)
+    # These two were added to the .constant by hand (the refresh timer, the text-overflow fixes), so a
+    # rerun of this dropped them and broke the build - they are written from here now.
+    L.append('')
+    L.append('// How often the page on show is refilled ([softtimer,questtab_refresh]): 5 ticks, three seconds.')
+    L.append('^questtab_refresh_ticks = 5')
+    L.append('')
+    L.append("// The widest a centred line may be inside one of the pages' %dpx boxes without touching its rim." % BOX_W)
+    L.append('^questtab_text_width = %d' % (BOX_W - 6))
     return '\n'.join(L) + '\n'
 
 

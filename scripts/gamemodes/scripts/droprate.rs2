@@ -95,3 +95,15 @@ if (%xp_rate = ^xprate_5x) {
     return(^droprate_boost_5x);
 }
 return(^droprate_boost_realism);
+
+// A boost as the player reads it: "Drop rates: +25%", or "Normal" for none. The XP rate chooser
+// (xprate.rs2) and the quest tab's Player Statistics page write it; genxpratechooser.py checks the
+// widest of it fits the chooser's boxes.
+[proc,droprate_boost_value](int $percent)(string)
+if ($percent > 0) {
+    return("@gre@+<tostring($percent)>%");
+}
+return("@whi@Normal");
+
+[proc,droprate_boost_line](int $percent)(string)
+return("Drop rates: <~droprate_boost_value($percent)>");

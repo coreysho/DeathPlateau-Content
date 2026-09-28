@@ -246,7 +246,7 @@ colour=0x2E2B23
 [mode_label]
 type=text
 x=10
-y=49
+y=47
 width=86
 height=15
 font=p12_full
@@ -257,7 +257,7 @@ colour=0xFF981F
 [mode]
 type=text
 x=96
-y=49
+y=47
 width=84
 height=15
 font=p12_full
@@ -268,7 +268,7 @@ colour=0xFFFFFF
 [mode_rule]
 type=rect
 x=9
-y=64
+y=61
 width=172
 height=1
 fill=yes
@@ -277,7 +277,7 @@ colour=0x4A4033
 [rate_label]
 type=text
 x=10
-y=65
+y=62
 width=86
 height=15
 font=p12_full
@@ -288,7 +288,7 @@ colour=0xFF981F
 [rate]
 type=text
 x=96
-y=65
+y=62
 width=84
 height=15
 font=p12_full
@@ -299,7 +299,38 @@ colour=0xFFFFFF
 [rate_rule]
 type=rect
 x=9
-y=80
+y=76
+width=172
+height=1
+fill=yes
+colour=0x4A4033
+
+[drops_label]
+type=text
+x=10
+y=77
+width=86
+height=15
+font=p12_full
+shadowed=yes
+text=Drop rates
+colour=0xFF981F
+
+[drops]
+type=text
+x=96
+y=77
+width=84
+height=15
+font=p12_full
+shadowed=yes
+text=
+colour=0xFFFFFF
+
+[drops_rule]
+type=rect
+x=9
+y=91
 width=172
 height=1
 fill=yes
@@ -308,7 +339,7 @@ colour=0x4A4033
 [playtime_label]
 type=text
 x=10
-y=81
+y=92
 width=86
 height=15
 font=p12_full
@@ -319,7 +350,7 @@ colour=0xFF981F
 [playtime]
 type=text
 x=96
-y=81
+y=92
 width=84
 height=15
 font=p12_full
@@ -330,7 +361,7 @@ colour=0xFFFFFF
 [playtime_rule]
 type=rect
 x=9
-y=96
+y=106
 width=172
 height=1
 fill=yes
@@ -339,7 +370,7 @@ colour=0x4A4033
 [age_label]
 type=text
 x=10
-y=97
+y=107
 width=86
 height=15
 font=p12_full
@@ -350,7 +381,7 @@ colour=0xFF981F
 [age]
 type=text
 x=96
-y=97
+y=107
 width=84
 height=15
 font=p12_full
@@ -361,7 +392,7 @@ colour=0xFFFFFF
 [age_rule]
 type=rect
 x=9
-y=112
+y=121
 width=172
 height=1
 fill=yes
@@ -370,7 +401,7 @@ colour=0x4A4033
 [locked_label]
 type=text
 x=10
-y=113
+y=122
 width=86
 height=15
 font=p12_full
@@ -381,7 +412,7 @@ colour=0xFF981F
 [locked]
 type=text
 x=96
-y=113
+y=122
 width=84
 height=15
 font=p12_full
@@ -392,7 +423,7 @@ colour=0xFFFFFF
 [locked_rule]
 type=rect
 x=9
-y=128
+y=136
 width=172
 height=1
 fill=yes
@@ -401,7 +432,7 @@ colour=0x4A4033
 [deaths_label]
 type=text
 x=10
-y=129
+y=137
 width=86
 height=15
 font=p12_full
@@ -412,7 +443,7 @@ colour=0xFF981F
 [deaths]
 type=text
 x=96
-y=129
+y=137
 width=84
 height=15
 font=p12_full
@@ -423,7 +454,7 @@ colour=0xFFFFFF
 [deaths_rule]
 type=rect
 x=9
-y=144
+y=151
 width=172
 height=1
 fill=yes
@@ -432,7 +463,7 @@ colour=0x4A4033
 [pvp_label]
 type=text
 x=10
-y=145
+y=152
 width=86
 height=15
 font=p12_full
@@ -443,7 +474,7 @@ colour=0xFF981F
 [pvp]
 type=text
 x=96
-y=145
+y=152
 width=84
 height=15
 font=p12_full
@@ -454,7 +485,7 @@ colour=0xFFFFFF
 [pvp_rule]
 type=rect
 x=9
-y=160
+y=166
 width=172
 height=1
 fill=yes
@@ -463,7 +494,7 @@ colour=0x4A4033
 [npcs_label]
 type=text
 x=10
-y=161
+y=167
 width=86
 height=15
 font=p12_full
@@ -474,7 +505,7 @@ colour=0xFF981F
 [npcs]
 type=text
 x=96
-y=161
+y=167
 width=84
 height=15
 font=p12_full
@@ -485,7 +516,7 @@ colour=0xFFFFFF
 [npcs_rule]
 type=rect
 x=9
-y=176
+y=181
 width=172
 height=1
 fill=yes
@@ -494,7 +525,7 @@ colour=0x4A4033
 [clues_label]
 type=text
 x=10
-y=177
+y=182
 width=86
 height=15
 font=p12_full
@@ -505,7 +536,7 @@ colour=0xFF981F
 [clues]
 type=text
 x=96
-y=177
+y=182
 width=84
 height=15
 font=p12_full
@@ -516,7 +547,7 @@ colour=0xFFFFFF
 [clues_rule]
 type=rect
 x=9
-y=192
+y=196
 width=172
 height=1
 fill=yes
@@ -525,7 +556,7 @@ colour=0x4A4033
 [bosses_label]
 type=text
 x=10
-y=193
+y=197
 width=86
 height=15
 font=p12_full
@@ -536,7 +567,7 @@ colour=0xFF981F
 [bosses]
 type=text
 x=96
-y=193
+y=197
 width=84
 height=15
 font=p12_full
@@ -547,7 +578,7 @@ colour=0xFFFFFF
 [bosses_rule]
 type=rect
 x=9
-y=208
+y=211
 width=172
 height=1
 fill=yes
@@ -556,7 +587,7 @@ colour=0x4A4033
 [slayer_label]
 type=text
 x=10
-y=209
+y=212
 width=86
 height=15
 font=p12_full
@@ -567,7 +598,7 @@ colour=0xFF981F
 [slayer]
 type=text
 x=96
-y=209
+y=212
 width=84
 height=15
 font=p12_full
@@ -578,7 +609,7 @@ colour=0xFFFFFF
 [slayer_rule]
 type=rect
 x=9
-y=224
+y=226
 width=172
 height=1
 fill=yes
@@ -587,7 +618,7 @@ colour=0x4A4033
 [slpoints_label]
 type=text
 x=10
-y=225
+y=227
 width=86
 height=15
 font=p12_full
@@ -598,7 +629,7 @@ colour=0xFF981F
 [slpoints]
 type=text
 x=96
-y=225
+y=227
 width=84
 height=15
 font=p12_full
@@ -609,7 +640,7 @@ colour=0xFFFFFF
 [slpoints_rule]
 type=rect
 x=9
-y=240
+y=241
 width=172
 height=1
 fill=yes
@@ -618,7 +649,7 @@ colour=0x4A4033
 [bank_label]
 type=text
 x=10
-y=241
+y=242
 width=86
 height=15
 font=p12_full
@@ -629,7 +660,7 @@ colour=0xFF981F
 [bank]
 type=text
 x=96
-y=241
+y=242
 width=84
 height=15
 font=p12_full
