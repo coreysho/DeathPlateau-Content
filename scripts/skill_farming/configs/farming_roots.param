@@ -1,0 +1,12 @@
+// Tree roots, which the farming generator does not know about. This is a file of its own rather
+// than another block in farming.param because that file says at the top that it is written by
+// tools/farming/gen.py and must not be hand-edited; the param itself is safe here, but the
+// param=farming_roots lines it needs live on the five tree saplings in _unpack/377/all.obj, which
+// gen.py DOES write - so if the Farming skill is ever regenerated, put them back.
+
+// What digging out this tree's stump leaves in your hands. Only the five ordinary trees have one:
+// a fruit tree, a bush, a cactus and the spirit tree leave nothing behind
+// (oldschool.runescape.wiki/w/Tree_roots_(Farming)).
+[farming_roots]
+type=namedobj
+default=null

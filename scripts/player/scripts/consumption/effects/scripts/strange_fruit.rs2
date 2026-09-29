@@ -8,6 +8,6 @@ healenergy(3000);
 // https://oldschool.runescape.wiki/w/Strange_fruit 
 // https://archive.is/6SmRo provides 30 ticks of poison immunity
 %poison = min(%poison,-1);
-~venom_cure_immune; // and venom, with ~18 seconds' immunity (OSRS)
+~venom_cure_immune(^venom_immune_strange_fruit); // and venom, with ~18 seconds' immunity (OSRS)
 ~set_poison_timer;
 ~consume_effect_messages($consumable, stat(hitpoints), false);

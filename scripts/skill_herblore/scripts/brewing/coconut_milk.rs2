@@ -1,0 +1,31 @@
+// COCONUT MILK, the base the antidote potions are mixed in. All four objs have been in the 377
+// cache since Farming shipped in 2005 and nothing in this repo has ever made one, so antidote+ and
+// antidote++ had no first step - see antivenom/scripts/antivenom.rs2 for the rest of that chain.
+//
+// "It is made by cracking a coconut open with a hammer, and then using the resulting half coconut
+// on an empty vial. This produces a vial of coconut milk and a supercompostable coconut shell."
+// (oldschool.runescape.wiki/w/Coconut_milk). No Herblore level and no experience for either step;
+// the milk is the SOLVENT of the potions made from it, not an ingredient, which is why those
+// potions come out at four doses where a vial of water gives three.
+//
+// The hammer's half of this is a case in general_use/scripts/hammer.rs2 rather than an
+// [opheldu,coconut] here: OpHeldUHandler tries the exact-obj trigger of both items and swaps them so
+// the trigger's own obj is always last_item, so the one case there already catches the coconut used
+// on the hammer and the hammer used on the coconut.
+
+[label,coconut_crack]
+inv_setslot(inv, last_useslot, coconut_half, 1);
+sound_synth(anvil, 1, 0);
+mes("You crack open the coconut.");
+
+// The other half. A trigger of its own, because neither a half coconut nor an empty vial has one
+// and the category triggers are only reached when both obj triggers miss.
+[opheldu,coconut_half]
+if (last_useitem ! vial_empty) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_setslot(inv, last_useslot, vial_coconut_milk, 1);
+inv_setslot(inv, last_slot, coconut_shell, 1);
+sound_synth(liquid, 1, 0);
+mes("You pour the coconut milk into the vial.");

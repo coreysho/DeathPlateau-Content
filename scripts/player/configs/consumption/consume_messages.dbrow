@@ -771,3 +771,34 @@ data=consumable,2dose1magic
 data=consumable,1dose1magic
 data=consume_message1,You drink some of your magic potion.
 data=message_delay,1
+
+// The antidote line. Old School's own wording for these three sips is not written down anywhere I
+// could check, so each follows the antipoison row above - "You drink some of your <potion>." - which
+// is what the rest of this table does and what the potion would otherwise say the long way round
+// ("You drink the anti-venom(3).", from the next dose's name).
+[antidote_pp_consume_messages]
+table=consume_messages_table
+data=consumable,antidote++4
+data=consumable,antidote++3
+data=consumable,antidote++2
+data=consumable,antidote++1
+data=consume_message1,You drink some of your antidote potion.
+data=message_delay,1
+
+[antivenom_consume_messages]
+table=consume_messages_table
+data=consumable,antivenom4
+data=consumable,antivenom3
+data=consumable,antivenom2
+data=consumable,antivenom1
+data=consume_message1,You drink some of your antivenom potion.
+data=message_delay,1
+
+[antivenom_plus_consume_messages]
+table=consume_messages_table
+data=consumable,antivenom+4
+data=consumable,antivenom+3
+data=consumable,antivenom+2
+data=consumable,antivenom+1
+data=consume_message1,You drink some of your super antivenom potion.
+data=message_delay,1

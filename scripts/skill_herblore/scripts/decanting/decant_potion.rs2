@@ -1,4 +1,11 @@
 [opheldu,_potion]
+@potion_opheldu;
+
+// What using anything on a potion does when nothing more specific claims it. Its own label because
+// declaring [opheldu,<some potion>] takes that potion OUT of the category trigger above, and a
+// potion that stops decanting is a bug - so antivenom/scripts/antivenom.rs2 ends every one of its
+// triggers by jumping here.
+[label,potion_opheldu]
 if(oc_category(last_useitem) = potion) {
     @decant_potion(last_item, last_useitem);
 }

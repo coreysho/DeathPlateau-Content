@@ -1,0 +1,98 @@
+// MAKING ANTI-VENOM AND ANTI-VENOM+ (OSRS, January 2015 - post-2006 content, so it is built exactly
+// as Old School has it). Both are Herblore, but neither fits the generic brewing table in
+// skill_herblore/configs/brewing/brew_potion.struct, which pairs one ingredient with one solvent and
+// deletes one of each:
+//   * anti-venom wants FIVE Zulrah's scales per dose of the antidote++ it is made from, so the
+//     amount depends on the potion it lands in;
+//   * anti-venom+ is made out of a finished potion rather than an unfinished one, and only out of
+//     the four-dose, so it would need four table rows hanging off one torstol - and an obj carries
+//     at most three brew_potion_struct params.
+// The antidote++ that feeds this IS in that table: coconut milk + irit leaf, then magic roots.
+//
+// THE TRIGGERS SIT ON THE POTIONS, not on the scales or the torstol, because OpHeldUHandler tries
+// the exact-obj trigger of BOTH items before either category trigger. A trigger on the scales would
+// therefore steal "toxic blowpipe used on scales" from toxic_blowpipe/scripts/blowpipe.rs2 and
+// "serpentine helm used on scales" from area_zulrah/scripts/serpentine_helm.rs2. Declaring an obj's
+// own opheldu also takes it out of the [opheldu,_potion] category trigger that decants potions, so
+// every one of these ends by falling through to @potion_opheldu - otherwise two antidote++(2)s
+// would stop combining into an antidote++(4).
+
+// ---------------------------------------------------------------------------------------------
+// Anti-venom: Zulrah's scales on an antidote++
+// ---------------------------------------------------------------------------------------------
+// "Players can make this potion at 87 Herblore by using Zulrah's scales on an Antidote++. Five
+// scales are needed per dose of antidote++, so 20 scales will be needed to create a four-dose
+// Anti-venom. This grants 30 Herblore experience per dose."
+// (oldschool.runescape.wiki/w/Anti-venom)
+[opheldu,antidote++4] @antivenom_mix(4, antivenom4);
+[opheldu,antidote++3] @antivenom_mix(3, antivenom3);
+[opheldu,antidote++2] @antivenom_mix(2, antivenom2);
+[opheldu,antidote++1] @antivenom_mix(1, antivenom1);
+
+[label,antivenom_mix](int $doses, namedobj $antivenom)
+if (last_useitem ! zulrahs_scales) {
+    @potion_opheldu;
+}
+if (~herblore_requires_druidic_ritual = false) {
+    return;
+}
+if (map_members = ^false) {
+    mes(^mes_members_herblore);
+    return;
+}
+if (stat(herblore) < ^antivenom_level) {
+    ~mesbox("You need a Herblore level of at least <tostring(^antivenom_level)> to make this potion.");
+    return;
+}
+def_int $scales = multiply($doses, ^antivenom_scales_per_dose);
+if (inv_total(inv, zulrahs_scales) < $scales) {
+    // Said rather than silently refused: five per dose is the one number a player gets wrong, and
+    // the scales stack, so the inventory does not show them running short.
+    mes("You need <tostring($scales)> Zulrah's scales to make that.");
+    return;
+}
+inv_del(inv, zulrahs_scales, $scales);
+inv_setslot(inv, last_slot, $antivenom, 1);
+// Old School's own line for this mix is not recorded anywhere I could check, so the wording follows
+// this repo's other Herblore mixes (skill_herblore/configs/brewing/brew_potion.struct), as does the
+// vial animation and the grinding sound (skill_herblore/scripts/herblore.rs2, ~brew_potion).
+mes("You mix the scales into your potion.");
+anim(human_herbing_vial, 0);
+sound_synth(grind, 1, 0);
+stat_advance(herblore, multiply($doses, ^antivenom_xp_per_dose));
+
+// ---------------------------------------------------------------------------------------------
+// Anti-venom+: torstol on an anti-venom(4)
+// ---------------------------------------------------------------------------------------------
+// "Players can make this potion at 94 Herblore by using a torstol or an unfinished torstol potion
+// on an anti-venom, granting 125 Herblore experience." The unfinished torstol potion was allowed in
+// on 16 November 2022 and is in Old School today, so it is in here too.
+// (oldschool.runescape.wiki/w/Anti-venom+)
+//
+// Only the four-dose has a recipe - the wiki's Creation box and Products list name anti-venom(4)
+// alone - so anti-venom(3) and below get no trigger at all and torstol on one of them falls to the
+// category trigger, which answers "Nothing interesting happens." as Old School does.
+[opheldu,antivenom4]
+if (last_useitem = torstol | last_useitem = torstolvial) {
+    @antivenom_plus_mix;
+}
+@potion_opheldu;
+
+[label,antivenom_plus_mix]
+if (~herblore_requires_druidic_ritual = false) {
+    return;
+}
+if (map_members = ^false) {
+    mes(^mes_members_herblore);
+    return;
+}
+if (stat(herblore) < ^antivenom_plus_level) {
+    ~mesbox("You need a Herblore level of at least <tostring(^antivenom_plus_level)> to make this potion.");
+    return;
+}
+inv_del(inv, last_useitem, 1);
+inv_setslot(inv, last_slot, antivenom+4, 1);
+mes("You mix the torstol into your potion.");
+anim(human_herbing_vial, 0);
+sound_synth(grind, 1, 0);
+stat_advance(herblore, ^antivenom_plus_xp);

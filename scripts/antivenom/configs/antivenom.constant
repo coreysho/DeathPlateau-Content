@@ -1,0 +1,48 @@
+// Every number here is the OSRS wiki's, read off the pages named beside it in September 2026. They
+// are collected rather than inlined because three of them - the two Herblore levels and the scales
+// per dose - are the ones a player notices first and so the ones most likely to be argued about.
+
+// ---------------------------------------------------------------------------------------------
+// Making them (oldschool.runescape.wiki/w/Anti-venom, /w/Anti-venom+)
+// ---------------------------------------------------------------------------------------------
+// "Players can make this potion at 87 Herblore by using Zulrah's scales on an Antidote++. Five
+// scales are needed per dose of antidote++, so 20 scales will be needed to create a four-dose
+// Anti-venom. This grants 30 Herblore experience per dose."
+^antivenom_level = 87
+^antivenom_scales_per_dose = 5
+^antivenom_xp_per_dose = 300
+
+// "Players can make this potion at 94 Herblore by using a torstol or an unfinished torstol potion
+// on an anti-venom, granting 125 Herblore experience." Its Creation box names anti-venom(4) and
+// only anti-venom(4) - a 1, 2 or 3 dose anti-venom has no product at all - so scripts/antivenom.rs2
+// refuses the lesser doses rather than silently scaling them.
+^antivenom_plus_level = 94
+^antivenom_plus_xp = 1250
+
+// ---------------------------------------------------------------------------------------------
+// Drinking them (oldschool.runescape.wiki/w/Venom, /w/Antidote++)
+// ---------------------------------------------------------------------------------------------
+// POISON IMMUNITY is counted in poison ticks, which are 30 game ticks = 18 seconds apiece
+// (skill_combat/scripts/poison.rs2), and %poison counts up from negative back to zero. So 12
+// minutes is 40 of them and 15 minutes is 50 - beside the 2006 antipoison's 5 (90 seconds) and
+// superantipoison's 20 (6 minutes), which this round does not touch.
+//   antidote++  "provides immunity to poison for 12 minutes"
+//   anti-venom  "provides immunity to poison for 12 minutes"
+//   anti-venom+ "provides immunity to poison for 15 minutes"
+^antidote_pp_poison_immunity = 40
+^antivenom_poison_immunity = 40
+^antivenom_plus_poison_immunity = 50
+
+// VENOM IMMUNITY is counted in venom ticks, which are also 30 game ticks = 18 seconds
+// (toxic_blowpipe/scripts/venom.rs2). OSRS's wiki gives each potion a RANGE because its counter
+// ticks down on a clock the sip does not restart; this build's venom timer IS restarted by the
+// sip, exactly as the strange fruit already restarts it, so each potion lands on the top of its
+// range. The wiki's "Venom Immunity Length" table:
+//   antidote++   18-36 seconds   -> 2 ticks
+//   anti-venom   36-54 seconds   -> 3 ticks
+//   anti-venom+  216 seconds     -> 12 ticks
+// The Anti-venom+ page says "approximately 3.6 minutes", which is that 216; the prose on the Venom
+// page says "three minutes" instead. Two sources against one, so 216 is what is built here.
+^antidote_pp_venom_immunity = 2
+^antivenom_venom_immunity = 3
+^antivenom_plus_venom_immunity = 12

@@ -1,0 +1,219 @@
+// ANTI-VENOM AND ANTI-VENOM+ (OSRS, 8 January 2015, "Zulrah - The Solo Snake Boss" - so they are
+// ported as OSRS has them, not reinvented). Every field below was read out of a modern OSRS cache
+// with tools/models/importosrs.py --dry-run: objs 12905/12907/12909/12911 (anti-venom 4..1) and
+// 12913/12915/12917/12919 (anti-venom+ 4..1).
+//
+// NOTHING WAS IMPORTED, because there was nothing to import. OSRS still draws all eight on the very
+// same four vial models this 377 cache already carries - the importer named models 2789, 2697, 2384
+// and 2621, which are pack ids 2789=obj_strength4, 2697=obj_guamvial, 2384=obj_2dose1strength and
+// 2621=obj_1dose1strength here, the models antidote++ itself uses. A potion is its vial plus one
+// recolour, so the only thing that crossed over is the colour: the cache's HSL16 recolour 61->26772
+// (anti-venom) and 61->61594 (anti-venom+), converted to the RGB15 a .obj config writes by
+// importosrs.hsl16_to_rgb15. That converter was checked on antidote++ first - its 61->11811 comes
+// back as 15855->12708, which is exactly what _unpack/377/all.obj already had - and both colours
+// were rendered with tools/models/ob2render.py and looked at: anti-venom is a deep green, anti-venom+
+// a dark maroon, as OSRS draws them. So this round took no model.pack ids at all.
+//
+// The 2d icon angles, costs, weights, examines and ops are the cache's own. They are noteable in
+// OSRS, hence the cert records. What they DO is in scripts/antivenom.rs2 (making them) and
+// player/scripts/consumption/effects/scripts/anti_poison.rs2 (drinking them).
+
+[antivenom4]
+name=Anti-venom(4)
+desc=4 doses of antivenom potion.
+model=obj_strength4
+recol1s=15855
+recol1d=4293
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=440
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom3
+param=decant_potion_enum,potion_antivenom
+param=dose_count,4
+
+[cert_antivenom4]
+certlink=antivenom4
+certtemplate=template_for_cert
+
+[antivenom3]
+name=Anti-venom(3)
+desc=3 doses of antivenom potion.
+model=obj_guamvial
+recol1s=15855
+recol1d=4293
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=330
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom2
+param=decant_potion_enum,potion_antivenom
+param=dose_count,3
+
+[cert_antivenom3]
+certlink=antivenom3
+certtemplate=template_for_cert
+
+[antivenom2]
+name=Anti-venom(2)
+desc=2 doses of antivenom potion.
+model=obj_2dose1strength
+recol1s=15855
+recol1d=4293
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=220
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom1
+param=decant_potion_enum,potion_antivenom
+param=dose_count,2
+
+[cert_antivenom2]
+certlink=antivenom2
+certtemplate=template_for_cert
+
+[antivenom1]
+name=Anti-venom(1)
+desc=1 dose of antivenom potion.
+model=obj_1dose1strength
+recol1s=15855
+recol1d=4293
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=110
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,vial_empty
+param=decant_potion_enum,potion_antivenom
+param=dose_count,1
+
+[cert_antivenom1]
+certlink=antivenom1
+certtemplate=template_for_cert
+
+[antivenom+4]
+name=Anti-venom+(4)
+desc=4 doses of super antivenom potion.
+model=obj_strength4
+recol1s=15855
+recol1d=8358
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=444
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom+3
+param=decant_potion_enum,potion_antivenom_plus
+param=dose_count,4
+
+[cert_antivenom+4]
+certlink=antivenom+4
+certtemplate=template_for_cert
+
+[antivenom+3]
+name=Anti-venom+(3)
+desc=3 doses of super antivenom potion.
+model=obj_guamvial
+recol1s=15855
+recol1d=8358
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=333
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom+2
+param=decant_potion_enum,potion_antivenom_plus
+param=dose_count,3
+
+[cert_antivenom+3]
+certlink=antivenom+3
+certtemplate=template_for_cert
+
+[antivenom+2]
+name=Anti-venom+(2)
+desc=2 doses of super antivenom potion.
+model=obj_2dose1strength
+recol1s=15855
+recol1d=8358
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=222
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,antivenom+1
+param=decant_potion_enum,potion_antivenom_plus
+param=dose_count,2
+
+[cert_antivenom+2]
+certlink=antivenom+2
+certtemplate=template_for_cert
+
+[antivenom+1]
+name=Anti-venom+(1)
+desc=1 dose of super antivenom potion.
+model=obj_1dose1strength
+recol1s=15855
+recol1d=8358
+2dzoom=550
+2dxan=84
+2dyan=1996
+2dyof=-1
+weight=35g
+cost=111
+members=yes
+iop1=Drink
+iop4=Empty
+category=potion
+param=cures_poison,yes
+param=next_obj_stage,vial_empty
+param=decant_potion_enum,potion_antivenom_plus
+param=dose_count,1
+
+[cert_antivenom+1]
+certlink=antivenom+1
+certtemplate=template_for_cert

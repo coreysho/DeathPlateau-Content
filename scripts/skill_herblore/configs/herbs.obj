@@ -122,6 +122,9 @@ param=identified_herb_level,40
 param=identified_herb_exp,88
 param=identified_herb_message,This herb is an Irit Leaf.
 param=brew_potion_struct,unf_irit_potion
+// Irit is the herb of antidote++ as well as of the superantipoison, and the two are told apart by
+// what it goes into: a vial of water or a vial of coconut milk (brewing/brew_potion.struct).
+param=brew_potion_struct_secondary,unf_antidote_pp
 
 [avantoe]
 name=Avantoe
