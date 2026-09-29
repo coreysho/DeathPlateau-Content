@@ -169,7 +169,29 @@ if (%dragonquest >= ^quest_dragon_spoken_to_oziach & %dragonquest < ^quest_drago
 
 [label,ned_dragon_slayer_hired]
 ~chatnpc("<p,neutral>Hello there lad.");
-def_int $choice = ~p_choice2("So are you going to take me to Crandor Island now then?", 1, "So are you still up to sailing this ship?", 2);
+// AUDIT 2026-09-29: this branch used to be these two options and nothing else, which took Ned's
+// wool and rope away from Prince Ali Rescue for the whole of Dragon Slayer. Prince Ali needs a rope
+// to tie Lady Keli and a blonde wig to wear, and @ned_make_wig below is the only place in the game
+// a plainwig comes from - which makes it the only source of the blondwig too, because the dye
+// shop's @make_blonde_wig takes a plainwig as its input. %dragon_ned_hired is set the moment the
+// player asks about Crandor, which the standard menu offers as soon as they have spoken to Oziach,
+// and it is only cleared by actually sailing - so a player who asked Ned about Crandor and then
+// went off to hunt map pieces had Prince Ali Rescue unfinishable until they got to Crandor.
+// Both questions are offered back here the way
+// @ned_dragon_slayer_back_in_draynor_after_visiting_crandor already offers them after the voyage:
+// rope to anybody, and the wool question only while Prince Ali Rescue wants it.
+def_int $choice;
+if (%princequest >= ^prince_spoken_osman & %princequest < ^prince_saved) {
+    $choice = ~p_choice4("So are you going to take me to Crandor Island now then?", 1, "So are you still up to sailing this ship?", 2, "Ned, could you make other things from wool?", 3, "Yes, I would like some rope.", 4);
+} else {
+    $choice = ~p_choice3("So are you going to take me to Crandor Island now then?", 1, "So are you still up to sailing this ship?", 2, "Yes, I would like some rope.", 4);
+}
+if ($choice = 3) {
+    @ned_other_things;
+}
+if ($choice = 4) {
+    @ned_start_rope_purchase;
+}
 if ($choice = 1) {
     // island is lowercase. Not a typo
     // https://youtu.be/kCMB4I_aJJM?list=PLn23LiLYLb1aqrojPTi1_Np81LJku2Nd0&t=134

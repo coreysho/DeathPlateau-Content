@@ -97,6 +97,25 @@ anim(human_pickupfloor, 0);
 p_delay(0);
 p_telejump(movecoord(loc_coord, 0, -1, 1));
 
+// The quest's gate. The OSRS wiki's Ratcatchers page asks for Icthlarin's Little Helper, which in
+// turn asks for Gertrude's Cat; both are named here because this server's Icthlarin's Little Helper
+// does not check Gertrude's Cat itself, so the chain is not transitive the way the wiki's is. The
+// wiki's third line - The Giant Dwarf started, for Keldagrim - is deliberately left out: there is no
+// Keldagrim chapter in this implementation (see configs/quest_ratcatch.constant), so requiring it
+// would gate content that does not exist.
+//
+// AUDIT 2026-09-29: there was no gate at all, and that mattered beyond the ordering. ^ratcatch_hired
+// makes ~ratcatch_gertrude_wants true, which takes Gertrude away from Gertrude's Cat - so a brand
+// new player who talked to Jimmy first could not be told about Fluffs until they had been back to
+// Gertrude once, and could not be told at all while their inventory was too full for the pot.
+[proc,ratcatch_requirements]()(boolean)
+if (%fluffs < ^fluffs_complete | %ics_little_var < ^icslittle_complete) {
+    ~chatnpc("<p,angry>No. You have never taken a rat off a floor in your life and it shows from here.");
+    ~mesbox("You need to have completed Gertrude's Cat and Icthlarin's Little Helper to start Rat Catchers.");
+    return(false);
+}
+return(true);
+
 [label,ratcatch_jimmy_start]
 ~chatnpc("<p,happy>You have the look of somebody between engagements.");
 switch_int (~p_choice2("What's the job?", 1, "I have engagements.", 2)) {
@@ -112,6 +131,11 @@ switch_int (~p_choice2("What's the job?", 1, "I have engagements.", 2)) {
 ~chatplayer("<p,quiz>So call a rat catcher.");
 ~chatnpc("<p,angry>I AM the rat catcher. I am also on the guest list, which means I cannot be seen crawling about with a pole.");
 ~chatnpc("<p,neutral>You can. Nobody knows you.");
+// Checked here rather than before the pitch so the player hears what the job is before being told
+// they are not up to it, which is how ~animmag_requirements is placed too.
+if (~ratcatch_requirements = false) {
+    return;
+}
 if (inv_freespace(inv) < 2) {
     ~chatnpc("<p,neutral>I am going to hand you two things and you have nowhere to put either.");
     return;

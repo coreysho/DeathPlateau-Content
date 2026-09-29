@@ -204,6 +204,12 @@ if (%lunar_quest = ^lunar_has_seal) {
 if (~lunar_has_seal = false) {
     @lunar_no_seal;
 }
+// Dream Mentor. Jack keeps Cyrisus's bank account and that conversation is the only way to get
+// Cyrisus's equipment, so the quest claims him while it is waiting on it and hands him straight
+// back afterwards. @dm_jack is in quests/quest_dreammentor/scripts/quest_dreammentor.rs2.
+if (~dm_jack_wants = true) {
+    @dm_jack;
+}
 ~chatnpc("<p,neutral>Navigator of the Lady Zay, that's me. Best eyes on the northern sea, and don't let the captain tell you otherwise.");
 
 // =========================================================================== the reward

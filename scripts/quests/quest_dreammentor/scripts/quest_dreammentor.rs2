@@ -154,7 +154,24 @@ if (%dreammentor > ^dm_found_cyrisus) {
 // He keeps Cyrisus's bank account. Which set is in it depends on the combat skill YOU are strongest
 // in - the joke of the quest is that his kit never matches his fighting style - and the wiki only
 // publishes the three right answers, so each slot is offered as one of those three.
-[opnpc3,birdseye_jack]
+//
+// AUDIT 2026-09-29: this was [opnpc3,birdseye_jack], and Jack has only op1=Talk-to
+// (quests/quest_lunar/configs/lunar_npcs.npc). The client can never send an op the npc does not
+// advertise, so the whole handler was dead code - and since ~dm_pick below is the only thing that
+// ever fills %dm_armament, [opnpc1,cyrisus_fallen] sat on "My equipment. It's all in the bank"
+// forever and Dream Mentor could not be finished. Lunar Diplomacy already owns [opnpc1] on him, so
+// this is a label it hooks into rather than a second trigger, the same way Garden of Tranquillity
+// hooks into King Roald.
+
+// True only while the account still has something in it, so Jack goes back to being the Lady Zay's
+// navigator the moment Cyrisus's kit is collected.
+[proc,dm_jack_wants]()(boolean)
+if (%dreammentor = ^dm_found_cyrisus & %dm_armament < ^dm_armament_full) {
+    return(true);
+}
+return(false);
+
+[label,dm_jack]
 if (~lunar_has_seal = false) {
     @lunar_no_seal;
 }
