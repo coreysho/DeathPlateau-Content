@@ -176,6 +176,19 @@ ambient=10
 contrast=100
 anim=osrsloc_anim_13561
 
+// No mapscene. These four came across from the OSRS cache carrying OSRS's own minimap icon
+// ids (196, 205, 206, 207), and the 377 client has an imageMapscene array of ONE HUNDRED -
+// Client.drawMinimapLoc indexes it with no bounds check, so drawing the minimap for this map
+// square threw ArrayIndexOutOfBoundsException inside update(), which ends GameShell's loop
+// outright: the window froze on "Loading - please wait" and the character could only be moved
+// by editing its save. 377 has no rapids icon to point at instead, so they have none.
+// No mapscene on these four. They came across from the OSRS cache carrying OSRS's own minimap icon
+// ids - 196, 205, 206 and 207 - and the 377 client's imageMapscene array holds ONE HUNDRED.
+// Client.drawMinimapLoc indexes it with no bounds check, so drawing the minimap for this map square
+// threw ArrayIndexOutOfBoundsException inside update(), and that ends GameShell's loop outright:
+// the window froze on "Loading - please wait" for ever and the character could only be moved by
+// editing its save from outside the server. Reported 2026-09-29, from a Zul-andra teleport.
+// 377 has no rapids icon to point at instead, so they have none.
 [osrsloc_60353]
 // OSRS loc 60353
 name=Strong rapids
@@ -187,7 +200,6 @@ blockrange=no
 active=yes
 sharelight=yes
 shadow=no
-mapscene=196
 ambient=30
 contrast=127
 anim=osrsloc_anim_13160
@@ -201,7 +213,6 @@ blockwalk=no
 blockrange=no
 active=no
 shadow=no
-mapscene=205
 anim=osrsloc_anim_13537
 
 [osrsloc_60357]
@@ -213,7 +224,6 @@ blockwalk=no
 blockrange=no
 active=no
 shadow=no
-mapscene=206
 anim=osrsloc_anim_13538
 
 [osrsloc_60358]
@@ -223,7 +233,6 @@ blockwalk=no
 blockrange=no
 active=no
 shadow=no
-mapscene=207
 
 [osrsloc_60436]
 // OSRS loc 60436
