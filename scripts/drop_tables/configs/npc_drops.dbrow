@@ -346,6 +346,7 @@ data=npc,knight_of_ardougne
 data=npc,knight_of_ardougne2
 data=npc,leprechaun
 data=npc,lizardman
+data=npc,lunar_me
 data=npc,macro_evil_chicken_1
 data=npc,macro_evil_chicken_2
 data=npc,macro_evil_chicken_3
@@ -376,13 +377,13 @@ data=npc,macro_pheasant_threetail
 data=npc,macro_pheasant_twotail
 data=npc,mdaughter_bearman
 data=npc,mdaughter_bearman_fighter
-data=npc,mdaughter_camp_female1
 data=drop,bones,Bones,1,Always
 
-[npc_drops_mdaughter_camp_female2]
+[npc_drops_mdaughter_camp_female1]
 table=npc_drops
 // [ai_queue3,_]
 // assumed false: %arthur, npc_stat()
+data=npc,mdaughter_camp_female1
 data=npc,mdaughter_camp_female2
 data=npc,mdaughter_camp_female3
 data=npc,mdaughter_camp_male1
@@ -582,12 +583,12 @@ data=npc,tzhaar_fightcave_swarm_4b
 data=npc,tzhaar_fightcave_swarm_5b
 data=npc,tzhaar_fightpit_swarm_1a
 data=npc,tzhaar_fightpit_swarm_1b
-data=npc,tzhaar_fightpit_swarm_2a
 data=drop,bones,Bones,1,Always
 
-[npc_drops_tzhaar_fightpit_swarm_2b]
+[npc_drops_tzhaar_fightpit_swarm_2a]
 table=npc_drops
 // [ai_queue3,_]
+data=npc,tzhaar_fightpit_swarm_2a
 data=npc,tzhaar_fightpit_swarm_2b
 data=npc,tzhaar_fightpit_swarm_3a
 data=npc,tzhaar_fightpit_swarm_3b
@@ -15159,6 +15160,22 @@ data=bonus,keyhalf1,1,1,7324,0
 data=bonus,keyhalf2,1,1,7324,0
 data=bonus,rune_javelin,5,5,7324,0
 data=bonus,imbued_heart,1,1,3995,0
+
+[npc_drops_suqah]
+table=npc_drops
+// [ai_queue3,suqah]
+// assumed false: and()
+data=npc,suqah
+data=drop,big_bones,Big bones,1,Always
+data=drop,suqah_hide,Suqah hide,1,Always
+data=drop,suqah_tooth,Suqah tooth,1,1/1.87
+data=drop,lunar_special_tiara,A special tiara,1,1/2
+data=drop,unidentified_guam,Herb (Guam),1,1/4.3
+data=drop,unidentified_marentill,Herb (Marentill),1,1/5.16
+data=bonus,suqah_tooth,1,1,5348837,0
+data=bonus,lunar_special_tiara,1,1,5000000,0
+data=bonus,unidentified_guam,1,1,2325581,0
+data=bonus,unidentified_marentill,1,1,1937984,0
 
 [npc_drops_swamp_cave_bug]
 table=npc_drops
