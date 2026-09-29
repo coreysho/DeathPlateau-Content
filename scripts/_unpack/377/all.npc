@@ -9489,6 +9489,15 @@ head3=npc_Artist1_headi2
 wanderrange=3
 moverestrict=indoors
 
+// Chancy levitated in his card-dealing pose, reported from play 2026-09-29 as "during Biohazard,
+// Chancy levitates in a sitting position when moving around the area". He is the seated gambler
+// outside the Chemist's house in Rimmington (spawned at maps/m45_50.jm2, 0 49 22): readyanim is
+// ready_playing_cards, a seated deal, and he has no walkanim of his own, so the client kept the
+// seated pose while the server slid him about. wanderrange=3 was the only thing moving him, and it
+// contradicted the turnspeed=0 already on this record - an npc that never turns is an npc that was
+// meant to stay put. The OSRS wiki files him under Seated NPCs and has him "practicing with a deck
+// of cards" by the Chemist, so being static is what he should be doing, not a missing walk cycle.
+// wanderrange=0 + moverestrict=nomove is what [morris] and the other turnspeed=0 npcs here use.
 [gambler1]
 name=Chancy
 desc=He's ready for a bet.
@@ -9518,7 +9527,8 @@ readyanim=ready_playing_cards
 op1=Talk-to
 turnspeed=0
 head1=obj_pickpocket_guide_farmer
-wanderrange=3
+wanderrange=0
+moverestrict=nomove
 
 [gambler2]
 name=Chancy
