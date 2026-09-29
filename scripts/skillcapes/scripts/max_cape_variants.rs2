@@ -81,9 +81,10 @@ anim(human_fletching, 0);
 [opheldu,imbued_saradomin_max_cape] @maxvariant_split;
 [opheldu,imbued_guthix_max_cape] @maxvariant_split;
 [opheldu,imbued_zamorak_max_cape] @maxvariant_split;
+[opheldu,accumulator_max_cape] @maxvariant_split;
 
 // THE SIX GOD VARIANTS EQUIP LIKE A GOD CAPE, so the staff of another god refuses them.
-// The other two need no trigger at all: [opheld2,_] in player/scripts/equip.rs2 wears
+// The other three need no trigger at all: [opheld2,_] in player/scripts/equip.rs2 wears
 // anything that has nothing more specific to say.
 [opheld2,saradomin_max_cape] @god_cape_equip(^god_saradomin);
 [opheld2,guthix_max_cape] @god_cape_equip(^god_guthix);

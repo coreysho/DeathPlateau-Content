@@ -150,7 +150,7 @@ MUTS = [
   '12 and the spawn count is what it was'),
 ]
 
-# ---- 13: the eight Max cape variants -----------------------------------------------------------
+# ---- 13: the Max cape variants -----------------------------------------------------------
 # Appended rather than written into the literal above because these entries carry rs2 source with
 # brackets at column 0, and there is no reliable way to find that list's end by text.
 #
@@ -176,7 +176,7 @@ MUTS += [
  (_SPC, '"strengthbonus": 8', '"strengthbonus": 7',
   "13 ...and the same numbers the spec took out of OSRS's item table"),
  (_VOBJ, '[imbued_zamorak_max_hood]', '[imbued_zamorak_max_hoodie]',
-  '13 the generated config holds exactly the sixteen pieces the spec names'),
+  '13 the generated config holds exactly the'),
  (_VOBJ, 'model=obj_max_hood\nmanwear=obj_max_hood_manwear,0',
          'model=obj_max_hoodie\nmanwear=obj_max_hood_manwear,0',
   '13 and every model those sixteen name is in model.pack AND on disk'),
@@ -243,7 +243,7 @@ MUTS += [
  (_VRS, 'if (last_useitem ! knife) {', 'if (false = true) {',
   '13 ...and only a knife does it'),
  (_VRS, '[opheldu,fire_max_cape] @maxvariant_split;', '',
-  '13 all eight variants answer the knife'),
+  '13 every variant answers the knife'),
  (_VRS, '[opheldu,max_cape]\ndef_namedobj', '[opheldu,max_cape]\n[opheldu,max_cape]\ndef_namedobj',
   '13 and the combine is ONE trigger on the Max cape rather than eight'),
 
@@ -264,6 +264,39 @@ MUTS += [
  # --- the recolours, which decide whether six of them look like anything
  (_VOBJ, 'recol1s=12354\nrecol1d=10', 'recol1s=12355\nrecol1d=10',
   '13 and tools/maxvariantrender.py'),
+]
+
+# ---- 13: the Accumulator max cape, which is a device and not just a colour ----------------------
+# The one variant whose point is behaviour rather than a name. Every mutation here leaves a cape
+# that looks perfect in the render and the config and does nothing on the player's back, which is
+# the failure mode the checks exist for.
+_AVA = 'scripts/quests/quest_animmag/scripts/avas_device.rs2'
+
+MUTS += [
+ (_AVA, 'def_namedobj $source = enum(obj, namedobj, maxvariant_source, $cape);',
+        'def_namedobj $source = null;',
+  '13 ~avas_device turns a worn Max cape variant back into the device it was fused with'),
+ (_AVA, 'if ($cape = avas_attractor) {\n    return(avas_attractor);\n}\n', '',
+  '13 ...and it still returns each of the two plain devices'),
+ (_AVA, '[proc,avas_attract]\ndef_namedobj $device = ~avas_device;',
+        '[proc,avas_attract]\ndef_obj $device = inv_getobj(worn, ^wearpos_back);',
+  '13 ...and neither reads the cape slot itself any more'),
+ (_AVA, '[proc,ranged_ammo_saved]()(boolean)\ndef_namedobj $device = ~avas_device;',
+        '[proc,ranged_ammo_saved]()(boolean)\ndef_namedobj $device = null;',
+  '13 both halves of what a device does'),
+ (_VEN, 'val=avas_accumulator,accumulator_max_cape', 'val=avas_attractor,accumulator_max_cape',
+  '13 the enum says both directions'),
+ (_GEN, 'val=zamorak_cape,^god_zamorak',
+        'val=zamorak_cape,^god_zamorak\nval=accumulator_max_cape,^god_zamorak',
+  '13 and the accumulator variant is in NO god table'),
+ (_SPC, '"assembler_max_cape"', '"assembler_max_cape_removed"',
+  '13 ...and both are still listed there by name'),
+
+ # --- the Features menu, whose check pointed at a dispatch line for a whole round
+ (_PRK, '[opheld4,max_cape] @max_cape_features;', '[opheld4,max_cape] @skillcape_spellbook;',
+  '5 the Features op dispatches to one label'),
+ (_PRK, 'case 3 : @skillcape_spellbook;', 'case 3 : @skillcape_toggle_rol;',
+  '5 Features reaches the ring of life'),
 ]
 
 

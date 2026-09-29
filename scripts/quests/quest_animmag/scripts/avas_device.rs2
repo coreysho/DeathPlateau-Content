@@ -11,27 +11,52 @@
 // attraction (it does not stop the ammo coming back).
 //
 // Both devices are cape-slot items, so they and a Ranging cape are mutually exclusive - which is
-// why ~ranged_ammo_saved below can simply ask the cape slot what is in it. That proc is what
+// why ~avas_device below can simply ask the cape slot what is in it. ~ranged_ammo_saved is what
 // skill_combat and the toxic blowpipe call now; skillcapes/scripts/skillcape_perks.rs2's
 // ~skillcape_ammo_saved is untouched and still answers for the Ranging cape, which stood in for an
 // accumulator while this build had none.
+//
+// THE ACCUMULATOR MAX CAPE IS AN ACCUMULATOR. OSRS lets a Max cape be fused with an Ava's device,
+// and the wiki's Accumulator max cape page says the result keeps the whole of what the device did:
+// the ammunition saving and the 3.5-minute steel attraction. So every question below is asked of
+// ~avas_device, which turns a worn Max cape variant back into the cape it was made from - one
+// enum lookup, and nothing here names the variant at all. A device variant added later is an
+// accumulator or an attractor here the moment its row exists in max_cape_variants.enum.
 //
 // The attracted metal goes to the quiver when it will stack there and to the pack otherwise, which
 // is the "steel or lower goes in your pack" half of it: nothing the devices pull in is above steel.
 
 // =========================================================================== saving the shot
 
+// Which Ava's device is on the back, counting the Max cape variants that have one fused into
+// them. Null when there is none - which is the usual answer, and the cheap one.
+[proc,avas_device]()(namedobj)
+def_obj $cape = inv_getobj(worn, ^wearpos_back);
+if ($cape = avas_accumulator) {
+    return(avas_accumulator);
+}
+if ($cape = avas_attractor) {
+    return(avas_attractor);
+}
+// maxvariant_source answers null for anything that is not a Max cape variant, so an ordinary
+// cape falls straight through here.
+def_namedobj $source = enum(obj, namedobj, maxvariant_source, $cape);
+if ($source = avas_accumulator | $source = avas_attractor) {
+    return($source);
+}
+return(null);
+
 // True when this shot's ammo is not spent: an Ava's device on the back, or the Ranging cape that
 // used to stand in for one.
 [proc,ranged_ammo_saved]()(boolean)
-def_obj $cape = inv_getobj(worn, ^wearpos_back);
-if ($cape = avas_accumulator) {
+def_namedobj $device = ~avas_device;
+if ($device = avas_accumulator) {
     if (random(100) < ^animmag_accumulator_save) {
         return(true);
     }
     return(false);
 }
-if ($cape = avas_attractor) {
+if ($device = avas_attractor) {
     if (random(100) < ^animmag_attractor_save) {
         return(true);
     }
@@ -53,11 +78,11 @@ queue(animmag_attract, 0, 0);
 ~avas_attract;
 
 [proc,avas_attract]
-def_obj $cape = inv_getobj(worn, ^wearpos_back);
+def_namedobj $device = ~avas_device;
 def_namedobj $metal = null;
-if ($cape = avas_accumulator) {
+if ($device = avas_accumulator) {
     $metal = ~avas_steel_item;
-} else if ($cape = avas_attractor) {
+} else if ($device = avas_attractor) {
     $metal = ~avas_iron_item;
 } else {
     return;

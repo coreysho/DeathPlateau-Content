@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Render the sixteen Max cape variant pieces, and prove their recolours actually bite.
+"""Render every Max cape variant piece, and prove their recolours actually bite.
 
-THE CHECK THIS EXISTS FOR. Twelve of the sixteen have no model of their own: they are the plain
-Max cape's model with a recolour list taken from the OSRS item table. That list names SOURCE
+THE CHECK THIS EXISTS FOR. All but the fire and infernal pieces have no model of their own: they
+are the plain Max cape's model with a recolour list taken from the OSRS item table. That list names SOURCE
 COLOURS on OSRS's model - and this build's model is a re-encoding of it. If the re-encoding moved
 a colour, every recolour would silently match nothing, all six god capes would render as a plain
 Max cape, and no config, no linter and no packed-data check would notice. Nothing would look
@@ -59,8 +59,13 @@ def main():
     INERT = spec['recolours']['inert_in_osrs_too']['pairs']
 
     recs = records(open(OBJ, newline='').read())
-    if len(recs) != 16:
-        print('expected 16 records in %s, found %d' % (os.path.relpath(OBJ, C), len(recs)))
+    # COUNTED FROM THE SPEC. A hard-coded 16 here turned into a failure the day a ninth variant
+    # was added, which is the one thing this check must not do: it exists to catch a recolour
+    # that stopped biting, not to notice that the spec grew.
+    want = 2 * len(spec['variants'])
+    if len(recs) != want:
+        print('expected %d records in %s (a cape and a hood for each of the %d variants in the '
+              'spec), found %d' % (want, os.path.relpath(OBJ, C), len(spec['variants']), len(recs)))
         return 1
 
     fails, tiles = [], []

@@ -219,7 +219,14 @@ check('if ($back = max_cape) {\n    return(true);' in worn,
 check(before(worn, 'max_cape', 'skillcape_cape'),
       'before it looks the individual capes up, so no table needs a Max cape row')
 tele = PERKS.split('[opheld3,max_cape]', 1)[1].split('\n[', 1)[0]
-feat = PERKS.split('[opheld4,max_cape]', 1)[1].split('\n[', 1)[0]
+# THE MENU MOVED INTO A LABEL and this check did not follow it. [opheld4,max_cape] is one line
+# now - @max_cape_features - so reading the trigger's body found a dispatch and no menu, and the
+# check had been red since the worn-options round with the feature working perfectly. Read the
+# label, and assert the trigger still reaches it, which is what the old split used to cover.
+check('[opheld4,max_cape] @max_cape_features;' in PERKS,
+      'the Features op dispatches to one label, so the backpack menu and the worn menu are the '
+      'same menu')
+feat = PERKS.split('[label,max_cape_features]', 1)[1].split('\n[', 1)[0]
 check('~p_choice5_header' in tele and tele.count('@skillcape_teleport(') == 3
       and '@skillcape_teleport_house' in tele,
       'Teleports offers the three guild teleports and the house, all through the single capes\' own labels')
@@ -416,7 +423,7 @@ if altars and spots:
     check(max(lvls) <= 20, 'in wilderness levels %s - inside the 20 that teleports still work in'
           % '-'.join(str(l) for l in (lvls[0], lvls[-1])))
 
-print('13. the eight Max cape variants: sixteen items, and none of them is a Max cape')
+print('13. the Max cape variants: a cape and a hood each, and none of them is a Max cape')
 
 import json as _json
 import subprocess as _sp
@@ -432,13 +439,16 @@ MACONST = read('scripts/areas/area_mage_arena/configs/mage_arena.constant')
 KEYS = [v['key'] for v in VSPEC['variants']]
 NAMES = ['%s_max_%s' % (k, part) for k in KEYS for part in ('cape', 'hood')]
 
-# ---- the sixteen exist, and only the sixteen
+# ---- they all exist, and only they. COUNTED FROM THE SPEC, not written down: a ninth variant
+# arrived (the Accumulator max cape, once Animal Magnetism gave the build an Ava's accumulator)
+# and every hard-coded eight and sixteen in this group went red at once while nothing was wrong.
 check(sorted(VOBJ) == sorted(NAMES),
-      'the generated config holds exactly the sixteen pieces the spec names, eight capes and '
-      'eight hoods: %s' % (sorted(set(VOBJ) ^ set(NAMES)) or 'exactly the sixteen'))
+      'the generated config holds exactly the %d pieces the spec names, a cape and a hood for '
+      'each of the %d variants: %s'
+      % (len(NAMES), len(KEYS), sorted(set(VOBJ) ^ set(NAMES)) or 'exactly those'))
 check(all(n in OBJP for n in NAMES),
       'every one has an id in pack/obj.pack, so the packer can see it: %s'
-      % ([n for n in NAMES if n not in OBJP][:3] or 'all sixteen'))
+      % ([n for n in NAMES if n not in OBJP][:3] or 'all %d' % len(NAMES)))
 _missing_models = []
 for n, f in VOBJ.items():
     for k in ('model', 'manwear', 'womanwear', 'manhead', 'womanhead'):
@@ -458,7 +468,8 @@ check(not _missing_models,
 ALLOBJ = {}
 for _rel in ('scripts/_unpack/377/all.obj',
              'scripts/minigames/game_fightcave/configs/fightcave.obj',
-             'scripts/areas/area_mage_arena/configs/mage_arena_2.obj'):
+             'scripts/areas/area_mage_arena/configs/mage_arena_2.obj',
+             'scripts/quests/quest_animmag/configs/animmag.obj'):
     ALLOBJ.update(blocks(read(_rel)))
 def _params(f):
     out = {}
@@ -480,7 +491,7 @@ for v in VSPEC['variants']:
         _bad.append('%s: variant %s, source %s' % (v['key'], got, want))
 check(not _bad,
       "each variant cape's combat bonuses are exactly its SOURCE cape's, compared record to "
-      'record: %s' % (_bad[:2] or 'all eight match their source'))
+      'record: %s' % (_bad[:2] or 'all %d match their source' % len(KEYS)))
 _sbad = []
 for v in VSPEC['variants']:
     got = _params(VOBJ.get('%s_max_cape' % v['key'], {}))
@@ -488,7 +499,7 @@ for v in VSPEC['variants']:
         _sbad.append('%s: config %s, spec %s' % (v['key'], got, v['bonuses']))
 check(not _sbad,
       "...and the same numbers the spec took out of OSRS's item table, so source and variant "
-      'cannot have drifted together: %s' % (_sbad[:2] or 'all eight'))
+      'cannot have drifted together: %s' % (_sbad[:2] or 'all %d' % len(KEYS)))
 check(not [n for n, f in VOBJ.items() if n.endswith('_max_hood') and f.get('param')],
       'no hood carries a combat bonus, which is what every skillcape hood in this build does')
 
@@ -635,10 +646,11 @@ check(all(x in _split for x in ('inv_add(inv, max_cape, 1)', 'inv_add(inv, max_h
 check('last_useitem ! knife' in _split,
       '...and only a knife does it - anything else on a variant falls through to the default '
       'message')
-check(len(re.findall(r'^\[opheldu,\w+_max_cape\] @maxvariant_split;$', VRS2, re.M)) == 8,
-      'all eight variants answer the knife, declared on the CAPES rather than on the knife '
-      'because [opheldu,knife] is already taken by the fruit-cutting handler: %d of 8'
-      % len(re.findall(r'^\[opheldu,\w+_max_cape\] @maxvariant_split;$', VRS2, re.M)))
+_knives = re.findall(r'^\[opheldu,(\w+)_max_cape\] @maxvariant_split;$', VRS2, re.M)
+check(sorted(_knives) == sorted(KEYS),
+      'every variant answers the knife, declared on the CAPES rather than on the knife '
+      'because [opheldu,knife] is already taken by the fruit-cutting handler: %d of %d'
+      % (len(_knives), len(KEYS)))
 check(nocomment(VRS2).count('[opheldu,max_cape]') == 1,
       'and the combine is ONE trigger on the Max cape rather than eight, because OpHeldUHandler '
       "tries the target item's trigger first and the used item's second")
@@ -662,10 +674,54 @@ for v in VSPEC['variants']:
         _srcbad.append('%s has a duplicate param line' % v['source_cape'])
 check(not _srcbad,
       'no source cape carries a duplicated param line - which is what "fixing" a bonus that was '
-      'already there looks like in a config: %s' % (_srcbad[:3] or 'all eight clean'))
+      'already there looks like in a config: %s'
+      % (_srcbad[:3] or 'all %d clean' % len(KEYS)))
 check('a_finding_of_mine_that_was_wrong' in VSPEC,
       '...and the wrong finding is written down in the spec rather than quietly dropped, with the '
       'regex that caused it')
+
+# ---- THE ACCUMULATOR MAX CAPE IS AN AVA'S ACCUMULATOR, which is the only reason to own one.
+# Its bonuses are already checked against avas_accumulator by the derived-from-source check above,
+# because animmag.obj is one of the files ALLOBJ reads. What is checked here is the BEHAVIOUR: the
+# ammunition saving and the metal attraction, which live in the quest's scripts and not in a config.
+AVAS = read('scripts/quests/quest_animmag/scripts/avas_device.rs2')
+def _proc(txt, head):
+    return txt.split(head, 1)[1].split('\n[', 1)[0] if head in txt else ''
+_dev = nocomment(_proc(AVAS, '[proc,avas_device]'))
+_saved = nocomment(_proc(AVAS, '[proc,ranged_ammo_saved]'))
+_pull = nocomment(_proc(AVAS, '[proc,avas_attract]'))
+check('enum(obj, namedobj, maxvariant_source, $cape)' in _dev,
+      "~avas_device turns a worn Max cape variant back into the device it was fused with in one "
+      'enum lookup, so no script in the build names accumulator_max_cape at all')
+# NAMING A DEVICE IS NOT ANSWERING WITH IT. The first version of this check searched _dev for the
+# two names and passed while a mutation deleted the attractor's whole branch - the names were still
+# there in the enum comparison two lines further down. The RETURN is what a caller sees.
+check(all('return(%s);' % d in _dev for d in ('avas_accumulator', 'avas_attractor')),
+      '...and it still returns each of the two plain devices worn on its own, which is the '
+      'ordinary case')
+check('~avas_device' in _saved and '~avas_device' in _pull,
+      'both halves of what a device does - the ammo that comes back and the metal that is pulled '
+      'in - ask that one proc')
+check('inv_getobj(worn, ^wearpos_back)' not in _saved
+      and 'inv_getobj(worn, ^wearpos_back)' not in _pull,
+      '...and neither reads the cape slot itself any more, so the saving and the attraction '
+      'cannot end up disagreeing about what is worn')
+check('val=accumulator_max_cape,avas_accumulator' in VENUM
+      and 'val=avas_accumulator,accumulator_max_cape' in VENUM,
+      'the enum says both directions - an accumulator makes the cape, and the cape came from an '
+      'accumulator - which is what makes the lookup above find it')
+check('accumulator_max_cape' not in GENUM,
+      'and the accumulator variant is in NO god table: it has no god, and a cape that belongs to '
+      'none has to answer ^god_none like any other')
+_ranged = [k for k in KEYS if 'accumulator' in k or 'attractor' in k]
+check(_ranged == ['accumulator'],
+      "one device variant, not two: OSRS's assembler max capes need Ava's assembler, which is "
+      'post-2006 and not in this build, so they stay in the spec under not_buildable_here: %s'
+      % _ranged)
+check('assembler_max_cape' in VSPEC['not_buildable_here']
+      and 'masori_assembler_max_cape' in VSPEC['not_buildable_here'],
+      '...and both are still listed there by name, so leaving them out was a decision and not an '
+      'oversight')
 
 # ---- the generators reproduce what is checked in
 _gen = _sp.run([sys.executable, os.path.join(C, 'tools/genmaxvariants.py'), '--check'],

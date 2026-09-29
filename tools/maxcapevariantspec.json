@@ -1,5 +1,5 @@
 {
- "_what": "The eight Max cape variants this build can have, and where every number came from. Written before any config was edited. tools/maxcape_battery.py reads this file, so a number changed here without the configs changing goes red, and the other way round.",
+ "_what": "The nine Max cape variants this build can have, and where every number came from. Written before any config was edited. tools/maxcape_battery.py reads this file, so a number changed here without the configs changing goes red, and the other way round.",
  "_sources": {
   "osrs_item_table": "C:\\\\LostCityServer\\\\caches\\\\newest cache, index 2 group 10, decoded by tools/models/objconfig474.py. Every bonus, model id, recolour pair and 2d camera below is READ OUT OF IT rather than transcribed from the wiki - the item table is what the live game loads, and the wiki is a rendering of it.",
   "wiki": [
@@ -8,9 +8,10 @@
    "https://oldschool.runescape.wiki/w/Infernal_max_cape",
    "https://oldschool.runescape.wiki/w/Saradomin_max_cape",
    "https://oldschool.runescape.wiki/w/Imbued_Saradomin_max_cape",
-   "https://oldschool.runescape.wiki/w/God_capes"
+   "https://oldschool.runescape.wiki/w/God_capes",
+   "https://oldschool.runescape.wiki/w/Accumulator_max_cape"
   ],
-  "_wiki_read": "2026-09-21. Used for the rules a config cannot state: how a variant is made, what it keeps, and how it comes apart."
+  "_wiki_read": "2026-09-21 for the eight; 2026-09-28 for the Accumulator max cape, added once Animal Magnetism brought Ava's accumulator into the build. Used for the rules a config cannot state: how a variant is made, what it keeps, and how it comes apart."
  },
  "param_ids": {
   "_how": "Not remembered - pinned by three records in the table itself. The plain Max cape (13280) gives 5..9 = 9 and 11 = 4, which is its +9 defence all round and +4 prayer. The Fire max cape (13329) gives 0..4 = 1 and 10 = 4, its +1 attack all round and +4 strength. The Saradomin max cape (13331) gives 3 = 10 and 8 = 10, which can only be magic attack and magic defence. Those three fix every slot used here.",
@@ -65,7 +66,8 @@
   "_emote": "The skillcape emote still works. This build has no Max cape emote of its own and picks a random skillcape emote instead; a variant does the same thing, through the same line, rather than getting a mechanism of its own.",
   "ops": [],
   "_ops": "No Teleports op and no Features op. That is where OSRS's restriction actually bites, and it is what keeps the plain Max cape worth owning.",
-  "_ops_cache_evidence": "The cache agrees, and this is better evidence than the wiki's prose: obj 13280, the plain Max cape, carries iops {0: Wear, 1: Teleports, 2: Spellbook, 3: Features}. Every one of the eight variants carries {1: Wear} and nothing else. The ops are stripped in OSRS's own item table."
+  "_ops_cache_evidence": "The cache agrees, and this is better evidence than the wiki's prose: obj 13280, the plain Max cape, carries iops {0: Wear, 1: Teleports, 2: Spellbook, 3: Features}. Every one of the eight god/fire variants carries {1: Wear} and nothing else. The ops are stripped in OSRS's own item table. The Accumulator max cape (13337) is the one exception and is not one: it carries {1: Wear, 3: Commune}, and so does Ava's accumulator itself (10499) - Commune is a modern option on the DEVICE that the variant inherits, not a max cape perk. This build's Ava's devices have no Commune, so the variant has none either and carries Wear like the other eight.",
+  "_device_perk": "The Accumulator max cape saves ammunition and attracts steel. That is NOT a skillcape perk and does not go through ~skillcape_worn: see device_identity below. The four retained skills above are the same four for all nine."
  },
  "god_identity": {
   "counts_as_its_god_cape": true,
@@ -73,8 +75,7 @@
   "_consequence": "The six god variants are accepted everywhere the plain and imbued capes are: casting the god spell outside the arena, the charged maximum of 30, and the Mage Arena battle mages. Those sites list capes by name in six files today and become one proc."
  },
  "not_buildable_here": {
-  "_why": "A variant needs its source cape to exist in this build. These six do not, so they are left out rather than invented:",
-  "accumulator_max_cape": "Ava's accumulator is a 2007 item; not in this build",
+  "_why": "A variant needs its source cape to exist in this build. These five do not, so they are left out rather than invented (accumulator_max_cape used to be a sixth; Animal Magnetism added Ava's accumulator, so it is a real variant now):",
   "assembler_max_cape": "Ava's assembler; not in this build",
   "masori_assembler_max_cape": "Masori assembler; not in this build",
   "ardougne_max_cape": "Ardougne cloak 4 needs the achievement diaries; not in this build",
@@ -857,6 +858,111 @@
     "299": 20
    },
    "god_param": 41
+  },
+  {
+   "key": "accumulator",
+   "source_cape": "avas_accumulator",
+   "cape": {
+    "osrs_id": 13337,
+    "osrs_name": "Accumulator max cape",
+    "model": 29630,
+    "manwear": 29616,
+    "womanwear": 29624,
+    "recol": [
+     [
+      668,
+      16536
+     ],
+     [
+      675,
+      0
+     ],
+     [
+      784,
+      10291
+     ],
+     [
+      815,
+      10407
+     ],
+     [
+      673,
+      103
+     ]
+    ],
+    "zoom2d": 2232,
+    "xan2d": 687,
+    "yan2d": 27,
+    "yof2d": -5,
+    "desc": "The cape worn by only the most experienced players.",
+    "weight": 453,
+    "cost": 99000,
+    "wearpos": 1,
+    "wearpos2": null,
+    "womanhead": null,
+    "iops": {
+     "1": "Wear",
+     "3": "Commune"
+    },
+    "members": true
+   },
+   "hood": {
+    "osrs_id": 13338,
+    "osrs_name": "Accumulator max hood",
+    "model": 29629,
+    "manwear": 29614,
+    "womanwear": 29623,
+    "manhead": 29626,
+    "womanhead": 29628,
+    "recol": [
+     [
+      668,
+      16536
+     ],
+     [
+      675,
+      0
+     ],
+     [
+      784,
+      10291
+     ],
+     [
+      815,
+      10407
+     ],
+     [
+      673,
+      103
+     ],
+     [
+      685,
+      16536
+     ]
+    ],
+    "zoom2d": 720,
+    "xan2d": 21,
+    "yan2d": 18,
+    "desc": "The hood worn by only the most experienced players.",
+    "weight": 453,
+    "cost": null,
+    "wearpos": 0,
+    "wearpos2": 8,
+    "iops": {
+     "1": "Wear"
+    },
+    "members": true
+   },
+   "bonuses": {
+    "rangeattack": 4,
+    "slashdefence": 1,
+    "magicdefence": 4
+   },
+   "osrs_params_not_bonuses": {
+    "295": 1,
+    "451": "Commune"
+   },
+   "god_param": null
   }
  ],
  "recolours": {
@@ -939,5 +1045,12 @@
   "_how": "The survey that produced the claim grepped the configs with param=(stab|slash|crush|magic|ranged|attack|defence|str|prayer) - and 'ranged' does not match 'rangeattack', while 'attack' only matches at the start of the value. So the regex could not see rangeattack on ANY record, and its absence from the output was read as its absence from the file.",
   "_caught_by": "tools/fightcave_battery.py, which pins the Infernal cape at exactly the bonuses its own spec names and counts them. Adding a duplicate rangeattack line made it thirteen and the count went red. The per-param checks above it had been printing 'param rangeattack is the cache's 1' as OK the whole time, which is the line that should have been read before believing the grep.",
   "_lesson": "A negative result from a hand-written regex is not evidence. The parser the battery already has - blocks() into {key: [values]} - answers the same question exactly, and is what the derived-from-source check in group 13 uses."
+ },
+ "device_identity": {
+  "counts_as_its_source_device": true,
+  "_wiki": "https://oldschool.runescape.wiki/w/Accumulator_max_cape - \"Approximately every 3.5 minutes, the Accumulator max cape will attract an assortment of steel items\", and it keeps the accumulator's ammunition saving. It is the source cape's whole function, not a fraction of it.",
+  "_consequence": "~ranged_ammo_saved and ~avas_attract in quests/quest_animmag/scripts/avas_device.rs2 ask ~avas_device, which reads the cape slot and then asks maxvariant_source what that cape came from. So the Accumulator max cape is an accumulator for bows, thrown weapons, the toxic blowpipe and the magnet, through the same 72%/8%/20% numbers, with no list of capes anywhere.",
+  "_not_a_skillcape_perk": "It deliberately does not go through ~skillcape_worn(ranged). The Ranging cape's own 72% lives there and a variant answers false for ranged, which is right: the saving comes from the device fused into the cape, not from the Max cape's skill perks.",
+  "_assembler": "Ava's assembler and the Masori assembler are post-2006 items this build does not have, so assembler_max_cape and masori_assembler_max_cape stay in not_buildable_here. Nothing about them is invented here."
  }
 }
