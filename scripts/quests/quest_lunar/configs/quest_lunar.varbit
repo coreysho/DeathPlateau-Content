@@ -46,6 +46,14 @@ basevar=lunar_task
 startbit=22
 endbit=25
 
+// 1 while he is reciting. It cannot be inferred from the three above being zero, because the first
+// of the sixteen sequences IS numbered zero: a player who drew it could not answer a single number,
+// because the floating digits read "nothing has started yet" and told them to go and talk to him.
+[lunar_seq_state]
+basevar=lunar_task
+startbit=26
+endbit=26
+
 // ------------------------------------------------- Chop, chop, chop away! (the Perceptive)
 [lunar_chop_mine]
 basevar=lunar_task

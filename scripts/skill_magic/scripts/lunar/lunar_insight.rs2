@@ -30,12 +30,15 @@
 [apnpct,lunar_magic:monster_examine] @lunar_monster_examine;
 
 [label,lunar_monster_examine]
-if (npc_hasop(2) = false) {
-    mes("You can only cast this spell on something you could fight.");
-    return;
-}
+// The level, the runes and the quest come first, as they do everywhere else on this book: a player
+// who has not done Dream Mentor and aims at something unattackable should be told THAT rather than
+// that the target cannot be fought. Same ordering as Humidify.
 def_dbrow $spell_data = ~get_spell_data(^monster_examine);
 if (~check_spell_requirements($spell_data) = false) {
+    return;
+}
+if (npc_hasop(2) = false) {
+    mes("You can only cast this spell on something you could fight.");
     return;
 }
 ~delete_spell_runes($spell_data);
