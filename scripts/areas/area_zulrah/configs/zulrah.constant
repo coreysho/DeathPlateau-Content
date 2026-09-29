@@ -45,8 +45,16 @@
 // east; these are the four 5x5 blocks of open water nearest the walkway in each of those
 // directions - 5x5 because that is Zulrah's size, and water because it surfaces in water and is
 // moverestrict=nomove like the Kraken. A coord here is the block's southwest corner.
-^zulrah_pos_middle = 0_36_79_26_33
-^zulrah_pos_south = 0_36_79_26_22
+//
+// AND "NEAREST" IS NOW TRUE OF ALL FOUR, which it was not. Measured against the imported square's
+// own collision (every tile of the block water, and the shortest distance from the block to a tile
+// a player can stand on): west and east sat one tile off the walkway, which is as close as a 5x5
+// block of water gets before it starts overlapping the walkway itself, while middle sat at two and
+// south at two. So the snake surfaced further away in two of its four places than the rule this
+// file states, and further from the player than Old School puts it. Middle moves from z33 to z31
+// and south from z22 to z23; west and east were already right.
+^zulrah_pos_middle = 0_36_79_26_31
+^zulrah_pos_south = 0_36_79_26_23
 ^zulrah_pos_west = 0_36_79_17_31
 ^zulrah_pos_east = 0_36_79_35_31
 ^zulrah_pos_count = 4
