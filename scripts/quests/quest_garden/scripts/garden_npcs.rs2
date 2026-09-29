@@ -14,6 +14,17 @@
 if (inv_total(inv, arravcertificate) > 0) {
     return(false);
 }
+// NOT BEFORE PRIEST IN PERIL, while this quest has not been started. King Roald is the only person
+// who offers Priest in Peril, and taking his conversation means nobody else can: a brand new player
+// was given the garden instead - and, being short of the Farming level, told to come back - so the
+// way into the whole of Morytania could not be started at all. Reported 2026-09-29, "new players
+// aren't able to start priest in peril".
+//
+// Once Priest in Peril is behind them the garden is his again, and a garden already under way keeps
+// him whatever Priest in Peril says, so nobody can be stranded halfway through this one either.
+if (%garden_quest = ^garden_not_started & %priestperil ! ^priestperil_complete) {
+    return(false);
+}
 switch_int (%garden_quest) {
     case ^garden_not_started : return(true);
     case ^garden_started : return(true);
