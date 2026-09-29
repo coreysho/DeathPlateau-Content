@@ -75,6 +75,11 @@ stock8=chisel,2,100
 stock9=hammer,5,100
 stock10=newcomer_map,5,100
 
+// Aubury's Rune Shop, Varrock. The five elemental rune packs added by the rune packs round, in
+// Old School's own row order (fire, water, air, earth, mind) directly after the last loose rune, at the
+// 80 / 80 / 80 / 80 / 40 and restock 10 its OSRS wiki Stock table gives.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [runeshop]
 // https://youtu.be/teiklXCRFFY?si=2s5NYNYwaxdkGB9w&t=35 (same as OSRS)
 scope=shared
@@ -90,6 +95,11 @@ stock5=mindrune,5000,10
 stock6=bodyrune,5000,10
 stock7=chaosrune,250,10
 stock8=deathrune,250,15
+stock9=fire_rune_pack,80,10
+stock10=water_rune_pack,80,10
+stock11=air_rune_pack,80,10
+stock12=earth_rune_pack,80,10
+stock13=mind_rune_pack,40,10
 
 [swordshop]
 // https://classic.runescape.wiki/w/Varrock_Swords
@@ -409,6 +419,11 @@ stock10=newcomer_map,5,100
 stock11=net,5,100
 stock12=rope,5,100
 
+// Betty's Magic Emporium, Port Sarim. Five rune packs added by the rune packs round at the
+// 80 / 80 / 80 / 80 / 40 restock 10 its OSRS wiki Stock table gives, in Old School's row order and in
+// its slot: after the death rune, before the eye of newt.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [magicshop]
 scope=shared
 size=40
@@ -423,9 +438,14 @@ stock5=mindrune,5000,10
 stock6=bodyrune,5000,10
 stock7=chaosrune,250,10
 stock8=deathrune,250,15
-stock9=eye_of_newt,300,10
-stock10=bluewizhat,1,100
-stock11=blackwizhat,1,100
+stock9=fire_rune_pack,80,10
+stock10=water_rune_pack,80,10
+stock11=air_rune_pack,80,10
+stock12=earth_rune_pack,80,10
+stock13=mind_rune_pack,40,10
+stock14=eye_of_newt,300,10
+stock15=bluewizhat,1,100
+stock16=blackwizhat,1,100
 
 [gemshop]
 scope=shared
@@ -1021,6 +1041,11 @@ stock15=blue_skirt,2,100
 stock16=red_cape,4,100
 stock17=eye_patch,3,2000
 
+// Magic Guild Store, the Wizards' Guild in Yanille. Five rune packs added by the rune packs round
+// at the 80 / 80 / 80 / 80 / 40 restock 10 its OSRS wiki Stock table gives, in its slot: after the
+// soul rune, before the battlestaff.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [magicguildshop]
 scope=shared
 size=40
@@ -1039,11 +1064,16 @@ stock9=deathrune,250,15
 stock10=lawrune,250,30
 stock11=bloodrune,250,30
 stock12=soulrune,250,10
-stock13=battlestaff,5,90
-stock14=staff_of_fire,2,1000
-stock15=staff_of_water,2,1000
-stock16=staff_of_air,2,1000
-stock17=staff_of_earth,2,1000
+stock13=fire_rune_pack,80,10
+stock14=water_rune_pack,80,10
+stock15=air_rune_pack,80,10
+stock16=earth_rune_pack,80,10
+stock17=mind_rune_pack,40,10
+stock18=battlestaff,5,90
+stock19=staff_of_fire,2,1000
+stock20=staff_of_water,2,1000
+stock21=staff_of_air,2,1000
+stock22=staff_of_earth,2,1000
 
 // Jiminua's Jungle Store, Tai Bwo Wannai. Water-filled vial pack added by the packs round at the
 // 50 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
@@ -1801,6 +1831,11 @@ stock1=rune_dart_tip,10
 stock2=rune_arrowheads,15
 stock3=rune_knife,5
 
+// Lundail's Arena-side Rune Shop, the Mage Arena. Five rune packs added by the rune packs round.
+// The stock is tiny here and that is Old School's own number, not a placeholder: 5 / 5 / 5 / 5 and 4
+// for the mind pack, restock 40 on all five.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [magearena_runeshop]
 scope=shared
 size=40
@@ -1818,6 +1853,11 @@ stock8=chaosrune,250,10
 stock9=lawrune,250,30
 stock10=cosmicrune,20,100
 stock11=deathrune,250,15
+stock12=fire_rune_pack,5,40
+stock13=water_rune_pack,5,40
+stock14=air_rune_pack,5,40
+stock15=earth_rune_pack,5,40
+stock16=mind_rune_pack,4,40
 
 [magearena_staffshop]
 scope=shared
@@ -2557,6 +2597,10 @@ size=25
 // Apeatoll city guide archive 17,December,2005 + The screenshots are from early 2005.
 // 2005 https://web.archive.org/web/20051217134028/http://runehq.com/RHQCityGuidesView.php?id=00518
 // 2007 https://web.archive.org/web/20070513105041/http://www.runehq.com/RHQCityGuidesView.php?id=00518
+// Tutab's Magical Market, Ape Atoll. FOUR rune packs and not five: Old School stocks air, water,
+// earth and fire here at 40 restock 10 and NO mind pack, matching the loose runes this shop carries,
+// so there is no mind row to add. No chaos pack either, which is Old School's doing here rather than
+// this round's - see item_packs.obj for the one that was left out on purpose.
 [mm_magic_shop]
 scope=shared
 size=40
@@ -2568,9 +2612,13 @@ stock2=waterrune,1000,10
 stock3=airrune,1000,10
 stock4=earthrune,1000,10
 stock5=lawrune,250,10
-stock6=mm_eye_of_gnome,10,100
-stock7=mm_monkey_dentures,100,100
-stock8=mm_monkey_talisman,50,100
+stock6=fire_rune_pack,40,10
+stock7=water_rune_pack,40,10
+stock8=air_rune_pack,40,10
+stock9=earth_rune_pack,40,10
+stock10=mm_eye_of_gnome,10,100
+stock11=mm_monkey_dentures,100,100
+stock12=mm_monkey_talisman,50,100
 
 [mm_scimitar_shop]
 scope=shared
@@ -3178,6 +3226,11 @@ size=1
 size=1
 
 //..
+// Battle Runes, the Zamorak mage in the Wilderness - the table he opens BEFORE Enter the Abyss,
+// which is why the numbers are worse than darkruneshop_uber's below. Five rune packs added by the
+// rune packs round at this table's own 35 / 35 / 35 / 35 restock 15 and 25 restock 25.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [darkruneshop_crap]
 scope=shared
 size=40
@@ -3192,8 +3245,18 @@ stock5=mindrune,100,10
 stock6=bodyrune,100,10
 stock7=chaosrune,50,25
 stock8=deathrune,50,50
+stock9=fire_rune_pack,35,15
+stock10=water_rune_pack,35,15
+stock11=air_rune_pack,35,15
+stock12=earth_rune_pack,35,15
+stock13=mind_rune_pack,25,25
 
 //..
+// Battle Runes, the Zamorak mage in the Wilderness - the better of his two tables, the one he opens
+// after Enter the Abyss. Five rune packs added by the rune packs round at the 50 / 50 / 50 / 50
+// restock 2 and 35 restock 5 its OSRS wiki Stock table gives for this table.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [darkruneshop_uber]
 scope=shared
 size=40
@@ -3208,6 +3271,11 @@ stock5=mindrune,1000,10
 stock6=chaosrune,500,10
 stock7=deathrune,500,10
 stock8=bloodrune,500,15
+stock9=fire_rune_pack,50,2
+stock10=water_rune_pack,50,2
+stock11=air_rune_pack,50,2
+stock12=earth_rune_pack,50,2
+stock13=mind_rune_pack,35,5
 
 [roguesden_puzzle_rotation]
 size=1
@@ -4648,6 +4716,10 @@ stock10=mithril_arrowheads,5,40
 stock11=adamant_arrowheads,5,40
 stock12=rune_arrowheads,5,40
 
+// Void Knight Magic Store, Pest Control. Five rune packs added by the rune packs round at the
+// 80 / 80 / 80 / 80 / 40 restock 10 its OSRS wiki Stock table gives.
+// Old School lists a chaos rune pack after the mind one here; it is left out on purpose, and
+// scripts/item_packs/configs/item_packs.obj says why. This block is not an incomplete copy.
 [pest_rune_store]
 scope=shared
 size=40
@@ -4662,6 +4734,11 @@ stock5=mindrune,5000,10
 stock6=bodyrune,5000,10
 stock7=chaosrune,250,10
 stock8=deathrune,250,15
+stock9=fire_rune_pack,80,10
+stock10=water_rune_pack,80,10
+stock11=air_rune_pack,80,10
+stock12=earth_rune_pack,80,10
+stock13=mind_rune_pack,40,10
 
 [pest_general_store]
 scope=shared

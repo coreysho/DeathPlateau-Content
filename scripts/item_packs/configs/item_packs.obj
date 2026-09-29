@@ -38,3 +38,123 @@ param=item_pack_amount,100
 [cert_water_filled_vial_pack]
 certlink=water_filled_vial_pack
 certtemplate=template_for_cert
+
+// THE FIVE ELEMENTAL RUNE PACKS (OSRS, 18 September 2014, "Bounty Hunter"). Same treatment as the
+// vial pack above: objs 12728 / 12730 / 12732 / 12734 / 12736 in a modern OSRS cache, read out with
+// tools/models/importosrs.py --dry-run, so the names, examines, 2d icon angles, weights and costs
+// are the cache's own. None of the five models was already in the build under another name - all
+// five were checked by hash against every obj model here before any was imported - so they took
+// model ids 24601-24605.
+//
+// THE SIXTH ONE IS MISSING ON PURPOSE. Old School sells a chaos rune pack (obj 12738) beside these
+// five in every shop below, and it is deliberately NOT here. It is a 9,950gp item that puts 100
+// chaos runes in a player's hand in one click, which is a real lever on a 2006 rune economy in a
+// way five packs of cheap elementals are not; the owner weighed that and chose to leave it out.
+// So the shop blocks in all.inv are the OSRS tables with the chaos column dropped, and they are
+// not incomplete. Anyone "completing the set" later is reversing a decision, not fixing an
+// oversight. The TzHaar variants (21698/21701/21704/21707) and the Last Man Standing packs
+// (Elemental 20524, Catalytic 20523, both removed from Old School in 2019 and unobtainable) are
+// out for their own reasons and were never in scope.
+//
+// Unlike the vial pack these hand over UNNOTED runes: the OSRS wiki's Item pack page says a pack's
+// contents come out noted "unless the item is already stackable", and every rune here is
+// stackable=yes, which is why item_pack_contents names the rune itself rather than a cert.
+// tradeable=no is dropped for the same reason as above - each pack's own wiki page says tradeable
+// and noteable - and each gets a cert record.
+
+[air_rune_pack]
+name=Air rune pack
+desc=A pack containing 100 air runes.
+model=obj_air_rune_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+weight=4535g
+cost=430
+iop1=Open
+category=item_pack
+param=item_pack_contents,airrune
+param=item_pack_amount,100
+
+[cert_air_rune_pack]
+certlink=air_rune_pack
+certtemplate=template_for_cert
+
+[water_rune_pack]
+name=Water rune pack
+desc=A pack containing 100 water runes.
+model=obj_water_rune_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+weight=4535g
+cost=430
+iop1=Open
+category=item_pack
+param=item_pack_contents,waterrune
+param=item_pack_amount,100
+
+[cert_water_rune_pack]
+certlink=water_rune_pack
+certtemplate=template_for_cert
+
+[earth_rune_pack]
+name=Earth rune pack
+desc=A pack containing 100 earth runes.
+model=obj_earth_rune_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+weight=4535g
+cost=430
+iop1=Open
+category=item_pack
+param=item_pack_contents,earthrune
+param=item_pack_amount,100
+
+[cert_earth_rune_pack]
+certlink=earth_rune_pack
+certtemplate=template_for_cert
+
+[fire_rune_pack]
+name=Fire rune pack
+desc=A pack containing 100 fire runes.
+model=obj_fire_rune_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+weight=4535g
+cost=430
+iop1=Open
+category=item_pack
+param=item_pack_contents,firerune
+param=item_pack_amount,100
+
+[cert_fire_rune_pack]
+certlink=fire_rune_pack
+certtemplate=template_for_cert
+
+// The odd cost out: 330 where the four elementals are 430, because a mind rune is cheaper than an
+// elemental one. It is the cache's number, not a typo.
+[mind_rune_pack]
+name=Mind rune pack
+desc=A pack containing 100 mind runes.
+model=obj_mind_rune_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+weight=4535g
+cost=330
+iop1=Open
+category=item_pack
+param=item_pack_contents,mindrune
+param=item_pack_amount,100
+
+[cert_mind_rune_pack]
+certlink=mind_rune_pack
+certtemplate=template_for_cert
