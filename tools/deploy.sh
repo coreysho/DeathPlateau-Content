@@ -70,6 +70,11 @@ LIVE_SERVICE=$SERVICE
 DEV_ROOT=$ROOT/dev
 DEV_SERVICE=deathplateau-dev.service
 DEV_UNIT=/etc/systemd/system/$DEV_SERVICE
+DEV_DROPIN_DIR=/etc/systemd/system/$DEV_SERVICE.d
+DEV_DROPIN=$DEV_DROPIN_DIR/dev-world.conf
+# The settings the dev world must own. Everything else it inherits from live's .env, and these are
+# the ones that would make dev a second live world if they leaked across.
+DEV_OWN_KEYS='NODE_ID|NODE_PORT|WEB_PORT|WEB_MANAGEMENT_PORT|NODE_PROFILE|NODE_PRODUCTION|NODE_MIN_STAFF_LEVEL|LOGIN_SERVER|FRIEND_SERVER|LOGGER_SERVER|EASY_STARTUP|DB_BACKEND|DISCORD_TOKEN|DISCORD_GUILD_ID|LOGIN_RSA_KEY_PATH|BUILD_SRC_DIR|BUILD_STARTUP|NODE_BOTS'
 DEV_NODE_ID=11          # World 2 - the client shows nodeId - 9
 DEV_MIN_STAFF_LEVEL=3   # administrator
 DEV_KEEP_BACKUPS=5
@@ -156,6 +161,59 @@ chown_dev() {
     fi
 }
 
+# SYSTEMD BEATS THE .env, and that is not obvious from either file. The engine reads its
+# configuration with plain dotenv (Engine-TS src/util/Environment.ts, `import 'dotenv/config'`),
+# and dotenv does NOT overwrite a variable that is already in the environment. The dev unit is a
+# copy of live's, so every Environment= line live carries arrives in dev and silently wins over
+# dev/engine/.env - which cannot be fixed by editing that file, because nothing is wrong with it.
+#
+# That is how the dev world ran with NODE_PRODUCTION=true while its own .env said false
+# (found 2026-09-29, when the fuzzing bots refused to start on it and said why). Nothing else
+# announced it: dev had quietly lost the developer commands and the content file-watcher too.
+#
+# Two defences. New units are written without those lines at all (see the grep -vE below). Units
+# written before this - or written by hand, or by a future change to live's unit - are pinned
+# back to dev's own values here, in a drop-in, which systemd reads after the unit and which
+# therefore wins. It runs on every --dev-setup AND every --dev, so a change to live's unit is
+# caught the next time dev is touched rather than whenever somebody happens to notice.
+dev_unit_env_guard() {
+    [ -f "$DEV_UNIT" ] || return 0
+    local env=$DEV_ROOT/engine/.env pinned='' line key want
+    if grep -qE "^EnvironmentFile=.*$LIVE_ENGINE(/|\$)" "$DEV_UNIT"; then
+        die "$DEV_UNIT reads live's .env (EnvironmentFile) - dev would take live's ports and profile. Point it at $DEV_ROOT/engine/.env"
+    fi
+    while IFS= read -r line; do
+        key=${line#Environment=}
+        key=${key%%=*}
+        printf '%s' "$key" | grep -qE "^($DEV_OWN_KEYS)\$" || continue
+        want=$(env_get "$env" "$key")
+        [ -n "$want" ] || die "$DEV_UNIT sets $key, which the dev world must own, but $env does not set it - remove that line from the unit"
+        pinned=$pinned$key=$want$'\n'
+    done < <(grep '^Environment=' "$DEV_UNIT" 2>/dev/null || true)
+    if [ -n "$pinned" ]; then
+        mkdir -p "$DEV_DROPIN_DIR"
+        {
+            printf '# Written by deploy.sh (dev_unit_env_guard). %s sets these itself, and\n' "$DEV_UNIT"
+            printf '# systemd Environment= beats dev/engine/.env because dotenv does not overwrite a\n'
+            printf '# variable that is already set. These pin dev back to its own values.\n'
+            printf '[Service]\n'
+            printf '%s' "$pinned" | while IFS= read -r line; do
+                [ -n "$line" ] && printf 'Environment=%s\n' "$line"
+            done
+        } > "$DEV_DROPIN"
+        systemctl daemon-reload
+        say "Pinned dev's own values over what $DEV_SERVICE inherited from live's unit:"
+        printf '%s' "$pinned" | sed 's/^/    /'
+        printf '  (the unit itself still sets these - %s overrides it)\n' "$DEV_DROPIN"
+    elif [ -f "$DEV_DROPIN" ]; then
+        rm -f "$DEV_DROPIN"
+        rmdir "$DEV_DROPIN_DIR" 2>/dev/null || true
+        systemctl daemon-reload
+        printf '  %s is no longer needed - removed\n' "$DEV_DROPIN"
+    fi
+}
+
+
 dev_setup() {
     [ "$(id -u)" = 0 ] || die "--dev-setup makes a systemd unit - run it as root"
     [ -d "$LIVE_ENGINE/.git" ] && [ -d "$CONTENT/.git" ] || die "no live checkouts under $ROOT"
@@ -213,7 +271,7 @@ dev_setup() {
         port=$(env_get "$live_env" NODE_PORT); port=${port:-43594}
         web=$(env_get "$live_env" WEB_PORT); web=${web:-8888}
         mgmt=$(env_get "$live_env" WEB_MANAGEMENT_PORT); mgmt=${mgmt:-8898}
-        local keys='NODE_ID|NODE_PORT|WEB_PORT|WEB_MANAGEMENT_PORT|NODE_PROFILE|NODE_PRODUCTION|NODE_MIN_STAFF_LEVEL|LOGIN_SERVER|FRIEND_SERVER|LOGGER_SERVER|EASY_STARTUP|DB_BACKEND|DISCORD_TOKEN|DISCORD_GUILD_ID|LOGIN_RSA_KEY_PATH|BUILD_SRC_DIR|BUILD_STARTUP|NODE_BOTS'
+        local keys=$DEV_OWN_KEYS
         {
             if [ -f "$live_env" ]; then
                 printf '# ---- from live (%s) on %s\n' "$live_env" "$(date +%F)"
@@ -259,6 +317,9 @@ EOF
     sync_dev_key
 
     # 4. the unit - live's own, pointed at dev/. Whatever live's needs (user, PATH, node) dev has too.
+    #    Everything live's unit sets for one of DEV_OWN_KEYS is dropped on the way across, because
+    #    systemd's Environment= beats the .env - see dev_unit_env_guard, which catches the ones that
+    #    got across before this did.
     if [ -f "$DEV_UNIT" ]; then
         printf '  %s exists - left as it is\n' "$DEV_UNIT"
     else
@@ -268,6 +329,7 @@ EOF
                   -e "s#$LIVE_ENGINE#$DEV_ROOT/engine#g" -e "s#$CONTENT#$DEV_ROOT/content#g" \
                   -e 's/^Description=.*/Description=Death Plateau dev world (World 2, staff only)/' \
                   -e '0,/^\[Service\]$/s//[Service]\n# if memory runs out, the kernel kills the dev world before live\nOOMScoreAdjust=500/' \
+            | grep -vE "^Environment=($DEV_OWN_KEYS)=" \
             > "$DEV_UNIT.tmp"
         if ! grep -q "^WorkingDirectory=$DEV_ROOT/engine" "$DEV_UNIT.tmp"; then
             rm -f "$DEV_UNIT.tmp"
@@ -278,6 +340,7 @@ EOF
         systemctl enable "$DEV_SERVICE"
         sed 's/^/    /' "$DEV_UNIT"
     fi
+    dev_unit_env_guard
     chown_dev
 
     say "Dev world set up. Build and start it with:  $ROOT/deploy.sh --dev"
@@ -298,6 +361,9 @@ if [ -n "$DEV" ]; then
     SERVICE=$DEV_SERVICE
     KEEP_BACKUPS=$DEV_KEEP_BACKUPS
     BACKUP_DIR=$DEV_ROOT
+    # What the unit exports beats what the .env says, so settle that before reading the .env at all -
+    # otherwise these checks pass on a file the running world is not using. See dev_unit_env_guard.
+    dev_unit_env_guard
     # the one thing that must never be shared is a port: check dev's .env before anything stops
     for key in NODE_PORT WEB_PORT WEB_MANAGEMENT_PORT; do
         dev_value=$(env_get "$ENGINE/.env" "$key")
