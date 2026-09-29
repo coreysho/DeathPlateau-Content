@@ -186,16 +186,18 @@ if(npc_findhero = ^true) {
         queue*(progress_task, 0)(npc_uid);
     }
 } else if(finduid(%npc_aggressive_player) = true) {
-    if(.npc_findhero = ^true & uid ! .uid) {
-        if(%slayer_target = $key) {
-            if_close;
-            queue*(progress_task_split, 0)(npc_uid);
-        }
-        if(.%slayer_target = $key) {
-            .if_close;
-            .queue*(progress_task_split, 0)(npc_uid);
-        }
-    } else if(%slayer_target = $key) {
+    // Nothing to split down here. npc_findhero said false just above and HeroPoints.findHero only
+    // reads, so this npc has no hero to find - the player it was last aggressive to is the only
+    // claimant there is.
+    //
+    // This branch was branch one copied with the two roles swapped, and it asked again with
+    // .npc_findhero. The dot form wants a SECOND active npc (engine ScriptOpcodePointers:
+    // require2 active_npc2), and a death never sets one, so it threw "Attempt to access null
+    // active_npc" - which aborted npc_death at the ~check_progress_task on its first line and took
+    // everything after it with it: the drop, the death animation, the kill counts and npc_del, so
+    // the corpse stayed standing. Seen in the live log on skeletons and a guard. Even with a second
+    // npc in hand the test could never have passed, for the same reason the first one failed.
+    if(%slayer_target = $key) {
         if_close;
         queue*(progress_task, 0)(npc_uid);
     }
