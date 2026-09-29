@@ -154,6 +154,12 @@ switch_int(%biohazard) { // ^biohazard_used_birdfeed intentionally has no dialog
         switch_int(~p_choice2("I'll try to retrieve it for you.", 1, "Well, good luck.", 2)) {
             case 1 :
                 ~chatplayer("<p,neutral>I'll try to retrieve it for you.");
+                // Checked here rather than at her first word, so a player who is not ready still
+                // hears the whole of why she needs the distillator. Same shape as
+                // ~animmag_requirements.
+                if (~biohazard_requirements = false) {
+                    return;
+                }
                 // https://web.archive.org/web/20050515184744im_/http://www.runeweb.net/fireball/Biohazard%20Images/biohazard3.PNG
                 ~chatnpc("<p,neutral>I was hoping you would say that.|Unfortunately they discovered the tunnel and filled it in.|We need another way over the wall.");
                 ~chatplayer("<p,quiz>Any ideas?");
@@ -165,3 +171,23 @@ switch_int(%biohazard) { // ^biohazard_used_birdfeed intentionally has no dialog
                 ~chatnpc("<p,confused>Thanks traveller.");
         }
 }
+
+// Biohazard's gate. Old School requires Plague City, and nothing here read it: no script under
+// quest_biohazard/ and none of Elena's own dialogue touched %elenaquest, so the two varps could be
+// held in combinations the content does not expect.
+//
+// That is not only untidy. Starting Biohazard is what fills the mud patch in - it is the line above
+// this one, "they discovered the tunnel and filled it in" - and the patch is the only way down
+// during Plague City, so a player holding Biohazard with Plague City unfinished had no way through
+// and no way back. quest_elena/scripts/mud_patch.rs2 now refuses to seal a patch whose quest is
+// unfinished, which fixes the players it already happened to; this stops it arising at all.
+//
+// Elena herself is only in East Ardougne once she has been rescued, so in ordinary play this can
+// only catch the one step between freeing her and finishing the quest.
+[proc,biohazard_requirements]()(boolean)
+if (%elenaquest < ^elena_complete) {
+    ~chatnpc("<p,neutral>That is kind of you, but one thing at a time.|We have not finished what you came here for.");
+    ~mesbox("You need to have completed Plague City to start Biohazard.");
+    return(false);
+}
+return(true);
