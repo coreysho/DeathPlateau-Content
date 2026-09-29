@@ -1,0 +1,17 @@
+// What an item pack turns into when you open it. Read by the [opheld1,_item_pack] trigger in
+// scripts/item_packs/scripts/item_packs.rs2, so a new pack needs no new script - give the obj
+// category=item_pack and these two params and it opens.
+//
+// item_pack_contents holds the obj the player is actually HANDED, already in its final form. The
+// OSRS wiki's Item pack page says a pack's contents come out noted "unless the item is already
+// stackable", so a vial-of-water pack names cert_vial_water here while a rune pack would name the
+// rune itself. Keeping the final obj in the param means the script never has to guess which of the
+// two rules applies to a given pack.
+
+[item_pack_contents]
+type=namedobj
+default=null
+
+[item_pack_amount]
+type=int
+default=0

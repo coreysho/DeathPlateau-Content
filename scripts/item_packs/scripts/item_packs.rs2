@@ -1,0 +1,56 @@
+// Opening an item pack. One trigger serves every pack: it is bound to the item_pack CATEGORY, the
+// way [opheldu,_potion] serves every potion, so a new pack is a config change only - give the obj
+// category=item_pack plus item_pack_contents and item_pack_amount and it opens with no new script.
+//
+// One pack opens in full, all 100 at once; the OSRS wiki's Item pack page describes no "one at a
+// time" option, and the pack's only inventory op in the cache is Open.
+//
+// The rest then follow on their own, because the same page says "If a player has multiple packs,
+// opening one will automatically open the remaining packs at a very slow pace of 1 pack every 1 or
+// 2 game ticks". The shape is the water sources' (general_use/scripts/water_sources.rs2), which is
+// cook_generic's: one pack per pass on a WEAK queue that re-queues itself before doing its own
+// open. Queueing comes first because @ is a jump and not a call, so anything after the jump would
+// never run. The weak queue also buys the interruptions for free - Player.clearPendingAction ->
+// closeModal empties it, so walking off or clicking anything stops the run.
+//
+// It is a weak queue and NOT p_delay. p_delay sets Player.delayed, and World.processClientsIn
+// throws away a walk click made while the player is delayed; a run built on p_delay would pin the
+// player in place for as many ticks as they had packs, which is the opposite of the same wiki
+// page's 6 August 2020 note that "Players can now continue moving as they open packs". Nothing
+// here delays the player at all, so a walk click always lands. The delay of 2 is the water
+// sources' number for the same reason it is theirs: World.processPlayers runs the queues twice in
+// the tick the entry is made, so a delay of 1 would spend its first count-down immediately and open
+// one every tick. 2 gives one every other tick, which is inside the "1 or 2 game ticks" the wiki
+// describes.
+//
+// There is NO "you do not have enough inventory space" check, and that is not an oversight. Every
+// pack hands over a single stack - noted contents for an unstackable item, the item itself when it
+// already stacks - and the pack's own slot is freed before that stack is added, so one pack always
+// has room for what it becomes even in a completely full inventory. A guard here could only ever
+// refuse an open that would have worked. If a pack is ever added whose contents need more than one
+// slot, it needs the hunter kit's guard (skill_magic/scripts/lunar/lunar_hunter_kit.rs2), and this
+// paragraph is the reason it is not here already.
+
+[opheld1,_item_pack]
+def_obj $pack = inv_getobj(inv, last_slot);
+if (inv_total(inv, $pack) > 1) {
+    weakqueue*(open_item_pack_run, 2)($pack);
+}
+@open_one_item_pack($pack);
+
+[queue,open_item_pack_run](obj $pack)
+// Re-read the count rather than trusting the one from when the entry was made: a queue entry
+// outlives the tick that made it, and the player can bank or trade the rest away in between.
+if (inv_total(inv, $pack) < 1) {
+    return;
+}
+if (inv_total(inv, $pack) > 1) {
+    weakqueue*(open_item_pack_run, 2)($pack);
+}
+@open_one_item_pack($pack);
+
+[label,open_one_item_pack](obj $pack)
+// Delete first. The freed slot is what the contents go into, and that is what lets a completely
+// full inventory still open a pack.
+inv_del(inv, $pack, 1);
+inv_add(inv, oc_param($pack, item_pack_contents), oc_param($pack, item_pack_amount));
