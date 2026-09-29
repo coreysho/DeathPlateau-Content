@@ -228,7 +228,10 @@ recol1d=29484
 
 [moonclan_guard]
 // rev 474 npc 4520
+// op1 so [opnpc1,moonclan_guard] can be reached at all: he declared no ops, so the seal check in
+// lunar_island.rs2 was a handler nobody could ever send. Caught by rs2check rule 20.
 name=Clan Guard
+op1=Talk-to
 desc=Clan Guard.
 model1=npc_moonclan_guard_1
 model2=npc_moonclan_guard_2

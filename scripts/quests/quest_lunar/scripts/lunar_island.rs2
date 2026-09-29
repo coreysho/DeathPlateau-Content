@@ -534,7 +534,6 @@ if (~lunar_has_seal = false) {
 ~chatnpc("<p,neutral>Keep that seal where I can see it, outerlander.");
 
 [opnpc1,sirsal_banker] @lunar_banker;
-[opnpc2,sirsal_banker] @lunar_banker;
 [opnpc3,sirsal_banker] @lunar_banker;
 
 [label,lunar_banker]

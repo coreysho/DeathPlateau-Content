@@ -1297,6 +1297,7 @@ def selftest():
         check_spell_row_fields()
         check_interfaces()
         check_castable_buttons()
+        check_npc_ops()
         check_varp_booleans(T)
         got = {}
         for sev, path, line, rule, msg in findings:
@@ -1357,6 +1358,67 @@ IF_FONTS = {"p11_full", "p12_full", "b12_full", "q8_full"}
 IF_TYPES = {"layer", "overlay", "inv", "rect", "text", "graphic", "model", "invtext", "8"}
 
 
+
+def check_npc_ops():
+    """rule 20: an [opnpcN,npc] trigger for an op the npc's config does not declare.
+
+    The client can only send an op the npc advertises, so a handler hung on one it does not is dead
+    code that no player can ever reach - and it fails in perfect silence. Dream Mentor could not be
+    finished by ANYBODY because its armament questions were declared [opnpc3,birdseye_jack] while
+    Jack's record says op1=Talk-to and nothing else; the handler is the only thing that fills
+    %dm_armament, so Cyrisus sat forever on "it's all in the bank". Found 2026-09-29 by reading, after
+    a player reported the quest stuck, and the sim had been driving op 3 quite happily for weeks.
+
+    Deliberately conservative, because a checker that cries wolf gets ignored and this file has
+    already been burnt three times that way:
+      * `_` is every npc, so it is skipped;
+      * an npc this working copy cannot resolve is a CHECK, not an ERROR, like the other rules;
+      * a multinpc SHELL takes the union of its own ops and every variant's. A shell resolves to a
+        variant at runtime and the truth is subtler than that, but the union can only ever silence
+        the rule, never make it fire wrongly.
+    """
+    ops = {}        # npc name -> set of declared op numbers
+    variants = {}   # shell name -> [variant names]
+    for path in walk({".npc"}):
+        name = None
+        for line in read(path).decode("utf-8", "replace").splitlines():
+            line = line.strip()
+            if line.startswith("[") and line.endswith("]"):
+                name = line[1:-1]
+                ops.setdefault(name, set())
+            elif name:
+                m = re.match(r"^op(\d)=", line)
+                if m:
+                    ops[name].add(int(m.group(1)))
+                elif line.startswith("multinpc="):
+                    part = line.split("=", 1)[1].split(",")
+                    if len(part) > 1:
+                        variants.setdefault(name, []).append(part[-1].strip())
+    for shell, vs in variants.items():
+        for v in vs:
+            ops.setdefault(shell, set()).update(ops.get(v, set()))
+
+    for path in walk({".rs2"}):
+        for n, line in enumerate(read(path).decode("utf-8", "replace").splitlines(), 1):
+            m = re.match(r"^\[opnpc(\d),([A-Za-z0-9_]+)\]", line.strip())
+            if not m:
+                continue
+            op, npc = int(m.group(1)), m.group(2)
+            # A leading underscore is a CATEGORY - [opnpc1,_citizen_burthorpe] is every npc in it,
+            # not an npc called that - and the ops then belong to each member. Checking those wants
+            # the category membership rather than a name lookup, so they are left alone: 54 of them
+            # reported as unresolved on the first run, which is precisely the crying wolf this file
+            # warns about three separate times.
+            if npc.startswith("_"):
+                continue
+            if npc not in ops:
+                report("CHECK", path, n, "20", "[opnpc%d,%s] - no .npc record for %s here" % (op, npc, npc))
+            elif op not in ops[npc]:
+                have = ",".join("op%d" % o for o in sorted(ops[npc])) or "no ops at all"
+                report("ERROR", path, n, "20",
+                       "[opnpc%d,%s] is an op %s does not declare (%s) - the client can never send it, so this never runs"
+                       % (op, npc, npc, have))
+
 def check_interfaces():
     for path in walk({".if"}):
         cur, kv, start = None, {}, 0
@@ -1416,6 +1478,7 @@ def main(argv):
         check_spell_row_fields()
         check_interfaces()
         check_castable_buttons()
+        check_npc_ops()
         check_varp_booleans(T)
 
     errors = [f for f in findings if f[0] == "ERROR"]

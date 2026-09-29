@@ -151,7 +151,6 @@ p_telejump(^lunar_isle_rellekka_pier);
 //
 // The Lady Zay, between Pirates' Cove and Lunar Isle. One Bentley on each dock, both this config.
 [opnpc1,captain_bentley] @lunar_bentley;
-[opnpc3,captain_bentley] @lunar_bentley;
 
 [label,lunar_bentley]
 if (coordz(coord) > ^lunar_isle_north_z) {
