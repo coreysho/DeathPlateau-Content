@@ -638,6 +638,10 @@ stock4=black_2h_sword,1,700
 stock5=mithril_2h_sword,1,1000
 stock6=adamant_2h_sword,1,15000
 
+// Jatix's Herblore Shop, Taverley. Water-filled vial pack added by the packs round at the
+// 750 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot: after the empty vial, before
+// the pestle and mortar. OSRS has a vial of water between them; 2006 did not stock one here and no
+// line was added for it - the era rule cuts both ways, so the pack comes in and nothing else moves.
 [herbloreshop]
 scope=shared
 size=40
@@ -645,8 +649,9 @@ restock=yes
 stackall=yes
 allstock=no
 stock1=vial_empty,800,100
-stock2=pestle_and_mortar,3,100
-stock3=eye_of_newt,800,20
+stock2=water_filled_vial_pack,750,50
+stock3=pestle_and_mortar,3,100
+stock4=eye_of_newt,800,20
 
 // Bandit camp Wilderness
 [taxfree]
@@ -791,6 +796,9 @@ stock26=zogre_bow,0,2000
 stock27=studded_body,2,1000
 stock28=studded_chaps,2,1000
 
+// Frincos' Fabulous Herb Store, Entrana. Water-filled vial pack added by the packs round at the
+// 8 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot after the empty vial. As at
+// Jatix's, OSRS's vial of water on the row between is 2006-absent here and stays absent.
 [herbloreshop2]
 scope=shared
 size=40
@@ -798,8 +806,9 @@ restock=yes
 stackall=yes
 allstock=no
 stock1=vial_empty,50,100
-stock2=pestle_and_mortar,3,100
-stock3=eye_of_newt,50,20
+stock2=water_filled_vial_pack,8,50
+stock3=pestle_and_mortar,3,100
+stock4=eye_of_newt,50,20
 
 [memberstaffshop]
 scope=shared
@@ -880,14 +889,18 @@ allstock=no
 // missing" from the Ardougne general store: there was a blank square in the shop window between
 // the vial of water and the bronze pickaxe. Nothing was missing from the LIST - stock2 simply had
 // no line. ca989661d ("[377] Shop stock fixes", #483) renumbered this block off the OSRS wiki's
-// table, whose second row is the water-filled vial pack, a 2019 item that rightly has no place in
-// 377, and left the hole behind. A hole is not free: InvConfig.ts writes an undefined stock slot as
-// obj -1 / count 0, InvType.ts reads that back through a Uint16Array as obj 65535, and
-// Inventory.fromType seeds the shop container with it. Closed by renumbering, which is also what
-// the shop held in 2006 - ten items, no jug. The jug_empty this block carried before #483 came
-// from the rev-727 dump, i.e. RS3 data (the RS3 wiki's list matches that dump item for item and
-// count); OSRS, the 2006scape wiki and the 2007 shop database all have Aemad's without one, so the
-// jug stays out under the era rule.
+// table, whose second row is the water-filled vial pack, and left the hole behind. A hole is not
+// free: InvConfig.ts writes an undefined stock slot as obj -1 / count 0, InvType.ts reads that back
+// through a Uint16Array as obj 65535, and Inventory.fromType seeds the shop container with it.
+// Closed by renumbering. The jug_empty this block carried before #483 came from the rev-727 dump,
+// i.e. RS3 data (the RS3 wiki's list matches that dump item for item and count); OSRS, the
+// 2006scape wiki and the 2007 shop database all have Aemad's without one, so the jug stays out
+// under the era rule.
+//
+// stock2 is that missing second row, filled in at last: the water-filled vial pack is imported and
+// stocked here as of the packs round, at the 250 / restock 10 its own OSRS wiki Stock table gives.
+// The price is not set here and never was - shop.rs2 works it out from the obj's cost and Aemad's
+// own shop_sell_multiplier, so adding a line cannot disturb what the other ten items cost.
 [adventurershop]
 scope=shared
 size=40
@@ -895,15 +908,16 @@ restock=yes
 stackall=yes
 allstock=yes
 stock1=vial_water,500,30
-stock2=bronze_pickaxe,2,100
-stock3=iron_axe,2,100
-stock4=cooked_meat,2,100
-stock5=tinderbox,2,100
-stock6=ball_of_wool,30,100
-stock7=bronze_arrow,500,10
-stock8=rope,20,100
-stock9=papyrus,50,1000
-stock10=knife,50,100
+stock2=water_filled_vial_pack,250,10
+stock3=bronze_pickaxe,2,100
+stock4=iron_axe,2,100
+stock5=cooked_meat,2,100
+stock6=tinderbox,2,100
+stock7=ball_of_wool,30,100
+stock8=bronze_arrow,500,10
+stock9=rope,20,100
+stock10=papyrus,50,1000
+stock11=knife,50,100
 
 [spiceshop]
 // https://oldschool.runescape.wiki/w/Unused_shops
@@ -1031,6 +1045,9 @@ stock15=staff_of_water,2,1000
 stock16=staff_of_air,2,1000
 stock17=staff_of_earth,2,1000
 
+// Jiminua's Jungle Store, Tai Bwo Wannai. Water-filled vial pack added by the packs round at the
+// 50 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
+// OSRS also puts an empty vial pack above it; that is a different item and not part of this round.
 [junglestore]
 scope=shared
 size=40
@@ -1049,19 +1066,20 @@ stock9=cooked_meat,2,500
 stock10=bread,10,500
 stock11=vial_empty,10,500
 stock12=vial_water,50,200
-stock13=pestle_and_mortar,3,500
-stock14=3doseantipoison,10,150
-stock15=papyrus,50,200
-stock16=charcoal,50,200
-stock17=knife,2,100
-stock18=hammer,10,500
-stock19=machette,50,200
-stock20=chisel,10,500
-stock21=spade,10,500
-stock22=bronze_axe,2,500
-stock23=bronze_pickaxe,2,500
-stock24=iron_axe,5,700
-stock25=bronze_bar,10,500
+stock13=water_filled_vial_pack,50,50
+stock14=pestle_and_mortar,3,500
+stock15=3doseantipoison,10,150
+stock16=papyrus,50,200
+stock17=charcoal,50,200
+stock18=knife,2,100
+stock19=hammer,10,500
+stock20=machette,50,200
+stock21=chisel,10,500
+stock22=spade,10,500
+stock23=bronze_axe,2,500
+stock24=bronze_pickaxe,2,500
+stock25=iron_axe,5,700
+stock26=bronze_bar,10,500
 
 [lathastrainingstore]
 scope=shared
@@ -1148,6 +1166,8 @@ stock9=hunter_bird_snare,20,100
 stock10=teasing_stick,5,100
 stock11=noose_wand,5,100
 
+// Grud's Herblore Stall, Gu'Tanoth. Water-filled vial pack added by the packs round at the
+// 8 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot after the empty vial.
 [herbloreshopogre]
 scope=shared
 size=40
@@ -1155,8 +1175,9 @@ restock=yes
 stackall=yes
 allstock=no
 stock1=vial_empty,50,100
-stock2=pestle_and_mortar,3,100
-stock3=eye_of_newt,50,20
+stock2=water_filled_vial_pack,8,50
+stock3=pestle_and_mortar,3,100
+stock4=eye_of_newt,50,20
 
 [silverstall]
 // https://oldschool.runescape.wiki/w/Unused_shops
@@ -1837,6 +1858,8 @@ stock3=horsey_black,5,20
 stock4=horsey_grey,5,20
 stock5=spinning_plate,250,20
 
+// Obli's General Store, Shilo Village. Water-filled vial pack added by the packs round at the
+// 50 / restock 50 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
 [shilojunglestore]
 scope=shared
 size=40
@@ -1864,8 +1887,9 @@ stock18=hammer,10,500
 stock19=papyrus,50,200
 stock20=charcoal,50,200
 stock21=vial_water,50,200
-stock22=machette,50,200
-stock23=rope,10,200
+stock22=water_filled_vial_pack,50,50
+stock23=machette,50,200
+stock24=rope,10,200
 
 [upassgeneralshop]
 scope=shared
@@ -2231,6 +2255,9 @@ size=1
 
 // https://web.archive.org/web/20060415002448/http://kbase.runescape.com/lang/en/aff/runescape/viewarticle.ws?article_id=2379
 //todo: Restock rates in '04?
+// Razmire General Store, Mort'ton. Water-filled vial pack added by the packs round at the
+// 50 / restock 100 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
+// The oliveoil3 above it stays a 3-dose: OSRS's 4-dose is a later change and not this round's to make.
 [razmiregeneralstore]
 scope=shared
 size=40
@@ -2246,8 +2273,9 @@ stock6=chisel,2,100
 stock7=hammer,5,100
 stock8=oliveoil3,150,10
 stock9=vial_water,100,100
-stock10=pot_flour,100,10
-stock11=flamtaer_hammer,3,10
+stock10=water_filled_vial_pack,50,100
+stock11=pot_flour,100,10
+stock12=flamtaer_hammer,3,10
 
 //swamp paste increase to 1500 was https://runescape.wiki/w/Update:Patch_Notes_(2_November_2010)
 //https://i.imgur.com/BaNh2A5.jpeg November 2004
@@ -2325,6 +2353,10 @@ stock9=viking_helmet_crush,5,100
 stock10=viking_helmet_slash,5,100
 stock11=viking_helmet_magic,5,100
 
+// Sigmund the Merchant, Rellekka. Water-filled vial pack added by the packs round at the
+// 10 / restock 20 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
+// Only the pack line is new: this shop's buy multiplier already differs from OSRS's and is left as
+// 2006 has it.
 [viking_general_store]
 scope=shared
 size=40
@@ -2343,14 +2375,15 @@ stock9=chisel,10,500
 stock10=hammer,10,500
 stock11=vial_empty,10,500
 stock12=vial_water,10,200
-stock13=bucket_empty,10,500
-stock14=bucket_water,10,200
-stock15=egg,10,200
-stock16=potato,10,200
-stock17=cabbage,10,200
-stock18=hunter_bird_snare,20,100
-stock19=noose_wand,5,100
-stock20=teasing_stick,5,100
+stock13=water_filled_vial_pack,10,20
+stock14=bucket_empty,10,500
+stock15=bucket_water,10,200
+stock16=egg,10,200
+stock17=potato,10,200
+stock18=cabbage,10,200
+stock19=hunter_bird_snare,20,100
+stock20=noose_wand,5,100
+stock21=teasing_stick,5,100
 
 [viking_fishmonger]
 scope=shared
@@ -2390,6 +2423,8 @@ allstock=no
 stock1=fur,3,100
 stock2=grey_wolf_fur,3,100
 
+// Jossik's Wares, the Lighthouse. Water-filled vial pack added by the packs round at the
+// 100 / restock 100 its OSRS wiki Stock table gives, in the OSRS slot right after the vial of water.
 [lighthouseshop]
 scope=shared
 size=40
@@ -2412,14 +2447,15 @@ stock13=jug_empty,5,200
 stock14=jug_water,5,500
 stock15=vial_empty,100,500
 stock16=vial_water,100,500
-stock17=gin,5,500
-stock18=brandy,5,500
-stock19=vodka,5,500
-stock20=grog,5,500
-stock21=whisky,5,500
-stock22=greenmans_ale,5,500
-stock23=dwarven_stout,5,500
-stock24=wizards_mind_bomb,5,500
+stock17=water_filled_vial_pack,100,100
+stock18=gin,5,500
+stock19=brandy,5,500
+stock20=vodka,5,500
+stock21=grog,5,500
+stock22=whisky,5,500
+stock23=greenmans_ale,5,500
+stock24=dwarven_stout,5,500
+stock25=wizards_mind_bomb,5,500
 // vodka restock time taken from rs3.
 
 [boardgames_boardinv]

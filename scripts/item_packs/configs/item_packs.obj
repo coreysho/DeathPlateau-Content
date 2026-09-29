@@ -1,0 +1,40 @@
+// ITEM PACKS (OSRS). A pack is bought from a shop and opened for 100 of something, which saves
+// buying that something 28 slots at a time. Post-2006 content, so under the era rule these are
+// ported to behave exactly as Old School has them rather than reinvented, and nothing 2006-era
+// changes to make room for them.
+//
+// Every field below was read out of a modern OSRS cache with tools/models/importosrs.py --dry-run,
+// which decodes the cache record rather than transcribing a wiki table: name, desc, the 2d icon
+// angles, the recolours, weight, cost and the Open op are the cache's own.
+//
+// The two exceptions, both because the cache field the importer reads is not the wiki's answer:
+//   * tradeable - the importer emits tradeable=no when the cache record carries no tradeable flag
+//     it can decode. The Water-filled vial pack's own wiki page says tradeable = Yes and noteable =
+//     Yes, so the line is dropped (the build's default is tradeable) and a cert record added.
+//   * category and param= - the importer cannot know these; they are what makes Open work. See
+//     item_packs.param.
+
+[water_filled_vial_pack]
+name=Water-filled vial pack
+desc=A pack containing 100 vials of water.
+model=obj_water_filled_vial_pack
+2dzoom=1411
+2dyan=2047
+2dxof=-3
+2dyof=-3
+recol1s=25231
+recol1d=18788
+recol2s=27345
+recol2d=13540
+recol3s=22060
+recol3d=18788
+weight=2100g
+cost=201
+iop1=Open
+category=item_pack
+param=item_pack_contents,cert_vial_water
+param=item_pack_amount,100
+
+[cert_water_filled_vial_pack]
+certlink=water_filled_vial_pack
+certtemplate=template_for_cert
