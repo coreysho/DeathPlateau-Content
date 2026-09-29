@@ -1,16 +1,16 @@
 [oplocu,plaguemudpatch1]
 switch_obj(last_useitem) {
-    case spade : @elena_dig_mud_patch;
+    case spade : ~elena_dig_mud_patch;
     case bucket_water : @elena_bucket_mud_patch(last_useslot);
 }
 
 [oplocu,plaguemudpatch2]
 switch_obj(last_useitem) {
-    case spade : @elena_dig_mud_patch;
+    case spade : ~elena_dig_mud_patch;
     case bucket_water : @elena_bucket_mud_patch(last_useslot);
 }
 
-[label,elena_dig_mud_patch]
+[proc,elena_dig_mud_patch]
 anim(human_dig, 0);
 // The tunnel is filled in only once Plague City is BEHIND you. Elena is the one who says so - "they
 // discovered the tunnel and filled it in", area_ardougne_east/scripts/elena.rs2, the line that sets
@@ -56,3 +56,21 @@ if (%elenaquest = ^quest_elena_mud_patch4) {
 } else {
     ~mesbox("You pour the water onto the soil.|The soil softens slightly.");
 }
+
+// THE SPADE'S OWN DIG, as well as using the spade on the patch (owner, 2026-09-29). Every other
+// quest dig in general_use/scripts/spade.rs2 is a coordinate test, because the thing being dug is
+// scenery with no ops. The mud patch is not: it is a real loc with its own oplocu, and nothing
+// writes its coordinate down. So this looks for the loc in the player's own zone rather than
+// testing a coordinate, which also keeps working if the patch is ever moved on the map.
+//
+// One tile of slack, so digging works from the tile you walked onto as well as from the patch
+// itself - the same reach the click on the loc has.
+[proc,elena_mud_patch_dig]()(boolean)
+loc_findallzone(coord);
+while (loc_findnext = true) {
+    if ((loc_type = plaguemudpatch1 | loc_type = plaguemudpatch2) & distance(coord, loc_coord) <= 1) {
+        ~elena_dig_mud_patch;
+        return(true);
+    }
+}
+return(false);

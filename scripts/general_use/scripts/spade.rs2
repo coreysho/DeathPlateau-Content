@@ -46,6 +46,14 @@ if (~lunar_dig = true) {
     return;
 }
 
+// Plague City. The odd one out: the mud patch IS a loc with its own oplocu, so using the spade on
+// it has always worked and this is the other way round - Dig on the spade while you are standing
+// there. It looks the loc up in the zone rather than testing a coordinate, since the patch's own
+// coordinate is not written down anywhere. quest_elena/scripts/mud_patch.rs2.
+if (~elena_mud_patch_dig = true) {
+    return;
+}
+
 // Everything else
 p_arrivedelay;
 p_stopaction;
