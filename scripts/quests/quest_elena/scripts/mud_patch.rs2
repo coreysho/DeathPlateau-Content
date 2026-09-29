@@ -12,7 +12,14 @@ switch_obj(last_useitem) {
 
 [label,elena_dig_mud_patch]
 anim(human_dig, 0);
-if (%biohazard >= ^biohazard_started) {
+// The tunnel is filled in only once Plague City is BEHIND you. Elena is the one who says so - "they
+// discovered the tunnel and filled it in", area_ardougne_east/scripts/elena.rs2, the line that sets
+// %biohazard to ^biohazard_started - so Biohazard having begun is the right thing to read. What was
+// wrong is that it was read on its own, ahead of any check that Plague City was finished: a player
+// who reached Biohazard with %elenaquest still short of ^elena_complete was told the ground was
+// packed hard while the bucket script was telling him the soil was already soft enough, and the mud
+// patch is the ONLY way down during the quest, so there was no way to finish it and no way back.
+if (%elenaquest >= ^elena_complete & %biohazard >= ^biohazard_started) {
     ~objbox(spade, "The ground's been filled in and packed hard.", 250, 0, 0);
     return;
 }
