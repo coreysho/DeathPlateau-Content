@@ -3,4 +3,12 @@
 // own models are authored at zoom=550 with obj_bronze_bar in every slot, which is a placeholder -
 // the server has to set all eight anyway, and setting them by obj is how every other window in
 // this fork does it. Rendered before shipping; see claude/four-cache-windows.md.
-^smelt_window_scale = 100
+// 150, not 100, because at icon size the bars read as small in a panel with this much room around
+// them (owner, 2026-09-29). Half again is as far as the panel's own geometry goes comfortably: the
+// columns are 57 apart and the icons are centred at x=41, 98, ... y=53, so a bar drawn about 42
+// wide still leaves 15 pixels between neighbours, and the label sits four blank lines down its
+// column's 62-pixel click zone, well under the bar's new bottom edge. The model draw is not
+// clipped to the 32x32 component - Client.drawInterface only tests whether the component's box
+// overlaps the clip rect at all - so growing past the box is safe, and overlapping a neighbour
+// would be the thing that looked wrong, not a cut-off edge.
+^smelt_window_scale = 150
