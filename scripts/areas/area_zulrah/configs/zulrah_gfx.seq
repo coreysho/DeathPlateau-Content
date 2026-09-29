@@ -37,15 +37,23 @@ delay5=5
 
 [zulrah_venom_cloud]
 // OSRS seq 6648
+//
+// RE-TIMED TO EXACTLY ONE GAME TICK, and that is what made the clouds visible at all. A MapSpotAnim
+// plays its sequence once and is then dropped (jagex2/dash3d/MapSpotAnim.method486), and a seq's
+// delays are counted in 20ms client cycles, so OSRS's own six frames at delay 2 are twelve cycles -
+// a quarter of a second. zulrah_fight.rs2 re-played it every five ticks, which showed a cloud for
+// 0.24s in every 3s and read as nothing being there. Six frames at delay 5 is thirty cycles, which
+// is one 600ms tick on the nose, and the cloud queue now re-plays it every tick: one graphic ends
+// as the next begins and the cloud burns continuously for as long as it is burning.
 frame1=anim_osrs_13182_1
-delay1=2
+delay1=5
 frame2=anim_osrs_13182_2
-delay2=2
+delay2=5
 frame3=anim_osrs_13182_3
-delay3=2
+delay3=5
 frame4=anim_osrs_13182_4
-delay4=2
+delay4=5
 frame5=anim_osrs_13182_5
-delay5=2
+delay5=5
 frame6=anim_osrs_13182_6
-delay6=2
+delay6=5

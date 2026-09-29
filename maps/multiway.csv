@@ -4503,3 +4503,27 @@
 1_46_81_40_16
 1_46_81_40_24
 1_46_81_40_32
+
+// zulrah shrine - the template m36_79 (16,16) is copied into every fight instance: Zulrah and
+// its snakelings all go for you at once, which is what Old School has, and single-way here meant
+// the snakelings could never strike and the player was refused a re-attack on Zulrah after every
+// phase change (npc_changetype_keepall gives it a new uid). The whole four-by-four template block
+// is marked, not just the water Zulrah surfaces in, so a step along the walkway cannot drop the
+// player back into single-way mid-fight. GameMap.isMulti answers an instance tile from the zone
+// it was copied from, which is what makes these lines reach the instance at all.
+0_36_79_16_16
+0_36_79_16_24
+0_36_79_16_32
+0_36_79_16_40
+0_36_79_24_16
+0_36_79_24_24
+0_36_79_24_32
+0_36_79_24_40
+0_36_79_32_16
+0_36_79_32_24
+0_36_79_32_32
+0_36_79_32_40
+0_36_79_40_16
+0_36_79_40_24
+0_36_79_40_32
+0_36_79_40_40

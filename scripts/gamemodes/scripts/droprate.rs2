@@ -75,9 +75,18 @@ switch_int ($kind) {
 
 // Where the monster's own loot lands. The Kraken's two die in the water and drop under the player
 // (area_kraken_cove/scripts/kraken_drops.rs2); everything else drops where it died.
+//
+// ZULRAH IS THE SAME CASE AND WAS MISSING FROM IT. Its own table already lands everything under the
+// player ("Zulrah dies in the water of its own pool, where nobody can walk", zulrah_drops.rs2), but
+// this bonus drop is added from [proc,npc_death] rather than from that table, so it was still using
+// npc_coord - and one item of a kill's four would sit in the pool where the player cannot reach it.
+// All three colours, because the snake can be killed wearing any of them.
 [proc,droprate_coord]()(coord)
 if (npc_type = kraken | npc_type = cave_kraken) {
     return(~kraken_loot_coord);
+}
+if (npc_type = zulrah | npc_type = zulrah_magma | npc_type = zulrah_tanzanite) {
+    return(coord);
 }
 return(npc_coord);
 

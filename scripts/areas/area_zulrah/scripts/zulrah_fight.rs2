@@ -270,7 +270,12 @@ if ($kind = ^zulrah_act_jad_mage) {
 [proc,zulrah_dive]
 npc_anim(enum(npc, seq, zulrah_dive_anim, npc_type), 0);
 %zulrah_submerged = 1;
-%npc_action_delay = add(map_clock, ^zulrah_dive_ticks);
+// HOW LONG IT STAYS DOWN IS THIS COLOUR'S OWN DIVE, not one number for three. The three dive
+// animations are not the same length in the cache - 5071 is 105 client cycles, 5072 and 5073 are 60
+// each (tools/models/osrsseq.py on the newest cache) - so the flat four ticks this used held the red
+// and the blue forms under the water for twice the length of the animation that put them there, and
+// the snake sat still on the surface for the difference. zulrah.enum carries the three.
+%npc_action_delay = add(map_clock, enum(npc, int, zulrah_dive_ticks, npc_type));
 
 [proc,zulrah_surface]
 %zulrah_submerged = 0;
@@ -301,7 +306,12 @@ npc_setmode(applayer2);
 npc_anim(npc_param(attack_anim), 0);
 ~npc_set_attack_vars;
 def_coord $at = map_findsquare(coord, 1, ^zulrah_snakeling_spawn_range, ^map_findsquare_lineofwalk);
-~player_projectile(npc_coord, $at, uid, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
+// ~coord_projectile, NOT ~player_projectile. An orb is thrown at a TILE - it lands beside you and
+// leaves a snakeling standing on it - and ~player_projectile ends in projanim_pl, which homes the
+// graphic on the player and ignores the destination coord altogether (skill_combat/scripts/
+// projectile.rs2). The orb therefore flew into the player's chest and the snakeling appeared
+// somewhere else entirely. projanim_map flies to $at, which is where the snakeling turns up.
+~coord_projectile(npc_coord, $at, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
 // Half melee, half magic - OSRS's snakelings "attack with either magic or melee".
 def_npc $type = zulrah_snakeling;
 if (random(2) = 0) {
@@ -402,10 +412,14 @@ if ($packed < 0) {
     $tile = modulo($packed, 1024);
 }
 def_coord $at = movecoord(%zulrah_instance, divide($tile, 32), 0, modulo($tile, 32));
-// The graphic is only 6 frames long, so it is re-played while the cloud is still there.
-if (modulo($left, 5) = 0 | $packed < 0) {
-    spotanim_map(zulrah_venom_cloud, $at, 0, 0);
-}
+// THE GRAPHIC IS RE-PLAYED EVERY TICK, and it has to be. A MapSpotAnim plays its sequence once and
+// the client then drops it, and zulrah_venom_cloud is six frames at delay 5 - thirty 20ms client
+// cycles, which is exactly one 600ms tick (zulrah_gfx.seq says why it was re-timed). Re-playing it
+// on every tick of the cloud's life is therefore one continuous cloud rather than a flicker: the
+// previous graphic ends on the tick boundary the next one starts on. Re-playing it every fifth tick,
+// which is what this did, showed the cloud for a quarter of a second in every three and read in game
+// as no cloud at all.
+spotanim_map(zulrah_venom_cloud, $at, 0, 0);
 // "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
 // The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
 // touches the venom timer.

@@ -17,18 +17,27 @@
 // counts, priorities and frame groups rather than from memory. Zulrah's rig is frame groups
 // 5693-5698 and every seq on them has classic frames, so all of them convert:
 //   5070   9 frames, no priority, group 5698          the idle - the npc record itself names it
-//   5069  15 frames at delay 3 = 0.9s, priority 6     the spit: the only one that fits a 3-tick
-//                                                     attack speed, and the only attack-length one
+//   5069  15 frames, 60 client cycles = 2 ticks,      the spit: the only one that fits a 3-tick
+//         priority 6                                  attack speed, and the only attack-length one
 //   5068  36 frames, priority 6, group 5694 with 5069 surfacing - the same group as the attack,
 //                                                     which is the group the head and neck live in
-//   5071/5072/5073  21 frames each, group 5696,       diving, ONE PER COLOUR (priorities 9/8/9,
-//                   priorities 9/8/9                  delays 5/2/3) - three of a kind on one group
-//                                                     is what a per-colour animation looks like
+//   5071/5072/5073  21 frames each, group 5696,       diving, ONE PER COLOUR (priorities 9/8/9) -
+//                   priorities 9/8/9                  three of a kind on one group is what a
+//                                                     per-colour animation looks like. They are NOT
+//                                                     the same length: 105, 60 and 60 client cycles,
+//                                                     which is 3.5, 2 and 2 ticks, and the fight
+//                                                     waits each colour's own (zulrah_dive_ticks)
 //   5804  49 frames, priority 10, group 5693          the death: priority 10 is the highest on the
 //                                                     rig and nothing else on the model is that long
-// 5806 (55 frames), 5807 (53) and 5808 (9) are the rig's other three. They are NOT converted: we
-// could not say what they are, and a wrong animation on a non-human rig is a picture of a snake
-// folded inside out.
+// 5806 (55 frames, 7.00 ticks), 5807 (53, 6.67) and 5808 (9, 1.00) are the rig's other three. They
+// are STILL NOT converted, and the magma form's tail swipe therefore still plays the spit, which is
+// the one thing about this snake's animation that is known to be wrong and is not fixed here. The
+// two long ones are the only candidates - both priority 6, the attack priority, both alone on frame
+// group 5695 - and "it will stare at the player's position for several seconds before whipping its
+// tail" is a seven-second animation if it is anything. But nothing in the cache says which of the
+// two it is, or whether either is Zulrah's at all rather than another npc sharing the framemap, and
+// a wrong animation on a non-human rig is a picture of a snake folded inside out. Identifying them
+// wants a render (tools/models/posepreview.py), which is the next round's.
 //
 // moverestrict=nomove on all three, like the Kraken: Zulrah surfaces in water, never walks, and is
 // put where the rotation says with npc_tele.
@@ -59,7 +68,14 @@ param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
 // "Damage at Zulrah is capped at 50" - the wiki, in so many words.
 param=max_dealt,^zulrah_damage_cap
-// The wiki's defensive block: stab, slash and crush 0, Magic -45, Ranged +50.
+// The wiki's defensive block: stab, slash and crush 0, Ranged +50.
+//
+// AND THE MAGIC DEFENCE IS PER COLOUR, which is the whole reason the fight makes you carry two
+// attack styles. It is the cache's own npc param 8, read off 2042/2043/2044 with tools/models'
+// osrsnpc.py: -45 on the green, 0 on the red, +300 on the blue. -45 is also the number the wiki
+// prints, which is what pins param 8 to magic defence and not to something else. The port gave all
+// three the green form's -45, so magic killed the blue form as fast as the green one and there was
+// nothing to switch for.
 param=magicdefence,-45
 param=stabdefence,0
 param=slashdefence,0
@@ -93,7 +109,8 @@ param=attackrate,^zulrah_attackrate
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
 param=max_dealt,^zulrah_damage_cap
-param=magicdefence,-45
+// OSRS npc 2043's own param 8: the red form is neither weak nor strong to magic.
+param=magicdefence,0
 param=stabdefence,0
 param=slashdefence,0
 param=crushdefence,0
@@ -125,7 +142,9 @@ param=attackrate,^zulrah_attackrate
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
 param=max_dealt,^zulrah_damage_cap
-param=magicdefence,-45
+// OSRS npc 2044's own param 8: +300. The blue form is the one you put the bow away for - "Blue
+// (Tanzanite): weak to Ranged" - and 300 is what makes a magic attack on it worthless.
+param=magicdefence,300
 param=stabdefence,0
 param=slashdefence,0
 param=crushdefence,0

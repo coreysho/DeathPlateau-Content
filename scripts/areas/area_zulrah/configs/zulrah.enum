@@ -605,3 +605,16 @@ default=zulrah_dive_serpentine
 val=zulrah,zulrah_dive_serpentine
 val=zulrah_magma,zulrah_dive_magma
 val=zulrah_tanzanite,zulrah_dive_tanzanite
+
+// HOW MANY TICKS EACH COLOUR STAYS UNDER, which is the length of that colour's own dive animation
+// rounded up to a whole tick. Read off the newest OSRS cache with tools/models/osrsseq.py: seq 5071
+// (serpentine) is 21 frames at delay 5 = 105 client cycles = 3.5 ticks, seq 5072 (magma) is 60
+// cycles = 2 ticks and seq 5073 (tanzanite) is 60 cycles = 2 ticks. zulrah_fight.rs2 used a flat
+// four for all three, so the red and the blue forms finished diving and then sat there.
+[zulrah_dive_ticks]
+inputtype=npc
+outputtype=int
+default=4
+val=zulrah,4
+val=zulrah_magma,2
+val=zulrah_tanzanite,2
