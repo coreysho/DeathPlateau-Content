@@ -78,6 +78,15 @@ if (last_useitem = ashes) {
 [opheldu,snapdragonvial]
 ~attempt_brew_potion(last_useslot, last_slot);
 
+// The antidote line, mixed in coconut milk rather than water (brewing/coconut_milk.rs2). Both of
+// these carry category=potion, so without a trigger of their own they would fall to the decanting
+// category trigger and answer "Nothing interesting happens." to a herb.
+[opheldu,vial_coconut_milk]
+~attempt_brew_potion(last_useslot, last_slot);
+
+[opheldu,unfinished_antidote++]
+~attempt_brew_potion(last_useslot, last_slot);
+
 [opheldu,eye_of_newt]
 ~attempt_brew_potion(last_useslot, last_slot);
 

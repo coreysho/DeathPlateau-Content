@@ -22,3 +22,51 @@ if (~venom_to_poison = false) {
 inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
 ~consume_effect_messages($consumable, stat(hitpoints), false);
 
+// ---------------------------------------------------------------------------------------------
+// The three that know about venom (OSRS, 2005 and 2015 - antivenom/configs/antivenom.constant has
+// every number and the wiki line it came from). The two 2006 antipoisons above are untouched by
+// this round on purpose: neither of them gives a minute's venom immunity in OSRS either.
+// ---------------------------------------------------------------------------------------------
+
+// ANTIDOTE++ is still an antipoison as far as venom is concerned - "the first dose will reduce the
+// venom to poison. The second dose will remove the poison and provide immunity to poison for 12
+// minutes and immunity to venom for 18-36 seconds" - so the venom branch is the same one the two
+// potions above take, and only the dose that finds you clean leaves anything behind.
+[label,consume_effect_antidote_pp]
+sound_synth(liquid, 1, 0);
+anim(human_eat, 0);
+def_obj $consumable = last_item;
+if (~venom_to_poison = false) {
+    %poison = min(%poison, multiply(^antidote_pp_poison_immunity, -1));
+    ~venom_cure_immune(^antidote_pp_venom_immunity);
+}
+~set_poison_timer;
+inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+~consume_effect_messages($consumable, stat(hitpoints), false);
+
+// ANTI-VENOM "instantly cures venom and poison. It provides immunity to poison for 12 minutes and
+// immunity to venom for 36-54 seconds." No ~venom_to_poison here and no second dose: one is the
+// whole cure, which is the entire point of the potion. Both immunities are floors rather than
+// assignments, so a sip under a longer one does not cut it short.
+[label,consume_effect_antivenom]
+sound_synth(liquid, 1, 0);
+anim(human_eat, 0);
+def_obj $consumable = last_item;
+%poison = min(%poison, multiply(^antivenom_poison_immunity, -1));
+~venom_cure_immune(^antivenom_venom_immunity);
+~set_poison_timer;
+inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+~consume_effect_messages($consumable, stat(hitpoints), false);
+
+// ANTI-VENOM+ "instantly cures venom and poison. It provides immunity to poison for 15 minutes and
+// venom for approximately 3.6 minutes."
+[label,consume_effect_antivenom_plus]
+sound_synth(liquid, 1, 0);
+anim(human_eat, 0);
+def_obj $consumable = last_item;
+%poison = min(%poison, multiply(^antivenom_plus_poison_immunity, -1));
+~venom_cure_immune(^antivenom_plus_venom_immunity);
+~set_poison_timer;
+inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+~consume_effect_messages($consumable, stat(hitpoints), false);
+

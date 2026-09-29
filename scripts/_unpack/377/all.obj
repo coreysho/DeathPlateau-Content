@@ -67416,6 +67416,7 @@ param=farming_check_state,12
 param=farming_checked_state,13
 param=farming_stump_state,14
 param=farming_pet_base,22483
+param=farming_roots,oak_roots
 
 [plantpot_willow_sapling]
 name=Willow sapling
@@ -67446,6 +67447,7 @@ param=farming_check_state,21
 param=farming_checked_state,22
 param=farming_stump_state,23
 param=farming_pet_base,16059
+param=farming_roots,willow_roots
 
 [plantpot_maple_sapling]
 name=Maple sapling
@@ -67476,6 +67478,7 @@ param=farming_check_state,32
 param=farming_checked_state,33
 param=farming_stump_state,34
 param=farming_pet_base,14052
+param=farming_roots,maple_roots
 
 [plantpot_yew_sapling]
 name=Yew sapling
@@ -67506,6 +67509,7 @@ param=farming_check_state,45
 param=farming_checked_state,46
 param=farming_stump_state,47
 param=farming_pet_base,11242
+param=farming_roots,yew_roots
 
 [plantpot_magic_tree_sapling]
 name=Magic sapling
@@ -67536,6 +67540,7 @@ param=farming_check_state,60
 param=farming_checked_state,61
 param=farming_stump_state,62
 param=farming_pet_base,9368
+param=farming_roots,magic_roots
 
 [plantpot_spirit_tree_sapling]
 name=Spirit sapling
@@ -75279,6 +75284,14 @@ iop1=Drink
 iop4=Empty
 weight=35g
 category=potion
+// Drinkable at last. Antidote++ has always been in this cache and has never had the four
+// params a potion needs, because nothing could make one; the recipe is now in
+// skill_herblore/configs/brewing/brew_potion.struct and what a dose does is in
+// player/scripts/consumption/effects/scripts/anti_poison.rs2.
+param=cures_poison,yes
+param=next_obj_stage,antidote++3
+param=decant_potion_enum,potion_antidote_pp
+param=dose_count,4
 
 [cert_antidote++4]
 certlink=antidote++4
@@ -75300,6 +75313,10 @@ iop1=Drink
 iop4=Empty
 weight=35g
 category=potion
+param=cures_poison,yes
+param=next_obj_stage,antidote++2
+param=decant_potion_enum,potion_antidote_pp
+param=dose_count,3
 
 [cert_antidote++3]
 certlink=antidote++3
@@ -75321,6 +75338,10 @@ iop1=Drink
 iop4=Empty
 weight=35g
 category=potion
+param=cures_poison,yes
+param=next_obj_stage,antidote++1
+param=decant_potion_enum,potion_antidote_pp
+param=dose_count,2
 
 [cert_antidote++2]
 certlink=antidote++2
@@ -75342,6 +75363,10 @@ iop1=Drink
 iop4=Empty
 weight=35g
 category=potion
+param=cures_poison,yes
+param=next_obj_stage,vial_empty
+param=decant_potion_enum,potion_antidote_pp
+param=dose_count,1
 
 [cert_antidote++1]
 certlink=antidote++1
@@ -76244,6 +76269,9 @@ model=obj_oak_roots
 2dxan=504
 members=yes
 weight=1g
+// Magic roots are the secondary of antidote++, which is the secondary of anti-venom
+// (skill_herblore/configs/brewing/brew_potion.struct, antivenom/scripts/antivenom.rs2).
+param=brew_potion_struct,antidote_pp
 
 [cert_magic_roots]
 certlink=magic_roots

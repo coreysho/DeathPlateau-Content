@@ -84,6 +84,13 @@ switch_obj(last_item) {
         @player_drink_potion(consume_effect_antipoison);
     case 1dose2antipoison, 2dose2antipoison, 3dose2antipoison, 4dose2antipoison :
         @player_drink_potion(consume_effect_super_antipoison);
+    // the three that also do something about venom (toxic_blowpipe/scripts/venom.rs2)
+    case antidote++1, antidote++2, antidote++3, antidote++4 :
+        @player_drink_potion(consume_effect_antidote_pp);
+    case antivenom1, antivenom2, antivenom3, antivenom4 :
+        @player_drink_potion(consume_effect_antivenom);
+    case antivenom+1, antivenom+2, antivenom+3, antivenom+4 :
+        @player_drink_potion(consume_effect_antivenom_plus);
     case default : @player_drink_potion(consume_effect_stat);
 }
 [opheld1,macro_triffidfruit]@player_consume_item(consume_effect_strange_fruit, 2, 3);

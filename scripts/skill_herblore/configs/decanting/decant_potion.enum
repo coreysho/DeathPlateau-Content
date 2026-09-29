@@ -177,3 +177,32 @@ val=1,1dosepotionofsaradomin
 val=2,2dosepotionofsaradomin
 val=3,3dosepotionofsaradomin
 val=4,4dosepotionofsaradomin
+
+// The antidote and anti-venom line. Decanting is this build's own (skill_herblore/scripts/decanting),
+// and these three are potions like any other, so a 2 and a 3 combine into a 4 and a 1.
+[potion_antidote_pp]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,antidote++1
+val=2,antidote++2
+val=3,antidote++3
+val=4,antidote++4
+
+[potion_antivenom]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,antivenom1
+val=2,antivenom2
+val=3,antivenom3
+val=4,antivenom4
+
+[potion_antivenom_plus]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,antivenom+1
+val=2,antivenom+2
+val=3,antivenom+3
+val=4,antivenom+4

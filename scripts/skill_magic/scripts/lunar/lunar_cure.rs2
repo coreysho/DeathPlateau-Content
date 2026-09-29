@@ -11,7 +11,13 @@
 // antipoison's immunity is counting down back to 0. A cure only ever touches the first: it goes
 // through ~clear_poison, which zeroes the varp, and it is only called when the varp is above 0 - so
 // an antipoison's immunity is never wiped out by a cure, which is what "gives no immunity" means
-// from the other side. There is no venom in this build for Cure Me to turn into poison.
+// from the other side.
+//
+// VENOM IS REDUCED, NOT CURED. The wiki's Venom page lists these spells beside the antipoisons -
+// "drinking a Guthix rest or Sanfew serum, ... casting the Cure Me on the Lunar Spellbook ... are
+// all additional options to reduce venom to poison" - so a cast on a venomed target does exactly
+// what one dose of antipoison does and leaves the poison it became behind, and no immunity. It must
+// not fall through to ~clear_poison, which cures venom outright (it is death's cure).
 //
 // Three choices of this server's, where Old School's wiki is silent. Casting on nobody who is
 // poisoned is refused and costs nothing - it could only waste the runes - and says why. The cured
@@ -25,7 +31,7 @@
 if (p_finduid(uid) = false) {
     return;
 }
-if (%poison < 1) {
+if (%poison < 1 & %venom < 1) {
     mes("You are not poisoned.");
     return;
 }
@@ -37,8 +43,7 @@ if (~check_spell_requirements($spell_data) = false) {
 ~give_spell_xp($spell_data);
 anim(human_cast_lunar_summon2, 0);
 spotanim_pl(cure_me, 92, 0);
-~clear_poison;
-mes("You have cured yourself of poison.");
+~lunar_cure_self;
 
 // ---------------------------------------------------------------------------------- Cure Other
 
@@ -56,7 +61,7 @@ if (.%option_aid = ^aid_no) {
     mes("<.displayname> is not accepting aid.");
     return;
 }
-if (.%poison < 1) {
+if (.%poison < 1 & .%venom < 1) {
     mes("<.displayname> is not poisoned.");
     return;
 }
@@ -79,7 +84,7 @@ if (p_finduid(uid) = false) {
 }
 // Asked BEFORE the runes go, so a cast on nobody costs nothing. The count and the cure below walk
 // the same squares in the same tick, so they find the same people.
-if (%poison < 1 & ~lunar_cure_group_others = 0) {
+if (%poison < 1 & %venom < 1 & ~lunar_cure_group_others = 0) {
     mes("Nobody around you is poisoned.");
     return;
 }
@@ -91,24 +96,24 @@ if (~check_spell_requirements($spell_data) = false) {
 ~give_spell_xp($spell_data);
 anim(human_cast_lunar_group, 0);
 spotanim_pl(cure_group, 92, 0);
-if (%poison > 0) {
-    ~clear_poison;
-    mes("You have cured yourself of poison.");
+if (%poison > 0 | %venom > 0) {
+    ~lunar_cure_self;
 }
 huntall(coord, ^lunar_group_radius, ^vis_off);
 while (.huntnext = true) {
-    if (.uid ! uid & .%option_aid ! ^aid_no & .%poison > 0) {
+    if (.uid ! uid & .%option_aid ! ^aid_no & (.%poison > 0 | .%venom > 0)) {
         .spotanim_pl(cure_group, 92, 0);
         .queue*(lunar_cured, 0)(displayname);
     }
 }
 
-// How many OTHER players Cure Group would cure: poisoned, accepting aid, and within a square.
+// How many OTHER players Cure Group would cure: poisoned or envenomed, accepting aid, and within
+// a square.
 [proc,lunar_cure_group_others]()(int)
 def_int $count = 0;
 huntall(coord, ^lunar_group_radius, ^vis_off);
 while (.huntnext = true) {
-    if (.uid ! uid & .%option_aid ! ^aid_no & .%poison > 0) {
+    if (.uid ! uid & .%option_aid ! ^aid_no & (.%poison > 0 | .%venom > 0)) {
         $count = add($count, 1);
     }
 }
@@ -119,8 +124,24 @@ return($count);
 // On the cured player, from their own queue. Asked again here because the poison may have run out
 // between the cast and this - and a cure on nobody says nothing.
 [queue,lunar_cured](string $caster)
-if (%poison < 1) {
+if (%poison < 1 & %venom < 1) {
+    return;
+}
+if (~venom_to_poison = true) {
+    mes("<$caster> weakens the venom in your body into ordinary poison.");
     return;
 }
 ~clear_poison;
 mes("<$caster> has cured you of poison.");
+
+// One cast's worth of cure on the caster themselves. Venom first: it is the case that must not
+// reach ~clear_poison, which is death's cure and takes venom away outright. The venom wording is
+// this server's, Old School's own not being written down anywhere I could check; what it describes
+// - venom down to a poison of the same strength, and that poison left standing - is the wiki's.
+[proc,lunar_cure_self]
+if (~venom_to_poison = true) {
+    mes("The venom in your body weakens into ordinary poison.");
+    return;
+}
+~clear_poison;
+mes("You have cured yourself of poison.");

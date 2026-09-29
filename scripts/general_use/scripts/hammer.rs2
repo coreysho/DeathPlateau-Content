@@ -4,5 +4,8 @@ switch_obj (last_useitem) {
     // Animal Magnetism: the Witch's selected iron becomes a magnet under a hammer blow, in the right
     // place. quests/quest_animmag/scripts/animmag_magnet.rs2 has the other way round and the rules.
     case animmag_selected_iron : @animmag_make_magnet;
+    // A coconut is cracked open with a hammer, which is the first step of coconut milk and so of
+    // every antidote potion. skill_herblore/scripts/brewing/coconut_milk.rs2 has the rest.
+    case coconut : @coconut_crack;
     case default : ~displaymessage(^dm_default);
 }

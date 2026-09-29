@@ -113,10 +113,47 @@ if ($condition = ^farming_healthy) {
     return;
 }
 
+// A tree stump is the one thing worth digging out for its own sake, so it needs somewhere to put
+// what comes up - and refusing on a full inventory is what harvesting already does
+// (farming_actions.rs2, ~farming_harvest).
+def_namedobj $roots = null;
+if ($condition = ^farming_stump) {
+    $roots = oc_param($seed, farming_roots);
+    if ($roots ! null & inv_freespace(inv) < 1) {
+        mes("Your inventory is too full to hold any more <lowercase(oc_name($roots))>.");
+        return;
+    }
+}
+
 anim(human_dig, 0);
 p_delay(3);
 ~farming_clear_patch($patch);
+if ($roots ! null) {
+    ~farming_dig_roots($roots, $seed);
+    return;
+}
 mes("You clear the patch.");
+
+// THE ROOTS OF A FARMED TREE, which is the only thing in the game that gives any of the five.
+// Old School's own table (oldschool.runescape.wiki/w/Tree_roots_(Farming)) is one root at the level
+// that plants the tree and one more every 8 levels after it, to four:
+//   oak 15/23/31/39, willow 30/38/46/54, maple 45/53/61/69, yew 60/68/76/84, magic 75/83/91/99.
+// Those first numbers are exactly farming_level on the five saplings, so the table needs no second
+// param. It is the BOOSTED level that counts, "the boost must be active when digging the stump not
+// checking the health or chopping the tree", which is what stat() answers and stat_base() would not.
+[proc,farming_dig_roots](namedobj $roots, namedobj $seed)
+def_int $extra = divide(sub(stat(farming), oc_param($seed, farming_level)), ^farming_roots_per_level);
+def_int $count = min(add($extra, 1), ^farming_roots_max);
+if ($count < 1) {
+    $count = 1;
+}
+// Roots do not stack, so four of them want four slots. The caller has already refused to dig with
+// no room at all; what is left is capped rather than added and quietly dropped on the floor, and
+// the count in the message below is what you actually got.
+$count = min($count, inv_freespace(inv));
+inv_add(inv, $roots, $count);
+sound_synth(pick, 1, 0);
+mes("You dig up the tree stump, and get <tostring($count)> <lowercase(oc_name($roots))>.");
 
 // ============================================================================ planting
 

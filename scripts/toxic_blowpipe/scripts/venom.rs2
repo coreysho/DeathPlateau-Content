@@ -11,11 +11,18 @@
 //     an ordinary poison no longer replaces venom (OSRS since April 2024). Monsters OSRS makes immune
 //     are listed in configs/blowpipe.enum [venom_immunity]: the ones only immune to venom are
 //     poisoned instead, the rest are left alone;
-//   * on a player it has its own timer and %venom; any antipoison turns it into poison "which starts at
-//     the same damage the venom had" (player/scripts/consumption/effects/scripts/anti_poison.rs2), a
-//     strange fruit cures it and keeps it off for about 18 seconds, dying cures it (~clear_poison), and
-//     it survives a logout (~set_poison_login). The antidote++ and anti-venom that OSRS cures it with
-//     do not exist here, and Cure Me only cures poison (skill_magic/scripts/lunar/lunar_cure.rs2).
+//   * on a player it has its own timer and %venom, which is POSITIVE while envenomed - it is the next
+//     hit - and NEGATIVE while immune, counting one 18-second tick back towards zero at a time;
+//   * a plain antipoison, a superantipoison and Cure Me turn venom into poison "which starts at the
+//     same damage the venom had" and leave no venom immunity at all, so a second dose is needed to
+//     finish the job (player/scripts/consumption/effects/scripts/anti_poison.rs2,
+//     skill_magic/scripts/lunar/lunar_cure.rs2);
+//   * antidote++, anti-venom and anti-venom+ are the potions that do more, and they are in the game
+//     as of this round (antivenom/scripts/antivenom.rs2 makes them, anti_poison.rs2 drinks them):
+//     antidote++ is an antipoison that also leaves 2 ticks of venom immunity, and the two anti-venoms
+//     cure venom outright and leave 3 and 12 ticks of it;
+//   * a strange fruit cures it and keeps it off for one tick, a charged serpentine helm blocks it
+//     outright, dying cures it (~clear_poison), and it survives a logout (~set_poison_login).
 
 // ---------------------------------------------------------------------------------------------
 // Monsters
@@ -110,10 +117,18 @@ cleartimer(venom);
 ~set_poison_timer;
 return(true);
 
-// A strange fruit: cures venom outright and keeps it off for about 18 seconds - one venom tick.
-[proc,venom_cure_immune]
-if (%venom > -1) {
-    %venom = -1;
+// Cures venom outright and keeps it off for $ticks venom ticks - 18 seconds apiece. What every
+// cure stronger than an antipoison goes through: a strange fruit (1), antidote++ (2), anti-venom (3)
+// and anti-venom+ (12), each number the OSRS wiki's own (antivenom/configs/antivenom.constant).
+//
+// It only ever LENGTHENS the immunity. A weaker cure drunk while a stronger one is still running
+// leaves the stronger one alone, which is the same rule %poison follows and the same rule OSRS
+// settled on in April 2016: "drinking any kind of antipoison will no longer decrease your poison
+// immunity". A positive %venom is always above any negative floor, so envenomed is always cured.
+[proc,venom_cure_immune](int $ticks)
+def_int $floor = multiply($ticks, -1);
+if (%venom > $floor) {
+    %venom = $floor;
 }
 settimer(venom, ^venom_interval);
 

@@ -19,6 +19,9 @@
 ^venom_step = 2
 ^venom_max = 20
 ^venom_interval = 30
+// A strange fruit "will completely cure venom and provide immunity for about 18 seconds", which is
+// one of those intervals. The potions' longer ones are in antivenom/configs/antivenom.constant.
+^venom_immune_strange_fruit = 1
 // what enum venom_immunity says of a monster
 ^venom_susceptible = 0
 ^venom_immune_poisoned_instead = 1

@@ -288,3 +288,30 @@ param=brew_potion_level,81
 param=brew_potion_exp,1800
 param=brew_potion_message,You mix the crushed nest into your potion.
 param=brew_potion_mixture,3dosepotionofsaradomin
+
+// ANTIDOTE++ (OSRS, and unchanged since Farming shipped in 2005 - the objs have been sitting in the
+// 377 cache all along with nothing in the game able to make one). Coconut milk is the SOLVENT, not
+// an ingredient: "players must add the ingredients to the vial of coconut milk in the same way as
+// they would add them to a vial of water", and "these potions yield four doses upon creation
+// instead of the usual three" (oldschool.runescape.wiki/w/Coconut_milk), which is why the mixture
+// below is the four-dose and not a 3dose* like every other row in this file.
+//
+// The unfinished step asks for 79 too. That is the wiki's own Creation box for antidote++ (unf) -
+// the coconut-milk unfinished potions want the FINISHED potion's level, where an ordinary
+// vial-of-water one wants the herb's (irit potion (unf) is 45, and irit is 45).
+[unf_antidote_pp]
+param=brew_potion_ingredient,irit_leaf
+param=brew_potion_solvent,vial_coconut_milk
+param=brew_potion_level,79
+param=brew_potion_message,You put the Irit Leaf into the vial of coconut milk.
+param=brew_potion_mixture,unfinished_antidote++
+
+// "It is used to make the Antidote++ at level 79 by adding magic roots, earning 177.5 experience."
+// (oldschool.runescape.wiki/w/Antidote++_(unf)) - xp is stored x10 throughout this file.
+[antidote_pp]
+param=brew_potion_ingredient,magic_roots
+param=brew_potion_solvent,unfinished_antidote++
+param=brew_potion_level,79
+param=brew_potion_exp,1775
+param=brew_potion_message,You mix the magic roots into your potion.
+param=brew_potion_mixture,antidote++4
