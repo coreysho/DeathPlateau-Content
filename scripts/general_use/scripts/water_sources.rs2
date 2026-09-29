@@ -85,24 +85,80 @@ switch_obj (last_useitem) {
     case default : ~displaymessage(^dm_default);
 }
 
+// AUTO-FILL, added 2026-09-29 on the owner's request: "when trying to fill buckets of water, they
+// don't auto fill. You have to manually do 1 bucket at a time - enable auto filling instead."
+// This is an Old School convenience and NOT 2006 behaviour as far as I could source it - the OSRS
+// wiki, the 2006scape wiki and the archived 2006 fansites say nothing about a multi-fill in this
+// era, and the vial/bucket pages only describe the later "Fill" option - so it is a deliberate
+// divergence from the era rule, asked for and not stumbled into.
+//
+// The shape is cook_generic's (skill_cooking/scripts/cooking.rs2) and smelt_window_run's
+// (skill_smithing/scripts/smelting/smelt_window.rs2): one container per pass on a weak queue that
+// re-queues itself before doing its own fill. Queueing has to come FIRST because @ is a jump and
+// not a call - anything written after @fill_one_container would never run. The weak queue is what
+// gets the interruptions for free: Player.clearPendingAction -> closeModal empties it, so walking
+// away, clicking another loc or npc, or opening anything at all stops the run on the spot. Running
+// out of containers stops it here.
+//
+// The cadence is one container every two ticks, and that is a decision rather than a guess at the
+// speed. Each fill keeps the p_delay(0) it has always had, and MoveClickHandler DISCARDS a walk
+// click made while the player is delayed - so a run that filled on every tick could never be walked
+// away from, which is the one thing it has to allow. A weak queue delay of 2 leaves every other
+// tick undelayed, and that is the tick the player's click lands on. It is 2 and not 1 because
+// World.processPlayers runs the queues twice in the tick the entry is made, so the first count-down
+// is spent immediately - a delay of 1 fires on the very next tick and fills every tick. Still
+// quicker than cooking (3) or smelting (4).
 [label,fill_container_water](obj $container)
+// loc_name is only addressable inside the oploc trigger, so the source's name is read once here
+// and carried through the queue rather than looked up again on each pass.
 def_string $source_name = lowercase(loc_name);
+if (inv_total(inv, $container) > 1) {
+    weakqueue*(fill_container_run, 2)($container, $source_name);
+}
+@fill_one_container($container, $source_name);
+
+[queue,fill_container_run](obj $container, string $source_name)
+if (inv_total(inv, $container) < 1) {
+    return;
+}
+if (inv_total(inv, $container) > 1) {
+    weakqueue*(fill_container_run, 2)($container, $source_name);
+}
+@fill_one_container($container, $source_name);
+
+[label,fill_one_container](obj $container, string $source_name)
 def_string $container_name = lowercase(oc_name($container));
 inv_del(inv, $container, 1);
 inv_add(inv, oc_param($container, next_obj_stage), 1);
 anim(human_pickuptable, 0);
 sound_synth(tap_fill, 1, 0);
 mes("You fill the <$container_name> from the <$source_name>.");
-// strongqueued in osrs but that was likely changed in Sept 2005 
+// strongqueued in osrs but that was likely changed in Sept 2005
 p_delay(0);
 
+// The well takes buckets only, and auto-fills the same way the water sources above do.
 [label,fill_bucket_well]
+if (inv_total(inv, bucket_empty) > 1) {
+    weakqueue(fill_bucket_well_run, 2, 0);
+}
+@fill_one_bucket_well;
+
+[queue,fill_bucket_well_run]
+if (inv_total(inv, bucket_empty) < 1) {
+    return;
+}
+if (inv_total(inv, bucket_empty) > 1) {
+    weakqueue(fill_bucket_well_run, 2, 0);
+}
+@fill_one_bucket_well;
+
+[label,fill_one_bucket_well]
 inv_del(inv, bucket_empty, 1);
 inv_add(inv, bucket_water, 1);
 anim(human_pickuptable, 0);
 sound_synth(well_fill, 1, 0);
 mes("You fill the bucket from the well.");
-// strongqueued in osrs but that was likely changed in Sept 2005 
+// strongqueued in osrs but that was likely changed in Sept 2005
 p_delay(0);
 
 [label,fill_watering_can_with](int $canslot, int $itemslot)
