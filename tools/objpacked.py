@@ -282,10 +282,15 @@ def main():
                 if obj['params'].get(pid) != pv:
                     vbad.append('%s %s packed as %s, wanted %s'
                                 % (v['key'], pname, obj['params'].get(pid), pv))
-        check(not nbad, 'all sixteen variant pieces are in the packed table: %s'
-                        % (nbad[:4] or 'all sixteen'))
+        # COUNTED FROM THE SPEC. The loop above always was; only these sentences said "sixteen"
+        # and "eight", and they were wrong the day a ninth variant arrived while the checks were
+        # still right. A message that states a number has to get it from the same place the check
+        # does.
+        npieces, nvariants = 2 * len(VS['variants']), len(VS['variants'])
+        check(not nbad, 'all %d variant pieces are in the packed table: %s'
+                        % (npieces, nbad[:4] or 'all %d' % npieces))
         check(not vbad, "each variant cape's combat bonuses survived the pack, read out of the "
-                        'artefact: %s' % (vbad[:3] or 'all eight agree'))
+                        'artefact: %s' % (vbad[:3] or 'all %d agree' % nvariants))
         # THE SERVER TABLE CARRIES NO RECOLOURS AT ALL, and finding that out is worth more than
         # the check that went here. A recolour is a CLIENT concern - the model is recoloured when
         # it is drawn - so ObjType.decodeType never reads opcode 40 into the server's obj.dat and
@@ -298,7 +303,7 @@ def main():
         check(not [x for x in rbad if 'packed as none' not in x],
               'the server obj table carries no recolour lists, which is expected - a recolour is '
               'drawn by the client - so nothing here disagrees with the OSRS table either: %s'
-              % (len(rbad) and 'all twelve empty, as they should be' or 'nothing to compare'))
+              % (len(rbad) and '%d empty, as they should be' % len(rbad) or 'nothing to compare'))
 
     # ---- nothing else in the game carries the param by accident
     others = sorted(n for n, o in byname.items()

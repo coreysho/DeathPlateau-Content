@@ -276,6 +276,10 @@ switch_int ($what) {
 // Since Animal Magnetism this is the fallback rather than the whole story: combat asks
 // ~ranged_ammo_saved (quests/quest_animmag/scripts/avas_device.rs2), which looks for a real Ava's
 // device on the back first and comes here when there is none. The two cannot be worn together.
+//
+// THE ACCUMULATOR MAX CAPE DOES NOT COME THROUGH HERE. ~skillcape_worn answers false for ranged on
+// every Max cape variant, deliberately: that cape's 72% is the accumulator fused into it, and
+// ~avas_device finds it by asking maxvariant_source what the worn cape was made from.
 [proc,skillcape_ammo_saved]()(boolean)
 if (~skillcape_worn(ranged) = true & random(100) < 72) {
     return(true);

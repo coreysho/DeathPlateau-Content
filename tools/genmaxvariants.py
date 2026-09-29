@@ -1,15 +1,16 @@
 #!/usr/bin/env python3
-"""Write the eight Max cape variants and their hoods from tools/maxcapevariantspec.json.
+"""Write the Max cape variants and their hoods from tools/maxcapevariantspec.json.
 
-WHY A GENERATOR. Sixteen obj records, each naming up to five models, a five- or six-pair
+WHY A GENERATOR. Two obj records per variant, each naming up to five models, a five- or six-pair
 recolour list, a 2d camera and up to eleven combat params: about four hundred numbers, every one
 of which came out of the OSRS item table. Typing them is how a wrong bonus gets in and stays in.
 
-TWELVE OF THE SIXTEEN REUSE MODELS THIS BUILD ALREADY HAS. In OSRS the six god max capes are the
-plain Max cape's own model (29630 / 29616 / 29624) with five recolours, and their hoods are the max
-hood's model with six - so here they point at obj_max_cape* and obj_max_hood*, which the Max cape
-round already converted, and carry recol lines. Only fire and infernal are real models, imported by
-tools/models/importosrs.py (not in this repo: it lives beside the OSRS cache on Corey's machine).
+MOST OF THEM REUSE MODELS THIS BUILD ALREADY HAS. In OSRS the six god max capes and the Accumulator
+max cape are the plain Max cape's own model (29630 / 29616 / 29624) with five recolours, and their
+hoods are the max hood's model with six - so here they point at obj_max_cape* and obj_max_hood*,
+which the Max cape round already converted, and carry recol lines. Only fire and infernal are real
+models, imported by tools/models/importosrs.py (not in this repo: it lives beside the OSRS cache on
+Corey's machine).
 
 THE RECOLOUR NUMBERS. The cache stores recolours as HSL16, which is what the CLIENT wants; an .obj
 config writes RGB15 and the packer converts with ColorConversion.rgb15toHsl16. So each cache value
@@ -44,6 +45,14 @@ WEARPOS = ['hat', 'back', 'front', 'righthand', 'torso', 'lefthand', 'arms', 'le
            'head', 'hands', 'feet', 'jaw', 'ring', 'quiver']
 # The two variants whose models are their own. Everything else wears the plain cape's.
 OWN_MODELS = ('fire', 'infernal')
+# The comments this file writes are prose, so the counts in them are spelled out. A number that
+# can only be read as a digit is a comment nobody proofreads.
+WORDS = {0: 'no', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six', 7: 'seven',
+         8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve'}
+
+
+def word(n):
+    return WORDS.get(n, str(n))
 
 
 def rgb15_to_hsl16(v):
@@ -127,19 +136,27 @@ def record(local, o, bonuses, model_base, is_hood):
 
 
 def build(spec):
-    L = ['// THE EIGHT MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.',
+    n = len(spec['variants'])
+    L = ['// THE %s MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.'
+         % word(n).upper(),
          '//   python3 tools/genmaxvariants.py',
          '// The numbers come from tools/maxcapevariantspec.json, which took them out of the OSRS',
          '// item table rather than off the wiki. Every bonus below is its SOURCE cape\'s, which is',
          '// what a variant is: the max cape\'s look-and-name over the source cape\'s stats.',
          '//',
          '// A VARIANT IS NOT A MAX CAPE. It carries iop2=Wear and nothing else - no Teleports, no',
-         '// Features - which is the cache\'s own list for all eight of them, where the plain cape',
+         '// Features - which is the cache\'s own list for every one of them, where the plain cape',
          '// has four ops. The perks go the same way: skillcape_perks.rs2 answers true for four',
          '// skills only, and claude/max-cape-variants.md says which four and why.',
          '//',
-         '// The six god variants have no models of their own: they are the plain Max cape\'s model',
-         '// with five recolours, and the max hood\'s with six, exactly as OSRS has them.',
+         '// THE ACCUMULATOR MAX CAPE SAVES AMMUNITION, and that does not come from here either:',
+         '// it comes from the accumulator fused into it. ~avas_device in the Animal Magnetism',
+         '// scripts reads the cape slot and asks maxvariant_source what it came from, so the',
+         '// variant is an Ava\'s accumulator for bows, thrown weapons, the blowpipe and the magnet.',
+         '//',
+         '// The %s variants with no models of their own are the plain Max cape\'s model with five'
+         % word(n - len(OWN_MODELS)),
+         '// recolours, and the max hood\'s with six, exactly as OSRS has them.',
          '']
     names = []
     for v in spec['variants']:
@@ -317,9 +334,12 @@ def build_rs2(spec):
          '']
     for v in V:
         L.append('[opheldu,%s_max_cape] @maxvariant_split;' % v['key'])
+    ngod = sum(1 for v in V if GOD_OF.get(v['key']))
     L += ['',
-          '// THE SIX GOD VARIANTS EQUIP LIKE A GOD CAPE, so the staff of another god refuses them.',
-          '// The other two need no trigger at all: [opheld2,_] in player/scripts/equip.rs2 wears',
+          '// THE %s GOD VARIANTS EQUIP LIKE A GOD CAPE, so the staff of another god refuses them.'
+          % word(ngod).upper(),
+          '// The other %s need no trigger at all: [opheld2,_] in player/scripts/equip.rs2 wears'
+          % word(len(V) - ngod),
           '// anything that has nothing more specific to say.']
     for v in V:
         g = GOD_OF.get(v['key'])

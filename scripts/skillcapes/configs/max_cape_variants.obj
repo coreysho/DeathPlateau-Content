@@ -1,16 +1,21 @@
-// THE EIGHT MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
+// THE NINE MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
 //   python3 tools/genmaxvariants.py
 // The numbers come from tools/maxcapevariantspec.json, which took them out of the OSRS
 // item table rather than off the wiki. Every bonus below is its SOURCE cape's, which is
 // what a variant is: the max cape's look-and-name over the source cape's stats.
 //
 // A VARIANT IS NOT A MAX CAPE. It carries iop2=Wear and nothing else - no Teleports, no
-// Features - which is the cache's own list for all eight of them, where the plain cape
+// Features - which is the cache's own list for every one of them, where the plain cape
 // has four ops. The perks go the same way: skillcape_perks.rs2 answers true for four
 // skills only, and claude/max-cape-variants.md says which four and why.
 //
-// The six god variants have no models of their own: they are the plain Max cape's model
-// with five recolours, and the max hood's with six, exactly as OSRS has them.
+// THE ACCUMULATOR MAX CAPE SAVES AMMUNITION, and that does not come from here either:
+// it comes from the accumulator fused into it. ~avas_device in the Animal Magnetism
+// scripts reads the cape slot and asks maxvariant_source what it came from, so the
+// variant is an Ava's accumulator for bows, thrown weapons, the blowpipe and the magnet.
+//
+// The seven variants with no models of their own are the plain Max cape's model with five
+// recolours, and the max hood's with six, exactly as OSRS has them.
 
 [fire_max_cape]
 name=Fire max cape
@@ -481,6 +486,67 @@ recol5s=13411
 recol5d=0
 recol6s=18596
 recol6d=0
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
+
+[accumulator_max_cape]
+name=Accumulator max cape
+desc=The cape worn by only the most experienced players.
+model=obj_max_cape
+manwear=obj_max_cape_manwear,0
+womanwear=obj_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+recol1s=12354
+recol1d=6373
+recol2s=14467
+recol2d=0
+recol3s=7201
+recol3d=14795
+recol4s=21602
+recol4d=11624
+recol5s=13411
+recol5d=26425
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=rangeattack,4
+param=slashdefence,1
+param=magicdefence,4
+
+[accumulator_max_hood]
+name=Accumulator max hood
+desc=The hood worn by only the most experienced players.
+model=obj_max_hood
+manwear=obj_max_hood_manwear,0
+womanwear=obj_max_hood_womanwear,0
+manhead=obj_max_hood_manhead
+womanhead=obj_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
+recol1s=12354
+recol1d=6373
+recol2s=14467
+recol2d=0
+recol3s=7201
+recol3d=14795
+recol4s=21602
+recol4d=11624
+recol5s=13411
+recol5d=26425
+recol6s=18596
+recol6d=6373
 iop2=Wear
 members=yes
 tradeable=no
