@@ -1,21 +1,21 @@
 {
- "_what": "The twelve bosses that keep a kill count, and how the count is kept. Written before any config was edited. tools/boss_battery.py reads this file, so a name or a number changed here without the configs changing goes red, and the other way round.",
- "_which_twelve": "MEASURED, not recalled. Every attackable npc in the tree was listed by its own vislevel; 256 sit at 100 or above, and the twelve below are what is left once the slayer superiors (their own system), the fight cave's lesser waves and the ordinary high-level monsters are set aside. They are the twelve things in this build with a boss's own script, drop table or arena.",
+ "_what": "The bosses that keep a kill count, and how the count is kept. Written before any config was edited. tools/boss_battery.py reads this file, so a name or a number changed here without the configs changing goes red, and the other way round.",
+ "_which_bosses": "MEASURED, not recalled. Every attackable npc in the tree was listed by its own vislevel; 256 sit at 100 or above, and the twelve the list opens with are what was left once the slayer superiors (their own system), the fight cave's lesser waves and the ordinary high-level monsters were set aside - the twelve things this build had with a boss's own script, drop table or arena. The Kraken (2026-09-21) and Zulrah (2026-09-28) were added to the end as they were built, which is why the list is no longer twelve long and nothing here says twelve.",
  "_display_names": "Each one's name= comes out of its own .npc record rather than being typed here, so the window cannot disagree with what the player sees over the monster's head. King black dragon's lower-case 'black' is the cache's own.",
  "how_a_kill_is_counted": {
   "hook": "[proc,npc_death]",
-  "_hook": "The one funnel every death passes through - the same place ~barrows_potential and ~check_progress_task already hang off, and the reason the Barrows reward potential went there: a second [ai_queue3] on an npc that already has one is a hard build error, so a per-boss hook does not exist for eight of these twelve.",
+  "_hook": "The one funnel every death passes through - the same place ~barrows_potential and ~check_progress_task already hang off, and the reason the Barrows reward potential went there: a second [ai_queue3] on an npc that already has one is a hard build error, so a per-boss hook does not exist for most of them.",
   "credit": "npc_findhero",
   "_credit": "The same test every drop table in this tree opens with - 'if (npc_findhero = ^false) { return; }' - so a kill counts for exactly the player the loot went to. %npc_aggressive_player is the LAST attacker and is not the same thing; ~barrows_potential uses findhero for the same reason.",
   "split_kills": false,
   "_split_kills": "Slayer splits a task kill when the hero and the last attacker differ (check_progress_task does it deliberately, with a comment). A kill count is not split here: one death is one kill, credited to the hero, because two players each being told they killed the same boss is a wrong number rather than a generous one.",
   "varp_write_is_inline": true,
   "_varp_write_is_inline": "A perm varp can be written straight from npc_death after findhero - ~barrows_potential does exactly that with %barrows_killed_monster. Only the MESSAGE needs a queue, because mes() wants the player context that an npc-context death does not have.",
-  "no_runtime_varp_index": "This engine cannot pick a varp at runtime: engine.rs2 has no varp commands and no enum outputs one. So the increment and the read are each a GENERATED switch_int over twelve cases, and the two enums do the rest - npc -> index, and index -> name."
+  "no_runtime_varp_index": "This engine cannot pick a varp at runtime: engine.rs2 has no varp commands and no enum outputs one. So the increment and the read are each a GENERATED switch_int with one case per boss, and the two enums do the rest - npc -> index, and index -> name."
  },
  "where_it_is_shown": {
   "window": "boss_kills",
-  "_window": "Its own window, Corey's choice when asked. The quest list was the other option and was not taken: it is a quest list, and twelve rows would push the quests up its scroll.",
+  "_window": "Its own window, Corey's choice when asked. The quest list was the other option and was not taken: it is a quest list, and a row per boss would push the quests up its scroll.",
   "opened_from": "questtab_sstats:act_bosses",
   "_opened_from": "The quest tab's Server Statistics page, Quick actions (questtab/scripts/questtab.rs2). It was a row under the last quest until the quest tab got pages of its own; the quest list is quests only now."
  },
@@ -124,6 +124,17 @@
    "vislevel": 291,
    "hitpoints": 255,
    "config": "scripts/areas/area_kraken_cove/configs/kraken.npc"
+  },
+  {
+   "key": "zulrah",
+   "npc": "zulrah",
+   "forms": ["zulrah_magma", "zulrah_tanzanite"],
+   "_forms": "THE OTHER TWO COLOURS, and the only boss here that needs the field. Old School gives each of Zulrah's colours its own npc id - 2042 green, 2043 magma, 2044 tanzanite - and the fight moves between them with npc_changetype_keepall, which changes the type of the ONE snake rather than making a second. So whichever colour it is wearing when it dies is the record that dies, all three map to this one slot in boss_kill_index, and a fight still produces exactly one death and one kill.",
+   "name": "Zulrah",
+   "vislevel": 725,
+   "hitpoints": 500,
+   "config": "scripts/areas/area_zulrah/configs/zulrah.npc",
+   "_hook": "Zulrah is the one boss with an [ai_queue3] that is not an engine drop table - it is its own death script, area_zulrah/scripts/zulrah_drops.rs2 - and the first thing that script does is gosub(npc_death). So the kill arrives at ~boss_kill_record through the same funnel as the other thirteen, once, and there is nothing to hook separately. The snakelings gosub(npc_death) too and are not in this table, so they count for nothing."
   }
  ]
 }

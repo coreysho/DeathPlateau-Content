@@ -1,7 +1,7 @@
 // ONE PERM VARP PER BOSS. GENERATED - do not hand-edit.
 //   python3 tools/genbosskills.py
 //
-// Twelve separate varps rather than bits in one, because a kill count has no ceiling a
+// One separate varp each rather than bits in one, because a kill count has no ceiling a
 // bit range could hold - four bits stop at fifteen - and a varp is a full int.
 //
 // NOT TRANSMITTED. The window is filled by if_settext when it opens, so the client never
@@ -78,5 +78,10 @@ protect=no
 
 // Kraken (kraken, level 291)
 [boss_kc_kraken]
+scope=perm
+protect=no
+
+// Zulrah (zulrah, zulrah_magma, zulrah_tanzanite, level 725)
+[boss_kc_zulrah]
 scope=perm
 protect=no

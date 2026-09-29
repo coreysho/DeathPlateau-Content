@@ -22,6 +22,7 @@ data=entries,collection_log_kbd
 data=entries,collection_log_kraken
 data=entries,collection_log_kreearra
 data=entries,collection_log_kril
+data=entries,collection_log_zulrah
 data=items,barrows_ahrim_head
 data=items,barrows_ahrim_weapon
 data=items,barrows_ahrim_body
@@ -93,6 +94,12 @@ data=items,armadyl_hilt
 data=items,bosspet_kril_item
 data=items,zamorakian_spear
 data=items,zamorak_hilt
+data=items,bosspet_snakeling_item
+data=items,tanzanite_fang
+data=items,magic_fang
+data=items,serpentine_visage
+data=items,uncut_onyx
+data=items,jar_of_swamp
 
 [collection_log_tab_1]
 table=collection_log_tab
@@ -234,6 +241,7 @@ data=items,bosspet_dagannoth_prime_item
 data=items,bosspet_kraken_item
 data=items,bosspet_kbd_item
 data=items,bosspet_giant_mole_item
+data=items,bosspet_snakeling_item
 data=items,skillpet_beaver_item
 data=items,skillpet_heron_item
 data=items,skillpet_rock_golem_item
@@ -473,6 +481,18 @@ data=items,godsword_shard_2
 data=items,godsword_shard_3
 data=counters,"K'ril Tsutsaroth kills",1
 
+// Zulrah: 6 items
+[collection_log_zulrah]
+table=collection_log_entry
+data=name,"Zulrah"
+data=items,bosspet_snakeling_item
+data=items,tanzanite_fang
+data=items,magic_fang
+data=items,serpentine_visage
+data=items,uncut_onyx
+data=items,jar_of_swamp
+data=counters,"Zulrah kills",13
+
 // Easy Treasure Trails: 22 items
 [collection_log_clue_easy]
 table=collection_log_entry
@@ -606,7 +626,7 @@ data=items,castlewars_cloak_saradomin_prize
 data=items,castlewars_hood_zamorak_prize
 data=items,castlewars_cloak_zamorak_prize
 
-// All Pets: 20 items
+// All Pets: 21 items
 [collection_log_pets]
 table=collection_log_entry
 data=name,"All Pets"
@@ -622,6 +642,7 @@ data=items,bosspet_dagannoth_prime_item
 data=items,bosspet_kraken_item
 data=items,bosspet_kbd_item
 data=items,bosspet_giant_mole_item
+data=items,bosspet_snakeling_item
 data=items,skillpet_beaver_item
 data=items,skillpet_heron_item
 data=items,skillpet_rock_golem_item

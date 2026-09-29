@@ -3,9 +3,11 @@
 //
 // ~boss_kill_record is called from [proc,npc_death], which is the one funnel every death
 // in the game passes through - and the only one available, because a second [ai_queue3]
-// on an npc that already has one is a hard build error and eight of these twelve already
-// have theirs for a drop table. ~barrows_potential hangs off the same place for the same
-// reason, and is the template for the whole shape of this file.
+// on an npc that already has one is a hard build error and most of these already have
+// theirs for a drop table. ~barrows_potential hangs off the same place for the same
+// reason, and is the template for the whole shape of this file. Zulrah is the one that
+// looks like an exception and is not: its [ai_queue3] IS its own death script, and the
+// first line of that script is gosub(npc_death), so its kill arrives here like the rest.
 //
 // CREDIT IS npc_findhero, the test every drop table in this tree opens with, so a kill
 // counts for exactly the player the loot went to. %npc_aggressive_player is the LAST
@@ -33,10 +35,10 @@ def_int $slot = enum(npc, int, boss_kill_index, npc_type);
 if ($slot = ^boss_kills_none) {
     return;
 }
-// TWELVE CASES IN THE OPEN. This is what "the engine cannot pick a varp at runtime"
-// costs, and there is no way to spend less: no %vars[$i], no enum that outputs a varp.
-// A default case, so a slot outside the table does nothing rather than incrementing the
-         // first boss's counter.
+// ONE CASE PER BOSS, ALL IN THE OPEN. This is what "the engine cannot pick a varp at
+// runtime" costs, and there is no way to spend less: no %vars[$i], no enum that outputs
+// a varp. A default case, so a slot outside the table does nothing rather than
+// incrementing the first boss's counter.
 switch_int ($slot) {
     case 0 : %boss_kc_jad = add(%boss_kc_jad, 1);
     case 1 : %boss_kc_kril = add(%boss_kc_kril, 1);
@@ -51,6 +53,7 @@ switch_int ($slot) {
     case 10 : %boss_kc_kbd = add(%boss_kc_kbd, 1);
     case 11 : %boss_kc_mole = add(%boss_kc_mole, 1);
     case 12 : %boss_kc_kraken = add(%boss_kc_kraken, 1);
+    case 13 : %boss_kc_zulrah = add(%boss_kc_zulrah, 1);
     case default : return;
 }
 queue(boss_kill_announce, 0, $slot);
@@ -62,8 +65,8 @@ queue(boss_kill_announce, 0, $slot);
 mes("Your <enum(int, string, boss_kill_name, $slot)> kill count is: <tostring(~boss_kill_get($slot))>.");
 
 // THE READ-BACK SWITCH. This is the other half of what "no runtime varp index" costs:
-// twelve cases to read one counter. A default of 0, so a slot outside the table reads
-// as no kills rather than as the first boss's.
+// one case per boss to read one counter. A default of 0, so a slot outside the table
+// reads as no kills rather than as the first boss's.
 [proc,boss_kill_get](int $slot)(int)
 switch_int ($slot) {
     case 0 : return(%boss_kc_jad);
@@ -79,6 +82,7 @@ switch_int ($slot) {
     case 10 : return(%boss_kc_kbd);
     case 11 : return(%boss_kc_mole);
     case 12 : return(%boss_kc_kraken);
+    case 13 : return(%boss_kc_zulrah);
     case default : return(0);
 }
 
@@ -100,6 +104,7 @@ $total = add($total, ~boss_kills_count(boss_kills:count9, ~boss_kill_get(9)));
 $total = add($total, ~boss_kills_count(boss_kills:count10, ~boss_kill_get(10)));
 $total = add($total, ~boss_kills_count(boss_kills:count11, ~boss_kill_get(11)));
 $total = add($total, ~boss_kills_count(boss_kills:count12, ~boss_kill_get(12)));
+$total = add($total, ~boss_kills_count(boss_kills:count13, ~boss_kill_get(13)));
 if_settext(boss_kills:subtitle, "Total boss kills: @yel@<~tp_gp($total)>");
 
 // One box's count: right-aligned in its box, yellow once there is a kill and grey before.

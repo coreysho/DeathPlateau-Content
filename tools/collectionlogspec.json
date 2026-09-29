@@ -101,6 +101,14 @@
      "counters": [["K'ril Tsutsaroth kills", "boss:kril"]],
      "items": ["bosspet_kril_item", "zamorakian_spear", "zamorak_hilt",
                "godsword_shard_1", "godsword_shard_2", "godsword_shard_3"]
+    },
+    {
+     "key": "zulrah",
+     "name": "Zulrah",
+     "counters": [["Zulrah kills", "boss:zulrah"]],
+     "_items": "The uniques and the two tertiaries that are items, which is what Old School's own Zulrah page carries. Everything else the table drops - the scales, the seeds, the noted resources, the rare drop table - is common loot and is no more collectable here than the Kraken's is. The hard clue is NOT here: a clue belongs to the Clues tab by its tier, which is what every other boss page in this build does with one. The two mutagens are not here either, and cannot be: they are cosmetic recolours of a serpentine helm and scripts/areas/area_zulrah/scripts/zulrah_drops.rs2 says why this build has neither.",
+     "items": ["bosspet_snakeling_item", "tanzanite_fang", "magic_fang", "serpentine_visage",
+               "uncut_onyx", "jar_of_swamp"]
     }
    ]
   },
@@ -185,7 +193,7 @@
      "items": ["bosspet_tzrek_jad_item", "bosspet_kril_item", "bosspet_graardor_item", "bosspet_zilyana_item",
                "bosspet_kree_item", "bosspet_kalphite_queen_item", "bosspet_dagannoth_rex_item",
                "bosspet_dagannoth_supreme_item", "bosspet_dagannoth_prime_item", "bosspet_kraken_item",
-               "bosspet_kbd_item", "bosspet_giant_mole_item",
+               "bosspet_kbd_item", "bosspet_giant_mole_item", "bosspet_snakeling_item",
                "skillpet_beaver_item", "skillpet_heron_item", "skillpet_rock_golem_item", "skillpet_rocky_item",
                "skillpet_squirrel_item", "skillpet_tangleroot_item", "skillpet_rift_guardian_item",
                "skillpet_chinchompa_item"]

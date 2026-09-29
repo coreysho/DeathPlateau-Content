@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Battery for the twelve boss kill counts.
+"""Battery for the boss kill counts.
 
 Everything is PARSED OUT of the delivered files - the display names from each boss's own .npc
 record, the mapping from the enum, the increments from the generated switch, the window from the
@@ -52,6 +52,10 @@ def blocks(txt):
 SPEC = json.loads(read('tools/bosskillspec.json'))
 B = SPEC['bosses']
 KEYS = [b['key'] for b in B]
+# Every npc record a boss can die in - its own, then whatever "forms" names. Only Zulrah has more
+# than one (three colours, one snake), and tools/genbosskills.py has the same helper.
+NPCS = {b['key']: [b['npc']] + list(b.get('forms', [])) for b in B}
+ALLNPCS = [n for b in B for n in NPCS[b['key']]]
 NPCP, VARPP, IFP = pack('npc.pack'), pack('varp.pack'), pack('interface.pack')
 VARP = blocks(read('scripts/bosses/configs/boss_kills.varp'))
 CONST = read('scripts/bosses/configs/boss_kills.constant')
@@ -62,16 +66,18 @@ DEATH = read('scripts/skill_combat/scripts/npc/npc_death.rs2')
 QL = blocks(read('scripts/interfaces/questlist.if'))
 QLRAW = read('scripts/interfaces/questlist.if')
 
-print('1. twelve bosses, and they are the ones the tree actually has')
-# thirteen since the Kraken (2026-09-21, area_kraken_cove)
-check(len(B) == 13 and len(set(KEYS)) == 13,
-      'the spec names thirteen bosses with thirteen distinct keys: %d' % len(B))
+print('1. the bosses, and they are the ones the tree actually has')
+# Twelve to begin with, thirteen since the Kraken (2026-09-21, area_kraken_cove), fourteen since
+# Zulrah (2026-09-28, area_zulrah).
+check(len(B) == 14 and len(set(KEYS)) == 14,
+      'the spec names fourteen bosses with fourteen distinct keys: %d' % len(B))
 check(re.search(r'^\^boss_kills_count = %d$' % len(B), CONST, re.M) is not None,
       '^boss_kills_count is counted from the spec rather than typed: %d' % len(B))
 check(re.search(r'^\^boss_kills_none = -1$', CONST, re.M) is not None,
       "and ^boss_kills_none is -1, which is the enum's default and so the 'not a boss' answer")
-_missing = [b['npc'] for b in B if b['npc'] not in NPCP]
-check(not _missing, 'every npc the spec names is a real npc: %s' % (_missing or 'all twelve'))
+_missing = [n for n in ALLNPCS if n not in NPCP]
+check(not _missing, 'every npc the spec names is a real npc, forms included: %s'
+      % (_missing or 'all %d' % len(ALLNPCS)))
 
 # THE DISPLAY NAMES COME FROM THE NPC RECORDS, not from the spec. This is the check that would
 # catch a window disagreeing with what the player sees over the monster's head.
@@ -89,11 +95,16 @@ for _root, _d, _files in os.walk(os.path.join(C, 'scripts')):
                 _cur = _m.group(1)
             elif _cur and _t.startswith('name='):
                 _npcnames.setdefault(_cur, _t[5:])
-_nbad = ['%s: record %r, spec %r' % (b['npc'], _npcnames.get(b['npc']), b['name'])
-         for b in B if _npcnames.get(b['npc']) != b['name']]
+_nbad = ['%s: record %r, spec %r' % (n, _npcnames.get(n), b['name'])
+         for b in B for n in NPCS[b['key']] if _npcnames.get(n) != b['name']]
 check(not _nbad,
-      "each boss's display name is its own npc record's name=, read out of the record: %s"
-      % (_nbad[:2] or 'all twelve agree'))
+      "each boss's display name is its own npc record's name=, read out of the record - and every "
+      'form of a boss carries the same name, so the window says one thing whichever colour died: '
+      '%s' % (_nbad[:2] or 'all %d records agree' % len(ALLNPCS)))
+check(sorted(NPCS['zulrah']) == ['zulrah', 'zulrah_magma', 'zulrah_tanzanite'],
+      "Zulrah's three colours are three npc records against ONE slot - the fight moves between "
+      'them with npc_changetype_keepall, which retypes the one snake rather than adding a second, '
+      'so a fight is still one death: %s' % sorted(NPCS['zulrah']))
 check(any(b['npc'] == 'kalphite_flyingqueen' for b in B)
       and not any(b['npc'] == 'kalphite_queen' for b in B),
       'the Kalphite Queen is counted on the FLYING form and not the first - the first does not '
@@ -102,8 +113,9 @@ check(any(b['npc'] == 'kalphite_flyingqueen' for b in B)
 
 print('2. one perm varp each, and protect=no, which is the whole reason this works')
 check(sorted(VARP) == sorted('boss_kc_%s' % k for k in KEYS),
-      'twelve varps, one per boss, named after its key: %s'
-      % (sorted(set(VARP) ^ {'boss_kc_%s' % k for k in KEYS}) or 'exactly twelve'))
+      'one varp per boss, named after its key - one per BOSS and not per npc record, so Zulrah\'s '
+      'three colours share a counter: %s'
+      % (sorted(set(VARP) ^ {'boss_kc_%s' % k for k in KEYS}) or 'exactly %d' % len(B)))
 check(all(f.get('scope') == ['perm'] for f in VARP.values()),
       'every one is scope=perm, so a kill count is the account\'s for good')
 # THE CHECK THIS ROUND EXISTS TO HAVE. Varps are PROTECTED by default and writing one needs the
@@ -115,24 +127,26 @@ check(all(f.get('protect') == ['no'] for f in VARP.values()),
       'varp has carried the whole time')
 check(all('boss_kc_%s' % k in VARPP for k in KEYS),
       'and each has an id in pack/varp.pack: %s'
-      % ([k for k in KEYS if 'boss_kc_%s' % k not in VARPP] or 'all twelve'))
+      % ([k for k in KEYS if 'boss_kc_%s' % k not in VARPP] or 'all %d' % len(B)))
 check(not [f for f in VARP.values() if f.get('transmit')],
       'none is transmitted - the window is filled by if_settext, so the client never needs them')
 
 print('3. the two tables: npc -> slot, and slot -> name')
 _ib = ENUM.split('[boss_kill_index]', 1)[1].split('\n[', 1)[0] if '[boss_kill_index]' in ENUM else ''
 _iv = dict((n, int(i)) for n, i in re.findall(r'^val=(\w+),(-?\d+)$', _ib, re.M))
-check(_iv == {b['npc']: i for i, b in enumerate(B)},
-      'boss_kill_index maps exactly the twelve npcs to slots 0..%d, in the spec\'s order: %s'
-      % (len(B) - 1, sorted(set(_iv.items()) ^ {(b['npc'], i) for i, b in enumerate(B)})[:2]
-         or 'exactly the twelve'))
+_want_iv = {n: i for i, b in enumerate(B) for n in NPCS[b['key']]}
+check(_iv == _want_iv,
+      'boss_kill_index maps every npc record to its boss\'s slot, 0..%d, in the spec\'s order: %s'
+      % (len(B) - 1, sorted(set(_iv.items()) ^ set(_want_iv.items()))[:2]
+         or 'exactly the %d records' % len(ALLNPCS)))
 check('default=-1' in _ib and 'inputtype=npc' in _ib and 'outputtype=int' in _ib,
       '...and everything else in the game answers -1, which is ^boss_kills_none')
 _nb = ENUM.split('[boss_kill_name]', 1)[1].split('\n[', 1)[0] if '[boss_kill_name]' in ENUM else ''
 _nv = dict((int(i), n) for i, n in re.findall(r'^val=(\d+),(.+)$', _nb, re.M))
 check(_nv == {i: b['name'] for i, b in enumerate(B)},
       'boss_kill_name maps each slot to that boss\'s name: %s'
-      % (sorted(set(_nv.items()) ^ {(i, b['name']) for i, b in enumerate(B)})[:2] or 'all twelve'))
+      % (sorted(set(_nv.items()) ^ {(i, b['name']) for i, b in enumerate(B)})[:2]
+         or 'all %d' % len(B)))
 
 print('4. a kill is credited to the hero, and counted once')
 _rec = nocomment(RS2).split('[proc,boss_kill_record]', 1)[1].split('\n[', 1)[0] \
@@ -165,7 +179,7 @@ _get = nocomment(RS2).split('[proc,boss_kill_get]', 1)[1].split('\n[', 1)[0] \
     if '[proc,boss_kill_get]' in nocomment(RS2) else ''
 _reads = dict(re.findall(r'case (\d+) : return\(%boss_kc_(\w+)\);', _get))
 check({int(k): v for k, v in _reads.items()} == {i: b['key'] for i, b in enumerate(B)},
-      'the read-back switch reads the same twelve, slot for slot: %d of %d'
+      'the read-back switch reads the same counters, slot for slot: %d of %d'
       % (len(_reads), len(B)))
 check('case default : return(0);' in _get,
       '...and an unknown slot reads as no kills rather than as the first boss\'s')
@@ -195,8 +209,21 @@ for _root, _d, _files in os.walk(os.path.join(C, 'scripts')):
                 if re.search(r'^\[ai_queue3,%s\]' % re.escape(b['npc']), _t, re.M):
                     _ai.append(b['npc'])
 check(len(_ai) >= 8,
-      'and at least eight of the twelve already carry an [ai_queue3] of their own, which is why '
-      'there was no per-boss hook to use: %d do' % len(_ai))
+      'and at least eight of them already carry an [ai_queue3] of their own, which is why there '
+      'was no per-boss hook to use: %d do' % len(_ai))
+# ZULRAH IS THE ONE THAT LOOKS LIKE AN EXCEPTION. Its [ai_queue3] is not an engine drop table but
+# its own death script, and the only thing that brings the kill to ~boss_kill_record is the
+# gosub(npc_death) that script opens with. Take that line out and the counter silently stops -
+# which is exactly the failure these two checks exist to catch.
+_zd = nocomment(read('scripts/areas/area_zulrah/scripts/zulrah_drops.rs2'))
+_zq = sorted(re.findall(r'^\[ai_queue3,(zulrah\w*)\]', _zd, re.M))
+check(_zq == ['zulrah', 'zulrah_magma', 'zulrah_tanzanite'],
+      "all three of Zulrah's colours die through the one death script in zulrah_drops.rs2: %s"
+      % _zq)
+check(_zd.count('gosub(npc_death)') == 1,
+      '...and that script opens with exactly one gosub(npc_death), which is the whole of how a '
+      'Zulrah kill reaches ~boss_kill_record - once per kill, whatever colour it was wearing: %d'
+      % _zd.count('gosub(npc_death)'))
 
 print('6. the window, and the one row that opens it')
 # EXACTLY name0..nameN and count0..countN. The first version counted components whose name
@@ -206,12 +233,13 @@ _wantrows = {'name%d' % i for i in range(len(B))} | {'count%d' % i for i in rang
 _haverows = {n for n in IFACE if re.match(r'^(name|count)\d+$', n)}
 check(_haverows == _wantrows and not [n for n in IFACE
                                       if re.match(r'^(name|count)', n) and n not in _wantrows],
-      'twelve name rows and twelve count rows, named exactly name0..name%d and count0..count%d: '
-      '%s' % (len(B) - 1, len(B) - 1,
-              sorted(_haverows ^ _wantrows)[:3] or 'exactly the twenty-four'))
+      '%d name rows and %d count rows, named exactly name0..name%d and count0..count%d: '
+      '%s' % (len(B), len(B), len(B) - 1, len(B) - 1,
+              sorted(_haverows ^ _wantrows)[:3] or 'exactly the %d' % (2 * len(B))))
 _rowbad = ['name%d' % i for i, b in enumerate(B)
            if IFACE.get('name%d' % i, {}).get('text') != [b['name']]]
-check(not _rowbad, 'each row is labelled with its own boss: %s' % (_rowbad[:2] or 'all twelve'))
+check(not _rowbad, 'each row is labelled with its own boss: %s'
+      % (_rowbad[:2] or 'all %d' % len(B)))
 check(all(IFACE.get('count%d' % i, {}).get('text') == ['0'] for i in range(len(B))),
       "and each count starts at 0 rather than blank - an empty row reads as a broken window")
 check(IFACE.get('close', {}).get('buttontype') == ['close'],

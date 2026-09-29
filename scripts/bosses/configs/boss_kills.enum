@@ -8,6 +8,10 @@
 
 [boss_kill_index]
 // the dying npc -> its slot, or ^boss_kills_none for everything else in the game
+//
+// A boss with more than one record here - Zulrah's three colours - lists every one of them
+// against the SAME slot. That is a mapping and not a double count: the colour change is
+// npc_changetype_keepall on one snake, so only one of the three ever dies.
 inputtype=npc
 outputtype=int
 default=-1
@@ -24,6 +28,9 @@ val=dagcave_magic_boss,9
 val=king_dragon,10
 val=mole_giant,11
 val=kraken,12
+val=zulrah,13
+val=zulrah_magma,13
+val=zulrah_tanzanite,13
 
 [boss_kill_name]
 // slot -> the name off the boss's own npc record, so the window cannot disagree with
@@ -44,3 +51,4 @@ val=9,Dagannoth Prime
 val=10,King black dragon
 val=11,Giant Mole
 val=12,Kraken
+val=13,Zulrah
