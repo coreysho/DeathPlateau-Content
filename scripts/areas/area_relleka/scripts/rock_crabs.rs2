@@ -1,0 +1,56 @@
+// Rellekka rock crabs: the disguise breaking, and settling back into a rock afterwards. The full
+// reasoning for the reveal - including why the trigger has to be [ai_opplayer2] and not [ai_queue1] -
+// is in the header of ../configs/rock_crabs.npc.
+//
+// This trigger is the one huntmode=aggressive_melee actually reaches: its find_newmode is opplayer2,
+// so the hunt sets the interaction and the engine then looks up [ai_opplayer2,<this npc's type>] with
+// the hunted player as the target. Changing type here rather than in an [ai_queue*] is what makes the
+// reveal fire at all.
+//
+// npc_changetype, NOT npc_changetype_keepall: keepall passes reset=false, and Npc.changeType only
+// copies the new type's stats across when reset is true. A crab revealed with keepall would keep the
+// "Rocks" form's stats, which for a type that declares none are the engine's 1/1/1/1/1/1 defaults -
+// a 1 hitpoint rock crab that dies to the first hit. (This is the same mistake in the Waterbirth
+// Boulder/Rock, fixed with it.)
+[ai_opplayer2,horror_rockcrab_inactive]
+npc_changetype(horror_rockcrab, ^max_32bit_int);
+npc_anim(horror_crab_reveal, 0);
+// Hold the first swing back by the reveal animation instead of letting the crab hit the instant it
+// stops being a rock.
+%npc_action_delay = add(map_clock, 4);
+// The revert clock, armed here as well as by the type's own timer= field, because the type's field
+// is only picked up when the npc next loses its target (Npc.resetDefaults) and a crab that reveals
+// and is immediately walked away from never gets that far.
+npc_settimer(50);
+
+[ai_opplayer2,horror_rockcrab_small_inactive]
+npc_changetype(horror_rockcrab_small, ^max_32bit_int);
+npc_anim(horror_crab_reveal, 0);
+%npc_action_delay = add(map_clock, 4);
+npc_settimer(50);
+
+// Left alone long enough, a crab hides again. %npc_lastcombat is stamped by every hit the crab gives
+// or takes (skill_combat/scripts/npc/npc_combat.rs2), so this one check covers both "still fighting"
+// and "just finished a fight" without needing to re-find the player. A crab that hides with a player
+// still standing on top of it is woken again on the next tick by the dormant form's own 1-tile hunt,
+// which is the behaviour we want anyway.
+[ai_timer,horror_rockcrab]
+if (add(%npc_lastcombat, 50) > map_clock) {
+    return;
+}
+npc_changetype(horror_rockcrab_inactive, ^max_32bit_int);
+npc_anim(horror_crab_hide, 0);
+npc_settimer(0);
+// Re-read huntmode/huntrange/timer off the type we just became, so the rock can wake up again. Only
+// npc_setmode(null) does that (it is the one that calls Npc.resetDefaults); changetype on its own
+// leaves the instance carrying whatever the awake form had.
+npc_setmode(null);
+
+[ai_timer,horror_rockcrab_small]
+if (add(%npc_lastcombat, 50) > map_clock) {
+    return;
+}
+npc_changetype(horror_rockcrab_small_inactive, ^max_32bit_int);
+npc_anim(horror_crab_hide, 0);
+npc_settimer(0);
+npc_setmode(null);

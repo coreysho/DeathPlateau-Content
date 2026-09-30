@@ -115,17 +115,32 @@ npc_settimer(20);
 // --- Boulder / Rock disguise reveal ---
 // Corey (2026-09-03): these weren't aggressive when walked near, and shouldn't wander while
 // disguised - see configs/dagannoth_maze_monsters.npc's header note for the wanderrange/huntmode
-// fix and the reasoning behind this changetype approach (self-directed npc_changetype_keepall from
-// this npc's own ai_queue1 hook - the one confirmed precedent for this primitive in this codebase,
-// content/scripts/macro events/scripts/general/macro_event_triffid.rs2). Once revealed, the real
-// giant_rockcrab_deeper/dagannoth_rock_lobster_2x2 type takes over via its own already-wired
-// huntmode/combat params (falls through to the plain melee wildcards - neither needs anything else
-// in this file), so all this override needs to do is switch type and let the normal retaliate
-// flow run.
-[ai_queue1,giant_rockcrab_hidden_deeper]
-npc_changetype_keepall(giant_rockcrab_deeper, ^max_32bit_int);
-gosub(npc_default_retaliate);
+// fix. Once revealed, the real giant_rockcrab_deeper/dagannoth_rock_lobster_2x2 type takes over via
+// its own already-wired huntmode/combat params (falls through to the plain melee wildcards - neither
+// needs anything else in this file), so all this override needs to do is switch type.
+//
+// FIXED 2026-09-30, found while fixing the Rellekka rock crabs, which had the same two faults:
+//
+//  - the trigger was [ai_queue1] and never ran. These npcs hunt on a find_newmode of opplayer2, and
+//    Npc.consumeHuntTarget only dispatches to an [ai_queueN] trigger when find_newmode is itself
+//    queue1-queue20; for any other mode it just sets the interaction. So their hunt reaches
+//    [ai_opplayer2], which is also the trigger that is handed the hunted player, and the
+//    [ai_queue1] hook here was only ever reachable by retaliation - which a disguised npc with no
+//    Attack option can never be the subject of. Dead code, and the Boulder and the Rock have been
+//    inert since they were written.
+//
+//  - npc_changetype_keepall passes reset=false, and Npc.changeType only copies the new type's stats
+//    across when reset is true. So even had it fired, the Boulder would have become a giant rock crab
+//    still carrying the Boulder's stats - and a type that declares none gets the engine's 1/1/1/1/1/1
+//    defaults, i.e. a 180-hitpoint boss with 1 hitpoint. npc_changetype is the one that brings the
+//    stats.
+//
+// The gosub to npc_default_retaliate is gone with them: it needs %npc_aggressive_player, which a
+// reveal has not got (nothing has attacked the boulder), so it returned immediately. The interaction
+// the hunt set is already opplayer2 on the hunted player, and the revealed type's own [ai_opplayer2,_]
+// wildcard swings from the next tick.
+[ai_opplayer2,giant_rockcrab_hidden_deeper]
+npc_changetype(giant_rockcrab_deeper, ^max_32bit_int);
 
-[ai_queue1,dagannoth_rock_lobster_2x2_loc]
-npc_changetype_keepall(dagannoth_rock_lobster_2x2, ^max_32bit_int);
-gosub(npc_default_retaliate);
+[ai_opplayer2,dagannoth_rock_lobster_2x2_loc]
+npc_changetype(dagannoth_rock_lobster_2x2, ^max_32bit_int);
