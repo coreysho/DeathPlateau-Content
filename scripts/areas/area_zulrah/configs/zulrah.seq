@@ -345,6 +345,11 @@ frame36=anim_osrs_5694_2
 delay36=5
 
 [zulrah_flinch]
+// UNWIRED ON PURPOSE (2026-09-30). The owner reports the snake blinking out for a tick and back
+// when it is attacked or attacking, which started with the round that added this. Nothing about
+// the import is wrong that can be seen from here - the frame group and its base are packed the
+// same way as Zulrah other five - so this is a bisect, not a diagnosis: defend_anim is off the
+// three records and the sequence is kept here so it costs one line to put back.
 // OSRS seq 5808 - the last of Zulrah's ten sequences, and the one no previous round had a name for.
 //
 // WHAT IT IS. Nine frames of its own five-frame group (5697), thirty cycles - one tick exactly - no

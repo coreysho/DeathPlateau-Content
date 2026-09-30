@@ -673,6 +673,8 @@ active=yes
 occlude=yes
 ambient=40
 op1=Open
+category=door_closed
+param=next_loc_stage,loc474_16776_open
 
 [loc474_16778]
 // rev 474 loc 16778 (import474map.py)
@@ -682,6 +684,8 @@ active=yes
 occlude=yes
 ambient=40
 op1=Open
+category=door_closed
+param=next_loc_stage,loc474_16778_open
 
 [loc474_16780]
 // rev 474 loc 16780 (import474map.py)
@@ -1422,6 +1426,8 @@ resizez=128
 ambient=20
 contrast=20
 op1=Open
+category=door_closed
+param=next_loc_stage,loc474_16902_open
 
 [loc474_16904]
 // rev 474 loc 16904 (import474map.py)
@@ -2211,3 +2217,53 @@ model=minigame_start_icon
 active=no
 bgsound=area474_3094,25
 randomsound=250,500,25,gull_1,gull_2,gull_3,gull_4,ocean_wind_1,ocean_wind_2,blustery_wind_loop_2,gull1
+
+// ---------------------------------------------------------------------------------------------
+// THE DOORS, which did nothing at all.
+//
+// Every door on the island was imported closed and left there: op1=Open with no category, so no
+// [oploc1] answered it by id or by category and clicking one sent nothing. A door in this build
+// is TWO loc records - ~open_door deletes the closed one and adds loc_param(next_loc_stage) a
+// tile over, turned a quarter, and ~close_door puts it back - and import474map.py could only
+// ever bring the closed half, because the open half is never placed on a map square for it to
+// read. So the open halves are written here, on the same model, exactly as the Keldagrim doors
+// (another 474 import) were done before them.
+// ---------------------------------------------------------------------------------------------
+[loc474_16776_open]
+// The open state of loc474_16776, which the 474 map import never brought across:
+// it is only ever placed by ~open_door, so it is on no map square to be imported from.
+name=Door
+model=loc474_16776
+active=yes
+occlude=yes
+ambient=40
+op1=Close
+category=door_opened
+param=next_loc_stage,loc474_16776
+
+[loc474_16778_open]
+// The open state of loc474_16778, which the 474 map import never brought across:
+// it is only ever placed by ~open_door, so it is on no map square to be imported from.
+name=Door
+model=loc474_16778
+active=yes
+occlude=yes
+ambient=40
+op1=Close
+category=door_opened
+param=next_loc_stage,loc474_16778
+
+[loc474_16902_open]
+// The open state of loc474_16902, which the 474 map import never brought across:
+// it is only ever placed by ~open_door, so it is on no map square to be imported from.
+name=Door
+model=loc474_16902
+active=yes
+resizex=128
+resizey=160
+resizez=128
+ambient=20
+contrast=20
+op1=Close
+category=door_opened
+param=next_loc_stage,loc474_16902
