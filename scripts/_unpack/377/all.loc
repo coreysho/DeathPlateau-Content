@@ -49296,90 +49296,6 @@ model=goblin_cavewall_hole1
 width=2
 active=no
 
-[loc_6943]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=5284
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
-[loc_6944]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=5284
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
-[loc_6945]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=5284
-recol2s=6342
-recol2d=19026
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
-[loc_6946]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=5284
-recol2s=6342
-recol2d=19026
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
-[loc_6947]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=5284
-recol2s=6342
-recol2d=5284
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
-[loc_6948]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=5284
-recol2s=6342
-recol2d=5284
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-
 [lost_tribe_collapsing_floor]
 model=lost_tribe_collapsing_floor
 active=no
@@ -72253,36 +72169,6 @@ offsety=-512
 [loc_10943]
 model=loc_10943
 
-[loc_10944]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=17793
-recol2s=6342
-recol2d=17793
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_10945]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=17793
-recol2s=6342
-recol2d=17793
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
 [loc_10946]
 name=Rocks
 desc=A rocky outcrop.
@@ -72308,36 +72194,6 @@ op1=Mine
 op2=Prospect
 op3=hidden
 hillskew=yes
-
-[loc_10948]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=17793
-recol2s=6342
-recol2d=4226
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_10949]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=17793
-recol2s=6342
-recol2d=22025
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
 
 [enakh_temple_sand_pile]
 name=Sand pile
@@ -81973,36 +81829,6 @@ mapscene=24
 blockrange=no
 ambient=10
 
-[loc_11946]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=7329
-recol2s=6342
-recol2d=6346
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_11947]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=7329
-recol2s=6342
-recol2d=6346
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
 [loc_11948]
 name=Rocks
 desc=A rocky outcrop.
@@ -82041,51 +81867,6 @@ recol1s=9513
 recol1d=7329
 recol2s=6342
 recol2d=21070
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_11951]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=7329
-recol2s=6342
-recol2d=23108
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_11952]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=7329
-recol2s=6342
-recol2d=23108
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_11953]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=7329
-recol2s=6342
-recol2d=23108
 op1=Mine
 op2=Prospect
 op3=hidden
@@ -92725,21 +92506,6 @@ active=yes
 blockwalk=no
 blockrange=no
 
-[loc_14834]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=4228
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
 [loc_14835]
 name=Rocks
 desc=A rocky outcrop.
@@ -93040,96 +92806,6 @@ mapscene=12
 blockrange=no
 ambient=10
 
-[loc_14853]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=4228
-recol2s=6342
-recol2d=6346
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14854]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6346
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14855]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6346
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14856]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=4228
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14857]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14858]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
 [loc_14861]
 name=Rocks
 desc=A rocky outcrop.
@@ -93138,51 +92814,6 @@ recol1s=9513
 recol1d=4228
 recol2s=6342
 recol2d=8721
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14862]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=4228
-recol2s=6342
-recol2d=6438
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14863]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6438
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14864]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=6438
 op1=Mine
 op2=Prospect
 op3=hidden
@@ -93474,36 +93105,6 @@ model=normal_bed
 length=2
 blockrange=no
 
-[loc_14892]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10570
-recol2s=6342
-recol2d=10570
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_14893]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10570
-recol2s=6342
-recol2d=10570
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
 [loc_14894]
 name=Rocks
 desc=A rocky outcrop.
@@ -93624,96 +93225,6 @@ mapscene=25
 blockrange=no
 ambient=10
 
-[loc_14092]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10570
-recol2s=6342
-recol2d=13741
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_14093]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10570
-recol2s=6342
-recol2d=13741
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_14904]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10570
-recol2s=6342
-recol2d=18854
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_14905]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10570
-recol2s=6342
-recol2d=18854
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_14906]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10570
-recol2s=6342
-recol2d=26981
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_14907]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10570
-recol2s=6342
-recol2d=26981
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
 [wom_staffmulti]
 active=yes
 multivar=swansong
@@ -93756,36 +93267,6 @@ recol1d=8354
 blockwalk=no
 active=yes
 op1=Take
-
-[loc_14913]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10570
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14914]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10570
-recol2s=6342
-recol2d=6242
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
 
 [loc_14915]
 name=Rocks
