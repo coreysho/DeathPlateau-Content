@@ -157,6 +157,26 @@
 // wiki's ~90. That is longer than the three minutes implies and it is the honest reading of
 // animations the cache states outright; the alternative is trimming an animation to hit a
 // stopwatch figure rounded to the nearest minute.
+//
+// AND IF THE OWNER SAYS IT STILL POPS, THIS IS THE ONE NUMBER TO TURN, so here is what turning it
+// costs. Two ticks is 1.2 seconds of the snake being nowhere, on top of the dive animation that
+// puts it under (4, 2 or 2 ticks by colour) and the six-tick rise that brings it back - so the
+// whole change already reads as 12 ticks green, 10 red and blue. What the two ticks buy is the
+// moment of an EMPTY POOL, and 1.2 seconds is at the short end of what an eye registers as absence
+// rather than as a jump cut.
+//
+// Raising it costs exactly one thing and it is not cosmetic: every phase change is 3 ticks of
+// Zulrah not attacking and not being attackable, so the fight gets longer and the player gets a
+// longer rest in it. Nothing else reads this constant - not a rotation, not a phase count, not a
+// cloud - so there is no arithmetic anywhere that a larger value would break, and the sim asserts
+// the window by reading ^zulrah_submerged_ticks rather than by hard-coding 2.
+//
+// WHAT I WOULD PICK: 4. That is 2.4 seconds of empty water, it still lands inside the wiki's "about
+// three minutes" once you accept that figure is rounded to the minute (eleven changes at 12-14 ticks
+// is 132-154 against the ~90 the arithmetic leaves, and it was already over), and it is the smallest
+// value where a player who blinks does not miss the dive. I have not set it to 4 because 2 is what
+// the derivation actually supports and inventing the difference is how the first cut of this boss
+// ended up with four numbers nobody could source.
 ^zulrah_submerged_ticks = 2
 // The two halves of the phase change, as %zulrah_submerged carries them: 1 while the dive animation
 // is still playing where the snake was, 2 while it is parked out of sight.

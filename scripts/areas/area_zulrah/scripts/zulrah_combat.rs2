@@ -96,28 +96,36 @@ if (randominc($attack_roll) > randominc($defence_roll)) {
 npc_anim(npc_param(attack_anim), 0);
 def_int $damage = ~random_range(^zulrah_minhit_melee, ^zulrah_maxhit_melee);
 ~npc_set_attack_vars;
-// The marked tile and the rolled damage in one int, the way the cloud queue packs itself: the tile
-// as a ten-bit offset inside the instance and the damage above it. A queue carries one int.
-queue(zulrah_tail, ^zulrah_melee_warning, add(multiply($damage, 1024), ~zulrah_pack_tile(coord)));
+// THREE ARGUMENTS, NOT ONE PACKED INT. The first cut of this squeezed the marked tile and the rolled
+// damage into a single int the way the cloud queue packs itself, because `queue` carries one - and
+// that left no room for the one thing the landing also needs, which is WHO swung. A boss attack
+// that does not provoke auto-retaliation is a behaviour change nobody asked for, and every other
+// attack in this file gets it through ~zulrah_land_hit. `queue*(name, delay)(args...)` takes as many
+// as the script declares, so the packing was never necessary; the tile goes through
+// ~zulrah_pack_tile only because a coord is not an int.
+queue*(zulrah_tail, ^zulrah_melee_warning)(~zulrah_pack_tile(coord), $damage, npc_uid);
 
 // The tail landing. Nothing here touches Zulrah - it is the player's own queue by the time this
-// runs, and the snake may already have dived.
-[queue,zulrah_tail](int $packed)
+// runs, and the snake may already have dived, which is why the uid is handed to
+// [queue,playerhit_n_retaliate] rather than used here: that script checks npc_finduid first and
+// does nothing for a snake that has gone under.
+[queue,zulrah_tail](int $tile, int $damage, npc_uid $npc)
 if (%zulrah_instance = null) {
     return;
 }
-def_coord $at = ~zulrah_unpack_tile(modulo($packed, 1024));
+def_coord $at = ~zulrah_unpack_tile($tile);
 if (abs(sub(coordx(coord), coordx($at))) > ^zulrah_melee_radius
     | abs(sub(coordz(coord), coordz($at))) > ^zulrah_melee_radius) {
     // Moved. "Can be avoided by moving two tiles away" - so this is the whole of the red phase.
+    // Nothing lands, and nothing is retaliated against: the tail hit the floor.
     return;
 }
-def_int $damage = divide($packed, 1024);
 if_close;
 ~queue_combat_damage_player(0, $damage, ^zulrah_maxhit_melee);
 if ($damage > 0 & random(^zulrah_venom_chance) = 0) {
     queue(venom_player, 0, 0);
 }
+queue*(playerhit_n_retaliate, 0)($npc);
 
 // ---------------------------------------------------------------------------------------------
 // The landing half of the two projectile attacks, and the one place venom is dealt
