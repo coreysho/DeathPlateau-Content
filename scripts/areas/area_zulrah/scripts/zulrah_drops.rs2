@@ -45,6 +45,14 @@ def_coord $at = coord;
 ~bosspet_roll(bosspet_snakeling_item, ^zulrah_pet_rate);
 // The 100% drop.
 obj_add($at, zulrahs_scales, ~random_range(^zulrah_scales_min, ^zulrah_scales_max), ^lootdrop_duration);
+// AND THE WAY OFF THE ISLAND, which is why this is here and not only in the table below.
+//
+// The shrine has no boat any more: the Zul-andra teleport read where it lies IS the exit. The
+// table drops four of them at 15/249, which is about one kill in seventeen - so on the other
+// sixteen the snake died and left nobody a way home. One is guaranteed here so that killing it
+// is always enough; the 15/249 stack is still in the table on top of this, and is still what
+// makes them worth banking.
+obj_add($at, zul_andra_teleport, 1, ^lootdrop_duration);
 // The tertiaries, one roll each.
 ~trail_hardcluedrop(^zulrah_elite_clue_rate, $at);
 if (random(^zulrah_jar_rate) = 0) {

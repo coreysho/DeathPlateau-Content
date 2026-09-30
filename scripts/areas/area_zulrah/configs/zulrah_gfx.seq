@@ -55,7 +55,20 @@ delay7=3
 frame8=anim_osrs_7759_9
 delay8=4
 frame9=anim_osrs_7759_5
-delay9=3
+// THIRTEEN, NOT THREE, AND THE EXTRA TEN ARE NEVER SEEN. The eight frames above total 27
+// client cycles and this one ran for 3, making 30 exactly - one 600ms tick - because
+// [queue,zulrah_cloud] re-plays the graphic every tick and the two were meant to butt up
+// against each other perfectly.
+//
+// Perfectly is the problem. A MapSpotAnim that ends on the same cycle its replacement is due
+// has no margin at all: the replacement arrives with the tick packet, and a packet that lands
+// even one cycle late leaves the tile empty until it does. That is the flicker the owner sees,
+// and it gets worse the further away they are playing from the server.
+//
+// Holding the last frame ten cycles longer costs nothing when the packet is on time - the
+// replacement still arrives at cycle 30 and restarts the sequence, so frames 1-9 play exactly
+// as before - and covers a fifth of a second of lateness when it is not.
+delay9=13
 
 [zulrah_venom_orb_spin]
 // OSRS seq 3151, the non-looping half of the orb rig (frame group 4665), at the cache's own delays.
