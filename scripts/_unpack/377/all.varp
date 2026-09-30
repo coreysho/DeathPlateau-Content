@@ -215,7 +215,13 @@ scope=perm
 scope=perm
 protect=no
 
+// Withdraw-as-note. scope=perm (Corey, 2026-09-30): the bank's settings are remembered as a
+// class - see banktab.varp, where %bankquantity, %bankquantity_x and %bankplaceholders are
+// already perm. This one was temp AND force-reset to 0 by bankpin_open_bank_real on every
+// single bank open, so it never survived even walking to the next booth. OSRS remembers it
+// for good, and this bank has already followed OSRS past 2006 (tabs, search, placeholders).
 [bankcert]
+scope=perm
 transmit=yes
 
 [zq_map_mechanisms]
@@ -492,7 +498,13 @@ transmit=yes
 protect=no
 transmit=yes
 
+// The bank's Swap/Insert rearrange mode. scope=perm (Corey, 2026-09-30): it used to be temp,
+// so it held for a session and then went back to Swap on the next login - "bank doesnt
+// remember swap / insert". clientcode=9 is how the client learns it (Client.bankArrangeMode,
+// which decides whether a drag draws as a swap or an insert), and transmit=yes on a perm varp
+// is resent on login, so the client is told the saved value before the bank is ever opened.
 [bankinsert]
+scope=perm
 transmit=yes
 clientcode=9
 

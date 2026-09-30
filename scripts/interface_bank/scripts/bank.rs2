@@ -1,10 +1,12 @@
-// Option 1 is the one the quantity buttons rewrite (see bank_bar.rs2); options 2-5 keep the
-// fixed wording they have always had, the way OSRS keeps its explicit entries under the default.
-[inv_button1,bank_main:bank] @bank_withdraw(last_slot, ~bank_quantity_amount);
-[inv_button2,bank_main:bank] @bank_withdraw(last_slot, 5);
-[inv_button3,bank_main:bank] @bank_withdraw(last_slot, 10);
-[inv_button4,bank_main:bank] @bank_withdraw(last_slot, ^max_32bit_int);
-[inv_button5,bank_main:bank] @bank_withdraw(last_slot, null);
+// All five options are rewritten by the quantity buttons now (see bank_bar.rs2): option 1 is
+// whichever amount is selected and options 2-5 are the other four, so which op means which amount
+// moves as the buttons move. ~bank_op_amount is the single place that mapping is decided, and
+// bank_apply_quantity words the options from the same proc - the two can never disagree.
+[inv_button1,bank_main:bank] @bank_withdraw(last_slot, ~bank_op_amount(1));
+[inv_button2,bank_main:bank] @bank_withdraw(last_slot, ~bank_op_amount(2));
+[inv_button3,bank_main:bank] @bank_withdraw(last_slot, ~bank_op_amount(3));
+[inv_button4,bank_main:bank] @bank_withdraw(last_slot, ~bank_op_amount(4));
+[inv_button5,bank_main:bank] @bank_withdraw(last_slot, ~bank_op_amount(5));
 [inv_buttond,bank_main:bank] 
 // Dropped on a tab button rather than on another slot. The client cannot express that in the
 // packet's component/slot fields - both slots have to be valid slots of the SAME inv or the
@@ -77,7 +79,9 @@ if (%bankpin_verified = 1) {
 ~bankpin_start_entry(^bankpin_flow_verify_access);
 
 [proc,bankpin_open_bank_real]
-%bankcert = 0;
+// Withdraw-as-note used to be forced back to Item here on every open, which is why the note
+// toggle never stuck. It is a remembered setting like the quantity buttons and the padlock now -
+// scope=perm on [bankcert] - so the bank opens on whatever the player last left it on.
 ~reorganize_inv(bank);
 inv_transmit(inv, bank_side:inv);
 inv_transmit(bank, bank_main:bank);
