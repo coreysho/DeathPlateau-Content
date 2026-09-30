@@ -138,20 +138,24 @@
 // "Damage at Zulrah is capped at 50" - per hit taken, param=max_dealt on all three records.
 ^zulrah_damage_cap = 50
 
-// Submerged between phases. The cache's own animations set these: the dive is 21 frames at delay
-// 2-5 (about 4 ticks) and the rise is 36 frames at delay 5 (about 6 ticks), so the snake is out of
-// the fight for ten ticks between phases, which is the gap Old School leaves.
+// Submerged between phases. The cache's own animations set these, and this round is the first one
+// where they are the RIGHT animations: the dive is OSRS 5072, 60 cycles, 2 ticks, and the rise is
+// OSRS 5071, 105 cycles, 3.5 ticks. zulrah_dive.seq has how those two were told apart, and why what
+// used to be here - a per-colour dive and a 36-frame "rise" that was really the spit - could only
+// ever have looked like the snake blinking out and back in.
 // How long the snake itself lives if nothing kills it. NOT ZERO and not small: the engine's
 // DurationValid rejects anything below 1, and npc_changetype_keepall takes the same duration, so
 // every colour change renews it. Five hours is past any fight; the number exists so a leaked
 // instance eventually empties itself rather than holding a snake forever.
 ^zulrah_npc_life = 30000
 
-// THE DIVE IS EACH COLOUR'S OWN and lives in zulrah.enum (^zulrah_dive_ticks there): 5071 is 105
-// client cycles, 5072 and 5073 are 60 each, so 4, 2 and 2 ticks. This constant is the flat one the
-// last round replaced and is kept only as the fallback an unknown npc type would get.
-^zulrah_dive_ticks = 4
-^zulrah_rise_ticks = 6
+// THE DIVE IS ONE ANIMATION FOR THREE COLOURS - the cache has no per-colour dive, only one motion
+// (OSRS 5072) and its reverse (5071, the rise). The enum in zulrah.enum survives because a name in
+// content/pack cannot be withdrawn, and all three of its rows now carry the same 2.
+^zulrah_dive_ticks = 2
+// The rise is 105 cycles, 3.5 ticks, so the snake gets 4 before it may attack: the beat it surfaces
+// on is a beat it is still coming out of the water, which is what makes a surfacing readable.
+^zulrah_rise_ticks = 4
 
 // AND BETWEEN THEM, THE SNAKE IS GONE. This is the beat the fight did not have, and it is what the
 // owner saw the absence of: "zulrah disappears quickly and respawns quickly when switching
@@ -162,12 +166,12 @@
 // WHERE THE NUMBER COMES FROM, since the wiki gives no tick count for a phase change: the strategy
 // page says "It takes Zulrah about three minutes to complete each full rotation", which is 300
 // ticks, and rotation 1's eleven phases are 70 beats of 3 ticks - 210 - leaving 90 ticks across
-// eleven changes, a shade over 8 each. The dive and the rise account for 8 or 10 of those on their
-// own (4+6 green, 2+6 red and blue), so the gap in between is the small remainder: 2 ticks, which
-// puts a green change at 12 and the other two at 10, and the eleven of them at 116 against the
-// wiki's ~90. That is longer than the three minutes implies and it is the honest reading of
-// animations the cache states outright; the alternative is trimming an animation to hit a
-// stopwatch figure rounded to the nearest minute.
+// eleven changes, a shade over 8 each. The dive and the rise account for 6 of those on their own
+// (2 down and 4 up, the same for every colour now that there is only one dive), so the gap in
+// between is the small remainder: 2 ticks, which puts every change at 8 and the eleven of them at
+// 88 against the wiki's ~90. That is the first time these three numbers have added up to what the
+// wiki implies, and they add up to it because the animations they are taken from are finally the
+// ones Zulrah actually dives and rises with.
 //
 // AND IF THE OWNER SAYS IT STILL POPS, THIS IS THE ONE NUMBER TO TURN, so here is what turning it
 // costs. Two ticks is 1.2 seconds of the snake being nowhere, on top of the dive animation that
@@ -182,12 +186,11 @@
 // cloud - so there is no arithmetic anywhere that a larger value would break, and the sim asserts
 // the window by reading ^zulrah_submerged_ticks rather than by hard-coding 2.
 //
-// WHAT I WOULD PICK: 4. That is 2.4 seconds of empty water, it still lands inside the wiki's "about
-// three minutes" once you accept that figure is rounded to the minute (eleven changes at 12-14 ticks
-// is 132-154 against the ~90 the arithmetic leaves, and it was already over), and it is the smallest
-// value where a player who blinks does not miss the dive. I have not set it to 4 because 2 is what
-// the derivation actually supports and inventing the difference is how the first cut of this boss
-// ended up with four numbers nobody could source.
+// WHAT I WOULD PICK: still 2, and more confidently than last round, when the answer here was 4.
+// What made a blink miss the dive was never the length of this window - it was that neither end of
+// it was animated. Two ticks of empty water now sits between a real 2-tick sink and a real 3.5-tick
+// surfacing, so the whole change is 8 ticks of something to look at rather than 12 with a hole in
+// the middle. If the owner still says it pops, this is the one number to turn.
 ^zulrah_submerged_ticks = 2
 // The two halves of the phase change, as %zulrah_submerged carries them: 1 while the dive animation
 // is still playing where the snake was, 2 while it is parked out of sight.
@@ -240,11 +243,26 @@
 // ordinary melee hit on whoever was standing there when it landed, with no warning and nothing to
 // dodge, which made the red phase a phase where you pray melee and read your screen.
 //
-// HOW LONG THE WARNING IS. One beat, 3 ticks, which is the wiki's attack speed for all three forms
-// - the tile is marked when the swing starts and the tail arrives on the next beat. The animation
-// itself says the same thing louder: OSRS seq 5807's first 35 frames are the stare and they run
-// 4.67 ticks before the strike frames begin.
-^zulrah_melee_warning = 3
+// HOW LONG THE WARNING IS, and this round it is the ANIMATION'S length rather than the attack rate.
+// It was 3 - one beat - on the reasoning that the wiki gives all three forms a 3-tick attack speed,
+// with the last round's own comment already noting that "OSRS seq 5807's first 35 frames are the
+// stare and they run 4.67 ticks before the strike frames begin". Those two numbers do not agree,
+// and the disagreement is visible: the player took 20-30 damage a second and a half BEFORE the tail
+// on the screen came round. That is a third of what the owner meant by "attack animations are a bit
+// off", and it is the only one of the three that is a timing fault rather than a wrong animation.
+//
+// So it is 5 now, which is where 5807 actually strikes. Frames 1-35 run at delay 4 - 140 cycles,
+// 4.67 ticks - and the sweep frames (42,40,41,43,44,45,...) begin there; the tail is laid out flat
+// across the platform around 155 cycles, 5.2 ticks. Five ticks is the whole-tick that lands in it.
+//
+// AND IT READS BETTER AGAINST THE WIKI, not worse: "Zulrah will stare at the player's position for
+// SEVERAL SECONDS before whipping its tail at that area". Three ticks is 1.8 seconds, which is not
+// several of anything; five is 3.0. The cost is that the red phase's dodge window is longer, and
+// that is the point - the window is meant to be the length of a stare you can see.
+//
+// The sim reads this constant rather than counting 3 ticks of its own, for the same reason it reads
+// ^zulrah_submerged_ticks: a test that pins the number fails on the very change it exists to guard.
+^zulrah_melee_warning = 5
 // "Can be avoided by moving two tiles away" - so one tile away is still inside it. The tail covers
 // the marked tile and the ring around it, and the third tile out is safe.
 ^zulrah_melee_radius = 1

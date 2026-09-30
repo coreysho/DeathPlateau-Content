@@ -27,29 +27,52 @@ frame8=anim_osrs_4665_2
 delay8=5
 
 [zulrah_venom_cloud]
-// OSRS seq 3151, the non-looping half of the same rig (frame group 4665), which is what spotanim
-// 1045 names.
+// OSRS seq 876 - the cloud's own billow, and the animation that belongs with the model 1043 names.
+// It replaces OSRS 3151, which is the orb pair's spin and has moved to [zulrah_venom_orb_spin]
+// below; the graphic and the animation were both the projectile's and both had to move.
 //
-// RE-TIMED TO EXACTLY ONE GAME TICK, and that is the one thing here that is not the cache's: the
-// cache has five frames at delay 5, twenty-five 20ms cycles. A MapSpotAnim plays its sequence once
-// and the client then drops it (jagex2/dash3d/MapSpotAnim.method486), and zulrah_fight.rs2 re-plays
-// this graphic on every tick a cloud is burning - so at 25 cycles there is a five-cycle hole in
-// every tick and the cloud strobes. Five frames at delay 6 is thirty cycles, which is one 600ms
-// tick on the nose: one graphic ends on the boundary the next begins on, and the cloud burns
-// continuously.
-//
-// The same seq is on the orbs while they FLY to their tiles, where it plays once and holds, which
-// is what a non-looping projectile graphic does.
+// RE-TIMED TO EXACTLY ONE GAME TICK, and that re-timing is the one thing here that is not the
+// cache's. The cache has nine frames at 5,5,5,5,4,4,4,4,4 - forty 20ms cycles. A MapSpotAnim plays
+// its sequence once and the client then drops it (jagex2/dash3d/MapSpotAnim.method486), and
+// zulrah_fight.rs2 re-plays this graphic on every tick a cloud is burning, so at forty cycles the
+// last two frames would never be reached before the next play restarted it. Thirty cycles is one
+// 600ms tick on the nose: the whole billow shows, once per tick, and one play ends on the boundary
+// the next begins on so the cloud burns continuously instead of strobing.
+frame1=anim_osrs_7759_1
+delay1=4
+frame2=anim_osrs_7759_6
+delay2=4
+frame3=anim_osrs_7759_2
+delay3=3
+frame4=anim_osrs_7759_7
+delay4=3
+frame5=anim_osrs_7759_3
+delay5=3
+frame6=anim_osrs_7759_8
+delay6=3
+frame7=anim_osrs_7759_4
+delay7=3
+frame8=anim_osrs_7759_9
+delay8=4
+frame9=anim_osrs_7759_5
+delay9=3
+
+[zulrah_venom_orb_spin]
+// OSRS seq 3151, the non-looping half of the orb rig (frame group 4665), at the cache's own delays.
+// This is spotanim 1045's animation and it now does only 1045's job: the barrage's two orbs spin
+// once on their way to the tile and then hold, which is what a non-looping projectile graphic does.
+// It used to be re-timed to 30 cycles because the same seq was being drawn on the ground as a
+// cloud; nothing is drawn on the ground with it any more, so it is back to the cache's timing.
 frame1=anim_osrs_4665_1
-delay1=6
+delay1=5
 frame2=anim_osrs_4665_2
-delay2=6
+delay2=5
 frame3=anim_osrs_4665_3
-delay3=6
+delay3=5
 frame4=anim_osrs_4665_4
-delay4=6
+delay4=5
 frame5=anim_osrs_4665_5
-delay5=6
+delay5=5
 
 [zulrah_magic_spin]
 // OSRS seq 6648, at the cache's own delays. This one is a projectile and nothing else - it is

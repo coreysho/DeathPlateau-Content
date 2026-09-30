@@ -3,33 +3,47 @@
 // Converted from the OSRS cache by tools/models/animconvosrs.py; they play on their own base
 // (base_osrs_5695), not the 377 one, so the client never walk-merges them with a 377 animation.
 //
-// WHICH OF 5806 AND 5807 IS THE STRIKE was settled by the converted frame lists below, not by
-// rendering and squinting - the two are FRAME-FOR-FRAME IDENTICAL for their first 35 frames, which
-// is the rear-up-and-stare the wiki describes ("Zulrah will stare at the player's position for
-// several seconds before whipping its tail at that area"), and then they part:
+// WHICH OF 5806 AND 5807 IS THE TAIL. The answer below is the one the last round reached; the
+// reasoning it reached it by was wrong, and it is replaced here rather than left standing, because
+// a wrong derivation that happens to land on the right id is the thing that makes the NEXT id wrong.
 //
-//   5806  frames 36-39 replay 18-26 and then 18,19,20 AGAIN - a hold loop, and a hold loop is
-//         what an animation that waits for something looks like. It is the TARGET animation.
-//   5807  frames 36-46 break into frames 40-45, which appear nowhere else on the rig, and come
-//         back through 25 - one new excursion and a recovery. It is the STRIKE.
+// What the last round said was that 5806 "replays 18-26 and then 18,19,20 again - a hold loop", so
+// 5806 waits and 5807 strikes. Both halves of that are mistaken. The replay of 18-26 and of 18,19,20
+// is in the FIRST 35 FRAMES, which the two share frame for frame; it is the rear-up-and-stare the
+// wiki describes ("Zulrah will stare at the player's position for several seconds before whipping
+// its tail at that area"). AFTER it, both animations strike, into frames of their own that appear
+// nowhere else on the rig, and then both recover through the same six frames:
 //
-// That reading agrees with the ids the private-server community publishes for this snake (melee
-// target 5806, melee attack 5807, rune-server thread "Zulrah Animation/GFX Ids"), which is the
-// only other source that names them at all.
+//   5806  ... 28,29,30,31,32,31,30,29,28 ... 33,34,38,35,36,37,39
+//   5807  ... 42,40,41,43,44,45,44,43,41,40,42,25 ... 34,38,35,36,37,39
 //
-// ONLY 5807 IS PLAYED. zulrah_combat.rs2 fires the swipe on the beat and lands it a beat later;
-// because 5807 CONTAINS the stare - those identical first 35 frames, 4.67 ticks of them - the
-// player sees the wind-up and the strike from one animation, which is what OSRS shows. 5806 is
-// kept here named and packed because it is Zulrah's, it is the evidence for the paragraph above,
-// and the next reader should not have to derive it twice.
+// Two strikes, one wind-up, one recovery. Which one is a TAIL is not something a frame list can
+// answer, so it was rendered: tools/models/posepreview.py on Zulrah's own mesh (OSRS npc 2042), the
+// divergent frames of each, from in front at a fixed camera.
 //
-// THE ANIMATION IS LONGER THAN THE BEAT and neither number was bent to make them agree: 5807 is
-// 200 client cycles (6.67 ticks) at the cache's own delays, and the wiki's attack speed for all
-// three forms is 3 ticks. A second swipe therefore cuts the first one short, exactly as a long
-// attack animation does on every other npc in this build.
+//   5806 brings the head DOWN AND FORWARD over the viewer with the hood spread symmetrically - a
+//        lunging bite, straight at whatever is in front of it. It is not played. Nothing in this
+//        fight bites.
+//   5807 swings a long pale limb across the body from one side, out to full extension flat across
+//        the frame, and back. That is the TAIL, and it is what the wiki says the red form does:
+//        "a typeless attack wherein it swings its tail at the player's position".
+//
+// So 5807 it is, which is also what the private-server community publishes (melee target 5806,
+// melee attack 5807, rune-server thread "Zulrah Animation/GFX Ids") - agreement worth noting and
+// not worth leaning on, since that thread is where the last round's "target" reading came from.
+//
+// THE ANIMATION IS LONGER THAN THE BEAT, and this round the WARNING was moved to fit it rather than
+// the other way round. 5807 is 200 client cycles at the cache's own delays, and its tail does not
+// begin to come round until frame 35 - 140 cycles, 4.67 ticks. ^zulrah_melee_warning was 3, the
+// wiki's attack speed, so the damage landed a second and a half before the tail on the screen moved.
+// It is 5 now, which is where the swing actually is; zulrah.constant has the arithmetic. A second
+// swipe still cuts the first one short, exactly as a long attack animation does on every other npc
+// in this build.
 
 [zulrah_tail_target]
-// OSRS seq 5806 - the stare. Not played; see the header.
+// OSRS seq 5806 - the BITE, not the stare, whatever this name says. The name cannot be withdrawn
+// (a packed name with no config throws in PackFile.ts), so it stays and the header says what the
+// animation is. Not played: nothing in this fight bites.
 reachforward=yes
 priority=6
 frame1=anim_osrs_5695_1
@@ -144,7 +158,8 @@ frame55=anim_osrs_5695_39
 delay55=3
 
 [zulrah_tail_swipe]
-// OSRS seq 5807 - the strike, and the one the magma form plays.
+// OSRS seq 5807 - the tail, and the one the magma form plays. Its first 35 frames are the stare and
+// its 36th is where the tail starts to come round, which is what ^zulrah_melee_warning is 5 for.
 reachforward=yes
 priority=6
 frame1=anim_osrs_5695_1

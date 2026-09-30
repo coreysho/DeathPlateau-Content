@@ -66,6 +66,9 @@ magic=300
 param=attackrate,^zulrah_attackrate
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
+// OSRS seq 5808, and the fight's last unnamed sequence - see zulrah.seq for what it is and why it
+// cannot cut an attack short.
+param=defend_anim,zulrah_flinch
 // "Damage at Zulrah is capped at 50" - the wiki, in so many words.
 param=max_dealt,^zulrah_damage_cap
 // The wiki's defensive block: stab, slash and crush 0, Ranged +50.
@@ -119,6 +122,9 @@ param=attackrate,^zulrah_attackrate
 // is simply the one where it is not 5069.
 param=attack_anim,zulrah_tail_swipe
 param=death_anim,osrs_seq_5804
+// OSRS seq 5808, and the fight's last unnamed sequence - see zulrah.seq for what it is and why it
+// cannot cut an attack short.
+param=defend_anim,zulrah_flinch
 param=max_dealt,^zulrah_damage_cap
 // OSRS npc 2043's own param 8: the red form is neither weak nor strong to magic.
 param=magicdefence,0
@@ -153,6 +159,9 @@ magic=300
 param=attackrate,^zulrah_attackrate
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
+// OSRS seq 5808, and the fight's last unnamed sequence - see zulrah.seq for what it is and why it
+// cannot cut an attack short.
+param=defend_anim,zulrah_flinch
 param=max_dealt,^zulrah_damage_cap
 // OSRS npc 2044's own param 8: +300. The blue form is the one you put the bow away for - "Blue
 // (Tanzanite): weak to Ranged" - and 300 is what makes a magic attack on it worthless.

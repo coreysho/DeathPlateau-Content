@@ -1,4 +1,4 @@
-// ZULRAH'S FOUR GRAPHICS, and which attack each one belongs to.
+// ZULRAH'S GRAPHICS, and which attack each one belongs to.
 //
 // OSRS gives this snake exactly four spot animations, 1044 to 1047, and nothing else in the whole
 // 4,023-record table shares its palette: a scan of every OSRS spotanim for a recolour whose targets
@@ -33,6 +33,12 @@
 // this round. Only the names were wrong, and the names are what the scripts read, so the names
 // moved: model.pack 24254-24257 and spotanim.pack 1280-1283 keep their ids and carry new ones.
 //
+// AND A FIFTH, BECAUSE FOUR WAS NOT ENOUGH. Everything above is last round's reasoning and it
+// still holds for 1044, 1046 and 1047. What it got wrong was giving 1045 two jobs: the orbs that
+// FLY to a tile and the cloud that then LIES on it. Those are not the same graphic and 1045 is
+// only ever the first of them - see [zulrah_venom_cloud] below for what the cloud is now and how
+// certain that is.
+//
 // Imported by tools/models/importosrsspot.py; models re-encoded by osrs2ob2.py, animations
 // converted by animconvosrs.py.
 
@@ -52,14 +58,80 @@ resizeh=96
 resizev=96
 ambient=60
 
-[zulrah_venom_cloud]
-// OSRS spotanim 1045 - the venom barrage, and the cloud it leaves. TWO orbs, which is what makes a
-// "barrage of dark-green orbs" a barrage, and the only one of the four whose graphic is used twice:
-// zulrah_fight.rs2 flies it to the tile and then re-plays it on that tile every tick the cloud
-// burns. Its seq is re-timed to exactly one game tick for that second job - see zulrah_gfx.seq.
+[zulrah_venom_orbs]
+// OSRS spotanim 1045 - the venom BARRAGE, in flight and nothing else. TWO of 1044's orb in one
+// mesh (277 faces to 20390's 139, the same three colours, the same 4665 rig, the same green
+// recolour), which is what makes a "barrage of dark-green orbs" a barrage.
 model=spot_zulrah_venom
-anim=zulrah_venom_cloud
+anim=zulrah_venom_orb_spin
 ambient=30
+
+[zulrah_venom_cloud]
+// OSRS spotanim 1043 - the cloud that LIES ON THE GROUND, which until this round was 1045 above.
+//
+// WHY IT COULD NOT GO ON BEING 1045. The owner's words were "the venom clouds ... just dont appear
+// to have the correct model", and the cache says why in one line: 1045 is 1044's comet, doubled.
+// Same frame group (4665), same seq family (3151 is the non-looping half of 5358), same green
+// recolour, and a mesh that is literally two copies of the single orb. Rendering all four of
+// Zulrah's spotanims side by side (tools/models/ob2render.py through the spot renderer) shows three
+// green comets and one fireball and nothing that could be a cloud. What was on the floor for
+// twenty-five ticks was two projectiles lying in the grass.
+//
+// WHAT 1043 IS, AND HOW SURE THIS IS. Model 29421 is a ragged green gas puff - 572 faces of hue-40
+// green, no tail, no direction - and its only other users in the whole table are two recolours of
+// itself (2599 into blues, 3486 flattened to one colour at 70%), which is the shape of a shared
+// gas-cloud graphic. It sits immediately below Zulrah's own block, and its model id is in the same
+// 26000-29000 band as 1046, the one graphic that was modelled new for this snake, rather than in
+// the 20390/11221 band of the three that were reused.
+//
+// THAT IS A REASONED PICK, NOT A PROVEN ONE. A modern cache holds no script that would say "Zulrah
+// spawns graphic N", so nothing here can prove 1043 is the id Old School uses; what it can prove is
+// that 1045 is a projectile and therefore is not the cloud. If this one is wrong it is wrong in the
+// direction of a green gas cloud instead of a green gas cloud.
+//
+// AND IT IS SCALED WIDE AND FLAT, which no other graphic in this file is, and the numbers were
+// picked by looking at it in the client rather than by arithmetic. The mesh is 42 units across and
+// 74 deep - a third of a tile - and one of these has to read as the 3x3 that ^zulrah_cloud_radius
+// damages. resizeh 512 is the most the config allows - SpotAnimConfig.ts refuses anything over it -
+// and is four times across, so a cloud is about a tile and a third wide and two and a half deep;
+// resizev 170 is only a third again as tall, so it LIES on the platform instead of standing on it.
+// Four times is not nine, so one puff does not blanket its whole 3x3; several of them landing side
+// by side is what covers the platform, which is also what a barrage of them looks like in Old
+// School - scattered blobs with gaps, not a carpet.
+//
+// The first cut of this was 384 and 256 with the old cloud's ambient=30 still on it, and the frames
+// out of javaclient/tools/clienttests/run_zulrahshots.py showed why that is wrong: nine bright mint
+// lumps standing up off the floor, which read as gemstones and not as gas. The ambient is gone -
+// OSRS spotanim 1043 carries none, and the 30 was inherited from the graphic this replaced - and
+// with it the glow.
+// AND IT IS RECOLOURED DOWN, which is the one thing here that is not the cache's and the one thing
+// the first set of frames out of the client insisted on. Model 29421 has exactly six colours and
+// they are bright: the 308 faces that make up most of it are hue 20 at lightness 64, the highlights
+// go to 88, and fourteen faces are hue 53, a cyan. On a dark platform that draws as nine glowing
+// mint GEMSTONES lying in a row - which is what the shots showed, and it is not what venom looks
+// like. The six pairs below are the same six colours at hue 24-30 and lightness 22-51: still green,
+// still unmistakable, but a murky swamp green in the family of Zulrah's own (the snake's greens are
+// hue 29 at lightness 16-28) rather than a lit crystal.
+//
+// The values are RGB15 because that is what the packer takes - SpotAnimConfig.ts runs every recol
+// through ColorConversion.rgb15toHsl16 - so the sources are the RGB15 that converts to each of the
+// model's stored HSL16 colours, not those colours themselves.
+model=spot_zulrah_venom_cloud
+anim=zulrah_venom_cloud
+resizeh=512
+resizev=170
+recol1s=4033
+recol1d=4454
+recol2s=14296
+recol2d=8747
+recol3s=1014
+recol3d=5543
+recol4s=31774
+recol4d=5548
+recol5s=1743
+recol5d=3333
+recol6s=883
+recol6d=3398
 
 [zulrah_snakeling_orb]
 // OSRS spotanim 1047 - the white orb that puts a snakeling on the floor beside you.
