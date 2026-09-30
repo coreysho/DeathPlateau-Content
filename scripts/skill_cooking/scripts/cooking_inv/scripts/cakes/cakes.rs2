@@ -36,6 +36,11 @@ switch_obj (last_useitem) {
     case default : ~displaymessage(^dm_default);
 }
 
+// Chocolate dust is also the energy potion's secondary. Because this trigger is on the dust, it
+// takes the click away from [opheldu,harralandervial] whenever the vial is the target - so the
+// potion could be made by dragging the dust onto the vial and not the other way round. The
+// leftovers go to Herblore, as [opheldu,snape_grass] below does; ~attempt_brew_potion says
+// "Nothing interesting happens" itself when there is no recipe.
 [opheldu,chocolate_dust]
 switch_int(oc_param(last_useitem, gnome_cooking_type)) {
     case ^gnome_cocktail : @finish_cocktail(last_useitem, last_item);
@@ -44,7 +49,7 @@ switch_int(oc_param(last_useitem, gnome_cooking_type)) {
 switch_obj (last_useitem) {
     case cake : @make_chocolate_cake(last_slot);
     case bucket_milk : @make_chocolate_milk(last_slot);
-    case default : ~displaymessage(^dm_default);
+    case default : ~attempt_brew_potion(last_useslot, last_slot);
 }
 
 [opheldu,snape_grass]
