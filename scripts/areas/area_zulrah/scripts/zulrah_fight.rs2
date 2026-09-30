@@ -51,17 +51,31 @@ while ($zz < ^zulrah_zones) {
     }
     $zz = calc($zz + 1);
 }
-// ONE ZONE ON LEVEL 3, AND IT IS NOT DECORATION. It is where the snake goes while it is submerged
-// (~zulrah_deep), and an npc cannot be teleported onto an unallocated zone at all:
-// PathingEntity.teleport checks isZoneAllocated and, for an npc, returns doing NOTHING - no error,
-// no message, the teleport simply does not happen. That is what the first cut of this looked like
-// in the sim: the state machine walked dive -> under -> surface exactly on time while the snake
-// never moved an inch off the floor.
+// ONE MORE ZONE FOR THE SNAKE TO HIDE IN, AND IT MUST BE NOWHERE NEAR THE ARENA. It is where the
+// snake goes while it is submerged (~zulrah_deep), and an npc cannot be teleported onto an
+// unallocated zone at all: PathingEntity.teleport checks isZoneAllocated and, for an npc, returns
+// doing NOTHING - no error, no message, the teleport simply does not happen. That is what the first
+// cut of this looked like in the sim: the state machine walked dive -> under -> surface exactly on
+// time while the snake never moved an inch off the floor.
 //
-// The zone is the one that contains ~zulrah_deep, which is the middle surfacing block, and it is
-// laid from the template's own south-west zone because setZone needs a real map square to copy and
-// it does not matter in the least what is up there. Nobody can reach level 3 of this instance.
-if (instance_setzone(movecoord($base, 8, 3, 8), ^zulrah_template, 0) = false) {
+// AND IT USED TO BE LAID DIRECTLY ABOVE THE SOUTH LOBE, which is what put the hole in the owner's
+// shrine. The zone was instance-local (1,1) on level 3 - the eight-by-eight over the tiles the boat
+// lands you on - copied from the template's own south-west corner, which is open lake. The client
+// builds all four levels of an instanced scene (Client.buildScene, the sceneInstanced branch), so
+// that copy was a flat sheet of water hanging at the water's own height over the platform; and
+// worse, World.method15 turns any flat, opaque tile on a level above 0 into a FLOOR OCCLUDER
+// (field131 |= 0x924), and an occluder culls what is behind it. The level-0 platform under that
+// sheet was therefore not drawn at all. A dark hole in one corner of the island is exactly what
+// that looks like from the ground.
+//
+// So the hiding place moved out of the scene entirely. The instance slot is 16 zones square and
+// only the first 4x4 of it is the shrine, so ^zulrah_deep_zone is zone 12 - and a player can never
+// stand outside the shrine's own 4x4 (everything else is blocked void collision), so the furthest
+// their 13x13 build area ever reaches is zone 9. BuildArea.rebuildNormal never asks
+// InstanceMap.templateAt about zone 12, the client is never told this zone exists, and nothing on
+// any level above 0 is ever inside the scene again. THAT IS THE RULE THIS FILE NOW KEEPS: an
+// instance zone above level 0 must be outside the player's build area, or it is a hole in the floor.
+if (instance_setzone(movecoord($base, ^zulrah_deep_zone, 3, ^zulrah_deep_zone), ^zulrah_template, 0) = false) {
     instance_delete($base);
     return(false);
 }
@@ -77,17 +91,22 @@ def_int $dx = sub(coordx($tpl), coordx(^zulrah_template));
 def_int $dz = sub(coordz($tpl), coordz(^zulrah_template));
 return(movecoord(%zulrah_instance, $dx, 0, $dz));
 
-// WHERE A SUBMERGED ZULRAH GOES. Level 3 of the instance's own middle tile, and the point of it is
-// that the client never draws it: NpcInfoEncoder.writeNpcs drops any npc whose coord.y() is not the
-// viewer's, so a snake three levels up is off the screen entirely rather than standing in the pool
-// waiting to be teleported.
+// WHERE A SUBMERGED ZULRAH GOES: the far corner of its own instance, on level 3. It is hidden twice
+// over, and both halves are wanted. NpcInfoEncoder.writeNpcs drops any npc whose coord.y() is not
+// the viewer's, so the level alone would do it; and the tile is some ninety tiles from anywhere a
+// player can stand, so it is outside the build area as well - which is what keeps the zone that
+// holds it out of the client's scene, and the scene free of the occluder ~zulrah_build describes.
 //
 // AN INSTANCE IS AN X/Z RECTANGLE, NOT A FLOOR. InstanceMap.at() is looked up on x and z alone, so
 // instance_find still returns this instance for a coord on level 3 and every guard in this file
 // keeps working - which is the whole reason this tile is inside the instance rather than off in a
-// corner of the map.
+// corner of the map. The tile sits two in from the zone's own corner so that all 5x5 of Zulrah
+// lands inside the one zone that was laid for it.
 [proc,zulrah_deep]()(coord)
-return(movecoord(~zulrah_at(^zulrah_pos_middle), 0, 3, 0));
+if (%zulrah_instance = null) {
+    return(^zulrah_template);
+}
+return(movecoord(%zulrah_instance, ^zulrah_deep_tile, 3, ^zulrah_deep_tile));
 
 [proc,in_zulrah_shrine](coord $coord)(boolean)
 if (%zulrah_instance = null) {
@@ -274,8 +293,12 @@ if ($kind = ^zulrah_act_melee) {
     ~zulrah_melee;
     return;
 }
+// A BARRAGE IS TOLD WHICH BARRAGE OF THIS PHASE IT IS, because that is what picks the slice of the
+// platform its clouds cover - see ~zulrah_venom_barrage. It is counted rather than stored in a var
+// because no phase in any of the four rotation tables has two separate venom runs in it, so the
+// position inside the one run that throws them IS the phase's count of barrages so far.
 if ($kind = ^zulrah_act_venom) {
-    ~zulrah_venom_barrage;
+    ~zulrah_venom_barrage($at);
     return;
 }
 if ($kind = ^zulrah_act_alt_orb) {
@@ -284,12 +307,12 @@ if ($kind = ^zulrah_act_alt_orb) {
         ~zulrah_snakeling_orb;
         return;
     }
-    ~zulrah_venom_barrage;
+    ~zulrah_venom_barrage(divide(sub($at, 1), 2));
     return;
 }
 if ($kind = ^zulrah_act_alt_venom) {
     if (modulo($at, 2) = 0) {
-        ~zulrah_venom_barrage;
+        ~zulrah_venom_barrage(divide($at, 2));
         return;
     }
     ~zulrah_snakeling_orb;
@@ -464,33 +487,62 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 // ---------------------------------------------------------------------------------------------
 // The venom clouds
 // ---------------------------------------------------------------------------------------------
-// A barrage drops a cloud where the player is standing and it burns for ^zulrah_cloud_ticks.
+// A BARRAGE'S CLOUDS BELONG TO THE SHRINE, NOT TO THE PLAYER, and until this round they did not:
+// a barrage dropped one cloud on the tile the player happened to be standing on. The owner's words
+// were "venom clouds are dropping on the player instead of where they are supposed to drop within
+// the rotations made by zulrah", and the wiki says the same thing twice:
 //
-// THE CLOUD CARRIES ITSELF. There is nowhere to keep four cloud coordinates: a queue takes one int,
+//   "The forms and when and where Zulrah spawns snakelings and toxic clouds are predictable: there
+//    are four possible patterns for the fight that dictate what it will do next." - /w/Zulrah
+//   "It will never attack directly at the start; rather, Zulrah will fill the area with venom
+//    clouds, leaving the tips on the east and west sides clear." - /w/Zulrah/Strategies
+//
+// A cloud that lands where you stand cannot leave anything clear, and a fight whose clouds follow
+// you is not one a rotation can be learned for - which is the whole reason players memorise these
+// rotations at all. The tiles are now data: tools/genzulrahclouds.py measures the platform and
+// writes zulrah_clouds.enum, nine cloud centres that cover all 71 walkway tiles except the seven at
+// the tips of the two arms, ordered outwards from each of the four places Zulrah surfaces. Nothing
+// below reads `coord`. That file's docstring says which parts of it are the wiki's and which are
+// ours; the short version is that the union of a four-barrage run is the wiki's and the order
+// within the run is not.
+//
+// FOUR BARRAGES IS A FULL FILL, so barrage k lays tiles [k*T/4, (k+1)*T/4) of this phase's ordering
+// and a phase with fewer barrages than four simply never finishes covering the platform.
+//
+// THE CLOUD CARRIES ITSELF. There is nowhere to keep a list of cloud coordinates: a queue takes one int,
 // an npc var takes an int and a coord is neither. So the cloud is a queue that re-queues itself
 // with its own position and its own remaining life packed into that one int - the tile as an offset
 // inside the instance (32x32, so ten bits) and the countdown above it. Nothing else has to know a
-// cloud exists, four can burn at once without four slots, and the whole thing ends when its
-// countdown does.
+// cloud exists, a whole fill of nine can burn at once without nine slots anywhere, and the whole
+// thing ends when its countdown does.
 //
-// AND THE ORBS FLY NOW, which they did not. A barrage used to be Zulrah's attack animation and a
-// cloud appearing under the player's feet on the same tick, with nothing in between - so there was
-// no barrage to see and no warning to read. "Zulrah will spawn venomous clouds during the fight via
-// a barrage of dark-green orbs": the orbs are OSRS spotanim 1045, which is literally two orbs in
-// one mesh, and they are thrown at the TILE the player is on with ~coord_projectile for the same
-// reason the snakeling orb is (a ~player_projectile homes on the player and ignores the coord, so
-// it would follow them off the tile the cloud is going to land on).
+// AND THE ORBS FLY, which they did not before the last round. "Zulrah will spawn venomous clouds
+// during the fight via a barrage of dark-green orbs": the orbs are OSRS spotanim 1045, which is
+// literally two orbs in one mesh, and they are thrown at the TILE each cloud is going to land on
+// with ~coord_projectile - never ~player_projectile, which ends in projanim_pl, homes the graphic
+// on the player and ignores the destination coord altogether. It is also finally a BARRAGE rather
+// than one orb: a barrage throws two or three of them at once, which is what the word means.
 //
 // -1 is the first tick of a cloud's life: "light on the tile that was packed into me".
-[proc,zulrah_venom_barrage]
+[proc,zulrah_venom_barrage](int $barrage)
 // The spit, named outright, for the reason ~zulrah_snakeling_orb gives: a barrage is spat whatever
 // colour the snake is wearing.
 npc_anim(osrs_seq_5069, 0);
 ~npc_set_attack_vars;
-def_coord $at = coord;
-~coord_projectile(npc_coord, $at, zulrah_venom_cloud, 40, 36, 32, 15, 0, 11, 5);
-// The cloud lights when the orbs get there, not when they leave.
-queue(zulrah_cloud, ^zulrah_cloud_arrive, sub(0, add(~zulrah_pack_tile($at), 1)));
+// The slice of the fill this barrage is responsible for, and the ordering it reads: the phase's own
+// surfacing place, so the clouds land nearest the snake first and the same phase lands them on the
+// same tiles however the player is standing.
+def_int $k = modulo($barrage, ^zulrah_cloud_barrages);
+def_int $slot = divide(multiply($k, ^zulrah_cloud_fill_count), ^zulrah_cloud_barrages);
+def_int $end = divide(multiply(add($k, 1), ^zulrah_cloud_fill_count), ^zulrah_cloud_barrages);
+def_int $row = multiply(enum(int, int, zulrah_phase_pos, %zulrah_phase), ^zulrah_cloud_stride);
+while ($slot < $end) {
+    def_coord $at = ~zulrah_at(enum(int, coord, zulrah_cloud_fill, add($row, $slot)));
+    ~coord_projectile(npc_coord, $at, zulrah_venom_cloud, 40, 36, 32, 15, 0, 11, 5);
+    // The cloud lights when the orbs get there, not when they leave.
+    queue(zulrah_cloud, ^zulrah_cloud_arrive, sub(0, add(~zulrah_pack_tile($at), 1)));
+    $slot = add($slot, 1);
+}
 
 [queue,zulrah_cloud](int $packed)
 if (%zulrah_instance = null) {

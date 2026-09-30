@@ -31,6 +31,17 @@
 ^zulrah_template = 0_36_79_16_16
 ^zulrah_zones = 4
 
+// WHERE ZULRAH HIDES BETWEEN PHASES, and it is a long way from the shrine on purpose. An instance
+// slot is 16 zones square (InstanceMap.INSTANCE_ZONES) and the shrine is only the first 4x4 of it,
+// so zone 12 is ninety-odd tiles from any tile a player can reach - far outside the 13x13 zones
+// BuildArea sends, which is what keeps this zone out of the client's scene. It has to be, because
+// an instance zone on a level above 0 that IS in the scene is drawn as a flat sheet over the arena
+// and is registered as a floor occluder besides, and that is what put a hole in the owner's shrine;
+// ~zulrah_build has the whole story. The tile is two in from the zone's corner so all 5x5 of the
+// snake lands inside the single zone that was laid for it.
+^zulrah_deep_zone = 96
+^zulrah_deep_tile = 98
+
 // THE ARENA, as the imported square has it: a walkway shaped like a horseshoe open to the north,
 // with a pool inside it. The south lobe is x24-33 z28-31, the two arms run north at x22-24 and
 // x32-34, and the water between them is the pool. Everything below was measured off that, not
@@ -258,24 +269,26 @@
 // ---------------------------------------------------------------------------------------------
 // The venom clouds
 // ---------------------------------------------------------------------------------------------
-// A barrage drops a cloud on the tile you are standing on: "If a player stands within a cloud's
-// 3x3 area, they will be dealt varying damage per tick". So the cloud is 3x3 around where it lands
-// and it hurts every tick you are inside it.
+// "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick". So
+// the cloud is 3x3 around where it lands and it hurts every tick you are inside it.
 //
-// FOUR AT A TIME. The longest barrage the wiki lists is four in a row, and a cloud outlives the
-// barrage that made it, so four slots is the most that can ever be burning at once - there is no
-// fifth cloud to drop on the floor.
-^zulrah_cloud_slots = 4
+// WHERE THEY LAND IS NOT HERE AND IS NOT A NUMBER. It is nine measured tiles per surfacing place in
+// zulrah_clouds.enum, written by tools/genzulrahclouds.py off the shrine's own map square, with
+// ^zulrah_cloud_fill_count, ^zulrah_cloud_stride and ^zulrah_cloud_barrages beside them in
+// zulrah_clouds.constant. What used to be here instead was a barrage dropping one cloud on the tile
+// the player was standing on, which is the thing the owner reported and the thing the wiki rules
+// out: "Zulrah will fill the area with venom clouds, leaving the tips on the east and west sides
+// clear" cannot be true of a cloud that follows the player. The generator's docstring carries the
+// derivation and says which parts of it are ours.
 ^zulrah_cloud_radius = 1
 // How long one cloud burns. OURS: the wiki gives no duration for a cloud anywhere, and 25 ticks
 // (15 seconds) was chosen so that a cloud outlives the beat that made it by enough to matter and
 // dies before the phase that made it does.
 ^zulrah_cloud_ticks = 25
-// A BARRAGE IS ORBS YOU CAN SEE COMING, and until this round it was nothing at all: the barrage
-// played Zulrah's attack animation and a cloud simply appeared underneath the player on the same
-// tick, with no projectile in between. "Zulrah will spawn venomous clouds during the fight via a
+// A BARRAGE IS ORBS YOU CAN SEE COMING. "Zulrah will spawn venomous clouds during the fight via a
 // barrage of dark-green orbs" - so the orbs fly (spotanim zulrah_venom_cloud, OSRS 1045, which is
-// two orbs in one mesh) and the cloud is what they leave where they land.
+// two orbs in one mesh), and there are two or three of them in a barrage now rather than one,
+// because a barrage lays a slice of the platform rather than a single tile.
 //
 // The delay a cloud waits before it lights, in ticks: the orbs have to arrive first.
 ^zulrah_cloud_arrive = 2
