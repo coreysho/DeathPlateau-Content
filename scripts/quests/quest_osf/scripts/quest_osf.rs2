@@ -240,30 +240,26 @@ inv_add(inv, favour_airtight_pot, 1);
 // "Quite independent in an aggressive and business like way." He will fix the directionals, and
 // what he wants for it is a sealed pot delivered without questions.
 [opnpc1,favour_hammerspike_stoutbeard]
-// The Giant Dwarf uses him too - he runs the cart into Keldagrim, because the city has no
-// entrance loc of its own. @gd_hammerspike is in quests/quest_giantdwarf/scripts/quest_giantdwarf.rs2
-// and only claims the conversation when this one has nothing outstanding with him.
+// The Giant Dwarf uses him too - he runs the cart into Keldagrim, because the city has no entrance
+// loc of its own, which makes this conversation the only door into the city.
+//
+// AUDIT 2026-09-29: the cart used to sit behind `%onesmallfavour < ^osf_parts | %directionalsfixed
+// = ^osf_on`, so it was shut for the whole of stages 10, 20 and 30 - most of this quest, and a
+// stretch a player can sit in for weeks. Keldagrim was therefore unreachable, and with it The Giant
+// Dwarf, Forgettable Tale, Between a Rock, the blast furnace and the city bank. Every line below is
+// still said at exactly the stage it was said at before; the only change is that the two that do
+// not move this quest forward now end at the cart instead of ending the conversation.
 if (%onesmallfavour < ^osf_parts | %directionalsfixed = ^osf_on) {
-    if (~gd_hammerspike_wants = true) {
-        @gd_hammerspike;
-    }
-}
-if (%onesmallfavour < ^osf_parts) {
-    ~chatnpc("<p,angry>Wrong tunnel.");
-    return;
-}
-if (%directionalsfixed = ^osf_on) {
-    ~chatnpc("<p,neutral>We are square. Stay square.");
-    return;
+    @hammerspike_cart;
 }
 if (inv_total(inv, favour_directionals_broken) = 0) {
     ~chatnpc("<p,angry>You want something. Everybody who comes down here wants something.");
-    return;
+    @hammerspike_cart;
 }
 if (inv_total(inv, favour_airtight_pot) = 0) {
     ~chatnpc("<p,neutral>Metalwork. Fine metalwork. I can do that, and it will cost you a delivery.");
     ~chatnpc("<p,neutral>The potter at the top of the hill makes an airtight pot. Bring me one. Do not open it and do not ask.");
-    return;
+    @hammerspike_cart;
 }
 ~chatplayer("<p,neutral>One airtight pot. I didn't ask.");
 ~chatnpc("<p,happy>Good. That is the whole of the skill.");
@@ -278,6 +274,22 @@ inv_add(inv, favour_directionals_fixed, 1);
 stat_advance(smithing, 2000);
 ~send_quest_progress(questlist:onesmallfavour, %onesmallfavour, ^osf_complete);
 ~chatnpc("<p,neutral>North is north again. Now go away.");
+
+// Where Hammerspike ends up whenever this quest has nothing left to ask him for. @gd_hammerspike is
+// in quests/quest_giantdwarf/scripts/quest_giantdwarf.rs2 and is the cart into Keldagrim; the two
+// lines under it are this quest's own, and are only reached when The Giant Dwarf has nothing to say
+// either - see ~gd_hammerspike_wants, which is false only for its own middle stages.
+[label,hammerspike_cart]
+if (~gd_hammerspike_wants = true) {
+    @gd_hammerspike;
+}
+if (%onesmallfavour < ^osf_parts) {
+    ~chatnpc("<p,angry>Wrong tunnel.");
+    return;
+}
+if (%directionalsfixed = ^osf_on) {
+    ~chatnpc("<p,neutral>We are square. Stay square.");
+}
 
 // =========================================================================== the landing lights
 // Eight placements - four colours, twice each - and eight bits in checklandinglights. All four

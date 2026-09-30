@@ -1,7 +1,15 @@
 [opnpc1,cook]
 // https://www.youtube.com/watch?v=mtPhS3n2dAo
-if(map_members = ^true &inv_total(inv, trail_clue_medium_anagram002) > 0) {
-    @trail_cook;
+// AUDIT 2026-09-29: this jumped straight into @trail_cook, and that label never comes back, so
+// carrying this one clue took the Cook away from three quests at once - Cook's Assistant could not
+// be started, The Lost Tribe could not ask him what he saw in the cellar, and Recipe for Disaster
+// could not be started or progressed - with nothing to tell the player why. Asking first is what
+// ~lost_tribe_witness two lines below already does, and its "Something else..." is where the
+// wording comes from. Anybody who came here for the clue still gets it on the first option.
+if(map_members = ^true & inv_total(inv, trail_clue_medium_anagram002) > 0) {
+    if (~p_choice2("I have a clue scroll for you.", 1, "Something else...", 2) = 1) {
+        @trail_cook;
+    }
 }
 // The Lost Tribe: one of four Lumbridge residents saw the goblin - see lost_tribe_lumbridge.rs2.
 if (~lost_tribe_witness(^lost_tribe_contact_cook) = true) {

@@ -92,8 +92,13 @@ if (last_useitem = four_diamonds_translation_primer & %deserttreasure = ^dt_got_
 %deserttreasure = ^dt_sent_to_bandits;
 ~send_quest_progress(questlist:deserttreasure, %deserttreasure, ^deserttreasure_complete);
 
-// The five prerequisite quests this server actually implements. The Tourist Trap is missing here
-// (not implemented), and Death Plateau is transitive through Troll Stronghold.
+// The six prerequisite quests, all of which this server implements. Death Plateau is not listed
+// because it is transitive through Troll Stronghold.
+//
+// AUDIT 2026-09-29: this said five, and that The Tourist Trap was "missing here (not implemented)".
+// It is implemented - it is %desertrescue, and its journal page names it
+// (quests/quest_desertrescue/scripts/desertrescue_journal.rs2 opens with "Tourist Trap") - so the
+// note was wrong and the check was simply absent.
 [proc,dt_quest_requirements]()(boolean)
 if (%itexamlevel < ^itexam_complete) {
     ~mesbox("You need to have completed The Dig Site to start this quest.");
@@ -113,6 +118,10 @@ if (%priestperil < ^priestperil_complete) {
 }
 if (%waterfall_quest < ^waterfall_complete) {
     ~mesbox("You need to have completed Waterfall Quest to start this quest.");
+    return(false);
+}
+if (%desertrescue < ^desertrescue_complete) {
+    ~mesbox("You need to have completed The Tourist Trap to start this quest.");
     return(false);
 }
 return(true);
@@ -532,6 +541,10 @@ return("shadow");
 // The assassin ambush. Zamorak's people notice you the moment Eblis sets you on the diamonds; the
 // cache reserved fd_killed_ninja for it and nothing ever set it. Triggered off the mirrors area
 // rather than a timer so it is deterministic and testable.
+//
+// He is not aggressive - no huntmode - so this handler is what starts the fight, not just what
+// explains it. AUDIT 2026-09-29: he had no op1 for it to hang off, so none of it ran; he now has
+// op1=Talk-to in configs/quest_deserttreasure_combat.npc.
 
 [opnpc1,fourdiamonds_assasin]
 ~chatnpc("<p,angry>You have been asking about diamonds that are not yours.");

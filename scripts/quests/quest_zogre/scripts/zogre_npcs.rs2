@@ -56,9 +56,11 @@ queue(zogre_quest_complete, 0, 0);
 
 [opnpc1,zogre_human_zavistic_rarve]
 // The Hand in the Sand runs through Rarve too - he is the guild's sand contract and the dead man
-// was one of his. @handsand_rarve_talk is in quests/quest_handsand/scripts/handsand_npcs.rs2 and
-// only claims the conversation while that quest actually wants him.
-if (%handsand_quest >= ^handsand_rarve & %handsand_quest < ^handsand_complete) {
+// was one of his. @handsand_rarve_talk is in quests/quest_handsand/scripts/handsand_npcs.rs2, and
+// ~handsand_rarve_wants beside it is true only at the stages that quest needs him for, so the two
+// stages where it is waiting on a lens and a coffee mug fall through to the prism and the potion
+// below rather than holding the conversation. See the note on that proc.
+if (~handsand_rarve_wants = true) {
     @handsand_rarve_talk;
 }
 if (%zogre = ^zogre_found_evidence) {
@@ -80,7 +82,11 @@ if (%zogre >= ^zogre_complete) {
     ~chatnpc("<p,happy>He will not, and it will do him good.");
     return;
 }
-~chatnpc("<p,neutral>The guild is not open to sightseers.");
+// Now that this quest has had its turn, The Hand in the Sand gets the conversation back even at the
+// stages ~handsand_rarve_wants released - so the "go and get a rose lens from Betty" line is not
+// lost, it is only outranked. That label ends on this same sightseers line when it has nothing,
+// which is what a player with neither quest running still hears.
+@handsand_rarve_talk;
 
 [label,zogre_rarve_identify]
 if (inv_total(inv, zogre_black_prism) = 0 | inv_total(inv, zogre_brentle_vahn_backpack) = 0) {
