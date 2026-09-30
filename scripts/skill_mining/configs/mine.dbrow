@@ -185,6 +185,11 @@ data=pet_base,42377
 [blurite_rock]
 table=mining_table
 data=rock,bluriterock
+// The Asgarnian Ice Dungeon places four blurite rocks, one per rock model; only
+// bluriterock was ever listed here, so the loc_4027- and loc_4028-modelled pair answered
+// "Nothing interesting happens". See regional_rocks.loc.
+data=rock,loc_10583
+data=rock,loc_10584
 data=rock,macro_bluriterock
 data=ore_name,blurite
 data=rock_output,blurite_ore

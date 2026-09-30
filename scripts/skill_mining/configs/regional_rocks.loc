@@ -1,0 +1,585 @@
+// The regional recoloured rocks - Falador west (Crafting Guild), the Asgarnian Ice Dungeon's
+// blurite, Barbarian Village and the Lava Maze runite - and the spent-rock variants they deplete
+// into (Corey, 2026-09-29).
+//
+// Reported in game: "rocks west of fally cant be mined" and "mining - Blurite - only one ore
+// works in asgarnia dungeon".
+//
+// Moved out of content/scripts/_unpack/377/all.loc, following the precedent set by
+// rimmington_rocks.loc in this directory: a loc cannot be redeclared while it still exists there
+// ("Duplicate config found"). Nothing below is invented - every line is the cache's own, with
+// category= and param= corrected.
+//
+// The cache authors every mine as a grid of (three rock models) x (the ores in that mine), all
+// sharing one recol1d - the colour of the rock body, which is what makes a Falador-west rock look
+// different from a Rimmington one. recol2d is the ore seam. The last row of every grid is the
+// spent rock: same recol1d, but recol2d either absent or equal to recol1d, because a rock with no
+// ore colour is a rock with no ore in it. That is how the depleted partner of each live rock
+// below was identified, and the model always matches: loc_4027 -> loc_9723, loc_4028 -> loc_9724,
+// loc_2110 -> loc_9725 in the 12579 family, and model-for-model in the other three.
+//
+// What was wrong:
+//
+//  * Falador west / Crafting Guild mine (recol1d=12579, around 2937-2942, 3276-3290). The nine
+//    rocks are gold (loc_11183-5), silver (loc_11186-8) and clay (loc_11189-91). The three clay
+//    rocks had no category= at all, so [oploc1,_mining_rock_normal] never ran and the Mine option
+//    did nothing. Four of the other six pointed param=next_loc_stage_mining at loc_4027/loc_4028 -
+//    "Pile of Rock", plain scenery whose examine text is literally "A pile of lime rock". Mining
+//    one turned it into an inert pile that carries no mining_rock_empty and never respawns, so
+//    after a few minutes of uptime the mine is a field of rubble. Only loc_11185 and loc_11188
+//    (which pointed at rocks1) survived a reset. Their depleted partners, unreferenced until now,
+//    are loc_9736, loc_9737 and loc_11165.
+//
+//  * Asgarnian Ice Dungeon blurite (recol1d=24511, around 3049-3067, 9564-9582). Four blurite
+//    rocks are placed; only bluriterock was wired, which is exactly "only one ore works".
+//    loc_10583 and loc_10584 are the same rock in the other two models - same recol2d=382 blurite
+//    seam - with no category and no params. Depleted partners: loc_10585/6/7. bluriterock itself
+//    depleted into rocks2, a generic grey rock that examines as "Stoney!"; it now uses loc_10587,
+//    its own model's spent variant, so all three blurite rocks deplete alike.
+//
+//  * Barbarian Village (recol1d=10500, around 3079-3083, 3420-3422) and the Lava Maze runite
+//    rocks (recol1d=4228, 3059-3060, 3884-3885) had the same loc_4027/loc_4028 next-stage bug as
+//    Falador west - mine once, then permanent rubble. Depleted partners: loc_11552/3/4 and
+//    loc_14832/3.
+//
+// The mining_table rows in mine.dbrow already listed every one of these locs, so no rock below
+// needed an ore assigned to it - they were listed as gold, silver, clay, coal, tin, runite and
+// blurite all along, and simply never reached the table because the loc was not wired.
+
+// ---- Falador west / Crafting Guild mine (recol1d=12579) ----
+
+[loc_9736]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_9723
+recol1s=15854
+recol1d=12579
+mapscene=24
+blockrange=no
+ambient=10
+op1=Mine
+op2=Prospect
+op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_9737]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_9724
+recol1s=15854
+recol1d=12579
+mapscene=25
+blockrange=no
+ambient=10
+op1=Mine
+op2=Prospect
+op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11165]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_9725
+recol1s=15854
+recol1d=12579
+mapscene=12
+blockrange=no
+ambient=10
+op1=Mine
+op2=Prospect
+op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11183]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=12579
+recol2s=6342
+recol2d=31393
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9736
+
+[loc_11184]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=31393
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9737
+
+[loc_11185]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=31393
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11165
+
+[loc_11186]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=12579
+recol2s=6342
+recol2d=19026
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9736
+
+[loc_11187]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=19026
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9737
+
+[loc_11188]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=19026
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11165
+
+[loc_11189]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=12579
+recol2s=6342
+recol2d=22025
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9736
+
+[loc_11190]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=22025
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_9737
+
+[loc_11191]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=12579
+recol2s=6342
+recol2d=22025
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11165
+
+// ---- Asgarnian Ice Dungeon blurite (recol1d=24511) ----
+
+[loc_10585]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=24511
+recol2s=6342
+recol2d=24511
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_10586]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=24511
+recol2s=6342
+recol2d=24511
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_10587]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=24511
+recol2s=6342
+recol2d=24511
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_10583]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=24511
+recol2s=6342
+recol2d=382
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_10585
+param=macro_gas,macro_bluriterock
+
+[loc_10584]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=24511
+recol2s=6342
+recol2d=382
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_10586
+param=macro_gas,macro_bluriterock
+
+[bluriterock]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=24511
+recol2s=6342
+recol2d=382
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+ambient=20
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_10587
+param=macro_gas,macro_bluriterock
+
+// ---- Barbarian Village mine (recol1d=10500) ----
+
+[loc_11552]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=10500
+recol2s=6342
+recol2d=10500
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11553]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=10500
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11554]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=10500
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11930]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=10500
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11552
+
+[loc_11931]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11553
+
+[loc_11932]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11554
+
+[loc_11933]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=10500
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11552
+
+[loc_11934]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11553
+
+[loc_11935]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=10500
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11554
+
+// ---- Lava Maze runite (recol1d=4228) ----
+
+[loc_14832]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=4228
+recol2s=6342
+recol2d=4228
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_14833]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=4228
+recol2s=6342
+recol2d=4228
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_14859]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=4228
+recol2s=6342
+recol2d=8721
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_14832
+
+[loc_14860]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=4228
+recol2s=6342
+recol2d=8721
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=12
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_14833

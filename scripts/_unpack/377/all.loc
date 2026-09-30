@@ -14812,26 +14812,6 @@ param=next_loc_stage_mining,rocks2
 param=macro_gas,macro_clayrock2
 
 // todo: name used from 244
-[bluriterock]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=24511
-recol2s=6342
-recol2d=382
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-ambient=20
-category=mining_rock_normal
-param=next_loc_stage_mining,rocks2
-param=macro_gas,macro_bluriterock
-
-// todo: name used from 244
 [gemrock]
 name=Rocks
 desc=A rocky outcrop.
@@ -63420,32 +63400,6 @@ anim=gas
 blockrange=no
 bgsound=area474_3073,3
 
-[loc_9736]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_9723
-recol1s=15854
-recol1d=12579
-mapscene=24
-blockrange=no
-ambient=10
-op1=Mine
-op2=Prospect
-op3=hidden
-
-[loc_9737]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_9724
-recol1s=15854
-recol1d=12579
-mapscene=25
-blockrange=no
-ambient=10
-op1=Mine
-op2=Prospect
-op3=hidden
-
 [loc_9738]
 name=Ruined Pillar
 desc=An old crumbled pillar.
@@ -68951,86 +68905,6 @@ recol2s=20083
 recol2d=17010
 recol3s=26390
 recol3d=26390
-
-[loc_10583]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=24511
-recol2s=6342
-recol2d=382
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-ambient=20
-
-[loc_10584]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=24511
-recol2s=6342
-recol2d=382
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-ambient=20
-
-[loc_10585]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=24511
-recol2s=6342
-recol2d=24511
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-ambient=20
-
-[loc_10586]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=24511
-recol2s=6342
-recol2d=24511
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-ambient=20
-
-[loc_10587]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=24511
-recol2s=6342
-recol2d=24511
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-ambient=20
 
 [wyvern_cave_wall]
 model=loc_4533
@@ -75067,19 +74941,6 @@ op1=Empty
 forceapproach=east
 sharelight=yes
 
-[loc_11165]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_9725
-recol1s=15854
-recol1d=12579
-mapscene=12
-blockrange=no
-ambient=10
-op1=Mine
-op2=Prospect
-op3=hidden
-
 [loc_11166]
 name=Rocks
 desc=A rocky outcrop.
@@ -75368,155 +75229,6 @@ mapscene=12
 anim=gas
 blockrange=no
 bgsound=area474_3073,3
-
-[loc_11183]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=12579
-recol2s=6342
-recol2d=31393
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4027
-
-[loc_11184]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=31393
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4028
-
-[loc_11185]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=31393
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-//TODO this is wrong but it doesn't accept loc_2110
-param=next_loc_stage_mining,rocks1
-
-[loc_11186]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=12579
-recol2s=6342
-recol2d=19026
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4027
-
-[loc_11187]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=19026
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4028
-
-[loc_11188]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=19026
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-//TODO this is wrong but it doesn't accept loc_2110
-param=next_loc_stage_mining,rocks1
-
-[loc_11189]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=12579
-recol2s=6342
-recol2d=22025
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_11190]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=22025
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_11191]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=12579
-recol2s=6342
-recol2d=22025
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
 
 [loc_11192]
 name=Rocks
@@ -77837,51 +77549,6 @@ model=draynor_table_2x1
 width=2
 ambient=12
 contrast=10
-
-[loc_11552]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10500
-recol2s=6342
-recol2d=10500
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-
-[loc_11553]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=10500
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-
-[loc_11554]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=10500
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
 
 [loc_11555]
 name=Rocks
@@ -82200,110 +81867,6 @@ mapscene=12
 anim=gas
 blockrange=no
 bgsound=area474_3073,3
-
-[loc_11930]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10500
-recol2s=6342
-recol2d=4226
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4027
-
-[loc_11931]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=4226
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4028
-
-[loc_11932]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=4226
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-category=mining_rock_normal
-//TODO this is wrong but it doesn't accept loc_2110
-param=next_loc_stage_mining,rocks1
-
-[loc_11933]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=10500
-recol2s=6342
-recol2d=13741
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=24
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4027
-
-[loc_11934]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=13741
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4028
-
-[loc_11935]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_2110
-recol1s=9513
-recol1d=10500
-recol2s=6342
-recol2d=13741
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=25
-blockrange=no
-ambient=10
-category=mining_rock_normal
-//TODO this is wrong but it doesn't accept loc_2110
-param=next_loc_stage_mining,rocks1
 
 [loc_11936]
 name=Rocks
@@ -93387,36 +92950,6 @@ active=yes
 blockwalk=no
 blockrange=no
 
-[loc_14832]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=4228
-recol2s=6342
-recol2d=4228
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
-[loc_14833]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=4228
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-
 [loc_14834]
 name=Rocks
 desc=A rocky outcrop.
@@ -93821,40 +93354,6 @@ op3=hidden
 mapscene=12
 blockrange=no
 ambient=10
-
-[loc_14859]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4027
-recol1s=15854
-recol1d=4228
-recol2s=6342
-recol2d=8721
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4027
-
-[loc_14860]
-name=Rocks
-desc=A rocky outcrop.
-model=loc_4028
-recol1s=9513
-recol1d=4228
-recol2s=6342
-recol2d=8721
-op1=Mine
-op2=Prospect
-op3=hidden
-mapscene=12
-blockrange=no
-ambient=10
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_4028
 
 [loc_14861]
 name=Rocks
