@@ -596,8 +596,10 @@ param=next_loc_stage_mining,loc_14833
 // (Barbarian Village's loc_11930-2). Those nine locs are wired below. The other four rows -
 // recol2d=6346, 14596, 21070 and 23108 - are left alone deliberately: nothing in the build pins
 // those colours to an ore, and guessing would put the wrong rock in the wrong mine. That leaves
-// loc_11960 and loc_11962 (recol2d=14596, one placement each at 2907,3361 and 2909,3364) still
-// inert in this mine; they need an ore identified before they can be wired.
+// recol2d=14596 IS COPPER, identified in game by the owner ("one of the rocks at the west
+// falador appears to be copper", 2026-09-30) and consistent with the grid: this family is
+// iron, tin, coal and one more, which in a low-level mine is copper. loc_11960-62 are wired
+// below. The other three unidentified seams - 6346, 21070 and 23108 - are still left alone.
 
 [loc_11555]
 name=Rocks
@@ -794,6 +796,61 @@ recol1s=9513
 recol1d=7329
 recol2s=6342
 recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11557
+
+// Copper, the fourth seam of the Falador-west scatter (recol1d=7329). Same shape as its iron,
+// tin and coal siblings above: the spent partner is the one with the same MODEL and no ore
+// colour of its own.
+
+[loc_11960]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=7329
+recol2s=6342
+recol2d=14596
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11555
+
+[loc_11961]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=14596
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11556
+
+[loc_11962]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=14596
 op1=Mine
 op2=Prospect
 op3=hidden
