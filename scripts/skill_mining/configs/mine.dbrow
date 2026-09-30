@@ -56,6 +56,10 @@ data=rock,loc_9716
 data=rock,loc_11933
 data=rock,loc_11934
 data=rock,loc_11935
+// The mine west of Falador (2903-2910, 3353-3366) - see regional_rocks.loc.
+data=rock,loc_11957
+data=rock,loc_11958
+data=rock,loc_11959
 data=ore_name,tin
 data=rock_output,tin_ore
 data=rock_level,1
@@ -73,6 +77,10 @@ data=rock,macro_ironrock2
 data=rock,loc_9717
 data=rock,loc_9718
 data=rock,loc_9719
+// The mine west of Falador (2903-2910, 3353-3366) - see regional_rocks.loc.
+data=rock,loc_11954
+data=rock,loc_11955
+data=rock,loc_11956
 data=ore_name,iron
 data=rock_output,iron_ore
 data=rock_level,15
@@ -90,6 +98,10 @@ data=rock,macro_coalrock2
 data=rock,loc_11930
 data=rock,loc_11931
 data=rock,loc_11932
+// The mine west of Falador (2903-2910, 3353-3366) - see regional_rocks.loc.
+data=rock,loc_11963
+data=rock,loc_11964
+data=rock,loc_11965
 data=ore_name,coal
 data=rock_output,coal
 data=rock_level,30
@@ -185,6 +197,11 @@ data=pet_base,42377
 [blurite_rock]
 table=mining_table
 data=rock,bluriterock
+// The Asgarnian Ice Dungeon places four blurite rocks, one per rock model; only
+// bluriterock was ever listed here, so the loc_4027- and loc_4028-modelled pair answered
+// "Nothing interesting happens". See regional_rocks.loc.
+data=rock,loc_10583
+data=rock,loc_10584
 data=rock,macro_bluriterock
 data=ore_name,blurite
 data=rock_output,blurite_ore
