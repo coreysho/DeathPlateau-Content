@@ -1,0 +1,100 @@
+// ONE REMEMBERED ATTACK STYLE PER WEAPON CATEGORY, three bits each. The categories are the ones
+// ~update_weapon_category switches on (skill_combat/scripts/player/player_attackstyles.rs2), so
+// there is exactly one slot per combat tab the player can be shown, and categories that share a tab
+// share a slot: flowers are blunt, javelins and chinchompas are thrown, and anything with no combat
+// tab of its own falls in with unarmed.
+//
+// Ten slots fill atkstyle_memory1's low thirty bits and the remaining eight fill atkstyle_memory2.
+// A slot left at 0 means "never touched", and 0 is also the style a player who has never touched the
+// tab should be on - the first option of the tab, Accurate on a bow and Chop on a scimitar - so no
+// "unset" marker is needed and the default falls out for free.
+
+[atkstyle_unarmed]
+basevar=atkstyle_memory1
+startbit=0
+endbit=2
+
+[atkstyle_2h_sword]
+basevar=atkstyle_memory1
+startbit=3
+endbit=5
+
+[atkstyle_axe]
+basevar=atkstyle_memory1
+startbit=6
+endbit=8
+
+[atkstyle_blunt]
+basevar=atkstyle_memory1
+startbit=9
+endbit=11
+
+[atkstyle_pickaxe]
+basevar=atkstyle_memory1
+startbit=12
+endbit=14
+
+[atkstyle_scythe]
+basevar=atkstyle_memory1
+startbit=15
+endbit=17
+
+[atkstyle_slash]
+basevar=atkstyle_memory1
+startbit=18
+endbit=20
+
+[atkstyle_spear]
+basevar=atkstyle_memory1
+startbit=21
+endbit=23
+
+[atkstyle_spiked]
+basevar=atkstyle_memory1
+startbit=24
+endbit=26
+
+[atkstyle_stab]
+basevar=atkstyle_memory1
+startbit=27
+endbit=29
+
+[atkstyle_claws]
+basevar=atkstyle_memory2
+startbit=0
+endbit=2
+
+[atkstyle_whip]
+basevar=atkstyle_memory2
+startbit=3
+endbit=5
+
+[atkstyle_bow]
+basevar=atkstyle_memory2
+startbit=6
+endbit=8
+
+[atkstyle_crossbow]
+basevar=atkstyle_memory2
+startbit=9
+endbit=11
+
+[atkstyle_thrown]
+basevar=atkstyle_memory2
+startbit=12
+endbit=14
+
+[atkstyle_salamander]
+basevar=atkstyle_memory2
+startbit=15
+endbit=17
+
+[atkstyle_staff]
+basevar=atkstyle_memory2
+startbit=18
+endbit=20
+
+[atkstyle_powered_staff]
+basevar=atkstyle_memory2
+startbit=21
+endbit=23

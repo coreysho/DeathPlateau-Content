@@ -1,0 +1,21 @@
+// WHERE THE PER-WEAPON-CATEGORY ATTACK STYLE LIVES. %com_mode is only ever the style of the weapon
+// in your hand right now; these two varps are the eighteen remembered styles behind it, three bits
+// each (skill_combat/configs/attackstyle.varbit carves them up, and
+// skill_combat/scripts/player/player_attackstyles.rs2 reads and writes them through
+// ~attackstyle_memory_get and ~attackstyle_memory_set).
+//
+// Three bits because a staff has FIVE styles - Bash, Pound, Focus and the two Spell boxes - so the
+// index reaches 4; every other category stops at 3. Eighteen slots at three bits is 54 bits, which
+// is why there are two varps rather than one.
+//
+// Both are scope=perm, because the whole point of the round is that the memory survives a logout:
+// %com_mode was made perm on 2026-09-10 and that is what put a bow on Longrange after a login (the
+// clamp in player_combat_stat.rs2 trimmed a melee Block, index 3, down to the bow's last style).
+// Neither is transmitted: the client draws the combat tab's highlight from %com_mode alone.
+[atkstyle_memory1]
+protect=no
+scope=perm
+
+[atkstyle_memory2]
+protect=no
+scope=perm

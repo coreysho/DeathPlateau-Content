@@ -99,7 +99,7 @@
 [proc,set_attackstyle](int $style)
 if_close;
 if (p_finduid(uid) = true) {
-    %com_mode = $style;
+    ~set_com_mode($style);
     ~player_combat_stat;
     // AND THAT IS HOW AUTOCAST IS TURNED OFF. The staff tab's two Spell boxes are combat styles of
     // their own now (auto_cast.rs2), so the old on/off toggle beside them is gone: in Old School you
@@ -113,6 +113,84 @@ if (p_finduid(uid) = true) {
 }
 %com_mode = %com_mode; // resync varp
 
+// THE ONE PLACE %com_mode IS ALLOWED TO CHANGE. Old School remembers a style per weapon CATEGORY,
+// not one style for the whole character - "Weapons that share a category (daggers, swords, bows
+// etc.) will now remember the combat style that was used", from the 6th Birthday and QoL update of
+// 21 February 2019 - so every write of %com_mode has to be mirrored into the slot of whatever is in
+// the right hand, or ~update_weapon_category will restore the stale one the moment the tab is
+// redrawn (and ~initalltabs redraws it after things as innocent as picking an autocast spell).
+[proc,set_com_mode](int $style)
+%com_mode = $style;
+~attackstyle_memory_set(inv_getobj(worn, ^wearpos_rhand), $style);
+
+// WHICH OF THE EIGHTEEN REMEMBERED STYLES BELONGS TO THIS WEAPON. The categories are the ones
+// ~update_weapon_category switches on below, one slot per combat tab the player can be shown -
+// flowers use the blunt tab and javelins and chinchompas use the thrown tab, so they share those
+// slots, and anything with no tab of its own shares unarmed's.
+//
+// A members' weapon on a free world is deliberately read as unarmed here, because that is the tab
+// ~update_weapon_category shows for it: the style it is set to is unarmed's, so that is where it
+// has to be remembered.
+[proc,attackstyle_memory_get](obj $weapon)(int)
+if ($weapon = null | (map_members = ^false & oc_members($weapon) = true)) {
+    return(%atkstyle_unarmed);
+}
+switch_category (oc_category($weapon)) {
+    // melee
+    case weapon_2h_sword : return(%atkstyle_2h_sword);
+    case weapon_axe : return(%atkstyle_axe);
+    case weapon_blunt, flowers : return(%atkstyle_blunt);
+    case weapon_pickaxe : return(%atkstyle_pickaxe);
+    case weapon_scythe : return(%atkstyle_scythe);
+    case weapon_slash : return(%atkstyle_slash);
+    case weapon_spear : return(%atkstyle_spear);
+    case weapon_spiked : return(%atkstyle_spiked);
+    case weapon_stab : return(%atkstyle_stab);
+    case weapon_claws : return(%atkstyle_claws);
+    case weapon_whip : return(%atkstyle_whip);
+    // ranged
+    case weapon_bow : return(%atkstyle_bow);
+    case weapon_crossbow : return(%atkstyle_crossbow);
+    case weapon_thrown, weapon_javelin : return(%atkstyle_thrown);
+    case weapon_salamander : return(%atkstyle_salamander);
+    // magic
+    case weapon_staff : return(%atkstyle_staff);
+    case weapon_powered_staff : return(%atkstyle_powered_staff);
+    // unarmed everything else
+    case default : return(%atkstyle_unarmed);
+}
+
+// The write half of ~attackstyle_memory_get - the same list, and it has to stay the same list.
+[proc,attackstyle_memory_set](obj $weapon, int $style)
+if ($weapon = null | (map_members = ^false & oc_members($weapon) = true)) {
+    %atkstyle_unarmed = $style;
+    return;
+}
+switch_category (oc_category($weapon)) {
+    // melee
+    case weapon_2h_sword : %atkstyle_2h_sword = $style;
+    case weapon_axe : %atkstyle_axe = $style;
+    case weapon_blunt, flowers : %atkstyle_blunt = $style;
+    case weapon_pickaxe : %atkstyle_pickaxe = $style;
+    case weapon_scythe : %atkstyle_scythe = $style;
+    case weapon_slash : %atkstyle_slash = $style;
+    case weapon_spear : %atkstyle_spear = $style;
+    case weapon_spiked : %atkstyle_spiked = $style;
+    case weapon_stab : %atkstyle_stab = $style;
+    case weapon_claws : %atkstyle_claws = $style;
+    case weapon_whip : %atkstyle_whip = $style;
+    // ranged
+    case weapon_bow : %atkstyle_bow = $style;
+    case weapon_crossbow : %atkstyle_crossbow = $style;
+    case weapon_thrown, weapon_javelin : %atkstyle_thrown = $style;
+    case weapon_salamander : %atkstyle_salamander = $style;
+    // magic
+    case weapon_staff : %atkstyle_staff = $style;
+    case weapon_powered_staff : %atkstyle_powered_staff = $style;
+    // unarmed everything else
+    case default : %atkstyle_unarmed = $style;
+}
+
 // updates the attack style tab depending on the
 // weapon currently equipped or not by the player
 [proc,update_weapon_category](obj $previous)
@@ -121,6 +199,16 @@ if ($previous ! null & oc_wearpos($previous) ! ^wearpos_rhand) {
     return;
 }
 def_obj $obj = inv_getobj(worn, ^wearpos_rhand);
+// THE STYLE THIS CATEGORY WAS LAST LEFT ON. Every write of %com_mode goes through ~set_com_mode, so
+// the slot for the weapon already in hand holds exactly what %com_mode holds and this is a no-op
+// except when the weapon has actually changed - which is what lets it sit here unconditionally and
+// cover the login too (~initalltabs calls this proc with the worn weapon as its own "previous").
+//
+// This is what fixes bows coming up on Longrange: %com_mode is perm, so a melee Block (index 3)
+// used to survive the logout and player_combat_stat.rs2's clamp trimmed it to the bow tab's last
+// style, which is Longrange. Now the bow gets the bow's own remembered style, and a bow nobody has
+// ever set a style on gets 0 - Accurate, the first option on the tab.
+%com_mode = ~attackstyle_memory_get($obj);
 if ($previous = null | $obj = null | oc_category($previous) ! oc_category($obj)) {
     // todo somehow confirm this
     // osrs keeps track of selected per category
@@ -198,6 +286,10 @@ if ($previous ! null & oc_wearpos($previous) ! ^wearpos_rhand) {
     return;
 }
 def_obj $obj = .inv_getobj(worn, ^wearpos_rhand);
+// As above. There is no .set_com_mode to go with it because nothing on the secondary-player path
+// ever writes .%com_mode - it only reads it - so the slots are always whatever the player's own
+// ~set_com_mode last put there, and restoring from them here is the whole job.
+.%com_mode = ~.attackstyle_memory_get($obj);
 if ($previous = null | $obj = null | oc_category($previous) ! oc_category($obj)) {
     // todo somehow confirm this
     // osrs keeps track of selected per category
@@ -267,3 +359,33 @@ if ($obj = null) {
     .if_settext(combat_unarmed:name, "<oc_name($obj)>"); // gnomeball uses this
 }
 .if_settab(combat_unarmed, 0);
+
+// The secondary-player half of ~attackstyle_memory_get. Read-only: see ~.update_weapon_category.
+[proc,.attackstyle_memory_get](obj $weapon)(int)
+if ($weapon = null | (map_members = ^false & oc_members($weapon) = true)) {
+    return(.%atkstyle_unarmed);
+}
+switch_category (oc_category($weapon)) {
+    // melee
+    case weapon_2h_sword : return(.%atkstyle_2h_sword);
+    case weapon_axe : return(.%atkstyle_axe);
+    case weapon_blunt, flowers : return(.%atkstyle_blunt);
+    case weapon_pickaxe : return(.%atkstyle_pickaxe);
+    case weapon_scythe : return(.%atkstyle_scythe);
+    case weapon_slash : return(.%atkstyle_slash);
+    case weapon_spear : return(.%atkstyle_spear);
+    case weapon_spiked : return(.%atkstyle_spiked);
+    case weapon_stab : return(.%atkstyle_stab);
+    case weapon_claws : return(.%atkstyle_claws);
+    case weapon_whip : return(.%atkstyle_whip);
+    // ranged
+    case weapon_bow : return(.%atkstyle_bow);
+    case weapon_crossbow : return(.%atkstyle_crossbow);
+    case weapon_thrown, weapon_javelin : return(.%atkstyle_thrown);
+    case weapon_salamander : return(.%atkstyle_salamander);
+    // magic
+    case weapon_staff : return(.%atkstyle_staff);
+    case weapon_powered_staff : return(.%atkstyle_powered_staff);
+    // unarmed everything else
+    case default : return(.%atkstyle_unarmed);
+}

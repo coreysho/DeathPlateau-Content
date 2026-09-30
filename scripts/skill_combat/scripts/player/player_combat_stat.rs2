@@ -44,7 +44,16 @@ def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
 // get style data
 def_dbrow $data = ~combat_get_weapon_style_data($weapon);
 
-%com_mode = min(%com_mode, sub(db_getfieldcount($data, combat_style_table:damagestyle), 1));
+// THE CLAMP, and it should never fire now. It is here because %com_mode used to be one number for
+// the whole character: a melee Block, index 3, carried onto a bow and had to be trimmed to the bow
+// tab's last style - Longrange - which is exactly the bug this round is about. The remembered style
+// is per category now (~attackstyle_memory_get), so a style index can only arrive from the tab it
+// belongs to. It stays as a backstop for a table that loses a row, and it writes the trimmed value
+// back into the category's slot so the two cannot drift apart.
+def_int $clamped_mode = min(%com_mode, sub(db_getfieldcount($data, combat_style_table:damagestyle), 1));
+if ($clamped_mode ! %com_mode) {
+    ~set_com_mode($clamped_mode);
+}
 def_int $damagetype = ~combat_get_damagetype($data, %com_mode);
 def_int $damagestyle = ~combat_get_damagestyle($data, %com_mode);
 
