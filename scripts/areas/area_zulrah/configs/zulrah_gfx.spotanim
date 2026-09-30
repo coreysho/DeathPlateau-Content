@@ -116,23 +116,29 @@ ambient=30
 // The values are RGB15 because that is what the packer takes - SpotAnimConfig.ts runs every recol
 // through ColorConversion.rgb15toHsl16 - so the sources are the RGB15 that converts to each of the
 // model's stored HSL16 colours, not those colours themselves.
-model=spot_zulrah_venom_cloud
+// THE MESH IS THE MOLE MUD CLOUD, RECOLOURED. OSRS 1043 was a reasoned pick and it was wrong:
+// rendered through tools/models/ob2render.py it is a bright, spiky, six-colour crystal - the
+// owner's screenshot of green gemstones lying on the platform is exactly what that model is.
+//
+// spot_mole_mud_cloud_spotanim is a billowing cloud silhouette, 264 vertices of ONE colour
+// (hsl16 7700, a dark brown), which is what makes this a single recolour pair rather than six.
+// It was chosen by rendering every cloud-ish graphic in the build side by side - the smoke puffs
+// are a single teardrop, smoke_barrage_impact is scattered particles, dustdevil_dust is three
+// spheres - and it is the only one shaped like a cloud.
+//
+// 8386 is the RGB15 that converts to the brown the model stores; 2473 converts to hue 28,
+// saturation 5, lightness 30 - a dark swamp green in the family of Zulrah's own (hue 29 at 16-28)
+// rather than a lit crystal. Not every HSL has an RGB15 that converts to it, which is why the
+// value is this one and not a rounder number.
+//
+// No ambient: the last mesh inherited ambient=30 and glowed. A cloud on a dark platform should
+// not be the brightest thing on it.
+model=spot_mole_mud_cloud_spotanim
 anim=zulrah_venom_cloud
-resizeh=512
-resizev=170
-recol1s=4033
-recol1d=4454
-recol2s=14296
-recol2d=8747
-recol3s=1014
-recol3d=5543
-recol4s=31774
-recol4d=5548
-recol5s=1743
-recol5d=3333
-recol6s=883
-recol6d=3398
-
+resizeh=320
+resizev=140
+recol1s=8386
+recol1d=2473
 [zulrah_snakeling_orb]
 // OSRS spotanim 1047 - the white orb that puts a snakeling on the floor beside you.
 model=spot_zulrah_snakeling_orb
