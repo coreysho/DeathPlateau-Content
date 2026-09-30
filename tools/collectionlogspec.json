@@ -1,6 +1,6 @@
 {
  "_what": "Every page of the collection log: the tabs, the entries on each, the items on each entry and the counters it shows. tools/gencollectionlog.py writes the dbrows, the interface and the code that fills it from this file, and refuses an obj name that no .obj config defines. The model is Old School's collection log (https://oldschool.runescape.wiki/w/Collection_log), cut down to what this build can actually drop or hand out.",
- "_items_are_global": "The log is keyed by ITEM, not by page, the way Old School's is: an item that sits on two pages (dragon pickaxe on the Dagannoth Kings and the Rare Drop Table, dragon chainbody on the Kalphite Queen and Slayer) is obtained on both the moment it is obtained once. So adding an item to a page never needs a new hook if something already logs it, and removing one never loses a player's record of it.",
+ "_items_are_global": "The log is keyed by ITEM, not by page, the way Old School's is: an item that sits on two pages (dragon pickaxe on the Kalphite Queen, Chaos Elemental and King Black Dragon pages, dragon chainbody on the Kalphite Queen and Slayer) is obtained on both the moment it is obtained once. So adding an item to a page never needs a new hook if something already logs it, and removing one never loses a player's record of it.",
  "_what_logs_an_item": "An item is logged only where it is DROPPED or HANDED OUT - a drop table, a casket, a chest, a shop that pays in tickets - by a call to ~collection_log_add. Picking something up does not log it, so a traded or found item does not count, as in Old School. See scripts/collection_log/scripts/collection_log.rs2 for the list of call sites; a new item whose source is not one of them needs a ~collection_log_add line beside the obj_add / inv_add that gives it.",
  "_counters": "boss:<key> is a kill count from tools/bosskillspec.json (read with ~boss_kill_get). Any other name is one of the log's own perm counters, declared under own_counters below; the generator gives each a varp and an id.",
  "capacity": 400,
@@ -31,8 +31,8 @@
      "key": "chaos_elemental",
      "name": "Chaos Elemental",
      "counters": [["Chaos Elemental kills", "boss:chaos_elemental"]],
-     "_items": "No pet and no dragon pickaxe here - this build's table has neither.",
-     "items": ["dragon_2h_sword"]
+     "_items": "No pet here - this build's table has none. The dragon pickaxe is a 1/256 roll of its own, see drop_tables/scripts/chaos_elemental.rs2.",
+     "items": ["dragon_2h_sword", "dragon_pickaxe"]
     },
     {
      "key": "zilyana",
@@ -47,7 +47,7 @@
      "counters": [["Rex kills", "boss:dag_rex"], ["Prime kills", "boss:dag_prime"], ["Supreme kills", "boss:dag_supreme"]],
      "items": ["bosspet_dagannoth_prime_item", "bosspet_dagannoth_supreme_item", "bosspet_dagannoth_rex_item",
                "berzerker_ring", "ranger_ring", "seer_ring", "warrior_ring",
-               "dragon_axe", "daganoth_cave_magic_shortbow", "mud_battlestaff", "dragon_pickaxe"]
+               "dragon_axe", "daganoth_cave_magic_shortbow", "mud_battlestaff"]
     },
     {
      "key": "fight_caves",
@@ -73,14 +73,14 @@
      "key": "kq",
      "name": "Kalphite Queen",
      "counters": [["Kalphite Queen kills", "boss:kq"]],
-     "items": ["bosspet_kalphite_queen_item", "kq_head", "dragon_chainbody"]
+     "items": ["bosspet_kalphite_queen_item", "kq_head", "dragon_chainbody", "dragon_pickaxe"]
     },
     {
      "key": "kbd",
      "name": "King Black Dragon",
      "counters": [["King Black Dragon kills", "boss:kbd"]],
-     "_items": "Only the pet: this build has no KBD heads and no draconic visage.",
-     "items": ["bosspet_kbd_item"]
+     "_items": "No KBD heads and no draconic visage in this build, so the pet and the 1/1,000 dragon pickaxe are all there is.",
+     "items": ["bosspet_kbd_item", "dragon_pickaxe"]
     },
     {
      "key": "kraken",

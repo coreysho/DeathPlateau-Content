@@ -8,6 +8,15 @@ if (npc_findhero = ^false) {
     return;
 }
 
+// The dragon pickaxe, 1/256, its own roll before the random(512) cascade rather than a band in
+// it - every threshold in that cascade is a calibrated 512th and inserting a band would shift all
+// of them, and in OSRS the pickaxe is a separate roll on top of the table rather than one of its
+// slots. Rate from https://oldschool.runescape.wiki/w/Dragon_pickaxe : Chaos Elemental, 1, 1/256.
+if (random(256) = 0) {
+    obj_add(npc_coord, dragon_pickaxe, 1, ^lootdrop_duration);
+    ~broadcast_drop(dragon_pickaxe); // the broadcast is also the collection log's way in
+}
+
 def_int $dropint = random(512);
 if ($dropint < 97) {
     obj_add(npc_coord, dragon_bones, 1, ^lootdrop_duration);
