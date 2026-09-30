@@ -355,6 +355,17 @@ name=Flowers
 model=loc474_16731
 
 [loc474_16732]
+// NOT WIRED. This ladder does not land on the tile it stands on: its other half is one
+// tile away rather than directly above or below, and WHICH way varies by placement -
+// (2078,3910) pairs with (2078,3909,1) to the south, (2104,3905) with (2105,3905,1) to
+// the east. The _ladder_up / _ladder_down categories say "same tile, one level" and
+// putting this on them teleported players into the wall between the two halves.
+//
+// It needs an angle-aware trigger of its own, like shipladder_angled in
+// ladders+stairs/scripts/ladders.rs2, which switches on loc_angle and steps out in the
+// direction the ladder faces. Until then it does nothing, which is where it started
+// and is better than a wall. The loc474_16735 / loc474_16736 pair IS same-tile and
+// stays wired.
 // rev 474 loc 16732 (import474map.py)
 name=Stairs
 model=loc474_16732
@@ -363,9 +374,19 @@ sharelight=yes
 mapscene=7
 forceapproach=south
 op1=Climb-down
-category=ladder_down
 
 [loc474_16733]
+// NOT WIRED. This ladder does not land on the tile it stands on: its other half is one
+// tile away rather than directly above or below, and WHICH way varies by placement -
+// (2078,3910) pairs with (2078,3909,1) to the south, (2104,3905) with (2105,3905,1) to
+// the east. The _ladder_up / _ladder_down categories say "same tile, one level" and
+// putting this on them teleported players into the wall between the two halves.
+//
+// It needs an angle-aware trigger of its own, like shipladder_angled in
+// ladders+stairs/scripts/ladders.rs2, which switches on loc_angle and steps out in the
+// direction the ladder faces. Until then it does nothing, which is where it started
+// and is better than a wall. The loc474_16735 / loc474_16736 pair IS same-tile and
+// stays wired.
 // rev 474 loc 16733 (import474map.py)
 name=Stairs
 model=loc474_16733
@@ -374,9 +395,19 @@ sharelight=yes
 mapscene=7
 forceapproach=west
 op1=Climb-down
-category=ladder_down
 
 [loc474_16734]
+// NOT WIRED. This ladder does not land on the tile it stands on: its other half is one
+// tile away rather than directly above or below, and WHICH way varies by placement -
+// (2078,3910) pairs with (2078,3909,1) to the south, (2104,3905) with (2105,3905,1) to
+// the east. The _ladder_up / _ladder_down categories say "same tile, one level" and
+// putting this on them teleported players into the wall between the two halves.
+//
+// It needs an angle-aware trigger of its own, like shipladder_angled in
+// ladders+stairs/scripts/ladders.rs2, which switches on loc_angle and steps out in the
+// direction the ladder faces. Until then it does nothing, which is where it started
+// and is better than a wall. The loc474_16735 / loc474_16736 pair IS same-tile and
+// stays wired.
 // rev 474 loc 16734 (import474map.py)
 name=Stairs
 model=loc474_16734
@@ -385,7 +416,6 @@ sharelight=yes
 mapscene=7
 forceapproach=north
 op1=Climb-up
-category=ladder_up
 
 [loc474_16735]
 // rev 474 loc 16735 (import474map.py)
