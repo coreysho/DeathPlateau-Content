@@ -1,0 +1,25 @@
+// The iron spit, and the one thing it is for.
+//
+// The spit is smithed from an iron bar at 17 Smithing and then, before this, did nothing at all -
+// the playtest report's "iron spit - nothing interesting happens". Its use is cooking: thread raw
+// meat onto it and the skewered meat goes on a fire. Raw rabbit was the other half of the same
+// dead end - it drops from every rabbit and the charter shop stocks twenty of them, and there was
+// no way to cook one. Both the skewered rabbit and the roast rabbit have been sitting in the 377
+// cache since 20 February 2006, models and all, waiting for these few lines.
+//
+// The spit is a tool, not an ingredient: it stays in the inventory, so one spit does a whole
+// trip's worth of rabbits. https://oldschool.runescape.wiki/w/Iron_spit
+//
+// The cooking half is an ordinary cooking_generic row (skill_cooking/configs/cooking_source), so
+// the skewered rabbit goes through the same burn curve, batch loop and Cook-X window as any other
+// food, and only over a fire - a range has nowhere to rest a spit. Eating the roast needs nothing
+// new: the opheld audit already gave it a handler and a 7-hitpoint heal, and the Hitpoints guide
+// has listed it all along. The food simply could not be reached.
+[opheldu,spit_iron]
+switch_obj(last_useitem) {
+    case raw_rabbit :
+        inv_del(inv, raw_rabbit, 1);
+        inv_add(inv, spit_skewered_rabbit_meat, 1);
+        mes("You skewer the rabbit on the iron spit.");
+    case default : ~displaymessage(^dm_default);
+}

@@ -586,3 +586,18 @@ data=levelrequired,20
 data=experience,520
 data=successchance,1,1
 data=successmessage,You boil the nettles into a bowl of tea.
+
+// Raw rabbit threaded onto an iron spit (skill_cooking/scripts/spit_roast). Old School: Cooking 16,
+// 72.5 xp, and only over a fire - a range has nowhere to rest a spit, hence cantcookmessage_range.
+// The burn curve is the trout's: roast rabbit unlocks one level above trout for 2.5 xp more, and
+// the two burn at much the same rate. https://oldschool.runescape.wiki/w/Roast_rabbit
+[cooking_generic_skewered_rabbit]
+table=cooking_generic
+data=uncooked,spit_skewered_rabbit_meat
+data=cooked,spit_roasted_rabbit_meat
+data=burnt,spit_burned_rabbit_meat
+data=levelrequired,16
+data=experience,725
+data=successchance,88,432
+data=cantcookmessage_range,You need an open fire to roast the rabbit on the spit.
+data=successmessage,You roast the rabbit over the fire.

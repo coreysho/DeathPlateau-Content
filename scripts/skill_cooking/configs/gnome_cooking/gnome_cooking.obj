@@ -93,6 +93,10 @@ model=obj_toads_legs
 2dxan=340
 weight=150g
 param=gnome_cooking_ingredient,^true
+// Toad's legs are the agility potion's secondary as well as a gnome ingredient. ~get_brew_struct
+// finds a recipe by reading brew_potion_struct off one of the two items, and toadflax potion (unf)
+// has none - so without this the whole potion was unreachable from either direction.
+param=brew_potion_struct,3dose1agility
 category=gnome_premade_and_toadlegs_kingworm
 
 [equa_toads_legs]

@@ -55,13 +55,18 @@ switch_obj(last_useitem) {
     case default : ~displaymessage(^dm_default);
 }
 
+// Toad's legs belong to Herblore too: they are the agility potion's secondary. Declaring
+// [opheldu,toads_legs] here takes the click away from [opheldu,toadflaxvial], because the engine
+// looks the trigger up on the target obj first - so this has to hand the leftovers back the way
+// [opheldu,snape_grass] does in cakes.rs2. ~attempt_brew_potion says "Nothing interesting happens"
+// itself when there is no recipe, so nothing else is lost.
 [opheldu,toads_legs]
 switch_obj(last_useitem) {
     case gnome_spice : @opheldu_make_gnome_food(spicy_toads_legs, "You add the gnome spice to the toad legs.");
     case equa_leaves : @opheldu_make_gnome_food(equa_toads_legs, "You add the equa leaves to the toad legs.");
     case half_baked_bowl : @add_bowl_ingredient(last_item);
     case half_baked_crunchy : @add_crunchies_ingredient(last_item);
-    case default : ~displaymessage(^dm_default);
+    case default : ~attempt_brew_potion(last_useslot, last_slot);
 }
 
 [opheldu,lemon_slices] @finish_cocktail(last_useitem, last_item);
