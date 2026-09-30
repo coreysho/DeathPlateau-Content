@@ -596,8 +596,13 @@ val=1,^zulrah_pos_south
 val=2,^zulrah_pos_west
 val=3,^zulrah_pos_east
 
-// One dive animation per colour - OSRS seqs 5071/5072/5073, three 21-frame animations on
-// the one frame group, which is what a per-colour animation looks like.
+// THERE IS NO DIVE PER COLOUR. 5071, 5072 and 5073 are 21 frames of the one frame group because
+// they are ONE motion: 5071 and 5073 list those frames in the same order and 5072 lists them in
+// exactly the reverse, and rendering all three says 5072 sinks while the other two surface. So all
+// three rows below now carry the same dive, and zulrah_dive.seq holds the whole derivation. The
+// enum is kept rather than removed because a name in content/pack cannot be withdrawn - PackFile.ts
+// throws when a packed name is not found in any config - and because if a colour ever does get its
+// own dive, this is where it goes.
 [zulrah_dive_anim]
 inputtype=npc
 outputtype=seq
@@ -606,15 +611,14 @@ val=zulrah,zulrah_dive_serpentine
 val=zulrah_magma,zulrah_dive_magma
 val=zulrah_tanzanite,zulrah_dive_tanzanite
 
-// HOW MANY TICKS EACH COLOUR STAYS UNDER, which is the length of that colour's own dive animation
-// rounded up to a whole tick. Read off the newest OSRS cache with tools/models/osrsseq.py: seq 5071
-// (serpentine) is 21 frames at delay 5 = 105 client cycles = 3.5 ticks, seq 5072 (magma) is 60
-// cycles = 2 ticks and seq 5073 (tanzanite) is 60 cycles = 2 ticks. zulrah_fight.rs2 used a flat
-// four for all three, so the red and the blue forms finished diving and then sat there.
+// HOW LONG THE DIVE TAKES, which is the length of the dive animation rounded up to a whole tick:
+// OSRS 5072 is 21 frames at delays 2 and 3, 60 client cycles, 2 ticks. One number three times,
+// because it is one animation three times. The 4 that used to be here for the green form was
+// 5071's length, and 5071 is the rise.
 [zulrah_dive_ticks]
 inputtype=npc
 outputtype=int
-default=4
-val=zulrah,4
+default=2
+val=zulrah,2
 val=zulrah_magma,2
 val=zulrah_tanzanite,2

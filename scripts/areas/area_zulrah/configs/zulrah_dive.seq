@@ -1,86 +1,46 @@
 // Animations converted from the OSRS cache by tools/models/animconvosrs.py.
 // They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
 // only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+//
+// ---------------------------------------------------------------------------------------------
+// THE DIVE AND THE RISE WERE THE WRONG WAY ROUND, AND ONE OF THEM WAS AN ATTACK
+// ---------------------------------------------------------------------------------------------
+// The owner's words after the last round: "it appears they dont have the animations of leaving one
+// spot and appearing at the other". They were being played. They were the wrong animations.
+//
+// Zulrah has exactly ten sequences in the OSRS cache - every seq whose frames come from one of the
+// six frame groups Zulrah's own seqs use (5693 to 5698). Three of them, 5071, 5072 and 5073, are
+// all 21 frames of frame group 5696, and 5071 and 5073 list those 21 frames in THE SAME ORDER
+// while 5072 lists them in EXACTLY THE REVERSE ORDER:
+//
+//   5071  8,11,9,10,6,4,14,7,15,3,2,13,1,12,5,17,16,18,19,21,20   105 cycles (3.5 ticks)
+//   5073  8,11,9,10,6,4,14,7,15,3,2,13,1,12,5,17,16,18,19,21,20    60 cycles (2 ticks)
+//   5072  20,21,19,18,16,17,5,12,1,13,2,3,15,7,14,4,6,10,9,11,8    60 cycles (2 ticks)
+//
+// which is one motion and its reverse, not three dives. Rendered on Zulrah's own mesh with
+// tools/models/posepreview.py at a FIXED camera (the stock preview refits the zoom per frame, which
+// hides exactly the vertical travel a dive is made of), 5071 goes from nothing on the tile to the
+// full standing pose and 5072 goes from the full standing pose down to nothing. So:
+//
+//   5072 is the DIVE       - it sinks
+//   5071 is the RISE       - it surfaces, slowly
+//   5073 is the same rise at 2 ticks instead of 3.5, and is not used here: one speed of surfacing
+//        is enough, and the slower one is the one you can read.
+//
+// What was here before had 5071 as the green form's dive and 5073 as the blue form's dive - which
+// means two of the three colours "dived" by playing a RISE, whose first frame is the snake not
+// there at all. On screen that is the snake blinking out and re-inflating on the spot it is about
+// to leave, which is precisely "no animation of leaving one spot". And the seq named zulrah_rise
+// was OSRS 5068, which is not a rise at all: it is frame group 5694, the SPIT, and it is now in
+// zulrah.seq under the name it earned.
+//
+// ONE SNAKE, ONE DIVE. There are three dive names below and they now hold the same animation,
+// because the cache has one dive for all three colours - Zulrah is one mesh that recolours. The
+// three names survive because a name in content/pack cannot be withdrawn (PackFile.ts throws when a
+// packed name is not found in any config), so they are kept and pointed at the truth instead.
 
 [zulrah_rise]
-// OSRS seq 5068
-priority=6
-duplicatebehaviour=reset
-frame1=anim_osrs_5694_1
-delay1=5
-frame2=anim_osrs_5694_7
-delay2=5
-frame3=anim_osrs_5694_3
-delay3=5
-frame4=anim_osrs_5694_8
-delay4=5
-frame5=anim_osrs_5694_5
-delay5=5
-frame6=anim_osrs_5694_6
-delay6=5
-frame7=anim_osrs_5694_11
-delay7=5
-frame8=anim_osrs_5694_9
-delay8=5
-frame9=anim_osrs_5694_4
-delay9=5
-frame10=anim_osrs_5694_14
-delay10=5
-frame11=anim_osrs_5694_2
-delay11=5
-frame12=anim_osrs_5694_15
-delay12=5
-frame13=anim_osrs_5694_13
-delay13=5
-frame14=anim_osrs_5694_10
-delay14=5
-frame15=anim_osrs_5694_12
-delay15=5
-frame16=anim_osrs_5694_10
-delay16=5
-frame17=anim_osrs_5694_13
-delay17=5
-frame18=anim_osrs_5694_15
-delay18=5
-frame19=anim_osrs_5694_2
-delay19=5
-frame20=anim_osrs_5694_15
-delay20=5
-frame21=anim_osrs_5694_13
-delay21=5
-frame22=anim_osrs_5694_10
-delay22=5
-frame23=anim_osrs_5694_12
-delay23=5
-frame24=anim_osrs_5694_10
-delay24=5
-frame25=anim_osrs_5694_13
-delay25=5
-frame26=anim_osrs_5694_15
-delay26=5
-frame27=anim_osrs_5694_2
-delay27=5
-frame28=anim_osrs_5694_15
-delay28=5
-frame29=anim_osrs_5694_13
-delay29=5
-frame30=anim_osrs_5694_10
-delay30=5
-frame31=anim_osrs_5694_12
-delay31=5
-frame32=anim_osrs_5694_10
-delay32=5
-frame33=anim_osrs_5694_13
-delay33=5
-frame34=anim_osrs_5694_15
-delay34=5
-frame35=anim_osrs_5694_16
-delay35=5
-frame36=anim_osrs_5694_2
-delay36=5
-
-[zulrah_dive_serpentine]
-// OSRS seq 5071
+// OSRS seq 5071 - THE RISE. 105 cycles, 3.5 ticks; ^zulrah_rise_ticks is 4 to cover it.
 priority=9
 frame1=anim_osrs_5696_8
 delay1=5
@@ -125,8 +85,55 @@ delay20=5
 frame21=anim_osrs_5696_20
 delay21=5
 
+[zulrah_dive_serpentine]
+// OSRS seq 5072 - THE DIVE, for every colour. See the header for how it was told from 5071.
+loops=1
+priority=8
+frame1=anim_osrs_5696_20
+delay1=2
+frame2=anim_osrs_5696_21
+delay2=2
+frame3=anim_osrs_5696_19
+delay3=2
+frame4=anim_osrs_5696_18
+delay4=3
+frame5=anim_osrs_5696_16
+delay5=3
+frame6=anim_osrs_5696_17
+delay6=3
+frame7=anim_osrs_5696_5
+delay7=3
+frame8=anim_osrs_5696_12
+delay8=3
+frame9=anim_osrs_5696_1
+delay9=3
+frame10=anim_osrs_5696_13
+delay10=3
+frame11=anim_osrs_5696_2
+delay11=3
+frame12=anim_osrs_5696_3
+delay12=3
+frame13=anim_osrs_5696_15
+delay13=3
+frame14=anim_osrs_5696_7
+delay14=3
+frame15=anim_osrs_5696_14
+delay15=3
+frame16=anim_osrs_5696_4
+delay16=3
+frame17=anim_osrs_5696_6
+delay17=3
+frame18=anim_osrs_5696_10
+delay18=3
+frame19=anim_osrs_5696_9
+delay19=3
+frame20=anim_osrs_5696_11
+delay20=3
+frame21=anim_osrs_5696_8
+delay21=3
+
 [zulrah_dive_magma]
-// OSRS seq 5072
+// OSRS seq 5072 - THE DIVE, for every colour. See the header for how it was told from 5071.
 loops=1
 priority=8
 frame1=anim_osrs_5696_20
@@ -173,47 +180,48 @@ frame21=anim_osrs_5696_8
 delay21=3
 
 [zulrah_dive_tanzanite]
-// OSRS seq 5073
-priority=9
-frame1=anim_osrs_5696_8
-delay1=3
-frame2=anim_osrs_5696_11
-delay2=3
-frame3=anim_osrs_5696_9
-delay3=3
-frame4=anim_osrs_5696_10
+// OSRS seq 5072 - THE DIVE, for every colour. See the header for how it was told from 5071.
+loops=1
+priority=8
+frame1=anim_osrs_5696_20
+delay1=2
+frame2=anim_osrs_5696_21
+delay2=2
+frame3=anim_osrs_5696_19
+delay3=2
+frame4=anim_osrs_5696_18
 delay4=3
-frame5=anim_osrs_5696_6
+frame5=anim_osrs_5696_16
 delay5=3
-frame6=anim_osrs_5696_4
+frame6=anim_osrs_5696_17
 delay6=3
-frame7=anim_osrs_5696_14
+frame7=anim_osrs_5696_5
 delay7=3
-frame8=anim_osrs_5696_7
+frame8=anim_osrs_5696_12
 delay8=3
-frame9=anim_osrs_5696_15
+frame9=anim_osrs_5696_1
 delay9=3
-frame10=anim_osrs_5696_3
+frame10=anim_osrs_5696_13
 delay10=3
 frame11=anim_osrs_5696_2
 delay11=3
-frame12=anim_osrs_5696_13
+frame12=anim_osrs_5696_3
 delay12=3
-frame13=anim_osrs_5696_1
+frame13=anim_osrs_5696_15
 delay13=3
-frame14=anim_osrs_5696_12
+frame14=anim_osrs_5696_7
 delay14=3
-frame15=anim_osrs_5696_5
+frame15=anim_osrs_5696_14
 delay15=3
-frame16=anim_osrs_5696_17
+frame16=anim_osrs_5696_4
 delay16=3
-frame17=anim_osrs_5696_16
+frame17=anim_osrs_5696_6
 delay17=3
-frame18=anim_osrs_5696_18
+frame18=anim_osrs_5696_10
 delay18=3
-frame19=anim_osrs_5696_19
-delay19=2
-frame20=anim_osrs_5696_21
-delay20=2
-frame21=anim_osrs_5696_20
-delay21=2
+frame19=anim_osrs_5696_9
+delay19=3
+frame20=anim_osrs_5696_11
+delay20=3
+frame21=anim_osrs_5696_8
+delay21=3

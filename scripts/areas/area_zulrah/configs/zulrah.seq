@@ -257,3 +257,122 @@ frame11=anim_osrs_3188_11
 delay11=21
 frame12=anim_osrs_3188_12
 delay12=21
+
+[zulrah_venom_spray]
+// OSRS seq 5068 - THE VENOM SPRAY, and the barrage's own animation. It used to be OSRS 5069, the
+// single spit, which is why the owner's "attack animations are a bit off" covered this one too: a
+// barrage of nine clouds was thrown with the same two-tick flick the snake uses for one orb.
+//
+// 5068 and 5069 are the same frame group (5694, the mouth) and 5068's first fifteen frames ARE
+// 5069, frame for frame: 1,7,3,8,5,6,11,9,4,14,2,15,13,10,12. Where 5069 stops, 5068 holds the
+// jaws open and oscillates - 10,12,10,13,15,2,15,13 three times over - for six ticks in all.
+// Rendered on Zulrah's mesh (tools/models/posepreview.py, npc 2042), 5069 is a rear-back and a
+// lunge that closes, and 5068 is the same lunge with the mouth held wide and spraying. That is the
+// difference between spitting one orb and filling a platform, and the cache has one of each.
+priority=6
+duplicatebehaviour=reset
+frame1=anim_osrs_5694_1
+delay1=5
+frame2=anim_osrs_5694_7
+delay2=5
+frame3=anim_osrs_5694_3
+delay3=5
+frame4=anim_osrs_5694_8
+delay4=5
+frame5=anim_osrs_5694_5
+delay5=5
+frame6=anim_osrs_5694_6
+delay6=5
+frame7=anim_osrs_5694_11
+delay7=5
+frame8=anim_osrs_5694_9
+delay8=5
+frame9=anim_osrs_5694_4
+delay9=5
+frame10=anim_osrs_5694_14
+delay10=5
+frame11=anim_osrs_5694_2
+delay11=5
+frame12=anim_osrs_5694_15
+delay12=5
+frame13=anim_osrs_5694_13
+delay13=5
+frame14=anim_osrs_5694_10
+delay14=5
+frame15=anim_osrs_5694_12
+delay15=5
+frame16=anim_osrs_5694_10
+delay16=5
+frame17=anim_osrs_5694_13
+delay17=5
+frame18=anim_osrs_5694_15
+delay18=5
+frame19=anim_osrs_5694_2
+delay19=5
+frame20=anim_osrs_5694_15
+delay20=5
+frame21=anim_osrs_5694_13
+delay21=5
+frame22=anim_osrs_5694_10
+delay22=5
+frame23=anim_osrs_5694_12
+delay23=5
+frame24=anim_osrs_5694_10
+delay24=5
+frame25=anim_osrs_5694_13
+delay25=5
+frame26=anim_osrs_5694_15
+delay26=5
+frame27=anim_osrs_5694_2
+delay27=5
+frame28=anim_osrs_5694_15
+delay28=5
+frame29=anim_osrs_5694_13
+delay29=5
+frame30=anim_osrs_5694_10
+delay30=5
+frame31=anim_osrs_5694_12
+delay31=5
+frame32=anim_osrs_5694_10
+delay32=5
+frame33=anim_osrs_5694_13
+delay33=5
+frame34=anim_osrs_5694_15
+delay34=5
+frame35=anim_osrs_5694_16
+delay35=5
+frame36=anim_osrs_5694_2
+delay36=5
+
+[zulrah_flinch]
+// OSRS seq 5808 - the last of Zulrah's ten sequences, and the one no previous round had a name for.
+//
+// WHAT IT IS. Nine frames of its own five-frame group (5697), thirty cycles - one tick exactly - no
+// priority, no loop, and the frame list is a palindrome: 4,1,2,5,3,5,2,1,4. Rendered on the snake's
+// own mesh it is the head staying exactly where it is while the jaw gapes wide and closes again.
+// Nothing travels, nothing winds up. That is a BLOCK: short, symmetric, in place, and the one thing
+// every attackable npc needs that an OSRS npc record cannot carry, because OSRS has no block-anim
+// field at all - it is script-driven there, which is exactly why this seq was left over.
+//
+// IT CANNOT INTERRUPT AN ATTACK, which is what makes wiring it safe. The client only takes a new
+// animation when its priority is at least the one already playing (Client.getNpcPosExtended, the
+// 0x2 branch), and this has none while the spit is 6, the dive 8 and the rise 9. So it plays when
+// the snake is between attacks and is thrown away when it is not.
+frame1=anim_osrs_5697_4
+delay1=3
+frame2=anim_osrs_5697_1
+delay2=3
+frame3=anim_osrs_5697_2
+delay3=3
+frame4=anim_osrs_5697_5
+delay4=3
+frame5=anim_osrs_5697_3
+delay5=6
+frame6=anim_osrs_5697_5
+delay6=3
+frame7=anim_osrs_5697_2
+delay7=3
+frame8=anim_osrs_5697_1
+delay8=3
+frame9=anim_osrs_5697_4
+delay9=3

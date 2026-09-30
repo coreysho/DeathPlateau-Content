@@ -525,9 +525,12 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 //
 // -1 is the first tick of a cloud's life: "light on the tile that was packed into me".
 [proc,zulrah_venom_barrage](int $barrage)
-// The spit, named outright, for the reason ~zulrah_snakeling_orb gives: a barrage is spat whatever
-// colour the snake is wearing.
-npc_anim(osrs_seq_5069, 0);
+// THE SPRAY, not the spit. Named outright for the reason ~zulrah_snakeling_orb gives - a barrage is
+// spat whatever colour the snake is wearing - but it is OSRS seq 5068 now and not 5069. 5069 is the
+// two-tick flick that throws ONE orb; 5068 is the same lunge with the jaws held open for six ticks,
+// which is what filling a platform looks like. configs/zulrah.seq has the frame-for-frame proof
+// that one is the other held open.
+npc_anim(zulrah_venom_spray, 0);
 ~npc_set_attack_vars;
 // The slice of the fill this barrage is responsible for, and the ordering it reads: the phase's own
 // surfacing place, so the clouds land nearest the snake first and the same phase lands them on the
@@ -538,7 +541,12 @@ def_int $end = divide(multiply(add($k, 1), ^zulrah_cloud_fill_count), ^zulrah_cl
 def_int $row = multiply(enum(int, int, zulrah_phase_pos, %zulrah_phase), ^zulrah_cloud_stride);
 while ($slot < $end) {
     def_coord $at = ~zulrah_at(enum(int, coord, zulrah_cloud_fill, add($row, $slot)));
-    ~coord_projectile(npc_coord, $at, zulrah_venom_cloud, 40, 36, 32, 15, 0, 11, 5);
+    // THE ORBS THAT FLY AND THE CLOUD THAT LANDS ARE NOT THE SAME GRAPHIC, which is what the
+    // owner meant by "the venom clouds ... just dont appear to have the correct model". This is the
+    // flight: OSRS spotanim 1045, two dark-green orbs, which is 1044's ranged comet doubled. What
+    // lights on the tile when they arrive is [queue,zulrah_cloud] below, and that is a different
+    // spotanim entirely now - see configs/zulrah_gfx.spotanim.
+    ~coord_projectile(npc_coord, $at, zulrah_venom_orbs, 40, 36, 32, 15, 0, 11, 5);
     // The cloud lights when the orbs get there, not when they leave.
     queue(zulrah_cloud, ^zulrah_cloud_arrive, sub(0, add(~zulrah_pack_tile($at), 1)));
     $slot = add($slot, 1);
@@ -561,12 +569,16 @@ if ($packed < 0) {
 }
 def_coord $at = ~zulrah_unpack_tile($tile);
 // THE GRAPHIC IS RE-PLAYED EVERY TICK, and it has to be. A MapSpotAnim plays its sequence once and
-// the client then drops it, and zulrah_venom_cloud is six frames at delay 5 - thirty 20ms client
-// cycles, which is exactly one 600ms tick (zulrah_gfx.seq says why it was re-timed). Re-playing it
-// on every tick of the cloud's life is therefore one continuous cloud rather than a flicker: the
-// previous graphic ends on the tick boundary the next one starts on. Re-playing it every fifth tick,
-// which is what this did, showed the cloud for a quarter of a second in every three and read in game
-// as no cloud at all.
+// the client then drops it, and zulrah_venom_cloud is nine frames re-timed to thirty 20ms client
+// cycles, which is exactly one 600ms tick (zulrah_gfx.seq says why). Re-playing it on every tick of
+// the cloud's life is therefore one continuous cloud rather than a flicker: the previous graphic
+// ends on the tick boundary the next one starts on. Re-playing it every fifth tick, which is what
+// this did two rounds ago, showed the cloud for a quarter of a second in every three and read in
+// game as no cloud at all.
+//
+// AND IT IS A CLOUD NOW. Until this round zulrah_venom_cloud was OSRS spotanim 1045 - the barrage's
+// two orbs - so what lay on the platform for twenty-five ticks was a pair of projectiles. It is
+// OSRS 1043, a green gas puff, scaled up to cover the 3x3 this tile damages.
 spotanim_map(zulrah_venom_cloud, $at, 0, 0);
 // "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
 // The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
