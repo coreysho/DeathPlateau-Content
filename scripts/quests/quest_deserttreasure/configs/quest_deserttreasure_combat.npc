@@ -668,6 +668,12 @@ recol6s=7298
 recol6d=2114
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
+// AUDIT 2026-09-29 (rs2check rule 20): he declared op2 and nothing else, so the [opnpc1] handler in
+// scripts/quest_deserttreasure.rs2 was unreachable - and that handler is not just three lines of
+// flavour, it is the whole ambush. He has no huntmode, so nothing else makes him attack: without
+// Talk-to he was a level 95 "Stranger" standing in the desert waiting to be hit first. Talk-to over
+// Attack is how the tree already orders a talkable enemy - see wormbrain and the armoured goblins.
+op1=Talk-to
 op2=Attack
 vislevel=95
 head1=npc_pirate1_head

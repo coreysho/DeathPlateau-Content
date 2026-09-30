@@ -290,6 +290,46 @@ return(true);
 // =========================================================================== Zavistic Rarve
 // His own [opnpc1,zogre_human_zavistic_rarve] is in quests/quest_zogre/scripts/zogre_npcs.rs2 and
 // jumps here when this quest wants him, the same way Reldo's does for A Tail of Two Cats.
+
+// AUDIT 2026-09-29: the hook used to be a plain range check, `%handsand_quest >= ^handsand_rarve &
+// < ^handsand_complete`, which held Rarve for every stage from 30 to 79. Rarve is also the only
+// person who can identify Brentle Vahn's prism for Zogre Flesh Eaters and the only source of the
+// ogre transformation potion, so a player who parked this quest halfway could not get past that
+// step - and could not get the potion replaced if they lost it.
+//
+// ^handsand_kit and ^handsand_ready are the two stages this proc releases him at. They are the ones
+// where the outstanding work is somewhere else entirely - a rose lens from Betty in Port Sarim, and
+// Sandy's coffee mug in Brimhaven - and the quest itself sends both of them to the same
+// @handsand_rarve_waiting, whose only lines are "get a lens" and "the orb is ready". The other
+// three stages are kept because each is a thing Rarve himself does: he takes the hand and the rota
+// at ^handsand_rarve, he takes the head and hands over the orb, the serum and the scroll at
+// ^handsand_rotas, and he plays the recording and ends the quest at ^handsand_confession. Each of
+// those is also one visit long, so no player is parked on one the way they can be parked on a lens.
+//
+// The exception inside the two released stages is that @handsand_rarve_waiting is also where a lost
+// orb or a lost vial of serum is replaced, and nowhere else has either. The condition below is the
+// same one that label uses, so he keeps the conversation whenever he would actually hand something
+// over - the shape ~ratcatch_gertrude_wants uses for Gertrude's weed pot.
+//
+// "Released" only means outranked, not silenced: the Zogre Flesh Eaters handler ends by jumping
+// back here once it has had its turn, so the lens line is still what a player hears when that quest
+// has nothing to say.
+[proc,handsand_rarve_wants]()(boolean)
+switch_int (%handsand_quest) {
+    case ^handsand_rarve : return(true);
+    case ^handsand_rotas : return(true);
+    case ^handsand_confession : return(true);
+    case ^handsand_kit, ^handsand_ready :
+        if (inv_total(inv, handsand_orb_storage) = 0) {
+            return(true);
+        }
+        if (inv_total(inv, handsand_truthserum) = 0 & %handsand_coffee_multi = ^handsand_mug_present) {
+            return(true);
+        }
+        return(false);
+}
+return(false);
+
 [label,handsand_rarve_talk]
 // AUDIT 2026-09-24: the rotas were only compared at Sandy's desk; compare them here too.
 ~handsand_check_rotas;
