@@ -1,0 +1,157 @@
+// The Rellekka coast rock crabs (npc 1265-1268), migrated out of the raw 377 cache dump
+// (content/scripts/_unpack/377/all.npc) so they can carry combat stats and a reveal. Everything
+// above "op2=Attack" on each block is the untouched raw cache value; everything from there down is
+// new. Corey (2026-09-30): "rock crabs arent attackable" and "rock crabs arent agressive & dont
+// become active when approached".
+//
+// BOTH COMPLAINTS ARE ONE BUG. Only the DORMANT forms are ever placed on the map - every one of the
+// 71 rock crab spawns in the build (m41_58 and m42_58 on the Rellekka coast, plus m38_158) is
+// horror_rockcrab_inactive or horror_rockcrab_small_inactive, and horror_rockcrab/_small are placed
+// in no .jm2 anywhere. So the only thing a player can ever see is the "Rocks" form, and the raw
+// cache gives that form NO ops at all: nothing to right-click, no Attack option, which is exactly
+// "not attackable". It also had no huntmode, so it could never notice a player walking past and had
+// no way to become the crab - "dont become active when approached". Same shape of bug as the Lunar
+// Isle Clan Guard (an npc with no ops is unclickable) and the Waterbirth Boulder/Rock.
+//
+// The real mechanic (https://oldschool.runescape.wiki/w/Rock_Crab, unchanged since 2005): a harmless
+// rocky outcrop that springs to life when a player walks right past it, attacks, and settles back
+// into a rock once it is left alone. all.seq carries the matching horror_crab_hide/_hide_ready and
+// horror_crab_reveal sequences, which is what confirms this is genuine built content rather than a
+// guess - the reveal animation exists and nothing in the repo ever played it.
+//
+// HOW THE REVEAL IS WIRED, and why NOT the way the Waterbirth Boulder does it. A hunt whose
+// find_newmode is a plain mode (aggressive_melee's, like cowardly's, is opplayer2) does NOT run an
+// [ai_queue1] trigger - Npc.consumeHuntTarget only dispatches to [ai_queueN] when find_newmode is
+// itself queue1-queue20, and otherwise just sets the interaction. So the changetype has to live in
+// [ai_opplayer2], which is the trigger the hunt actually reaches, and which is handed the hunted
+// player as its target. See scripts/rock_crabs.rs2. (The Waterbirth Boulder/Rock put theirs in
+// [ai_queue1] and so never fired - fixed there too, in
+// areas/area_waterbirth/scripts/dagannoth_maze_monsters.rs2.)
+
+[horror_rockcrab]
+name=Rock Crab
+desc=No one likes crabs...
+model1=npc_1265
+model2=npc_1265i2
+walkanim=horror_crab_walk
+readyanim=horror_crab_ready
+minimap=no
+op2=Attack
+vislevel=13
+// Stats are the wiki's own (Hitpoints 50, every combat level 1, no defence bonuses) - those are what
+// the attack and defence rolls are made from, and a level 1 attack on 50 hitpoints is why a rock crab
+// is famously slow to kill and almost never hits back hard.
+hitpoints=50
+attack=1
+strength=1
+defence=1
+magic=1
+ranged=1
+// The published max hit is 3, and Old School states a monster's max hit outright where this engine
+// derives it from strength (~npc_melee_maxhit -> ~combat_maxhit). With strength 1 the derivation
+// gives 1, so the gap is carried on the strength BONUS, which touches nothing but the max hit: 96 is
+// the exact value at which ((1 + 9) * (96 + 64) + 320) / 640 lands on 3. Same trick the raw cache
+// itself uses on the ice wolves (param=strengthbonus,8).
+param=strengthbonus,96
+param=damagetype,^crush_style
+param=attackrate,4
+// The bare attackrange CONFIG field, not just the param: the engine gates approach on
+// NpcType.attackrange (Npc.inApproachDistance), and param=attackrange is read by content only.
+attackrange=1
+param=attackrange,1
+param=attack_anim,horror_crab_attack
+param=defend_anim,horror_crab_defend
+// No horror_crab death sequence exists in all.seq (checked - only ready/walk/attack/defend/hide/
+// hide_ready/reveal/pincer_attack), so the death anim is left at the combat.param default rather
+// than guessing a name that does not exist.
+param=death_drop,null
+// A rock crab has nowhere to run to and never flees.
+param=retreat,0
+huntmode=aggressive_melee
+// huntrange 5: what it re-acquires at once it is already awake and its first target is gone. The
+// wiki gives no tile radius for this, so the number is a judgment call, not a sourced one. Same hunt
+// as the rock's, so an awake crab goes for anyone too.
+huntrange=5
+// wanderrange 0 so a crab that has finished a fight turns back into a rock ON ITS OWN ROCK rather
+// than a few tiles adrift of it; maxrange 8 (which would otherwise default to wanderrange + 2 = 2)
+// so it can still chase a player properly while the fight is on.
+wanderrange=0
+maxrange=8
+// The revert clock. timer is re-read from the type whenever the npc loses its target
+// (Npc.resetDefaults), which is exactly when a crab should start counting down to hiding again;
+// [ai_timer,horror_rockcrab] in scripts/rock_crabs.rs2 does the hiding.
+timer=50
+
+[horror_rockcrab_inactive]
+name=Rocks
+desc=A rocky outcrop.
+model1=npc_1265
+model2=npc_1265i2
+vislevel=hide
+walkanim=horror_crab_walk
+readyanim=horror_crab_hide_ready
+minimap=no
+// wanderrange 0: this engine defaults wanderrange to 5 (NpcType.ts), so with nothing set these
+// "rocks" were free to drift around the beach while disguised.
+wanderrange=0
+// huntrange 1 - "when approached" is one tile, the crab is under your feet before it moves.
+// aggressive_melee and NOT cowardly, which is what the Waterbirth Boulder was given: the engine reads
+// cowardly's check_nottoostrong=outside_wilderness as `player.combatLevel > type.vislevel * 2` against
+// the npc's CURRENT type (Npc.huntPlayers), and a disguised npc's vislevel is `hide`, which is 0 - so
+// the test is "combat level > 0" and no player alive is ever weak enough. A rock on cowardly can never
+// find anybody to wake for, however close they stand, and that is the second half of "dont become
+// active when approached". aggressive_melee is the cache's own mode (its comment there reads
+// "official"), identical to cowardly but for check_nottoostrong=off, which is also the right rule for
+// the monster: Old School lists rock crabs as aggressive always, with no combat level cut-off.
+huntmode=aggressive_melee
+huntrange=1
+
+[horror_rockcrab_small]
+name=Rock Crab
+desc=No one likes crabs...
+model1=npc_1265
+model2=npc_1265i2
+walkanim=horror_crab_walk
+readyanim=horror_crab_ready
+resizeh=84
+resizev=84
+minimap=no
+op2=Attack
+vislevel=13
+// The small crab is the same monster at 84% scale - same vislevel in the raw cache, so the same
+// stats, not a weaker variant.
+hitpoints=50
+attack=1
+strength=1
+defence=1
+magic=1
+ranged=1
+param=strengthbonus,96
+param=damagetype,^crush_style
+param=attackrate,4
+attackrange=1
+param=attackrange,1
+param=attack_anim,horror_crab_attack
+param=defend_anim,horror_crab_defend
+param=death_drop,null
+param=retreat,0
+huntmode=aggressive_melee
+huntrange=5
+wanderrange=0
+maxrange=8
+timer=50
+
+[horror_rockcrab_small_inactive]
+name=Rocks
+desc=A rocky outcrop.
+model1=npc_1265
+model2=npc_1265i2
+vislevel=hide
+walkanim=horror_crab_walk
+readyanim=horror_crab_hide_ready
+resizeh=84
+resizev=84
+minimap=no
+wanderrange=0
+huntmode=aggressive_melee
+huntrange=1

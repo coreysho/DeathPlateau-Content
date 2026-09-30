@@ -318,7 +318,13 @@ turnspeed=0
 // wiki - no exact radius given, this is a judgment call). See the header note for the changetype
 // wiring in dagannoth_maze_monsters.rs2.
 wanderrange=0
-huntmode=cowardly
+// Not cowardly: a disguised npc's vislevel is `hide` = 0, and the engine reads cowardly's
+// check_nottoostrong=outside_wilderness as `player.combatLevel > type.vislevel * 2` against the npc's
+// CURRENT type (Npc.huntPlayers), so the test is "combat level > 0" and every player alive fails it.
+// A disguise that only breaks for a combat level 0 player never breaks. aggressive_melee is the
+// cache's own mode, identical but for that one check. Same fault and same fix as the Rellekka rock
+// crabs (areas/area_relleka/configs/rock_crabs.npc).
+huntmode=aggressive_melee
 huntrange=1
 
 [dagannoth_rock_lobster_2x2_loc]
@@ -335,7 +341,7 @@ turnspeed=0
 minimap=no
 // Same disguise-reveal treatment as Boulder above, same reasoning.
 wanderrange=0
-huntmode=cowardly
+huntmode=aggressive_melee
 huntrange=1
 
 // --- Spinolyp (real name, raw cache) ---

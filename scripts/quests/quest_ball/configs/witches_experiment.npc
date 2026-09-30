@@ -1,0 +1,55 @@
+// The Witch's House experiment's fourth form, migrated out of the raw 377 cache dump
+// (content/scripts/_unpack/377/all.npc) so one field can be corrected. Every line below is the
+// untouched raw cache value except size, which the cache does not set at all.
+//
+// Corey (2026-09-30): "in witches house quest the 4th experiment(wolf) phases through objects".
+//
+// IT IS NOT A COLLISION BUG. The engine validates every npc step against canTravel before it moves
+// (PathingEntity.takeStep), and the whole fight run through the real shed - all four forms, the
+// player moved around the room mid-fight - takes zero steps the collision map disallows. What is
+// wrong is the wolf's FOOTPRINT: every other npc in the 377 cache built on model1=npc_wolf declares
+// size=2 (wolf, whitewolf, whitewolf_sentry, wolfpack_leader, pack_wolf, jungle_wolf, desert_wolf,
+// direwolf, viking_wolf, ice_wolf_1-6, vampire_juve_hound - all of them), and shapeshifterwolf alone
+// declares none, so it defaults to 1. A 2x2 wolf model standing on a 1x1 tile of collision has three
+// quarters of its body outside anything the server is checking, and it walks that body straight
+// through the shed's crate, sacks, food trough and walls. Giving it the footprint its own model has
+// is the fix.
+//
+// The other three forms were checked against the same rule and are right as the cache has them, so
+// they stay in all.npc: shapeshifterglob is model1=npc_skavid and the plain skavid is size 1;
+// shapeshifterspider is model1=poh_giantspider_8 and every giant spider in the cache is size 1; and
+// shapeshifterbear already carries size=2, matching brownbear.
+//
+// The shed is four tiles wide (inzone 0_45_54_54_3 to 0_45_54_57_11 in quest_ball.rs2, x 2934-2937
+// by z 3459-3467) and its middle, x 2934-2937 by z 3462-3465, is a clear 4x4 with the spawn coord
+// inside it, so a 2x2 wolf has room to fight and to path - the bear, which is already 2x2, has
+// always fought there.
+
+[shapeshifterwolf]
+name=Witches experiment fourth form
+desc=Looks unnatural.
+model1=npc_wolf
+recol1s=15855
+recol1d=9228
+recol2s=23254
+recol2d=12560
+recol3s=15393
+recol3d=10219
+size=2
+walkanim=dog_walk
+readyanim=dog_ready
+op2=Attack
+vislevel=53
+hitpoints=51
+attack=48
+strength=40
+defence=49
+param=damagetype,^stab_style
+param=attack_anim,dog_attack
+param=defend_anim,dog_block
+param=death_anim,dog_death
+param=attack_sound,wolf_attack
+param=defend_sound,wolf_hit
+param=death_sound,wolf_death
+param=death_drop,null
+category=witches_experiment

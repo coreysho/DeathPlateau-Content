@@ -23488,34 +23488,6 @@ param=death_sound,bear_death
 param=death_drop,null
 category=witches_experiment
 
-[shapeshifterwolf]
-name=Witches experiment fourth form
-desc=Looks unnatural.
-model1=npc_wolf
-recol1s=15855
-recol1d=9228
-recol2s=23254
-recol2d=12560
-recol3s=15393
-recol3d=10219
-walkanim=dog_walk
-readyanim=dog_ready
-op2=Attack
-vislevel=53
-hitpoints=51
-attack=48
-strength=40
-defence=49
-param=damagetype,^stab_style
-param=attack_anim,dog_attack
-param=defend_anim,dog_block
-param=death_anim,dog_death
-param=attack_sound,wolf_attack
-param=defend_sound,wolf_hit
-param=death_sound,wolf_death
-param=death_drop,null
-category=witches_experiment
-
 [witchrat]
 name=Mouse
 desc=Deceptively mouse shaped.
@@ -31307,52 +31279,6 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 op2=Attack
 vislevel=108
-
-[horror_rockcrab]
-name=Rock Crab
-desc=No one likes crabs...
-model1=npc_1265
-model2=npc_1265i2
-walkanim=horror_crab_walk
-readyanim=horror_crab_ready
-minimap=no
-op2=Attack
-vislevel=13
-
-[horror_rockcrab_inactive]
-name=Rocks
-desc=A rocky outcrop.
-model1=npc_1265
-model2=npc_1265i2
-vislevel=hide
-walkanim=horror_crab_walk
-readyanim=horror_crab_hide_ready
-minimap=no
-
-[horror_rockcrab_small]
-name=Rock Crab
-desc=No one likes crabs...
-model1=npc_1265
-model2=npc_1265i2
-walkanim=horror_crab_walk
-readyanim=horror_crab_ready
-resizeh=84
-resizev=84
-minimap=no
-op2=Attack
-vislevel=13
-
-[horror_rockcrab_small_inactive]
-name=Rocks
-desc=A rocky outcrop.
-model1=npc_1265
-model2=npc_1265i2
-vislevel=hide
-walkanim=horror_crab_walk
-readyanim=horror_crab_hide_ready
-resizeh=84
-resizev=84
-minimap=no
 
 [viking_olaf]
 name=Olaf the Bard
