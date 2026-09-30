@@ -87,6 +87,21 @@ if (last_useitem = ashes) {
 [opheldu,unfinished_antidote++]
 ~attempt_brew_potion(last_useslot, last_slot);
 
+// AND THE OTHER THREE UNFINISHED COCONUT-MILK POTIONS, for exactly the reason above: they carry
+// category=potion, so without a trigger of their own the click falls to the decanting category
+// trigger and answers "Nothing interesting happens." to the secondary. antidote++ had one and
+// worked; antidote+ and weapon poison(++) did not and could not be finished at all, no matter
+// what the recipes said. Weapon poison(+) only worked by luck, because red spiders' eggs happen
+// to carry a trigger of their own - it gets one here too so all four are the same shape.
+[opheldu,unfinished_antidote+]
+~attempt_brew_potion(last_useslot, last_slot);
+
+[opheldu,unfinished_weapon_poison+]
+~attempt_brew_potion(last_useslot, last_slot);
+
+[opheldu,unfinished_weapon_poison++]
+~attempt_brew_potion(last_useslot, last_slot);
+
 [opheldu,eye_of_newt]
 ~attempt_brew_potion(last_useslot, last_slot);
 

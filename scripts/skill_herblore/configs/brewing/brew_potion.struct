@@ -315,3 +315,70 @@ param=brew_potion_level,79
 param=brew_potion_exp,1775
 param=brew_potion_message,You mix the magic roots into your potion.
 param=brew_potion_mixture,antidote++4
+
+// ---------------------------------------------------------------------------------------------
+// THE THREE COCONUT-MILK POISONS, none of which could be made at all.
+//
+// Antidote++ was here and works; Antidote+, Weapon poison(+) and Weapon poison(++) were not, so
+// the objs existed, the skill guide listed them, and nothing in the game produced one. Every
+// number below is off that potion's own OSRS wiki page.
+//
+// They follow the antidote++ pair above exactly: a herb in COCONUT MILK rather than a vial of
+// water, which is why the unfinished step asks for the finished potion's level rather than the
+// herb's, and why the mixture is the four-dose - "these potions yield four doses upon creation
+// instead of the usual three".
+//
+// Experience is stored x10 throughout this file.
+// ---------------------------------------------------------------------------------------------
+
+// "Toadflax and coconut milk", 68 Herblore. (/w/Antidote+_(unf))
+[unf_antidote_p]
+param=brew_potion_ingredient,toadflax
+param=brew_potion_solvent,vial_coconut_milk
+param=brew_potion_level,68
+param=brew_potion_message,You put the Toadflax into the vial of coconut milk.
+param=brew_potion_mixture,unfinished_antidote+
+
+// "68 Herblore ... 155 Herblore experience", with yew roots. (/w/Antidote+)
+[antidote_p]
+param=brew_potion_ingredient,yew_roots
+param=brew_potion_solvent,unfinished_antidote+
+param=brew_potion_level,68
+param=brew_potion_exp,1550
+param=brew_potion_message,You mix the yew roots into your potion.
+param=brew_potion_mixture,antidote+4
+
+// "Coconut milk and cactus spine", 73 Herblore. (/w/Weapon_poison+_(unf))
+[unf_weapon_poison_p]
+param=brew_potion_ingredient,cactus_spine
+param=brew_potion_solvent,vial_coconut_milk
+param=brew_potion_level,73
+param=brew_potion_message,You put the cactus spine into the vial of coconut milk.
+param=brew_potion_mixture,unfinished_weapon_poison+
+
+// "73 ... 190" experience, with red spiders' eggs. (/w/Weapon_poison(+))
+[weapon_poison_p]
+param=brew_potion_ingredient,red_spiders_eggs
+param=brew_potion_solvent,unfinished_weapon_poison+
+param=brew_potion_level,73
+param=brew_potion_exp,1900
+param=brew_potion_message,You mix the red spiders' eggs into your potion.
+param=brew_potion_mixture,weapon_poison+
+
+// "Coconut milk" and "Cave nightshade", 82 Herblore. 377 calls the item Nightshade.
+// (/w/Weapon_poison++_(unf))
+[unf_weapon_poison_pp]
+param=brew_potion_ingredient,nightshade
+param=brew_potion_solvent,vial_coconut_milk
+param=brew_potion_level,82
+param=brew_potion_message,You put the nightshade into the vial of coconut milk.
+param=brew_potion_mixture,unfinished_weapon_poison++
+
+// "82 Herblore ... 190 Herblore experience", with poison ivy berries. (/w/Weapon_poison(++))
+[weapon_poison_pp]
+param=brew_potion_ingredient,poisonivy_berries
+param=brew_potion_solvent,unfinished_weapon_poison++
+param=brew_potion_level,82
+param=brew_potion_exp,1900
+param=brew_potion_message,You mix the poison ivy berries into your potion.
+param=brew_potion_mixture,weapon_poison++

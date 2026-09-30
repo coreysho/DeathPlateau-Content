@@ -2698,6 +2698,7 @@ model=obj_red_spiders_eggs
 weight=7g
 param=brew_potion_struct,3dose1restore
 param=brew_potion_struct_secondary,3dose2restore
+param=brew_potion_struct_tertiary,weapon_poison_p
 
 [cert_red_spiders_eggs]
 certlink=red_spiders_eggs
@@ -26240,6 +26241,7 @@ members=yes
 weight=15g
 category=category_1748
 tradeable=no
+param=brew_potion_struct,unf_weapon_poison_pp
 
 [silverlight_key_1]
 name=Key
@@ -35299,6 +35301,7 @@ param=identified_herb_level,30
 param=identified_herb_exp,80
 param=identified_herb_message,This herb is a Toadflax.
 param=brew_potion_struct,unf_toadflax_potion
+param=brew_potion_struct_secondary,unf_antidote_p
 
 [cert_toadflax]
 certlink=toadflax
@@ -75940,6 +75943,7 @@ model=obj_cactus_spine
 ambient=15
 members=yes
 weight=1oz
+param=brew_potion_struct,unf_weapon_poison_p
 
 [cert_cactus_spine]
 certlink=cactus_spine
@@ -75964,6 +75968,7 @@ members=yes
 ambient=15
 cost=65
 weight=7g
+param=brew_potion_struct,weapon_poison_pp
 
 [cert_poisonivy_berries]
 certlink=poisonivy_berries
@@ -76276,6 +76281,7 @@ model=obj_oak_roots
 2dxan=504
 members=yes
 weight=1g
+param=brew_potion_struct,antidote_p
 
 [cert_yew_roots]
 certlink=yew_roots
