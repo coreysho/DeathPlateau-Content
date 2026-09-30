@@ -1,9 +1,13 @@
-// Animations converted from the OSRS cache by tools/models/animconvosrs.py.
-// They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
-// only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+// The animations Zulrah's four graphics spin on. Converted from the OSRS cache by
+// tools/models/animconvosrs.py; they play on their own base (base_osrs_*), not the 377 one,
+// because the client only walk-merges two animations that share a base (ClientPlayer/NpcType
+// patch).
 
-[zulrah_range_travel]
-// OSRS seq 5358
+[zulrah_orb_spin]
+// OSRS seq 5358 - the orb's own spin, and the reason 1044 and 1047 read as things in flight:
+// loops=8 is in the cache record, so the graphic keeps turning for the whole journey instead of
+// freezing after 40 cycles. Both orbs use it, which is what OSRS does - 1044 and 1047 name the
+// same seq.
 loops=8
 frame1=anim_osrs_4665_1
 delay1=5
@@ -22,38 +26,44 @@ delay7=5
 frame8=anim_osrs_4665_2
 delay8=5
 
-[zulrah_range_impact]
-// OSRS seq 3151
-frame1=anim_osrs_4665_1
-delay1=5
-frame2=anim_osrs_4665_2
-delay2=5
-frame3=anim_osrs_4665_3
-delay3=5
-frame4=anim_osrs_4665_4
-delay4=5
-frame5=anim_osrs_4665_5
-delay5=5
-
 [zulrah_venom_cloud]
-// OSRS seq 6648
+// OSRS seq 3151, the non-looping half of the same rig (frame group 4665), which is what spotanim
+// 1045 names.
 //
-// RE-TIMED TO EXACTLY ONE GAME TICK, and that is what made the clouds visible at all. A MapSpotAnim
-// plays its sequence once and is then dropped (jagex2/dash3d/MapSpotAnim.method486), and a seq's
-// delays are counted in 20ms client cycles, so OSRS's own six frames at delay 2 are twelve cycles -
-// a quarter of a second. zulrah_fight.rs2 re-played it every five ticks, which showed a cloud for
-// 0.24s in every 3s and read as nothing being there. Six frames at delay 5 is thirty cycles, which
-// is one 600ms tick on the nose, and the cloud queue now re-plays it every tick: one graphic ends
-// as the next begins and the cloud burns continuously for as long as it is burning.
+// RE-TIMED TO EXACTLY ONE GAME TICK, and that is the one thing here that is not the cache's: the
+// cache has five frames at delay 5, twenty-five 20ms cycles. A MapSpotAnim plays its sequence once
+// and the client then drops it (jagex2/dash3d/MapSpotAnim.method486), and zulrah_fight.rs2 re-plays
+// this graphic on every tick a cloud is burning - so at 25 cycles there is a five-cycle hole in
+// every tick and the cloud strobes. Five frames at delay 6 is thirty cycles, which is one 600ms
+// tick on the nose: one graphic ends on the boundary the next begins on, and the cloud burns
+// continuously.
+//
+// The same seq is on the orbs while they FLY to their tiles, where it plays once and holds, which
+// is what a non-looping projectile graphic does.
+frame1=anim_osrs_4665_1
+delay1=6
+frame2=anim_osrs_4665_2
+delay2=6
+frame3=anim_osrs_4665_3
+delay3=6
+frame4=anim_osrs_4665_4
+delay4=6
+frame5=anim_osrs_4665_5
+delay5=6
+
+[zulrah_magic_spin]
+// OSRS seq 6648, at the cache's own delays. This one is a projectile and nothing else - it is
+// never drawn on the ground - so there is no reason to re-time it: twelve cycles of flame and then
+// the last frame holds for the rest of the flight.
 frame1=anim_osrs_13182_1
-delay1=5
+delay1=2
 frame2=anim_osrs_13182_2
-delay2=5
+delay2=2
 frame3=anim_osrs_13182_3
-delay3=5
+delay3=2
 frame4=anim_osrs_13182_4
-delay4=5
+delay4=2
 frame5=anim_osrs_13182_5
-delay5=5
+delay5=2
 frame6=anim_osrs_13182_6
-delay6=5
+delay6=2

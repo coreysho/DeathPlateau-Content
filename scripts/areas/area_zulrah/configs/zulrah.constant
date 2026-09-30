@@ -108,7 +108,22 @@
 // action Zulrah takes runs on that same 3-tick beat: an attack, a venom barrage and a snakeling
 // orb all cost one beat, which is what the wiki's phase tables count in.
 ^zulrah_attackrate = 3
-^zulrah_maxhit = 41
+// AND THE MAX HIT IS PER FORM, not one number for three. The wiki's infobox prints three:
+// "Max hit  41 (Serpentine), 30 (Magma), 41 (Tanzanite)", and the strategy page says the same
+// thing about the tail in words - "they will be dealt 20-30 damage". The port gave all three 41,
+// so the tail swipe, the attack you are meant to be able to eat through, hit as hard as the
+// ranged attack.
+//
+// Written per STYLE rather than per form, because that is what the three forms actually come to:
+// the green form ranges, the blue form ranges and casts, the Jad phase does both, and all of those
+// are 41; only the red form's tail is 30.
+^zulrah_maxhit_ranged = 41
+^zulrah_maxhit_magic = 41
+^zulrah_maxhit_melee = 30
+// And the tail has a FLOOR as well as a ceiling, because it does not roll accuracy at all - it is
+// typeless, and the strategy page states the whole spread in one breath: "they will be dealt 20-30
+// damage and be stunned for several seconds".
+^zulrah_minhit_melee = 20
 // "Damage at Zulrah is capped at 50" - per hit taken, param=max_dealt on all three records.
 ^zulrah_damage_cap = 50
 
@@ -121,8 +136,32 @@
 // instance eventually empties itself rather than holding a snake forever.
 ^zulrah_npc_life = 30000
 
+// THE DIVE IS EACH COLOUR'S OWN and lives in zulrah.enum (^zulrah_dive_ticks there): 5071 is 105
+// client cycles, 5072 and 5073 are 60 each, so 4, 2 and 2 ticks. This constant is the flat one the
+// last round replaced and is kept only as the fallback an unknown npc type would get.
 ^zulrah_dive_ticks = 4
 ^zulrah_rise_ticks = 6
+
+// AND BETWEEN THEM, THE SNAKE IS GONE. This is the beat the fight did not have, and it is what the
+// owner saw the absence of: "zulrah disappears quickly and respawns quickly when switching
+// positions". What used to happen is that the dive animation played, and then on the very next beat
+// the same npc was teleported to the next place and started rising - so it never left, it jumped.
+// Old School sinks it, leaves the pool empty for a moment, and brings it up somewhere else.
+//
+// WHERE THE NUMBER COMES FROM, since the wiki gives no tick count for a phase change: the strategy
+// page says "It takes Zulrah about three minutes to complete each full rotation", which is 300
+// ticks, and rotation 1's eleven phases are 70 beats of 3 ticks - 210 - leaving 90 ticks across
+// eleven changes, a shade over 8 each. The dive and the rise account for 8 or 10 of those on their
+// own (4+6 green, 2+6 red and blue), so the gap in between is the small remainder: 2 ticks, which
+// puts a green change at 12 and the other two at 10, and the eleven of them at 116 against the
+// wiki's ~90. That is longer than the three minutes implies and it is the honest reading of
+// animations the cache states outright; the alternative is trimming an animation to hit a
+// stopwatch figure rounded to the nearest minute.
+^zulrah_submerged_ticks = 2
+// The two halves of the phase change, as %zulrah_submerged carries them: 1 while the dive animation
+// is still playing where the snake was, 2 while it is parked out of sight.
+^zulrah_sub_diving = 1
+^zulrah_sub_under = 2
 
 // Rotations are numbered the way the wiki numbers them: 1 "Crimson A", 2 "Crimson B", 3 "Serp",
 // 4 "Tanz". Which one you get is a fresh roll each fight, as it is in Old School, and the fight
@@ -146,11 +185,38 @@
 ^zulrah_act_jad_range = 7
 ^zulrah_act_jad_mage = 8
 
-// THE BLUE FORM ATTACKS WITH EITHER. "Blue (Tanzanite): attacks with Ranged and Magic" - it picks
-// one per attack, so this is the chance in eight that a given one is magic. Four in eight: the wiki
-// gives no weighting, and an even coin is the only split it does not overstate.
-^zulrah_mage_form_magic_chance = 4
+// THE BLUE FORM ATTACKS WITH EITHER, AND MOSTLY WITH MAGIC. The infobox line is "Blue (Tanzanite):
+// attacks with Ranged and Magic", but the strategy page is more specific and the port was written
+// against the shorter one: "it will randomly attack with both Magic and Ranged attacks, although it
+// uses magic MUCH MORE FREQUENTLY compared to ranged". An even coin, which is what this was, is not
+// "much more frequently" - it is the one split the sentence rules out.
+//
+// THE RATIO IS OURS. The wiki states no number anywhere, so six in eight was chosen: a clear
+// majority that still throws a ranged attack often enough that a player who prays magic and forgets
+// about it gets punished, which is the point of the form having two.
+^zulrah_mage_form_magic_chance = 6
 ^zulrah_mage_form_of = 8
+
+// ---------------------------------------------------------------------------------------------
+// The magma form's tail
+// ---------------------------------------------------------------------------------------------
+// "Zulrah will stare at the player's position for several seconds before whipping its tail at that
+// area. If the player does not move away from the targeted area in time, they will be dealt 20-30
+// damage and be stunned for several seconds."
+//
+// So the red attack is not an attack on the PLAYER, it is an attack on a TILE, announced in advance
+// and dodgeable - and that is the whole of what the red phase asks of you. The port rolled it as an
+// ordinary melee hit on whoever was standing there when it landed, with no warning and nothing to
+// dodge, which made the red phase a phase where you pray melee and read your screen.
+//
+// HOW LONG THE WARNING IS. One beat, 3 ticks, which is the wiki's attack speed for all three forms
+// - the tile is marked when the swing starts and the tail arrives on the next beat. The animation
+// itself says the same thing louder: OSRS seq 5807's first 35 frames are the stare and they run
+// 4.67 ticks before the strike frames begin.
+^zulrah_melee_warning = 3
+// "Can be avoided by moving two tiles away" - so one tile away is still inside it. The tail covers
+// the marked tile and the ring around it, and the third tile out is safe.
+^zulrah_melee_radius = 1
 
 // ---------------------------------------------------------------------------------------------
 // The snakelings
@@ -160,9 +226,11 @@
 // the 15 is here because the cache cannot carry a max hit.
 ^zulrah_snakeling_maxhit = 15
 ^zulrah_snakeling_attackrate = 3
-// How long a snakeling lives if nothing kills it. They also all die the moment Zulrah does - "will
-// automatically die off with Zulrah when it is killed" - and when the fight is left or lost.
-^zulrah_snakeling_life = 3000
+// How long a snakeling lives if nothing kills it. THE WIKI GIVES THIS ONE A NUMBER and the port did
+// not use it: they "will automatically die off with Zulrah when it is killed, or will die off after
+// 40 seconds" - and 40 seconds is 67 ticks, not the 3,000 (half an hour) this used to be. The
+// difference is a phase you have walked away from still shooting at you.
+^zulrah_snakeling_life = 67
 // How far from the player an orb puts one down, and how far out to sweep for them when clearing up.
 ^zulrah_snakeling_spawn_range = 3
 ^zulrah_snakeling_sweep = 30
@@ -179,8 +247,18 @@
 // fifth cloud to drop on the floor.
 ^zulrah_cloud_slots = 4
 ^zulrah_cloud_radius = 1
-// How long one cloud burns.
+// How long one cloud burns. OURS: the wiki gives no duration for a cloud anywhere, and 25 ticks
+// (15 seconds) was chosen so that a cloud outlives the beat that made it by enough to matter and
+// dies before the phase that made it does.
 ^zulrah_cloud_ticks = 25
+// A BARRAGE IS ORBS YOU CAN SEE COMING, and until this round it was nothing at all: the barrage
+// played Zulrah's attack animation and a cloud simply appeared underneath the player on the same
+// tick, with no projectile in between. "Zulrah will spawn venomous clouds during the fight via a
+// barrage of dark-green orbs" - so the orbs fly (spotanim zulrah_venom_cloud, OSRS 1045, which is
+// two orbs in one mesh) and the cloud is what they leave where they land.
+//
+// The delay a cloud waits before it lights, in ticks: the orbs have to arrive first.
+^zulrah_cloud_arrive = 2
 // OURS, and the only number here that is: the wiki states no per-tick damage. One to five a tick
 // for 25 ticks is up to 125 if you stand in one and do nothing, which is fatal and is meant to be,
 // while a step out of it costs a few hitpoints rather than a trip.

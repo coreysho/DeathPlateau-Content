@@ -1,28 +1,68 @@
-// OSRS spot animations imported by tools/models/importosrsspot.py.
-// Models re-encoded by osrs2ob2.py, animations converted by animconvosrs.py.
+// ZULRAH'S FOUR GRAPHICS, and which attack each one belongs to.
+//
+// OSRS gives this snake exactly four spot animations, 1044 to 1047, and nothing else in the whole
+// 4,023-record table shares its palette: a scan of every OSRS spotanim for a recolour whose targets
+// are Zulrah's dark green (HSL hue 29 - 30608 and 30236) finds 1044 and 1045 and no third. So the
+// block is the fight's, entire, and the only question was which of the four is which.
+//
+// THE LAST ROUND GOT IT WRONG BY ONE, and the owner saw it: "the venom clouds are showing as
+// fireballs". 1046 was taken for the cloud and drawn on the ground every tick - and 1046 is
+// model 26593, whose 266 faces are yellow (hue 10) and orange (hue 4) and whose own recolour
+// (5060->4025, 11185->6067, 11200->7097) maps orange onto DARKER ORANGE. It is a fireball. It was
+// never a cloud. Rendering the four re-encoded meshes side by side (tools/models/ob2render.py) is
+// what showed it: three green-and-white comets and one ball of flame.
+//
+// SO WHAT IS EACH? The cache says what they look like and the wiki says what Zulrah throws:
+//
+//   1044  model 20390, ONE dark-green orb with a tail, seq 5358 which LOOPS 8 times
+//   1045  model 11221, TWO of that same orb (277 faces to 20390's 139, the same three colours),
+//         seq 3151 which does not loop
+//   1046  model 26593, the ball of flame, resized to 96 and lit at ambient 60
+//   1047  model 20390 again, recoloured white (HSL 127 is lightness 127 at zero saturation)
+//
+// and the strategy page says Zulrah "will spawn venomous clouds during the fight via a BARRAGE of
+// dark-green orbs" and summons snakelings "via shooting WHITE orbs". A barrage is more than one
+// orb, and 1045 is literally two of them; a white orb is 1047 and there is only one white one. That
+// leaves 1044, the single green orb that loops while it flies, for the ranged attack, and 1046 for
+// the magic attack - which is the assignment the private-server community publishes for this snake
+// as well (range 1044, toxic cloud 1045, mage 1046, snakeling 1047; rune-server thread "Zulrah
+// Animation/GFX Ids"). Cache and community agree, so that is what is wired below.
+//
+// THE MODELS WERE ALREADY RIGHT. All four .ob2 files were byte-identical to the cache's models
+// re-encoded with their own spotanim recolours baked in - md5 for md5 - so nothing was re-imported
+// this round. Only the names were wrong, and the names are what the scripts read, so the names
+// moved: model.pack 24254-24257 and spotanim.pack 1280-1283 keep their ids and carry new ones.
+//
+// Imported by tools/models/importosrsspot.py; models re-encoded by osrs2ob2.py, animations
+// converted by animconvosrs.py.
 
-[zulrah_range_travel]
-// OSRS spotanim 1044
-model=spot_zulrah_range_travel
-anim=zulrah_range_travel
+[zulrah_ranged]
+// OSRS spotanim 1044 - the ranged attack, and the green form's whole repertoire. One dark-green
+// orb that spins its way to you.
+model=spot_zulrah_ranged
+anim=zulrah_orb_spin
 ambient=20
 
-[zulrah_range_impact]
-// OSRS spotanim 1045
-model=spot_zulrah_range_impact
-anim=zulrah_range_impact
-ambient=30
-
-[zulrah_venom_cloud]
-// OSRS spotanim 1046
-model=spot_zulrah_venom_cloud
-anim=zulrah_venom_cloud
+[zulrah_magic]
+// OSRS spotanim 1046 - the magic attack. It really is a ball of fire; the last round's mistake was
+// putting it on the floor, not importing it.
+model=spot_zulrah_magic
+anim=zulrah_magic_spin
 resizeh=96
 resizev=96
 ambient=60
 
-[zulrah_magic_travel]
-// OSRS spotanim 1047
-model=spot_zulrah_magic_travel
-anim=zulrah_range_travel
+[zulrah_venom_cloud]
+// OSRS spotanim 1045 - the venom barrage, and the cloud it leaves. TWO orbs, which is what makes a
+// "barrage of dark-green orbs" a barrage, and the only one of the four whose graphic is used twice:
+// zulrah_fight.rs2 flies it to the tile and then re-plays it on that tile every tick the cloud
+// burns. Its seq is re-timed to exactly one game tick for that second job - see zulrah_gfx.seq.
+model=spot_zulrah_venom
+anim=zulrah_venom_cloud
+ambient=30
+
+[zulrah_snakeling_orb]
+// OSRS spotanim 1047 - the white orb that puts a snakeling on the floor beside you.
+model=spot_zulrah_snakeling_orb
+anim=zulrah_orb_spin
 ambient=20

@@ -29,15 +29,15 @@
 //                                                     waits each colour's own (zulrah_dive_ticks)
 //   5804  49 frames, priority 10, group 5693          the death: priority 10 is the highest on the
 //                                                     rig and nothing else on the model is that long
-// 5806 (55 frames, 7.00 ticks), 5807 (53, 6.67) and 5808 (9, 1.00) are the rig's other three. They
-// are STILL NOT converted, and the magma form's tail swipe therefore still plays the spit, which is
-// the one thing about this snake's animation that is known to be wrong and is not fixed here. The
-// two long ones are the only candidates - both priority 6, the attack priority, both alone on frame
-// group 5695 - and "it will stare at the player's position for several seconds before whipping its
-// tail" is a seven-second animation if it is anything. But nothing in the cache says which of the
-// two it is, or whether either is Zulrah's at all rather than another npc sharing the framemap, and
-// a wrong animation on a non-human rig is a picture of a snake folded inside out. Identifying them
-// wants a render (tools/models/posepreview.py), which is the next round's.
+// 5806 (55 frames, 7.00 ticks) and 5807 (53, 6.67) are the rig's tail swipe, and THEY ARE NOW
+// CONVERTED AND TOLD APART - configs/zulrah_tail.seq carries both and its header carries the
+// evidence. The short version: their first 35 frames are identical (the rear-up and stare), then
+// 5806 loops frames 18-26 twice over and 5807 breaks into frames 40-45, which appear nowhere else
+// on the rig. A hold loop is a wait; a new excursion is a strike. 5807 is the swipe and it is what
+// the magma record plays below.
+//
+// 5808 (9 frames, 1.00 tick, frame group 5697) is the rig's last seq and is still unidentified and
+// unconverted. Nothing in the fight needs a one-tick animation, so nothing guesses at it.
 //
 // moverestrict=nomove on all three, like the Kraken: Zulrah surfaces in water, never walks, and is
 // put where the rotation says with npc_tele.
@@ -80,6 +80,12 @@ param=magicdefence,-45
 param=stabdefence,0
 param=slashdefence,0
 param=crushdefence,0
+// AND THE RANGED DEFENCE IS PER COLOUR TOO, which the port missed the same way it missed the magic
+// defence: the wiki's infobox prints three Ranged defence figures beside the three Magic ones -
+// +50 on the green, +300 on the red, 0 on the blue - and all three records here carried the green
+// form's +50. So the blue form, the one the whole fight tells you to put the bow on, defended
+// against Ranged exactly as well as the green form did, and the red form, which you are supposed to
+// be unable to range at all, defended no better than either.
 param=rangedefence,50
 // Its own table, in scripts/zulrah_drops.rs2 - not the engine's death_drop.
 param=death_drop,null
@@ -106,7 +112,12 @@ hitpoints=500
 ranged=300
 magic=300
 param=attackrate,^zulrah_attackrate
-param=attack_anim,osrs_seq_5069
+// THE RED FORM DOES NOT SPIT, IT SWINGS ITS TAIL, and it now has the animation for it: OSRS seq
+// 5807, converted this round (configs/zulrah_tail.seq says how it was told apart from 5806). Every
+// form used to play the spit, 5069, which is why the tail swipe looked like a ranged attack with
+// nothing coming out of it. attack_anim is still the param every other npc reads; the magma record
+// is simply the one where it is not 5069.
+param=attack_anim,zulrah_tail_swipe
 param=death_anim,osrs_seq_5804
 param=max_dealt,^zulrah_damage_cap
 // OSRS npc 2043's own param 8: the red form is neither weak nor strong to magic.
@@ -114,7 +125,8 @@ param=magicdefence,0
 param=stabdefence,0
 param=slashdefence,0
 param=crushdefence,0
-param=rangedefence,50
+// The wiki's infobox: +300 on the red form. You do not range the magma snake.
+param=rangedefence,300
 param=death_drop,null
 
 [zulrah_tanzanite]
@@ -148,7 +160,9 @@ param=magicdefence,300
 param=stabdefence,0
 param=slashdefence,0
 param=crushdefence,0
-param=rangedefence,50
+// The wiki's infobox: 0 on the blue form. "Blue (Tanzanite): weak to Ranged" is this number and
+// the +300 magic defence above it, together - one form you shoot, one form you cast at.
+param=rangedefence,0
 param=death_drop,null
 
 // THE SNAKELINGS. "Despite their combat level of 90, they have extremely low defence and only 1
