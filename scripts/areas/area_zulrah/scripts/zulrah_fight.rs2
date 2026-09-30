@@ -599,18 +599,25 @@ if ($packed < 0) {
     $tile = modulo($packed, 1024);
 }
 def_coord $at = ~zulrah_unpack_tile($tile);
-// THE GRAPHIC IS RE-PLAYED EVERY TICK, and it has to be. A MapSpotAnim plays its sequence once and
-// the client then drops it, and zulrah_venom_cloud is nine frames re-timed to thirty 20ms client
-// cycles, which is exactly one 600ms tick (zulrah_gfx.seq says why). Re-playing it on every tick of
-// the cloud's life is therefore one continuous cloud rather than a flicker: the previous graphic
-// ends on the tick boundary the next one starts on. Re-playing it every fifth tick, which is what
-// this did two rounds ago, showed the cloud for a quarter of a second in every three and read in
-// game as no cloud at all.
+// THE GRAPHIC IS PLAYED ONCE, ON THE TICK THE CLOUD LANDS.
 //
-// AND IT IS A CLOUD NOW. Until this round zulrah_venom_cloud was OSRS spotanim 1045 - the barrage's
-// two orbs - so what lay on the platform for twenty-five ticks was a pair of projectiles. It is
-// OSRS 1043, a green gas puff, scaled up to cover the 3x3 this tile damages.
-spotanim_map(zulrah_venom_cloud, $at, 0, 0);
+// It used to be re-played every tick, on the reasoning that the sequence is exactly one tick long
+// so each play would butt up against the next. The client harness says otherwise: it counted the
+// map spotanims on the floor and watched nine cloud centres read as 18, 15, 9, 18, 16, 9 - two
+// overlapping copies on each tile for part of every tick, with the next play starting over the top
+// of the one still finishing. Twenty-five restarts in fifteen seconds is a cloud that pulses, and
+// that is what was reported as flickering.
+//
+// zulrah_venom_cloud now runs for the cloud's whole 25-tick life by itself, so this plays it on
+// the first tick and leaves it alone. The damage below still runs every tick - that is the queue's
+// other job and is unrelated to what is drawn.
+//
+// AND IT IS A CLOUD, NOT A PROJECTILE. Until two rounds ago zulrah_venom_cloud was OSRS spotanim
+// 1045 - the barrage's two orbs - so what lay on the platform was a pair of projectiles. It is
+// OSRS 1043, a green gas puff. The MESH is still not right, which is a separate thing.
+if ($packed < 0) {
+    spotanim_map(zulrah_venom_cloud, $at, 0, 0);
+}
 // "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
 // The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
 // touches the venom timer.
