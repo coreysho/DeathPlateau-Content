@@ -583,3 +583,222 @@ blockrange=no
 ambient=10
 category=mining_rock_normal
 param=next_loc_stage_mining,loc_14833
+
+// ---- West of Falador, between the city's west gate and the Dark Wizards' Tower (recol1d=7329) ----
+//
+// Thirteen rocks scattered among the trees and dead trees around 2903-2910, 3353-3366, every one
+// of them inert: none carried a category=, so [oploc1,_mining_rock_normal] never ran and Mine did
+// nothing at all. The same family also supplies the rocks at 2480-2489, 4367-4379.
+//
+// The 7329 family runs to seven ore rows and only three of them can be named with certainty, from
+// colours that mine.dbrow already treats as that ore elsewhere in the same cache: recol2d=6242 is
+// iron (Rimmington's loc_9717-9), 13741 is tin (Barbarian Village's loc_11933-5) and 4226 is coal
+// (Barbarian Village's loc_11930-2). Those nine locs are wired below. The other four rows -
+// recol2d=6346, 14596, 21070 and 23108 - are left alone deliberately: nothing in the build pins
+// those colours to an ore, and guessing would put the wrong rock in the wrong mine. That leaves
+// loc_11960 and loc_11962 (recol2d=14596, one placement each at 2907,3361 and 2909,3364) still
+// inert in this mine; they need an ore identified before they can be wired.
+
+[loc_11555]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=7329
+recol2s=6342
+recol2d=7329
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11556]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=7329
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11557]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=7329
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=mining_rock_empty,1
+
+[loc_11954]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=7329
+recol2s=6342
+recol2d=6242
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11555
+
+[loc_11955]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=6242
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11556
+
+[loc_11956]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=6242
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11557
+
+[loc_11957]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=7329
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11555
+
+[loc_11958]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11556
+
+[loc_11959]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=13741
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11557
+
+[loc_11963]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4027
+recol1s=15854
+recol1d=7329
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=24
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11555
+
+[loc_11964]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_4028
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11556
+
+[loc_11965]
+name=Rocks
+desc=A rocky outcrop.
+model=loc_2110
+recol1s=9513
+recol1d=7329
+recol2s=6342
+recol2d=4226
+op1=Mine
+op2=Prospect
+op3=hidden
+mapscene=25
+blockrange=no
+ambient=10
+category=mining_rock_normal
+param=next_loc_stage_mining,loc_11557
