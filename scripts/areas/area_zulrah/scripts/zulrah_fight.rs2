@@ -148,13 +148,22 @@ settimer(zulrah_fight, 1);
 if (%zulrah_instance = null) {
     return;
 }
+// The player leaves before the instance does - anyone still inside is standing on unallocated
+// collision, which blocks every step they try to take.
+p_teleport(^zulandra_dock);
+~zulrah_free;
+
+// The same thing for a player who is already somewhere else. Splitting these two is the whole
+// point of the check in [timer,zulrah_fight]: a player who left by a route with no script on it
+// must not be dragged back to the dock from wherever they teleported to.
+[proc,zulrah_free]
+if (%zulrah_instance = null) {
+    return;
+}
 cleartimer(zulrah_fight);
 ~zulrah_clear_snakelings;
 def_coord $inst = %zulrah_instance;
 %zulrah_instance = null;
-// The player leaves before the instance does - anyone still inside is standing on unallocated
-// collision, which blocks every step they try to take.
-p_teleport(^zulandra_dock);
 instance_delete($inst);
 
 // Everything alive in the instance goes with it: "[the snakelings] will automatically die off with
@@ -217,6 +226,15 @@ instance_delete($inst);
 [timer,zulrah_fight]
 if (%zulrah_instance = null) {
     cleartimer(zulrah_fight);
+    return;
+}
+// ANY WAY OUT, not only the ones with a script on them. The boat is gone, so the exits are the
+// scroll, a home teleport, a death and a logout - and only the first three of those pass through
+// anything that could hand the instance back. A slot left allocated is one of 1024 that nobody
+// can use until the server restarts, so this catches the rest: the owner is not in it any more,
+// therefore it goes.
+if (~in_zulrah_shrine(coord) = false) {
+    ~zulrah_free;
     return;
 }
 npc_findallany(~zulrah_at(^zulrah_pos_middle), ^zulrah_snakeling_sweep, ^vis_off);

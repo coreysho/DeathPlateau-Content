@@ -86,16 +86,10 @@ if ($choice = 2) {
 }
 ~chatplayer("<p,neutral>Not yet.");
 
-// The return boat at Zulrah's shrine - OSRS loc 46241, op1 Board, imported by
-// tools/models/importosrslocs.py and placed by hand on m36_79 at ^zulrah_shrine_boat. OSRS's own
-// shrine squares (m35_47 and m35_48, x 2262-2276 z 3067-3078) carry no boat loc at all, because
-// the shrine is instanced there and its boat is spawned into the instance; this build copies the
-// shrine as static terrain, so the boat has to be on the square. It is the only way off the island.
-[oploc1,osrsloc_46241]
-if (~in_zulrah_shrine(coord) = true) {
-    @zulrah_shrine_leave;
-}
-@zulrah_cross_loc;
+// THERE IS NO BOAT AT THE SHRINE. One was hand-placed on m36_79 when the shrine was imported,
+// on the reasoning that copied terrain needs a boat where an instance would have spawned one.
+// The way off the island is the Zul-andra teleport Zulrah drops, read where it lies - see
+// [opobj3,zul_andra_teleport] below - so the boat is gone and so is its trigger.
 
 // ZUL-ANDRA'S BOAT, and the only one there. OSRS's l34_47 places the multi-loc 10068 at (38,48)
 // shape 11 rot 1, off the end of the village pier; its default child is 46242, the same boat with
@@ -108,11 +102,7 @@ if (~in_zulrah_shrine(coord) = true) {
 // no collision either. The deck walks from (31,48) out to (37,48), which is the tile you board
 // from. The extra boat was also a 3x3 sitting across (31..33, 47..49), walling off the pier mouth.
 // Both of 46242's ops go to the same place rather than being left as clicks that do nothing.
-[oploc1,osrsloc_46242]
-if (~in_zulrah_shrine(coord) = true) {
-    @zulrah_shrine_leave;
-}
-@zulrah_cross_loc;
+[oploc1,osrsloc_46242] @zulrah_cross_loc;
 
 [oploc2,osrsloc_46242] @zulrah_cross_loc;
 
@@ -141,20 +131,35 @@ mes("Priestess Zul-Gwenwynig rows you out to the shrine.");
 p_delay(2);
 ~zulrah_start;
 
-[label,zulrah_shrine_leave]
-if (p_finduid(uid) = false) {
-    return;
-}
-if_close;
-mes("You row back to Zul-Andra.");
-p_delay(2);
-~zulrah_end;
 
 // ---------------------------------------------------------------------------------------------
 // The Zul-andra teleport
 // ---------------------------------------------------------------------------------------------
 // OSRS obj 12938, four to a drop, op1 Teleport. It lands "in the village centre". The checks are
 // the tablets' (~pre_tele_checks): not a way out of deep wilderness, a duel or the trawler.
+
+// READ WHERE IT LIES, which is how you get off the island now that the boat is gone. opobj3 is
+// the ground "Take": clicking the pile spends it on the spot instead of putting it in your
+// inventory. Everywhere else in the world the scroll is picked up normally, so this only
+// changes what the scroll does standing on the shrine floor.
+//
+// The WHOLE PILE goes, not one of the four - it is spent where it lies and the instance it was
+// lying in is deleted a tick later, so there is nothing left to come back for.
+[opobj3,zul_andra_teleport]
+if (~in_zulrah_shrine(coord) = false) {
+    @pickup_obj;
+}
+obj_del;
+mes("You read the scroll.");
+if_close;
+p_stopaction;
+sound_synth(teleport_all, 1, 0);
+~poh_tab_breakanim;
+p_delay(2);
+// ~zulrah_end rather than a bare teleport: it clears the snakelings, stops the fight timer and
+// hands the instance slot back. It lands you on the dock rather than the village centre, which
+// is where the boat used to put you and where the priestess is standing.
+~zulrah_end;
 
 [opheld1,zul_andra_teleport]
 if (~wilderness_level(coord) > 20) {
