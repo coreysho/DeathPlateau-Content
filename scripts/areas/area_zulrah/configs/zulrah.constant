@@ -70,12 +70,36 @@
 // quest_regicide.constant meant by "neither Arandar nor Zul-Andra appears anywhere in this cache or
 // in any map file, so there is nothing to open". It does now.
 //
-// The two priestesses and the Sacrificial boat are NOT in the map cache - OSRS carries npc spawns
-// and that boat somewhere else - so all three are placed by hand on the imported square: the
-// priestess and the boat on the east shore where the water starts, the high priestess in the
-// village. m34_47's own NPC section holds the two spawns.
-^zulandra_dock = 0_34_47_29_48
-^zulandra_village = 0_34_47_26_53
+// THE SACRIFICIAL BOAT IS IN THE MAP CACHE after all, and only once: OSRS's l34_47 places loc
+// 10068 at local (38,48) shape 11 rot 1 - a varbit-4391 multi-loc whose default child is 46242,
+// the Board/Quick-Board boat - and a scan of every keyed map square in the rev236 cache finds
+// 10068 nowhere else in the world. The hand-placed second boat that used to sit at (31,47) has
+// been taken out; see scripts/zulrah_travel.rs2 for why it was ever put there.
+//
+// The two priestesses ARE placed by hand: no OSRS cache holds npc spawns at all. Their tiles come
+// from the OSRS wiki's own {{Map}} markers (oldschool.runescape.wiki, Sept 2026), which this round
+// checked against the cache tile-for-tile before trusting them - /w/Chest_(Zul-Andra) marks
+// 2196,3051 and the cache puts the deposit chest loc on exactly that tile, and /w/Sacrificial_boat
+// marks 2215,3057, the centre of the 3x3 boat the cache puts at 2214,3056.
+//   High Priestess Zul-Harcinqa  /w/High_Priestess_Zul-Harcinqa  x=2193 y=3056 -> local (17,48)
+//   Priestess Zul-Gwenwynig      /w/Priestess_Zul-Gwenwynig      x=2212 y=3057 -> local (36,49)
+// Gwenwynig goes on her tile as marked, out on the pier deck beside the boat. Harcinqa does not:
+// (17,48) is where the cache puts one of the two Torches (OSRS loc 10658) that flank the dead end
+// at the west of the village road, so she sits in the one free tile between them, local (17,47).
+// That is the only coordinate on this square this round could not source to the tile.
+// m34_47's own NPC section holds both spawns.
+//
+// WHERE THE BOAT PUTS YOU DOWN coming back from the shrine: the pier deck tile next to the boat,
+// not the shore. The deck is walkable - its level-1 tiles carry the LINK_BELOW flag, so GameMap
+// folds them onto level 0 and the level-0 "blocked" water underneath never applies.
+^zulandra_dock = 0_34_47_37_48
+
+// WHERE THE ZUL-ANDRA TELEPORT LANDS. /w/Zul-Andra calls it "centre of Zul-Andra" and
+// /w/Zul-andra_teleport marks 2196,3056, which is the village road three tiles east of the High
+// Priestess. THIS IS NOT HER TILE AND MUST NOT BE REUSED AS ONE: the first cut of this round used
+// ^zulandra_village for both, so every player who teleported in materialised standing inside her.
+// Her spawn lives in maps/m34_47.jm2, and nowhere else.
+^zulandra_village = 0_34_47_20_48
 
 // ---------------------------------------------------------------------------------------------
 // The fight

@@ -86,21 +86,28 @@ if ($choice = 2) {
 }
 ~chatplayer("<p,neutral>Not yet.");
 
-// The Sacrificial boat - OSRS loc 46241, op1 Board, imported by tools/models/importosrslocs.py and
-// placed by hand on the Zul-Andra shore and in the shrine (neither the boat nor an npc spawn is in
-// the map cache). One handler, two directions: Board it on the dock and you go out, Board it at the
-// shrine and you come back, which is what the one word means in both places.
+// The return boat at Zulrah's shrine - OSRS loc 46241, op1 Board, imported by
+// tools/models/importosrslocs.py and placed by hand on m36_79 at ^zulrah_shrine_boat. OSRS's own
+// shrine squares (m35_47 and m35_48, x 2262-2276 z 3067-3078) carry no boat loc at all, because
+// the shrine is instanced there and its boat is spawned into the instance; this build copies the
+// shrine as static terrain, so the boat has to be on the square. It is the only way off the island.
 [oploc1,osrsloc_46241]
 if (~in_zulrah_shrine(coord) = true) {
     @zulrah_shrine_leave;
 }
 @zulrah_cross_loc;
 
-// AND THE ONE THE MAP ALREADY HAD. OSRS's m34_47 places loc 46242 - the same boat with a
-// Quick-Board as well - at (38,48), at the end of the village pier. The pier's deck is blocked
-// terrain in the imported square, so nobody can stand next to that one and click it; the boat
-// above is placed on the shore where the walkable ground stops, which is why there are two. Both
-// of 46242's ops go to the same place rather than being left as clicks that do nothing.
+// ZUL-ANDRA'S BOAT, and the only one there. OSRS's l34_47 places the multi-loc 10068 at (38,48)
+// shape 11 rot 1, off the end of the village pier; its default child is 46242, the same boat with
+// a Quick-Board as well, which is what the map square carries.
+//
+// A SECOND BOAT USED TO SIT AT (31,47) on the shore, put there because this file once read the
+// pier deck as blocked terrain nobody could stand on. It is not blocked: the deck's level-1 tiles
+// carry the LINK_BELOW flag, GameMap.loadGround folds them down onto level 0, and a loc whose
+// actualLevel comes out at -1 is skipped entirely - so the pier_shadow_on_water locs under it add
+// no collision either. The deck walks from (31,48) out to (37,48), which is the tile you board
+// from. The extra boat was also a 3x3 sitting across (31..33, 47..49), walling off the pier mouth.
+// Both of 46242's ops go to the same place rather than being left as clicks that do nothing.
 [oploc1,osrsloc_46242]
 if (~in_zulrah_shrine(coord) = true) {
     @zulrah_shrine_leave;
