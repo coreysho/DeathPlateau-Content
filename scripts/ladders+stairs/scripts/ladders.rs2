@@ -253,3 +253,20 @@ p_arrivedelay;
 [oploc1,elid_laddertop]
 p_arrivedelay;
 ~climb_ladder(movecoord(coord, 0, -1, 0), false);
+
+// ---------------------------------------------------------------------------------------------
+// A PLAIN LADDER, by category rather than by name.
+//
+// Every ladder in this file before this point is wired one loc at a time, which is fine for five
+// of them and not for an imported island with eighteen. These two are the ordinary case and
+// nothing else: the ladder goes straight up or straight down, and you come out on the same tile
+// one level away. A ladder that lands somewhere else - the ship ladders above, which step two
+// tiles out in the direction they face - is NOT this, and must keep its own trigger.
+// ---------------------------------------------------------------------------------------------
+[oploc1,_ladder_up]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, 1, 0), true);
+
+[oploc1,_ladder_down]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, -1, 0), false);
