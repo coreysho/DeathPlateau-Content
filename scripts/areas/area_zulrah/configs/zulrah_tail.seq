@@ -1,0 +1,255 @@
+
+// THE MAGMA FORM'S TAIL SWIPE - the two animations the last round could not tell apart.
+// Converted from the OSRS cache by tools/models/animconvosrs.py; they play on their own base
+// (base_osrs_5695), not the 377 one, so the client never walk-merges them with a 377 animation.
+//
+// WHICH OF 5806 AND 5807 IS THE STRIKE was settled by the converted frame lists below, not by
+// rendering and squinting - the two are FRAME-FOR-FRAME IDENTICAL for their first 35 frames, which
+// is the rear-up-and-stare the wiki describes ("Zulrah will stare at the player's position for
+// several seconds before whipping its tail at that area"), and then they part:
+//
+//   5806  frames 36-39 replay 18-26 and then 18,19,20 AGAIN - a hold loop, and a hold loop is
+//         what an animation that waits for something looks like. It is the TARGET animation.
+//   5807  frames 36-46 break into frames 40-45, which appear nowhere else on the rig, and come
+//         back through 25 - one new excursion and a recovery. It is the STRIKE.
+//
+// That reading agrees with the ids the private-server community publishes for this snake (melee
+// target 5806, melee attack 5807, rune-server thread "Zulrah Animation/GFX Ids"), which is the
+// only other source that names them at all.
+//
+// ONLY 5807 IS PLAYED. zulrah_combat.rs2 fires the swipe on the beat and lands it a beat later;
+// because 5807 CONTAINS the stare - those identical first 35 frames, 4.67 ticks of them - the
+// player sees the wind-up and the strike from one animation, which is what OSRS shows. 5806 is
+// kept here named and packed because it is Zulrah's, it is the evidence for the paragraph above,
+// and the next reader should not have to derive it twice.
+//
+// THE ANIMATION IS LONGER THAN THE BEAT and neither number was bent to make them agree: 5807 is
+// 200 client cycles (6.67 ticks) at the cache's own delays, and the wiki's attack speed for all
+// three forms is 3 ticks. A second swipe therefore cuts the first one short, exactly as a long
+// attack animation does on every other npc in this build.
+
+[zulrah_tail_target]
+// OSRS seq 5806 - the stare. Not played; see the header.
+reachforward=yes
+priority=6
+frame1=anim_osrs_5695_1
+delay1=4
+frame2=anim_osrs_5695_2
+delay2=4
+frame3=anim_osrs_5695_3
+delay3=4
+frame4=anim_osrs_5695_4
+delay4=4
+frame5=anim_osrs_5695_5
+delay5=4
+frame6=anim_osrs_5695_6
+delay6=4
+frame7=anim_osrs_5695_7
+delay7=4
+frame8=anim_osrs_5695_9
+delay8=4
+frame9=anim_osrs_5695_8
+delay9=4
+frame10=anim_osrs_5695_10
+delay10=4
+frame11=anim_osrs_5695_11
+delay11=4
+frame12=anim_osrs_5695_12
+delay12=4
+frame13=anim_osrs_5695_13
+delay13=4
+frame14=anim_osrs_5695_14
+delay14=4
+frame15=anim_osrs_5695_15
+delay15=4
+frame16=anim_osrs_5695_16
+delay16=4
+frame17=anim_osrs_5695_17
+delay17=4
+frame18=anim_osrs_5695_18
+delay18=4
+frame19=anim_osrs_5695_19
+delay19=4
+frame20=anim_osrs_5695_20
+delay20=4
+frame21=anim_osrs_5695_21
+delay21=4
+frame22=anim_osrs_5695_22
+delay22=4
+frame23=anim_osrs_5695_23
+delay23=4
+frame24=anim_osrs_5695_24
+delay24=4
+frame25=anim_osrs_5695_25
+delay25=4
+frame26=anim_osrs_5695_26
+delay26=4
+frame27=anim_osrs_5695_27
+delay27=4
+frame28=anim_osrs_5695_18
+delay28=4
+frame29=anim_osrs_5695_19
+delay29=4
+frame30=anim_osrs_5695_20
+delay30=4
+frame31=anim_osrs_5695_21
+delay31=4
+frame32=anim_osrs_5695_22
+delay32=4
+frame33=anim_osrs_5695_23
+delay33=4
+frame34=anim_osrs_5695_24
+delay34=4
+frame35=anim_osrs_5695_25
+delay35=4
+frame36=anim_osrs_5695_26
+delay36=4
+frame37=anim_osrs_5695_18
+delay37=4
+frame38=anim_osrs_5695_19
+delay38=4
+frame39=anim_osrs_5695_20
+delay39=4
+frame40=anim_osrs_5695_28
+delay40=3
+frame41=anim_osrs_5695_29
+delay41=3
+frame42=anim_osrs_5695_30
+delay42=3
+frame43=anim_osrs_5695_31
+delay43=3
+frame44=anim_osrs_5695_32
+delay44=3
+frame45=anim_osrs_5695_31
+delay45=3
+frame46=anim_osrs_5695_30
+delay46=3
+frame47=anim_osrs_5695_29
+delay47=3
+frame48=anim_osrs_5695_28
+delay48=3
+frame49=anim_osrs_5695_33
+delay49=4
+frame50=anim_osrs_5695_34
+delay50=4
+frame51=anim_osrs_5695_38
+delay51=4
+frame52=anim_osrs_5695_35
+delay52=4
+frame53=anim_osrs_5695_36
+delay53=4
+frame54=anim_osrs_5695_37
+delay54=4
+frame55=anim_osrs_5695_39
+delay55=3
+
+[zulrah_tail_swipe]
+// OSRS seq 5807 - the strike, and the one the magma form plays.
+reachforward=yes
+priority=6
+frame1=anim_osrs_5695_1
+delay1=4
+frame2=anim_osrs_5695_2
+delay2=4
+frame3=anim_osrs_5695_3
+delay3=4
+frame4=anim_osrs_5695_4
+delay4=4
+frame5=anim_osrs_5695_5
+delay5=4
+frame6=anim_osrs_5695_6
+delay6=4
+frame7=anim_osrs_5695_7
+delay7=4
+frame8=anim_osrs_5695_9
+delay8=4
+frame9=anim_osrs_5695_8
+delay9=4
+frame10=anim_osrs_5695_10
+delay10=4
+frame11=anim_osrs_5695_11
+delay11=4
+frame12=anim_osrs_5695_12
+delay12=4
+frame13=anim_osrs_5695_13
+delay13=4
+frame14=anim_osrs_5695_14
+delay14=4
+frame15=anim_osrs_5695_15
+delay15=4
+frame16=anim_osrs_5695_16
+delay16=4
+frame17=anim_osrs_5695_17
+delay17=4
+frame18=anim_osrs_5695_18
+delay18=4
+frame19=anim_osrs_5695_19
+delay19=4
+frame20=anim_osrs_5695_20
+delay20=4
+frame21=anim_osrs_5695_21
+delay21=4
+frame22=anim_osrs_5695_22
+delay22=4
+frame23=anim_osrs_5695_23
+delay23=4
+frame24=anim_osrs_5695_24
+delay24=4
+frame25=anim_osrs_5695_25
+delay25=4
+frame26=anim_osrs_5695_26
+delay26=4
+frame27=anim_osrs_5695_27
+delay27=4
+frame28=anim_osrs_5695_18
+delay28=4
+frame29=anim_osrs_5695_19
+delay29=4
+frame30=anim_osrs_5695_20
+delay30=4
+frame31=anim_osrs_5695_21
+delay31=4
+frame32=anim_osrs_5695_22
+delay32=4
+frame33=anim_osrs_5695_23
+delay33=4
+frame34=anim_osrs_5695_24
+delay34=4
+frame35=anim_osrs_5695_25
+delay35=4
+frame36=anim_osrs_5695_42
+delay36=3
+frame37=anim_osrs_5695_40
+delay37=3
+frame38=anim_osrs_5695_41
+delay38=3
+frame39=anim_osrs_5695_43
+delay39=3
+frame40=anim_osrs_5695_44
+delay40=3
+frame41=anim_osrs_5695_45
+delay41=3
+frame42=anim_osrs_5695_44
+delay42=3
+frame43=anim_osrs_5695_43
+delay43=3
+frame44=anim_osrs_5695_41
+delay44=3
+frame45=anim_osrs_5695_40
+delay45=3
+frame46=anim_osrs_5695_42
+delay46=3
+frame47=anim_osrs_5695_25
+delay47=4
+frame48=anim_osrs_5695_34
+delay48=4
+frame49=anim_osrs_5695_38
+delay49=4
+frame50=anim_osrs_5695_35
+delay50=4
+frame51=anim_osrs_5695_36
+delay51=4
+frame52=anim_osrs_5695_37
+delay52=4
+frame53=anim_osrs_5695_39
+delay53=3

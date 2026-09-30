@@ -1,12 +1,20 @@
-// ZULRAH'S THREE ATTACKS. Called a beat at a time by zulrah_fight.rs2's rotation engine, as the
+// ZULRAH'S FOUR ATTACKS. Called a beat at a time by zulrah_fight.rs2's rotation engine, as the
 // npc, with the player as the (unprotected) target.
+//
+// WHAT WAS WRONG WITH THE LAST CUT, in the owner's words: "the venom clouds are showing as
+// fireballs; the range and mage animations dont fire from zulrah". Both were one mistake. Zulrah's
+// four OSRS graphics were imported correctly and then assigned to the wrong four jobs: the ranged
+// and the magic attack shared a single impact graphic, the magic attack flew the snakeling's white
+// orb, and the fireball - which is the MAGIC attack - was being painted on the floor as a venom
+// cloud. configs/zulrah_gfx.spotanim has the whole derivation; the short of it is that OSRS gives
+// this snake exactly four spotanims, 1044 to 1047, and each attack below now names its own.
 //
 // WHY THESE ARE WRITTEN OUT RATHER THAN ~npc_rangeattack AND FRIENDS. Two reasons, and they are the
 // same two the Fight Cave's fireball had:
 //
-//   * THE MAX HIT IS A NUMBER, NOT A DERIVATION. The wiki states one max hit for all three forms -
-//     41 - and no strength bonus that would produce it. Deriving it from 300 Ranged and a bonus
-//     nobody has written down would be inventing the bonus to get the answer.
+//   * THE MAX HIT IS A NUMBER, NOT A DERIVATION. The wiki states three - 41 ranged, 41 magic, 30
+//     for the tail - and no strength bonus that would produce any of them. Deriving them from 300
+//     Ranged and a bonus nobody has written down would be inventing the bonus to get the answer.
 //   * THE PACING IS THE ROTATION'S. A phase is a count of beats, and the beat clock belongs to
 //     ~zulrah_tick; the stock procs set %npc_action_delay themselves.
 //
@@ -14,57 +22,109 @@
 // ~npc_magic_attack_roll and ~npc_melee_attack_roll each return 0 when the matching Protect prayer
 // is up, so a prayed-against attack simply cannot beat the defence roll. That is the whole fight:
 // the colour tells you which of those three is coming, and the Jad phase alternates two of them.
+//
+// THE FLIGHT NUMBERS (40, 36, 32, 15, 0, 11, 5) ARE NOT FROM THE CACHE AND CANNOT BE. A modern OSRS
+// cache holds no projectiles at all - a projectile is a server-side packet that names a spotanim,
+// so heights, arcs and speeds exist nowhere a decoder can reach them. These are this build's own
+// boss-projectile numbers, unchanged from the last round, and they are the one part of an attack
+// below that is not sourced.
 
-// Green, "serpentine": Ranged.
+// ---------------------------------------------------------------------------------------------
+// Ranged - the green form's only attack, and half of the blue form's and half of the Jad phase's
+// ---------------------------------------------------------------------------------------------
+// OSRS spotanim 1044: one dark-green orb, on the only one of Zulrah's four seqs that loops, so it
+// spins the whole way to you.
 [proc,zulrah_ranged]
 npc_anim(npc_param(attack_anim), 0);
 def_int $attack_roll = ~npc_ranged_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^ranged_style);
-def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_ranged, 40, 36, 32, 15, 0, 11, 5);
 def_int $damage = 0;
 if (randominc($attack_roll) > randominc($defence_roll)) {
-    $damage = randominc(^zulrah_maxhit);
+    $damage = randominc(^zulrah_maxhit_ranged);
 }
-spotanim_pl(zulrah_range_impact, 92, $duration);
-~zulrah_land_hit($damage, ^zulrah_maxhit, $duration);
+~zulrah_land_hit($damage, ^zulrah_maxhit_ranged, $duration);
 
-// Blue, "tanzanite": Magic. (Which of the two a blue beat uses is rolled in ~zulrah_action.)
+// ---------------------------------------------------------------------------------------------
+// Magic - the other half of the blue form and of the Jad phase
+// ---------------------------------------------------------------------------------------------
+// OSRS spotanim 1046, which is a ball of flame and is meant to be: model 26593 is 266 faces of
+// yellow and orange and its own recolour only makes it oranger. It is the one graphic of the four
+// that does not belong to the green palette, which is exactly why it is the one the other colour of
+// attack uses.
 [proc,zulrah_magic]
 npc_anim(npc_param(attack_anim), 0);
 def_int $attack_roll = ~npc_magic_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
-def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic_travel, 40, 36, 32, 15, 0, 11, 5);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic, 40, 36, 32, 15, 0, 11, 5);
 def_int $damage = 0;
 if (randominc($attack_roll) > randominc($defence_roll)) {
-    $damage = randominc(^zulrah_maxhit);
+    $damage = randominc(^zulrah_maxhit_magic);
 }
-spotanim_pl(zulrah_range_impact, 92, $duration);
-~zulrah_land_hit($damage, ^zulrah_maxhit, $duration);
+~zulrah_land_hit($damage, ^zulrah_maxhit_magic, $duration);
 
-// Red, "magma": the tail swipe. The wiki calls it "a typeless attack wherein it swings its tail",
-// and the strategy the whole game plays is to put Protect from Melee up for the red form - so it
-// is rolled as melee here, which is the only reading under which that strategy works. It lands
-// with no flight time, because the tail arrives when it arrives.
+// ---------------------------------------------------------------------------------------------
+// The magma form's tail - an attack on a TILE, announced a beat in advance
+// ---------------------------------------------------------------------------------------------
+// "Zulrah will stare at the player's position for several seconds before whipping its tail at that
+// area. If the player does not move away from the targeted area in time, they will be dealt 20-30
+// damage and be stunned for several seconds." The last cut rolled this as an ordinary melee swing
+// on whoever happened to be standing there when it resolved, with no warning and nothing to dodge,
+// and gave it the green form's 41 max hit and the green form's spitting animation.
 //
-// NOT IMPLEMENTED: Old School's red attack also stuns for a moment. There is no stun for a player
-// in this build that is not a spell's freeze, and inventing one for a boss is a bigger change than
-// this round should make - it is left out and said so.
+// So: the tile is marked NOW, the swipe animation starts NOW (OSRS seq 5807 - see
+// configs/zulrah_tail.seq for how it was told apart from 5806, and note its first 35 frames ARE the
+// stare), and the tail arrives one beat later. Step two tiles and it lands on nothing.
+//
+// AND IT IS TYPELESS, SO NOTHING IS ROLLED. "It uses a TYPELESS attack wherein it swings its tail
+// at the player's position, which can be avoided by moving two tiles away; if it hits, it will deal
+// heavy damage" - so there is no accuracy, no defence and no protection prayer in it. Moving is the
+// defence, and it is the only one.
+//
+// THE LAST CUT ROLLED IT AS MELEE and said so out loud: "the strategy the whole game plays is to
+// put Protect from Melee up for the red form - so it is rolled as melee here, which is the only
+// reading under which that strategy works". The strategy the whole game plays for the red form is
+// to MOVE. And rolling it as melee did not work at all, which the cache could have said first:
+// Zulrah's own stat array is 1 Attack (1/300/1/500/300/300), so a melee roll off that number missed
+// a player in any real armour essentially every time. The red phase was free.
+//
+// "They will be dealt 20-30 damage" is the damage, exactly as written - not zero to thirty.
+//
+// NOT IMPLEMENTED: the stun that follows. There is no stun for a player in this build that is not a
+// spell's freeze, and inventing one for a boss is a bigger change than this round should make.
 [proc,zulrah_melee]
 npc_anim(npc_param(attack_anim), 0);
-def_int $attack_roll = ~npc_melee_attack_roll;
-// ^crush_style, not ^melee_style: ~player_defence_roll_specific switches on the three melee
-// damage types and errors on anything else, and a tail the size of a boat is a crush.
-def_int $defence_roll = ~player_defence_roll_specific(^crush_style);
-def_int $damage = 0;
-if (randominc($attack_roll) > randominc($defence_roll)) {
-    $damage = randominc(^zulrah_maxhit);
-}
-~zulrah_land_hit($damage, ^zulrah_maxhit, 0);
+def_int $damage = ~random_range(^zulrah_minhit_melee, ^zulrah_maxhit_melee);
+~npc_set_attack_vars;
+// The marked tile and the rolled damage in one int, the way the cloud queue packs itself: the tile
+// as a ten-bit offset inside the instance and the damage above it. A queue carries one int.
+queue(zulrah_tail, ^zulrah_melee_warning, add(multiply($damage, 1024), ~zulrah_pack_tile(coord)));
 
-// The landing half of all three, and the one place venom is dealt. "Venom inflicted by Zulrah and
-// the snakelings: starting at 6 damage per hit and increasing up to 20" - which is exactly the
-// venom the toxic blowpipe already brought (toxic_blowpipe/scripts/venom.rs2), so this is one
-// queue rather than a second mechanic. Only a hit that landed envenoms.
+// The tail landing. Nothing here touches Zulrah - it is the player's own queue by the time this
+// runs, and the snake may already have dived.
+[queue,zulrah_tail](int $packed)
+if (%zulrah_instance = null) {
+    return;
+}
+def_coord $at = ~zulrah_unpack_tile(modulo($packed, 1024));
+if (abs(sub(coordx(coord), coordx($at))) > ^zulrah_melee_radius
+    | abs(sub(coordz(coord), coordz($at))) > ^zulrah_melee_radius) {
+    // Moved. "Can be avoided by moving two tiles away" - so this is the whole of the red phase.
+    return;
+}
+def_int $damage = divide($packed, 1024);
+if_close;
+~queue_combat_damage_player(0, $damage, ^zulrah_maxhit_melee);
+if ($damage > 0 & random(^zulrah_venom_chance) = 0) {
+    queue(venom_player, 0, 0);
+}
+
+// ---------------------------------------------------------------------------------------------
+// The landing half of the two projectile attacks, and the one place venom is dealt
+// ---------------------------------------------------------------------------------------------
+// "Venom inflicted by Zulrah and the snakelings: starting at 6 damage per hit and increasing up to
+// 20" - which is exactly the venom the toxic blowpipe already brought (toxic_blowpipe/scripts/
+// venom.rs2), so this is one queue rather than a second mechanic. Only a hit that landed envenoms.
 [proc,zulrah_land_hit](int $damage, int $maxhit, int $duration)
 if_close;
 ~queue_combat_damage_player(calc($duration / 30), $damage, $maxhit);
@@ -73,3 +133,20 @@ if ($damage > 0 & random(^zulrah_venom_chance) = 0) {
 }
 queue*(playerhit_n_retaliate, calc($duration / 30))(npc_uid);
 ~npc_set_attack_vars;
+
+// ---------------------------------------------------------------------------------------------
+// Packing a tile into an int
+// ---------------------------------------------------------------------------------------------
+// A queue carries one int and a coord is not one. The shrine instance is 32 by 32, so a tile inside
+// it is ten bits of offset from the instance's own south-west corner - which is also why nothing
+// here ever addresses the shrine raw. Both the venom clouds and the tail use these.
+[proc,zulrah_pack_tile](coord $at)(int)
+if (%zulrah_instance = null) {
+    return(0);
+}
+def_int $dx = sub(coordx($at), coordx(%zulrah_instance));
+def_int $dz = sub(coordz($at), coordz(%zulrah_instance));
+return(add(multiply($dx, 32), $dz));
+
+[proc,zulrah_unpack_tile](int $tile)(coord)
+return(movecoord(%zulrah_instance, divide($tile, 32), 0, modulo($tile, 32)));

@@ -8,8 +8,9 @@
 //   FIGHTING    do the next action of the current run, one every 3 ticks (%npc_action_delay, the
 //               same clock every other monster in this build attacks on), until the phase's runs
 //               are spent
-//   SUBMERGED   play this colour's dive, wait, then surface at the next phase's place in the next
-//               phase's colour and start again
+//   DIVING      play this colour's own dive animation, for that animation's own length
+//   UNDER       be somewhere the client is not told about, for ^zulrah_submerged_ticks, and then
+//               surface at the next phase's place in the next phase's colour and start again
 //
 // and when a rotation runs out it rolls another, because "Zulrah will then continue on to the
 // starting phase of the next rotation".
@@ -50,6 +51,20 @@ while ($zz < ^zulrah_zones) {
     }
     $zz = calc($zz + 1);
 }
+// ONE ZONE ON LEVEL 3, AND IT IS NOT DECORATION. It is where the snake goes while it is submerged
+// (~zulrah_deep), and an npc cannot be teleported onto an unallocated zone at all:
+// PathingEntity.teleport checks isZoneAllocated and, for an npc, returns doing NOTHING - no error,
+// no message, the teleport simply does not happen. That is what the first cut of this looked like
+// in the sim: the state machine walked dive -> under -> surface exactly on time while the snake
+// never moved an inch off the floor.
+//
+// The zone is the one that contains ~zulrah_deep, which is the middle surfacing block, and it is
+// laid from the template's own south-west zone because setZone needs a real map square to copy and
+// it does not matter in the least what is up there. Nobody can reach level 3 of this instance.
+if (instance_setzone(movecoord($base, 8, 3, 8), ^zulrah_template, 0) = false) {
+    instance_delete($base);
+    return(false);
+}
 %zulrah_instance = $base;
 return(true);
 
@@ -61,6 +76,18 @@ if (%zulrah_instance = null) {
 def_int $dx = sub(coordx($tpl), coordx(^zulrah_template));
 def_int $dz = sub(coordz($tpl), coordz(^zulrah_template));
 return(movecoord(%zulrah_instance, $dx, 0, $dz));
+
+// WHERE A SUBMERGED ZULRAH GOES. Level 3 of the instance's own middle tile, and the point of it is
+// that the client never draws it: NpcInfoEncoder.writeNpcs drops any npc whose coord.y() is not the
+// viewer's, so a snake three levels up is off the screen entirely rather than standing in the pool
+// waiting to be teleported.
+//
+// AN INSTANCE IS AN X/Z RECTANGLE, NOT A FLOOR. InstanceMap.at() is looked up on x and z alone, so
+// instance_find still returns this instance for a coord on level 3 and every guard in this file
+// keeps working - which is the whole reason this tile is inside the instance rather than off in a
+// corner of the map.
+[proc,zulrah_deep]()(coord)
+return(movecoord(~zulrah_at(^zulrah_pos_middle), 0, 3, 0));
 
 [proc,in_zulrah_shrine](coord $coord)(boolean)
 if (%zulrah_instance = null) {
@@ -125,6 +152,17 @@ while (npc_findnext = true) {
         npc_del;
     }
 }
+// AND THE SNAKE ITSELF IF IT IS UNDER THE WATER. npc_findallany searches one level, so a Zulrah
+// parked on level 3 by ~zulrah_submerge survives the sweep above - and a snake left behind holds
+// an instance slot and keeps a timer alive for a fight nobody is in any more. This is the second
+// sweep that finds it; the range is 1 because ~zulrah_deep is a single known tile.
+npc_findallany(~zulrah_deep, 1, ^vis_off);
+while (npc_findnext = true) {
+    if (instance_find(npc_coord) = %zulrah_instance
+        & (npc_type = zulrah | npc_type = zulrah_magma | npc_type = zulrah_tanzanite)) {
+        npc_del;
+    }
+}
 
 // Logging out inside the shrine. The instance is a temp varp and a dead instance is unallocated
 // collision, so a player who logs out in one would come back unable to take a step. They come back
@@ -170,6 +208,17 @@ while (npc_findnext = true) {
         return;
     }
 }
+// THE SECOND PLACE TO LOOK, and the fight stops dead without it: between phases the snake is parked
+// on level 3 (~zulrah_deep) so that the client cannot draw it, and npc_findallany only searches the
+// level its coord is on.
+npc_findallany(~zulrah_deep, 1, ^vis_off);
+while (npc_findnext = true) {
+    if ((npc_type = zulrah | npc_type = zulrah_magma | npc_type = zulrah_tanzanite)
+        & instance_find(npc_coord) = %zulrah_instance) {
+        ~zulrah_tick;
+        return;
+    }
+}
 
 [proc,zulrah_tick]
 if (%npc_action_delay > map_clock) {
@@ -178,11 +227,15 @@ if (%npc_action_delay > map_clock) {
 // The snake faces and holds the player it is fighting. It cannot walk (moverestrict=nomove) and it
 // has no ap trigger any more, so this is only what it looks at - and it is re-stated every beat
 // because a snakeling orb ends in npc_add, which makes the snakeling the active npc.
-npc_setmode(applayer2);
-if (%zulrah_submerged = 1) {
+if (%zulrah_submerged = ^zulrah_sub_diving) {
+    ~zulrah_submerge;
+    return;
+}
+if (%zulrah_submerged = ^zulrah_sub_under) {
     ~zulrah_surface;
     return;
 }
+npc_setmode(applayer2);
 def_int $first = enum(int, int, zulrah_phase_run_start, %zulrah_phase);
 def_int $runs = enum(int, int, zulrah_phase_run_count, %zulrah_phase);
 if (%zulrah_run >= add($first, $runs)) {
@@ -267,15 +320,33 @@ if ($kind = ^zulrah_act_jad_mage) {
 // Diving and surfacing
 // ---------------------------------------------------------------------------------------------
 
+// A PHASE CHANGE IS THREE STEPS, NOT ONE, and it used to be one. The owner's words were "zulrah
+// disappears quickly and respawns quickly when switching positions": the snake played its dive, and
+// then on the very next beat the SAME npc was teleported to the next place and started rising, so
+// it never actually left - it jumped. Old School sinks it, leaves the pool empty, and brings it up
+// somewhere else.
+//
+//   DIVING   the colour's own dive animation plays where it is, for that animation's own length
+//   UNDER    it is parked on level 3, where the client cannot draw it (~zulrah_deep)
+//   RISING   it comes up at the next phase's place in the next phase's colour
 [proc,zulrah_dive]
 npc_anim(enum(npc, seq, zulrah_dive_anim, npc_type), 0);
-%zulrah_submerged = 1;
+%zulrah_submerged = ^zulrah_sub_diving;
 // HOW LONG IT STAYS DOWN IS THIS COLOUR'S OWN DIVE, not one number for three. The three dive
 // animations are not the same length in the cache - 5071 is 105 client cycles, 5072 and 5073 are 60
 // each (tools/models/osrsseq.py on the newest cache) - so the flat four ticks this used held the red
 // and the blue forms under the water for twice the length of the animation that put them there, and
 // the snake sat still on the surface for the difference. zulrah.enum carries the three.
 %npc_action_delay = add(map_clock, enum(npc, int, zulrah_dive_ticks, npc_type));
+
+// The dive animation has finished, so the snake is under the water and nothing should be able to
+// see it or hit it. npc_setmode(null) as well as the teleport: a snake still holding applayer2
+// would keep trying to approach a player three levels below it.
+[proc,zulrah_submerge]
+%zulrah_submerged = ^zulrah_sub_under;
+npc_setmode(null);
+npc_tele(~zulrah_deep);
+%npc_action_delay = add(map_clock, ^zulrah_submerged_ticks);
 
 [proc,zulrah_surface]
 %zulrah_submerged = 0;
@@ -303,7 +374,10 @@ npc_setmode(applayer2);
 // the last thing this proc does, for the reason ~zulrah_tick's comment gives.
 
 [proc,zulrah_snakeling_orb]
-npc_anim(npc_param(attack_anim), 0);
+// The SPIT, named outright rather than read out of attack_anim. An orb is spat, and attack_anim is
+// now the magma form's tail swipe on the magma record - so a rotation that spits an orb while red
+// (rotation 4's phase 5 is "melee twice, 2 venom barrages") would have swung its tail to throw it.
+npc_anim(osrs_seq_5069, 0);
 ~npc_set_attack_vars;
 def_coord $at = map_findsquare(coord, 1, ^zulrah_snakeling_spawn_range, ^map_findsquare_lineofwalk);
 // ~coord_projectile, NOT ~player_projectile. An orb is thrown at a TILE - it lands beside you and
@@ -311,7 +385,12 @@ def_coord $at = map_findsquare(coord, 1, ^zulrah_snakeling_spawn_range, ^map_fin
 // graphic on the player and ignores the destination coord altogether (skill_combat/scripts/
 // projectile.rs2). The orb therefore flew into the player's chest and the snakeling appeared
 // somewhere else entirely. projanim_map flies to $at, which is where the snakeling turns up.
-~coord_projectile(npc_coord, $at, zulrah_range_travel, 40, 36, 32, 15, 0, 11, 5);
+//
+// AND IT IS THE WHITE ORB, which is a different graphic from the ranged attack and always was:
+// "Zulrah will summon [snakelings] during the fight via shooting WHITE orbs" (OSRS spotanim 1047,
+// the same orb mesh as the ranged attack recoloured to lightness 127 at zero saturation). The last
+// cut threw the green ranged orb here, so a snakeling orb and an attack looked identical.
+~coord_projectile(npc_coord, $at, zulrah_snakeling_orb, 40, 36, 32, 15, 0, 11, 5);
 // Half melee, half magic - OSRS's snakelings "attack with either magic or melee".
 def_npc $type = zulrah_snakeling;
 if (random(2) = 0) {
@@ -371,7 +450,11 @@ if (~npc_check_notcombat_self = false) {
     return;
 }
 %npc_action_delay = add(map_clock, ^zulrah_snakeling_attackrate);
-def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic_travel, 40, 36, 32, 15, 0, 11, 5);
+// Zulrah's own magic graphic, borrowed: OSRS's four Zulrah spotanims are the snake's - ranged,
+// magic, venom, snakeling orb - and none of them is a snakeling's cast. There is nothing in the
+// cache to use here, so the mage snakeling throws what its parent throws, and this is the one
+// graphic in the fight that is not sourced to a spotanim OSRS uses in that place.
+def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic, 40, 36, 32, 15, 0, 11, 5);
 def_int $damage = 0;
 if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(^magic_style))) {
     $damage = randominc(^zulrah_snakeling_maxhit);
@@ -390,12 +473,24 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 // cloud exists, four can burn at once without four slots, and the whole thing ends when its
 // countdown does.
 //
-// -1 is the first tick: "land on wherever I am now", which is what a barrage aimed at the player
-// does.
+// AND THE ORBS FLY NOW, which they did not. A barrage used to be Zulrah's attack animation and a
+// cloud appearing under the player's feet on the same tick, with nothing in between - so there was
+// no barrage to see and no warning to read. "Zulrah will spawn venomous clouds during the fight via
+// a barrage of dark-green orbs": the orbs are OSRS spotanim 1045, which is literally two orbs in
+// one mesh, and they are thrown at the TILE the player is on with ~coord_projectile for the same
+// reason the snakeling orb is (a ~player_projectile homes on the player and ignores the coord, so
+// it would follow them off the tile the cloud is going to land on).
+//
+// -1 is the first tick of a cloud's life: "light on the tile that was packed into me".
 [proc,zulrah_venom_barrage]
-npc_anim(npc_param(attack_anim), 0);
+// The spit, named outright, for the reason ~zulrah_snakeling_orb gives: a barrage is spat whatever
+// colour the snake is wearing.
+npc_anim(osrs_seq_5069, 0);
 ~npc_set_attack_vars;
-queue(zulrah_cloud, 0, -1);
+def_coord $at = coord;
+~coord_projectile(npc_coord, $at, zulrah_venom_cloud, 40, 36, 32, 15, 0, 11, 5);
+// The cloud lights when the orbs get there, not when they leave.
+queue(zulrah_cloud, ^zulrah_cloud_arrive, sub(0, add(~zulrah_pack_tile($at), 1)));
 
 [queue,zulrah_cloud](int $packed)
 if (%zulrah_instance = null) {
@@ -404,14 +499,15 @@ if (%zulrah_instance = null) {
 def_int $left = ^zulrah_cloud_ticks;
 def_int $tile = $packed;
 if ($packed < 0) {
-    def_int $dx = sub(coordx(coord), coordx(%zulrah_instance));
-    def_int $dz = sub(coordz(coord), coordz(%zulrah_instance));
-    $tile = add(multiply($dx, 32), $dz);
+    // The first tick, carrying the tile the barrage was aimed at. Negated and offset by one so that
+    // tile 0 - the instance's own south-west corner - is still a negative number and still reads as
+    // "this is the first tick".
+    $tile = sub(sub(0, $packed), 1);
 } else {
     $left = divide($packed, 1024);
     $tile = modulo($packed, 1024);
 }
-def_coord $at = movecoord(%zulrah_instance, divide($tile, 32), 0, modulo($tile, 32));
+def_coord $at = ~zulrah_unpack_tile($tile);
 // THE GRAPHIC IS RE-PLAYED EVERY TICK, and it has to be. A MapSpotAnim plays its sequence once and
 // the client then drops it, and zulrah_venom_cloud is six frames at delay 5 - thirty 20ms client
 // cycles, which is exactly one 600ms tick (zulrah_gfx.seq says why it was re-timed). Re-playing it
@@ -426,9 +522,10 @@ spotanim_map(zulrah_venom_cloud, $at, 0, 0);
 if (abs(sub(coordx(coord), coordx($at))) <= ^zulrah_cloud_radius
     & abs(sub(coordz(coord), coordz($at))) <= ^zulrah_cloud_radius) {
     // ~poison_hit is this build's "take N damage and die if that was the last of it" -
-    // venom.rs2 and the poison timer both land their damage through it. The splat is the
-    // ordinary one, not poison's green: a cloud is not a poison.
-    ~poison_hit(calc(random(^zulrah_cloud_maxhit) + 1), ^hitmark_damage);
+    // venom.rs2 and the poison timer both land their damage through it. The splat is VENOM'S,
+    // which is what the wiki calls it: the clouds "inflict venom damage" but "do not envenom the
+    // player", so the colour on the screen says venom and nothing here touches the venom timer.
+    ~poison_hit(calc(random(^zulrah_cloud_maxhit) + 1), ^hitmark_venom);
 }
 if ($left <= 1) {
     return;
