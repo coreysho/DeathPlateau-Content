@@ -193,7 +193,7 @@ inv_add(inv, mourning_head_mourner_key, 1);
 inv_add(inv, mourning_mourner_message, 1);
 %mourning_quest = ^mourning_has_keys;
 ~send_quest_progress(questlist:mourning, 9, ^mourning_complete);
-~objbox(mourning_head_mourner_key, "A worn key, and a letter. The letter certifies that its bearer has passed all entry requirements for something called the <col=7f0000>Death Guard<col=000000>, which is not a thing plague doctors have.", 250, 0, 0);
+~objbox(mourning_head_mourner_key, "A worn key, and a letter. The letter certifies that its bearer has passed all entry requirements for something called the @dre@Death Guard@bla@, which is not a thing plague doctors have.", 250, 0, 0);
 
 // --- The office chest ---
 

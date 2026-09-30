@@ -1298,6 +1298,7 @@ def selftest():
         check_interfaces()
         check_castable_buttons()
         check_npc_ops()
+        check_colour_tags()
         check_varp_booleans(T)
         got = {}
         for sev, path, line, rule, msg in findings:
@@ -1419,6 +1420,27 @@ def check_npc_ops():
                        "[opnpc%d,%s] is an op %s does not declare (%s) - the client can never send it, so this never runs"
                        % (op, npc, npc, have))
 
+
+def check_colour_tags():
+    """rule 21: OSRS's <col=RRGGBB> markup, which this client does not read.
+
+    377 colours text with @xxx@ - four characters, parsed by PixFont.evaluateTag - and knows nothing
+    about <col=...>. A line carrying one is printed to the player verbatim, angle brackets and all:
+    the owner saw "<col=8f0000>Zulrah rises from the water.</col>" in his chatbox. It is not a compile
+    error and nothing else catches it, so it survives until somebody reads the line in game.
+
+    Eighteen of these were in the tree when this rule was written, across seven files - the Fight
+    Cave's wave announcements among them, which every player who has ever entered it has seen.
+
+    The tags the client does have are in PixFont.evaluateTag: red gre blu yel cya mag whi bla lre dre
+    dbl or1 or2 or3 gr1 and friends. @red@ is 0xFF0000 exactly and @dre@ is 0x800000.
+    """
+    for path in walk({".rs2"}):
+        for n, line in enumerate(read(path).decode("utf-8", "replace").splitlines(), 1):
+            for tag in re.findall(r"</?col[^>]*>", line):
+                report("ERROR", path, n, "21",
+                       "%s is OSRS markup - this client reads @xxx@ tags and prints that one literally" % tag)
+
 def check_interfaces():
     for path in walk({".if"}):
         cur, kv, start = None, {}, 0
@@ -1479,6 +1501,7 @@ def main(argv):
         check_interfaces()
         check_castable_buttons()
         check_npc_ops()
+        check_colour_tags()
         check_varp_booleans(T)
 
     errors = [f for f in findings if f[0] == "ERROR"]

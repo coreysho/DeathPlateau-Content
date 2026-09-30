@@ -165,7 +165,7 @@ if (%mourning_gun_ammo ! $wants) {
     sound_synth(mourning_firegun, 1, 0);
     sound_synth(mourning_impact, 1, 30);
     p_delay(1);
-    ~mesbox("The dye splashes across the fleece and runs straight off it. Whatever the Mourners have been dipping these sheep in, this flock will only hold <col=7f0000><~mourning_colour_name($wants)><col=000000>.");
+    ~mesbox("The dye splashes across the fleece and runs straight off it. Whatever the Mourners have been dipping these sheep in, this flock will only hold @dre@<~mourning_colour_name($wants)>@bla@.");
     return;
 }
 sound_synth(mourning_firegun, 1, 0);

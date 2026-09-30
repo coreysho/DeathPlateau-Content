@@ -37,7 +37,7 @@ if (~fightcave_build = false) {
 %fightcave_cycle_at = 0;
 p_teleport(~fightcave_at(^fightcave_entry));
 ~fightcave_spawn_wave(1);
-mes("<col=ff0000>Wave 1</col>");
+mes("@red@Wave 1@bla@");
 
 [label,fightcave_leave]
 if (p_finduid(uid) = false) {
@@ -155,7 +155,7 @@ if (%fightcave_wave >= ^fightcave_jad_wave) {
 }
 %fightcave_wave = add(%fightcave_wave, 1);
 ~fightcave_spawn_wave(%fightcave_wave);
-mes("<col=ff0000>Wave <tostring(%fightcave_wave)></col>");
+mes("@red@Wave <tostring(%fightcave_wave)>@bla@");
 
 // ---------------------------------------------------------------------------------------------
 // Getting out, one way or the other
@@ -182,7 +182,7 @@ p_teleport(^fightcave_outside);
 instance_delete($inst);
 
 [proc,fightcave_finish]
-mes("<col=ff0000>You have defeated TzTok-Jad!</col>");
+mes("@red@You have defeated TzTok-Jad!@bla@");
 ~fightcave_reward;
 ~fightcave_end(^fightcave_waves);
 

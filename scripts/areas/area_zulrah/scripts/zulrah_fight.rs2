@@ -108,7 +108,7 @@ if (~zulrah_build = false) {
     return;
 }
 p_teleport(~zulrah_at(^zulrah_entry));
-mes("<col=8f0000>Zulrah rises from the water.</col>");
+mes("@dre@Zulrah rises from the water.@bla@");
 // The rotation is rolled fresh every fight, as it is in Old School. npc_add makes the snake the
 // active npc, so every line below it writes Zulrah's own vars.
 npc_add(~zulrah_at(^zulrah_pos_middle), zulrah, ^zulrah_npc_life);

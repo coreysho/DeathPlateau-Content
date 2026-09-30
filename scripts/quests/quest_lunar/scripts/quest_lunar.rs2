@@ -79,7 +79,7 @@ if (stat(herblore) < ^lunar_req_herblore | stat(crafting) < ^lunar_req_crafting
         | stat(magic) < ^lunar_req_magic | stat(mining) < ^lunar_req_mining
         | stat(woodcutting) < ^lunar_req_woodcutting) {
     ~chatnpc("<p,neutral>Yar, you'd not last a day out there as you are. You'll need to be handier than that first.");
-    ~mesbox("You need the following before Lokar will take you:|<col=8B0000>Herblore <tostring(^lunar_req_herblore)>, Crafting <tostring(^lunar_req_crafting)>, Defence <tostring(^lunar_req_defence)>, Firemaking <tostring(^lunar_req_firemaking)>,|Magic <tostring(^lunar_req_magic)>, Mining <tostring(^lunar_req_mining)> and Woodcutting <tostring(^lunar_req_woodcutting)></col>");
+    ~mesbox("You need the following before Lokar will take you:|@dre@Herblore <tostring(^lunar_req_herblore)>, Crafting <tostring(^lunar_req_crafting)>, Defence <tostring(^lunar_req_defence)>, Firemaking <tostring(^lunar_req_firemaking)>,|Magic <tostring(^lunar_req_magic)>, Mining <tostring(^lunar_req_mining)> and Woodcutting <tostring(^lunar_req_woodcutting)>@bla@");
     return(false);
 }
 return(true);

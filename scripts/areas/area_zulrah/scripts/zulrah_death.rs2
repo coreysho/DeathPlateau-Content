@@ -58,7 +58,7 @@ if (%zulrah_items_held = ^false) {
 }
 inv_clear(zulrah_deathbank);
 %zulrah_items_held = ^false;
-mes("<col=8f0000>Whatever Priestess Zul-Gwenwynig was keeping for you is gone.</col>");
+mes("@dre@Whatever Priestess Zul-Gwenwynig was keeping for you is gone.@bla@");
 
 // ---------------------------------------------------------------------------------------------
 // Collecting it back
