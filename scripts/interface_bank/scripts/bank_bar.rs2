@@ -7,10 +7,16 @@
 //
 // THE QUANTITY BUTTONS are radio buttons over one varp, exactly like Swap/Insert - buttontype=
 // select writes %bankquantity client side on click AND sends this if_button, so the highlight is
-// instant and the server still learns about it. What the server then does is rewrite the FIRST
-// right-click option of both grids with if_setinvop, so the left click reads "Withdraw 10" and
-// [inv_button1] withdraws ten. The other four options keep their fixed 1/5/10/All/X wording, the
-// way OSRS keeps its explicit entries underneath the default one.
+// instant and the server still learns about it. What the server then does is rewrite ALL FIVE
+// right-click options of both grids with if_setinvop, so the left click reads "Withdraw 10" and
+// the four entries under it are the four amounts that are NOT selected.
+//
+// Rewriting all five is the fix for "when 'all' or 'x' amount is selected in bank you cannot
+// withdraw 1" (Corey, 2026-09-30). Only option 1 used to be rewritten, and option 1 is the cache's
+// "Withdraw 1" - so choosing All overwrote the only Withdraw-1 entry there was and left the menu
+// reading All / 5 / 10 / All / X. OSRS always offers all five however the buttons are set; the
+// selected one is only ever the LEFT click. The order here is OSRS's own - 1, 5, 10, X, All -
+// which is already the order the ^bank_qty_* constants are numbered in, so a mode IS its rank.
 
 [if_button,bank_main:bankqty1] ~bank_setquantity(^bank_qty_1);
 [if_button,bank_main:bankqty5] ~bank_setquantity(^bank_qty_5);
@@ -33,42 +39,101 @@ if (last_int <= 0) {
 %bankquantity = $quantity;
 ~bank_apply_quantity;
 
-// Push the current choice into the two grids' left-click option and onto the X button's face.
+// Push the current choice into the two grids' five options and onto the X button's face.
 // Called on every change and once on open, because if_setinvop is not sticky: the client rebuilds
-// a component's options from the cache whenever the interface is loaded.
+// a component's options from the cache whenever the interface is loaded (Component.unloadCom).
 [proc,bank_apply_quantity]
-def_string $label = ~bank_quantity_label;
-if_setinvop(bank_main:bank, 1, "Withdraw<$label>");
-if_setinvop(bank_side:inv, 1, "Deposit<$label>");
+def_int $op = 1;
+def_string $label = "";
+while ($op <= 5) {
+    $label = ~bank_op_label($op);
+    if_setinvop(bank_main:bank, $op, "Withdraw<$label>");
+    if_setinvop(bank_side:inv, $op, "Deposit<$label>");
+    $op = add($op, 1);
+}
 if_settext(bank_main:bankqtyxtext, ~bank_quantity_xlabel);
 
-[proc,bank_quantity_amount]()(int)
-switch_int (%bankquantity) {
-    case ^bank_qty_5 : return(5);
-    case ^bank_qty_10 : return(10);
-    case ^bank_qty_all : return(^max_32bit_int);
-    case ^bank_qty_x :
-        // belt and braces: the X button never stores a non-positive amount, but a zero here would
-        // reach @bank_withdraw as "ask me" and pop a second amount prompt on every left click.
-        if (%bankquantity_x > 0) {
-            return(%bankquantity_x);
-        }
-        return(1);
-    case default : return(1);
+// Which of the five amounts sits on right-click option $op. Option 1 is whatever the quantity
+// buttons are set to; options 2-5 are the other four, walked in ^bank_qty_* order (1, 5, 10, X,
+// All) with the selected one skipped. That is why the menu can never lose an entry: the five
+// options are a permutation of the five modes rather than four fixed ones plus an overwrite.
+[proc,bank_op_mode](int $op)(int)
+if ($op <= 1) {
+    return(%bankquantity);
 }
+def_int $mode = ^bank_qty_1;
+def_int $rank = 2;
+while ($mode <= ^bank_qty_all) {
+    if ($mode ! %bankquantity) {
+        if ($rank = $op) {
+            return($mode);
+        }
+        $rank = add($rank, 1);
+    }
+    $mode = add($mode, 1);
+}
+return(^bank_qty_1);
 
-[proc,bank_quantity_label]()(string)
-switch_int (%bankquantity) {
+// The wording on option $op. The SELECTED entry spells out the stored X amount ("Withdraw 6000000")
+// because that is what a left click will actually take; the explicit X entry underneath it stays
+// the letter X, because clicking that one asks for an amount the way OSRS's Withdraw-X does.
+[proc,bank_op_label](int $op)(string)
+if ($op <= 1) {
+    return(~bank_quantity_label);
+}
+return(~bank_mode_label(~bank_op_mode($op)));
+
+// How many option $op takes. Same split as the label: the selected X entry uses the stored amount,
+// the explicit X entry returns null, which @bank_withdraw and @bank_deposit read as "ask me".
+[proc,bank_op_amount](int $op)(int)
+def_int $mode = ~bank_op_mode($op);
+if ($op <= 1 & $mode = ^bank_qty_x) {
+    return(~bank_quantity_amount);
+}
+return(~bank_mode_amount($mode));
+
+[proc,bank_mode_label](int $mode)(string)
+switch_int ($mode) {
     case ^bank_qty_5 : return(" 5");
     case ^bank_qty_10 : return(" 10");
     case ^bank_qty_all : return(" All");
-    case ^bank_qty_x :
-        if (%bankquantity_x > 0) {
-            return(" <tostring(%bankquantity_x)>");
-        }
-        return(" 1");
+    case ^bank_qty_x : return(" X");
     case default : return(" 1");
 }
+
+[proc,bank_mode_amount](int $mode)(int)
+switch_int ($mode) {
+    case ^bank_qty_5 : return(5);
+    case ^bank_qty_10 : return(10);
+    case ^bank_qty_all : return(^max_32bit_int);
+    case ^bank_qty_x : return(null);
+    case default : return(1);
+}
+
+// The SELECTED amount, which is the one a left click takes. The four fixed amounts are
+// ~bank_mode_amount's business; the only thing this adds is X, which stands for a stored number
+// rather than for a prompt once the player has entered one.
+[proc,bank_quantity_amount]()(int)
+if (%bankquantity = ^bank_qty_x) {
+    // belt and braces: the X button never stores a non-positive amount, but a zero here would
+    // reach @bank_withdraw as "ask me" and pop a second amount prompt on every left click.
+    if (%bankquantity_x > 0) {
+        return(%bankquantity_x);
+    }
+    return(1);
+}
+return(~bank_mode_amount(%bankquantity));
+
+// The selected amount's wording, the same split as ~bank_quantity_amount: a stored X is spelled
+// out in full ("Withdraw 6000000") so the left-click option says what it will really take.
+[proc,bank_quantity_label]()(string)
+if (%bankquantity = ^bank_qty_x) {
+    if (%bankquantity_x > 0) {
+        return(" <tostring(%bankquantity_x)>");
+    }
+    return(" 1");
+}
+return(~bank_mode_label(%bankquantity));
 
 // OSRS puts the chosen amount on the button once it has been set, so the bar reads 1 5 10 250 All
 // rather than 1 5 10 X All. Before anything has been entered it is still an X.

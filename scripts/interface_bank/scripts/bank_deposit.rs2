@@ -1,8 +1,11 @@
-[inv_button1,bank_side:inv] @bank_deposit(last_slot, ~bank_quantity_amount);
-[inv_button2,bank_side:inv] @bank_deposit(last_slot, 5);
-[inv_button3,bank_side:inv] @bank_deposit(last_slot, 10);
-[inv_button4,bank_side:inv] @bank_deposit(last_slot, ^max_32bit_int);
-[inv_button5,bank_side:inv] @bank_deposit(last_slot, null);
+// The side pack's five options move with the quantity buttons exactly as the bank grid's do, and
+// for the same reason: with All selected the old code overwrote the only "Deposit 1" entry there
+// was. ~bank_op_amount (bank_bar.rs2) is the one place op -> amount is decided for both grids.
+[inv_button1,bank_side:inv] @bank_deposit(last_slot, ~bank_op_amount(1));
+[inv_button2,bank_side:inv] @bank_deposit(last_slot, ~bank_op_amount(2));
+[inv_button3,bank_side:inv] @bank_deposit(last_slot, ~bank_op_amount(3));
+[inv_button4,bank_side:inv] @bank_deposit(last_slot, ~bank_op_amount(4));
+[inv_button5,bank_side:inv] @bank_deposit(last_slot, ~bank_op_amount(5));
 [inv_buttond,bank_side:inv] inv_movetoslot(inv, inv, last_slot, last_targetslot);
 
 [label,bank_deposit](int $slot, int $requested_number)
