@@ -51,7 +51,10 @@ if (~player_autocast_enabled = true) {
 // back to its first style (Bash) and the swing happens with that. Modes 0-2 are melee on every
 // staff; the trident's tab is magic on all three and never reaches this.
 if (%damagetype = ^magic_style & %com_mode > 2) {
-    %com_mode = 0;
+    // ~set_com_mode, so the staff's remembered style comes back as Bash as well - otherwise the next
+    // redraw of the combat tab would put the player straight back on the Spell box they have no
+    // spell for (player_attackstyles.rs2).
+    ~set_com_mode(0);
     ~player_combat_stat;
 }
 @player_melee_attack;

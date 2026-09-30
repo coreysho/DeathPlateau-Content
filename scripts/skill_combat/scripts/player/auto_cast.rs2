@@ -34,7 +34,11 @@ if (p_finduid(uid) = false) { // cant open autocast interface if delayed
 // already autocasting switches you between plain and defensive casting without having to pick the
 // spell again - and so a cancelled picker leaves the tab where you clicked. A style with no spell
 // armed is caught in player_combat.rs2 and falls back to Bash.
-%com_mode = $style;
+//
+// Through ~set_com_mode, so the staff's remembered style is the Spell box too: picking a spell ends
+// in ~initalltabs, which redraws the combat tab and restores the staff's slot over the top of
+// whatever is here (player_attackstyles.rs2).
+~set_com_mode($style);
 ~player_combat_stat;
 if_settab(staff_spells, 0);
 
