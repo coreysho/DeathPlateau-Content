@@ -2,6 +2,7 @@
 //
 // ::~onehit            toggle - every swing kills whatever you hit, hit or miss
 // ::~kill              instantly kill the nearest npc, no fighting
+// ::~npcinfo           the hitpoints the SERVER holds for every npc near you
 // ::~droptest <npc> <n>  spawn that npc next to you and kill it n times, for drop-rate testing
 // ::~droptest <npc> 0    cancel a running drop test
 //
@@ -93,6 +94,42 @@ if (p_finduid(uid) = true) {
     def_string $name = npc_name;
     ~debug_kill_active;
     mes("Killed <$name>.");
+}
+
+// ---------------------------------------------------------------------------------------------
+// ::~npcinfo - the hitpoints the SERVER holds, for every npc within 15 tiles.
+//
+// The health bar the client draws over a boss is built out of the hitsplats the client has been
+// SENT. It is not the number the server kills on, and the two can disagree - a dropped or
+// mis-ordered hit leaves the bar empty over an npc the server still gives hitpoints to. When a
+// boss looks like it reached zero and refused to die, this is the number that settles which of
+// the two is wrong, and it is the first thing to read before anything else is chased.
+//
+// It prints the PLANE as well, which matters for Zulrah in particular: the snake is parked on
+// level 3 between phases so the client cannot draw it, and one on level 3 is submerged and is
+// meant to be untouchable.
+// ---------------------------------------------------------------------------------------------
+[debugproc,npcinfo]
+if (p_finduid(uid) = true) {
+    if (~debug_require_dev = false) {
+        return;
+    }
+    def_int $found = 0;
+    npc_findallany(coord, 15, ^vis_off);
+    while (npc_findnext = true) {
+        $found = add($found, 1);
+        // CAPPED. The chatbox holds a dozen lines and fifteen tiles of Lumbridge is
+        // twenty-two npcs, which scrolls the one being asked about straight off the top.
+        if ($found <= ^debug_npcinfo_max) {
+            mes("<npc_name>: <tostring(npc_stat(hitpoints))>/<tostring(npc_basestat(hitpoints))> hp, at <tostring(coordx(npc_coord))>,<tostring(coordz(npc_coord))> level <tostring(coordy(npc_coord))>");
+        }
+    }
+    if ($found > ^debug_npcinfo_max) {
+        mes("...and <tostring(sub($found, ^debug_npcinfo_max))> more - stand closer to the one you want.");
+    }
+    if ($found = 0) {
+        mes("No npc within 15 tiles.");
+    }
 }
 
 // ---------------------------------------------------------------------------------------------

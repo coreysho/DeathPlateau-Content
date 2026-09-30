@@ -18,3 +18,5 @@
 // ticks the spawned npc lives if something goes wrong and it is never killed, so a failed test
 // cleans itself up rather than leaving a monster standing on you
 ^debug_droptest_lifetime = 50
+// How many npcs ::~npcinfo will print before it stops and counts the rest.
+^debug_npcinfo_max = 10
