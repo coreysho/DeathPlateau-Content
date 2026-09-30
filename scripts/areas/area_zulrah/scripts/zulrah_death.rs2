@@ -49,6 +49,8 @@ while ($slot < inv_size(inv)) {
 }
 ~update_all(null);
 %zulrah_items_held = ^true;
+// A NEW DEATH IS A NEW FEE, so whatever was paid for the last one does not carry over.
+%zulrah_recovery_paid = ^false;
 
 // The ordinary death, from player/scripts/death.rs2. A player who dies in the world with things
 // still sitting with the priestess loses them, exactly as Old School says.
@@ -74,7 +76,10 @@ if (%zulrah_items_held = ^false) {
     ~chatnpc("<p,neutral>I am keeping nothing of yours. Long may that|last.");
     return;
 }
-if (~zulrah_recovery_fee > 0) {
+// ALREADY PAID IS ALREADY PAID. The fee buys this death back, not this conversation: a player
+// whose inventory fills is told to come back for the rest, and coming back must not cost
+// another 100,000.
+if (~zulrah_recovery_fee > 0 & %zulrah_recovery_paid = ^false) {
     if (inv_total(inv, coins) < ~zulrah_recovery_fee) {
         ~chatnpc("<p,sad>The Great One's blessing is not free forever.|Bring me <tostring(~zulrah_recovery_fee)> coins and your things are|yours again.");
         return;
@@ -84,8 +89,9 @@ if (inv_freespace(inv) = 0) {
     ~chatnpc("<p,neutral>You are carrying too much already.");
     return;
 }
-if (~zulrah_recovery_fee > 0) {
+if (~zulrah_recovery_fee > 0 & %zulrah_recovery_paid = ^false) {
     inv_del(inv, coins, ~zulrah_recovery_fee);
+    %zulrah_recovery_paid = ^true;
 }
 def_int $slot = 0;
 while ($slot < inv_size(zulrah_deathbank)) {
@@ -99,6 +105,7 @@ if (~zulrah_deathbank_count > 0) {
     return;
 }
 %zulrah_items_held = ^false;
+%zulrah_recovery_paid = ^false;
 ~chatnpc("<p,happy>There. Every last thing of yours.");
 
 // What this recovery costs. The fifty is on kills: "First 50 kills: free recovery. After 50 kills:

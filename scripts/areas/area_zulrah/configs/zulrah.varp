@@ -37,3 +37,13 @@ scope=perm
 // The trident of the swamp's charges, on the same terms as the seas'. 0..2,500.
 [swamp_trident_charges]
 scope=perm
+
+// WHETHER THIS DEATH HAS ALREADY BEEN PAID FOR.
+//
+// The recovery fee is per DEATH, not per trip to the priestess. Without this it was charged
+// every time you spoke to her, so a player whose inventory filled up - which she says 'come back
+// for the rest' about, so it is an expected thing to happen - paid 100,000 again for items they
+// had already bought back. Set when the fee is taken, cleared when the bank is finally empty and
+// when a new death fills it.
+[zulrah_recovery_paid]
+scope=perm

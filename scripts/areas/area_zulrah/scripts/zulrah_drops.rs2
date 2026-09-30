@@ -52,7 +52,18 @@ obj_add($at, zulrahs_scales, ~random_range(^zulrah_scales_min, ^zulrah_scales_ma
 // sixteen the snake died and left nobody a way home. One is guaranteed here so that killing it
 // is always enough; the 15/249 stack is still in the table on top of this, and is still what
 // makes them worth banking.
-obj_add($at, zul_andra_teleport, 1, ^lootdrop_duration);
+//
+// ON ITS OWN TILE, NOT ON THE PILE. Everything else lands under the player, and a scroll
+// underneath a heap of loot is a scroll you take by accident while looting - which is the one
+// thing it must not be, because taking it is not how it is used. map_findsquare with a MINIMUM
+// radius of 1 puts it beside the pile instead: still reachable (lineofwalk checks that it can
+// be walked to from where the player is standing), never underneath anything.
+def_coord $tele = map_findsquare($at, 1, 2, ^map_findsquare_lineofwalk);
+if ($tele = null) {
+    // Nowhere free beside them - better on the pile than not dropped at all.
+    $tele = $at;
+}
+obj_add($tele, zul_andra_teleport, 1, ^lootdrop_duration);
 // The tertiaries, one roll each.
 ~trail_hardcluedrop(^zulrah_elite_clue_rate, $at);
 if (random(^zulrah_jar_rate) = 0) {

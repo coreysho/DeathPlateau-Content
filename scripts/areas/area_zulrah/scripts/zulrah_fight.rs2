@@ -102,6 +102,19 @@ return(movecoord(%zulrah_instance, $dx, 0, $dz));
 // keeps working - which is the whole reason this tile is inside the instance rather than off in a
 // corner of the map. The tile sits two in from the zone's own corner so that all 5x5 of Zulrah
 // lands inside the one zone that was laid for it.
+// WHERE ZULRAH ACTUALLY IS, for anything that flies out of it.
+//
+// npc_coord is the SOUTH-WEST TILE of an npc, and Zulrah is size=5 - so every projectile in this
+// fight left from the corner of a five-by-five snake rather than from the snake. The owner's
+// words were "the attack animations are coming from the corner of zulrah and not the correct
+// place", and that is exactly what they were.
+//
+// Two tiles in each direction is the middle of a five. This is a proc rather than five copies of
+// movecoord because there are five places that throw something, and the next one should not have
+// to know the size.
+[proc,zulrah_muzzle]()(coord)
+return(movecoord(npc_coord, 2, 0, 2));
+
 [proc,zulrah_deep]()(coord)
 if (%zulrah_instance = null) {
     return(^zulrah_template);
@@ -431,7 +444,7 @@ def_coord $at = map_findsquare(coord, 1, ^zulrah_snakeling_spawn_range, ^map_fin
 // "Zulrah will summon [snakelings] during the fight via shooting WHITE orbs" (OSRS spotanim 1047,
 // the same orb mesh as the ranged attack recoloured to lightness 127 at zero saturation). The last
 // cut threw the green ranged orb here, so a snakeling orb and an attack looked identical.
-~coord_projectile(npc_coord, $at, zulrah_snakeling_orb, 40, 36, 32, 15, 0, 11, 5);
+~coord_projectile(~zulrah_muzzle, $at, zulrah_snakeling_orb, 40, 36, 32, 15, 0, 11, 5);
 // Half melee, half magic - OSRS's snakelings "attack with either magic or melee".
 def_npc $type = zulrah_snakeling;
 if (random(2) = 0) {
@@ -495,7 +508,7 @@ if (~npc_check_notcombat_self = false) {
 // magic, venom, snakeling orb - and none of them is a snakeling's cast. There is nothing in the
 // cache to use here, so the mage snakeling throws what its parent throws, and this is the one
 // graphic in the fight that is not sourced to a spotanim OSRS uses in that place.
-def_int $duration = ~player_projectile(npc_coord, coord, uid, zulrah_magic, 40, 36, 32, 15, 0, 11, 5);
+def_int $duration = ~player_projectile(~zulrah_muzzle, coord, uid, zulrah_magic, 40, 36, 32, 15, 0, 11, 5);
 def_int $damage = 0;
 if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(^magic_style))) {
     $damage = randominc(^zulrah_snakeling_maxhit);
@@ -564,7 +577,7 @@ while ($slot < $end) {
     // flight: OSRS spotanim 1045, two dark-green orbs, which is 1044's ranged comet doubled. What
     // lights on the tile when they arrive is [queue,zulrah_cloud] below, and that is a different
     // spotanim entirely now - see configs/zulrah_gfx.spotanim.
-    ~coord_projectile(npc_coord, $at, zulrah_venom_orbs, 40, 36, 32, 15, 0, 11, 5);
+    ~coord_projectile(~zulrah_muzzle, $at, zulrah_venom_orbs, 40, 36, 32, 15, 0, 11, 5);
     // The cloud lights when the orbs get there, not when they leave.
     queue(zulrah_cloud, ^zulrah_cloud_arrive, sub(0, add(~zulrah_pack_tile($at), 1)));
     $slot = add($slot, 1);
