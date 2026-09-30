@@ -8,6 +8,9 @@
 //    all confirmed OSRS-only additions from 2013+ with no equivalent at this server's revision.
 //  - elite clue scroll: excluded (hard clue only - see below); ensouled heads/Konar have no reasonable
 //    2006 substitute so they're dropped rather than reskinned.
+//  - dragon pickaxe: NOT a Dagannoth King drop in OSRS. It was here at 1/128 and has been moved to
+//    the bosses the wiki's Dragon pickaxe page actually lists and this build actually has - the
+//    Kalphite Queen, the Chaos Elemental and the King Black Dragon.
 // Follows the same structure as king_black_dragon.rs2 (bespoke ai_queue3 override + weighted
 // random(128) cascade), not the roll_on_drop_table/dbrow system.
 
@@ -24,16 +27,6 @@ if (npc_findhero = ^false) {
 obj_add(npc_coord, dagannoth_king_bones, 1, ^lootdrop_duration);
 
 ~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
-
-// The dragon pickaxe, on its own roll BEFORE the cascade rather than inside it. Every threshold
-// in that cascade is a calibrated 128th and inserting a band would shift all of them; this way
-// nothing else moves. It is also the truer shape - OSRS added the pickaxe to the Kings as an
-// extra 1/128 alongside the rings, not carved out of the existing table. This is the item's only
-// source in the game.
-if (random(128) = 0) {
-    obj_add(npc_coord, dragon_pickaxe, 1, ^lootdrop_duration);
-    ~broadcast_drop(dragon_pickaxe);
-}
 
 def_int $random = random(128);
 

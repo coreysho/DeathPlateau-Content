@@ -6,8 +6,9 @@
 // WHERE IT IS KEPT. The perm inv collection_log, one stackall slot per distinct item obtained with
 // the count in the slot (collection_log.inv says why an inv rather than packed varps). An item is
 // obtained on every page that lists it the moment it is obtained once - the log is keyed by item,
-// as Old School's is - so the dragon pickaxe from a Dagannoth King fills it in on the Rare Drop
-// Table page too, and a page added later is already filled in for everyone who has its items.
+// as Old School's is - so a dragon pickaxe from the Kalphite Queen fills it in on the Chaos
+// Elemental and King Black Dragon pages too, and a page added later is already filled in for
+// everyone who has its items.
 //
 // HOW AN ITEM GETS IN: ~collection_log_add, called where the thing is DROPPED or HANDED OUT, never
 // where it is picked up - a traded or found item does not count, as in Old School. It ignores any
@@ -15,8 +16,8 @@
 // call sites, so a new page knows whether its items are already covered:
 //
 //   ~broadcast_drop  general/scripts/broadcast.rs2   every broadcast rare: GWD uniques, the Kraken,
-//                                                    the black mask, the Dagannoth Kings' pickaxe and
-//                                                    rings, the mega-rare table
+//                                                    the black mask, the Dagannoth Kings' rings, the
+//                                                    dragon pickaxe, the mega-rare table
 //   ~broadcast_pet   general/scripts/broadcast.rs2   every pet, boss or skilling
 //   ~outfit_give     skilling_outfits/.../outfit_drop.rs2   every skilling outfit piece
 //   ~barrows_reward_add   area_barrows/.../barrows_chest.rs2   everything the chest pays

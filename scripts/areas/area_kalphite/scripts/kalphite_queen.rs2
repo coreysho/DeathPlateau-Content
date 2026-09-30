@@ -25,7 +25,7 @@ if (npc_canreach = true) {
 switch_int($random) {
     case 0 : ~kalphite_queen_mage_attack;
     case 1 : ~kalphite_queen_ranged_attack;
-    case 2 : ~kalphite_melee_attack;
+    case 2 : ~kalphite_queen_melee_attack;
 }
 
 // #1 https://youtu.be/KTVznh5-S44?t=222
@@ -42,20 +42,36 @@ npc_delay(0);
 // npc_arrivedelay; // might replace this when the client can add+face on same tick
 
 .npc_add(npc_coord, kalphite_queen_dead, 3);
-.npc_anim(kalphite_crackopen, 0);
+// The shell splitting open IS Old School's death animation for the first form (seq 6242), which
+// is what it is: the queen does not die here, she comes out of it.
+.npc_anim(osrs_seq_6242, 0);
 ~sound_area(kalphite_crack_open, 0, movecoord(npc_coord, 2, 0, 2), 12);
 
 npc_changetype_keepall(kalphite_flyingqueen, 2000); // 20 min in osrs
-npc_anim(kalphite_queen_rising, 0);
+npc_anim(osrs_seq_6270, 0); // OSRS seq 6270, the flying form unfolding out of the shell
 // https://x.com/JagexAsh/status/861503532712722432 doesn't stat heal all stats
 npc_statheal(hitpoints, 0, 100);
 npc_sethuntmode(kalphite_queen);
 
 npc_delay(0);
 
+// THE FIRST FORM'S MELEE, hers alone. [proc,kalphite_melee_attack] in kalphite.rs2 serves every
+// other kalphite in the dungeon and plays kalphite_attack_mandibles / kalphite_attack_claws, which
+// are 377 seqs on the 377 kalphite skeleton; the queen wears Old School's mesh now and those move
+// nothing on it. Old School gives her first form ONE attack animation for all three styles (seq
+// 6240 is the only attack on skeleton 1422 in her own block of five), so there is no claws/mandibles
+// coin flip to keep.
+[proc,kalphite_queen_melee_attack]
+anim(%com_defendanim, 0);
+npc_anim(osrs_seq_6240, 0);
+if (npc_param(attack_sound) ! null) {
+    sound_synth(npc_param(attack_sound), 0, 0);
+}
+~npc_meleeattack;
+
 [proc,kalphite_queen_mage_attack]
 spotanim_npc(kalphite_glow, 0, 0);
-npc_anim(kalphite_lightning, 0);
+npc_anim(osrs_seq_6240, 0);
 sound_synth(kalthite_lightning, 1, 30);
 if_close;
 %npc_action_delay = add(map_clock, npc_param(attackrate));
@@ -123,7 +139,7 @@ return(coord, $duration, $total_distance);
 // distance of 6: map_projanim_v2	id=kalphite_spine (288), starttime=30, endtime=58, angle=20, progress=255, startheight=120, endheight=124
 [proc,kalphite_queen_ranged_attack]
 if_close;
-npc_anim(kalphite_ranged_attack, 0);
+npc_anim(osrs_seq_6240, 0);
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 
 def_int $damage = 0;
@@ -182,9 +198,9 @@ switch_int($random) {
 [proc,kalphite_flyingqueen_melee_attack]
 anim(%com_defendanim, 0);
 if (random(2) = 0) {
-    npc_anim(kalphite_queen_attack_mandibles, 0);
+    npc_anim(osrs_seq_6234, 0);
 } else {
-    npc_anim(kalphite_queen_attack_claws, 0);
+    npc_anim(osrs_seq_6235, 0);
 }
 if (npc_param(attack_sound) ! null) {
     sound_synth(npc_param(attack_sound), 0, 0);
@@ -193,7 +209,7 @@ if (npc_param(attack_sound) ! null) {
 
 [proc,kalphite_flyingqueen_mage_attack]
 spotanim_npc(kalphite_queen_glow, 0, 0);
-npc_anim(kalphite_queen_lightning, 0);
+npc_anim(osrs_seq_6234, 0);
 sound_synth(kalthite_lightning, 1, 30);
 
 if_close;
@@ -203,7 +219,7 @@ if_close;
 
 [proc,kalphite_flyingqueen_ranged_attack]
 if_close;
-npc_anim(kalphite_queen_ranged_attack, 0);
+npc_anim(osrs_seq_6234, 0);
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 
 def_int $damage = 0;

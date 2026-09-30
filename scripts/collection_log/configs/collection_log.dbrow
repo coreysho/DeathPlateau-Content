@@ -49,6 +49,7 @@ data=items,barrows_verac_body
 data=items,barrows_verac_legs
 data=items,barrows_karil_ammo
 data=items,dragon_2h_sword
+data=items,dragon_pickaxe
 data=items,bosspet_zilyana_item
 data=items,saradomin_sword
 data=items,saradomin_hilt
@@ -66,7 +67,6 @@ data=items,warrior_ring
 data=items,dragon_axe
 data=items,daganoth_cave_magic_shortbow
 data=items,mud_battlestaff
-data=items,dragon_pickaxe
 data=items,tzhaar_cape_fire
 data=items,bosspet_tzrek_jad_item
 data=items,tzhaar_cape_infernal
@@ -358,11 +358,12 @@ data=items,barrows_verac_legs
 data=items,barrows_karil_ammo
 data=counters,"Barrows Chests",103
 
-// Chaos Elemental: 1 items
+// Chaos Elemental: 2 items
 [collection_log_chaos_elemental]
 table=collection_log_entry
 data=name,"Chaos Elemental"
 data=items,dragon_2h_sword
+data=items,dragon_pickaxe
 data=counters,"Chaos Elemental kills",6
 
 // Commander Zilyana: 7 items
@@ -378,7 +379,7 @@ data=items,godsword_shard_2
 data=items,godsword_shard_3
 data=counters,"Commander Zilyana kills",3
 
-// Dagannoth Kings: 11 items
+// Dagannoth Kings: 10 items
 [collection_log_dagannoth_kings]
 table=collection_log_entry
 data=name,"Dagannoth Kings"
@@ -392,7 +393,6 @@ data=items,warrior_ring
 data=items,dragon_axe
 data=items,daganoth_cave_magic_shortbow
 data=items,mud_battlestaff
-data=items,dragon_pickaxe
 data=counters,"Rex kills",7
 data=counters,"Prime kills",9
 data=counters,"Supreme kills",8
@@ -429,20 +429,22 @@ data=items,mole_skin
 data=items,mole_claw
 data=counters,"Giant Mole kills",11
 
-// Kalphite Queen: 3 items
+// Kalphite Queen: 4 items
 [collection_log_kq]
 table=collection_log_entry
 data=name,"Kalphite Queen"
 data=items,bosspet_kalphite_queen_item
 data=items,kq_head
 data=items,dragon_chainbody
+data=items,dragon_pickaxe
 data=counters,"Kalphite Queen kills",5
 
-// King Black Dragon: 1 items
+// King Black Dragon: 2 items
 [collection_log_kbd]
 table=collection_log_entry
 data=name,"King Black Dragon"
 data=items,bosspet_kbd_item
+data=items,dragon_pickaxe
 data=counters,"King Black Dragon kills",10
 
 // Kraken: 4 items

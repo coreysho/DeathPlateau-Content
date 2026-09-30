@@ -8341,8 +8341,12 @@ model=obj_phoenix_crossbow
 2dyan=1132
 2dxan=332
 iop2=Wield
-manwear=obj_phoenix_crossbow_manwear,0
-womanwear=obj_phoenix_crossbow_manwear,6
+// The Phoenix crossbow is the plain crossbow under another name - it shared the same wield model and
+// so had the same ninety-degree grip, for the reason spelled out at [crossbow] further down. Its
+// recol1s=6273 above is already a no-op: no face in either model carries colour 6273, so nothing is
+// lost by moving to the same wield model the other nine crossbows use.
+manwear=obj_crossbow474_manwear,0
+womanwear=obj_crossbow474_manwear,6
 wearpos=righthand
 weight=8lb
 category=weapon_crossbow
@@ -9985,8 +9989,16 @@ model=obj_phoenix_crossbow
 2dyan=744
 2dxan=640
 iop2=Wield
-manwear=obj_phoenix_crossbow_manwear,0
-womanwear=obj_phoenix_crossbow_manwear,6
+// HELD LIKE EVERY OTHER CROSSBOW. 377's own wield model (obj_phoenix_crossbow_manwear) is authored
+// for 377's one-handed hip shot, human_crossbow - its limbs span the model's Z axis and it is only
+// 20 units wide in X. Every other crossbow in the game is on the OSRS two-handed stance instead
+// (osrs_crossbow_ready/walk/run, see skill_combat/configs/ranged/osrs_crossbow_std_anims.seq, which
+// explains why), and their wield models are authored for THAT arm: obj_crossbow474_manwear spans
+// 62 units in X and is flat in Z, as do the Armadyl and hunters' crossbows. Kept on the 377 model,
+// this one crossbow was turned ninety degrees in the hand. The inventory model below is untouched -
+// in the bag it is still 2006's crossbow.
+manwear=obj_crossbow474_manwear,0
+womanwear=obj_crossbow474_manwear,6
 category=weapon_crossbow
 wearpos=righthand
 weight=8kg

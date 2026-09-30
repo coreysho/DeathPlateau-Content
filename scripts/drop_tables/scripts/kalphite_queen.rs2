@@ -17,6 +17,16 @@ if (random(128) = 0) {
     ~collection_log_add(kq_head, 1); // not broadcast, so the collection log is told here
 }
 
+// The dragon pickaxe, 1/400, its own roll rather than a band in the cascade below - exactly the
+// shape kq_head above uses, and for the same two reasons: every threshold in that cascade is a
+// calibrated 128th that inserting a band would shift, and in OSRS the pickaxe is not an
+// alternative to a rune chainbody, it is a separate roll on top of the table.
+// Rate from https://oldschool.runescape.wiki/w/Dragon_pickaxe : Kalphite Queen, 1, 1/400.
+if (random(400) = 0) {
+    obj_add(npc_coord, dragon_pickaxe, 1, ^lootdrop_duration);
+    ~broadcast_drop(dragon_pickaxe); // the broadcast is also the collection log's way in
+}
+
 def_int $random = random(128);
 
 // https://web.archive.org/web/20060412010923/http://www.runehq.com/RHQMonsterView.php?id=244

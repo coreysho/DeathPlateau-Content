@@ -162,13 +162,34 @@ param=magicdefence,50
 param=rangedefence,50
 param=slayer_category,^slayer_kalphite
 
+// BOTH FORMS ARE OLD SCHOOL'S. The 377 cache's queen (npc_1158 crawling, npc_1160 flying at
+// resize 256) is a different creature from the one every player has a picture of in their head, so
+// both forms now wear Old School's meshes: npc 963's models 24597/24598 here, npc 965's 24602/24605/
+// 24606 on the flying form below.
+//
+// NOTHING WAS IMPORTED FOR THIS. Old School's Kalphite Princess pet IS the Kalphite Queen shrunk -
+// npc 6638 carries 24597/24598 and npc 6637 carries 24602/24605/24606 - so when the boss pets went
+// in, both of the queen's forms came with them under pet names. A fresh conversion of all five
+// cache models is byte-identical to the .ob2 files already in models/npc, so these reference the
+// pet's names rather than taking five more model.pack ids for the same meshes. The names read oddly
+// on a boss; the alternative was five duplicate models.
+//
+// THE ANIMATIONS HAD TO COME TOO. An Old School mesh carries Old School vertex labels, so a 377 seq
+// (kalphite_ready, kalphite_block, ...) moves nothing on it. Old School's queen is rigged on two
+// skeletons, 1422 for the crawling form and 1425 for the flying one, and each form's set is five
+// seqs: walk, ready, attack, block, death. The cache states walk and ready in the npc record; the
+// other three were picked by rendering every seq on that skeleton onto this mesh with
+// tools/models/posepreview.py and looking (6241 flinches and recovers, 6242 ends collapsed).
+// See kalphite_queen_osrs.seq. The small kalphites keep their 377 models and their 377 seqs.
 [kalphite_queen]
 name=Kalphite Queen
 desc=I don't think insect repellent will work...
-model1=npc_1158
+// OSRS npc 963 - models 24597, 24598
+model1=npc_bosspet_kalphite_queen_green_1
+model2=npc_bosspet_kalphite_queen_green_2
 size=5
-walkanim=kalphite_walk
-readyanim=kalphite_ready
+walkanim=osrs_seq_6238
+readyanim=osrs_seq_6239
 op2=Attack
 headicon=6
 vislevel=333
@@ -187,30 +208,35 @@ param=crushdefence,10
 param=magicdefence,100
 param=rangedefence,100
 param=attack_sound,kalthite_queen_attack
-param=defend_anim,kalphite_block
-param=death_anim,kalphite_death
+param=defend_anim,osrs_seq_6241
+param=death_anim,osrs_seq_6242
 param=defend_sound,kalthite_queen_hit
 param=slayer_category,^slayer_kalphite
 
+// The corpse the shell-split plays on while the flying form is swapped in underneath it
+// (area_kalphite/scripts/kalphite_queen.rs2), so it has to be the same creature as the first form.
 [kalphite_queen_dead]
 name=Kalphite Queen
 desc=I don't think insect repellent will work...
-model1=npc_1158
+model1=npc_bosspet_kalphite_queen_green_1
+model2=npc_bosspet_kalphite_queen_green_2
 vislevel=333
 size=5
-walkanim=kalphite_walk
-readyanim=kalphite_ready
+walkanim=osrs_seq_6238
+readyanim=osrs_seq_6239
 defaultmode=none
 
 [kalphite_flyingqueen]
 name=Kalphite Queen
 desc=I don't think insect repellent will work...
-model1=npc_1160
+// OSRS npc 965 - models 24602, 24605, 24606. No resize: the 377 model needed doubling to read as a
+// boss and this one is already authored at boss size, which is what the cache record says too.
+model1=npc_bosspet_kalphite_queen_1
+model2=npc_bosspet_kalphite_queen_2
+model3=npc_bosspet_kalphite_queen_3
 size=5
-walkanim=kalphite_queen_ready
-readyanim=kalphite_queen_ready
-resizeh=256
-resizev=256
+walkanim=osrs_seq_6236
+readyanim=osrs_seq_6236
 op2=Attack
 headicon=0
 vislevel=333
@@ -229,8 +255,8 @@ param=crushdefence,100
 param=magicdefence,10
 param=rangedefence,10
 param=attack_sound,kalphite_flyingqueen_attack
-param=defend_anim,kalphite_queen_block
-param=death_anim,kalphite_queen_death
+param=defend_anim,osrs_seq_6237
+param=death_anim,osrs_seq_6233
 param=death_sound,kalphite_flyingqueen_death
 param=defend_sound,kalphite_flyingqueen_hit
 param=slayer_category,^slayer_kalphite
