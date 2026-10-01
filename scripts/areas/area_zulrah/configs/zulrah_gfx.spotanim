@@ -135,8 +135,15 @@ ambient=30
 // not be the brightest thing on it.
 model=spot_mole_mud_cloud_spotanim
 anim=zulrah_venom_cloud
-resizeh=320
-resizev=140
+// SIZE, THIRD ATTEMPT. 512/170 was the old crystal mesh, which was tiny. 320/140 on THIS mesh
+// came back "too large" from the owner - the clouds merged into one carpet across the platform,
+// where Old School has scattered blobs with gaps between them. 160/120 is half the width again.
+//
+// 128 is 100%, so this is a quarter again over the mesh as drawn rather than two and a half
+// times it. The damage is still the 3x3 ^zulrah_cloud_radius covers whatever the graphic does -
+// a cloud you can see the edges of is the point, not one that hides the platform.
+resizeh=160
+resizev=120
 recol1s=8386
 recol1d=2473
 [zulrah_snakeling_orb]
