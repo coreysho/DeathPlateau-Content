@@ -262,6 +262,24 @@
 // The sim reads this constant rather than counting 3 ticks of its own, for the same reason it reads
 // ^zulrah_submerged_ticks: a test that pins the number fails on the very change it exists to guard.
 ^zulrah_melee_warning = 5
+
+// THE RED FORM SWINGS SLOWER, because its animation is three times as long as the other two.
+//
+// All three ran on ^zulrah_attackrate = 3. zulrah_tail_swipe is 53 frames and 200 client cycles
+// - 6.67 ticks - so on a 3-tick beat it was cut off 45% through and restarted, every time. The
+// tail does not come round until frame 35, which is 140 cycles and 4.67 ticks, so the swing that
+// does the damage was never once drawn: what you saw was the first half of a wind-up on a loop,
+// with damage arriving at ^zulrah_melee_warning out of nothing. The owner's words were "the melee
+// phase leaves/starts too early, i can't tell because the animation is off".
+//
+// Seven ticks lets the whole thing play: wind-up, the tail round at 4.67, the damage at 5, and a
+// beat of recovery. It is also what the wiki describes the red form doing - it "stares at the
+// player for several seconds" before it strikes - rather than flailing twice a second.
+//
+// THIS MAKES THE RED PHASE HIT LESS OFTEN, which is a difficulty change and not a cosmetic one.
+// Asked for by the owner once the cause was understood. Seven is the smallest number the
+// animation allows; anything under it cuts the strike off again.
+^zulrah_melee_attackrate = 7
 // "Can be avoided by moving two tiles away" - so one tile away is still inside it. The tail covers
 // the marked tile and the ring around it, and the third tile out is safe.
 ^zulrah_melee_radius = 1

@@ -113,7 +113,7 @@ strength=1
 hitpoints=500
 ranged=300
 magic=300
-param=attackrate,^zulrah_attackrate
+param=attackrate,^zulrah_melee_attackrate
 // THE RED FORM DOES NOT SPIT, IT SWINGS ITS TAIL, and it now has the animation for it: OSRS seq
 // 5807, converted this round (configs/zulrah_tail.seq says how it was told apart from 5806). Every
 // form used to play the spit, 5069, which is why the tail swipe looked like a ranged attack with

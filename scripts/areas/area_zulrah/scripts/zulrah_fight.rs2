@@ -301,7 +301,11 @@ if (%zulrah_run_at >= enum(int, int, zulrah_run_count, %zulrah_run)) {
     %zulrah_run = add(%zulrah_run, 1);
     %zulrah_run_at = 0;
 }
-%npc_action_delay = add(map_clock, ^zulrah_attackrate);
+// THE BEAT IS THE FORM'S OWN, not one number for three. This read ^zulrah_attackrate directly,
+// so the param on each npc record was decoration - changing it moved nothing. The red form needs
+// seven ticks for its tail swipe to finish; the other two still answer 3, because that is what
+// their records say.
+%npc_action_delay = add(map_clock, npc_param(attackrate));
 ~zulrah_action($kind, $at);
 
 // One beat's worth of whatever this run is. $at is how far into the run we are, which is all the
