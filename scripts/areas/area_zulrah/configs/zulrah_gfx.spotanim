@@ -142,10 +142,21 @@ anim=zulrah_venom_cloud
 // 128 is 100%, so this is a quarter again over the mesh as drawn rather than two and a half
 // times it. The damage is still the 3x3 ^zulrah_cloud_radius covers whatever the graphic does -
 // a cloud you can see the edges of is the point, not one that hides the platform.
-resizeh=160
-resizev=120
+// FLAT ON THE FLOOR AND PALE, which is what Old School has. The owner sent a shot of the real
+// thing beside ours: theirs are low, washed-out, almost translucent puffs lying ON the ground
+// with the platform showing through; ours was a tall, dense, saturated mound sitting up off it
+// like a bush. Same mesh, three numbers wrong.
+//
+// resizev 45 against resizeh 170 is nearly a four-to-one squash, which turns the cloud mesh
+// into a mat rather than a heap. 128 is 100%, so it is a third of its drawn height and a third
+// again over its width.
+resizeh=170
+resizev=45
 recol1s=8386
-recol1d=2473
+// 14037 is hue 30 saturation 2 lightness 72 - a pale washed-out teal, against the 2473 that was
+// hue 28 saturation 5 lightness 30. The dark saturated green read as solid matter; venom gas
+// is the lightest thing on that platform, not the heaviest.
+recol1d=14037
 [zulrah_snakeling_orb]
 // OSRS spotanim 1047 - the white orb that puts a snakeling on the floor beside you.
 model=spot_zulrah_snakeling_orb
