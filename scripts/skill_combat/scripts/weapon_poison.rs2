@@ -1,36 +1,61 @@
+// THE THREE POISONS. Only the first of them existed here, so Weapon poison(+) and (++) could
+// be brewed and then did nothing to anything. The tier is passed through to the label, which
+// reads the matching param - a (p), (p+) or (p++) weapon - rather than always the weakest.
 [opheldu,weapon_poison]
 if (oc_param(last_useitem, weapon_poisoned) ! null) {
-    @make_weapon_poisoned(last_useslot, last_slot);
+    @make_weapon_poisoned(last_useslot, last_slot, 0);
+}
+~displaymessage(^dm_default);
+
+[opheldu,weapon_poison+]
+if (oc_param(last_useitem, weapon_poisoned_plus) ! null) {
+    @make_weapon_poisoned(last_useslot, last_slot, 1);
+}
+~displaymessage(^dm_default);
+
+[opheldu,weapon_poison++]
+if (oc_param(last_useitem, weapon_poisoned_plusplus) ! null) {
+    @make_weapon_poisoned(last_useslot, last_slot, 2);
 }
 ~displaymessage(^dm_default);
 
 [opheldu,_weapon_stab]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default : ~displaymessage(^dm_default);
 }
 
 [opheldu,_weapon_spear]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default : ~displaymessage(^dm_default);
 }
 
 [opheldu,_weapon_javelin]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default : ~displaymessage(^dm_default);
 }
 
 [opheldu,_weapon_thrown]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default : ~displaymessage(^dm_default);
 }
 
 [opheldu,_bolts]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default :
         // bolt tips on a metal bolt (skill_fletching/scripts/bolts.rs2); a category trigger can be
         // reached with the two items either way round
@@ -44,35 +69,46 @@ switch_obj(last_useitem) {
 
 [opheldu,_arrows]
 switch_obj(last_useitem) {
-    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot);
+    case weapon_poison : @make_weapon_poisoned(last_slot, last_useslot, 0);
+    case weapon_poison+ : @make_weapon_poisoned(last_slot, last_useslot, 1);
+    case weapon_poison++ : @make_weapon_poisoned(last_slot, last_useslot, 2);
     case default : ~displaymessage(^dm_default);
 }
 
-[label,make_weapon_poisoned](int $weapon_slot, int $poison_slot)
+// $tier is 0 for Weapon poison, 1 for (+) and 2 for (++). The poisoned weapon is read ONCE
+// into $poisoned and used everywhere below; this used to call oc_param(weapon_poisoned) at
+// each of the four branches, which is what made adding two more tiers worth doing properly.
+[label,make_weapon_poisoned](int $weapon_slot, int $poison_slot, int $tier)
 def_obj $weapon = inv_getobj(inv, $weapon_slot);
-if (oc_param($weapon, weapon_poisoned) = null) {
+def_namedobj $poisoned = oc_param($weapon, weapon_poisoned);
+if ($tier = 1) {
+    $poisoned = oc_param($weapon, weapon_poisoned_plus);
+} else if ($tier = 2) {
+    $poisoned = oc_param($weapon, weapon_poisoned_plusplus);
+}
+if ($poisoned = null) {
     ~displaymessage(^dm_default);
     return;
 }
 if (oc_category($weapon) = weapon_javelin) { // javelins inv_add poisoned wep, but setslot for the weapon poison
     def_int $wep_count = min(inv_total(inv, $weapon), 5);
     inv_del(inv, $weapon, $wep_count);
-    inv_add(inv, oc_param($weapon, weapon_poisoned), $wep_count);
+    inv_add(inv, $poisoned, $wep_count);
     inv_setslot(inv, $poison_slot, vial_empty, 1);
 } else if (oc_category($weapon) = weapon_spear) {
     inv_del(inv, inv_getobj(inv, $poison_slot), 1);
     inv_add(inv, vial_empty, 1);
     inv_del(inv, $weapon, 1);
-    inv_add(inv, oc_param($weapon, weapon_poisoned), 1);
+    inv_add(inv, $poisoned, 1);
 } else if (oc_stackable($weapon) = true) {
     inv_del(inv, inv_getobj(inv, $poison_slot), 1);
     inv_add(inv, vial_empty, 1);
     def_int $wep_count = min(inv_total(inv, $weapon), 5);
     inv_del(inv, $weapon, $wep_count);
-    inv_add(inv, oc_param($weapon, weapon_poisoned), $wep_count);
+    inv_add(inv, $poisoned, $wep_count);
 } else {
     // non stackables uses setslot (except spears)
-    inv_setslot(inv, $weapon_slot, oc_param($weapon, weapon_poisoned), 1);
+    inv_setslot(inv, $weapon_slot, $poisoned, 1);
     inv_setslot(inv, $poison_slot, vial_empty, 1);
 }
 

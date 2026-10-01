@@ -5,3 +5,17 @@ default=null
 [weapon_poisoned_message]
 type=string
 default=^string_empty
+
+// THE STRONGER TWO POISONS, which had nowhere to put their answer.
+//
+// weapon_poisoned names the (p) version of a weapon and was the only one of the three, so
+// Weapon poison(+) and Weapon poison(++) could be made and then did nothing when used on
+// anything: there was no [opheldu] for them and no param to tell the script what a (p+) dagger
+// is even called. Both target objs exist for all 42 poisonable weapons already.
+[weapon_poisoned_plus]
+type=namedobj
+default=null
+
+[weapon_poisoned_plusplus]
+type=namedobj
+default=null
