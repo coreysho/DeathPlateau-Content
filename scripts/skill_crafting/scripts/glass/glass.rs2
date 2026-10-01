@@ -84,13 +84,23 @@ if (stat(crafting) < $level) {
     mes("You need level <tostring($level)> Crafting to make <$name>.");
     return;
 }
-// delete molten glass
-inv_del(inv, molten_glass, 1);
-// add item
-inv_add(inv, $glass_item, 1);
-// play anim
-anim(human_glassblowing,0);
-// display game message
-mes("You make <$name>.");
-// give xp
-stat_advance(crafting, struct_param($struct, productexp));
+// EVERY PIECE OF GLASS, not one of them. This made a single item and stopped, so an inventory
+// of molten glass took twenty-six clicks.
+//
+// p_delay is what carries the repeat, the same way smelting spaces its bars out. It yields, so
+// the player can walk away or click something else and the loop ends on its own the next time
+// round - there is no state to clean up and nothing to interrupt explicitly.
+def_int $made = 0;
+while (inv_total(inv, molten_glass) > 0) {
+    inv_del(inv, molten_glass, 1);
+    inv_add(inv, $glass_item, 1);
+    anim(human_glassblowing, 0);
+    mes("You make <$name>.");
+    stat_advance(crafting, struct_param($struct, productexp));
+    $made = add($made, 1);
+    // The last one needs no wait after it, and waiting would hold the player still for
+    // nothing - which reads as the action not having finished.
+    if (inv_total(inv, molten_glass) > 0) {
+        p_delay(2);
+    }
+}

@@ -32,11 +32,19 @@ if (stat(fletching) < $level) {
     return;
 }
 
-// make one bow at a time
-inv_del(inv, $unstrung_bow, 1);
-inv_del(inv, bow_string, 1);
-// 2005-osrs, rsc
-mes("You add a string to the bow.");
-
-stat_advance(fletching, db_getfield($data, fletching_table:experience, 0));
-inv_add(inv, db_getfield($data, fletching_table:product, 0));
+// EVERY BOW IN THE INVENTORY, not one of them. "make one bow at a time" is what this said and
+// what it did, so stringing a full load was twenty-seven separate clicks.
+//
+// p_delay carries the repeat and yields with it, so walking away or clicking something else
+// ends the loop by itself on the next pass - there is no state to unwind.
+while (inv_total(inv, $unstrung_bow) > 0 & inv_total(inv, bow_string) > 0) {
+    inv_del(inv, $unstrung_bow, 1);
+    inv_del(inv, bow_string, 1);
+    // 2005-osrs, rsc
+    mes("You add a string to the bow.");
+    stat_advance(fletching, db_getfield($data, fletching_table:experience, 0));
+    inv_add(inv, db_getfield($data, fletching_table:product, 0));
+    if (inv_total(inv, $unstrung_bow) > 0 & inv_total(inv, bow_string) > 0) {
+        p_delay(2);
+    }
+}
