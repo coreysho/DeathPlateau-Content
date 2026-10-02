@@ -250,4 +250,82 @@ return($x);
 // Taken out of the gen_eat_heal0 consume group: it is red hot and glowing, and eating it destroyed
 // a quest item and healed nothing.
 [opheld1,hundred_dwarf_hot_rockcake]
+// GLOVES COOL IT, which is the wiki's first method: "Picking it up with ice gloves or Smiths
+// gloves (i) equipped". Clicking it while wearing a pair does the same thing, because a player
+// who put the gloves on for this should not have to work out that it only counts off the floor.
+if (~hundred_cold_hands = true) {
+    ~hundred_cool_rockcake_by("your gloves");
+    return;
+}
 ~mesbox("It is glowing. You are not putting that in your mouth. | Rohak said to cool it in water first.");
+
+// A BUCKET OF WATER, either way round. The water-source trigger has always handled fountains and
+// sinks; a bucket is the same idea carried to the cake, and it is the first thing anybody tries.
+[opheldu,hundred_dwarf_hot_rockcake]
+if (last_useitem = bucket_water) {
+    inv_del(inv, bucket_water, 1);
+    inv_add(inv, bucket_empty, 1);
+    ~hundred_cool_rockcake_by("the bucket of water");
+    return;
+}
+~displaymessage(^dm_default);
+
+// PICKED UP OFF THE FLOOR with the gloves on, which is the method as the wiki states it.
+[opobj3,hundred_dwarf_hot_rockcake]
+if (~hundred_cold_hands = false) {
+    @pickup_obj;
+}
+obj_del;
+inv_add(inv, hundred_dwarf_cool_rockcake, 1);
+if (%hundred_dwarf_quest = ^hundred_dwarf_has_hot) {
+    %hundred_dwarf_quest = ^hundred_dwarf_has_cool;
+}
+~objbox(hundred_dwarf_cool_rockcake, "You pick it up in your gloves. By the time it is in your pack the glow has gone out of it entirely.", 250, 0, 0);
+
+// Ice gloves, or the smith's gloves that the wiki lists beside them.
+[proc,hundred_cold_hands]()(boolean)
+if (inv_total(worn, ice_gloves) > 0 | inv_total(worn, smiths_gloves) > 0) {
+    return(true);
+}
+return(false);
+
+// The other two ways in, so the cooling and the quest-stage move live in one place rather than
+// three copies. $how names whatever did it, for the message.
+[proc,hundred_cool_rockcake_by](string $how)
+if (inv_total(inv, hundred_dwarf_hot_rockcake) < 1) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, hundred_dwarf_hot_rockcake, 1);
+inv_add(inv, hundred_dwarf_cool_rockcake, 1);
+if (%hundred_dwarf_quest = ^hundred_dwarf_has_hot) {
+    %hundred_dwarf_quest = ^hundred_dwarf_has_cool;
+}
+~objbox(hundred_dwarf_cool_rockcake, append(append("The heat goes out of it against ", $how), ". What is left is grey, cold, and heavy as a brick."), 250, 0, 0);
+
+// AND KILLING AN ICEFIEND, the wiki's second method. Called from [proc,npc_death] rather than
+// an [ai_queue3] of its own, because an npc can only carry one of those and the icefiend may
+// want its own drop table later. It returns at once for everything that is not an icefiend,
+// which is every death in the game bar a handful.
+[proc,hundred_icefiend_chill]
+if (npc_type ! slayer_icefiend_1) {
+    return;
+}
+// THE KILLER, AND THEN A QUEUE ON THEM. This proc runs from the icefiend own [ai_queue3], where
+// there is no active player at all - inv_total threw "Attempt to access null active_player" the
+// first time it was written straight. npc_findhero names the killer, but it hands back the active
+// player WITHOUT protected access, so an inv_add still will not run.
+//
+// A queue on the player is the way across: it runs next tick with the player as self and the
+// protected access an inventory swap needs. Same thing npc_combat does to reach the degrade
+// code from a hit.
+if (npc_findhero = ^false) {
+    return;
+}
+queue(hundred_icefiend_chill_q, 0, 0);
+
+[queue,hundred_icefiend_chill_q](int $unused)
+if (inv_total(inv, hundred_dwarf_hot_rockcake) < 1) {
+    return;
+}
+~hundred_cool_rockcake_by("the cold coming off it as it falls");

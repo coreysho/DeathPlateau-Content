@@ -12,6 +12,15 @@
 // But they do it in this screenshot so might be good to do it here just incase: https://i.imgur.com/AfQ1MfF.png
 npc_walk(npc_coord);
 npc_setmode(none);
+// AND THE RFD ROCK CAKE, which has to go BEFORE the arrivedelay below. That line gives up
+// p_active_player, and everything after it has to win the player back with npc_findhero - which
+// returns the active player but NOT protected access, so an inv_add after it will not compile.
+// The hook swaps a hot rock cake for a cool one, so it needs the inventory, so it goes here.
+//
+// Same shape as the four hooks below it: ~hundred_icefiend_chill returns at once for anything
+// that is not an icefiend, which is every death in the game bar a handful. It is a proc rather
+// than an [ai_queue3] on the icefiend because an npc can only carry one of those.
+~hundred_icefiend_chill;
 npc_arrivedelay; // arrivedelay for up to two ticks (current osrs too) https://youtu.be/Vsnkdq8OOMg?t=209
 ~check_progress_task(npc_param(slayer_category)); // this is checked after arrivedelay
 // The Barrows tunnels pay reward potential for everything that dies in them, and this is the one
