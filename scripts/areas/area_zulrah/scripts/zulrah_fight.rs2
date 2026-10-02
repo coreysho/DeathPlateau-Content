@@ -565,7 +565,20 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 // two-tick flick that throws ONE orb; 5068 is the same lunge with the jaws held open for six ticks,
 // which is what filling a platform looks like. configs/zulrah.seq has the frame-for-frame proof
 // that one is the other held open.
-npc_anim(zulrah_venom_spray, 0);
+// BISECT, NOT A FIX (2026-10-02). The owner reports the green and red forms blinking out and
+// back and the BLUE one never doing it, through a client that has now been instrumented to the
+// floor: the snake is in the npc list continuously, handed to the scene on every frame, at the
+// right place and the right height, with its model built and every frame present. Measured off
+// a traced fight, the only thing that separates the colours is which animations they play:
+//
+//   GREEN  rise, idle, spit, dive  AND zulrah_venom_spray
+//   RED    rise, idle, dive        AND zulrah_tail_swipe
+//   BLUE   rise, idle, spit                                  <- and blue never blinks
+//
+// Both extras came in with the round the blinking was first reported against. So both forms
+// now animate exactly like blue. If the blinking stops, it is in those two sequences and this
+// comes straight back out; if it does not, they are cleared and the answer is elsewhere.
+npc_anim(osrs_seq_5069, 0); // was zulrah_venom_spray
 ~npc_set_attack_vars;
 // The slice of the fill this barrage is responsible for, and the ordering it reads: the phase's own
 // surfacing place, so the clouds land nearest the snake first and the same phase lands them on the
