@@ -101,10 +101,11 @@ if (random($rarity) ! 0) {
     return;
 }
 def_int $held = ~trail_stack_count($tier);
+def_int $cap = ~trail_stack_cap($tier);
 if ($held = 0) {
     ~impling_give(~trail_clue_getrandom($tier), 1);
     ~clear_trail_progress($tier);
-} else if ($held < ~trail_stack_cap($tier)) {
+} else if ($cap = ^trail_stackcap_none | $held < $cap) {
     ~impling_give(~trail_scrollbox($tier), 1);
 } else {
     mes("You have a sneaking suspicion that you would have received <~trail_tier_article($tier)> scroll box."); // OSRS

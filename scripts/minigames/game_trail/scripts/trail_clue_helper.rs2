@@ -103,11 +103,12 @@ if (random($rarity) ! 0) {
     return;
 }
 def_int $held = ~trail_stack_count($tier);
+def_int $cap = ~trail_stack_cap($tier);
 if ($held = 0) {
     obj_add($coord, ~trail_clue_getrandom($tier), 1, ^lootdrop_duration);
     // A fresh clue starts a fresh trail. Safe here because nothing of this tier is held.
     ~clear_trail_progress($tier);
-} else if ($held < ~trail_stack_cap($tier)) {
+} else if ($cap = ^trail_stackcap_none | $held < $cap) {
     obj_add($coord, ~trail_scrollbox($tier), 1, ^lootdrop_duration);
 } else {
     mes("You have a sneaking suspicion that you would have received <~trail_tier_article($tier)> scroll box."); // OSRS
@@ -130,8 +131,11 @@ if (oc_category($obj) ! trail_scrollbox) {
     $count = 1;
 }
 // OSRS destroys the boxes over the limit when a stack is picked up. Leaving them on the floor loses
-// nothing and tells the player the same thing.
-if (calc(~trail_stack_count($tier) + $count) > ~trail_stack_cap($tier)) {
+// nothing and tells the player the same thing. With no limit set there is nothing to be over, and
+// the total is not worked out at all - which is what keeps a stack of boxes from having to be
+// weighed against a cap that does not exist.
+if (~trail_stack_cap($tier) ! ^trail_stackcap_none
+        & calc(~trail_stack_count($tier) + $count) > ~trail_stack_cap($tier)) {
     mes("You already have as many <~trail_tier_name($tier)> clues as you can carry.");
     return(true);
 }

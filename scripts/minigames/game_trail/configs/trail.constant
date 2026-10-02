@@ -41,12 +41,22 @@
 ^trail_tier_hard = 2
 
 // SCROLL BOX STACK LIMITS. https://oldschool.runescape.wiki/w/Scroll_box - the base limit is 2 for
-// every tier, and it is "shared across boxes and scrolls": the clue you are working on counts as
-// one of the two. OSRS raises it to 5 with scroll cases, which this build does not have, so these
-// are the base values. One per tier so a tier can be raised without touching the others.
-^trail_easy_stackcap = 2
-^trail_medium_stackcap = 2
-^trail_hard_stackcap = 2
+// every tier, "shared across boxes and scrolls", and OSRS raises it to 5 with scroll cases this
+// build does not have.
+//
+// DEATH PLATEAU KEEPS NO LIMIT (owner, 2026-10-02): "drop the limit on the scroll box so you can
+// get however many you want." Boxes stack and are untradeable, so a backlog costs one inventory
+// slot per tier and cannot be sold - there is nothing for a cap to protect. Clues still arrive one
+// at a time and are still done one at a time; all that changes is that a drop which rolled is
+// never thrown away for being the third.
+//
+// ^trail_stackcap_none, not a big number: the two places that compare against the cap test for it
+// by name, so nothing has to reason about a total overflowing. Set a tier back to a real number
+// and its limit works again, message and all.
+^trail_stackcap_none = -1
+^trail_easy_stackcap = ^trail_stackcap_none
+^trail_medium_stackcap = ^trail_stackcap_none
+^trail_hard_stackcap = ^trail_stackcap_none
 
 // %trail_progress (configs/trail.varp): four bits of step count per tier from bit 0, and each
 // tier's guardian-beaten flag at ^trail_guardian_bit + tier.
