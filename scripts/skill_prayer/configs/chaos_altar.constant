@@ -1,0 +1,18 @@
+// THE WILDERNESS CHAOS ALTAR - https://oldschool.runescape.wiki/w/Chaos_altar_(Prayer)
+//
+// The altar in the Chaos Temple hut at level 38 Wilderness, and only that one. This build has five
+// [chaosaltar] locs (Engine-TS tools/sim/findaltar.ts lists them); the other four are ordinary
+// Pray-at altars, including the Chaos Temple church at level 12, which gives no bonus in Old School
+// either. So the bonus is keyed to the tile rather than to the loc.
+^chaos_altar_coord = 0_46_59_3_44
+
+// "granting 3.5x Prayer experience per bone, the same bonus as a gilded altar with two burners lit",
+// as a fraction because bone_exp is in tenths and 3.5 is not an integer.
+^chaos_altar_xp_num = 7
+^chaos_altar_xp_den = 2
+
+// "There is a 50% chance that the bone offered will not be consumed", and a saved bone rolls again
+// next time - which is why the wiki puts the average at 7x burying rather than 3.5x. Nothing here
+// has to implement the re-roll: a bone that survives is still in the pack and the loop offers it
+// again, which IS the re-roll.
+^chaos_altar_save_chance = 2

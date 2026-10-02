@@ -1,0 +1,48 @@
+// Offering bones at the Wilderness chaos altar - the Prayer training method, not the Pray-at that
+// every altar already has (altar.rs2). https://oldschool.runescape.wiki/w/Chaos_altar_(Prayer)
+//
+// 3.5x the bone's own experience, and "there is a 50% chance that the bone offered will not be
+// consumed". A saved bone stays in the pack and is offered again by the loop below, which is the
+// wiki's "can continue to roll ... until the roll fails" - and why the average works out at seven
+// times burying rather than three and a half.
+//
+// Keyed to the tile (^chaos_altar_coord), not the loc: this build has five [chaosaltar] locs and
+// only the one in the hut at level 38 is the training altar. The others, the level 12 church
+// included, stay plain Pray-at altars, as they are in Old School.
+
+[oplocu,chaosaltar]
+if (loc_coord ! ^chaos_altar_coord) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (oc_category(last_useitem) ! bones) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@chaos_altar_offer(last_useitem);
+
+// One kind of bone at a time, for as long as you are holding one. p_delay carries the repeat and
+// yields with it, so walking away or clicking something else ends it on the next pass - the same
+// shape the fletching and glassblowing loops use, and there is no state to unwind.
+[label,chaos_altar_offer](obj $bone)
+def_int $exp = oc_param($bone, bone_exp);
+if ($exp <= 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+while (inv_total(inv, $bone) > 0) {
+    anim(human_pray, 0);
+    sound_synth(bones_down, 1, 0);
+    // THE EXPERIENCE IS PAID EITHER WAY, as it is when Zealot's robes save a buried bone
+    // (bury_bone.rs2) - the saving is a bonus on top, not a refund of the offering.
+    ~prayer_xp(calc($exp * ^chaos_altar_xp_num / ^chaos_altar_xp_den));
+    if (random(^chaos_altar_save_chance) = 0) {
+        mes("The gods are pleased with your offering, and return the bones to you.");
+    } else {
+        inv_del(inv, $bone, 1);
+        mes("You offer the bones to Zamorak.");
+    }
+    if (inv_total(inv, $bone) > 0) {
+        p_delay(2);
+    }
+}
