@@ -54,12 +54,25 @@ return($rate);
 // One shot's worth: a scale two times in three, a dart unless an Ava's device saves it. Returns
 // false when the blowpipe has just run out of either - the caller must not re-target, since the next
 // shot cannot be made. With nothing left in it at all it turns into the empty blowpipe in the hands.
-[proc,blowpipe_spend]()(boolean)
+//
+// THE DART LANDS ON THE FLOOR, which it did not. This file used to say a blowpipe dart "never
+// lands on the floor, it is simply used", and that is not what Old School does: "Using an Ava's
+// device OR PICKING UP USED AMMO will reduce the number of darts needed" (/w/Toxic_blowpipe).
+// Every dart fired was being destroyed, which quietly doubled what the weapon costs to run.
+//
+// It drops the way every other ranged shot drops its ammo, at the target's feet and on the same
+// one-in-^dropammo_chance odds of breaking instead (player_ranged.rs2) - obj_add rather than
+// inv_dropitem_delayed, because a loaded dart is a count in a varp and not an item in the quiver.
+[proc,blowpipe_spend](coord $at)(boolean)
 if (random(3) ! 0) {
     %blowpipe_scales = max(0, sub(%blowpipe_scales, 1));
 }
 if (~ranged_ammo_saved = false) {
+    def_namedobj $dart = %blowpipe_dart_type;
     %blowpipe_darts = max(0, sub(%blowpipe_darts, 1));
+    if ($dart ! null & random(^dropammo_chance) ! 0 & map_blocked($at) = false) {
+        obj_add($at, $dart, 1, ^lootdrop_duration);
+    }
 }
 if (%blowpipe_scales > 0 & %blowpipe_darts > 0) {
     return(true);
@@ -165,7 +178,7 @@ if (npc_param(defend_sound) ! null) {
 if ($spec = true) {
     stat_heal(hitpoints, divide($roll, 2), 0);
 }
-return(~blowpipe_spend);
+return(~blowpipe_spend(npc_coord));
 
 // What a monster's resistances leave of a blowpipe hit - the same ones every ranged shot meets in
 // player_ranged.rs2: a kurask or turoth takes nothing from anything but a bow with broad arrows, the
@@ -265,6 +278,6 @@ def_int $delay = ~player_projectile(coord, .coord, .uid, $projectile, 40, 36, 32
 if ($spec = true) {
     stat_heal(hitpoints, divide($roll, 2), 0);
 }
-if (~blowpipe_spend = false) {
+if (~blowpipe_spend(.coord) = false) {
     return;
 }
