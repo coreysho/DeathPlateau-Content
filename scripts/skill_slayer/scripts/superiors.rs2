@@ -165,10 +165,19 @@ if (%imbued_heart_minute > 0 & $wait > 0) {
 }
 %imbued_heart_minute = world_minute;
 // IT HAS ITS ANIMATION, which it did not - the heart boosted in silence, with the player
-// standing still. configs/imbued_heart.{spotanim,seq} are OSRS spotanim 1316 and seq 9104
-// brought across by tools/models/importosrsspot.py; the graphic is the blood-red cousin of
-// the Saradomin sword special (spotanim 1213, already here as sara_sword_spec) and is played
-// the same way that one is, in pvm_godswords.rs2.
+// standing still. configs/imbued_heart.{spotanim,seq} are OSRS spotanim 1316 and seq 9170,
+// brought across by tools/models/importosrsspot.py, and played the way pvm_godswords.rs2
+// plays the Saradomin sword special.
+//
+// WHICH SEQ WAS NOT GUESSED, it was found by rig. The wiki says the heart's animation is "a
+// blood red version of the Saradomin sword's special attack", and that special is seq 1132 on
+// frame group 12156. Exactly three seqs live on that group: 1132 and 1133, each with a
+// replaceheldright weapon model, and 9170 - the same 27-frame reachforward motion at the same
+// priority with NOTHING swapped into the hand, which is what the move looks like when you are
+// holding a heart instead of a sword. Group 12156 is skeleton 0, the human rig.
+//
+// The first attempt used seq 9104 and was wrong in game. 9104 is the ONLY seq on frame group
+// 2749, skeleton 1888 - a rig with one animation on it is not the player's.
 anim(imbued_heart_invigorate_anim, 0);
 spotanim_pl(imbued_heart_invigorate, 0, 0);
 stat_boost(magic, 1, 10);
