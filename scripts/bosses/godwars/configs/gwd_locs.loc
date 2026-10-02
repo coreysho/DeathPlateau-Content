@@ -1,0 +1,1299 @@
+// Imported from the rev 474 cache by tools/models/import474map.py: m44_82, m44_83, m45_83.
+// God Wars Dungeon - three of its four map squares, from the rev 474 cache (27 October 2007), which is the dungeon as it was built.
+// MISSING: m45_82, which holds the rope landing you arrive on and Commander Zilyana's room. The 474 cache has its terrain but no XTEA key for its locs, so it cannot be read from here - see the GWD notes for the two ways round that.
+// Five decorative locs (26853-26857) carry models in the post-377 format and are left out: all nameless, no ops, three placements each.
+// The named locs are the ones content has to reference - the three faction doors, the three altars, the Bang door, the ice bridge, the grapple pillar and the crate. Everything else keeps its loc474_<id> name.
+
+[loc474_16399]
+// rev 474 loc 16399 (import474map.py)
+model=loc474_16399
+active=no
+
+[loc474_17030]
+// rev 474 loc 17030 (import474map.py)
+model=loc474_17030
+forcedecor=yes
+
+[loc474_18405]
+// rev 474 loc 18405 (import474map.py)
+model=loc474_18405
+active=no
+
+[loc474_26229]
+// rev 474 loc 26229 (import474map.py)
+name=Battle tower
+model=loc474_26229
+width=2
+length=3
+hillskew=yes
+
+[loc474_26230]
+// rev 474 loc 26230 (import474map.py)
+name=Broken catapult
+model=loc474_26230
+width=2
+length=3
+hillskew=yes
+
+[loc474_26231]
+// rev 474 loc 26231 (import474map.py)
+name=Crossbow
+model=loc474_26231
+width=3
+length=3
+hillskew=yes
+
+[loc474_26232]
+// rev 474 loc 26232 (import474map.py)
+name=Chain
+model=loc474_26232
+hillskew=yes
+
+[loc474_26233]
+// rev 474 loc 26233 (import474map.py)
+name=Battering ram
+model=loc474_26233
+width=2
+length=3
+hillskew=yes
+
+[loc474_26234]
+// rev 474 loc 26234 (import474map.py)
+name=Arrow
+model=loc474_26234
+hillskew=yes
+ambient=25
+
+[loc474_26235]
+// rev 474 loc 26235 (import474map.py)
+name=Broken mast
+model=loc474_26235
+hillskew=yes
+ambient=25
+
+[loc474_26236]
+// rev 474 loc 26236 (import474map.py)
+name=Skeleton
+model=loc474_26236
+hillskew=yes
+ambient=25
+
+[loc474_26237]
+// rev 474 loc 26237 (import474map.py)
+name=Wheel
+model=loc474_26237
+width=2
+length=2
+hillskew=yes
+ambient=25
+
+[loc474_26238]
+// rev 474 loc 26238 (import474map.py)
+name=Hammer
+model=loc474_26238
+hillskew=yes
+ambient=25
+
+[loc474_26239]
+// rev 474 loc 26239 (import474map.py)
+name=Armour
+model=loc474_26239
+hillskew=yes
+ambient=25
+
+[loc474_26240]
+// rev 474 loc 26240 (import474map.py)
+name=Ladder
+model=loc474_26240
+width=2
+hillskew=yes
+ambient=25
+
+[loc474_26241]
+// rev 474 loc 26241 (import474map.py)
+name=Crate
+model=loc474_26241
+hillskew=yes
+ambient=25
+
+[loc474_26242]
+// rev 474 loc 26242 (import474map.py)
+name=Arm
+model=loc474_26242
+hillskew=yes
+ambient=25
+
+[loc474_26243]
+// rev 474 loc 26243 (import474map.py)
+name=Barrels
+model=loc474_26243
+hillskew=yes
+ambient=25
+
+[loc474_26247]
+// rev 474 loc 26247 (import474map.py)
+name=Old axe
+model=loc474_26247
+length=2
+hillskew=yes
+ambient=25
+
+[loc474_26248]
+// rev 474 loc 26248 (import474map.py)
+name=Column
+model=loc474_26248
+hillskew=yes
+ambient=25
+
+[loc474_26249]
+// rev 474 loc 26249 (import474map.py)
+name=Cannonball
+model=loc474_26249
+hillskew=yes
+ambient=25
+
+[loc474_26250]
+// rev 474 loc 26250 (import474map.py)
+name=Spikes
+model=loc474_26250
+hillskew=yes
+resizex=100
+resizez=100
+ambient=25
+
+[loc474_26251]
+// rev 474 loc 26251 (import474map.py)
+name=Crate
+model=loc474_26251
+hillskew=yes
+ambient=25
+
+[loc474_26252]
+// rev 474 loc 26252 (import474map.py)
+name=Spikes
+model=loc474_26252
+hillskew=yes
+ambient=25
+
+[loc474_26253]
+// rev 474 loc 26253 (import474map.py)
+name=Barrels
+model=loc474_26253
+hillskew=yes
+ambient=25
+
+[loc474_26254]
+// rev 474 loc 26254 (import474map.py)
+name=Barrels
+model=loc474_26254
+hillskew=yes
+ambient=25
+
+[loc474_26255]
+// rev 474 loc 26255 (import474map.py)
+name=Pole
+model=loc474_26255
+hillskew=yes
+ambient=25
+
+[loc474_26256]
+// rev 474 loc 26256 (import474map.py)
+name=Catapult
+model=loc474_26256
+hillskew=yes
+ambient=25
+
+[loc474_26257]
+// rev 474 loc 26257 (import474map.py)
+name=Crates
+model=loc474_26257
+hillskew=yes
+ambient=25
+
+[loc474_26258]
+// rev 474 loc 26258 (import474map.py)
+name=Crates
+model=loc474_26258
+hillskew=yes
+ambient=25
+
+[loc474_26259]
+// rev 474 loc 26259 (import474map.py)
+name=Crossbow
+model=loc474_26259
+hillskew=yes
+ambient=25
+
+[loc474_26260]
+// rev 474 loc 26260 (import474map.py)
+name=Crates
+model=loc474_26260
+hillskew=yes
+ambient=25
+
+[loc474_26261]
+// rev 474 loc 26261 (import474map.py)
+name=Crates
+model=loc474_26261
+hillskew=yes
+ambient=25
+
+[loc474_26262]
+// rev 474 loc 26262 (import474map.py)
+name=Spikes
+model=loc474_26262
+hillskew=yes
+ambient=25
+
+[loc474_26263]
+// rev 474 loc 26263 (import474map.py)
+name=Wood
+model=loc474_26263
+hillskew=yes
+ambient=25
+
+[loc474_26264]
+// rev 474 loc 26264 (import474map.py)
+name=Spikes
+model=loc474_26264
+hillskew=yes
+ambient=25
+
+[loc474_26265]
+// rev 474 loc 26265 (import474map.py)
+name=Stormram
+model=loc474_26265
+hillskew=yes
+ambient=25
+
+[loc474_26266]
+// rev 474 loc 26266 (import474map.py)
+name=Skullshield
+model=loc474_26266
+hillskew=yes
+ambient=25
+
+[loc474_26267]
+// rev 474 loc 26267 (import474map.py)
+name=Barrels
+model=loc474_26267
+hillskew=yes
+ambient=25
+
+[loc474_26268]
+// rev 474 loc 26268 (import474map.py)
+name=Boards
+model=loc474_26268
+hillskew=yes
+ambient=25
+
+[loc474_26269]
+// rev 474 loc 26269 (import474map.py)
+name=Crane
+model=loc474_26269
+hillskew=yes
+ambient=25
+
+[loc474_26270]
+// rev 474 loc 26270 (import474map.py)
+name=Handle
+model=loc474_26270
+hillskew=yes
+ambient=25
+
+[loc474_26271]
+// rev 474 loc 26271 (import474map.py)
+name=Frozen warrior
+model=loc474_26271
+model2=loc474_26271_2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26272]
+// rev 474 loc 26272 (import474map.py)
+name=Frozen warrior
+model=loc474_26272
+model2=loc474_26272_2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26273]
+// rev 474 loc 26273 (import474map.py)
+name=Frozen warrior
+model=loc474_26273
+model2=loc474_26273_2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26274]
+// rev 474 loc 26274 (import474map.py)
+name=Frozen warrior
+model=loc474_26274
+model2=loc474_26274_2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26276]
+// rev 474 loc 26276 (import474map.py)
+name=Frozen warrior
+model=loc474_26276
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26277]
+// rev 474 loc 26277 (import474map.py)
+name=Frozen warrior
+model=loc474_26277
+model2=loc474_26277_2
+width=2
+length=2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26278]
+// rev 474 loc 26278 (import474map.py)
+name=Frozen warrior
+model=loc474_26278
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26279]
+// rev 474 loc 26279 (import474map.py)
+name=Frozen warrior
+model=loc474_26279
+length=2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26280]
+// rev 474 loc 26280 (import474map.py)
+name=Frozen warrior
+model=loc474_26280
+length=2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26281]
+// rev 474 loc 26281 (import474map.py)
+name=Frozen demon
+model=loc474_26281
+width=3
+length=3
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26282]
+// rev 474 loc 26282 (import474map.py)
+name=Frozen demon
+model=loc474_26282
+model2=loc474_26282_2
+width=3
+length=3
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26283]
+// rev 474 loc 26283 (import474map.py)
+name=Frozen orc
+model=loc474_26283
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26284]
+// rev 474 loc 26284 (import474map.py)
+name=Frozen orc
+model=loc474_26284
+length=2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[loc474_26285]
+// rev 474 loc 26285 (import474map.py)
+name=Frozen orc
+model=loc474_26285
+width=2
+length=2
+active=yes
+hillskew=yes
+ambient=20
+contrast=20
+
+[gwd_altar_zamorak]
+// rev 474 loc 26286 (import474map.py)
+name=Zamorak altar
+model=gwd_altar_zamorak
+width=4
+length=4
+active=yes
+ambient=15
+op1=Pray-at
+op2=Teleport
+
+[gwd_altar_armadyl]
+// rev 474 loc 26288 (import474map.py)
+name=Armadyl altar
+model=gwd_altar_armadyl
+model2=gwd_altar_armadyl_2
+width=3
+length=3
+active=yes
+ambient=15
+op1=Pray-at
+op2=Teleport
+
+[gwd_altar_bandos]
+// rev 474 loc 26289 (import474map.py)
+name=Bandos altar
+model=gwd_altar_bandos
+width=3
+length=3
+active=yes
+ambient=15
+op1=Pray-at
+op2=Teleport
+
+[loc474_26290]
+// rev 474 loc 26290 (import474map.py)
+model=loc474_26290
+width=3
+length=3
+active=no
+hillskew=yes
+mapscene=11
+ambient=25
+contrast=25
+
+[loc474_26291]
+// rev 474 loc 26291 (import474map.py)
+name=Big hole
+model=loc474_26291
+width=5
+length=5
+active=yes
+hillskew=yes
+shadow=no
+ambient=100
+contrast=20
+
+[loc474_26302]
+// rev 474 loc 26302 (import474map.py)
+name=Pillar
+model=loc474_26302
+length=9
+active=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[gwd_pillar_grapple]
+// rev 474 loc 26303 (import474map.py)
+name=Pillar
+model=gwd_pillar_grapple
+length=9
+active=yes
+sharelight=yes
+ambient=25
+contrast=25
+op1=Grapple
+
+[loc474_26304]
+// rev 474 loc 26304 (import474map.py)
+model=loc474_26304
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26307]
+// rev 474 loc 26307 (import474map.py)
+model=loc474_26307
+length=2
+active=no
+sharelight=yes
+
+[loc474_26308]
+// rev 474 loc 26308 (import474map.py)
+model=loc474_26308
+width=2
+active=no
+sharelight=yes
+
+[loc474_26309]
+// rev 474 loc 26309 (import474map.py)
+model=loc474_26309
+width=2
+active=no
+sharelight=yes
+
+[loc474_26310]
+// rev 474 loc 26310 (import474map.py)
+model=loc474_26310
+width=2
+active=no
+sharelight=yes
+
+[loc474_26311]
+// rev 474 loc 26311 (import474map.py)
+model=loc474_26311
+width=2
+active=no
+sharelight=yes
+
+[loc474_26312]
+// rev 474 loc 26312 (import474map.py)
+model=loc474_26312
+active=no
+
+[loc474_26313]
+// rev 474 loc 26313 (import474map.py)
+model=loc474_26313
+active=no
+hillskew=yes
+
+[loc474_26314]
+// rev 474 loc 26314 (import474map.py)
+model=loc474_26314
+active=no
+hillskew=yes
+mirror=yes
+
+[loc474_26315]
+// rev 474 loc 26315 (import474map.py)
+model=loc474_26315
+active=no
+hillskew=yes
+
+[loc474_26316]
+// rev 474 loc 26316 (import474map.py)
+model=loc474_26316
+active=no
+hillskew=yes
+
+[loc474_26319]
+// rev 474 loc 26319 (import474map.py)
+model=loc474_26319
+recol1s=32767
+recol1d=24511
+hillskew=yes
+
+[loc474_26320]
+// rev 474 loc 26320 (import474map.py)
+model=loc474_26320
+recol1s=32767
+recol1d=24511
+hillskew=yes
+
+[loc474_26321]
+// rev 474 loc 26321 (import474map.py)
+model=loc474_26321
+recol1s=32767
+recol1d=24511
+hillskew=yes
+
+[loc474_26322]
+// rev 474 loc 26322 (import474map.py)
+model=loc474_26322
+width=2
+length=2
+blockrange=no
+active=no
+hillskew=yes
+
+[loc474_26337]
+// rev 474 loc 26337 (import474map.py)
+model=loc474_26337
+blockrange=no
+active=no
+mapscene=11
+ambient=25
+
+[loc474_26346]
+// rev 474 loc 26346 (import474map.py)
+model=loc474_26346
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26347]
+// rev 474 loc 26347 (import474map.py)
+model=loc474_26347
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26348]
+// rev 474 loc 26348 (import474map.py)
+model=loc474_26348
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26349]
+// rev 474 loc 26349 (import474map.py)
+model=loc474_26349
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26350]
+// rev 474 loc 26350 (import474map.py)
+model=loc474_26350
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26358]
+// rev 474 loc 26358 (import474map.py)
+model=loc474_26358
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26359]
+// rev 474 loc 26359 (import474map.py)
+model=loc474_26359
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26360]
+// rev 474 loc 26360 (import474map.py)
+model=loc474_26360
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26361]
+// rev 474 loc 26361 (import474map.py)
+model=loc474_26361
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26362]
+// rev 474 loc 26362 (import474map.py)
+model=loc474_26362
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26363]
+// rev 474 loc 26363 (import474map.py)
+model=loc474_26363
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26364]
+// rev 474 loc 26364 (import474map.py)
+model=loc474_26364
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26365]
+// rev 474 loc 26365 (import474map.py)
+model=loc474_26365
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26366]
+// rev 474 loc 26366 (import474map.py)
+model=loc474_26366
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[loc474_26367]
+// rev 474 loc 26367 (import474map.py)
+model=loc474_26367
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26368]
+// rev 474 loc 26368 (import474map.py)
+model=loc474_26368
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26369]
+// rev 474 loc 26369 (import474map.py)
+model=loc474_26369
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[loc474_26370]
+// rev 474 loc 26370 (import474map.py)
+model=loc474_26370
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26371]
+// rev 474 loc 26371 (import474map.py)
+model=loc474_26371
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26372]
+// rev 474 loc 26372 (import474map.py)
+model=loc474_26372
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[loc474_26373]
+// rev 474 loc 26373 (import474map.py)
+model=loc474_26373
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26374]
+// rev 474 loc 26374 (import474map.py)
+model=loc474_26374
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26375]
+// rev 474 loc 26375 (import474map.py)
+model=loc474_26375
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[loc474_26376]
+// rev 474 loc 26376 (import474map.py)
+model=loc474_26376
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26377]
+// rev 474 loc 26377 (import474map.py)
+model=loc474_26377
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26378]
+// rev 474 loc 26378 (import474map.py)
+model=loc474_26378
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[loc474_26379]
+// rev 474 loc 26379 (import474map.py)
+model=loc474_26379
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26382]
+// rev 474 loc 26382 (import474map.py)
+model=loc474_26382
+length=3
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26383]
+// rev 474 loc 26383 (import474map.py)
+model=loc474_26383
+length=3
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=25
+
+[gwd_door_bang]
+// rev 474 loc 26384 (import474map.py)
+name=Big door
+model=gwd_door_bang
+active=yes
+sharelight=yes
+ambient=25
+contrast=25
+op1=Bang
+
+[loc474_26386]
+// rev 474 loc 26386 (import474map.py)
+model=loc474_26386
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26387]
+// rev 474 loc 26387 (import474map.py)
+name=Door
+model=loc474_26387
+blockwalk=no
+blockrange=no
+active=yes
+sharelight=yes
+mirror=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26388]
+// rev 474 loc 26388 (import474map.py)
+model=loc474_26388
+active=no
+sharelight=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26389]
+// rev 474 loc 26389 (import474map.py)
+model=loc474_26389
+active=no
+sharelight=yes
+mirror=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26390]
+// rev 474 loc 26390 (import474map.py)
+model=loc474_26390
+active=no
+sharelight=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26391]
+// rev 474 loc 26391 (import474map.py)
+model=loc474_26391
+active=no
+sharelight=yes
+mirror=yes
+mapscene=22
+ambient=25
+contrast=25
+
+[loc474_26392]
+// rev 474 loc 26392 (import474map.py)
+model=loc474_26392
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26393]
+// rev 474 loc 26393 (import474map.py)
+model=loc474_26393
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26394]
+// rev 474 loc 26394 (import474map.py)
+model=loc474_26394
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26395]
+// rev 474 loc 26395 (import474map.py)
+model=loc474_26395
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26396]
+// rev 474 loc 26396 (import474map.py)
+model=loc474_26396
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26397]
+// rev 474 loc 26397 (import474map.py)
+model=loc474_26397
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26398]
+// rev 474 loc 26398 (import474map.py)
+model=loc474_26398
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26399]
+// rev 474 loc 26399 (import474map.py)
+model=loc474_26399
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26400]
+// rev 474 loc 26400 (import474map.py)
+model=loc474_26400
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26401]
+// rev 474 loc 26401 (import474map.py)
+model=loc474_26401
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26402]
+// rev 474 loc 26402 (import474map.py)
+model=loc474_26402
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26403]
+// rev 474 loc 26403 (import474map.py)
+model=loc474_26403
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26404]
+// rev 474 loc 26404 (import474map.py)
+model=loc474_26404
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=25
+
+[loc474_26405]
+// rev 474 loc 26405 (import474map.py)
+model=loc474_26405
+blockrange=no
+active=no
+ambient=25
+contrast=25
+
+[loc474_26406]
+// rev 474 loc 26406 (import474map.py)
+model=loc474_26406
+blockrange=no
+active=no
+ambient=25
+contrast=25
+
+[loc474_26407]
+// rev 474 loc 26407 (import474map.py)
+model=loc474_26407
+blockrange=no
+active=no
+ambient=25
+contrast=25
+
+[loc474_26408]
+// rev 474 loc 26408 (import474map.py)
+model=loc474_26408
+width=2
+length=2
+active=no
+hillskew=yes
+ambient=25
+contrast=25
+
+[loc474_26409]
+// rev 474 loc 26409 (import474map.py)
+model=loc474_26409
+width=2
+length=2
+active=no
+hillskew=yes
+mapscene=11
+ambient=25
+contrast=25
+
+[loc474_26410]
+// rev 474 loc 26410 (import474map.py)
+model=loc474_26410
+width=2
+length=2
+active=no
+shadow=no
+ambient=25
+contrast=25
+
+[loc474_26411]
+// rev 474 loc 26411 (import474map.py)
+model=loc474_26411
+active=no
+shadow=no
+ambient=25
+contrast=25
+
+[loc474_26412]
+// rev 474 loc 26412 (import474map.py)
+model=loc474_26412
+width=2
+length=2
+active=no
+shadow=no
+ambient=25
+contrast=25
+
+[loc474_26413]
+// rev 474 loc 26413 (import474map.py)
+model=loc474_26413
+width=2
+length=2
+active=no
+shadow=no
+ambient=25
+contrast=25
+
+[loc474_26414]
+// rev 474 loc 26414 (import474map.py)
+name=Large geyser
+model=loc474_26414
+width=2
+length=2
+active=yes
+ambient=30
+contrast=30
+
+[loc474_26416]
+// rev 474 loc 26416 (import474map.py)
+model=loc474_26416
+active=no
+hillskew=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26417]
+// rev 474 loc 26417 (import474map.py)
+name=Snowfall
+model=loc474_26417
+blockwalk=no
+blockrange=no
+resizey=256
+ambient=35
+
+[gwd_door_bandos]
+// rev 474 loc 26425 (import474map.py)
+name=Big door
+model=gwd_door_bandos
+active=yes
+shadow=no
+ambient=25
+contrast=25
+raiseobject=no
+op1=Open
+
+[gwd_door_armadyl]
+// rev 474 loc 26426 (import474map.py)
+name=Big door
+model=gwd_door_armadyl
+active=yes
+shadow=no
+ambient=25
+contrast=25
+raiseobject=no
+op1=Open
+
+[gwd_door_zamorak]
+// rev 474 loc 26428 (import474map.py)
+name=Big door
+model=gwd_door_zamorak
+active=yes
+shadow=no
+ambient=25
+contrast=25
+raiseobject=no
+op1=Open
+
+[gwd_ice_bridge]
+// rev 474 loc 26439 (import474map.py)
+name=Ice bridge
+model=gwd_ice_bridge
+blockwalk=no
+blockrange=no
+shadow=no
+op1=Climb-off
+
+[gwd_crate]
+// rev 474 loc 26440 (import474map.py)
+name=Crate
+model=gwd_crate
+recol1s=13639
+recol1d=15753
+recol2s=12582
+recol2d=14696
+recol3s=11525
+recol3d=13639
+recol4s=10468
+recol4d=12582
+recol5s=9411
+recol5d=11525
+recol6s=8354
+recol6d=10468
+resizex=100
+resizey=100
+resizez=100
+ambient=25
+op1=Search

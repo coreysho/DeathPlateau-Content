@@ -48,7 +48,14 @@ while ($slot < inv_size(inv)) {
     $slot = calc($slot + 1);
 }
 ~update_all(null);
-%zulrah_items_held = ^true;
+// ONLY IF SHE IS ACTUALLY KEEPING SOMETHING. This was set on every death, so dying with
+// nothing to lose - everything protected, or an empty pack - still left the player owing her
+// 100,000 coins to collect an empty box. Reported from play.
+if (~zulrah_deathbank_count > 0) {
+    %zulrah_items_held = ^true;
+} else {
+    %zulrah_items_held = ^false;
+}
 // A NEW DEATH IS A NEW FEE, so whatever was paid for the last one does not carry over.
 %zulrah_recovery_paid = ^false;
 
@@ -72,7 +79,12 @@ mes("@dre@Whatever Priestess Zul-Gwenwynig was keeping for you is gone.@bla@");
 [opnpc3,zulandra_priestess] ~zulrah_collect;
 
 [proc,zulrah_collect]
-if (%zulrah_items_held = ^false) {
+// The flag AND the box. Belt and braces: whatever leaves the two out of step - an older save,
+// a death that banked nothing - the fee is for getting things back, and there is no fee for
+// getting nothing back.
+if (%zulrah_items_held = ^false | ~zulrah_deathbank_count = 0) {
+    %zulrah_items_held = ^false;
+    %zulrah_recovery_paid = ^false;
     ~chatnpc("<p,neutral>I am keeping nothing of yours. Long may that|last.");
     return;
 }
