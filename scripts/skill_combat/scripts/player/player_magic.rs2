@@ -405,7 +405,18 @@ if ($maxhit ! null) {
     }
     // npcs didnt have a flinch anim until sept 20 2006. https://youtu.be/UFgMqvI4to8
     // https://oldschool.runescape.wiki/w/Update:Slug_Menace
-    npc_anim(npc_param(defend_anim), $duration); // delay npc this tick
+    // AN NPC WITH NO BLOCK ANIMATION NOW PLAYS NONE, instead of a human one. defend_anim defaults to
+    // human_unarmed_def (skill_combat/configs/combat.param), so every npc that never declared one was
+    // being told to play a PLAYER animation off the human rig. On anything built on its own rig - a
+    // dragon, a kalphite, Zulrah - the frame transforms land on vertex groups that mean something
+    // else entirely and the model folds up for the length of the block.
+    //
+    // Guarded rather than passed through, because npc_anim(null) is npc_anim(-1), which does not mean
+    // "play nothing" - it CANCELS whatever the npc is doing, and a block arrives mid-attack. The
+    // defend_sound line below has always been written this way; this is the same shape.
+    if (npc_param(defend_anim) ! null) {
+        npc_anim(npc_param(defend_anim), $duration); // delay npc this tick
+    }
     // npc sound
     if (npc_param(defend_sound) ! null) {
         sound_synth(npc_param(defend_sound), 0, $duration); // delay 1 client tick for the hit queue

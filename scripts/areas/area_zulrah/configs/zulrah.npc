@@ -64,6 +64,13 @@ hitpoints=500
 ranged=300
 magic=300
 param=attackrate,^zulrah_attackrate
+// NO BLOCK ANIMATION, which is what Old School gives it - Zulrah never flinches. Without
+// this it inherits defend_anim's default, human_unarmed_def, and a player animation off the
+// human rig was being played on a model rigged to frame groups 5693-5698. Measured in a real
+// 900-tick fight (Engine-TS tools/sim/zulrahvis.ts): human_unarmed_def was the single most
+// played animation in the fight, 152 times, more than the spit - once for every hit landed
+// on it. That is the reported "it disappears for a tick and comes back".
+param=defend_anim,null
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
 // OSRS seq 5808, and the fight's last unnamed sequence - see zulrah.seq for what it is and why it
@@ -114,6 +121,13 @@ hitpoints=500
 ranged=300
 magic=300
 param=attackrate,^zulrah_melee_attackrate
+// NO BLOCK ANIMATION, which is what Old School gives it - Zulrah never flinches. Without
+// this it inherits defend_anim's default, human_unarmed_def, and a player animation off the
+// human rig was being played on a model rigged to frame groups 5693-5698. Measured in a real
+// 900-tick fight (Engine-TS tools/sim/zulrahvis.ts): human_unarmed_def was the single most
+// played animation in the fight, 152 times, more than the spit - once for every hit landed
+// on it. That is the reported "it disappears for a tick and comes back".
+param=defend_anim,null
 // THE RED FORM DOES NOT SPIT, IT SWINGS ITS TAIL, and it now has the animation for it: OSRS seq
 // 5807, converted this round (configs/zulrah_tail.seq says how it was told apart from 5806). Every
 // form used to play the spit, 5069, which is why the tail swipe looked like a ranged attack with
@@ -155,6 +169,13 @@ hitpoints=500
 ranged=300
 magic=300
 param=attackrate,^zulrah_attackrate
+// NO BLOCK ANIMATION, which is what Old School gives it - Zulrah never flinches. Without
+// this it inherits defend_anim's default, human_unarmed_def, and a player animation off the
+// human rig was being played on a model rigged to frame groups 5693-5698. Measured in a real
+// 900-tick fight (Engine-TS tools/sim/zulrahvis.ts): human_unarmed_def was the single most
+// played animation in the fight, 152 times, more than the spit - once for every hit landed
+// on it. That is the reported "it disappears for a tick and comes back".
+param=defend_anim,null
 param=attack_anim,osrs_seq_5069
 param=death_anim,osrs_seq_5804
 // OSRS seq 5808, and the fight's last unnamed sequence - see zulrah.seq for what it is and why it
@@ -190,6 +211,9 @@ desc=A spawn of the Great One.
 model1=npc_zulrah_snakeling_1
 size=1
 readyanim=osrs_seq_1721
+// No block animation either, for the same reason as the three forms above: readyanim is OSRS seq
+// 1721 off the snakeling's own rig, and defend_anim's default is a human one.
+param=defend_anim,null
 walkanim=osrs_seq_2405
 op2=Attack
 vislevel=90
@@ -217,6 +241,9 @@ desc=A spawn of the Great One.
 model1=npc_zulrah_snakeling_1
 size=1
 readyanim=osrs_seq_1721
+// No block animation either, for the same reason as the three forms above: readyanim is OSRS seq
+// 1721 off the snakeling's own rig, and defend_anim's default is a human one.
+param=defend_anim,null
 walkanim=osrs_seq_2405
 op2=Attack
 vislevel=90
