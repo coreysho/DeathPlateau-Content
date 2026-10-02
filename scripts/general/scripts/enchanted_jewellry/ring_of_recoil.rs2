@@ -1,7 +1,23 @@
+// The ring recoils ^ring_of_recoil_charges damage in its life and then shatters. The 40 used
+// to be written here as a bare number and nothing could ask about it; it is a constant now
+// because Check below has to count down from the same one.
 [proc,ring_of_recoil_lose_charge](int $recoil_damage)
 %ring_of_recoil = add(max(%ring_of_recoil, 0), $recoil_damage);
-if (%ring_of_recoil >= 40) {
+if (%ring_of_recoil >= ^ring_of_recoil_charges) {
     %ring_of_recoil = 0;
     inv_delslot(worn, ^wearpos_ring);
     mes("Your Ring of Recoil has shattered.");
 }
+
+// CHECK, which there was no way to do. Old School answers from the pack and from the finger,
+// so both ops come here. The ring counts damage recoiled, not hits, so what is left is damage
+// too - which is the number the wiki quotes and the one that decides when it goes.
+[opheld3,ring_of_recoil] ~ring_of_recoil_check;
+[label,wearop1_ring_of_recoil] ~ring_of_recoil_check;
+
+[proc,ring_of_recoil_check]
+def_int $left = sub(^ring_of_recoil_charges, max(%ring_of_recoil, 0));
+if ($left < 1) {
+    $left = 1;
+}
+mes("Your Ring of Recoil can recoil <tostring($left)> more damage before it shatters.");

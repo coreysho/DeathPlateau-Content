@@ -31,3 +31,10 @@ scope=temp
 [animmag_attract_coord]
 scope=temp
 type=coord
+
+// Set when the player has turned the metal attraction off. The ammo saving is NOT affected - it
+// is the whole point of the device and is not what anybody wants to switch off. scope=perm so
+// the choice survives a logout.
+[avas_attract_off]
+scope=perm
+type=boolean

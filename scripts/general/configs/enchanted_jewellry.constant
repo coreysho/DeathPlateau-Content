@@ -1,0 +1,6 @@
+// Numbers the enchanted jewellery in general/scripts/enchanted_jewellry/ runs on.
+
+// The Ring of recoil shatters once it has recoiled this much damage. Read twice by
+// ring_of_recoil.rs2 - once to spend it, once for Check to count down from it - which is why it
+// stopped being a bare 40 written in one place.
+^ring_of_recoil_charges = 40

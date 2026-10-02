@@ -78,6 +78,11 @@ queue(animmag_attract, 0, 0);
 ~avas_attract;
 
 [proc,avas_attract]
+// TURNED OFF, if the player asked. Only the metal attraction - the ammo saving is the whole
+// reason to wear the thing and is left alone.
+if (%avas_attract_off = true) {
+    return;
+}
 def_namedobj $device = ~avas_device;
 def_namedobj $metal = null;
 if ($device = avas_accumulator) {
@@ -172,3 +177,29 @@ if (%animmag < ^animmag_complete) {
     return;
 }
 ~equip($slot);
+
+// =========================================================================== the toggle
+//
+// The devices pull in an armful of iron or steel every 3.5 minutes whether you want it or not,
+// and for anyone who is not there to collect scrap that is an inventory slot gone and a pile to
+// drop. Toggle-attract turns that off and LEAVES THE AMMO SAVING ON - saving your own ammo is
+// what the device is for, and switching it off is not a thing anybody would ask for.
+//
+// Both ops come here, from the pack and from the back, and the Accumulator max cape carries them
+// too: ~avas_device already turns a worn Max cape variant back into the device fused into it, so
+// nothing below names the variant.
+[opheld3,avas_attractor] ~avas_attract_toggle;
+[opheld3,avas_accumulator] ~avas_attract_toggle;
+[opheld3,accumulator_max_cape] ~avas_attract_toggle;
+[label,wearop1_avas_attractor] ~avas_attract_toggle;
+[label,wearop1_avas_accumulator] ~avas_attract_toggle;
+[label,wearop1_accumulator_max_cape] ~avas_attract_toggle;
+
+[proc,avas_attract_toggle]
+if (%avas_attract_off = true) {
+    %avas_attract_off = false;
+    mes("Your Ava's device will attract metal items again.");
+    return;
+}
+%avas_attract_off = true;
+mes("Your Ava's device will no longer attract metal items. It still saves your ammunition.");

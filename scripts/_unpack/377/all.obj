@@ -28484,9 +28484,15 @@ model=obj_litarrow_5
 2dyan=1860
 2dxan=440
 
+// Check, which it had no way of answering. The ring shatters after 40 recoiled damage and
+// nothing told you how close it was. iop3 + wearop1, as the serpentine helm does it, so it
+// answers in the pack and on your finger. scripts/general/scripts/enchanted_jewellry/
+// ring_of_recoil.rs2 has the wording.
 [ring_of_recoil]
 name=Ring of recoil
 desc=An enchanted ring.
+iop3=Check
+wearop1=Check
 recol1s=32767
 recol1d=23
 cost=900
