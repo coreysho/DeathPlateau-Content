@@ -21,3 +21,33 @@ if ($left < 1) {
     $left = 1;
 }
 mes("Your Ring of Recoil can recoil <tostring($left)> more damage before it shatters.");
+
+
+
+// BREAK, which is what Old School calls it and why it exists: "if the player wishes to obtain a
+// ring with 40 charges remaining, the player must use any ring of recoil completely until it
+// shatters, OR USE THE RIGHT-CLICK BREAK OPTION on a ring while in the inventory."
+//
+// That is the whole point. The count is kept per PLAYER and not per ring - "a newly-equipped ring
+// will have the same number of charges remaining as any other ring the player wears" - so buying a
+// replacement does not give you a fresh 40. Breaking one does, at the cost of the ring.
+//
+// iop4, so Drop stays where it is on op5 ([opheld5,_] in player/scripts/drop.rs2). The ring is
+// tradeable and worth dropping for somebody; Break is an extra option, not a replacement.
+[opheld4,ring_of_recoil]
+def_int $left = sub(^ring_of_recoil_charges, max(%ring_of_recoil, 0));
+if ($left < 1) {
+    $left = 1;
+}
+~mesbox("Breaking the ring destroys it. It can still recoil <tostring($left)> more damage.");
+if (~p_choice2("Break the ring of recoil.", 1, "Keep it.", 2) ! 1) {
+    return;
+}
+// Checked after the question, the way @storage_destroy does: the ring can leave the pack while the
+// dialogue is open.
+if (inv_total(inv, ring_of_recoil) < 1) {
+    return;
+}
+inv_del(inv, ring_of_recoil, 1);
+%ring_of_recoil = 0;
+mes("You break the ring of recoil. The next one you wear will be at full charge.");
