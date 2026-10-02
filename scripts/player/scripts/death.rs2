@@ -102,6 +102,7 @@ if($protecting_item = true) {
     ~move_priciest_item_on_hero_to_death;
 }
 ~blowpipe_death_spill; // toxic_blowpipe/scripts/blowpipe.rs2
+~rune_pouch_death_spill; // storage_items/scripts/rune_pouch.rs2 - the runes go with the pouch
 
 def_int $i = 0;
 def_int $size = inv_size(inv);
@@ -151,6 +152,7 @@ if($protecting_item = true) {
     ~move_priciest_item_on_hero_to_death;
 }
 ~blowpipe_death_spill_pvp; // toxic_blowpipe/scripts/blowpipe.rs2
+~rune_pouch_death_spill_pvp; // storage_items/scripts/rune_pouch.rs2
 
 def_int $i = 0;
 def_int $size = inv_size(inv);

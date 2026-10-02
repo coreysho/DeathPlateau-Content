@@ -153,3 +153,38 @@ inv_del(inv, divine_rune_pouch, 1);
 inv_add(inv, rune_pouch, 1);
 inv_add(inv, thread_of_elidinis, 1);
 mes("You unpick the stitching and get the thread back.");
+
+// ---------------------------------------------------------------- Death
+//
+// THE RUNES GO WITH THE POUCH. Reported: "destroying/losing a runepouch does not remove runes
+// from it when you get another." Destroying it always has (@storage_destroy clears the store),
+// but dying with it did not - the store is a perm inv that outlives the item, so the next pouch
+// you bought came pre-loaded with the runes you had already dropped.
+//
+// They spill at your feet with everything else, the way the looting bag's contents already do and
+// the way a charged blowpipe spills its scales (~blowpipe_death_spill). That empties the store,
+// which is the fix, without quietly destroying runes the player could otherwise walk back for.
+//
+// ONLY WHEN THE POUCH ITSELF IS BEING LOST. ~rune_pouch_carried reads the inventory, and by the
+// time this is called a protected pouch has already been moved to deathkeep - so a pouch you keep,
+// and a pouch sitting in the bank, both leave the store alone. That distinction is the whole
+// reason this is not just an inv_clear.
+[proc,rune_pouch_death_spill]
+if (~rune_pouch_carried = null) {
+    return;
+}
+inv_dropall(rune_pouch_store, coord, ^lootdrop_duration);
+
+// the same, to the killer, as the looting bag does
+[proc,rune_pouch_death_spill_pvp]
+if (~rune_pouch_carried = null) {
+    return;
+}
+def_int $i = 0;
+def_int $size = inv_size(rune_pouch_store);
+while ($i < $size) {
+    if (inv_getnum(rune_pouch_store, $i) > 0) {
+        both_dropslot(rune_pouch_store, coord, $i, ^lootdrop_duration);
+    }
+    $i = calc($i + 1);
+}
