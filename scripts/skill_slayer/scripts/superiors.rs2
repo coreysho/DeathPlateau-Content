@@ -164,6 +164,13 @@ if (%imbued_heart_minute > 0 & $wait > 0) {
     return;
 }
 %imbued_heart_minute = world_minute;
+// IT HAS ITS ANIMATION, which it did not - the heart boosted in silence, with the player
+// standing still. configs/imbued_heart.{spotanim,seq} are OSRS spotanim 1316 and seq 9104
+// brought across by tools/models/importosrsspot.py; the graphic is the blood-red cousin of
+// the Saradomin sword special (spotanim 1213, already here as sara_sword_spec) and is played
+// the same way that one is, in pvm_godswords.rs2.
+anim(imbued_heart_invigorate_anim, 0);
+spotanim_pl(imbued_heart_invigorate, 0, 0);
 stat_boost(magic, 1, 10);
 mes("Your imbued heart invigorates you, boosting your Magic.");
 

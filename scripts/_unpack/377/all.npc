@@ -74796,11 +74796,26 @@ head2=obj_pickpocket_guide_man
 head3=npc_master_fisher_head
 head4=npc_1901_headi2
 
+// Rohak vanished when you handed him the ale, reported from play as "when you use an ale on the
+// old dwarf for RFD, he disappears. Had to relog for him to respawn." He is two spawned npcs
+// sharing one varbit - this shell for states 0 and 1, hundred_dwarf_drunk_multi for state 2 -
+// one tile apart, and handing over the ale is supposed to be a swap on the spot.
+//
+// Both of them wandered, independently. Measured on the real engine (tools/sim/rohak2.ts): over
+// 300 ticks the sober shell drifts 5 tiles from its spawn and the drunk one 4, and the gap
+// between the two reaches NINE tiles. So the dwarf in front of you blinks out and drunk Rohak
+// is across the camp, often out of sight - which is exactly what "he disappears" looks like,
+// and why walking back after a relog found him again.
+//
+// wanderrange=0 + moverestrict=nomove, as [gambler1] uses. Rohak stands in the dwarf camp in
+// Old School and has nowhere to be.
 [hundred_dwarf_dad_multi]
 walkanim=dwarf_walk
 readyanim=dwarf_ready
 alwaysontop=yes
 vislevel=1
+wanderrange=0
+moverestrict=nomove
 multivar=hundred_dwarf_multi_dad
 multinpc=0,hundred_dwarf_dad
 multinpc=1,hundred_dwarf_dad_rohak
@@ -74864,11 +74879,14 @@ alwaysontop=yes
 head1=npc_lawgof2_head
 head2=npc_mcannonguard_headi2
 
+// The other half of the swap - see [hundred_dwarf_dad_multi] above. Pinned for the same reason.
 [hundred_dwarf_drunk_multi]
 readyanim=dwarf_drunkready
 walkanim=dwarf_drunkwalk
 alwaysontop=yes
 vislevel=1
+wanderrange=0
+moverestrict=nomove
 multivar=hundred_dwarf_multi_dad
 multinpc=2,hundred_dwarf_dad_drunk
 

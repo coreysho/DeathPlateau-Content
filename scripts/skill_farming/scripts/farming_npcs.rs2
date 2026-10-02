@@ -256,15 +256,20 @@ if (~garden_wants(3) = true) { @garden_gardener(3); }
 
 [opnpc1,farming_tools_leprechaun]
 ~chatnpc("<p,happy>Top o' the mornin'! Need a hand with your tools?");
-def_int $choice = ~p_choice3("My tools, please.", 1, "Fill my watering can.", 2, "Nothing, thanks.", 3);
+def_int $choice = ~p_choice4("My tools, please.", 1, "Fill my watering can.", 2, "Can you note my produce?", 3, "Nothing, thanks.", 4);
 switch_int($choice) {
     case 1 : ~leprechaun_window;
     case 2 : ~farming_leprechaun_fill_can;
+    case 3 : ~chatnpc("<p,neutral>Use any of your farming produce on me and I'll turn it into a banknote for you.");
     case default : ~chatplayer("<p,neutral>Nothing, thanks.");
 }
 
+// EXCHANGE OPENS THE STORE. The npc has carried op3=Exchange since 377 and it answered with one
+// sentence about banknotes, so the only way to the tools was Talk-to and then a dialogue option -
+// four clicks for the thing the leprechaun exists to do. Exchange opens the store in Old School
+// and now opens it here. The banknote line moved to Talk-to, which is where you ask him things.
 [opnpc3,farming_tools_leprechaun]
-~chatnpc("<p,neutral>Use any of your farming produce on me and I'll turn it into a banknote for you.");
+~leprechaun_window;
 
 // He fills a watering can straight to eight doses, which is the whole reason to look for him.
 [proc,farming_leprechaun_fill_can]
