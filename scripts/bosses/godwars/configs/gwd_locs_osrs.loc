@@ -168,7 +168,8 @@ hillskew=yes
 ambient=20
 contrast=100
 
-[osrsloc_26364]
+// Saradomin altar - the fourth faction altar
+[gwd_altar_saradomin]
 // OSRS loc 26364
 name=Saradomin altar
 model=osrsloc_26364
@@ -185,7 +186,8 @@ name=Rope
 model=osrsloc_26369
 active=yes
 
-[osrsloc_26370]
+// the rope you climb down into the dungeon on (lvl 2)
+[gwd_rope_down]
 // OSRS loc 26370
 name=Rope
 model=osrsloc_26370
@@ -195,14 +197,16 @@ ambient=25
 contrast=125
 op1=Climb
 
-[osrsloc_26373]
+// Rock you tie a rope to, lvl 2 at 2913,5300
+[gwd_rock_tierope_upper]
 // OSRS loc 26373
 name=Rock
 model=osrsloc_26373
 width=2
 op1=Tie-rope
 
-[osrsloc_26377]
+// Rock you tie a rope to, lvl 1 at 2920,5274
+[gwd_rock_tierope_lower]
 // OSRS loc 26377
 name=Rock
 model=osrsloc_26377
@@ -243,7 +247,8 @@ hillskew=yes
 model=osrsloc_26398
 hillskew=yes
 
-[osrsloc_26422]
+// the top of that rope (lvl 3)
+[gwd_rope_top]
 // OSRS loc 26422
 name=Rope
 model=osrsloc_26422
@@ -747,7 +752,8 @@ hillskew=yes
 sharelight=yes
 offsety=1
 
-[osrsloc_40419]
+// Commander Zilyana's door, the one with Peek
+[gwd_door_saradomin]
 // OSRS loc 40419
 name=Big door
 model=osrsloc_40419
@@ -763,7 +769,8 @@ model=osrsloc_41187
 ambient=25
 contrast=50
 
-[osrsloc_42840]
+// Frozen Door at 2884,5279
+[gwd_frozen_door_east]
 // OSRS loc 42840
 name=Frozen Door
 model=osrsloc_42840
@@ -772,7 +779,8 @@ ambient=25
 contrast=125
 op1=Open
 
-[osrsloc_42841]
+// Frozen Door at 2883,5279
+[gwd_frozen_door_west]
 // OSRS loc 42841
 name=Frozen Door
 model=osrsloc_42841
