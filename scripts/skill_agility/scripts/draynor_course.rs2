@@ -31,7 +31,7 @@ mes("...and pull yourself onto the roof.");
 p_arrivedelay;
 mes("You carefully cross the tightrope.");
 sound_synth(tightrope, 5, 0);
-~agility_force_move(^draynor_xp_rope1, human_walk_logbalance, ^draynor_land_rope1);
+~draynor_cross(^draynor_xp_rope1, ^draynor_rope1_start, ^draynor_land_rope1);
 ~draynor_progress(2);
 
 // ---------------------------------------------------------------- 3. the second tightrope
@@ -39,14 +39,14 @@ sound_synth(tightrope, 5, 0);
 p_arrivedelay;
 mes("You carefully cross the tightrope.");
 sound_synth(tightrope, 5, 0);
-~agility_force_move(^draynor_xp_rope2, human_walk_logbalance, ^draynor_land_rope2);
+~draynor_cross(^draynor_xp_rope2, ^draynor_rope2_start, ^draynor_land_rope2);
 ~draynor_progress(3);
 
 // ---------------------------------------------------------------- 4. the narrow wall
 [oploc1,osrsloc_11430]
 p_arrivedelay;
 mes("You balance along the narrow wall.");
-~agility_force_move(^draynor_xp_narrow, human_walk_logbalance, ^draynor_land_narrow);
+~draynor_cross_corner(^draynor_xp_narrow, ^draynor_narrow_start, ^draynor_narrow_corner, ^draynor_land_narrow);
 ~draynor_progress(4);
 
 // ---------------------------------------------------------------- 5. the wall
@@ -60,7 +60,7 @@ mes("You jump up the wall...");
 [oploc1,osrsloc_11631]
 p_arrivedelay;
 mes("You leap across the gap...");
-~agility_force_move(^draynor_xp_gap, human_walk_logbalance, ^draynor_land_gap);
+~draynor_cross(^draynor_xp_gap, ^draynor_gap_start, ^draynor_land_gap);
 mes("...and land on the far roof.");
 ~draynor_progress(6);
 
@@ -70,6 +70,31 @@ p_arrivedelay;
 mes("You climb down onto the crate and jump to the ground.");
 ~agility_climb_up(^draynor_xp_crate, ^draynor_land_crate);
 ~draynor_progress(7);
+
+// ---------------------------------------------------------------- crossing one of them
+//
+// EVERY CROSSING STARTS ON THE OBSTACLE, not wherever the player happened to stop walking.
+// ~agility_walk moves a tile at a time and spends its diagonal FIRST, so a crossing whose start and
+// finish are not on the same row drifts off the rope on the very first step and stays off it. Level
+// 3 does not define the tiles either side of a rope, so a player who drifts walks at street height
+// through the air - which is exactly what both tightropes did.
+//
+// Putting them on the near end first costs a one-tile snap nobody sees and makes the whole span a
+// straight line, the way log_balances.rs2 does it for the logs.
+[proc,draynor_cross](int $xp, coord $start, coord $end)
+p_teleport($start);
+p_delay(0);
+~agility_force_move($xp, human_walk_logbalance, $end);
+
+// The narrow wall's roof is one tile west of where the wall ends, so the step off it is a diagonal
+// and must come LAST. Two legs rather than one: down the wall, then off it.
+[proc,draynor_cross_corner](int $xp, coord $start, coord $corner, coord $end)
+p_teleport($start);
+p_delay(0);
+~set_forcemove_bas(human_walk_logbalance);
+~agility_walk(calc(coordx($corner) - coordx($start)), calc(coordz($corner) - coordz($start)), false);
+~agility_walk(calc(coordx($end) - coordx($corner)), calc(coordz($end) - coordz($corner)), true);
+~agility_xp($xp);
 
 // ---------------------------------------------------------------- the lap
 //

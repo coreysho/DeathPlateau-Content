@@ -11,14 +11,28 @@
 
 // WHERE EACH OBSTACLE PUTS YOU DOWN, read off the grafted roofs rather than guessed -
 // Engine-TS tools/sim/draynorroof.ts draws them and tools/sim/draynorcourse.ts walks the lap and
-// fails if any of these is blocked or unreachable from the obstacle before it.
+// fails if any of these is blocked, unreachable, or off the roof.
 ^draynor_land_wall = 3_48_51_30_15
-^draynor_land_rope1 = 3_48_51_19_12
-^draynor_land_rope2 = 3_48_51_21_2
+^draynor_land_rope1 = 3_48_51_17_13
+^draynor_land_rope2 = 3_48_51_20_2
 ^draynor_land_narrow = 3_48_50_16_61
 ^draynor_land_jumpup = 3_48_50_16_55
 ^draynor_land_gap = 3_48_50_24_56
 ^draynor_land_crate = 0_48_50_31_61
+
+// AND WHERE EACH WALKED ONE STARTS. ~agility_walk steps one tile at a time and takes its diagonal
+// FIRST, so a crossing that does not begin and end on the same row walks beside the rope rather
+// than along it - which is what the first version did: both tightropes put the player a tile off
+// the roof, over tiles level 3 does not even define, so they crossed at street height on nothing.
+// Putting them on the near end first makes every step of a rope a straight line down it.
+^draynor_rope1_start = 3_48_51_25_13   // 3097,3277 - the rope runs west along z 3277
+^draynor_rope2_start = 3_48_51_20_11   // 3092,3275 - and south along x 3092
+^draynor_narrow_start = 3_48_51_17_0   // 3089,3264 - the wall runs south along x 3089
+^draynor_gap_start = 3_48_50_23_55     // 3095,3255 - one diagonal hop to the far roof
+
+// The narrow wall's roof is a tile WEST of the wall's south end, so that one step off is a
+// diagonal and has to come last. This is the corner it turns.
+^draynor_narrow_corner = 3_48_50_17_62 // 3089,3262
 
 // The rough wall is climbed from the street south of it; from the north you are on the roof already.
 ^draynor_wall_z = 3279
