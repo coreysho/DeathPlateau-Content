@@ -60,3 +60,16 @@
 // left tied. Two floors down: the upper rock drops to level 1, the lower one to the encampment.
 ^gwd_rope_upper_down = 1_45_82_35_52
 ^gwd_rope_lower_down = 0_45_82_39_26
+
+// ---------------------------------------------------------------- the altars
+// "Can recharge prayer points every 10 minutes, which also gives a +1 Prayer bonus for every piece
+// of equipment affiliated to the correct deity", and "every altar has the option to teleport
+// players outside of the general's lair".
+^gwd_altar_minutes = 10
+
+// The corridor side of each faction door - where Teleport puts you down, which is what "outside
+// the general's lair" means. The room side is ^gwd_inside_* above.
+^gwd_outside_armadyl = 2_44_82_23_46
+^gwd_outside_bandos = 2_44_83_46_42
+^gwd_outside_zamorak = 2_45_83_45_21
+^gwd_outside_saradomin = 0_45_82_29_17

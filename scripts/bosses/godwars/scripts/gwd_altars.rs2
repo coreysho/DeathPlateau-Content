@@ -1,0 +1,100 @@
+// The four altars in the God Wars Dungeon.
+//
+// "Can recharge prayer points every 10 minutes, which also gives a +1 Prayer bonus for every piece
+// of equipment affiliated to the correct deity", and "every altar has the option to teleport
+// players outside of the general's lair" - which is the escape route out of a boss room, and the
+// reason the cache gives these locs a second option the ordinary altars do not have.
+//
+// The +1 per devoted piece is counted off the SAME param the factions read to decide whether to
+// come after you (gwd.param), so a set worn to walk past Saradomin's followers is the set that
+// boosts you at Saradomin's altar. One rule, two uses.
+
+[oploc1,gwd_altar_armadyl] @gwd_pray_at(~gwd_devotion_armadyl);
+[oploc1,gwd_altar_bandos] @gwd_pray_at(~gwd_devotion_bandos);
+[oploc1,gwd_altar_saradomin] @gwd_pray_at(~gwd_devotion_saradomin);
+[oploc1,gwd_altar_zamorak] @gwd_pray_at(~gwd_devotion_zamorak);
+
+[oploc2,gwd_altar_armadyl] @gwd_altar_teleport(^gwd_outside_armadyl);
+[oploc2,gwd_altar_bandos] @gwd_altar_teleport(^gwd_outside_bandos);
+[oploc2,gwd_altar_saradomin] @gwd_altar_teleport(^gwd_outside_saradomin);
+[oploc2,gwd_altar_zamorak] @gwd_altar_teleport(^gwd_outside_zamorak);
+
+// $devotion is how many worn pieces answer to this altar's god. @pray_at_altar is the ordinary
+// altar's own label - it decides recharge against boost, says the right line and plays the right
+// sound - and all this adds is the target to take prayer up to.
+[label,gwd_pray_at](int $devotion)
+def_int $wait = sub(^gwd_altar_minutes, sub(world_minute, %gwd_altar_minute));
+if (%gwd_altar_minute > 0 & $wait > 0) {
+    if ($wait = 1) {
+        mes("The altar is dormant. It will be ready again in around 1 minute.");
+    } else {
+        mes("The altar is dormant. It will be ready again in around <tostring($wait)> minutes.");
+    }
+    return;
+}
+%gwd_altar_minute = world_minute;
+if ($devotion > 0) {
+    mes("Your devotion is noticed.");
+}
+@pray_at_altar(calc(stat_base(prayer) + $devotion));
+
+// Out of the lair, not out of the dungeon: you come back round through the door you opened.
+[label,gwd_altar_teleport](coord $out)
+mes("You step through the altar's light.");
+anim(human_pray, 0);
+p_delay(2);
+p_telejump($out);
+
+// HOW MANY DEVOTED PIECES ARE WORN. Four near-identical procs rather than one taking the param,
+// because a param is a literal in RuneScript - there is no passing one as an argument, the same
+// wall ~make_weapon_poisoned ran into when it needed three poison tiers. inv_totalparam is not a
+// command in this build; the two places that reference it are both commented out, which is the
+// clue it never was.
+
+[proc,gwd_devotion_armadyl]()(int)
+def_int $worn = 0;
+def_int $slot = 0;
+while ($slot < inv_size(worn)) {
+    def_obj $item = inv_getobj(worn, $slot);
+    if ($item ! null) {
+        $worn = add($worn, oc_param($item, gwd_prot_armadyl));
+    }
+    $slot = calc($slot + 1);
+}
+return($worn);
+
+[proc,gwd_devotion_bandos]()(int)
+def_int $worn = 0;
+def_int $slot = 0;
+while ($slot < inv_size(worn)) {
+    def_obj $item = inv_getobj(worn, $slot);
+    if ($item ! null) {
+        $worn = add($worn, oc_param($item, gwd_prot_bandos));
+    }
+    $slot = calc($slot + 1);
+}
+return($worn);
+
+[proc,gwd_devotion_saradomin]()(int)
+def_int $worn = 0;
+def_int $slot = 0;
+while ($slot < inv_size(worn)) {
+    def_obj $item = inv_getobj(worn, $slot);
+    if ($item ! null) {
+        $worn = add($worn, oc_param($item, gwd_prot_saradomin));
+    }
+    $slot = calc($slot + 1);
+}
+return($worn);
+
+[proc,gwd_devotion_zamorak]()(int)
+def_int $worn = 0;
+def_int $slot = 0;
+while ($slot < inv_size(worn)) {
+    def_obj $item = inv_getobj(worn, $slot);
+    if ($item ! null) {
+        $worn = add($worn, oc_param($item, gwd_prot_zamorak));
+    }
+    $slot = calc($slot + 1);
+}
+return($worn);
