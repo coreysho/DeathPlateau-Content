@@ -34,9 +34,16 @@ attackrange=1
 maxrange=20
 wanderrange=8
 respawnrate=100
+// Six ticks, which is his cycle in Old School and slower than the default - his hits are big
+// and they are meant to be spaced.
+param=attackrate,6
 param=attack_anim,graardor_attack
 param=defend_anim,graardor_block
 param=death_anim,graardor_death
+// STRENGTH BONUS, so his max hit is the 60 Old School gives him. The cache carries no bonus and
+// without one the formula returns 36 from his strength of 350 - measured, not assumed. Solving
+// ~npc_melee_maxhit backwards from that 36 puts the bonus at 44, which lands on 60.
+param=strengthbonus,44
 param=stabdefence,90
 param=slashdefence,90
 param=crushdefence,90

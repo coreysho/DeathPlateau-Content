@@ -1,0 +1,67 @@
+// General Graardor, who has two attacks and until now used one.
+//
+// "He operates on a 6-tick attack cycle, with melee comprising 2/3 of his attacks and ranged
+// attacks making up the remaining 1/3." The melee is crush and hits up to 60. The ranged one is not
+// a ranged attack in any ordinary sense: "rather than targeting individual players, he slams the
+// ground, hitting all players in the room" for 15-35, and he "can only use it if he is within melee
+// range of his current target" - so it is a melee-range attack that happens to be ranged-typed and
+// happens to hit everybody.
+//
+// That last part is the whole reason a team brings Protect from Missiles rather than spreading out:
+// there is nowhere in the room to stand that the slam does not reach.
+//
+// Shaped on [ai_applayer2,kalphite_queen], which is the build's own two-style boss.
+
+[ai_opplayer2,graardor] npc_setmode(applayer2);
+
+[ai_applayer2,graardor]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+// Neither attack reaches from a distance - the slam included, which is what "only if he is within
+// melee range of his current target" means. Out of reach he just keeps walking in.
+if (npc_canreach = false) {
+    return;
+}
+if (random(3) = 0) {
+    ~graardor_slam_attack;
+    return;
+}
+~graardor_melee_attack;
+
+// The crush swing. ~npc_meleeattack rolls his attack against your defence and his strength into a
+// hit, which is every other melee npc's path and is his too.
+[proc,graardor_melee_attack]
+anim(%com_defendanim, 0);
+npc_anim(graardor_attack, 0);
+~npc_meleeattack;
+
+// THE SLAM. It does not roll to hit and it does not pick a target: everyone in the room takes
+// 15 to 35, evenly, unless they are praying against missiles. graardor_slam is 474 seq 7063, which
+// was converted with the rest of his set when he was imported and has been sitting unused since.
+[proc,graardor_slam_attack]
+npc_anim(graardor_slam, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+huntall(coord, 15, ^vis_off);
+while (huntnext = true) {
+    ~graardor_slam_hit;
+}
+
+// ^vis_off above, not line of sight: the pillars in his hall would otherwise shelter anyone standing
+// behind one, and "all players in the room" is the whole point of the attack.
+[proc,graardor_slam_hit]
+def_int $damage = add(^graardor_slam_min, random(add(sub(^graardor_slam_max, ^graardor_slam_min), 1)));
+if (~check_protect_prayer(^ranged_style) = true) {
+    $damage = 0;
+}
+~npc_set_attack_vars;
+anim(%com_defendanim, 0);
+queue(combat_damage_player, 0, $damage);
+queue*(playerhit_n_retaliate, 0)(npc_uid);
