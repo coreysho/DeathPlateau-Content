@@ -1,0 +1,165 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_269]
+// OSRS loc 269
+model=osrsloc_269
+hillskew=yes
+sharelight=yes
+
+[osrsloc_1642]
+// OSRS loc 1642
+model=osrsloc_1642
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_1643]
+// OSRS loc 1643
+model=osrsloc_1643
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_5710]
+// OSRS loc 5710
+model=osrsloc_5710
+active=no
+sharelight=yes
+
+[osrsloc_5734]
+// OSRS loc 5734
+model=osrsloc_5734
+active=no
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_5738]
+// OSRS loc 5738
+model=osrsloc_5738
+active=no
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_5745]
+// OSRS loc 5745
+model=osrsloc_5745
+active=no
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_5747]
+// OSRS loc 5747
+model=osrsloc_5747
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=125
+
+[osrsloc_11402]
+// OSRS loc 11402
+name=Sign
+model=osrsloc_11402
+blockrange=no
+active=yes
+ambient=10
+contrast=100
+
+[osrsloc_11405]
+// OSRS loc 11405
+name=Tightrope
+model=osrsloc_11405
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+forceapproach=south
+op1=Cross
+
+[osrsloc_11406]
+// OSRS loc 11406
+name=Tightrope
+model=osrsloc_11406
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+forceapproach=east
+op1=Cross
+
+[osrsloc_11429]
+// OSRS loc 11429
+model=osrsloc_11429
+active=no
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+
+[osrsloc_11430]
+// OSRS loc 11430
+name=Narrow wall
+model=osrsloc_11430
+active=yes
+forcedecor=yes
+forceapproach=north
+op1=Balance
+
+[osrsloc_11630]
+// OSRS loc 11630
+name=Wall
+model=osrsloc_11630
+active=yes
+hillskew=yes
+forcedecor=yes
+forceapproach=north
+op1=Jump-up
+
+[osrsloc_11631]
+// OSRS loc 11631
+name=Gap
+model=osrsloc_11631
+active=yes
+hillskew=yes
+forcedecor=yes
+resizez=160
+offsetz=32
+forceapproach=west
+op1=Jump
+
+[osrsloc_11632]
+// OSRS loc 11632
+name=Crate
+model=osrsloc_11632
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizez=256
+forceapproach=west
+op1=Climb-down
+
+[osrsloc_39627]
+// OSRS loc 39627
+model=osrsloc_39627
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+forcedecor=yes
+offsety=-1
+ambient=20
+
+[osrsloc_39628]
+// OSRS loc 39628
+model=osrsloc_39628
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+forcedecor=yes
+offsety=-1
+ambient=20

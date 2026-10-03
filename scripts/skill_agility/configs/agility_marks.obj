@@ -1,0 +1,19 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[mark_of_grace]
+name=Mark of Grace
+desc=You can exchange these for rewards at the Rogues' Den.
+model=obj_mark_of_grace
+2dzoom=1600
+2dxan=588
+2dxof=-5
+2dyof=2
+weight=0g
+cost=1
+members=yes
+stackable=yes
+tradeable=no
+// TODO by hand: category, param= combat bonuses, equip requirement

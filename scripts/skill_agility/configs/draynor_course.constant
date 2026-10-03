@@ -1,0 +1,27 @@
+// The Draynor Village Rooftop Course. Experience is the wiki's, obstacle by obstacle; the seven add
+// to the 120 a lap is worth, and the crate's 79 is where the lap bonus lives.
+^draynor_obstacles = 7
+^draynor_xp_wall = 5
+^draynor_xp_rope1 = 8
+^draynor_xp_rope2 = 7
+^draynor_xp_narrow = 7
+^draynor_xp_jumpup = 10
+^draynor_xp_gap = 4
+^draynor_xp_crate = 79
+
+// WHERE EACH OBSTACLE PUTS YOU DOWN, read off the grafted roofs rather than guessed -
+// Engine-TS tools/sim/draynorroof.ts draws them and tools/sim/draynorcourse.ts walks the lap and
+// fails if any of these is blocked or unreachable from the obstacle before it.
+^draynor_land_wall = 3_48_51_30_15
+^draynor_land_rope1 = 3_48_51_19_12
+^draynor_land_rope2 = 3_48_51_21_2
+^draynor_land_narrow = 3_48_50_16_61
+^draynor_land_jumpup = 3_48_50_16_55
+^draynor_land_gap = 3_48_50_24_56
+^draynor_land_crate = 0_48_50_31_61
+
+// The rough wall is climbed from the street south of it; from the north you are on the roof already.
+^draynor_wall_z = 3279
+
+// No published rate for Draynor, so this is ours and it is named rather than buried: one lap in four.
+^draynor_mark_chance = 4
