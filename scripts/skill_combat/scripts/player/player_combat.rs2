@@ -10,6 +10,13 @@ if (($attackrange <= 1 & ~player_in_combat_check = false) | npc_range(coord) > $
 @player_combat_start;
 
 [label,player_combat_start]
+// SOME THINGS CANNOT BE REACHED WITH A SHORT WEAPON. npc_param(min_attackrange) is 0 on every npc
+// but Zulrah, which sits across water: Old School lets a halberd touch it and nothing shorter.
+if (npc_param(min_attackrange) > 0
+        & ~player_attackrange(inv_getobj(worn, ^wearpos_rhand)) < npc_param(min_attackrange)) {
+    mes("You can't reach that from here. You need a longer weapon.");
+    return;
+}
 ~barrows_combat_entry; // equipment degradation - see degrade/scripts/degrade.rs2
 ~serpentine_helm_combat_entry; // ten scales on entering combat - area_zulrah/scripts/serpentine_helm.rs2
 if (~player_in_combat_check = false) {
