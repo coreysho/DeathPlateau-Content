@@ -1,0 +1,215 @@
+// The God Wars Dungeon armies - drop tables. Rates are the OSRS wiki's (October 2026), adapted to
+// what exists in this 377 cache.
+//
+// FOUR TABLES, NOT THIRTY-NINE. The wiki is explicit that the four gods' Spiritual warriors share
+// one table, their rangers share one and their mages share one - "the four original god variants
+// share the same drop table" - and that every Aviansie drops from one table whatever its level. So
+// POISONED VARIANTS ARE <item>_p, _p+ and _p++ here. Writing mithril_arrow++ the way the wiki
+// writes (p+) COMPILES - it resolves to the plain arrow and quietly drops the wrong item - and
+// only rune_dagger++ was refused, because there is no plain rune_dagger++ to fall back on. Four
+// of the five were wrong and one error was raised.
+//
+// these hang off categories rather than npc names, and the generated npc_drops.dbrow collapses to
+// four rows listing the npcs that share each.
+//
+// Items the wiki lists that this cache does not have are left out and their weight simply is not in
+// the table, which is how gwd_drops.rs2 handles the same problem for the generals. Named per table
+// below so the gap is visible rather than silent.
+//
+// The Zarosian variants are a different table and a different dungeon (the Ancient Prison, 2017),
+// and are not here at all.
+
+// ---------------------------------------------------------------- Spiritual mage
+// Dragon boots at 1/128 is the drop people come here for, and the reason killcount is worth
+// grinding rather than walking past in a god item.
+// Left out: Antipoison(3) noted, 5/128 - this cache has no antipoison(3).
+[ai_queue3,_gwd_spiritual_mage]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $random = random(128);
+if ($random < 18) {                                      // 18/128
+    obj_add(npc_coord, chaosrune, 10, ^lootdrop_duration);
+} else if ($random < 29) {                               // 11/128
+    obj_add(npc_coord, dustrune, 15, ^lootdrop_duration);
+} else if ($random < 38) {                               // 9/128
+    obj_add(npc_coord, airrune, 30, ^lootdrop_duration);
+} else if ($random < 47) {                               // 9/128
+    obj_add(npc_coord, astralrune, 15, ^lootdrop_duration);
+} else if ($random < 55) {                               // 8/128
+    obj_add(npc_coord, waterrune, 15, ^lootdrop_duration);
+} else if ($random < 63) {                               // 8/128
+    obj_add(npc_coord, deathrune, 15, ^lootdrop_duration);
+} else if ($random < 70) {                               // 7/128
+    obj_add(npc_coord, waterrune, 50, ^lootdrop_duration);
+} else if ($random < 77) {                               // 7/128
+    obj_add(npc_coord, mudrune, 20, ^lootdrop_duration);
+} else if ($random < 84) {                               // 7/128
+    obj_add(npc_coord, naturerune, 25, ^lootdrop_duration);
+} else if ($random < 90) {                               // 6/128
+    obj_add(npc_coord, mistrune, 20, ^lootdrop_duration);
+} else if ($random < 96) {                               // 6/128
+    obj_add(npc_coord, cert_blankrune_high, 90, ^lootdrop_duration);
+} else if ($random < 100) {                              // 4/128
+    obj_add(npc_coord, naturerune, 18, ^lootdrop_duration);
+} else if ($random < 104) {                              // 4/128
+    obj_add(npc_coord, mindrune, 50, ^lootdrop_duration);
+} else if ($random < 107) {                              // 3/128
+    obj_add(npc_coord, bodyrune, 35, ^lootdrop_duration);
+} else if ($random < 109) {                              // 2/128
+    obj_add(npc_coord, firerune, 65, ^lootdrop_duration);
+} else if ($random < 111) {                              // 2/128
+    obj_add(npc_coord, airrune, 50, ^lootdrop_duration);
+} else if ($random < 113) {                              // 2/128
+    obj_add(npc_coord, bodyrune, 25, ^lootdrop_duration);
+} else if ($random < 115) {                              // 2/128
+    obj_add(npc_coord, lawrune, 15, ^lootdrop_duration);
+} else if ($random < 117) {                              // 2/128
+    obj_add(npc_coord, bloodrune, 10, ^lootdrop_duration);
+} else if ($random < 119) {                              // 2/128 - the gem table
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+} else if ($random < 120) {                              // 1/128
+    obj_add(npc_coord, chaosrune, 25, ^lootdrop_duration);
+} else if ($random < 121) {                              // 1/128
+    obj_add(npc_coord, dragon_boots, 1, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- Spiritual warrior
+// Weights out of 127, and they sum to exactly 127 - every item on the wiki's list exists here.
+[ai_queue3,_gwd_spiritual_warrior]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $random = random(127);
+if ($random < 18) {                                      // 18/127
+    obj_add(npc_coord, steel_chainbody, 1, ^lootdrop_duration);
+} else if ($random < 33) {                               // 15/127
+    obj_add(npc_coord, steel_longsword, 1, ^lootdrop_duration);
+} else if ($random < 44) {                               // 11/127
+    obj_add(npc_coord, mithril_platelegs, 1, ^lootdrop_duration);
+} else if ($random < 53) {                               // 9/127
+    obj_add(npc_coord, mithril_spear_p, 1, ^lootdrop_duration);
+} else if ($random < 62) {                               // 9/127
+    obj_add(npc_coord, leather_gloves, 1, ^lootdrop_duration);
+} else if ($random < 70) {                               // 8/127
+    obj_add(npc_coord, iron_scimitar, 1, ^lootdrop_duration);
+} else if ($random < 78) {                               // 8/127
+    obj_add(npc_coord, mithril_axe, 1, ^lootdrop_duration);
+} else if ($random < 86) {                               // 8/127
+    obj_add(npc_coord, adamant_full_helm, 1, ^lootdrop_duration);
+} else if ($random < 93) {                               // 7/127
+    obj_add(npc_coord, steel_sword, 1, ^lootdrop_duration);
+} else if ($random < 100) {                              // 7/127
+    obj_add(npc_coord, mithril_mace, 1, ^lootdrop_duration);
+} else if ($random < 105) {                              // 5/127
+    obj_add(npc_coord, black_warhammer, 1, ^lootdrop_duration);
+} else if ($random < 109) {                              // 4/127
+    obj_add(npc_coord, iron_plateskirt, 1, ^lootdrop_duration);
+} else if ($random < 113) {                              // 4/127 - the gem table
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+} else if ($random < 116) {                              // 3/127
+    obj_add(npc_coord, iron_sword, 1, ^lootdrop_duration);
+} else if ($random < 119) {                              // 3/127
+    obj_add(npc_coord, black_kiteshield, 1, ^lootdrop_duration);
+} else if ($random < 121) {                              // 2/127
+    obj_add(npc_coord, black_dagger, 1, ^lootdrop_duration);
+} else if ($random < 123) {                              // 2/127
+    obj_add(npc_coord, adamant_battleaxe, 1, ^lootdrop_duration);
+} else if ($random < 124) {                              // 1/127
+    obj_add(npc_coord, adamant_2h_sword, 1, ^lootdrop_duration);
+} else if ($random < 125) {                              // 1/127
+    obj_add(npc_coord, rune_longsword, 1, ^lootdrop_duration);
+} else if ($random < 126) {                              // 1/127
+    obj_add(npc_coord, rune_halberd, 1, ^lootdrop_duration);
+} else if ($random < 127) {                              // 1/127
+    obj_add(npc_coord, rune_kiteshield, 1, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- Spiritual ranger
+// Left out: adamant fire arrow (2/128), iron arrowtips (11/128), adamant arrowtips (9/128), broken
+// arrow (1/128) and oak longbow (u) (9/128) - none of the five is in this cache.
+[ai_queue3,_gwd_spiritual_ranger]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $random = random(128);
+if ($random < 18) {                                      // 18/128
+    obj_add(npc_coord, bow_string, 7, ^lootdrop_duration);
+} else if ($random < 33) {                               // 15/128
+    obj_add(npc_coord, iron_arrow, 12, ^lootdrop_duration);
+} else if ($random < 46) {                               // 13/128
+    obj_add(npc_coord, bronze_arrow, 16, ^lootdrop_duration);
+} else if ($random < 57) {                               // 11/128
+    obj_add(npc_coord, mithril_arrow_p+, 1, ^lootdrop_duration);
+} else if ($random < 67) {                               // 10/128
+    obj_add(npc_coord, headless_arrow, 12, ^lootdrop_duration);
+} else if ($random < 72) {                               // 5/128
+    obj_add(npc_coord, oak_shortbow, 1, ^lootdrop_duration);
+} else if ($random < 76) {                               // 4/128
+    obj_add(npc_coord, maple_longbow, 1, ^lootdrop_duration);
+} else if ($random < 80) {                               // 4/128
+    obj_add(npc_coord, steel_arrow, 12, ^lootdrop_duration);
+} else if ($random < 84) {                               // 4/128
+    obj_add(npc_coord, bodyrune, 12, ^lootdrop_duration);
+} else if ($random < 87) {                               // 3/128
+    obj_add(npc_coord, steel_crossbow, 1, ^lootdrop_duration);
+} else if ($random < 90) {                               // 3/128
+    obj_add(npc_coord, adamant_arrow_p++, 3, ^lootdrop_duration);
+} else if ($random < 92) {                               // 2/128
+    obj_add(npc_coord, rune_arrow, 5, ^lootdrop_duration);
+} else if ($random < 93) {                               // 1/128
+    obj_add(npc_coord, magic_shortbow, 1, ^lootdrop_duration);
+} else if ($random < 94) {                               // 1/128
+    obj_add(npc_coord, bronze_arrow_p+, 1, ^lootdrop_duration);
+} else if ($random < 95) {                               // 1/128
+    obj_add(npc_coord, adamant_arrow, 12, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- Aviansie
+// Bones and feathers every time, and the adamantite bars are what the place is actually farmed for.
+[ai_queue3,_gwd_aviansie]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, bones, 1, ^lootdrop_duration);
+obj_add(npc_coord, feather, ~random_range(1, 6), ^lootdrop_duration);
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $random = random(128);
+if ($random < 30) {                                      // 30/128
+    obj_add(npc_coord, adamantite_bar, 4, ^lootdrop_duration);
+} else if ($random < 48) {                               // 18/128
+    obj_add(npc_coord, airrune, 15, ^lootdrop_duration);
+} else if ($random < 63) {                               // 15/128 - the herb table
+    obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
+} else if ($random < 76) {                               // 13/128
+    obj_add(npc_coord, waterrune, 30, ^lootdrop_duration);
+} else if ($random < 87) {                               // 11/128
+    obj_add(npc_coord, rune_dagger_p+, 1, ^lootdrop_duration);
+} else if ($random < 97) {                               // 10/128
+    obj_add(npc_coord, silver_ore, 1, ^lootdrop_duration);
+} else if ($random < 101) {                              // 4/128
+    obj_add(npc_coord, lawrune, 2, ^lootdrop_duration);
+} else if ($random < 105) {                              // 4/128
+    obj_add(npc_coord, naturerune, 9, ^lootdrop_duration);
+} else if ($random < 108) {                              // 3/128
+    obj_add(npc_coord, chaosrune, 3, ^lootdrop_duration);
+} else if ($random < 111) {                              // 3/128 - the gem table
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+} else if ($random < 113) {                              // 2/128
+    obj_add(npc_coord, bodyrune, 12, ^lootdrop_duration);
+} else if ($random < 115) {                              // 2/128
+    obj_add(npc_coord, bloodrune, 11, ^lootdrop_duration);
+} else if ($random < 116) {                              // 1/128
+    obj_add(npc_coord, mindrune, 5, ^lootdrop_duration);
+} else if ($random < 117) {                              // 1/128
+    obj_add(npc_coord, chaosrune, 16, ^lootdrop_duration);
+} else if ($random < 118) {                              // 1/128
+    obj_add(npc_coord, runite_limbs, 1, ^lootdrop_duration);
+}

@@ -27,10 +27,13 @@ magic=200
 ranged=210
 huntmode=aggressive_melee
 huntrange=8
-attackrange=1
+// He shoots from across the room - the only general who does - so his reach is not a melee
+// tile. Three ticks, which is faster than every other general here.
+attackrange=8
 maxrange=20
 wanderrange=8
 respawnrate=100
+param=attackrate,3
 param=attack_anim,kreearra_attack
 param=defend_anim,kreearra_block
 param=death_anim,kreearra_death
