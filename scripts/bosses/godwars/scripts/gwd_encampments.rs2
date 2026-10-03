@@ -1,0 +1,109 @@
+// God Wars Dungeon: the four ways out of the entrance hall and into the encampments.
+//
+// Old School gates each one behind a single level-70 skill, and the cache's own locs are already
+// the four obstacles - which one belongs to which god was read off the map, not guessed: each has
+// the entrance region on one side and exactly one faction's region on the other.
+//
+//   Armadyl    70 Ranged, a crossbow and a mithril grapple - fired across the chasm
+//   Bandos     70 Strength and a hammer - struck on the gong set into the big door
+//   Saradomin  70 Agility, NOT boostable, and two ropes - tied once and left tied
+//   Zamorak    70 Hitpoints - across the ice bridge, which empties your prayer
+
+// ---------------------------------------------------------------- Armadyl: the grapple
+[oploc1,gwd_pillar_grapple]
+if (stat(ranged) < ^gwd_encampment_level) {
+    mes("You need a Ranged level of <tostring(^gwd_encampment_level)> to make that shot.");
+    return;
+}
+// The null check comes FIRST: an empty hand makes inv_getobj answer -1, and oc_category throws
+// on that rather than returning nothing ("An input for a Obj type was not valid to use").
+def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+if ($weapon = null | oc_category($weapon) ! weapon_crossbow) {
+    mes("You need a crossbow to fire a grapple.");
+    return;
+}
+if (inv_total(worn, mith_grapple) < 1 & inv_total(inv, mith_grapple) < 1) {
+    mes("You need a mithril grapple to get across.");
+    return;
+}
+mes("You fire the grapple at the pillar across the chasm.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+mes("The line goes taut, and you swing across.");
+p_telejump(^gwd_grapple_to);
+
+// ---------------------------------------------------------------- Bandos: the gong
+[oploc1,gwd_door_bang]
+if (stat(strength) < ^gwd_encampment_level) {
+    mes("You need a Strength level of <tostring(^gwd_encampment_level)> to swing hard enough.");
+    return;
+}
+if (inv_total(inv, hammer) < 1) {
+    mes("There is a gong set into the door. You would need a hammer to strike it.");
+    return;
+}
+mes("You strike the gong. The door swings open.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+// The gong is on the entrance side, so this only ever carries you west into the stronghold.
+// Walking back out is an ordinary walk - the door is open behind you.
+p_telejump(^gwd_gong_west);
+
+// ---------------------------------------------------------------- Zamorak: the ice bridge
+// Both ends are the same loc, so which way you are going is decided by which side of the bridge
+// you are standing on rather than by which of the two you clicked.
+[oploc1,gwd_ice_bridge]
+if (stat(hitpoints) < ^gwd_encampment_level) {
+    mes("You need a Hitpoints level of <tostring(^gwd_encampment_level)> to survive the crossing.");
+    return;
+}
+mes("You edge out onto the ice.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+// "an ice bridge that drains prayer points to zero" - the cost of the crossing, every time, and
+// the reason you do not bring your prayer to Zamorak.
+if (stat(prayer) > 0) {
+    stat_sub(prayer, 0, 100);
+    mes("The cold drives every prayer out of your head.");
+}
+if (coordz(coord) < ^gwd_icebridge_middle) {
+    p_telejump(^gwd_icebridge_north);
+} else {
+    p_telejump(^gwd_icebridge_south);
+}
+
+// ---------------------------------------------------------------- Saradomin: the two ropes
+[oploc1,gwd_rock_tierope_upper] @gwd_tie_rope(^gwd_rope_upper_down, true);
+[oploc1,gwd_rock_tierope_lower] @gwd_tie_rope(^gwd_rope_lower_down, false);
+
+// $upper picks which of the two rocks this is. The rope is spent the first time and the varp
+// remembers it, so afterwards the rock is simply a way down - "2 ropes for first-time entry only".
+//
+// stat_base, not stat: the wiki says this one is NOT boostable, and stat() would read a Summer pie
+// through.
+[label,gwd_tie_rope](coord $down, boolean $upper)
+if (stat_base(agility) < ^gwd_encampment_level) {
+    mes("You need an Agility level of <tostring(^gwd_encampment_level)> to climb down there.");
+    return;
+}
+def_boolean $tied = %gwd_rope_lower;
+if ($upper = true) {
+    $tied = %gwd_rope_upper;
+}
+if ($tied = false) {
+    if (inv_total(inv, rope) < 1) {
+        mes("The rock is bare. You would need a rope to tie to it.");
+        return;
+    }
+    inv_del(inv, rope, 1);
+    if ($upper = true) {
+        %gwd_rope_upper = true;
+    } else {
+        %gwd_rope_lower = true;
+    }
+    mes("You tie your rope to the rock. It should hold.");
+}
+mes("You climb down the rope.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+p_telejump($down);

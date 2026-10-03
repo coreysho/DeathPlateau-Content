@@ -1,0 +1,21 @@
+// Imported from the rev 474 cache by tools/models/import474.py
+// Models are copied byte-for-byte; 474 uses the same model format the 377 client reads.
+// Everything the cache does not carry is marked TODO below.
+
+[mith_grapple]
+name=Mith grapple
+desc=A mithril grapple, for firing across a gap with a crossbow.
+model=obj_mith_grapple
+2dzoom=848
+2dxan=153
+2dyan=1925
+recol1s=11525
+recol1d=8460
+recol2s=9411
+recol2d=6346
+recol3s=7297
+recol3d=4232
+wearpos=quiver
+cost=48
+members=yes
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
