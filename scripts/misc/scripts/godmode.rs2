@@ -1,0 +1,56 @@
+// ::godmode - hitpoints, prayer and special attack that do not run out. Developer and above.
+//
+// Asked for on 2026-10-03 for testing: fighting something for an hour to see whether its rotation
+// is right should not also be a fight for survival.
+//
+//   hitpoints   topped back up every tick, and death itself refused - see [proc,player_die] in
+//               player/scripts/death.rs2. The hit still LANDS and the splat still shows, which is
+//               the point: you are testing what the thing hits for.
+//   prayer      topped back up every tick, so a prayer stays on
+//   special     put back to full every tick, by the queue - see the note on it below
+//
+// A SOFTTIMER HAS NO PROTECTED ACCESS and %sa_energy is a protected varp, so the timer does nothing
+// but queue - the same shape as avas_device.rs2 and for the same reason.
+//
+// The gate is in the engine (ClientCheatHandler), not here: a [debugproc,] is owner-only on a live
+// server, and this was asked for at developer and above. Nothing else can reach these scripts.
+
+[proc,godmode_toggle]
+if (%godmode = true) {
+    %godmode = false;
+    clearsofttimer(godmode_tick);
+    mes("Godmode off. You can die again.");
+    return;
+}
+%godmode = true;
+softtimer(godmode_tick, 1);
+~godmode_restore;
+mes("Godmode on: hitpoints, prayer and special attack will not run out. It ends when you log out.");
+
+[softtimer,godmode_tick]
+queue(godmode_tick, 0, 0);
+
+[queue,godmode_tick]
+if (%godmode = false) {
+    clearsofttimer(godmode_tick);
+    return;
+}
+~godmode_restore;
+// THE SPECIAL BAR IS REFILLED HERE AND NOWHERE ELSE. %sa_energy is a protected varp, so a
+// proc that writes it can only be called from somewhere with protected access - and
+// ~godmode_restore is called from [proc,player_die], which half the game reaches. Putting
+// ~sa_reset in there made the compiler demand protected access of every caller of every
+// script that can kill you, and two unrelated quests stopped building. A queue has it.
+if (%sa_energy < ^sa_max_energy) {
+    ~sa_reset;
+}
+
+// Only ever puts things back UP. A boosted stat is left where it is rather than being dragged down
+// to base, which is what stat_heal/stat_add would do if they were called unconditionally.
+[proc,godmode_restore]
+if (stat(hitpoints) < stat_base(hitpoints)) {
+    stat_heal(hitpoints, calc(stat_base(hitpoints) - stat(hitpoints)), 0);
+}
+if (stat(prayer) < stat_base(prayer)) {
+    stat_add(prayer, calc(stat_base(prayer) - stat(prayer)), 0);
+}
