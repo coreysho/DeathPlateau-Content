@@ -1,0 +1,23 @@
+// OSRS locs imported by tools/models/importosrslocs.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[gwd_boulder]
+// OSRS loc 26415
+name=Boulder
+model=gwd_boulder
+width=4
+length=3
+blockrange=no
+active=yes
+ambient=25
+op1=Move
+
+[gwd_crack]
+// OSRS loc 26382
+name=Little crack
+model=gwd_crack
+active=yes
+sharelight=yes
+ambient=25
+contrast=125
+op1=Crawl-through
