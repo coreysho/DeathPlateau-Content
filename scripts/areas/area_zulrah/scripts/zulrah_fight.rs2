@@ -655,11 +655,25 @@ def_coord $at = ~zulrah_unpack_tile($tile);
 // the first tick and leaves it alone. The damage below still runs every tick - that is the queue's
 // other job and is unrelated to what is drawn.
 //
-// AND IT IS A CLOUD, NOT A PROJECTILE. Until two rounds ago zulrah_venom_cloud was OSRS spotanim
-// 1045 - the barrage's two orbs - so what lay on the platform was a pair of projectiles. It is
-// OSRS 1043, a green gas puff. The MESH is still not right, which is a separate thing.
+// AND IT IS A LOC, WHICH IS WHY NO SPOTANIM EVER LOOKED RIGHT. This has been wrong three times,
+// each time by picking a spotanim id from a description: first OSRS 1045, which is the barrage's
+// two orbs, so what lay on the platform was a pair of projectiles; then 1043, called "a green gas
+// puff" - rendered, it is a bright green spiky CRYSTAL.
+//
+// The reason none of them fitted is that Old School's toxic cloud is not a spotanim at all. It is
+// OBJECT 11700, a loc, and a search of all 4023 spotanims in the cache for anything wide, flat,
+// translucent and green turned up nothing tile-sized in Zulrah's era - which was the clue.
+//
+// The cache settles it beyond the id: 11700 is width 3 length 3, and the wiki says a cloud damages
+// "within a cloud's 3x3 area", which is exactly ^zulrah_cloud_radius. It is blockwalk=no so you
+// can stand in it, it carries its own animation, and the model renders as a low wide lumpy
+// translucent green mass - a cloud. Loc 11701 right beside it is "Zul-Andra teleport", so this is
+// the right neighbourhood of the cache and not a lookalike.
+//
+// Placed from its SOUTH-WEST tile, which is what loc_add takes, so a 3x3 centred on the cloud
+// tile starts one to the south and west of it.
 if ($packed < 0) {
-    spotanim_map(zulrah_venom_cloud, $at, 0, 0);
+    loc_add(movecoord($at, -1, 0, -1), osrsloc_11700, 0, centrepiece_straight, ^zulrah_cloud_ticks);
 }
 // "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
 // The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
