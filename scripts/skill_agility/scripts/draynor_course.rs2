@@ -1,0 +1,106 @@
+// The Draynor Village Rooftop Course - https://oldschool.runescape.wiki/w/Draynor_Village_Rooftop_Course
+//
+// The first of the rooftop courses, and the first to be built here. Level 1 Agility, seven
+// obstacles, 120 experience a lap: 5, 8, 7, 7, 10, 4 and then 79 for the crate, which is where the
+// lap bonus lives rather than in a separate award.
+//
+// THE ROOFS ARE OSRS'S OWN, grafted onto the two squares Draynor already occupies by
+// tools/models/graftosrsmap.py - level 3 only, inside the course corridor, which touched 54 of this
+// build's locs and left 2006 Draynor's 528 ground tiles and 389 ground locs alone. The obstacles are
+// loc 11404 (the rough wall, at ground level), 11405 and 11406 (the tightropes), 11430 (the narrow
+// wall), 11630 (the wall), 11631 (the gap) and 11632 (the crate).
+//
+// EVERY LANDING TILE WAS READ OFF THE GRAFTED MAP, not guessed: tools/sim/draynorroof.ts draws the
+// level 3 roofs as ASCII and tools/sim/draynorcourse.ts walks the whole lap and fails if any landing
+// is blocked or any obstacle is unreachable from the one before it.
+
+// ---------------------------------------------------------------- 1. the rough wall, from the street
+[oploc1,osrsloc_11404]
+if (coordz(coord) > ^draynor_wall_z) {
+    mes("You can't reach the wall from here.");
+    return;
+}
+p_arrivedelay;
+mes("You climb the rough wall...");
+~agility_climb_up(^draynor_xp_wall, ^draynor_land_wall);
+mes("...and pull yourself onto the roof.");
+~draynor_progress(1);
+
+// ---------------------------------------------------------------- 2. the first tightrope
+[oploc1,osrsloc_11405]
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+sound_synth(tightrope, 5, 0);
+~agility_force_move(^draynor_xp_rope1, human_walk_logbalance, ^draynor_land_rope1);
+~draynor_progress(2);
+
+// ---------------------------------------------------------------- 3. the second tightrope
+[oploc1,osrsloc_11406]
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+sound_synth(tightrope, 5, 0);
+~agility_force_move(^draynor_xp_rope2, human_walk_logbalance, ^draynor_land_rope2);
+~draynor_progress(3);
+
+// ---------------------------------------------------------------- 4. the narrow wall
+[oploc1,osrsloc_11430]
+p_arrivedelay;
+mes("You balance along the narrow wall.");
+~agility_force_move(^draynor_xp_narrow, human_walk_logbalance, ^draynor_land_narrow);
+~draynor_progress(4);
+
+// ---------------------------------------------------------------- 5. the wall
+[oploc1,osrsloc_11630]
+p_arrivedelay;
+mes("You jump up the wall...");
+~agility_climb_up(^draynor_xp_jumpup, ^draynor_land_jumpup);
+~draynor_progress(5);
+
+// ---------------------------------------------------------------- 6. the gap
+[oploc1,osrsloc_11631]
+p_arrivedelay;
+mes("You leap across the gap...");
+~agility_force_move(^draynor_xp_gap, human_walk_logbalance, ^draynor_land_gap);
+mes("...and land on the far roof.");
+~draynor_progress(6);
+
+// ---------------------------------------------------------------- 7. the crate, back to the street
+[oploc1,osrsloc_11632]
+p_arrivedelay;
+mes("You climb down onto the crate and jump to the ground.");
+~agility_climb_up(^draynor_xp_crate, ^draynor_land_crate);
+~draynor_progress(7);
+
+// ---------------------------------------------------------------- the lap
+//
+// Progress only moves forward one obstacle at a time, as the other courses do, so a player who
+// climbs back up halfway through does not collect the lap for half a lap's work.
+[proc,draynor_progress](int $completed)
+if (calc(%draynor_course_progress + 1) >= $completed) {
+    %draynor_course_progress = $completed;
+}
+if (%draynor_course_progress < ^draynor_obstacles) {
+    return;
+}
+%draynor_course_progress = 0;
+// The crate's 79 experience IS the lap bonus - the wiki counts it as the obstacle's own, and the
+// seven add to the 120 a lap is worth. Nothing extra is paid here.
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_draynor);
+~draynor_mark_roll;
+
+// A MARK OF GRACE A LAP, SOMETIMES. Old School spawns marks on the rooftop ahead of you during a
+// lap; this gives one at the end instead, which is the same reward with none of the machinery for
+// placing and expiring a ground item nobody may walk over.
+//
+// The wiki publishes no exact rate for Draynor, so ^draynor_mark_chance is this build's number and
+// is named rather than buried: one lap in four.
+[proc,draynor_mark_roll]
+if (random(^draynor_mark_chance) ! 0) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");
