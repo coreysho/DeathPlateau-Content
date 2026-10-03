@@ -560,6 +560,25 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 //
 // -1 is the first tick of a cloud's life: "light on the tile that was packed into me".
 [proc,zulrah_venom_barrage](int $barrage)
+// BISECT NUMBER TWO, NOT A FIX (2026-10-02). The first one cleared the animations: with green and
+// red both reduced to the spit, RED STOPPED BLINKING and green did not, so zulrah_tail_swipe was
+// red's cause and zulrah_venom_spray was never green's. Green now plays exactly what blue plays -
+// spit, idle, rise and a dive that is byte-identical across all three colours - and blue has never
+// blinked once.
+//
+// The owner confirms green comes back IN THE SAME SPOT, so it is not the phase change either. And
+// the client is instrumented to the end of the chain: the npc is never dropped by the server or
+// the client, its model builds, no frame is missing, it is never out of scene, the per-tile cap
+// never fires, the scene accepts it every frame, and the scene DRAWS it every cycle. Nothing in
+// the pipeline is losing it.
+//
+// What is left that is green-shaped is this: green fires a venom barrage on 16 of its 39 runs,
+// against 2 of 10 for red and 5 of 26 for blue. A barrage is nine cloud graphics plus the orbs
+// thrown at them, and drawScene pushes spotanims AFTER npcs. So: no barrage at all, and see.
+//
+// If green stops blinking, it is the clouds or the orbs and this narrows to which. If it does not,
+// they are cleared too. Either way this comes out - it is three lines and a return.
+return;
 // THE SPRAY, not the spit. Named outright for the reason ~zulrah_snakeling_orb gives - a barrage is
 // spat whatever colour the snake is wearing - but it is OSRS seq 5068 now and not 5069. 5069 is the
 // two-tick flick that throws ONE orb; 5068 is the same lunge with the jaws held open for six ticks,
