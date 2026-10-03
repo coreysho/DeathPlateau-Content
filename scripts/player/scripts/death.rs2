@@ -83,6 +83,13 @@ healenergy(10000);
 ~update_all($prev_wep);
 ~initalltabs;
 ~player_end_poison;
+// VENOM GOES TOO. Death cleared %poison and left %venom running, so a player killed while
+// envenomed - at Zulrah, which is where venom comes from - respawned still envenomed and ticking
+// up from where it left off. Reported from play.
+//
+// ~venom_clear rather than %venom = 0: the timer has to be cancelled as well, or it fires once
+// more against a cleared varp (toxic_blowpipe/scripts/venom.rs2).
+~venom_clear;
 
 [proc,player_death_lose_items]
 if (staffmodlevel > 1 & map_live = true) { return; }

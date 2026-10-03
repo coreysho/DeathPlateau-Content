@@ -37199,6 +37199,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -37245,6 +37250,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -37289,6 +37299,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -37335,6 +37350,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -37381,6 +37401,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=6lb
 category=weapon_spear
@@ -37427,6 +37452,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=8lb
 category=weapon_spear
@@ -37473,6 +37503,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -37519,6 +37554,11 @@ iop2=Wield
 manwear=obj_dragon_halberd_manwear,0
 womanwear=obj_dragon_halberd_manwear,6
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear
@@ -83286,6 +83326,11 @@ womanwear=obj_bronze_halberd_manwear,6
 2dyan=48
 2dxan=604
 wearpos=righthand
+// A HALBERD REACHES TWO TILES, which it did not: no halberd in the build declared attackrange,
+// so ~player_attackrange returned 0 for them and they swung exactly as far as a bare fist.
+// That is what let a player punch Zulrah across the water - and it was wrong for every
+// halberd everywhere, not only there.
+param=attackrange,2
 wearpos2=lefthand
 weight=7lb
 category=weapon_spear

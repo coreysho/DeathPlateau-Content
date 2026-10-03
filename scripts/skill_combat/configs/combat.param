@@ -219,3 +219,14 @@ default=no
 [ammo_self_supplied]
 type=boolean
 default=no
+
+// THE SHORTEST WEAPON THAT CAN REACH AN NPC AT ALL. 0, so it changes nothing anywhere it is not
+// set. Zulrah is the reason it exists: Old School puts the snake across water from the walkway so
+// only a halberd touches it, and this build lets you stand one tile from its body - measured, in
+// Engine-TS tools/sim/zulrahreach.ts - so a bare fist reached it. Fixing that by geometry would
+// mean moving the snake or the walkway and re-laying the cloud fill with it; this says the same
+// thing in one param without touching the arena.
+[min_attackrange]
+type=int
+default=0
+autodisable=yes

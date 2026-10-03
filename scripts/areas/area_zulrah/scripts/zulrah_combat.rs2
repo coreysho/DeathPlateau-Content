@@ -35,7 +35,13 @@
 // OSRS spotanim 1044: one dark-green orb, on the only one of Zulrah's four seqs that loops, so it
 // spins the whole way to you.
 [proc,zulrah_ranged]
-npc_anim(npc_param(attack_anim), 0);
+// THE SNAKE DOES NOT ANIMATE ITS ATTACKS, and that is deliberate - see zulrah.npc, where
+// attack_anim is null on all three forms. Guarded rather than passed through, because
+// npc_anim(null) is npc_anim(-1), which CANCELS whatever is playing rather than playing
+// nothing - and that would cut a dive or a rise short.
+if (npc_param(attack_anim) ! null) {
+    npc_anim(npc_param(attack_anim), 0);
+}
 def_int $attack_roll = ~npc_ranged_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^ranged_style);
 def_int $duration = ~player_projectile(~zulrah_muzzle, coord, uid, zulrah_ranged, 40, 36, 32, 15, 0, 11, 5);
@@ -53,7 +59,13 @@ if (randominc($attack_roll) > randominc($defence_roll)) {
 // that does not belong to the green palette, which is exactly why it is the one the other colour of
 // attack uses.
 [proc,zulrah_magic]
-npc_anim(npc_param(attack_anim), 0);
+// THE SNAKE DOES NOT ANIMATE ITS ATTACKS, and that is deliberate - see zulrah.npc, where
+// attack_anim is null on all three forms. Guarded rather than passed through, because
+// npc_anim(null) is npc_anim(-1), which CANCELS whatever is playing rather than playing
+// nothing - and that would cut a dive or a rise short.
+if (npc_param(attack_anim) ! null) {
+    npc_anim(npc_param(attack_anim), 0);
+}
 def_int $attack_roll = ~npc_magic_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 def_int $duration = ~player_projectile(~zulrah_muzzle, coord, uid, zulrah_magic, 40, 36, 32, 15, 0, 11, 5);
@@ -93,7 +105,13 @@ if (randominc($attack_roll) > randominc($defence_roll)) {
 // NOT IMPLEMENTED: the stun that follows. There is no stun for a player in this build that is not a
 // spell's freeze, and inventing one for a boss is a bigger change than this round should make.
 [proc,zulrah_melee]
-npc_anim(npc_param(attack_anim), 0);
+// THE SNAKE DOES NOT ANIMATE ITS ATTACKS, and that is deliberate - see zulrah.npc, where
+// attack_anim is null on all three forms. Guarded rather than passed through, because
+// npc_anim(null) is npc_anim(-1), which CANCELS whatever is playing rather than playing
+// nothing - and that would cut a dive or a rise short.
+if (npc_param(attack_anim) ! null) {
+    npc_anim(npc_param(attack_anim), 0);
+}
 def_int $damage = ~random_range(^zulrah_minhit_melee, ^zulrah_maxhit_melee);
 ~npc_set_attack_vars;
 // THREE ARGUMENTS, NOT ONE PACKED INT. The first cut of this squeezed the marked tile and the rolled
