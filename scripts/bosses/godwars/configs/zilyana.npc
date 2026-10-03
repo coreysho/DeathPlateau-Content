@@ -35,9 +35,16 @@ attackrange=1
 maxrange=20
 wanderrange=8
 respawnrate=100
+// TWO TICKS - twice an ordinary monster's rate and three times Graardor's. It is the whole reason she is dangerous, and the smallest max hits of the four generals are the trade.
+param=attackrate,2
 param=attack_anim,zilyana_attack
 param=defend_anim,zilyana_ready
 param=death_anim,zilyana_death
+// STRENGTH BONUS for a max hit of 27, which is Old School's. The cache carries no
+// bonus and without one ~npc_melee_maxhit returns 23 - measured, not assumed - so the
+// bonus is solved backwards from that, then checked by measuring again - the first solve put her
+// at 28 and 10 is what actually lands on 27.
+param=strengthbonus,10
 param=stabdefence,70
 param=slashdefence,120
 param=crushdefence,70

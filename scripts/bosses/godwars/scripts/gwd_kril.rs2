@@ -1,0 +1,77 @@
+// K'ril Tsutsaroth: slash, magic, and the special that goes through your prayer.
+//
+// "Attack style: Slash, Magic", 6 ticks. Melee hits up to 46 and the magic 10 to 30. The special
+// "occurs as a replacement to his standard melee strike roughly 1 in every 9 melee attacks", which
+// with the two-thirds melee split is the 2/27 the wiki quotes, and it "does ignore protection
+// prayers" - he "hits through prayer" for 35 to 49 and drains half your remaining prayer with it.
+//
+// That is the whole reason you do not simply park under Protect from Melee at him: twice in every
+// twenty-seven swings the prayer is worth nothing and takes half of itself away.
+//
+// He has no teleblock. I had remembered one; the wiki says otherwise and the wiki is right.
+
+[ai_opplayer2,kril] npc_setmode(applayer2);
+
+[ai_applayer2,kril]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+// Both of his styles are melee-distance; out of reach he walks in.
+if (npc_canreach = false) {
+    return;
+}
+if (random(3) = 0) {
+    ~kril_magic_attack;
+    return;
+}
+// one melee swing in nine is the special instead
+if (random(9) = 0) {
+    ~kril_special_attack;
+    return;
+}
+~kril_melee_attack;
+
+[proc,kril_melee_attack]
+anim(%com_defendanim, 0);
+npc_anim(kril_attack, 0);
+~npc_meleeattack;
+
+// No projectile: he casts it in your face, and this build has no graphic of his to throw. The
+// damage and the prayer that stops it are what matter here.
+[proc,kril_magic_attack]
+npc_anim(kril_attack, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+def_int $damage = add(^kril_magic_min, random(add(sub(^kril_magic_max, ^kril_magic_min), 1)));
+if (~check_protect_prayer(^magic_style) = true) {
+    $damage = 0;
+}
+~npc_set_attack_vars;
+anim(%com_defendanim, 0);
+queue(combat_damage_player, 0, $damage);
+queue*(playerhit_n_retaliate, 0)(npc_uid);
+
+// THROUGH PRAYER. No ~check_protect_prayer here, and that is the point of it rather than an
+// oversight - Protect from Melee does not reduce this by a point.
+[proc,kril_special_attack]
+npc_anim(kril_special, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+def_int $damage = add(^kril_special_min, random(add(sub(^kril_special_max, ^kril_special_min), 1)));
+~npc_set_attack_vars;
+anim(%com_defendanim, 0);
+queue(combat_damage_player, 0, $damage);
+queue*(playerhit_n_retaliate, 0)(npc_uid);
+// "drains half of the player's current prayer points, rounded down"
+queue(kril_drain_prayer, 0, 0);
+
+[queue,kril_drain_prayer]
+if (stat(prayer) > 0) {
+    stat_sub(prayer, divide(stat(prayer), 2), 0);
+    mes("K'ril Tsutsaroth tears at your prayer.");
+}

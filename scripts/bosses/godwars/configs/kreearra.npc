@@ -34,6 +34,10 @@ respawnrate=100
 param=attack_anim,kreearra_attack
 param=defend_anim,kreearra_block
 param=death_anim,kreearra_death
+// STRENGTH BONUS for a max hit of 25, which is Old School's. The cache carries no
+// bonus and without one ~npc_melee_maxhit returns 22 - measured, not assumed - so the
+// bonus is solved backwards from that.
+param=strengthbonus,9
 param=stabdefence,200
 param=slashdefence,200
 param=crushdefence,200
