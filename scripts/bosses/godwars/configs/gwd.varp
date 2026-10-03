@@ -37,3 +37,9 @@ protect=no
 scope=perm
 type=boolean
 protect=no
+
+// world_minute of the last prayer recharged at a God Wars altar - one clock for all four, as the
+// ten minutes is the player's and not the altar's. perm, so it survives a logout the way the
+// imbued heart's does.
+[gwd_altar_minute]
+scope=perm
