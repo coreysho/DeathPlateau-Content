@@ -578,33 +578,17 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 // Both extras came in with the round the blinking was first reported against. So both forms
 // now animate exactly like blue. If the blinking stops, it is in those two sequences and this
 // comes straight back out; if it does not, they are cleared and the answer is elsewhere.
-// THE BARRAGE PLAYS NO ANIMATION OF ITS OWN, and that is what stopped the green form blinking
-// out and back - a bug the owner had been reporting for days and that survived everything else.
+// THE BARRAGE STILL PLAYS NO ANIMATION, and the reason has changed.
 //
-// FOUND BY BISECTION, after reasoning had been wrong four times running. Turning the whole barrage
-// off was the only change that ever stopped it; then each piece went back one at a time:
+// It came out because turning the whole barrage off was the only thing that had ever stopped the
+// green form blinking. That reading is now WRONG: the owner reports green blinking when it plays
+// its own attack animation and NOT when it spawns clouds, so the barrage was never the cause and
+// that test was a false negative - too short a fight to catch it.
 //
-//   nine projectiles back, no animation   steady
-//   nine cloud graphics back              blinked
-//   nine projectiles back                 blinked
-//   npc_anim out, everything else in      STEADY
-//
-// so the animation call is the one that matters, and it is not which animation: the barrage played
-// zulrah_venom_spray before this round and osrs_seq_5069 during it, and green blinked on both.
-//
-// WHAT IS NOT UNDERSTOOD, written down rather than papered over. ~zulrah_snakeling_orb makes the
-// identical call - npc_anim(osrs_seq_5069, 0), ~npc_set_attack_vars, a projectile - and the blue
-// form runs more orb beats than green runs barrages, yet blue has never blinked once. So either
-// blue blinks on its orb runs and nobody has caught it, or something about a barrage beat differs
-// from an orb beat in a way not yet found. Until that is answered this is a fix by measurement and
-// not by explanation, which is why the snake now sprays without lunging: the honest version of
-// that trade is a missing animation, not a reintroduced flicker.
-//
-// Everything upstream is already ruled out and should not be re-walked: the server never drops the
-// npc, the client never drops it, its model builds, no animation frame is ever missing, it is
-// never out of scene, the per-tile entity cap never fires, the scene accepts it every frame and
-// DRAWS it every cycle. The snake is rendered throughout. Whatever this call does, it does to how
-// the snake looks, not to whether it is drawn.
+// It stays out anyway, for a smaller and honest reason: the blink happens when Zulrah plays an
+// attack animation, so a barrage that plays one is simply another place it can happen. Putting it
+// back buys a lunge and costs a flicker, and there is no sense paying that until the real bug is
+// understood. One line, and it goes back the moment it is.
 ~npc_set_attack_vars;
 // The slice of the fill this barrage is responsible for, and the ordering it reads: the phase's own
 // surfacing place, so the clouds land nearest the snake first and the same phase lands them on the
