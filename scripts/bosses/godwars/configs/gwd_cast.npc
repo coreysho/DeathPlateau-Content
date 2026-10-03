@@ -17,6 +17,16 @@
 // 474 seq 64 carries the attack markers and is demon_attack, 65 is demon_block and the
 // priority-10 67 is demon_death. It picks out what somebody else had already picked out.
 //
+// THE FLYERS DO NOT ALL SWING. Armadyl's rig carries four priority-6 poses and only 6954 has
+// reachforward - the lunge - so that one belongs to whoever swings and the others are what a shot
+// or a cast looks like. The ranger and the fifteen Aviansies take 6953, the mage 6955. WHICH of
+// those two is the shot and which the cast cannot be told apart from the metadata: both are 20
+// frames, 2 ticks, priority 6, no flags. That pairing is the only guess in this file, and it is
+// cosmetic - what matters is that a mage no longer lunges at you like a swordsman.
+//
+// Still unassigned on that rig: 6967, ninety frames with two sound events, which is something
+// bigger than an attack and is not identified.
+//
 // Three rigs needed nothing converted at all: the Zamorak and Saradomin spiritual npcs are on the
 // human skeleton and take the human_sword_* set every other humanoid in the tree uses; the three
 // Zamorak bodyguards are demons; and the Bandos spiritual npcs share General Graardor's own rig,
@@ -269,6 +279,15 @@ huntrange=8
 param=attack_anim,gwd_seq_6954
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
+// NO MELEE. "Like other Armadylean followers in the God Wars Dungeon, he and his bodyguards
+// cannot be attacked with Melee, except when using Halberds or Salamanders." min_attackrange=2
+// is how this build already says that - it is what keeps a short weapon off Zulrah across the
+// water, and a halberd through.
+//
+// WHICH NPCS: everything on frame group 1774, which is the flying Armadylean rig - Kree'arra's
+// three bodyguards, Armadyl's spiritual warrior, ranger and mage, and all fifteen Aviansies.
+// The rig and the wiki's "other Armadylean followers" agree on the same twenty-one.
+param=min_attackrange,2
 
 [gwd_flockleader_geerin]
 // rev 474 npc 6225
@@ -297,6 +316,7 @@ huntrange=8
 param=attack_anim,gwd_seq_6954
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
+param=min_attackrange,2
 
 [gwd_flight_kilisa]
 // rev 474 npc 6227
@@ -326,6 +346,7 @@ huntrange=8
 param=attack_anim,gwd_seq_6954
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
+param=min_attackrange,2
 
 [gwd_spiritual_warrior_armadyl]
 // rev 474 npc 6229
@@ -354,6 +375,7 @@ param=attack_anim,gwd_seq_6954
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_warrior
+param=min_attackrange,2
 
 [gwd_spiritual_ranger_armadyl]
 // rev 474 npc 6230
@@ -378,10 +400,11 @@ ranged=150
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_ranger
+param=min_attackrange,2
 
 [gwd_spiritual_mage_armadyl]
 // rev 474 npc 6231
@@ -404,10 +427,11 @@ ranged=1
 magic=150
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6955
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_mage
+param=min_attackrange,2
 
 [gwd_aviansie_1]
 // rev 474 npc 6232
@@ -434,10 +458,11 @@ ranged=71
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_2]
 // rev 474 npc 6233
@@ -464,10 +489,11 @@ ranged=85
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_3]
 // rev 474 npc 6234
@@ -494,10 +520,11 @@ ranged=93
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_4]
 // rev 474 npc 6235
@@ -524,10 +551,11 @@ ranged=76
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_5]
 // rev 474 npc 6236
@@ -554,10 +582,11 @@ ranged=90
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_6]
 // rev 474 npc 6237
@@ -584,10 +613,11 @@ ranged=99
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_7]
 // rev 474 npc 6238
@@ -613,10 +643,11 @@ ranged=136
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_8]
 // rev 474 npc 6239
@@ -642,10 +673,11 @@ ranged=151
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_9]
 // rev 474 npc 6240
@@ -672,10 +704,11 @@ ranged=86
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_10]
 // rev 474 npc 6241
@@ -702,10 +735,11 @@ ranged=89
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_11]
 // rev 474 npc 6242
@@ -732,10 +766,11 @@ ranged=96
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_12]
 // rev 474 npc 6243
@@ -762,10 +797,11 @@ ranged=89
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_13]
 // rev 474 npc 6244
@@ -792,10 +828,11 @@ ranged=96
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_14]
 // rev 474 npc 6245
@@ -821,10 +858,11 @@ ranged=101
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_aviansie_15]
 // rev 474 npc 6246
@@ -851,10 +889,11 @@ ranged=143
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
-param=attack_anim,gwd_seq_6954
+param=attack_anim,gwd_seq_6953
 param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
+param=min_attackrange,2
 
 [gwd_starlight]
 // rev 474 npc 6248

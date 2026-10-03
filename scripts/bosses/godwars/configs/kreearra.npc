@@ -33,6 +33,9 @@ attackrange=8
 maxrange=20
 wanderrange=8
 respawnrate=100
+// NO MELEE - he flies. "He and his bodyguards cannot be attacked with Melee, except when using
+// Halberds or Salamanders"; min_attackrange=2 is how Zulrah already says the same thing.
+param=min_attackrange,2
 param=attackrate,3
 param=attack_anim,kreearra_attack
 param=defend_anim,kreearra_block
