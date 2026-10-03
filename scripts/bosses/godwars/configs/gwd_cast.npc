@@ -6,6 +6,22 @@
 // The four bosses are elsewhere - graardor.npc, kril.npc, zilyana.npc, kreearra.npc. This is everyone between you and them: twelve bodyguards, each god's warrior/ranger/mage, and the fifteen Aviansies.
 // Combat stats are NOT in the cache and are not here yet; vislevel is the cache's own. Attack, defend and death animations are deliberately absent - see the batch file.
 
+// Attack, defend and death, derived per RIG rather than guessed per npc - the cache states ready
+// and walk and nothing else, which is why they were left out of the import.
+//
+// WHAT DECIDES IT: death is the priority-10 sequence, which is unambiguous on every rig and is
+// also the longest. Attack is the priority-6 one carrying reachforward - the flag that makes the
+// model lean into its target, which a block does not do. Defend is the priority-6 one left over.
+//
+// The method was checked against a rig this build had already named by hand: on the demon rig,
+// 474 seq 64 carries the attack markers and is demon_attack, 65 is demon_block and the
+// priority-10 67 is demon_death. It picks out what somebody else had already picked out.
+//
+// Three rigs needed nothing converted at all: the Zamorak and Saradomin spiritual npcs are on the
+// human skeleton and take the human_sword_* set every other humanoid in the tree uses; the three
+// Zamorak bodyguards are demons; and the Bandos spiritual npcs share General Graardor's own rig,
+// so they swing what he swings.
+
 [gwd_tstanon_karlak]
 // rev 474 npc 6204
 name=Tstanon Karlak
@@ -31,6 +47,9 @@ ranged=50
 magic=50
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,demon_attack
+param=defend_anim,demon_block
+param=death_anim,demon_death
 
 [gwd_zakln_gritch]
 // rev 474 npc 6206
@@ -57,6 +76,9 @@ ranged=150
 magic=50
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,demon_attack
+param=defend_anim,demon_block
+param=death_anim,demon_death
 
 [gwd_balfrug_kreeyath]
 // rev 474 npc 6208
@@ -81,6 +103,9 @@ ranged=1
 magic=150
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,demon_attack
+param=defend_anim,demon_block
+param=death_anim,demon_death
 
 [gwd_spiritual_warrior_zamorak]
 // rev 474 npc 6219
@@ -122,6 +147,9 @@ ranged=1
 magic=1
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_spiritual_ranger_zamorak]
 // rev 474 npc 6220
@@ -163,6 +191,9 @@ ranged=140
 magic=1
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_spiritual_mage_zamorak]
 // rev 474 npc 6221
@@ -201,6 +232,9 @@ ranged=1
 magic=180
 huntmode=gwd_aggressive_zamorak
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_wingman_skree]
 // rev 474 npc 6223
@@ -229,6 +263,9 @@ ranged=100
 magic=150
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_flockleader_geerin]
 // rev 474 npc 6225
@@ -254,6 +291,9 @@ ranged=150
 magic=50
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_flight_kilisa]
 // rev 474 npc 6227
@@ -280,6 +320,9 @@ ranged=169
 magic=50
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_spiritual_warrior_armadyl]
 // rev 474 npc 6229
@@ -304,6 +347,9 @@ ranged=141
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_spiritual_ranger_armadyl]
 // rev 474 npc 6230
@@ -328,6 +374,9 @@ ranged=150
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_spiritual_mage_armadyl]
 // rev 474 npc 6231
@@ -350,6 +399,9 @@ ranged=1
 magic=150
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_1]
 // rev 474 npc 6232
@@ -376,6 +428,9 @@ ranged=71
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_2]
 // rev 474 npc 6233
@@ -402,6 +457,9 @@ ranged=85
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_3]
 // rev 474 npc 6234
@@ -428,6 +486,9 @@ ranged=93
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_4]
 // rev 474 npc 6235
@@ -454,6 +515,9 @@ ranged=76
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_5]
 // rev 474 npc 6236
@@ -480,6 +544,9 @@ ranged=90
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_6]
 // rev 474 npc 6237
@@ -506,6 +573,9 @@ ranged=99
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_7]
 // rev 474 npc 6238
@@ -531,6 +601,9 @@ ranged=136
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_8]
 // rev 474 npc 6239
@@ -556,6 +629,9 @@ ranged=151
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_9]
 // rev 474 npc 6240
@@ -582,6 +658,9 @@ ranged=86
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_10]
 // rev 474 npc 6241
@@ -608,6 +687,9 @@ ranged=89
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_11]
 // rev 474 npc 6242
@@ -634,6 +716,9 @@ ranged=96
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_12]
 // rev 474 npc 6243
@@ -660,6 +745,9 @@ ranged=89
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_13]
 // rev 474 npc 6244
@@ -686,6 +774,9 @@ ranged=96
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_14]
 // rev 474 npc 6245
@@ -711,6 +802,9 @@ ranged=101
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_aviansie_15]
 // rev 474 npc 6246
@@ -737,6 +831,9 @@ ranged=143
 magic=1
 huntmode=gwd_aggressive_armadyl
 huntrange=8
+param=attack_anim,gwd_seq_6954
+param=defend_anim,gwd_seq_6952
+param=death_anim,gwd_seq_6956
 
 [gwd_starlight]
 // rev 474 npc 6248
@@ -761,6 +858,9 @@ ranged=1
 magic=125
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,gwd_seq_6376
+param=defend_anim,gwd_seq_6375
+param=death_anim,gwd_seq_6377
 
 [gwd_growler]
 // rev 474 npc 6250
@@ -784,6 +884,9 @@ ranged=1
 magic=150
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,gwd_seq_7018
+param=defend_anim,gwd_seq_7017
+param=death_anim,gwd_seq_7016
 
 [gwd_bree]
 // rev 474 npc 6252
@@ -805,6 +908,9 @@ ranged=150
 magic=80
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,gwd_seq_7009
+param=defend_anim,gwd_seq_7010
+param=death_anim,gwd_seq_7011
 
 [gwd_spiritual_warrior_saradomin]
 // rev 474 npc 6255
@@ -846,6 +952,9 @@ ranged=1
 magic=1
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_spiritual_ranger_saradomin]
 // rev 474 npc 6256
@@ -885,6 +994,9 @@ ranged=146
 magic=1
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_spiritual_mage_saradomin]
 // rev 474 npc 6257
@@ -925,6 +1037,9 @@ ranged=1
 magic=160
 huntmode=gwd_aggressive_saradomin
 huntrange=8
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
 
 [gwd_strongstack]
 // rev 474 npc 6261
@@ -946,6 +1061,9 @@ ranged=50
 magic=50
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,gwd_seq_6154
+param=defend_anim,gwd_seq_6155
+// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
 
 [gwd_steelwill]
 // rev 474 npc 6263
@@ -967,6 +1085,9 @@ ranged=1
 magic=150
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,gwd_seq_6154
+param=defend_anim,gwd_seq_6155
+// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
 
 [gwd_grimspike]
 // rev 474 npc 6265
@@ -987,6 +1108,9 @@ ranged=150
 magic=50
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,gwd_seq_6154
+param=defend_anim,gwd_seq_6155
+// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
 
 [gwd_spiritual_ranger_bandos]
 // rev 474 npc 6276
@@ -1011,6 +1135,9 @@ ranged=121
 magic=1
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,graardor_attack
+param=defend_anim,graardor_block
+param=death_anim,graardor_death
 
 [gwd_spiritual_warrior_bandos]
 // rev 474 npc 6277
@@ -1033,6 +1160,9 @@ ranged=1
 magic=1
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,graardor_attack
+param=defend_anim,graardor_block
+param=death_anim,graardor_death
 
 [gwd_spiritual_mage_bandos]
 // rev 474 npc 6278
@@ -1055,3 +1185,6 @@ ranged=1
 magic=142
 huntmode=gwd_aggressive_bandos
 huntrange=8
+param=attack_anim,graardor_attack
+param=defend_anim,graardor_block
+param=death_anim,graardor_death
