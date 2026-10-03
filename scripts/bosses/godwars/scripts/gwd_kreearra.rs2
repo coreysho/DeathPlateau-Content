@@ -1,0 +1,70 @@
+// Kree'arra, the only one of the four generals who fights you from across the room.
+//
+// "Ranged, Ranged magic, Magical melee" on a 3-tick cycle. The ranged attack is the dangerous one
+// at 69 - the biggest hit in the dungeon - with magic at 21 and melee at 25. "Kree'arra primarily
+// engages opponents from distance", and "if no one is targeting Kree'arra, he will fly up to
+// players to use Melee attacks as well".
+//
+// So he keeps his distance and shoots, and the melee only happens when he is already next to you.
+// That is the whole reason his room is the one where you stand still and pray Missiles rather than
+// chasing him.
+//
+// THE PROJECTILE is 474 spotanim 1197, found by rendering the cache rather than by guessing at an
+// id: the wiki describes his ranged attack as "grey tornadoes", and 1197 is a grey cone among a
+// block of God Wars-era graphics that also holds the godsword specials. 1196 is the same cone in
+// cyan and is his magic.
+
+[ai_opplayer2,kreearra] npc_setmode(applayer2);
+
+[ai_applayer2,kreearra]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+// Melee only when he is already on top of you - he does not close the distance for it.
+if (npc_canreach = true & random(3) = 0) {
+    ~kreearra_melee_attack;
+    return;
+}
+if (random(2) = 0) {
+    ~kreearra_magic_attack;
+    return;
+}
+~kreearra_ranged_attack;
+
+[proc,kreearra_melee_attack]
+anim(%com_defendanim, 0);
+npc_anim(kreearra_attack, 0);
+~npc_meleeattack;
+
+[proc,kreearra_ranged_attack]
+npc_anim(kreearra_attack2, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+~kreearra_projectile(kreearra_ranged_proj, ^kreearra_ranged_max, ^ranged_style);
+
+[proc,kreearra_magic_attack]
+npc_anim(kreearra_attack2, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+~kreearra_projectile(kreearra_magic_proj, ^kreearra_magic_max, ^magic_style);
+
+// The two shots differ only in which cone leaves him, how hard it lands and which prayer stops it.
+// The muzzle is the middle of a five-tile bird rather than his south-west corner, which is where
+// npc_coord is - the same correction Zulrah's projectiles needed.
+// A proc, not a label: a label cannot be jumped to from a proc (rs2check rule 11), and both
+// callers are procs. $proj is a spotanim - the projectile is a graphic, not an item.
+[proc,kreearra_projectile](spotanim $proj, int $maxhit, int $style)
+def_int $damage = 0;
+if (~check_protect_prayer($style) = false) {
+    $damage = randominc($maxhit);
+}
+~npc_set_attack_vars;
+def_int $duration = ~player_projectile(movecoord(npc_coord, 2, 0, 2), coord, uid, $proj, 30, 31, 0, 20, 0, 11, 5);
+anim(%com_defendanim, $duration);
+queue(combat_damage_player, divide($duration, 30), $damage);
+queue*(playerhit_n_retaliate, divide($duration, 30))(npc_uid);
