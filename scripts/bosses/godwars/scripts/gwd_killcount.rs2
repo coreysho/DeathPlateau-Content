@@ -1,0 +1,114 @@
+// God Wars Dungeon: killcount, and the four doors it buys you through.
+//
+// Each god's followers are tagged with param=gwd_god (configs/gwd.param). Kill one and that god's
+// count goes up; the door spends ^gwd_killcount_needed of them to let you in. The count is per god
+// and survives a logout, as it does in Old School.
+//
+// The doors are the 474 and OSRS locs the map import brought in, renamed so this file can read:
+// gwd_door_armadyl, gwd_door_bandos, gwd_door_zamorak and gwd_door_saradomin. All four are called
+// "Big door" in the cache, which is why they are addressed by name here and not by that one.
+
+// ---------------------------------------------------------------- counting
+// Called from [proc,npc_death] once per death, so the first thing it does is leave: a param read
+// and a compare for every other npc in the game.
+[proc,gwd_killcount_add]
+// npc_findhero FIRST, before anything else, exactly as ~player_stats_npc_kill opens. The death has
+// already given the active player up by the time this runs and this is what wins it back; put any
+// statement in front of it and the compiler stops believing the player is established afterwards
+// ("p_active_player required here" on the varp writes below).
+if (npc_findhero = ^false) {
+    return;
+}
+def_int $god = npc_param(gwd_god);
+if ($god = ^gwd_god_none) {
+    return;
+}
+// The varps are written HERE rather than through ~gwd_killcount_set, which reads better and does
+// not compile: npc_findhero proves the active player to this proc, and the compiler will not carry
+// that proof into a called one ("p_active_player required here"). The door below has a real active
+// player from its click and uses the procs.
+// if/else rather than switch_int: the compiler does not carry "the active player is established"
+// into a switch case, so the varp writes inside one read as having no player to write to.
+def_int $count = 0;
+if ($god = ^gwd_god_armadyl) {
+    %gwd_kc_armadyl = add(%gwd_kc_armadyl, 1);
+    $count = %gwd_kc_armadyl;
+} else if ($god = ^gwd_god_bandos) {
+    %gwd_kc_bandos = add(%gwd_kc_bandos, 1);
+    $count = %gwd_kc_bandos;
+} else if ($god = ^gwd_god_saradomin) {
+    %gwd_kc_saradomin = add(%gwd_kc_saradomin, 1);
+    $count = %gwd_kc_saradomin;
+} else {
+    %gwd_kc_zamorak = add(%gwd_kc_zamorak, 1);
+    $count = %gwd_kc_zamorak;
+}
+// THE MESSAGE IS QUEUED, because mes() wants a player context an npc-context death does not
+// have - the counter write above does not, which is what protect=no on the varps buys.
+queue(gwd_killcount_say, 0, $god);
+
+[proc,gwd_killcount](int $god)(int)
+switch_int ($god) {
+    case ^gwd_god_armadyl : return(%gwd_kc_armadyl);
+    case ^gwd_god_bandos : return(%gwd_kc_bandos);
+    case ^gwd_god_saradomin : return(%gwd_kc_saradomin);
+    case ^gwd_god_zamorak : return(%gwd_kc_zamorak);
+}
+return(0);
+
+[proc,gwd_killcount_set](int $god, int $count)
+switch_int ($god) {
+    case ^gwd_god_armadyl : %gwd_kc_armadyl = $count;
+    case ^gwd_god_bandos : %gwd_kc_bandos = $count;
+    case ^gwd_god_saradomin : %gwd_kc_saradomin = $count;
+    case ^gwd_god_zamorak : %gwd_kc_zamorak = $count;
+}
+
+[proc,gwd_god_name](int $god)(string)
+switch_int ($god) {
+    case ^gwd_god_armadyl : return("Armadyl");
+    case ^gwd_god_bandos : return("Bandos");
+    case ^gwd_god_saradomin : return("Saradomin");
+    case ^gwd_god_zamorak : return("Zamorak");
+}
+return("");
+
+// ---------------------------------------------------------------- the doors
+[oploc1,gwd_door_armadyl] @gwd_open_door(^gwd_god_armadyl, ^gwd_inside_armadyl);
+[oploc1,gwd_door_bandos] @gwd_open_door(^gwd_god_bandos, ^gwd_inside_bandos);
+[oploc1,gwd_door_zamorak] @gwd_open_door(^gwd_god_zamorak, ^gwd_inside_zamorak);
+[oploc1,gwd_door_saradomin] @gwd_open_door(^gwd_god_saradomin, ^gwd_inside_saradomin);
+
+// $inside is the tile on the room side of this door - gwd.constant says how each was found. The
+// door is not animated open: it is a wall with a room behind it, and what the player wants is to
+// be through it.
+[label,gwd_open_door](int $god, coord $inside)
+def_int $have = ~gwd_killcount($god);
+if ($have < ^gwd_killcount_needed) {
+    def_int $short = sub(^gwd_killcount_needed, $have);
+    // RuneScript has no conditional inside a string, so the singular is its own line rather
+    // than "1 more kills".
+    if ($short = 1) {
+        mes("You need 1 more kill before the followers of <~gwd_god_name($god)> will let you through.");
+    } else {
+        mes("You need <tostring($short)> more kills before the followers of <~gwd_god_name($god)> will let you through.");
+    }
+    return;
+}
+~gwd_killcount_set($god, sub($have, ^gwd_killcount_needed));
+mes("The door opens, and shuts again behind you.");
+p_telejump($inside);
+
+// Peek, which only Commander Zilyana's door carries in the cache. It costs nothing and tells you
+// what you are walking into.
+[oploc2,gwd_door_saradomin]
+~mesbox("You peer through the gap in the door.|Commander Zilyana and her bodyguard are waiting on the other side.");
+
+// Re-reads the count rather than being handed it, so the number said is the number stored.
+[queue,gwd_killcount_say](int $god)
+def_int $n = ~gwd_killcount($god);
+if ($n = 1) {
+    mes("You have killed 1 follower of <~gwd_god_name($god)>.");
+} else {
+    mes("You have killed <tostring($n)> followers of <~gwd_god_name($god)>.");
+}

@@ -1,0 +1,5 @@
+// Which god an npc in the God Wars Dungeon follows - see gwd.constant. Default 0, so every npc
+// outside the dungeon answers "none" without carrying the param at all.
+[gwd_god]
+type=int
+default=0

@@ -41,6 +41,9 @@ npc_arrivedelay; // arrivedelay for up to two ticks (current osrs too) https://y
 // AND THE PLAYER STATISTICS' monster kill count, same funnel: it credits the player the drop tables
 // credit, so npc_findhero again. It moves the active player, which the finduid below sets again.
 ~player_stats_npc_kill;
+// God Wars killcount. Reads one param and returns for every npc that is not one of the four
+// gods' - which is every other npc in the game. bosses/godwars/scripts/gwd_killcount.rs2
+~gwd_killcount_add;
 if (finduid(%npc_aggressive_player) = true) {
     if (npc_param(death_sound) ! null) {
         ~sound_within_distance(npc_param(death_sound), 0, npc_coord, 12); // osrs

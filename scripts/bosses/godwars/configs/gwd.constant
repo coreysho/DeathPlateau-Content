@@ -1,0 +1,22 @@
+// God Wars Dungeon.
+
+// Which god an npc follows. On every npc in the dungeon, read at its death to decide whose
+// killcount goes up. 0 is the default and means "not one of theirs", which is every other npc in
+// the game - so the death hook costs one param read and returns.
+^gwd_god_none = 0
+^gwd_god_armadyl = 1
+^gwd_god_bandos = 2
+^gwd_god_saradomin = 3
+^gwd_god_zamorak = 4
+
+// Kills of a god's followers needed to be let through that god's door, and spent when you are.
+// Forty, as Old School has always had it.
+^gwd_killcount_needed = 40
+
+// Where each door puts you down: the tile on the room side of it. Not guessed - each one is the
+// door-adjacent tile whose walkable region contains that god's altar, which is what makes it the
+// inside rather than the corridor (tools/sim/gwd.ts asserts the same thing).
+^gwd_inside_armadyl = 2_44_82_23_48
+^gwd_inside_bandos = 2_44_83_48_42
+^gwd_inside_zamorak = 2_45_83_45_19
+^gwd_inside_saradomin = 0_45_82_27_17

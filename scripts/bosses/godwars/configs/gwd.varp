@@ -1,0 +1,27 @@
+// Killcount, one per god. Kills of that god's followers, spent forty at a time on its door.
+// perm: it survives logging out, as it does in Old School.
+//
+// protect=no IS WHAT MAKES THIS WORK AT ALL, and it is the same answer boss_kills.varp spent four
+// builds finding. A varp is PROTECTED by default, and writing a protected varp needs the
+// p_active_player pointer - which an npc-context death does not have, whatever npc_findhero
+// returns. Without it the build fails with "p_active_player required here" on the write and
+// "corrupted here" at the call site in npc_death.rs2; moving the guard, swapping switch_int for
+// if/else and reordering the proc all change nothing, because none of them is the cause.
+//
+// NOT TRANSMITTED. Nothing client-side reads these.
+
+[gwd_kc_armadyl]
+scope=perm
+protect=no
+
+[gwd_kc_bandos]
+scope=perm
+protect=no
+
+[gwd_kc_saradomin]
+scope=perm
+protect=no
+
+[gwd_kc_zamorak]
+scope=perm
+protect=no
