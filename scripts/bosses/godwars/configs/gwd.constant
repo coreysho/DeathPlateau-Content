@@ -20,3 +20,43 @@
 ^gwd_inside_bandos = 2_44_83_48_42
 ^gwd_inside_zamorak = 2_45_83_45_19
 ^gwd_inside_saradomin = 0_45_82_27_17
+
+// ---------------------------------------------------------------- the way in
+// Old School's boulder sits at 2898,3716. That tile is INSIDE THE MOUNTAIN on this build: the 2007
+// update reshaped the Trollheim summit and the 2006 map never had the ground it stands on - every
+// tile south of z=3718 up there is solid rock. Rather than re-import a surface square three quests
+// walk across, the boulder goes at the southern edge of the plateau this build does have, four
+// tiles north of where Old School puts it.
+^gwd_entrance_strength = 60
+^gwd_entrance_outside = 0_45_58_18_12
+^gwd_entrance_inside = 3_45_82_0_63
+
+// The rope between the entrance floor and the dungeon proper. Both ends are the same tile on
+// different levels, so each lands you beside it rather than in it.
+^gwd_rope_bottom = 2_45_82_0_62
+^gwd_rope_topside = 3_45_82_0_63
+
+// ---------------------------------------------------------------- the four ways through
+// Old School gates each encampment behind one level-70 skill. The obstacles are the cache's own
+// locs, and which is which was read off the map rather than guessed: each one has the entrance
+// region on one side and exactly one faction's region on the other.
+^gwd_encampment_level = 70
+
+// Armadyl's Eyrie: 70 Ranged, a crossbow and a mithril grapple, fired across the chasm at x=2871.
+^gwd_grapple_from = 2_44_82_55_31
+^gwd_grapple_to = 2_44_82_55_21
+
+// Bandos' Stronghold: 70 Strength and a hammer, to strike the gong on the big door. That is why
+// this door's option is Bang and the other three are Open.
+^gwd_gong_east = 2_44_83_36_21
+^gwd_gong_west = 2_44_83_34_21
+
+// Zamorak's Fortress: 70 Hitpoints to cross the ice bridge, which empties your prayer doing it.
+^gwd_icebridge_south = 2_45_83_5_20
+^gwd_icebridge_north = 2_45_83_5_33
+^gwd_icebridge_middle = 5338
+
+// Saradomin's Encampment: 70 Agility, NOT boostable, and two ropes - one per rock - tied once and
+// left tied. Two floors down: the upper rock drops to level 1, the lower one to the encampment.
+^gwd_rope_upper_down = 1_45_82_35_52
+^gwd_rope_lower_down = 0_45_82_39_26

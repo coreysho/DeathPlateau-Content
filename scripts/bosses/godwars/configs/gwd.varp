@@ -25,3 +25,15 @@ protect=no
 [gwd_kc_zamorak]
 scope=perm
 protect=no
+
+// The two ropes into Saradomin's Encampment, tied once and left tied - "2 ropes for first-time
+// entry only". protect=no for the same reason the killcounts carry it.
+[gwd_rope_upper]
+scope=perm
+type=boolean
+protect=no
+
+[gwd_rope_lower]
+scope=perm
+type=boolean
+protect=no
