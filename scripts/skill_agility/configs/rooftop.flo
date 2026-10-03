@@ -1,0 +1,11 @@
+// THE FLOOR OF A ROOFTOP COURSE.
+//
+// Old School paints a course deck with a plain grey and no texture, and that is how it looks there:
+// a flat slab. Dropped into 2006 Draynor it reads as a missing texture, because every roof around it
+// is slate - which is the shingle texture roof2, the same one oldroof_greyslate retextures onto its
+// own model. So the deck gets the slate rather than a colour, and a roof looks like the roof it is
+// part of from the street as well as from on top of it.
+
+[roofdeck_greyslate]
+overlay=yes
+texture=roof2
