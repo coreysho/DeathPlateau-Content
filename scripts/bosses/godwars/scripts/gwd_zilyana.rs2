@@ -1,0 +1,52 @@
+// Commander Zilyana, who is dangerous for her speed rather than her damage.
+//
+// "Attack style: Crush, Magic", and TWO TICKS - twice the rate of an ordinary monster and three
+// times Graardor's. Her max hits are the smallest of the four generals, 27 melee and 20 magic, and
+// the wiki is explicit about why that does not help you: "extremely fast and accurate attacks"
+// combined with "significantly lower max hit than the other generals". She gets through a prayer
+// book while Graardor is winding up.
+//
+// "She will only use her magic attacks at melee distance, which has a minimum hit of 10 should it
+// successfully hit" - so both styles are melee-range, and the magic has a floor as well as a cap.
+
+[ai_opplayer2,zilyana] npc_setmode(applayer2);
+
+[ai_applayer2,zilyana]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+if (~npc_check_notcombat = false) {
+    npc_setmode(null);
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+if (npc_canreach = false) {
+    return;
+}
+// THE SPLIT IS A GUESS, and the only one in this file. The wiki gives her styles, her speed and
+// both max hits but never how often she picks the magic one; one in three matches what the other
+// two-style generals do here. Everything else below is stated.
+if (random(3) = 0) {
+    ~zilyana_magic_attack;
+    return;
+}
+~zilyana_melee_attack;
+
+[proc,zilyana_melee_attack]
+anim(%com_defendanim, 0);
+npc_anim(zilyana_attack, 0);
+~npc_meleeattack;
+
+[proc,zilyana_magic_attack]
+npc_anim(zilyana_magic, 0);
+%npc_action_delay = add(map_clock, npc_param(attackrate));
+def_int $damage = add(^zilyana_magic_min, random(add(sub(^zilyana_magic_max, ^zilyana_magic_min), 1)));
+if (~check_protect_prayer(^magic_style) = true) {
+    $damage = 0;
+}
+~npc_set_attack_vars;
+anim(%com_defendanim, 0);
+queue(combat_damage_player, 0, $damage);
+queue*(playerhit_n_retaliate, 0)(npc_uid);

@@ -32,9 +32,15 @@ attackrange=1
 maxrange=20
 wanderrange=8
 respawnrate=100
+// Six ticks, his cycle in Old School.
+param=attackrate,6
 param=attack_anim,kril_attack
 param=defend_anim,kril_block
 param=death_anim,kril_death
+// STRENGTH BONUS for a max hit of 46, which is Old School's. The cache carries no
+// bonus and without one ~npc_melee_maxhit returns 33 - measured, not assumed - so the
+// bonus is solved backwards from that.
+param=strengthbonus,26
 param=stabdefence,60
 param=slashdefence,90
 param=crushdefence,90

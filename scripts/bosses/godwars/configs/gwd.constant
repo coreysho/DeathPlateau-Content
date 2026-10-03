@@ -79,3 +79,16 @@
 // separate thing and hits up to 60.
 ^graardor_slam_min = 15
 ^graardor_slam_max = 35
+
+// ---------------------------------------------------------------- K'ril Tsutsaroth
+// Melee up to 46 (his stats and strength bonus carry that), magic 10-30, and the special 35-49
+// which ignores protection prayers and takes half your remaining prayer with it.
+^kril_magic_min = 10
+^kril_magic_max = 30
+^kril_special_min = 35
+^kril_special_max = 49
+
+// ---------------------------------------------------------------- Commander Zilyana
+// "a minimum hit of 10 should it successfully hit", and 20 at the top.
+^zilyana_magic_min = 10
+^zilyana_magic_max = 20
