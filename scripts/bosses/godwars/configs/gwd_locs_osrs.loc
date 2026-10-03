@@ -1,0 +1,793 @@
+// OSRS locs imported by tools/models/importosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_16431]
+// OSRS loc 16431
+model=osrsloc_16431
+active=no
+
+[osrsloc_17030]
+// OSRS loc 17030
+model=osrsloc_17030
+forcedecor=yes
+
+[osrsloc_21804]
+// OSRS loc 21804
+model=osrsloc_21804
+active=no
+
+[osrsloc_26306]
+// OSRS loc 26306
+name=Battle tower
+model=osrsloc_26306
+width=2
+length=3
+hillskew=yes
+
+[osrsloc_26311]
+// OSRS loc 26311
+name=Arrow
+model=osrsloc_26311
+hillskew=yes
+ambient=25
+
+[osrsloc_26312]
+// OSRS loc 26312
+name=Broken mast
+model=osrsloc_26312
+hillskew=yes
+ambient=25
+
+[osrsloc_26313]
+// OSRS loc 26313
+name=Skeleton
+model=osrsloc_26313
+hillskew=yes
+ambient=25
+
+[osrsloc_26315]
+// OSRS loc 26315
+name=Hammer
+model=osrsloc_26315
+hillskew=yes
+ambient=25
+
+[osrsloc_26316]
+// OSRS loc 26316
+name=Armour
+model=osrsloc_26316
+hillskew=yes
+ambient=25
+
+[osrsloc_26317]
+// OSRS loc 26317
+name=Ladder
+model=osrsloc_26317
+width=2
+hillskew=yes
+ambient=25
+
+[osrsloc_26319]
+// OSRS loc 26319
+name=Arm
+model=osrsloc_26319
+hillskew=yes
+ambient=25
+
+[osrsloc_26324]
+// OSRS loc 26324
+name=Old axe
+model=osrsloc_26324
+length=2
+hillskew=yes
+ambient=25
+
+[osrsloc_26327]
+// OSRS loc 26327
+name=Spikes
+model=osrsloc_26327
+hillskew=yes
+resizex=100
+resizez=100
+ambient=25
+
+[osrsloc_26332]
+// OSRS loc 26332
+name=Pole
+model=osrsloc_26332
+hillskew=yes
+ambient=25
+
+[osrsloc_26339]
+// OSRS loc 26339
+name=Spikes
+model=osrsloc_26339
+hillskew=yes
+ambient=25
+
+[osrsloc_26340]
+// OSRS loc 26340
+name=Wood
+model=osrsloc_26340
+hillskew=yes
+ambient=25
+
+[osrsloc_26341]
+// OSRS loc 26341
+name=Spikes
+model=osrsloc_26341
+hillskew=yes
+ambient=25
+
+[osrsloc_26343]
+// OSRS loc 26343
+name=Skullshield
+model=osrsloc_26343
+hillskew=yes
+ambient=25
+
+[osrsloc_26346]
+// OSRS loc 26346
+name=Crane
+model=osrsloc_26346
+hillskew=yes
+ambient=25
+
+[osrsloc_26347]
+// OSRS loc 26347
+name=Handle
+model=osrsloc_26347
+hillskew=yes
+ambient=25
+
+[osrsloc_26351]
+// OSRS loc 26351
+name=Frozen warrior
+model=osrsloc_26351
+model2=osrsloc_26351_2
+active=yes
+hillskew=yes
+ambient=20
+contrast=100
+
+[osrsloc_26352]
+// OSRS loc 26352
+name=Frozen warrior
+model=osrsloc_26352
+active=yes
+hillskew=yes
+ambient=20
+contrast=100
+
+[osrsloc_26355]
+// OSRS loc 26355
+name=Frozen warrior
+model=osrsloc_26355
+active=yes
+hillskew=yes
+ambient=20
+contrast=100
+
+[osrsloc_26364]
+// OSRS loc 26364
+name=Saradomin altar
+model=osrsloc_26364
+width=4
+length=4
+active=yes
+ambient=15
+op1=Pray
+op2=Teleport
+
+[osrsloc_26369]
+// OSRS loc 26369
+name=Rope
+model=osrsloc_26369
+active=yes
+
+[osrsloc_26370]
+// OSRS loc 26370
+name=Rope
+model=osrsloc_26370
+active=yes
+mapscene=7
+ambient=25
+contrast=125
+op1=Climb
+
+[osrsloc_26373]
+// OSRS loc 26373
+name=Rock
+model=osrsloc_26373
+width=2
+op1=Tie-rope
+
+[osrsloc_26377]
+// OSRS loc 26377
+name=Rock
+model=osrsloc_26377
+width=2
+op1=Tie-rope
+
+[osrsloc_26390]
+// OSRS loc 26390
+model=osrsloc_26390
+active=no
+hillskew=yes
+
+[osrsloc_26391]
+// OSRS loc 26391
+model=osrsloc_26391
+active=no
+hillskew=yes
+mirror=yes
+
+[osrsloc_26392]
+// OSRS loc 26392
+model=osrsloc_26392
+active=no
+hillskew=yes
+
+[osrsloc_26396]
+// OSRS loc 26396
+model=osrsloc_26396
+hillskew=yes
+
+[osrsloc_26397]
+// OSRS loc 26397
+model=osrsloc_26397
+hillskew=yes
+
+[osrsloc_26398]
+// OSRS loc 26398
+model=osrsloc_26398
+hillskew=yes
+
+[osrsloc_26422]
+// OSRS loc 26422
+name=Rope
+model=osrsloc_26422
+active=yes
+ambient=25
+contrast=125
+op1=Climb-down
+
+[osrsloc_26423]
+// OSRS loc 26423
+model=osrsloc_26423
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26424]
+// OSRS loc 26424
+model=osrsloc_26424
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26425]
+// OSRS loc 26425
+model=osrsloc_26425
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26426]
+// OSRS loc 26426
+model=osrsloc_26426
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26427]
+// OSRS loc 26427
+model=osrsloc_26427
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26428]
+// OSRS loc 26428
+model=osrsloc_26428
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=100
+
+[osrsloc_26429]
+// OSRS loc 26429
+model=osrsloc_26429
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=100
+
+[osrsloc_26430]
+// OSRS loc 26430
+model=osrsloc_26430
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=100
+
+[osrsloc_26431]
+// OSRS loc 26431
+model=osrsloc_26431
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=100
+
+[osrsloc_26435]
+// OSRS loc 26435
+model=osrsloc_26435
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26436]
+// OSRS loc 26436
+model=osrsloc_26436
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26437]
+// OSRS loc 26437
+model=osrsloc_26437
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26438]
+// OSRS loc 26438
+model=osrsloc_26438
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26439]
+// OSRS loc 26439
+model=osrsloc_26439
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26440]
+// OSRS loc 26440
+model=osrsloc_26440
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26441]
+// OSRS loc 26441
+model=osrsloc_26441
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26469]
+// OSRS loc 26469
+model=osrsloc_26469
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26470]
+// OSRS loc 26470
+model=osrsloc_26470
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26471]
+// OSRS loc 26471
+model=osrsloc_26471
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26472]
+// OSRS loc 26472
+model=osrsloc_26472
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26473]
+// OSRS loc 26473
+model=osrsloc_26473
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26474]
+// OSRS loc 26474
+model=osrsloc_26474
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26475]
+// OSRS loc 26475
+model=osrsloc_26475
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26476]
+// OSRS loc 26476
+model=osrsloc_26476
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26477]
+// OSRS loc 26477
+model=osrsloc_26477
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26478]
+// OSRS loc 26478
+model=osrsloc_26478
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26479]
+// OSRS loc 26479
+model=osrsloc_26479
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26480]
+// OSRS loc 26480
+model=osrsloc_26480
+active=no
+hillskew=yes
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26482]
+// OSRS loc 26482
+model=osrsloc_26482
+blockrange=no
+active=no
+ambient=25
+contrast=125
+
+[osrsloc_26483]
+// OSRS loc 26483
+model=osrsloc_26483
+blockrange=no
+active=no
+ambient=25
+contrast=125
+
+[osrsloc_26484]
+// OSRS loc 26484
+model=osrsloc_26484
+blockrange=no
+active=no
+ambient=25
+contrast=125
+
+[osrsloc_26485]
+// OSRS loc 26485
+model=osrsloc_26485
+width=2
+length=2
+active=no
+hillskew=yes
+ambient=25
+contrast=125
+
+[osrsloc_26486]
+// OSRS loc 26486
+model=osrsloc_26486
+width=2
+length=2
+active=no
+hillskew=yes
+mapscene=11
+ambient=25
+contrast=125
+
+[osrsloc_26487]
+// OSRS loc 26487
+model=osrsloc_26487
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+ambient=25
+contrast=125
+anim=osrsloc_anim_3743
+
+[osrsloc_26488]
+// OSRS loc 26488
+model=osrsloc_26488
+active=no
+shadow=no
+offsety=-1
+ambient=25
+contrast=125
+anim=osrsloc_anim_3743
+
+[osrsloc_26489]
+// OSRS loc 26489
+model=osrsloc_26489
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+ambient=25
+contrast=125
+anim=osrsloc_anim_3743
+
+[osrsloc_26490]
+// OSRS loc 26490
+model=osrsloc_26490
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+ambient=25
+contrast=125
+anim=osrsloc_anim_3743
+
+[osrsloc_26493]
+// OSRS loc 26493
+model=osrsloc_26493
+active=no
+hillskew=yes
+shadow=no
+ambient=25
+contrast=100
+
+[osrsloc_26494]
+// OSRS loc 26494
+name=Snowfall
+model=osrsloc_26494
+blockwalk=no
+blockrange=no
+resizey=256
+ambient=35
+anim=osrsloc_anim_7001
+
+[osrsloc_26497]
+// OSRS loc 26497
+name=Waterfall
+model=osrsloc_26497
+width=3
+length=3
+sharelight=yes
+shadow=no
+offsety=-2
+ambient=26
+anim=osrsloc_anim_7024
+
+[osrsloc_26498]
+// OSRS loc 26498
+name=Waterfall
+model=osrsloc_26498
+width=3
+length=3
+sharelight=yes
+shadow=no
+ambient=26
+contrast=100
+anim=osrsloc_anim_7024
+
+[osrsloc_26499]
+// OSRS loc 26499
+name=Waterfall
+model=osrsloc_26499
+width=3
+length=2
+sharelight=yes
+shadow=no
+ambient=25
+contrast=100
+anim=osrsloc_anim_7024
+
+[osrsloc_26512]
+// OSRS loc 26512
+model=osrsloc_26512
+length=3
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_26513]
+// OSRS loc 26513
+model=osrsloc_26513
+length=3
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+ambient=25
+contrast=125
+
+[osrsloc_26514]
+// OSRS loc 26514
+model=osrsloc_26514
+blockrange=no
+active=no
+sharelight=yes
+mapscene=22
+ambient=25
+contrast=125
+
+[osrsloc_26515]
+// OSRS loc 26515
+model=osrsloc_26515
+blockrange=no
+active=no
+sharelight=yes
+mirror=yes
+mapscene=22
+ambient=25
+contrast=125
+
+[osrsloc_26516]
+// OSRS loc 26516
+model=osrsloc_26516
+active=no
+sharelight=yes
+mapscene=22
+ambient=25
+contrast=125
+
+[osrsloc_26517]
+// OSRS loc 26517
+model=osrsloc_26517
+active=no
+sharelight=yes
+mirror=yes
+mapscene=22
+ambient=25
+contrast=125
+
+[osrsloc_27122]
+// OSRS loc 27122
+model=osrsloc_27122
+blockwalk=no
+blockrange=no
+active=yes
+resizex=1
+resizey=1
+resizez=0
+
+[osrsloc_37491]
+// OSRS loc 37491
+model=osrsloc_37491
+active=no
+hillskew=yes
+sharelight=yes
+offsety=1
+
+[osrsloc_40419]
+// OSRS loc 40419
+name=Big door
+model=osrsloc_40419
+ambient=25
+contrast=125
+op1=Open
+op3=Peek
+
+[osrsloc_41187]
+// OSRS loc 41187
+name=Ancient brazier
+model=osrsloc_41187
+ambient=25
+contrast=50
+
+[osrsloc_42840]
+// OSRS loc 42840
+name=Frozen Door
+model=osrsloc_42840
+sharelight=yes
+ambient=25
+contrast=125
+op1=Open
+
+[osrsloc_42841]
+// OSRS loc 42841
+name=Frozen Door
+model=osrsloc_42841
+sharelight=yes
+ambient=25
+contrast=125
+op1=Open
+
+[osrsloc_43859]
+// OSRS loc 43859
+model=osrsloc_43859
+
+[osrsloc_44603]
+// OSRS loc 44603
+model=osrsloc_44603
+blockrange=no
+shadow=no
+mapscene=22
