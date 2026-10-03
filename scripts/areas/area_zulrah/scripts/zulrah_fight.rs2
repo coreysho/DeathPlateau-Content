@@ -578,7 +578,24 @@ if (randominc(~npc_magic_attack_roll) > randominc(~player_defence_roll_specific(
 // Both extras came in with the round the blinking was first reported against. So both forms
 // now animate exactly like blue. If the blinking stops, it is in those two sequences and this
 // comes straight back out; if it does not, they are cleared and the answer is elsewhere.
-npc_anim(osrs_seq_5069, 0); // was zulrah_venom_spray
+// BISECT FIVE, NOT A FIX (2026-10-02). THE LAST PIECE, and the only one I ruled out by argument
+// instead of by test - which is the thing that has been wrong all day.
+//
+// Turning the WHOLE barrage off is the only change that has ever stopped green blinking. Since
+// then every piece of it has been put back one at a time and green blinked each time:
+//
+//   the nine projectiles   back; green blinked
+//   the nine cloud graphics back; green blinked
+//   ~npc_set_attack_vars   sets four varps and touches nothing that draws
+//
+// Those cannot all be true at once, so the piece left is this line. The argument I used to dismiss
+// it was that osrs_seq_5069 is green's own attack_anim and plays on every ranged attack anyway -
+// but the combat system plays it with its own delay, and this plays it with delay 0, possibly over
+// a copy of itself that is already running. osrs_seq_5069 carries duplicatebehaviour=reset.
+//
+// If green holds steady now, that is the whole thing and the barrage needs its own animation back
+// properly rather than a second copy of the attack.
+// npc_anim(osrs_seq_5069, 0); // was zulrah_venom_spray
 ~npc_set_attack_vars;
 // The slice of the fill this barrage is responsible for, and the ordering it reads: the phase's own
 // surfacing place, so the clouds land nearest the snake first and the same phase lands them on the
@@ -632,21 +649,9 @@ def_coord $at = ~zulrah_unpack_tile($tile);
 // AND IT IS A CLOUD, NOT A PROJECTILE. Until two rounds ago zulrah_venom_cloud was OSRS spotanim
 // 1045 - the barrage's two orbs - so what lay on the platform was a pair of projectiles. It is
 // OSRS 1043, a green gas puff. The MESH is still not right, which is a separate thing.
-// BISECT FOUR, NOT A FIX (2026-10-02). The barrage is green's cause - turning all of it off was
-// the only thing in this hunt that stopped green blinking. Narrowing inside it:
-//
-//   the nine projectiles   put back above; with only these off, green blinked again
-//   ~npc_set_attack_vars   sets four varps and nothing else
-//   npc_anim(osrs_seq_5069) green's own attack_anim, so it plays on every ranged attack it makes -
-//                          and with the whole barrage off green went on attacking and did not blink
-//
-// which leaves this, the only thing a barrage puts on the floor. Nine map spotanims, each running
-// a 25-tick sequence, pushed after the npcs by drawScene. The owner independently reports the
-// cloud mesh is still wrong, so there was already reason to look here.
-//
-// if ($packed < 0) {
-//     spotanim_map(zulrah_venom_cloud, $at, 0, 0);
-// }
+if ($packed < 0) {
+    spotanim_map(zulrah_venom_cloud, $at, 0, 0);
+}
 // "If a player stands within a cloud's 3x3 area, they will be dealt varying damage per tick".
 // The clouds do NOT envenom - that is Zulrah's own hits and the snakelings' - so nothing here
 // touches the venom timer.
