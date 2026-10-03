@@ -1,0 +1,58 @@
+// God Wars Dungeon aggression.
+//
+// "All monsters in the dungeon are aggressive to any player unless they have equipped at least one
+// item that is devoted to their god." One hunt per god, and the only difference between them is
+// which devotion param it looks for on the WORN inventory - equipped is the word that matters, and
+// check_invparam reads worn rather than inv for exactly that reason.
+//
+// The items carry param=gwd_prot_<god> (gwd.param). Godswords count, which is why the four of them
+// are tagged alongside the capes and the rune god armour.
+//
+// Shaped on [aggressive_melee] from the 377 cache - same visibility, same combat guards - with the
+// devotion check added. check_invparam=worn,<param>,<1 means "hunt only when nothing worn carries
+// it", so a player wearing one Saradomin item is invisible to Saradomin's followers and still fair
+// game for the other three.
+
+[gwd_aggressive_armadyl]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,gwd_prot_armadyl,<1
+find_keephunting=off
+find_newmode=opplayer2
+
+[gwd_aggressive_bandos]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,gwd_prot_bandos,<1
+find_keephunting=off
+find_newmode=opplayer2
+
+[gwd_aggressive_saradomin]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,gwd_prot_saradomin,<1
+find_keephunting=off
+find_newmode=opplayer2
+
+[gwd_aggressive_zamorak]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,gwd_prot_zamorak,<1
+find_keephunting=off
+find_newmode=opplayer2

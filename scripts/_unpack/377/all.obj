@@ -26579,6 +26579,8 @@ param=destroy_death,^true
 tradeable=no
 param=lose_cape_message,Saradomin reclaims the cape as it touches the ground.
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [guthix_cape]
 name=Guthix cape
@@ -26649,6 +26651,8 @@ param=destroy_death,^true
 param=lose_cape_message,Zamorak reclaims the cape as it touches the ground.
 tradeable=no
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [saradomin_staff]
 name=Saradomin staff
@@ -26685,6 +26689,8 @@ param=defend_anim,human_blunt_block
 param=crush_sound,staff_hit
 tradeable=no
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [guthix_staff]
 name=Guthix staff
@@ -26758,6 +26764,8 @@ param=defend_anim,human_blunt_block
 param=crush_sound,staff_hit
 tradeable=no
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [princeskey]
 name=Bronze key
@@ -30085,6 +30093,8 @@ param=crushdefence,72
 param=magicdefence,-6
 param=rangedefence,80
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [cert_rune_platebody_zamorak]
 certlink=rune_platebody_zamorak
@@ -30118,6 +30128,8 @@ param=crushdefence,47
 param=magicdefence,-4
 param=rangedefence,49
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [cert_rune_platelegs_zamorak]
 certlink=rune_platelegs_zamorak
@@ -30155,6 +30167,8 @@ param=crushdefence,27
 param=magicdefence,-1
 param=rangedefence,30
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [cert_rune_full_helm_zamorak]
 certlink=rune_full_helm_zamorak
@@ -30191,6 +30205,8 @@ param=magicdefence,-1
 param=rangedefence,46
 param=defend_anim,human_shield_defence
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [cert_rune_kiteshield_zamorak]
 certlink=rune_kiteshield_zamorak
@@ -30232,6 +30248,8 @@ param=crushdefence,72
 param=magicdefence,-6
 param=rangedefence,80
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [cert_rune_platebody_saradomin]
 certlink=rune_platebody_saradomin
@@ -30265,6 +30283,8 @@ param=crushdefence,47
 param=magicdefence,-4
 param=rangedefence,49
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [cert_rune_platelegs_saradomin]
 certlink=rune_platelegs_saradomin
@@ -30302,6 +30322,8 @@ param=crushdefence,27
 param=magicdefence,-1
 param=rangedefence,30
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [cert_rune_full_helm_saradomin]
 certlink=rune_full_helm_saradomin
@@ -30338,6 +30360,8 @@ param=magicdefence,-1
 param=rangedefence,46
 param=defend_anim,human_shield_defence
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [cert_rune_kiteshield_saradomin]
 certlink=rune_kiteshield_saradomin
@@ -40845,6 +40869,8 @@ param=slashdefence,49
 param=crushdefence,47
 param=magicdefence,-4
 param=rangedefence,49
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [rune_plateskirt_saradomin]
 name=Saradomin skirt
@@ -40877,6 +40903,8 @@ param=slashdefence,49
 param=crushdefence,47
 param=magicdefence,-4
 param=rangedefence,49
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [rune_plateskirt_guthix]
 name=Guthix plateskirt
@@ -45810,6 +45838,8 @@ weight=1kg
 wearpos=lefthand
 param=saradominitem,^true
 param=prayerbonus,5
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [saradominbook_complete]
 name=Holy book
@@ -45842,6 +45872,8 @@ param=crushdefence,8
 param=magicdefence,8
 param=rangedefence,8
 param=prayerbonus,5
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [unfinished_zamorakbook]
 name=Damaged book
@@ -45868,6 +45900,8 @@ weight=1kg
 wearpos=lefthand
 param=zamorakitem,^true
 param=prayerbonus,5
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [zamorakbook_complete]
 name=Unholy book
@@ -45899,6 +45933,8 @@ param=crushattack,8
 param=magicattack,8
 param=rangeattack,8
 param=prayerbonus,5
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [unfinished_guthixbook]
 name=Damaged book
@@ -85540,6 +85576,8 @@ wearpos=righthand
 wearpos2=lefthand
 weight=5lb
 param=saradominitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_saradomin,1
 
 [cert_makinghistory_saradomin_polestaff]
 certlink=makinghistory_saradomin_polestaff
@@ -85564,6 +85602,8 @@ wearpos=righthand
 wearpos2=lefthand
 weight=5lb
 param=zamorakitem,^true
+// Devoted to this god: worn, it makes that faction ignore you in the God Wars Dungeon.
+param=gwd_prot_zamorak,1
 
 [cert_makinghistory_zamorak_polestaff]
 certlink=makinghistory_zamorak_polestaff

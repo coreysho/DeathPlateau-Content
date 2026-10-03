@@ -3,3 +3,26 @@
 [gwd_god]
 type=int
 default=0
+
+// DEVOTION. One param per god, carried by every wearable item devoted to it. The God Wars hunts
+// read these off the WORN inventory - "all monsters in the dungeon are aggressive to any player
+// unless they have equipped at least one item that is devoted to their god", and equipped is the
+// word that matters: carrying one does nothing.
+//
+// A param rather than a category because most of these items already have a category and can only
+// have one, while an obj can carry as many params as it likes.
+[gwd_prot_armadyl]
+type=int
+default=0
+
+[gwd_prot_bandos]
+type=int
+default=0
+
+[gwd_prot_saradomin]
+type=int
+default=0
+
+[gwd_prot_zamorak]
+type=int
+default=0

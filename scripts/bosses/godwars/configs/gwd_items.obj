@@ -41,6 +41,7 @@ param=rangedefence,133
 param=strengthbonus,4
 param=prayerbonus,1
 // Equip gate: 65 Defence, levelrequire/scripts/tier65.rs2.
+param=gwd_prot_bandos,1
 
 [bandos_tassets]
 name=Bandos tassets
@@ -69,6 +70,7 @@ param=rangedefence,93
 param=strengthbonus,2
 param=prayerbonus,1
 // Equip gate: 65 Defence, levelrequire/scripts/tier65.rs2.
+param=gwd_prot_bandos,1
 
 [bandos_boots]
 name=Bandos boots
@@ -93,6 +95,7 @@ param=crushdefence,19
 param=rangedefence,15
 param=prayerbonus,1
 // Equip gate: 65 Defence, levelrequire/scripts/tier65.rs2.
+param=gwd_prot_bandos,1
 
 [bandos_hilt]
 name=Bandos hilt
@@ -139,6 +142,7 @@ param=magicdefence,10
 param=rangedefence,8
 param=prayerbonus,1
 // Equip gate: 70 Ranged + 70 Defence, levelrequire/scripts/tier70.rs2.
+param=gwd_prot_armadyl,1
 
 [armadyl_chestplate]
 name=Armadyl chestplate
@@ -171,6 +175,7 @@ param=magicdefence,70
 param=rangedefence,57
 param=prayerbonus,1
 // Equip gate: 70 Ranged + 70 Defence, levelrequire/scripts/tier70.rs2.
+param=gwd_prot_armadyl,1
 
 [armadyl_chainskirt]
 name=Armadyl chainskirt
@@ -201,6 +206,7 @@ param=magicdefence,40
 param=rangedefence,33
 param=prayerbonus,1
 // Equip gate: 70 Ranged + 70 Defence, levelrequire/scripts/tier70.rs2.
+param=gwd_prot_armadyl,1
 
 [armadyl_hilt]
 name=Armadyl hilt
@@ -256,6 +262,7 @@ param=walk_l_baseanim,osrs_2h_walk_l
 param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 // Equip gate: 70 Attack.
+param=gwd_prot_saradomin,1
 
 [saradomin_hilt]
 name=Saradomin hilt
@@ -312,6 +319,7 @@ param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
 // Equip gate: 70 Attack.
+param=gwd_prot_zamorak,1
 
 [zamorak_hilt]
 name=Zamorak hilt
@@ -473,6 +481,7 @@ param=walk_l_baseanim,osrs_2h_walk_l
 param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 // Equip gate: 75 Attack, levelrequire/scripts/tier75.rs2.
+param=gwd_prot_armadyl,1
 
 [bandos_godsword]
 name=Bandos godsword
@@ -517,6 +526,7 @@ param=walk_l_baseanim,osrs_2h_walk_l
 param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 // Equip gate: 75 Attack, levelrequire/scripts/tier75.rs2.
+param=gwd_prot_bandos,1
 
 [saradomin_godsword]
 name=Saradomin godsword
@@ -561,6 +571,7 @@ param=walk_l_baseanim,osrs_2h_walk_l
 param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 // Equip gate: 75 Attack, levelrequire/scripts/tier75.rs2.
+param=gwd_prot_saradomin,1
 
 [zamorak_godsword]
 name=Zamorak godsword
@@ -605,6 +616,7 @@ param=walk_l_baseanim,osrs_2h_walk_l
 param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 // Equip gate: 75 Attack, levelrequire/scripts/tier75.rs2.
+param=gwd_prot_zamorak,1
 
 [cert_bandos_chestplate]
 certlink=bandos_chestplate

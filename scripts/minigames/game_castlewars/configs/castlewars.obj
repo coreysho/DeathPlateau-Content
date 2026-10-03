@@ -71,6 +71,7 @@ param=crushattack_anim,human_banner_spike
 param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
+param=gwd_prot_zamorak,1
 
 [cert_castlewars_zamorak_banner]
 certlink=castlewars_zamorak_banner
@@ -104,6 +105,7 @@ wearpos=back
 wearpos2=hat
 wearpos3=head
 weight=1g
+param=gwd_prot_saradomin,1
 
 [castlewars_cloak_zamorak]
 name=Hooded cloak
@@ -133,6 +135,7 @@ wearpos=back
 wearpos2=hat
 wearpos3=head
 weight=1g
+param=gwd_prot_zamorak,1
 
 [castlewars_catapult_rock]
 name=Rock
@@ -883,6 +886,7 @@ category=armour_helmet
 param=slashdefence,1
 param=crushdefence,2
 param=rangedefence,1
+param=gwd_prot_saradomin,1
 
 [castlewars_cloak_saradomin_prize]
 name=Castlewars cloak
@@ -914,6 +918,7 @@ category=armour_cape
 param=slashdefence,1
 param=crushdefence,1
 param=rangedefence,2
+param=gwd_prot_saradomin,1
 
 [castlewars_hood_zamorak_prize]
 name=Castlewars hood
@@ -942,6 +947,7 @@ category=armour_helmet
 param=slashdefence,1
 param=crushdefence,2
 param=rangedefence,1
+param=gwd_prot_zamorak,1
 
 [castlewars_cloak_zamorak_prize]
 name=Castlewars cloak
@@ -971,3 +977,4 @@ category=armour_cape
 param=slashdefence,1
 param=crushdefence,1
 param=rangedefence,2
+param=gwd_prot_zamorak,1
