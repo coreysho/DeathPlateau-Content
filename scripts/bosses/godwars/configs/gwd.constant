@@ -73,3 +73,9 @@
 ^gwd_outside_bandos = 2_44_83_46_42
 ^gwd_outside_zamorak = 2_45_83_45_21
 ^gwd_outside_saradomin = 0_45_82_29_17
+
+// ---------------------------------------------------------------- General Graardor
+// "He slams the ground, hitting all players in the room" for an even 15 to 35. His melee is a
+// separate thing and hits up to 60.
+^graardor_slam_min = 15
+^graardor_slam_max = 35
