@@ -1,0 +1,6 @@
+// ::godmode, developer and above. scope=temp ON PURPOSE: a testing switch that survived a logout
+// would be a testing switch somebody forgets they left on, and this one makes a player unkillable.
+// Logging out turns it off. See misc/scripts/godmode.rs2.
+[godmode]
+type=boolean
+scope=temp

@@ -284,8 +284,8 @@ return (false);
 //
 // The fix is one flush proc used from three places - before rolling a new casket, the moment the
 // reward window closes, and from the queue as a backstop - and nothing is ever moved into an
-// inventory that cannot hold it. Loot that will not fit stays in trail_rewardinv and the player is
-// told to make room, rather than being deleted or dropped where they will not see it.
+// inventory that cannot hold it. Loot that will not fit is dropped at the player's feet and they
+// are told so, rather than being deleted, left in a container nothing shows, or dumped silently.
 
 // THE ONE PLACE A TRAIL ENDS. Each tier's ~trail_clue_<tier>_reward rolls its loot into
 // trail_rewardinv and then calls this with its ^trail_tier_*, so anything that wants to know a trail
@@ -303,28 +303,40 @@ queue(trail_give_reward, 0, 0);
 // into an empty reward inv even if the previous one has not been collected yet.
 [proc,trail_prepare_rewardinv]
 if (~trail_flush_rewards > 0) {
-    mes("You still have rewards waiting from your last casket - make some inventory space.");
+    mes("Your inventory was full - the rest of your last casket is on the ground beneath you.");
 }
 // What is still here belongs to the last casket; the collection log counts only what this one adds.
 ~collection_log_casket_before;
 
-// Moves everything out of the reward inv and into the player's, and returns how many slots it
-// could not empty. No inv_clear: what stays put is collected by the next flush.
+// Moves everything out of the reward inv, and returns how many slots it had to put on the floor
+// instead of in the pack.
+//
+// WHAT WILL NOT FIT GOES ON THE GROUND, asked for on 2026-10-03. It used to stay in trail_rewardinv
+// and wait for the player to make room, which was the careful answer to loot being silently
+// deleted - but it meant a full inventory held a casket's loot in a container nothing shows, and a
+// player who did not read the message never saw it again. On the floor it is visible, it is theirs,
+// and it behaves like every other drop in the game.
+//
+// inv_dropslot, not inv_movefromslot's own overflow: INV_MOVEFROMSLOT calls World.addObj for
+// anything that does not fit, which drops it with no message and no owner. inv_dropslot drops it
+// as the player's, logs it as a drop like any other, and empties the slot in one go.
+// ^lootdrop_duration is the same 200 ticks every other drop in this build uses.
 [proc,trail_flush_rewards]()(int)
 def_int $slot = 0;
-def_int $stuck = 0;
+def_int $dropped = 0;
 while ($slot < inv_size(trail_rewardinv)) {
     def_obj $slotobj = inv_getobj(trail_rewardinv, $slot);
     if ($slotobj ! null) {
         if (inv_freespace(inv) > 0 | (oc_stackable($slotobj) = true & inv_total(inv, $slotobj) > 0)) {
             inv_movefromslot(trail_rewardinv, inv, $slot);
         } else {
-            $stuck = calc($stuck + 1);
+            inv_dropslot(trail_rewardinv, coord, $slot, ^lootdrop_duration);
+            $dropped = calc($dropped + 1);
         }
     }
     $slot = calc($slot + 1);
 }
-return($stuck);
+return($dropped);
 
 // The real handover, the moment the window closes. Queued, not done here: an [if_close] has no
 // protected access, and moving out of trail_rewardinv needs it ("inv_movefromslot $inv requires
@@ -336,7 +348,7 @@ queue(trail_reward_closed, 0, 0);
 
 [queue,trail_reward_closed]
 if (~trail_flush_rewards > 0) {
-    mes("Make some space in your inventory - the rest of your reward is still waiting for you.");
+    mes("Your inventory is full - the rest of your reward has dropped to the floor.");
 }
 
 // Backstop for an interface dismissed without an if_close (a forced interface swap, for instance).

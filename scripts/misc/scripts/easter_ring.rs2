@@ -1,0 +1,62 @@
+// THE EASTER RING (2026-10-03). Easter 2006's reward, which this build had the item for and no
+// script behind: it sat in the ring slot and did nothing.
+//
+// Wearing it turns you into an egg. The cache has six of them - easter06_npc_3689 through 3694,
+// "A rolling chocolate egg", one model each and no ready pose - and the wiki records that WHICH egg
+// you become depends on where you are standing. Which colour belongs to which place was never
+// published, so the mapping here is the map square: every square has its colour, the same colour
+// every time you go back, and it changes as you travel. That is the rule the original describes
+// without inventing a specific table nobody can check.
+//
+// Everything about the transform is the greegree's, because that is the one worked example in this
+// build: p_transmogrify (quests/quest_mm/scripts/mm_stage3.rs2), unhooked through ~on_unequip, and
+// put back on login because p_transmogrify is player state and is not saved while the worn ring is.
+
+// The six eggs, in cache order. Named rather than computed from a base id: an enum of npcs would be
+// another file for six entries, and a switch cannot be indexed.
+[proc,easter_ring_egg]()(npc)
+switch_int (calc((coordx(coord) / 64 + coordz(coord) / 64) % 6)) {
+    case 0 : return(easter06_npc_3689);
+    case 1 : return(easter06_npc_3690);
+    case 2 : return(easter06_npc_3691);
+    case 3 : return(easter06_npc_3692);
+    case 4 : return(easter06_npc_3693);
+    case default : return(easter06_npc_3694);
+}
+
+// One animation for all seven slots. The egg npcs carry a walkanim (seq_3849, the roll) and no
+// ready anim at all, so there is no stand pose to give it: an egg that is not rolling is a still
+// model, and rolling on the spot is what the cache's own egg does.
+[proc,easter_ring_become_egg]
+p_transmogrify(~easter_ring_egg);
+~bas_set_all(seq_3849);
+p_animprotect(^true);
+
+[proc,easter_ring_become_human]
+p_transmogrify(null);
+~update_bas;
+p_animprotect(^false);
+
+// iop2=Wear is the cache's own option, so this beats the global [opheld2,_] and has to do the
+// equip itself - exactly as the greegree's hold trigger does.
+[opheld2,easter06_ring_of_egg]
+~equip(last_slot);
+if (inv_getobj(worn, ^wearpos_ring) ! easter06_ring_of_egg) {
+    return;
+}
+~easter_ring_become_egg;
+mes("You feel a strange sensation...");
+~mesbox("...and find yourself looking at the world from inside a very large chocolate egg.");
+
+// Taking it off. ~on_unequip in player/scripts/equip.rs2 is the one proc every unequip path funnels
+// through, which is where the greegree hooks in too.
+[proc,easter_ring_removed]
+~easter_ring_become_human;
+mes("You are yourself again.");
+
+// Logging in wearing one.
+[proc,easter_ring_login]
+if (inv_getobj(worn, ^wearpos_ring) ! easter06_ring_of_egg) {
+    return;
+}
+~easter_ring_become_egg;

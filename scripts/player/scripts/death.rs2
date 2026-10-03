@@ -1,4 +1,11 @@
 [proc,player_die]
+// ::godmode, developer and above. The hit landed and the splat showed; this is where it stops
+// short of killing you. Every death in the build comes through here - npc combat, pvp, poison,
+// the Arkan blade and ~damage_self - so one guard covers all of them. misc/scripts/godmode.rs2.
+if (%godmode = true) {
+    ~godmode_restore;
+    return;
+}
 strongqueue(player_death_default, 0, 0);
 
 [proc,player_death]

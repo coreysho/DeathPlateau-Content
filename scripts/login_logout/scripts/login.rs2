@@ -118,6 +118,8 @@ queue(follower_login, 0, 0);
 // this a player who logged out as a monkey logs back in as a human still holding one, and every
 // guard on Ape Atoll reacts to that.
 ~mm_greegree_login;
+// And the Easter ring, which transforms the same way - misc/scripts/easter_ring.rs2.
+~easter_ring_login;
 // The run toggle: option_run is scope=perm so the SAVED value comes back and lights the orb, but
 // the engine's run-mode is player state that is not saved. p_run is to option_run exactly what
 // p_transmogrify is to the worn greegree above - without this the orb says "run" while the player
