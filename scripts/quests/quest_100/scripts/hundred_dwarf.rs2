@@ -247,6 +247,44 @@ switch_int (%hundred_dwarf_quest) {
 }
 return($x);
 
+// ===================================================================================================
+// THE COOL ROCK CAKE IS NOT FOOD
+// ===================================================================================================
+// It was in the gen_eat_heal0 consume group, so Eat swallowed it whole and healed nothing - "you can
+// fully eat the dwarven rockcake", reported 2026-10-03. A rock cake has never been eaten. It costs
+// you a hitpoint and stays in the pack, and that is the entire reason anyone keeps one: it is how a
+// player gets down to the hitpoints Dharok's wants.
+//
+//   Eat     - 1 damage, and only while above 2 hitpoints, so it cannot take you to 1 on its own.
+//   Guzzle  - a tenth of your current hitpoints rounded down, plus one.
+//
+// Neither can kill: the damage is capped at one short of what you have, so guzzling at 1 hitpoint
+// does nothing at all. Guzzle is Old School's (1 May 2014) rather than 2006's, and is here because
+// without it the cake cannot reach 1 hitpoint, which is the thing it is for.
+[opheld1,hundred_dwarf_cool_rockcake]
+if (stat(hitpoints) <= 2) {
+    mes("You nibble the rock cake. It is as hard and as nourishing as a brick.");
+    return;
+}
+~hundred_rockcake_bite(1);
+
+[opheld2,hundred_dwarf_cool_rockcake]
+~hundred_rockcake_bite(calc(stat(hitpoints) / 10 + 1));
+
+// One bite, capped so the cake can never be the thing that kills you.
+[proc,hundred_rockcake_bite](int $amount)
+def_int $cap = calc(stat(hitpoints) - 1);
+if ($amount > $cap) {
+    $amount = $cap;
+}
+if ($amount <= 0) {
+    mes("You guzzle the rock cake. There is nothing left in you for it to take.");
+    return;
+}
+mes("You take a bite of the rock cake. Ouch! That hurt.");
+sound_synth(human_hit2, 0, 0);
+~damage_self($amount);
+
 // Taken out of the gen_eat_heal0 consume group: it is red hot and glowing, and eating it destroyed
 // a quest item and healed nothing.
 [opheld1,hundred_dwarf_hot_rockcake]

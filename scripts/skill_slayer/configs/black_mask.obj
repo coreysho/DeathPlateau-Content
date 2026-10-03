@@ -95,6 +95,11 @@ tradeable=no
 cost=3000
 weight=10kg
 category=armour_helmet
+// THE SAME PENALTIES THE PLAIN MASK CARRIES. An imbue raises the slayer bonus, not the mask's
+// attack bonuses - leaving these off handed Black mask (i) +3 magic attack and +1 ranged attack
+// over the mask it was made from. Old School's 11784 has them exactly as 8921 does.
+param=magicattack,-3
+param=rangeattack,-1
 param=stabdefence,9
 param=slashdefence,10
 param=crushdefence,8

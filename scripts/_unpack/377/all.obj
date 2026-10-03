@@ -69459,92 +69459,13 @@ param=crafting_jewelry_struct,tiara
 certlink=tiara
 certtemplate=template_for_cert
 
-[roguesden_body]
-name=Rogue top
-desc=Black banded leather armour, a rogue's dream!
-model=obj_roguesden_body
-iop2=Wear
-members=yes
-manwear=obj_roguesden_body_manwear,0
-manwear2=obj_roguesden_body_manwear2
-womanwear=obj_roguesden_body_womanwear,0
-womanwear2=obj_roguesden_body_womanwear2
-2dyof=16
-2dzoom=1300
-2dyan=212
-2dxan=364
-cost=625
-wearpos=torso
-wearpos2=arms
-weight=1lb
-
-[roguesden_helm]
-name=Rogue mask
-desc=Black banded leather armour, a rogue's dream!
-model=obj_roguesden_helm
-iop2=Wear
-members=yes
-manwear=obj_roguesden_helm_manwear,0
-womanwear=obj_roguesden_helm_womanwear,0
-manhead=obj_roguesden_helm_manhead
-womanhead=obj_roguesden_helm_womanhead
-2dzoom=730
-2dyan=232
-2dxan=348
-cost=375
-wearpos=hat
-wearpos2=head
-wearpos3=jaw
-weight=1lb
-
-[roguesden_legs]
-name=Rogue trousers
-desc=Black banded leather armour, a rogue's dream!
-model=obj_roguesden_legs
-iop2=Wear
-members=yes
-manwear=obj_roguesden_legs_manwear,0
-womanwear=obj_roguesden_legs_womanwear,0
-2dyof=4
-2dzoom=1140
-2dyan=2036
-2dxan=388
-cost=500
-wearpos=legs
-weight=1lb
-
-[roguesden_gloves]
-name=Rogue gloves
-desc=Black banded leather gloves, a rogue's dream!
-model=obj_roguesden_gloves
-iop2=Wear
-members=yes
-manwear=obj_roguesden_gloves_manwear,0
-womanwear=obj_roguesden_gloves_womanwear,0
-2dxof=3
-2dyof=7
-2dzoom=740
-2dyan=60
-2dxan=376
-cost=250
-wearpos=hands
-weight=1lb
-
-[roguesden_boots]
-name=Rogue boots
-desc=Black banded leather boots, a rogue's dream!
-model=obj_roguesden_boots
-iop2=Wear
-members=yes
-manwear=obj_roguesden_boots_manwear,0
-womanwear=obj_roguesden_boots_womanwear,0
-2dzoom=870
-2dyan=204
-2dxan=184
-cost=250
-wearpos=feet
-weight=1lb
-
+// THE ROGUE OUTFIT IS NOT HERE TWICE ANY MORE. The cache's five Rogues' Den pieces -
+// roguesden_body/helm/legs/gloves/boots, obj 5553-5557 - were a second "Rogue top", "Rogue
+// mask" and so on beside the set in skilling_outfits/configs/outfits.obj. Nothing in this
+// build referenced them: the Rogues' Den minigame is not implemented, while the outfits.obj
+// set is wired into the collection log, the outfits enum and outfit_effects.rs2. Removed
+// 2026-10-03 rather than the live set, and their obj.pack lines with them - obj ids are
+// explicit there, so the holes change nothing else.
 [roguesden_kit]
 name=Rogue kit
 desc=It can do almost anything!
@@ -92822,6 +92743,16 @@ manwear=obj_studded_body_trim_gold_manwear,0
 womanwear=obj_studded_body_trim_gold_womanwear,0
 wearpos=torso
 weight=12lb
+// A TRIM IS PAINT. (t) had neither a category nor a single bonus, so it was cosmetic armour
+// that defended nothing while (g) - the same body with a different recolour - had the lot.
+category=armour_body
+param=magicattack,-4
+param=rangeattack,8
+param=stabdefence,18
+param=slashdefence,25
+param=crushdefence,22
+param=magicdefence,8
+param=rangedefence,25
 
 [cert_studded_body_trim_fur]
 certlink=studded_body_trim_fur
@@ -92874,6 +92805,15 @@ manwear=obj_studded_chaps_trim_gold_manwear,0
 womanwear=obj_studded_chaps_trim_gold_womanwear,0
 wearpos=legs
 weight=10lb
+// Same as the (t) body above: the trim had no category and no bonuses at all.
+category=armour_legs
+param=magicattack,-5
+param=rangeattack,6
+param=stabdefence,15
+param=slashdefence,16
+param=crushdefence,17
+param=magicdefence,6
+param=rangedefence,16
 
 [cert_studded_chaps_trim_fur]
 certlink=studded_chaps_trim_fur
@@ -95101,6 +95041,7 @@ weight=1lb
 [hundred_dwarf_cool_rockcake]
 name=Dwarven rock cake
 desc=Cool and heavy as a brick. Only for dwarf consumption.
+iop2=Guzzle
 recol1s=23013
 recol1d=13671
 recol2s=18756
@@ -100288,6 +100229,10 @@ stackable=yes
 [easter06_ring_of_egg]
 name=Easter ring
 desc=A ring given to you by the Easter Bunny.
+// NO WEARPOS IN THE CACHE. The record carries iop2=Wear and nothing to wear it in, so ~equip
+// refused it with "No wearpos set" and the ring did nothing at all - half of why it was never
+// coded. Old School's 1037 wears it on the finger. See misc/scripts/easter_ring.rs2.
+wearpos=ring
 model=obj_easter06_ring_of_egg
 2dxof=-11
 2dyof=-11

@@ -190,6 +190,12 @@ if ($obj = castlewars_saradomin_banner | $obj = castlewars_zamorak_banner) {
 if (oc_category($obj) = mm_greegree) {
     ~mm_greegree_removed;
 }
+
+// Easter 2006's ring, the same way: taking it off stops you being an egg.
+// See misc/scripts/easter_ring.rs2.
+if ($obj = easter06_ring_of_egg) {
+    ~easter_ring_removed;
+}
 ~runecraft_unset_no_tally($obj);
 
 // used for duel arena, no weapon/no armour

@@ -3,16 +3,20 @@
 // scroll: this server has one scroll and the rule that everything it imbues can be uncharged.
 // OSRS's differences, and only those: +75 ranged attack against +69, and a cheaper special - 50% of
 // the bar against 55%, so this build's 350 becomes 318. Same model, same Snapshot special
-// (player_special_attack.rs2 / pvp_special_attack.rs2), untradeable like every imbue.
+// (player_special_attack.rs2 / pvp_special_attack.rs2), untradeable like every imbue. Its models are
+// Old School's own - see below.
 [magic_shortbow_i]
 name=Magic shortbow (i)
 desc=Short and magical, but still effective.
-recol1s=7330
-recol1d=1451
+// ITS OWN MODELS, NOT THE PLAIN BOW RECOLOURED. Old School's 12788 carries three models of its
+// own (48061 in the pack, 47997 and 47999 worn) with twelve extra faces of pale white along the
+// limbs - the glow. Pointing at obj_shortbow with the plain bow's recolour gave an imbued bow
+// that looked exactly like an unimbued one, which is what the owner reported on 2026-10-03.
+// No recol1s/recol1d here: the converted models are already the colour the recolour produced.
 members=yes
 tradeable=no
 cost=1600
-model=obj_shortbow
+model=obj_magic_shortbow_i
 2dxof=7
 2dyof=2
 2dzoom=1200
@@ -22,8 +26,8 @@ iop2=Wield
 iop4=Uncharge
 wearpos=righthand
 wearpos2=lefthand
-manwear=obj_shortbow_manwear,0
-womanwear=obj_shortbow_manwear,6
+manwear=obj_magic_shortbow_i_manwear,0
+womanwear=obj_magic_shortbow_i_womanwear,0
 category=weapon_bow
 weight=3lb
 param=rangeattack,75
