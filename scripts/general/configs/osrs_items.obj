@@ -180,6 +180,9 @@ param=stab_sound,hacksword_stab
 param=slash_sound,hacksword_slash
 // No equip requirement in OSRS.
 // NOT IMPLEMENTED: the +10% herb yield when wielded - that is Farming-script work.
+// Old School swings these at 5, not the param default of 4 (cache param 14). Nothing in the
+// import carries a speed, so every weapon that is not 4 has to be written down.
+param=attackrate,5
 
 [imbued_heart]
 name=Imbued heart

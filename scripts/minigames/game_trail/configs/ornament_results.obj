@@ -29,7 +29,6 @@ param=slashdefence,17
 param=crushdefence,18
 param=strengthbonus,4
 param=ornament_from,dragon_boots
-category=ornamented
 iop4=Revert
 
 [rune_defender_t]
@@ -70,7 +69,6 @@ param=magicdefence,-3
 param=rangedefence,-2
 param=strengthbonus,5
 param=ornament_from,rune_defender
-category=ornamented
 iop4=Revert
 
 [berserker_necklace_or]
@@ -102,7 +100,6 @@ param=rangedefence,-20
 param=strengthbonus,7
 param=prayerbonus,3
 param=ornament_from,berserker_necklace
-category=ornamented
 iop4=Revert
 
 [tzhaar_ket_om_t]
@@ -139,7 +136,6 @@ param=walk_l_baseanim,osrs_maul_walk
 param=walk_r_baseanim,osrs_maul_walk
 param=running_baseanim,osrs_maul_run
 param=ornament_from,tzhaar_maul
-category=ornamented
 iop4=Revert
 
 [dragon_chainbody_g]
@@ -171,7 +167,6 @@ param=crushdefence,98
 param=magicdefence,-3
 param=rangedefence,82
 param=ornament_from,dragon_chainbody
-category=ornamented
 iop4=Revert
 
 [dragon_platelegs_g]
@@ -205,7 +200,6 @@ param=crushdefence,63
 param=magicdefence,-4
 param=rangedefence,65
 param=ornament_from,dragon_platelegs
-category=ornamented
 iop4=Revert
 
 [dragon_plateskirt_g]
@@ -240,7 +234,6 @@ param=crushdefence,63
 param=magicdefence,-4
 param=rangedefence,65
 param=ornament_from,dragon_plateskirt
-category=ornamented
 iop4=Revert
 
 [dragon_sq_shield_g]
@@ -276,7 +269,6 @@ param=crushdefence,48
 param=rangedefence,50
 param=defend_anim,human_shield_defence
 param=ornament_from,dragon_sq_shield
-category=ornamented
 iop4=Revert
 
 [dragon_scimitar_or]
@@ -312,7 +304,6 @@ param=stab_sound,hacksword_stab
 param=specwep,^true
 param=sa_energy,550
 param=ornament_from,dragon_scimitar
-category=ornamented
 iop4=Revert
 
 [amulet_of_fury_or]
@@ -348,7 +339,6 @@ param=rangedefence,15
 param=strengthbonus,8
 param=prayerbonus,5
 param=ornament_from,enchanted_onyx_amulet
-category=ornamented
 iop4=Revert
 
 [light_infinity_hat]
@@ -385,7 +375,6 @@ category=armour_helmet
 param=magicattack,6
 param=magicdefence,6
 param=ornament_from,magictraining_infinityhat
-category=ornamented
 iop4=Revert
 
 [light_infinity_top]
@@ -426,7 +415,6 @@ category=armour_body
 param=magicattack,22
 param=magicdefence,22
 param=ornament_from,magictraining_infinitytop
-category=ornamented
 iop4=Revert
 
 [light_infinity_bottoms]
@@ -461,7 +449,6 @@ category=armour_legs
 param=magicattack,17
 param=magicdefence,17
 param=ornament_from,magictraining_infinitybottom
-category=ornamented
 iop4=Revert
 
 [dark_infinity_hat]
@@ -498,7 +485,6 @@ category=armour_helmet
 param=magicattack,6
 param=magicdefence,6
 param=ornament_from,magictraining_infinityhat
-category=ornamented
 iop4=Revert
 
 [dark_infinity_top]
@@ -539,7 +525,6 @@ category=armour_body
 param=magicattack,22
 param=magicdefence,22
 param=ornament_from,magictraining_infinitytop
-category=ornamented
 iop4=Revert
 
 [dark_infinity_bottoms]
@@ -574,7 +559,6 @@ category=armour_legs
 param=magicattack,17
 param=magicdefence,17
 param=ornament_from,magictraining_infinitybottom
-category=ornamented
 iop4=Revert
 
 [dragon_defender_t]
@@ -612,7 +596,6 @@ param=magicdefence,-3
 param=rangedefence,-2
 param=strengthbonus,6
 param=ornament_from,dragon_defender
-category=ornamented
 iop4=Revert
 
 [armadyl_godsword_or]
@@ -662,7 +645,6 @@ param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 param=gwd_prot_armadyl,1
 param=ornament_from,armadyl_godsword
-category=ornamented
 iop4=Revert
 
 [bandos_godsword_or]
@@ -712,7 +694,6 @@ param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 param=gwd_prot_bandos,1
 param=ornament_from,bandos_godsword
-category=ornamented
 iop4=Revert
 
 [saradomin_godsword_or]
@@ -762,7 +743,6 @@ param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 param=gwd_prot_saradomin,1
 param=ornament_from,saradomin_godsword
-category=ornamented
 iop4=Revert
 
 [zamorak_godsword_or]
@@ -813,7 +793,6 @@ param=walk_r_baseanim,osrs_2h_walk_r
 param=running_baseanim,osrs_2h_run
 param=gwd_prot_zamorak,1
 param=ornament_from,zamorak_godsword
-category=ornamented
 iop4=Revert
 
 // NAMED FOR THE GOD, where Old School calls all three plainly "Rune scimitar". Three items
@@ -853,7 +832,6 @@ param=defend_anim,human_sword_def
 param=slash_sound,hacksword_slash
 param=stab_sound,hacksword_stab
 param=ornament_from,rune_scimitar
-category=ornamented
 iop4=Revert
 
 [rune_scimitar_saradomin]
@@ -891,7 +869,6 @@ param=defend_anim,human_sword_def
 param=slash_sound,hacksword_slash
 param=stab_sound,hacksword_stab
 param=ornament_from,rune_scimitar
-category=ornamented
 iop4=Revert
 
 [rune_scimitar_zamorak]
@@ -930,5 +907,4 @@ param=defend_anim,human_sword_def
 param=slash_sound,hacksword_slash
 param=stab_sound,hacksword_stab
 param=ornament_from,rune_scimitar
-category=ornamented
 iop4=Revert
