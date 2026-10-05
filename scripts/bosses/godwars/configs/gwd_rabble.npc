@@ -1,0 +1,422 @@
+// THE REST OF THE FOUR ARMIES: the rank and file that fill the main chamber alongside the
+// spirituals and the aviansies. Old School's dungeon holds ogres, jogres, cyclopes, hobgoblins and
+// goblins for Bandos, and hellhounds, werewolves, bloodvelds, pyrefiends, icefiends and imps for
+// Zamorak, and this build had none of them in there.
+//
+// NOTHING IS IMPORTED HERE. Every one of these is a monster the 377 cache already draws and this
+// build already animates, so each entry is that art with God Wars numbers on it rather than a
+// second copy of the same model brought over from a later cache. The ones with no 2006 ancestor -
+// the orks, the gorak, the priest and the knights - are the eight in configs/gwd_army.npc.
+//
+// WHY THEY ARE SEPARATE NPCS rather than the existing ogre/hellhound/imp with a param added: the
+// param is what pays God Wars killcount (scripts/gwd_killcount.rs2 reads it and returns for every
+// npc that is not one of the four gods), so putting it on the general-game monster would pay
+// Bandos killcount for an ogre killed in the Feldip Hills. The devotion aggression and the
+// free-for-all timer are the same story.
+//
+// Stats and levels are Old School's own for the God Wars version of each - the cache that carries
+// them - so a God Wars hellhound is the level 127 one, not the level 122 Taverley dungeon dog.
+
+// ------------------------------------------------------------------------------ Bandos
+[gwd_ogre]
+name=Ogre
+desc=A large dim looking humanoid.
+model1=npc_ogre
+model2=npc_ogrei2
+size=2
+walkanim=ogre_walk
+readyanim=ogre_ready
+op2=Attack
+vislevel=58
+// Old School npc 2233.
+attack=46
+defence=43
+strength=48
+hitpoints=70
+ranged=1
+magic=1
+param=attackrate,6
+param=damagetype,^crush_style
+param=attack_anim,ogre_attack
+param=defend_anim,ogre_block
+param=death_anim,ogre_death
+param=attack_sound,giant_attack
+param=defend_sound,giant_hit
+param=death_sound,giant_death
+param=death_drop,big_bones
+param=slayer_category,^slayer_ogre
+param=gwd_god,^gwd_god_bandos
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_jogre]
+name=Jogre
+desc=An aggressive humanoid.
+model1=npc_firegiant
+model2=npc_jogre
+recol1s=24075
+recol1d=10688
+recol2s=21279
+recol2d=5378
+recol3s=17927
+recol3d=10688
+size=2
+walkanim=giant_walk
+readyanim=giant_ready
+op2=Attack
+vislevel=58
+// Old School npc 2234.
+attack=46
+defence=43
+strength=48
+hitpoints=70
+ranged=1
+magic=1
+param=attackrate,6
+param=damagetype,^crush_style
+param=attack_anim,giant_attack
+param=defend_anim,giant_block
+param=death_anim,giant_death
+param=attack_sound,giant_attack
+param=defend_sound,giant_hit
+param=death_sound,giant_death
+param=death_drop,tbwt_jogre_bones
+param=gwd_god,^gwd_god_bandos
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_cyclops]
+name=Cyclops
+desc=A one-eyed man eater.
+model1=npc_firegiant
+model2=npc_cyclops
+size=2
+walkanim=giant_walk
+readyanim=giant_ready
+op2=Attack
+vislevel=81
+// Old School npc 2235.
+attack=60
+defence=48
+strength=70
+hitpoints=110
+ranged=1
+magic=1
+param=damagetype,^crush_style
+param=attack_anim,giant_attack
+param=defend_anim,giant_block
+param=death_anim,giant_death
+param=attack_sound,giant_attack
+param=defend_sound,giant_hit
+param=death_sound,giant_death
+param=death_drop,big_bones
+param=gwd_god,^gwd_god_bandos
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_hobgoblin]
+name=Hobgoblin
+desc=An ugly, smelly creature.
+model1=npc_hobgoblin_unarmed
+walkanim=hobgoblin_walk
+readyanim=hobgoblin_ready
+op2=Attack
+vislevel=47
+// Old School npc 2241.
+attack=39
+defence=35
+strength=39
+hitpoints=52
+ranged=1
+magic=1
+param=damagetype,^crush_style
+param=attack_anim,hobgoblin_attackunarmed
+param=defend_anim,hobgoblin_block
+param=death_anim,hobgoblin_death
+param=attack_sound,goblin_attack
+param=defend_sound,goblin_hit
+param=death_sound,goblin_death
+param=slayer_category,^slayer_hobgoblin
+param=gwd_god,^gwd_god_bandos
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_goblin]
+name=Goblin
+desc=An ugly green creature.
+model1=npc_goblin
+model2=npc_goblini2
+model3=npc_goblini3
+model4=npc_goblini4
+walkanim=goblin_walk
+readyanim=goblin_ready
+op2=Attack
+vislevel=17
+// Old School npc 2245. The smallest thing in the war, and it still attacks you.
+attack=14
+defence=14
+strength=16
+hitpoints=18
+ranged=1
+magic=1
+param=damagetype,^crush_style
+param=attack_anim,goblin_attack_unarmed
+param=defend_anim,goblin_block
+param=death_anim,goblin_death
+param=attack_sound,goblin_attack
+param=defend_sound,goblin_hit
+param=death_sound,goblin_death
+param=slayer_category,^slayer_goblin
+param=gwd_god,^gwd_god_bandos
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+// ------------------------------------------------------------------------------ Zamorak
+[gwd_hellhound]
+name=Hellhound
+desc=Hello, nice doggy...
+model1=loc_13371_8
+size=2
+walkanim=hell_walk
+readyanim=hell_ready
+op2=Attack
+vislevel=127
+// Old School npc 3133.
+attack=107
+defence=106
+strength=116
+hitpoints=116
+ranged=1
+magic=1
+param=damagetype,^stab_style
+param=attack_anim,hell_attack
+param=defend_anim,hell_block
+param=death_anim,hell_death
+param=attack_sound,growl6
+param=defend_sound,growl5
+param=slayer_category,^slayer_hellhound
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_werewolf_1]
+name=Werewolf
+desc=Eek! A werewolf!
+model1=npc_1030
+recol1s=2340
+recol1d=10570
+recol2s=14724
+recol2d=10240
+recol3s=6273
+recol3d=8324
+recol4s=10435
+recol4d=8324
+walkanim=werewolf_walk
+readyanim=werewolf_ready
+op2=Attack
+vislevel=93
+// Old School npc 3135.
+attack=77
+defence=85
+strength=76
+hitpoints=92
+ranged=1
+magic=1
+param=damagetype,^slash_style
+param=magicdefence,60
+param=attack_anim,werewolf_attack
+param=defend_anim,werewolf_block
+param=death_anim,werewolf_death
+param=attack_sound,wolf_attack
+param=defend_sound,wolf_hit
+param=death_sound,wolf_death
+param=death_drop,wolf_bones
+param=slayer_category,^slayer_werewolf
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_werewolf_2]
+name=Werewolf
+desc=Eek! A werewolf!
+model1=npc_1030
+recol1s=2340
+recol1d=15860
+recol2s=14724
+recol2d=231
+recol3s=6273
+recol3d=20001
+recol4s=10435
+recol4d=20001
+walkanim=werewolf_walk
+readyanim=werewolf_ready
+op2=Attack
+vislevel=93
+// Old School npc 3136 - the second of the two, as both caches have it.
+attack=77
+defence=85
+strength=76
+hitpoints=92
+ranged=1
+magic=1
+param=damagetype,^slash_style
+param=magicdefence,60
+param=attack_anim,werewolf_attack
+param=defend_anim,werewolf_block
+param=death_anim,werewolf_death
+param=attack_sound,wolf_attack
+param=defend_sound,wolf_hit
+param=death_sound,wolf_death
+param=death_drop,wolf_bones
+param=slayer_category,^slayer_werewolf
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_bloodveld]
+name=Bloodveld
+desc=The tongue of evil.
+model1=obj_slayerguide_bloodveld
+size=2
+walkanim=bloodveld_walk
+readyanim=bloodveld_ready
+resizeh=245
+resizev=245
+op2=Attack
+vislevel=81
+// Old School npc 3138.
+attack=80
+defence=30
+strength=46
+hitpoints=134
+ranged=1
+magic=1
+param=attack_anim,bloodveld_attack
+param=defend_anim,bloodveld_defend
+param=death_anim,bloodveld_death
+param=attack_sound,bloodveld_attack
+param=defend_sound,bloodveld_hit
+param=death_sound,bloodveld_death
+param=slayer_category,^slayer_bloodveld
+param=damagetype,^magic_style
+param=death_drop,null
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_pyrefiend]
+name=Pyrefiend
+desc=A small fire demon.
+model1=obj_slayerguide_pyrfiend
+walkanim=pyrefiend_walk
+readyanim=pyrefiend_ready
+op2=Attack
+ambient=60
+contrast=60
+vislevel=48
+// Old School npc 3139.
+attack=60
+defence=22
+strength=36
+hitpoints=48
+ranged=1
+magic=1
+param=stabdefence,10
+param=slashdefence,10
+param=crushdefence,10
+param=rangedefence,10
+param=attack_anim,pyrefiend_attack
+param=defend_anim,pyrefiend_defend
+param=death_anim,pyrefiend_death
+param=attack_sound,pyrefiend_attack
+param=defend_sound,pyrefiend_hit
+param=death_sound,pyrefiend_death
+param=slayer_category,^slayer_pyrefiend
+param=damagetype,^magic_style
+param=death_drop,ashes
+param=fiery,yes
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_icefiend]
+name=Icefiend
+desc=A small ice demon.
+model1=npc_3406
+walkanim=pyrefiend_walk
+readyanim=pyrefiend_ready
+op2=Attack
+ambient=60
+contrast=60
+vislevel=18
+// Old School npc 3140.
+attack=12
+defence=19
+strength=16
+hitpoints=20
+ranged=1
+magic=1
+param=attack_anim,pyrefiend_attack
+param=defend_anim,pyrefiend_defend
+param=death_anim,pyrefiend_death
+param=attack_sound,pyrefiend_attack
+param=defend_sound,pyrefiend_hit
+param=death_sound,pyrefiend_death
+param=slayer_category,^slayer_icefiend
+param=damagetype,^magic_style
+param=death_drop,ashes
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks
+
+[gwd_imp]
+name=Imp
+desc=A cheeky little imp.
+model1=npc_imp
+walkanim=imp_walk
+readyanim=imp_ready
+op2=Attack
+vislevel=7
+// Old School npc 3134.
+attack=5
+defence=6
+strength=5
+hitpoints=10
+ranged=1
+magic=1
+param=damagetype,^stab_style
+param=attack_anim,imp_attack
+param=defend_anim,imp_block
+param=death_anim,imp_death
+param=attack_sound,imp_attack
+param=defend_sound,imp_hit
+param=death_sound,imp_death
+param=death_drop,ashes
+param=demonbane_vulnerable,yes
+param=gwd_god,^gwd_god_zamorak
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+timer=^gwd_skirmish_ticks

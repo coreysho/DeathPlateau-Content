@@ -161,6 +161,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_warrior
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_ranger_zamorak]
 // rev 474 npc 6220
@@ -206,6 +208,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_ranger
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_mage_zamorak]
 // rev 474 npc 6221
@@ -248,6 +252,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_mage
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_wingman_skree]
 // rev 474 npc 6223
@@ -376,6 +382,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_warrior
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_ranger_armadyl]
 // rev 474 npc 6230
@@ -405,6 +413,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_ranger
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_mage_armadyl]
 // rev 474 npc 6231
@@ -432,6 +442,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_spiritual_mage
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_1]
 // rev 474 npc 6232
@@ -463,6 +475,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_2]
 // rev 474 npc 6233
@@ -494,6 +508,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_3]
 // rev 474 npc 6234
@@ -525,6 +541,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_4]
 // rev 474 npc 6235
@@ -556,6 +574,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_5]
 // rev 474 npc 6236
@@ -587,6 +607,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_6]
 // rev 474 npc 6237
@@ -618,6 +640,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_7]
 // rev 474 npc 6238
@@ -648,6 +672,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_8]
 // rev 474 npc 6239
@@ -678,6 +704,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_9]
 // rev 474 npc 6240
@@ -709,6 +737,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_10]
 // rev 474 npc 6241
@@ -740,6 +770,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_11]
 // rev 474 npc 6242
@@ -771,6 +803,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_12]
 // rev 474 npc 6243
@@ -802,6 +836,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_13]
 // rev 474 npc 6244
@@ -833,6 +869,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_14]
 // rev 474 npc 6245
@@ -863,6 +901,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_aviansie_15]
 // rev 474 npc 6246
@@ -894,6 +934,8 @@ param=defend_anim,gwd_seq_6952
 param=death_anim,gwd_seq_6956
 category=gwd_aviansie
 param=min_attackrange,2
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_starlight]
 // rev 474 npc 6248
@@ -1016,6 +1058,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_warrior
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_ranger_saradomin]
 // rev 474 npc 6256
@@ -1059,6 +1103,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_ranger
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_mage_saradomin]
 // rev 474 npc 6257
@@ -1103,6 +1149,8 @@ param=attack_anim,human_sword_slash
 param=defend_anim,human_sword_def
 param=death_anim,human_death
 category=gwd_spiritual_mage
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_strongstack]
 // rev 474 npc 6261
@@ -1202,6 +1250,8 @@ param=attack_anim,graardor_attack
 param=defend_anim,graardor_block
 param=death_anim,graardor_death
 category=gwd_spiritual_ranger
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_warrior_bandos]
 // rev 474 npc 6277
@@ -1228,6 +1278,8 @@ param=attack_anim,graardor_attack
 param=defend_anim,graardor_block
 param=death_anim,graardor_death
 category=gwd_spiritual_warrior
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
 
 [gwd_spiritual_mage_bandos]
 // rev 474 npc 6278
@@ -1254,3 +1306,5 @@ param=attack_anim,graardor_attack
 param=defend_anim,graardor_block
 param=death_anim,graardor_death
 category=gwd_spiritual_mage
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
