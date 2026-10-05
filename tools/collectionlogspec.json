@@ -1,284 +1,1089 @@
 {
- "_what": "Every page of the collection log: the tabs, the entries on each, the items on each entry and the counters it shows. tools/gencollectionlog.py writes the dbrows, the interface and the code that fills it from this file, and refuses an obj name that no .obj config defines. The model is Old School's collection log (https://oldschool.runescape.wiki/w/Collection_log), cut down to what this build can actually drop or hand out.",
- "_items_are_global": "The log is keyed by ITEM, not by page, the way Old School's is: an item that sits on two pages (dragon pickaxe on the Kalphite Queen, Chaos Elemental and King Black Dragon pages, dragon chainbody on the Kalphite Queen and Slayer) is obtained on both the moment it is obtained once. So adding an item to a page never needs a new hook if something already logs it, and removing one never loses a player's record of it.",
- "_what_logs_an_item": "An item is logged only where it is DROPPED or HANDED OUT - a drop table, a casket, a chest, a shop that pays in tickets - by a call to ~collection_log_add. Picking something up does not log it, so a traded or found item does not count, as in Old School. See scripts/collection_log/scripts/collection_log.rs2 for the list of call sites; a new item whose source is not one of them needs a ~collection_log_add line beside the obj_add / inv_add that gives it.",
- "_counters": "boss:<key> is a kill count from tools/bosskillspec.json (read with ~boss_kill_get). Any other name is one of the log's own perm counters, declared under own_counters below; the generator gives each a varp and an id.",
- "capacity": 400,
- "_capacity": "Slots in the perm inv that holds the log: one per DISTINCT item ever obtained, so this is the ceiling on the number of different items the whole log can list. The generator fails if the log lists more. It can be raised freely; it must never be lowered below a size that has shipped, because the save keeps a slot index per item and a slot past the new end would not load.",
- "own_counters": [
-  {"key": "clue_easy", "_why": "Easy caskets opened. Nothing counted clues before this; the only trail varp is %trail_status, which is step progress."},
-  {"key": "clue_medium"},
-  {"key": "clue_hard"},
-  {"key": "barrows_chests", "_why": "Barrows chests looted. %barrows_killed_count counts tunnel monsters, not chests."}
- ],
- "tabs": [
-  {
-   "name": "Bosses",
-   "entries": [
-    {
-     "key": "barrows",
-     "name": "Barrows Chests",
-     "counters": [["Barrows Chests", "barrows_chests"]],
-     "items": ["barrows_ahrim_head", "barrows_ahrim_weapon", "barrows_ahrim_body", "barrows_ahrim_legs",
-               "barrows_dharok_head", "barrows_dharok_weapon", "barrows_dharok_body", "barrows_dharok_legs",
-               "barrows_guthan_head", "barrows_guthan_weapon", "barrows_guthan_body", "barrows_guthan_legs",
-               "barrows_karil_head", "barrows_karil_weapon", "barrows_karil_body", "barrows_karil_legs",
-               "barrows_torag_head", "barrows_torag_weapon", "barrows_torag_body", "barrows_torag_legs",
-               "barrows_verac_head", "barrows_verac_weapon", "barrows_verac_body", "barrows_verac_legs",
-               "barrows_karil_ammo"]
-    },
-    {
-     "key": "chaos_elemental",
-     "name": "Chaos Elemental",
-     "counters": [["Chaos Elemental kills", "boss:chaos_elemental"]],
-     "_items": "No pet here - this build's table has none. The dragon pickaxe is a 1/256 roll of its own, see drop_tables/scripts/chaos_elemental.rs2.",
-     "items": ["dragon_2h_sword", "dragon_pickaxe"]
-    },
-    {
-     "key": "zilyana",
-     "name": "Commander Zilyana",
-     "counters": [["Commander Zilyana kills", "boss:zilyana"]],
-     "items": ["bosspet_zilyana_item", "saradomin_sword", "saradomin_hilt", "armadyl_crossbow",
-               "godsword_shard_1", "godsword_shard_2", "godsword_shard_3"]
-    },
-    {
-     "key": "dagannoth_kings",
-     "name": "Dagannoth Kings",
-     "counters": [["Rex kills", "boss:dag_rex"], ["Prime kills", "boss:dag_prime"], ["Supreme kills", "boss:dag_supreme"]],
-     "items": ["bosspet_dagannoth_prime_item", "bosspet_dagannoth_supreme_item", "bosspet_dagannoth_rex_item",
-               "berzerker_ring", "ranger_ring", "seer_ring", "warrior_ring",
-               "dragon_axe", "daganoth_cave_magic_shortbow", "mud_battlestaff"]
-    },
-    {
-     "key": "fight_caves",
-     "name": "The Fight Caves",
-     "counters": [["TzTok-Jad kills", "boss:jad"]],
-     "_items": "The infernal cape is here rather than on an Inferno page because this build has no Inferno: TzHaar-Mej-Jal's fire cape gamble is the only way to get one.",
-     "items": ["tzhaar_cape_fire", "bosspet_tzrek_jad_item", "tzhaar_cape_infernal"]
-    },
-    {
-     "key": "graardor",
-     "name": "General Graardor",
-     "counters": [["General Graardor kills", "boss:graardor"]],
-     "items": ["bosspet_graardor_item", "bandos_chestplate", "bandos_tassets", "bandos_boots", "bandos_hilt",
-               "godsword_shard_1", "godsword_shard_2", "godsword_shard_3"]
-    },
-    {
-     "key": "mole",
-     "name": "Giant Mole",
-     "counters": [["Giant Mole kills", "boss:mole"]],
-     "items": ["bosspet_giant_mole_item", "mole_skin", "mole_claw"]
-    },
-    {
-     "key": "kq",
-     "name": "Kalphite Queen",
-     "counters": [["Kalphite Queen kills", "boss:kq"]],
-     "items": ["bosspet_kalphite_queen_item", "kq_head", "dragon_chainbody", "dragon_pickaxe"]
-    },
-    {
-     "key": "kbd",
-     "name": "King Black Dragon",
-     "counters": [["King Black Dragon kills", "boss:kbd"]],
-     "_items": "No KBD heads and no draconic visage in this build, so the pet and the 1/1,000 dragon pickaxe are all there is.",
-     "items": ["bosspet_kbd_item", "dragon_pickaxe"]
-    },
-    {
-     "key": "kraken",
-     "name": "Kraken",
-     "counters": [["Kraken kills", "boss:kraken"]],
-     "items": ["bosspet_kraken_item", "kraken_tentacle_item", "trident_of_the_seas_full", "jar_of_dirt"]
-    },
-    {
-     "key": "kreearra",
-     "name": "Kree'arra",
-     "counters": [["Kree'arra kills", "boss:kreearra"]],
-     "items": ["bosspet_kree_item", "armadyl_helmet", "armadyl_chestplate", "armadyl_chainskirt", "armadyl_hilt",
-               "godsword_shard_1", "godsword_shard_2", "godsword_shard_3"]
-    },
-    {
-     "key": "kril",
-     "name": "K'ril Tsutsaroth",
-     "counters": [["K'ril Tsutsaroth kills", "boss:kril"]],
-     "items": ["bosspet_kril_item", "zamorakian_spear", "zamorak_hilt",
-               "godsword_shard_1", "godsword_shard_2", "godsword_shard_3"]
-    },
-    {
-     "key": "zulrah",
-     "name": "Zulrah",
-     "counters": [["Zulrah kills", "boss:zulrah"]],
-     "_items": "The uniques and the two tertiaries that are items, which is what Old School's own Zulrah page carries. Everything else the table drops - the scales, the seeds, the noted resources, the rare drop table - is common loot and is no more collectable here than the Kraken's is. The hard clue is NOT here: a clue belongs to the Clues tab by its tier, which is what every other boss page in this build does with one. The two mutagens are not here either, and cannot be: they are cosmetic recolours of a serpentine helm and scripts/areas/area_zulrah/scripts/zulrah_drops.rs2 says why this build has neither.",
-     "items": ["bosspet_snakeling_item", "tanzanite_fang", "magic_fang", "serpentine_visage",
-               "uncut_onyx", "jar_of_swamp"]
-    }
-   ]
-  },
-  {
-   "name": "Clues",
-   "entries": [
-    {
-     "key": "clue_easy",
-     "name": "Easy Treasure Trails",
-     "counters": [["Easy clues completed", "clue_easy"]],
-     "items": ["black_full_helm_trim", "black_platebody_trim", "black_platelegs_trim", "black_kiteshield_trim",
-               "black_full_helm_gold", "black_platebody_gold", "black_platelegs_gold", "black_kiteshield_gold",
-               "black_heraldic_kiteshield1", "black_heraldic_kiteshield2", "black_heraldic_kiteshield3",
-               "black_heraldic_kiteshield4", "black_heraldic_kiteshield5",
-               "bluewizhat_trim", "wizards_robe_trim", "bluewizhat_trim_gold", "wizards_robe_trim_gold",
-               "highwaymanmask", "berret_blue", "berret_black", "berret_white", "boots_wizard"]
-    },
-    {
-     "key": "clue_medium",
-     "name": "Medium Treasure Trails",
-     "counters": [["Medium clues completed", "clue_medium"]],
-     "items": ["adamant_full_helm_trim", "adamant_platebody_trim", "adamant_platelegs_trim", "adamant_kiteshield_trim",
-               "adamant_full_helm_gold", "adamant_platebody_gold", "adamant_platelegs_gold", "adamant_kiteshield_gold",
-               "adamant_heraldic_kiteshield1", "adamant_heraldic_kiteshield2", "adamant_heraldic_kiteshield3",
-               "adamant_heraldic_kiteshield4", "adamant_heraldic_kiteshield5",
-               "boots_ranger", "boots_wizard", "headband_red", "headband_black", "headband_brown"]
-    },
-    {
-     "key": "clue_hard",
-     "name": "Hard Treasure Trails",
-     "counters": [["Hard clues completed", "clue_hard"]],
-     "items": ["rune_full_helm_trim", "rune_platebody_trim", "rune_platelegs_trim", "rune_kiteshield_trim",
-               "rune_full_helm_gold", "rune_platebody_gold", "rune_platelegs_gold", "rune_kiteshield_gold",
-               "rune_full_helm_zamorak", "rune_platebody_zamorak", "rune_platelegs_zamorak", "rune_kiteshield_zamorak",
-               "rune_full_helm_guthix", "rune_platebody_guthix", "rune_platelegs_guthix", "rune_kiteshield_guthix",
-               "rune_full_helm_saradomin", "rune_platebody_saradomin", "rune_platelegs_saradomin", "rune_kiteshield_saradomin",
-               "rune_heraldic_kiteshield1", "rune_heraldic_kiteshield2", "rune_heraldic_kiteshield3",
-               "rune_heraldic_kiteshield4", "rune_heraldic_kiteshield5",
-               "robinhoodhat", "piratehat", "cavalier_brown", "cavalier_dark", "cavalier_black",
-               "enchanted_hat", "enchanted_robetop", "enchanted_robelegs", "thread_of_elidinis"]
-    },
-    {
-     "key": "clue_shared",
-     "name": "Shared Clue Rewards",
-     "_items": "The clue hunter outfit rolls in every tier, so it gets Old School's shared page rather than a place on one tier.",
-     "counters": [],
-     "items": ["helm_of_raedwald", "clue_hunter_garb", "clue_hunter_gloves", "clue_hunter_trousers",
-               "clue_hunter_boots", "clue_hunter_cloak"]
-    }
-   ]
-  },
-  {
-   "name": "Minigames",
-   "_entries": "Only the two minigames that pay out a collectible here. Pest Control's void exchange is a stub, the Ranging Guild ticket shop is commented out, Champions' Challenge has no arena, and the Duel Arena, Party Room, Gnomeball and Fishing Trawler pay nothing worth a page.",
-   "entries": [
-    {
-     "key": "agility_arena",
-     "name": "Brimhaven Agility Arena",
-     "counters": [],
-     "items": ["piratehook"]
-    },
-    {
-     "key": "castle_wars",
-     "name": "Castle Wars",
-     "counters": [],
-     "items": ["castlewars_med_helm", "castlewars_armour_body", "castlewars_armour_legs", "castlewars_sword", "castlewars_shield",
-               "castlewars_med_helm_2", "castlewars_armour_body_2", "castlewars_armour_legs_2", "castlewars_sword_2", "castlewars_shield_2",
-               "castlewars_med_helm_3", "castlewars_armour_body_3", "castlewars_armour_legs_3", "castlewars_sword_3", "castlewars_shield_3",
-               "castlewars_hood_saradomin_prize", "castlewars_cloak_saradomin_prize",
-               "castlewars_hood_zamorak_prize", "castlewars_cloak_zamorak_prize"]
-    }
-   ]
-  },
-  {
-   "name": "Other",
-   "entries": [
-    {
-     "key": "pets",
-     "name": "All Pets",
-     "counters": [],
-     "_items": "Every pet that is rolled for. Jal-rek-Jad is left off: it is TzRek-Jad metamorphosed, not something that is ever received.",
-     "items": ["bosspet_tzrek_jad_item", "bosspet_kril_item", "bosspet_graardor_item", "bosspet_zilyana_item",
-               "bosspet_kree_item", "bosspet_kalphite_queen_item", "bosspet_dagannoth_rex_item",
-               "bosspet_dagannoth_supreme_item", "bosspet_dagannoth_prime_item", "bosspet_kraken_item",
-               "bosspet_kbd_item", "bosspet_giant_mole_item", "bosspet_snakeling_item",
-               "skillpet_beaver_item", "skillpet_heron_item", "skillpet_rock_golem_item", "skillpet_rocky_item",
-               "skillpet_squirrel_item", "skillpet_tangleroot_item", "skillpet_rift_guardian_item",
-               "skillpet_chinchompa_item"]
-    },
-    {
-     "key": "outfits_artisan",
-     "name": "Artisan Outfits",
-     "counters": [],
-     "items": ["pyromancer_hood", "pyromancer_garb", "pyromancer_robe", "pyromancer_boots",
-               "eye_hat", "eye_top", "eye_bottoms", "eye_boots",
-               "smiths_tunic", "smiths_trousers", "smiths_boots", "smiths_gloves",
-               "carpenters_helm", "carpenters_shirt", "carpenters_trousers", "carpenters_boots",
-               "zealots_helm", "zealots_top", "zealots_bottom", "zealots_boots"]
-    },
-    {
-     "key": "chaos_druids",
-     "name": "Chaos Druids",
-     "counters": [],
-     "items": ["elder_chaos_hood", "elder_chaos_top", "elder_chaos_robe"]
-    },
-    {
-     "key": "cyclopes",
-     "name": "Cyclopes",
-     "counters": [],
-     "items": ["bronze_defender", "iron_defender", "steel_defender", "black_defender", "mithril_defender",
-               "adamant_defender", "rune_defender", "dragon_defender"]
-    },
-    {
-     "key": "outfits_gathering",
-     "name": "Gathering Outfits",
-     "counters": [],
-     "items": ["prospector_helm", "prospector_jacket", "prospector_legs", "prospector_boots",
-               "angler_hat", "angler_top", "angler_waders", "angler_boots",
-               "lumberjack_hat", "lumberjack_top", "lumberjack_legs", "lumberjack_boots",
-               "hunter_headwear", "hunter_top", "hunter_legs", "hunter_boots",
-               "rogue_mask", "rogue_top", "rogue_trousers", "rogue_boots", "rogue_gloves"]
-    },
-    {
-     "key": "graceful",
-     "name": "Graceful",
-     "counters": [],
-     "items": ["graceful_hood", "graceful_top", "graceful_legs", "graceful_gloves", "graceful_boots", "graceful_cape"]
-    },
-    {
-     "key": "mage_arena",
-     "name": "Mage Arena",
-     "counters": [],
-     "items": ["saradomin_cape", "guthix_cape", "zamorak_cape",
-               "imbued_saradomin_cape", "imbued_guthix_cape", "imbued_zamorak_cape"]
-    },
-    {
-     "key": "rare_drop_table",
-     "name": "Rare Drop Table",
-     "counters": [],
-     "_items": "The mega-rare end of the shared table (~megararetable), which every monster that reaches the rare table can roll once Legends' Quest is done.",
-     "items": ["rune_spear", "dragonshield_a", "dragon_spear"]
-    },
-    {
-     "key": "slayer",
-     "name": "Slayer",
-     "counters": [],
-     "items": ["imbued_heart", "abyssal_head", "abyssal_whip", "granite_maul", "granite_legs", "black_mask",
-               "dragon_chainbody", "kraken_tentacle_item", "trident_of_the_seas_uncharged"]
-    }
-   ]
-  }
- ],
- "rewards": [
-  {
-   "key": "first_item",
-   "bit": 0,
-   "entry": null,
-   "threshold": 1,
-   "reward": null,
-   "message": "Your collection log is open for business - read it from the Collection Log page of your quest tab.",
-   "_why": "A PLACEHOLDER that proves the mechanism and tells a new player where the log is. No item."
-  },
-  {
-   "key": "complete",
-   "bit": 1,
-   "entry": null,
-   "threshold": -1,
-   "reward": null,
-   "message": "You have completed the entire collection log!",
-   "_why": "A PLACEHOLDER: threshold -1 means every item on the pages it covers."
-  }
- ]
+    "_what": "Every page of the collection log: the tabs, the entries on each, the items on each entry and the counters it shows. tools/gencollectionlog.py writes the dbrows, the interface and the code that fills it from this file, and refuses an obj name that no .obj config defines. The model is Old School's collection log (https://oldschool.runescape.wiki/w/Collection_log), cut down to what this build can actually drop or hand out.",
+    "_items_are_global": "The log is keyed by ITEM, not by page, the way Old School's is: an item that sits on two pages (dragon pickaxe on the Kalphite Queen, Chaos Elemental and King Black Dragon pages, dragon chainbody on the Kalphite Queen and Slayer) is obtained on both the moment it is obtained once. So adding an item to a page never needs a new hook if something already logs it, and removing one never loses a player's record of it.",
+    "_what_logs_an_item": "An item is logged only where it is DROPPED or HANDED OUT - a drop table, a casket, a chest, a shop that pays in tickets - by a call to ~collection_log_add. Picking something up does not log it, so a traded or found item does not count, as in Old School. See scripts/collection_log/scripts/collection_log.rs2 for the list of call sites; a new item whose source is not one of them needs a ~collection_log_add line beside the obj_add / inv_add that gives it.",
+    "_counters": "boss:<key> is a kill count from tools/bosskillspec.json (read with ~boss_kill_get). Any other name is one of the log's own perm counters, declared under own_counters below; the generator gives each a varp and an id.",
+    "capacity": 800,
+    "_capacity": "Slots in the perm inv that holds the log: one per DISTINCT item ever obtained, so this is the ceiling on the number of different items the whole log can list. The generator fails if the log lists more. It can be raised freely; it must never be lowered below a size that has shipped, because the save keeps a slot index per item and a slot past the new end would not load.",
+    "own_counters": [
+        {
+            "key": "clue_easy",
+            "_why": "Easy caskets opened. Nothing counted clues before this; the only trail varp is %trail_status, which is step progress."
+        },
+        {
+            "key": "clue_medium"
+        },
+        {
+            "key": "clue_hard"
+        },
+        {
+            "key": "barrows_chests",
+            "_why": "Barrows chests looted. %barrows_killed_count counts tunnel monsters, not chests."
+        }
+    ],
+    "tabs": [
+        {
+            "name": "Bosses",
+            "entries": [
+                {
+                    "key": "barrows",
+                    "name": "Barrows Chests",
+                    "counters": [
+                        [
+                            "Barrows Chests",
+                            "barrows_chests"
+                        ]
+                    ],
+                    "items": [
+                        "barrows_ahrim_head",
+                        "barrows_ahrim_weapon",
+                        "barrows_ahrim_body",
+                        "barrows_ahrim_legs",
+                        "barrows_dharok_head",
+                        "barrows_dharok_weapon",
+                        "barrows_dharok_body",
+                        "barrows_dharok_legs",
+                        "barrows_guthan_head",
+                        "barrows_guthan_weapon",
+                        "barrows_guthan_body",
+                        "barrows_guthan_legs",
+                        "barrows_karil_head",
+                        "barrows_karil_weapon",
+                        "barrows_karil_body",
+                        "barrows_karil_legs",
+                        "barrows_torag_head",
+                        "barrows_torag_weapon",
+                        "barrows_torag_body",
+                        "barrows_torag_legs",
+                        "barrows_verac_head",
+                        "barrows_verac_weapon",
+                        "barrows_verac_body",
+                        "barrows_verac_legs",
+                        "barrows_karil_ammo"
+                    ]
+                },
+                {
+                    "key": "chaos_elemental",
+                    "name": "Chaos Elemental",
+                    "counters": [
+                        [
+                            "Chaos Elemental kills",
+                            "boss:chaos_elemental"
+                        ]
+                    ],
+                    "_items": "No pet here - this build's table has none. The dragon pickaxe is a 1/256 roll of its own, see drop_tables/scripts/chaos_elemental.rs2.",
+                    "items": [
+                        "dragon_2h_sword",
+                        "dragon_pickaxe"
+                    ]
+                },
+                {
+                    "key": "zilyana",
+                    "name": "Commander Zilyana",
+                    "counters": [
+                        [
+                            "Commander Zilyana kills",
+                            "boss:zilyana"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_zilyana_item",
+                        "saradomin_sword",
+                        "saradomin_hilt",
+                        "armadyl_crossbow",
+                        "godsword_shard_1",
+                        "godsword_shard_2",
+                        "godsword_shard_3"
+                    ]
+                },
+                {
+                    "key": "dagannoth_kings",
+                    "name": "Dagannoth Kings",
+                    "counters": [
+                        [
+                            "Rex kills",
+                            "boss:dag_rex"
+                        ],
+                        [
+                            "Prime kills",
+                            "boss:dag_prime"
+                        ],
+                        [
+                            "Supreme kills",
+                            "boss:dag_supreme"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_dagannoth_prime_item",
+                        "bosspet_dagannoth_supreme_item",
+                        "bosspet_dagannoth_rex_item",
+                        "berzerker_ring",
+                        "ranger_ring",
+                        "seer_ring",
+                        "warrior_ring",
+                        "dragon_axe",
+                        "daganoth_cave_magic_shortbow",
+                        "mud_battlestaff"
+                    ]
+                },
+                {
+                    "key": "fight_caves",
+                    "name": "The Fight Caves",
+                    "counters": [
+                        [
+                            "TzTok-Jad kills",
+                            "boss:jad"
+                        ]
+                    ],
+                    "_items": "The infernal cape is here rather than on an Inferno page because this build has no Inferno: TzHaar-Mej-Jal's fire cape gamble is the only way to get one.",
+                    "items": [
+                        "tzhaar_cape_fire",
+                        "bosspet_tzrek_jad_item",
+                        "tzhaar_cape_infernal"
+                    ]
+                },
+                {
+                    "key": "graardor",
+                    "name": "General Graardor",
+                    "counters": [
+                        [
+                            "General Graardor kills",
+                            "boss:graardor"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_graardor_item",
+                        "bandos_chestplate",
+                        "bandos_tassets",
+                        "bandos_boots",
+                        "bandos_hilt",
+                        "godsword_shard_1",
+                        "godsword_shard_2",
+                        "godsword_shard_3"
+                    ]
+                },
+                {
+                    "key": "mole",
+                    "name": "Giant Mole",
+                    "counters": [
+                        [
+                            "Giant Mole kills",
+                            "boss:mole"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_giant_mole_item",
+                        "mole_skin",
+                        "mole_claw"
+                    ]
+                },
+                {
+                    "key": "kq",
+                    "name": "Kalphite Queen",
+                    "counters": [
+                        [
+                            "Kalphite Queen kills",
+                            "boss:kq"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_kalphite_queen_item",
+                        "kq_head",
+                        "dragon_chainbody",
+                        "dragon_pickaxe"
+                    ]
+                },
+                {
+                    "key": "kbd",
+                    "name": "King Black Dragon",
+                    "counters": [
+                        [
+                            "King Black Dragon kills",
+                            "boss:kbd"
+                        ]
+                    ],
+                    "_items": "No KBD heads and no draconic visage in this build, so the pet and the 1/1,000 dragon pickaxe are all there is.",
+                    "items": [
+                        "bosspet_kbd_item",
+                        "dragon_pickaxe"
+                    ]
+                },
+                {
+                    "key": "kraken",
+                    "name": "Kraken",
+                    "counters": [
+                        [
+                            "Kraken kills",
+                            "boss:kraken"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_kraken_item",
+                        "kraken_tentacle_item",
+                        "trident_of_the_seas_full",
+                        "jar_of_dirt"
+                    ]
+                },
+                {
+                    "key": "kreearra",
+                    "name": "Kree'arra",
+                    "counters": [
+                        [
+                            "Kree'arra kills",
+                            "boss:kreearra"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_kree_item",
+                        "armadyl_helmet",
+                        "armadyl_chestplate",
+                        "armadyl_chainskirt",
+                        "armadyl_hilt",
+                        "godsword_shard_1",
+                        "godsword_shard_2",
+                        "godsword_shard_3"
+                    ]
+                },
+                {
+                    "key": "kril",
+                    "name": "K'ril Tsutsaroth",
+                    "counters": [
+                        [
+                            "K'ril Tsutsaroth kills",
+                            "boss:kril"
+                        ]
+                    ],
+                    "items": [
+                        "bosspet_kril_item",
+                        "zamorakian_spear",
+                        "zamorak_hilt",
+                        "godsword_shard_1",
+                        "godsword_shard_2",
+                        "godsword_shard_3"
+                    ]
+                },
+                {
+                    "key": "zulrah",
+                    "name": "Zulrah",
+                    "counters": [
+                        [
+                            "Zulrah kills",
+                            "boss:zulrah"
+                        ]
+                    ],
+                    "_items": "The uniques and the two tertiaries that are items, which is what Old School's own Zulrah page carries. Everything else the table drops - the scales, the seeds, the noted resources, the rare drop table - is common loot and is no more collectable here than the Kraken's is. The hard clue is NOT here: a clue belongs to the Clues tab by its tier, which is what every other boss page in this build does with one. The two mutagens are not here either, and cannot be: they are cosmetic recolours of a serpentine helm and scripts/areas/area_zulrah/scripts/zulrah_drops.rs2 says why this build has neither.",
+                    "items": [
+                        "bosspet_snakeling_item",
+                        "tanzanite_fang",
+                        "magic_fang",
+                        "serpentine_visage",
+                        "uncut_onyx",
+                        "jar_of_swamp",
+                        "tanzanite_mutagen",
+                        "magma_mutagen"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Clues",
+            "entries": [
+                {
+                    "key": "clue_easy",
+                    "name": "Easy Treasure Trails",
+                    "counters": [
+                        [
+                            "Easy clues completed",
+                            "clue_easy"
+                        ]
+                    ],
+                    "items": [
+                        "black_full_helm_trim",
+                        "black_platebody_trim",
+                        "black_platelegs_trim",
+                        "black_kiteshield_trim",
+                        "black_full_helm_gold",
+                        "black_platebody_gold",
+                        "black_platelegs_gold",
+                        "black_kiteshield_gold",
+                        "bluewizhat_trim_gold",
+                        "wizards_robe_trim_gold",
+                        "bluewizhat_trim",
+                        "wizards_robe_trim",
+                        "highwaymanmask",
+                        "berret_blue",
+                        "berret_black",
+                        "berret_white",
+                        "black_plateskirt_trim",
+                        "black_plateskirt_gold",
+                        "studded_body_trim_gold",
+                        "studded_chaps_trim_gold",
+                        "studded_body_trim_fur",
+                        "studded_chaps_trim_fur",
+                        "blue_skirt_trim_gold",
+                        "blue_skirt_trim",
+                        "willow_comp_bow",
+                        "amulet_of_magic_t",
+                        "team_cape_zero",
+                        "team_cape_i",
+                        "team_cape_x",
+                        "cape_of_skulls",
+                        "golden_chef_s_hat",
+                        "golden_apron",
+                        "wooden_shield_g",
+                        "black_shield_h1",
+                        "black_shield_h2",
+                        "black_shield_h3",
+                        "black_shield_h4",
+                        "black_shield_h5",
+                        "black_helm_h1",
+                        "black_helm_h2",
+                        "black_helm_h3",
+                        "black_helm_h4",
+                        "black_helm_h5",
+                        "black_platebody_h1",
+                        "black_platebody_h2",
+                        "black_platebody_h3",
+                        "black_platebody_h4",
+                        "black_platebody_h5",
+                        "steel_full_helm_t",
+                        "steel_platebody_t",
+                        "steel_platelegs_t",
+                        "steel_plateskirt_t",
+                        "steel_kiteshield_t",
+                        "steel_full_helm_g",
+                        "steel_platebody_g",
+                        "steel_platelegs_g",
+                        "steel_plateskirt_g",
+                        "steel_kiteshield_g",
+                        "iron_full_helm_t",
+                        "iron_platebody_t",
+                        "iron_platelegs_t",
+                        "iron_plateskirt_t",
+                        "iron_kiteshield_t",
+                        "iron_full_helm_g",
+                        "iron_platebody_g",
+                        "iron_platelegs_g",
+                        "iron_plateskirt_g",
+                        "iron_kiteshield_g",
+                        "bronze_full_helm_t",
+                        "bronze_platebody_t",
+                        "bronze_platelegs_t",
+                        "bronze_plateskirt_t",
+                        "bronze_kiteshield_t",
+                        "bronze_full_helm_g",
+                        "bronze_platebody_g",
+                        "bronze_platelegs_g",
+                        "bronze_plateskirt_g",
+                        "bronze_kiteshield_g",
+                        "leather_body_g",
+                        "leather_chaps_g",
+                        "black_wizard_hat_g",
+                        "black_wizard_robe_g",
+                        "black_skirt_g",
+                        "black_wizard_hat_t",
+                        "black_wizard_robe_t",
+                        "black_skirt_t",
+                        "monk_s_robe_top_g",
+                        "monk_s_robe_g",
+                        "saradomin_robe_top",
+                        "saradomin_robe_legs",
+                        "guthix_robe_top",
+                        "guthix_robe_legs",
+                        "zamorak_robe_top",
+                        "zamorak_robe_legs",
+                        "ancient_robe_top",
+                        "ancient_robe_legs",
+                        "armadyl_robe_top",
+                        "armadyl_robe_legs",
+                        "bandos_robe_top",
+                        "bandos_robe_legs",
+                        "bob_s_red_shirt",
+                        "bob_s_green_shirt",
+                        "bob_s_blue_shirt",
+                        "bob_s_black_shirt",
+                        "bob_s_purple_shirt",
+                        "red_beret",
+                        "a_powdered_wig",
+                        "beanie",
+                        "imp_mask",
+                        "goblin_mask",
+                        "sleeping_cap",
+                        "flared_trousers",
+                        "pantaloons",
+                        "black_cane",
+                        "staff_of_bob_the_cat",
+                        "red_elegant_shirt",
+                        "red_elegant_blouse",
+                        "red_elegant_legs",
+                        "red_elegant_skirt",
+                        "green_elegant_shirt",
+                        "green_elegant_blouse",
+                        "green_elegant_legs",
+                        "green_elegant_skirt",
+                        "blue_elegant_shirt",
+                        "blue_elegant_blouse",
+                        "blue_elegant_legs",
+                        "blue_elegant_skirt",
+                        "amulet_of_power_t",
+                        "ham_joint",
+                        "rain_bow"
+                    ]
+                },
+                {
+                    "key": "clue_medium",
+                    "name": "Medium Treasure Trails",
+                    "counters": [
+                        [
+                            "Medium clues completed",
+                            "clue_medium"
+                        ]
+                    ],
+                    "items": [
+                        "boots_ranger",
+                        "boots_wizard",
+                        "adamant_full_helm_trim",
+                        "adamant_platebody_trim",
+                        "adamant_platelegs_trim",
+                        "adamant_kiteshield_trim",
+                        "adamant_full_helm_gold",
+                        "adamant_platebody_gold",
+                        "adamant_platelegs_gold",
+                        "adamant_kiteshield_gold",
+                        "headband_red",
+                        "headband_black",
+                        "headband_brown",
+                        "adamant_plateskirt_trim",
+                        "adamant_plateskirt_gold",
+                        "dragonhide_body_trim_gold",
+                        "dragonhide_body_trim",
+                        "dragonhide_chaps_trim_gold",
+                        "dragonhide_chaps_trim",
+                        "strawboater_red",
+                        "strawboater_green",
+                        "strawboater_orange",
+                        "strawboater_black",
+                        "strawboater_blue",
+                        "gnomish_firelighter",
+                        "yew_comp_bow",
+                        "strength_amulet_t",
+                        "holy_sandals",
+                        "spiked_manacles",
+                        "climbing_boots_g",
+                        "adamant_shield_h1",
+                        "adamant_shield_h2",
+                        "adamant_shield_h3",
+                        "adamant_shield_h4",
+                        "adamant_shield_h5",
+                        "adamant_helm_h1",
+                        "adamant_helm_h2",
+                        "adamant_helm_h3",
+                        "adamant_helm_h4",
+                        "adamant_helm_h5",
+                        "adamant_platebody_h1",
+                        "adamant_platebody_h2",
+                        "adamant_platebody_h3",
+                        "adamant_platebody_h4",
+                        "adamant_platebody_h5",
+                        "mithril_full_helm_g",
+                        "mithril_platebody_g",
+                        "mithril_platelegs_g",
+                        "mithril_plateskirt_g",
+                        "mithril_kiteshield_g",
+                        "mithril_full_helm_t",
+                        "mithril_platebody_t",
+                        "mithril_platelegs_t",
+                        "mithril_plateskirt_t",
+                        "mithril_kiteshield_t",
+                        "saradomin_mitre",
+                        "saradomin_cloak",
+                        "guthix_mitre",
+                        "guthix_cloak",
+                        "zamorak_mitre",
+                        "zamorak_cloak",
+                        "ancient_mitre",
+                        "ancient_cloak",
+                        "ancient_stole",
+                        "ancient_crozier",
+                        "armadyl_mitre",
+                        "armadyl_cloak",
+                        "armadyl_stole",
+                        "armadyl_crozier",
+                        "bandos_mitre",
+                        "bandos_cloak",
+                        "bandos_stole",
+                        "bandos_crozier",
+                        "pink_boater",
+                        "purple_boater",
+                        "white_boater",
+                        "white_headband",
+                        "blue_headband",
+                        "gold_headband",
+                        "pink_headband",
+                        "green_headband",
+                        "crier_hat",
+                        "crier_coat",
+                        "crier_bell",
+                        "adamant_cane",
+                        "cabbage_round_shield",
+                        "black_unicorn_mask",
+                        "white_unicorn_mask",
+                        "cat_mask",
+                        "penguin_mask",
+                        "leprechaun_hat",
+                        "black_leprechaun_hat",
+                        "wolf_mask",
+                        "wolf_cloak",
+                        "purple_elegant_shirt",
+                        "purple_elegant_blouse",
+                        "purple_elegant_legs",
+                        "purple_elegant_skirt",
+                        "black_elegant_shirt",
+                        "white_elegant_blouse",
+                        "black_elegant_legs",
+                        "white_elegant_skirt",
+                        "pink_elegant_shirt",
+                        "pink_elegant_blouse",
+                        "pink_elegant_legs",
+                        "pink_elegant_skirt",
+                        "gold_elegant_shirt",
+                        "gold_elegant_blouse",
+                        "gold_elegant_legs",
+                        "gold_elegant_skirt"
+                    ]
+                },
+                {
+                    "key": "clue_hard",
+                    "name": "Hard Treasure Trails",
+                    "counters": [
+                        [
+                            "Hard clues completed",
+                            "clue_hard"
+                        ]
+                    ],
+                    "items": [
+                        "robinhoodhat",
+                        "enchanted_hat",
+                        "enchanted_robetop",
+                        "enchanted_robelegs",
+                        "rune_full_helm_trim",
+                        "rune_platebody_trim",
+                        "rune_platelegs_trim",
+                        "rune_kiteshield_trim",
+                        "rune_full_helm_gold",
+                        "rune_platebody_gold",
+                        "rune_platelegs_gold",
+                        "rune_kiteshield_gold",
+                        "rune_full_helm_zamorak",
+                        "rune_platebody_zamorak",
+                        "rune_platelegs_zamorak",
+                        "rune_kiteshield_zamorak",
+                        "rune_full_helm_guthix",
+                        "rune_platebody_guthix",
+                        "rune_platelegs_guthix",
+                        "rune_kiteshield_guthix",
+                        "rune_full_helm_saradomin",
+                        "piratehat",
+                        "cavalier_brown",
+                        "cavalier_dark",
+                        "cavalier_black",
+                        "rune_plateskirt_trim",
+                        "rune_plateskirt_gold",
+                        "rune_plateskirt_zamorak",
+                        "rune_plateskirt_guthix",
+                        "blue_dragonhide_body_trim_gold",
+                        "blue_dragonhide_body_trim",
+                        "blue_dragonhide_chaps_trim_gold",
+                        "blue_dragonhide_chaps_trim",
+                        "trick_or_treat_head",
+                        "rune_full_helm_goldplate",
+                        "rune_platebody_goldplate",
+                        "rune_platelegs_goldplate",
+                        "rune_plateskirt_goldplate",
+                        "rune_kiteshield_goldplate",
+                        "magic_comp_bow",
+                        "amulet_of_glory_t4",
+                        "dragon_boots_ornament_kit",
+                        "rune_shield_h1",
+                        "rune_shield_h2",
+                        "rune_shield_h3",
+                        "rune_shield_h4",
+                        "rune_shield_h5",
+                        "rune_helm_h1",
+                        "rune_helm_h2",
+                        "rune_helm_h3",
+                        "rune_helm_h4",
+                        "rune_helm_h5",
+                        "rune_platebody_h1",
+                        "rune_platebody_h2",
+                        "rune_platebody_h3",
+                        "rune_platebody_h4",
+                        "rune_platebody_h5",
+                        "saradomin_platebody",
+                        "saradomin_platelegs",
+                        "saradomin_plateskirt",
+                        "saradomin_kiteshield",
+                        "ancient_full_helm",
+                        "ancient_platebody",
+                        "ancient_platelegs",
+                        "ancient_plateskirt",
+                        "ancient_kiteshield",
+                        "armadyl_full_helm",
+                        "armadyl_platebody",
+                        "armadyl_platelegs",
+                        "armadyl_plateskirt",
+                        "armadyl_kiteshield",
+                        "bandos_full_helm",
+                        "bandos_platebody",
+                        "bandos_platelegs",
+                        "bandos_plateskirt",
+                        "bandos_kiteshield",
+                        "red_dhide_body_g",
+                        "red_dhide_body_t",
+                        "red_dhide_chaps_g",
+                        "red_dhide_chaps_t",
+                        "saradomin_coif",
+                        "saradomin_dhide_body",
+                        "saradomin_chaps",
+                        "saradomin_bracers",
+                        "saradomin_dhide_boots",
+                        "saradomin_dhide_shield",
+                        "guthix_coif",
+                        "guthix_dhide_body",
+                        "guthix_chaps",
+                        "guthix_bracers",
+                        "guthix_dhide_boots",
+                        "guthix_dhide_shield",
+                        "zamorak_coif",
+                        "zamorak_dhide_body",
+                        "zamorak_chaps",
+                        "zamorak_bracers",
+                        "zamorak_dhide_boots",
+                        "zamorak_dhide_shield",
+                        "bandos_coif",
+                        "bandos_dhide_body",
+                        "bandos_chaps",
+                        "bandos_bracers",
+                        "bandos_dhide_boots",
+                        "bandos_dhide_shield",
+                        "armadyl_coif",
+                        "armadyl_dhide_body",
+                        "armadyl_chaps",
+                        "armadyl_bracers",
+                        "armadyl_dhide_boots",
+                        "armadyl_dhide_shield",
+                        "ancient_coif",
+                        "ancient_dhide_body",
+                        "ancient_chaps",
+                        "ancient_bracers",
+                        "ancient_dhide_boots",
+                        "ancient_dhide_shield",
+                        "saradomin_stole",
+                        "saradomin_crozier",
+                        "guthix_stole",
+                        "guthix_crozier",
+                        "zamorak_stole",
+                        "zamorak_crozier",
+                        "cyclops_head",
+                        "red_cavalier",
+                        "white_cavalier",
+                        "navy_cavalier",
+                        "pith_helmet",
+                        "explorer_backpack",
+                        "green_dragon_mask",
+                        "blue_dragon_mask",
+                        "red_dragon_mask",
+                        "black_dragon_mask",
+                        "nunchaku",
+                        "rune_cane",
+                        "dual_sai",
+                        "thieving_bag",
+                        "rune_defender_ornament_kit",
+                        "berserker_necklace_ornament_kit",
+                        "tzhaar_ket_om_ornament_kit",
+                        "gilded_med_helm",
+                        "gilded_chainbody",
+                        "gilded_sq_shield",
+                        "gilded_2h_sword",
+                        "gilded_spear",
+                        "gilded_hasta",
+                        "third_age_full_helmet",
+                        "third_age_platebody",
+                        "third_age_platelegs",
+                        "third_age_plateskirt",
+                        "third_age_kiteshield",
+                        "third_age_range_coif",
+                        "third_age_range_top",
+                        "third_age_range_legs",
+                        "third_age_vambraces",
+                        "third_age_mage_hat",
+                        "third_age_robe_top",
+                        "third_age_robe",
+                        "third_age_amulet"
+                    ]
+                },
+                {
+                    "key": "clue_elite_master",
+                    "name": "Elite & Master Rewards",
+                    "_items": "There is no elite or master trail in a 2006 build, so these come out of the HARD casket - one rare roll in eight. They get a page of their own rather than 112 more lines on the hard page: a player hunting 3rd age druidic looks for it under the tier it belongs to, and a 270-item page is not something anybody browses.",
+                    "counters": [],
+                    "items": [
+                        "dragon_chainbody_ornament_kit",
+                        "dragon_legs_skirt_ornament_kit",
+                        "dragon_sq_shield_ornament_kit",
+                        "dragon_scimitar_ornament_kit",
+                        "fury_ornament_kit",
+                        "light_infinity_colour_kit",
+                        "dark_infinity_colour_kit",
+                        "royal_crown",
+                        "royal_gown_top",
+                        "royal_gown_bottom",
+                        "royal_sceptre",
+                        "musketeer_hat",
+                        "musketeer_tabard",
+                        "musketeer_pants",
+                        "black_dhide_body_g",
+                        "black_dhide_body_t",
+                        "black_dhide_chaps_g",
+                        "black_dhide_chaps_t",
+                        "rangers_tunic",
+                        "ranger_gloves",
+                        "holy_wraps",
+                        "bronze_dragon_mask",
+                        "iron_dragon_mask",
+                        "steel_dragon_mask",
+                        "mithril_dragon_mask",
+                        "adamant_dragon_mask",
+                        "rune_dragon_mask",
+                        "katana",
+                        "dragon_cane",
+                        "bucket_helm",
+                        "blacksmith_s_helm",
+                        "deerstalker",
+                        "afro",
+                        "big_pirate_hat",
+                        "top_hat",
+                        "monocle",
+                        "briefcase",
+                        "sagacious_spectacles",
+                        "dark_bow_tie",
+                        "dark_tuxedo_jacket",
+                        "dark_tuxedo_cuffs",
+                        "dark_trousers",
+                        "dark_tuxedo_shoes",
+                        "light_bow_tie",
+                        "light_tuxedo_jacket",
+                        "light_tuxedo_cuffs",
+                        "light_trousers",
+                        "light_tuxedo_shoes",
+                        "rangers_tights",
+                        "uri_s_hat",
+                        "giant_boot",
+                        "fremennik_kilt",
+                        "ring_of_nature",
+                        "gilded_scimitar",
+                        "gilded_boots",
+                        "gilded_coif",
+                        "gilded_dhide_vambraces",
+                        "gilded_dhide_body",
+                        "gilded_dhide_chaps",
+                        "gilded_pickaxe",
+                        "gilded_axe",
+                        "gilded_spade",
+                        "third_age_longsword",
+                        "third_age_wand",
+                        "third_age_cloak",
+                        "third_age_bow",
+                        "dragon_defender_ornament_kit",
+                        "hood_of_darkness",
+                        "robe_top_of_darkness",
+                        "gloves_of_darkness",
+                        "robe_bottom_of_darkness",
+                        "boots_of_darkness",
+                        "samurai_kasa",
+                        "samurai_shirt",
+                        "samurai_gloves",
+                        "samurai_greaves",
+                        "samurai_boots",
+                        "old_demon_mask",
+                        "lesser_demon_mask",
+                        "greater_demon_mask",
+                        "black_demon_mask",
+                        "jungle_demon_mask",
+                        "left_eye_patch",
+                        "bowl_wig",
+                        "ale_of_the_gods",
+                        "obsidian_cape_r",
+                        "fancy_tiara",
+                        "half_moon_spectacles",
+                        "armadyl_godsword_ornament_kit",
+                        "bandos_godsword_ornament_kit",
+                        "saradomin_godsword_ornament_kit",
+                        "zamorak_godsword_ornament_kit",
+                        "ankou_mask",
+                        "ankou_top",
+                        "ankou_gloves",
+                        "ankou_s_leggings",
+                        "ankou_socks",
+                        "mummy_s_head",
+                        "mummy_s_body",
+                        "mummy_s_hands",
+                        "mummy_s_legs",
+                        "mummy_s_feet",
+                        "bucket_helm_g",
+                        "ring_of_coins",
+                        "third_age_druidic_robe_top",
+                        "third_age_druidic_robe_bottoms",
+                        "third_age_druidic_cloak",
+                        "third_age_druidic_staff",
+                        "third_age_pickaxe",
+                        "third_age_axe",
+                        "bloodhound",
+                        "ring_of_third_age"
+                    ]
+                },
+                {
+                    "key": "clue_shared",
+                    "name": "Shared Clue Rewards",
+                    "_items": "The clue hunter outfit rolls in every tier, so it gets Old School's shared page rather than a place on one tier.",
+                    "counters": [],
+                    "items": [
+                        "helm_of_raedwald",
+                        "clue_hunter_garb",
+                        "clue_hunter_gloves",
+                        "clue_hunter_trousers",
+                        "clue_hunter_boots",
+                        "clue_hunter_cloak"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Minigames",
+            "_entries": "Only the two minigames that pay out a collectible here. Pest Control's void exchange is a stub, the Ranging Guild ticket shop is commented out, Champions' Challenge has no arena, and the Duel Arena, Party Room, Gnomeball and Fishing Trawler pay nothing worth a page.",
+            "entries": [
+                {
+                    "key": "agility_arena",
+                    "name": "Brimhaven Agility Arena",
+                    "counters": [],
+                    "items": [
+                        "piratehook"
+                    ]
+                },
+                {
+                    "key": "castle_wars",
+                    "name": "Castle Wars",
+                    "counters": [],
+                    "items": [
+                        "castlewars_med_helm",
+                        "castlewars_armour_body",
+                        "castlewars_armour_legs",
+                        "castlewars_sword",
+                        "castlewars_shield",
+                        "castlewars_med_helm_2",
+                        "castlewars_armour_body_2",
+                        "castlewars_armour_legs_2",
+                        "castlewars_sword_2",
+                        "castlewars_shield_2",
+                        "castlewars_med_helm_3",
+                        "castlewars_armour_body_3",
+                        "castlewars_armour_legs_3",
+                        "castlewars_sword_3",
+                        "castlewars_shield_3",
+                        "castlewars_hood_saradomin_prize",
+                        "castlewars_cloak_saradomin_prize",
+                        "castlewars_hood_zamorak_prize",
+                        "castlewars_cloak_zamorak_prize"
+                    ]
+                }
+            ]
+        },
+        {
+            "name": "Other",
+            "entries": [
+                {
+                    "key": "pets",
+                    "name": "All Pets",
+                    "counters": [],
+                    "_items": "Every pet that is rolled for. Jal-rek-Jad is left off: it is TzRek-Jad metamorphosed, not something that is ever received.",
+                    "items": [
+                        "bosspet_tzrek_jad_item",
+                        "bosspet_kril_item",
+                        "bosspet_graardor_item",
+                        "bosspet_zilyana_item",
+                        "bosspet_kree_item",
+                        "bosspet_kalphite_queen_item",
+                        "bosspet_dagannoth_rex_item",
+                        "bosspet_dagannoth_supreme_item",
+                        "bosspet_dagannoth_prime_item",
+                        "bosspet_kraken_item",
+                        "bosspet_kbd_item",
+                        "bosspet_giant_mole_item",
+                        "bosspet_snakeling_item",
+                        "skillpet_beaver_item",
+                        "skillpet_heron_item",
+                        "skillpet_rock_golem_item",
+                        "skillpet_rocky_item",
+                        "skillpet_squirrel_item",
+                        "skillpet_tangleroot_item",
+                        "skillpet_rift_guardian_item",
+                        "skillpet_chinchompa_item"
+                    ]
+                },
+                {
+                    "key": "outfits_artisan",
+                    "name": "Artisan Outfits",
+                    "counters": [],
+                    "items": [
+                        "pyromancer_hood",
+                        "pyromancer_garb",
+                        "pyromancer_robe",
+                        "pyromancer_boots",
+                        "eye_hat",
+                        "eye_top",
+                        "eye_bottoms",
+                        "eye_boots",
+                        "smiths_tunic",
+                        "smiths_trousers",
+                        "smiths_boots",
+                        "smiths_gloves",
+                        "carpenters_helm",
+                        "carpenters_shirt",
+                        "carpenters_trousers",
+                        "carpenters_boots",
+                        "zealots_helm",
+                        "zealots_top",
+                        "zealots_bottom",
+                        "zealots_boots"
+                    ]
+                },
+                {
+                    "key": "chaos_druids",
+                    "name": "Chaos Druids",
+                    "counters": [],
+                    "items": [
+                        "elder_chaos_hood",
+                        "elder_chaos_top",
+                        "elder_chaos_robe"
+                    ]
+                },
+                {
+                    "key": "cyclopes",
+                    "name": "Cyclopes",
+                    "counters": [],
+                    "items": [
+                        "bronze_defender",
+                        "iron_defender",
+                        "steel_defender",
+                        "black_defender",
+                        "mithril_defender",
+                        "adamant_defender",
+                        "rune_defender",
+                        "dragon_defender"
+                    ]
+                },
+                {
+                    "key": "outfits_gathering",
+                    "name": "Gathering Outfits",
+                    "counters": [],
+                    "items": [
+                        "prospector_helm",
+                        "prospector_jacket",
+                        "prospector_legs",
+                        "prospector_boots",
+                        "angler_hat",
+                        "angler_top",
+                        "angler_waders",
+                        "angler_boots",
+                        "lumberjack_hat",
+                        "lumberjack_top",
+                        "lumberjack_legs",
+                        "lumberjack_boots",
+                        "hunter_headwear",
+                        "hunter_top",
+                        "hunter_legs",
+                        "hunter_boots",
+                        "rogue_mask",
+                        "rogue_top",
+                        "rogue_trousers",
+                        "rogue_boots",
+                        "rogue_gloves"
+                    ]
+                },
+                {
+                    "key": "graceful",
+                    "name": "Graceful",
+                    "counters": [],
+                    "items": [
+                        "graceful_hood",
+                        "graceful_top",
+                        "graceful_legs",
+                        "graceful_gloves",
+                        "graceful_boots",
+                        "graceful_cape"
+                    ]
+                },
+                {
+                    "key": "mage_arena",
+                    "name": "Mage Arena",
+                    "counters": [],
+                    "items": [
+                        "saradomin_cape",
+                        "guthix_cape",
+                        "zamorak_cape",
+                        "imbued_saradomin_cape",
+                        "imbued_guthix_cape",
+                        "imbued_zamorak_cape"
+                    ]
+                },
+                {
+                    "key": "rare_drop_table",
+                    "name": "Rare Drop Table",
+                    "counters": [],
+                    "_items": "The mega-rare end of the shared table (~megararetable), which every monster that reaches the rare table can roll once Legends' Quest is done.",
+                    "items": [
+                        "rune_spear",
+                        "dragonshield_a",
+                        "dragon_spear"
+                    ]
+                },
+                {
+                    "key": "slayer",
+                    "name": "Slayer",
+                    "counters": [],
+                    "items": [
+                        "imbued_heart",
+                        "abyssal_head",
+                        "abyssal_whip",
+                        "granite_maul",
+                        "granite_legs",
+                        "black_mask",
+                        "dragon_chainbody",
+                        "kraken_tentacle_item",
+                        "trident_of_the_seas_uncharged"
+                    ]
+                }
+            ]
+        }
+    ],
+    "rewards": [
+        {
+            "key": "first_item",
+            "bit": 0,
+            "entry": null,
+            "threshold": 1,
+            "reward": null,
+            "message": "Your collection log is open for business - read it from the Collection Log page of your quest tab.",
+            "_why": "A PLACEHOLDER that proves the mechanism and tells a new player where the log is. No item."
+        },
+        {
+            "key": "complete",
+            "bit": 1,
+            "entry": null,
+            "threshold": -1,
+            "reward": null,
+            "message": "You have completed the entire collection log!",
+            "_why": "A PLACEHOLDER: threshold -1 means every item on the pages it covers."
+        }
+    ]
 }
