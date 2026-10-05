@@ -1,0 +1,817 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[dragon_boots_g]
+name=Dragon boots (g)
+desc=These fancy boots will protect my feet.
+model=obj_dragon_boots_g
+manwear=obj_dragon_boots_g_manwear,0
+womanwear=obj_dragon_boots_g_womanwear,0
+wearpos=feet
+2dzoom=595
+2dxan=96
+2dyof=-1
+weight=1000g
+cost=20000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of dragon_boots, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_feet
+param=magicattack,-3
+param=rangeattack,-1
+param=stabdefence,16
+param=slashdefence,17
+param=crushdefence,18
+param=strengthbonus,4
+param=ornament_from,dragon_boots
+category=ornamented
+iop4=Revert
+
+[rune_defender_t]
+name=Rune defender (t)
+desc=A defensive weapon trimmed with gold.
+model=obj_rune_defender_t
+manwear=obj_rune_defender_t_manwear,0
+womanwear=obj_rune_defender_t_womanwear,0
+wearpos=lefthand
+2dzoom=490
+2dxan=344
+2dyan=192
+2dxof=1
+2dyof=20
+recol1s=7399
+recol1d=19809
+recol2s=19026
+recol2d=32453
+weight=453g
+cost=65004
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of rune_defender, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_shield
+param=shield_defend_anim,osrs_defender_block
+param=stabattack,20
+param=slashattack,19
+param=crushattack,18
+param=magicattack,-3
+param=rangeattack,-2
+param=stabdefence,20
+param=slashdefence,19
+param=crushdefence,18
+param=magicdefence,-3
+param=rangedefence,-2
+param=strengthbonus,5
+param=ornament_from,rune_defender
+category=ornamented
+iop4=Revert
+
+[berserker_necklace_or]
+name=Berserker necklace (or)
+desc=Makes obsidian weapons even stronger and has a nice glow to boot!
+model=obj_berserker_necklace_or
+manwear=obj_berserker_necklace_or_manwear,0
+womanwear=obj_berserker_necklace_or_womanwear,0
+wearpos=front
+2dzoom=568
+2dxan=303
+2dyan=135
+weight=10g
+cost=202000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of berserker_necklace, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+param=stabattack,-10
+param=slashattack,-10
+param=crushattack,-10
+param=stabdefence,-20
+param=slashdefence,-20
+param=crushdefence,-20
+param=magicdefence,-20
+param=rangedefence,-20
+param=strengthbonus,7
+param=prayerbonus,3
+param=ornament_from,berserker_necklace
+category=ornamented
+iop4=Revert
+
+[tzhaar_ket_om_t]
+name=Tzhaar-ket-om (t)
+desc=A maul of obsidian with trim and spikes.
+model=obj_tzhaar_ket_om_t
+manwear=obj_tzhaar_ket_om_t_manwear,0
+womanwear=obj_tzhaar_ket_om_t_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1642
+2dxan=357
+2dyan=1554
+2dyof=13
+weight=3628g
+cost=50001
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of tzhaar_maul, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_crush
+param=crushattack,80
+param=strengthbonus,85
+param=attackrate,7
+param=crushattack_anim,osrs_obsidian_maul_attack
+param=defend_anim,osrs_maul_block
+param=crush_sound,2H_crush
+param=ready_baseanim,osrs_maul_ready
+param=walk_f_baseanim,osrs_maul_walk
+param=walk_b_baseanim,osrs_maul_walk
+param=walk_l_baseanim,osrs_maul_walk
+param=walk_r_baseanim,osrs_maul_walk
+param=running_baseanim,osrs_maul_run
+param=ornament_from,tzhaar_maul
+category=ornamented
+iop4=Revert
+
+[dragon_chainbody_g]
+name=Dragon chainbody (g)
+desc=A series of connected metal rings with gold trim.
+model=obj_dragon_chainbody_g
+manwear=obj_dragon_chainbody_g_manwear,0
+manwear2=obj_dragon_chainbody_g_manwear2
+womanwear=obj_dragon_chainbody_g_womanwear,0
+womanwear2=obj_dragon_chainbody_g_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1100
+2dxan=568
+2dyof=2
+weight=6803g
+cost=250000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of dragon_chainbody, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_body
+param=magicattack,-15
+param=stabdefence,81
+param=slashdefence,93
+param=crushdefence,98
+param=magicdefence,-3
+param=rangedefence,82
+param=ornament_from,dragon_chainbody
+category=ornamented
+iop4=Revert
+
+[dragon_platelegs_g]
+name=Dragon platelegs (g)
+desc=Heavy protective legwear with a gold trim.
+model=obj_dragon_platelegs_g
+manwear=obj_dragon_platelegs_g_manwear,0
+womanwear=obj_dragon_platelegs_g_womanwear,0
+wearpos=legs
+2dzoom=1740
+2dxan=444
+2dyof=-8
+recol1s=8192
+recol1d=32453
+recol2s=6144
+recol2d=32453
+weight=9071g
+cost=270000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of dragon_platelegs, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_legs
+param=magicattack,-21
+param=rangeattack,-7
+param=stabdefence,68
+param=slashdefence,66
+param=crushdefence,63
+param=magicdefence,-4
+param=rangedefence,65
+param=ornament_from,dragon_platelegs
+category=ornamented
+iop4=Revert
+
+[dragon_plateskirt_g]
+name=Dragon plateskirt (g)
+desc=Heavy protective legwear with a gold trim.
+model=obj_dragon_plateskirt_g
+manwear=obj_dragon_plateskirt_g_manwear,0
+womanwear=obj_dragon_plateskirt_g_womanwear,0
+wearpos=legs
+2dzoom=1230
+2dxan=584
+2dxof=4
+2dyof=15
+recol1s=11296
+recol1d=32453
+recol2s=6144
+recol2d=32453
+weight=9071g
+cost=270000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of dragon_plateskirt, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_legs
+param=magicattack,-21
+param=rangeattack,-7
+param=stabdefence,68
+param=slashdefence,66
+param=crushdefence,63
+param=magicdefence,-4
+param=rangedefence,65
+param=ornament_from,dragon_plateskirt
+category=ornamented
+iop4=Revert
+
+[dragon_sq_shield_g]
+name=Dragon sq shield (g)
+desc=An ancient and powerful looking Dragon Square shield with gold trim.
+model=obj_dragon_sq_shield_g
+manwear=obj_dragon_sq_shield_g_manwear,0
+womanwear=obj_dragon_sq_shield_g_womanwear,6
+wearpos=lefthand
+2dzoom=1730
+2dxan=352
+2dyan=120
+2dxof=1
+2dyof=10
+recol1s=7296
+recol1d=32453
+recol2s=9513
+recol2d=32453
+weight=3175g
+cost=500000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of dragon_sq_shield, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_shield
+param=rangeattack,-2
+param=magicattack,-6
+param=stabdefence,50
+param=slashdefence,52
+param=crushdefence,48
+param=rangedefence,50
+param=defend_anim,human_shield_defence
+param=ornament_from,dragon_sq_shield
+category=ornamented
+iop4=Revert
+
+[dragon_scimitar_or]
+name=Dragon scimitar (or)
+desc=A vicious, curved and stylish sword.
+model=obj_dragon_scimitar_or
+manwear=obj_dragon_scimitar_or_manwear,0
+womanwear=obj_dragon_scimitar_or_womanwear,6
+wearpos=righthand
+2dzoom=1640
+2dxan=456
+2dyan=12
+2dyof=6
+weight=1814g
+cost=100000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of dragon_scimitar, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_slash
+param=stabattack,8
+param=slashattack,67
+param=crushattack,-2
+param=slashdefence,1
+param=strengthbonus,66
+param=slashattack_anim,human_sword_slash
+param=stabattack_anim,human_sword_stab
+param=defend_anim,human_sword_def
+param=slash_sound,hacksword_slash
+param=stab_sound,hacksword_stab
+param=specwep,^true
+param=sa_energy,550
+param=ornament_from,dragon_scimitar
+category=ornamented
+iop4=Revert
+
+[amulet_of_fury_or]
+name=Amulet of fury (or)
+desc=A very powerful and stylish onyx amulet.
+model=obj_amulet_of_fury_or
+manwear=obj_amulet_of_fury_or_manwear,0
+womanwear=obj_amulet_of_fury_or_womanwear,0
+wearpos=front
+2dzoom=550
+2dxan=340
+2dyan=26
+2dxof=1
+2dyof=29
+weight=10g
+cost=206000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of enchanted_onyx_amulet, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+param=stabattack,10
+param=slashattack,10
+param=crushattack,10
+param=magicattack,10
+param=rangeattack,10
+param=stabdefence,15
+param=slashdefence,15
+param=crushdefence,15
+param=magicdefence,15
+param=rangedefence,15
+param=strengthbonus,8
+param=prayerbonus,5
+param=ornament_from,enchanted_onyx_amulet
+category=ornamented
+iop4=Revert
+
+[light_infinity_hat]
+name=Light infinity hat
+desc=A mystic hat with a light recolour.
+model=obj_light_infinity_hat
+manwear=obj_light_infinity_hat_manwear,0
+womanwear=obj_light_infinity_hat_womanwear,0
+manhead=obj_light_infinity_hat_manhead
+womanhead=obj_light_infinity_hat_womanhead
+wearpos=hat
+2dzoom=1150
+2dxan=112
+2dyan=68
+recol1s=22725
+recol1d=27482
+recol2s=17520
+recol2d=32453
+recol3s=32576
+recol3d=31676
+recol4s=1310
+recol4d=30584
+recol5s=14023
+recol5d=32453
+weight=453g
+cost=17000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinityhat, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_helmet
+param=magicattack,6
+param=magicdefence,6
+param=ornament_from,magictraining_infinityhat
+category=ornamented
+iop4=Revert
+
+[light_infinity_top]
+name=Light infinity top
+desc=Mystical robes with a light recolour.
+model=obj_light_infinity_top
+manwear=obj_light_infinity_top_manwear,0
+manwear2=obj_light_infinity_top_manwear2
+womanwear=obj_light_infinity_top_womanwear,0
+womanwear2=obj_light_infinity_top_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1380
+2dxan=468
+2dyan=2044
+2dxof=-1
+recol1s=22725
+recol1d=27482
+recol2s=17520
+recol2d=32453
+recol3s=1992
+recol3d=31536
+recol4s=7230
+recol4d=30584
+recol5s=32576
+recol5d=31676
+recol6s=31961
+recol6d=32453
+weight=2267g
+cost=140000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinitytop, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_body
+param=magicattack,22
+param=magicdefence,22
+param=ornament_from,magictraining_infinitytop
+category=ornamented
+iop4=Revert
+
+[light_infinity_bottoms]
+name=Light infinity bottoms
+desc=Mystical robes with a light recolour.
+model=obj_light_infinity_bottoms
+manwear=obj_light_infinity_bottoms_manwear,0
+womanwear=obj_light_infinity_bottoms_womanwear,0
+wearpos=legs
+2dzoom=1760
+2dxan=304
+2dyof=30
+recol1s=22725
+recol1d=27482
+recol2s=17520
+recol2d=32453
+recol3s=1992
+recol3d=31536
+recol4s=7230
+recol4d=30584
+recol5s=31961
+recol5d=32453
+weight=1814g
+cost=90000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinitybottom, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_legs
+param=magicattack,17
+param=magicdefence,17
+param=ornament_from,magictraining_infinitybottom
+category=ornamented
+iop4=Revert
+
+[dark_infinity_hat]
+name=Dark infinity hat
+desc=A mystic hat with a dark recolour.
+model=obj_dark_infinity_hat
+manwear=obj_dark_infinity_hat_manwear,0
+womanwear=obj_dark_infinity_hat_womanwear,0
+manhead=obj_dark_infinity_hat_manhead
+womanhead=obj_dark_infinity_hat_womanhead
+wearpos=hat
+2dzoom=1150
+2dxan=112
+2dyan=68
+recol1s=22725
+recol1d=0
+recol2s=17520
+recol2d=17519
+recol3s=32576
+recol3d=12300
+recol4s=1310
+recol4d=31961
+recol5s=14023
+recol5d=17519
+weight=453g
+cost=17000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinityhat, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_helmet
+param=magicattack,6
+param=magicdefence,6
+param=ornament_from,magictraining_infinityhat
+category=ornamented
+iop4=Revert
+
+[dark_infinity_top]
+name=Dark infinity top
+desc=Mystical robes with a dark recolour.
+model=obj_dark_infinity_top
+manwear=obj_dark_infinity_top_manwear,0
+manwear2=obj_dark_infinity_top_manwear2
+womanwear=obj_dark_infinity_top_womanwear,0
+womanwear2=obj_dark_infinity_top_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1380
+2dxan=468
+2dyan=2044
+2dxof=-1
+recol1s=22725
+recol1d=0
+recol2s=17520
+recol2d=17519
+recol3s=1992
+recol3d=12300
+recol4s=7230
+recol4d=0
+recol5s=32576
+recol5d=0
+recol6s=31961
+recol6d=17519
+weight=2267g
+cost=140000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinitytop, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_body
+param=magicattack,22
+param=magicdefence,22
+param=ornament_from,magictraining_infinitytop
+category=ornamented
+iop4=Revert
+
+[dark_infinity_bottoms]
+name=Dark infinity bottoms
+desc=Mystical robes with a dark recolour.
+model=obj_dark_infinity_bottoms
+manwear=obj_dark_infinity_bottoms_manwear,0
+womanwear=obj_dark_infinity_bottoms_womanwear,0
+wearpos=legs
+2dzoom=1760
+2dxan=304
+2dyof=30
+recol1s=22725
+recol1d=0
+recol2s=17520
+recol2d=17519
+recol3s=1992
+recol3d=12300
+recol4s=7230
+recol4d=0
+recol5s=31961
+recol5d=17519
+weight=1814g
+cost=90000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Dismantle
+// A repaint of magictraining_infinitybottom, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_legs
+param=magicattack,17
+param=magicdefence,17
+param=ornament_from,magictraining_infinitybottom
+category=ornamented
+iop4=Revert
+
+[dragon_defender_t]
+name=Dragon defender (t)
+desc=A defensive weapon trimmed with gold.
+model=obj_dragon_defender_t
+manwear=obj_dragon_defender_t_manwear,0
+womanwear=obj_dragon_defender_t_womanwear,1
+wearpos=lefthand
+2dzoom=589
+2dxan=498
+2dyan=256
+2dzan=2047
+2dxof=5
+2dyof=8
+weight=453g
+cost=68007
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of dragon_defender, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=armour_shield
+param=shield_defend_anim,osrs_defender_block
+param=stabattack,25
+param=slashattack,24
+param=crushattack,23
+param=magicattack,-3
+param=rangeattack,-2
+param=stabdefence,25
+param=slashdefence,24
+param=crushdefence,23
+param=magicdefence,-3
+param=rangedefence,-2
+param=strengthbonus,6
+param=ornament_from,dragon_defender
+category=ornamented
+iop4=Revert
+
+[armadyl_godsword_or]
+name=Armadyl godsword (or)
+desc=An ornamented, beautiful, heavy sword.
+model=obj_armadyl_godsword_or
+manwear=obj_armadyl_godsword_or_manwear,2
+womanwear=obj_armadyl_godsword_or_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1957
+2dxan=498
+2dyan=484
+2dxof=-1
+2dyof=-1
+weight=10000g
+cost=1250000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of armadyl_godsword, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_2h_sword
+param=slashattack,132
+param=crushattack,80
+param=strengthbonus,132
+param=prayerbonus,8
+param=attackrate,6
+param=slashattack_anim,osrs_2h_slash
+param=crushattack_anim,osrs_2h_smash
+param=style1_attack_anim,osrs_2h_chop
+param=style2_attack_anim,osrs_2h_slash
+param=style3_attack_anim,osrs_2h_smash
+param=style4_attack_anim,osrs_2h_block
+param=defend_anim,osrs_2h_defend
+param=specwep,^true
+param=sa_energy,500
+param=slash_sound,2H_slash
+param=crush_sound,2H_crush
+param=ready_baseanim,osrs_2h_ready
+param=turnonspot_baseanim,osrs_2h_turnonspot
+param=walk_f_baseanim,osrs_2h_walk
+param=walk_b_baseanim,osrs_2h_walk
+param=walk_l_baseanim,osrs_2h_walk_l
+param=walk_r_baseanim,osrs_2h_walk_r
+param=running_baseanim,osrs_2h_run
+param=gwd_prot_armadyl,1
+param=ornament_from,armadyl_godsword
+category=ornamented
+iop4=Revert
+
+[bandos_godsword_or]
+name=Bandos godsword (or)
+desc=An ornamented, brutally heavy sword.
+model=obj_bandos_godsword_or
+manwear=obj_bandos_godsword_or_manwear,2
+womanwear=obj_bandos_godsword_or_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1957
+2dxan=498
+2dyan=484
+2dxof=-1
+2dyof=-1
+weight=10000g
+cost=1250000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of bandos_godsword, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_2h_sword
+param=slashattack,132
+param=crushattack,80
+param=strengthbonus,132
+param=prayerbonus,8
+param=attackrate,6
+param=slashattack_anim,osrs_2h_slash
+param=crushattack_anim,osrs_2h_smash
+param=style1_attack_anim,osrs_2h_chop
+param=style2_attack_anim,osrs_2h_slash
+param=style3_attack_anim,osrs_2h_smash
+param=style4_attack_anim,osrs_2h_block
+param=defend_anim,osrs_2h_defend
+param=specwep,^true
+param=sa_energy,500
+param=slash_sound,2H_slash
+param=crush_sound,2H_crush
+param=ready_baseanim,osrs_2h_ready
+param=turnonspot_baseanim,osrs_2h_turnonspot
+param=walk_f_baseanim,osrs_2h_walk
+param=walk_b_baseanim,osrs_2h_walk
+param=walk_l_baseanim,osrs_2h_walk_l
+param=walk_r_baseanim,osrs_2h_walk_r
+param=running_baseanim,osrs_2h_run
+param=gwd_prot_bandos,1
+param=ornament_from,bandos_godsword
+category=ornamented
+iop4=Revert
+
+[saradomin_godsword_or]
+name=Saradomin godsword (or)
+desc=An ornamented, gracious, heavy sword.
+model=obj_saradomin_godsword_or
+manwear=obj_saradomin_godsword_or_manwear,2
+womanwear=obj_saradomin_godsword_or_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1957
+2dxan=498
+2dyan=484
+2dxof=-1
+2dyof=-1
+weight=10000g
+cost=1250000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of saradomin_godsword, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_2h_sword
+param=slashattack,132
+param=crushattack,80
+param=strengthbonus,132
+param=prayerbonus,8
+param=attackrate,6
+param=slashattack_anim,osrs_2h_slash
+param=crushattack_anim,osrs_2h_smash
+param=style1_attack_anim,osrs_2h_chop
+param=style2_attack_anim,osrs_2h_slash
+param=style3_attack_anim,osrs_2h_smash
+param=style4_attack_anim,osrs_2h_block
+param=defend_anim,osrs_2h_defend
+param=specwep,^true
+param=sa_energy,500
+param=slash_sound,2H_slash
+param=crush_sound,2H_crush
+param=ready_baseanim,osrs_2h_ready
+param=turnonspot_baseanim,osrs_2h_turnonspot
+param=walk_f_baseanim,osrs_2h_walk
+param=walk_b_baseanim,osrs_2h_walk
+param=walk_l_baseanim,osrs_2h_walk_l
+param=walk_r_baseanim,osrs_2h_walk_r
+param=running_baseanim,osrs_2h_run
+param=gwd_prot_saradomin,1
+param=ornament_from,saradomin_godsword
+category=ornamented
+iop4=Revert
+
+[zamorak_godsword_or]
+name=Zamorak godsword (or)
+desc=An ornamented, terrifying, heavy sword.
+model=obj_zamorak_godsword_or
+manwear=obj_zamorak_godsword_or_manwear,2
+womanwear=obj_zamorak_godsword_or_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1957
+2dxan=498
+2dyan=484
+2dxof=-1
+2dyof=-1
+weight=10000g
+cost=1250000
+members=yes
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+
+// A repaint of zamorak_godsword, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+category=weapon_2h_sword
+param=slashattack,132
+param=crushattack,80
+param=strengthbonus,132
+param=prayerbonus,8
+param=attackrate,6
+param=slashattack_anim,osrs_2h_slash
+param=crushattack_anim,osrs_2h_smash
+param=style1_attack_anim,osrs_2h_chop
+param=style2_attack_anim,osrs_2h_slash
+param=style3_attack_anim,osrs_2h_smash
+param=style4_attack_anim,osrs_2h_block
+param=defend_anim,osrs_2h_defend
+param=specwep,^true
+param=sa_energy,500
+param=slash_sound,2H_slash
+param=crush_sound,2H_crush
+param=ready_baseanim,osrs_2h_ready
+param=turnonspot_baseanim,osrs_2h_turnonspot
+param=walk_f_baseanim,osrs_2h_walk
+param=walk_b_baseanim,osrs_2h_walk
+param=walk_l_baseanim,osrs_2h_walk_l
+param=walk_r_baseanim,osrs_2h_walk_r
+param=running_baseanim,osrs_2h_run
+param=gwd_prot_zamorak,1
+param=ornament_from,zamorak_godsword
+category=ornamented
+iop4=Revert

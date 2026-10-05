@@ -1,0 +1,33 @@
+// THE SERPENTINE HELM FAMILY. Three helms now - serpentine, tanzanite and magma - each with a
+// charged and an uncharged record, and all of them behaving identically. serpentine_helm.rs2 used
+// to name its two records in six places; these let it ask the item instead, so the two mutated
+// pairs got the scales, the Check, the Uncharge and the degrade for free.
+//
+// On a charged helm: the record it becomes when the last scale goes.
+[serpentine_uncharged]
+type=namedobj
+default=null
+
+// On an uncharged helm: the record it becomes when the first scale goes in.
+[serpentine_charged]
+type=namedobj
+default=null
+
+// THE MUTAGENS. Two slots because a mutagen works on either state of the helm and the result has
+// to match the state it was used on - charged in, charged out. One slot would have meant losing
+// the charges or refusing the uncharged helm, and neither is what Old School does.
+[mutagen_from]
+type=namedobj
+default=null
+
+[mutagen_into]
+type=namedobj
+default=null
+
+[mutagen_from2]
+type=namedobj
+default=null
+
+[mutagen_into2]
+type=namedobj
+default=null

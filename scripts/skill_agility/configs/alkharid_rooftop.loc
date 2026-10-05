@@ -1,0 +1,172 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_1329]
+// OSRS loc 1329
+name=Tropical leaves
+model=osrsloc_1329
+width=3
+length=3
+ambient=15
+contrast=100
+
+[osrsloc_14398]
+// OSRS loc 14398
+name=Tightrope
+model=osrsloc_14398
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+forceapproach=south
+op1=Cross
+
+[osrsloc_14399]
+// OSRS loc 14399
+name=Gap
+model=osrsloc_14399
+active=yes
+hillskew=yes
+forcedecor=yes
+resizez=160
+offsetz=32
+forceapproach=west
+op1=Jump
+
+[osrsloc_14401]
+// OSRS loc 14401
+model=osrsloc_14401
+length=6
+blockrange=no
+active=no
+
+[osrsloc_14402]
+// OSRS loc 14402
+name=Cable
+model=osrsloc_14402
+active=yes
+hillskew=yes
+forcedecor=yes
+forceapproach=south
+op1=Swing-across
+
+[osrsloc_14403]
+// OSRS loc 14403
+name=Zip line
+model=osrsloc_14403
+length=3
+hillskew=yes
+ambient=10
+contrast=50
+op1=Teeth-grip
+
+[osrsloc_14405]
+// OSRS loc 14405
+name=Zip line
+model=osrsloc_14405
+active=yes
+hillskew=yes
+forcedecor=yes
+ambient=10
+contrast=50
+
+[osrsloc_14409]
+// OSRS loc 14409
+name=Tightrope
+model=osrsloc_14409
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+op1=Cross
+
+[osrsloc_14410]
+// OSRS loc 14410
+model=osrsloc_14410
+active=no
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+
+[osrsloc_39629]
+// OSRS loc 39629
+model=osrsloc_39629
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+forcedecor=yes
+offsety=-1
+ambient=20
+
+
+[osrsloc_1791]
+model=osrsloc_1791
+sharelight=yes
+
+[osrsloc_1858]
+model=osrsloc_1858
+active=no
+
+[osrsloc_1925]
+model=osrsloc_1925
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_11634]
+name=Roof top beams
+model=osrsloc_11634
+active=yes
+forcedecor=yes
+offsety=-30
+op1=Climb
+
+[osrsloc_14404]
+name=Tropical tree
+model=osrsloc_14404
+// NOT USABLE YET, and not for want of a config. The zip line lands the player in a pocket six
+// tiles across - 3313 to 3318, z 3160 to 3165, everything north of 3165 blocked - so the south
+// face is the ONLY side they can ever stand on, and that is the side the reach test refuses:
+// "I can't reach that!". The swing itself is fine and fires from the east, west and north.
+//
+// Measured, not guessed, and all three of these changed nothing, so none of them is here:
+// forceapproach=south, length 1 instead of the cache's 2, and blockwalk=no.
+length=2
+active=yes
+resizex=164
+resizez=256
+op1=Swing-across
+
+[osrsloc_14406]
+name=Zip line
+model=osrsloc_14406
+hillskew=yes
+ambient=10
+contrast=50
+
+[osrsloc_14407]
+name=Zip line
+model=osrsloc_14407
+length=3
+hillskew=yes
+ambient=10
+contrast=50
+
+[osrsloc_14408]
+name=Zip line
+model=osrsloc_14408
+length=3
+hillskew=yes
+mirror=yes
+ambient=10
+contrast=50
+
+[osrsloc_26587]
+model=osrsloc_26587
+blockrange=no
+active=no
+sharelight=yes
+offsety=1
+ambient=20
+contrast=125

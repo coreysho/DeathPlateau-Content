@@ -73,26 +73,121 @@ switch_int ($random) {
     case 25 : inv_add(trail_rewardinv, amulet_of_power, 1);
 }
 
+// EVERY UNIQUE OLD SCHOOL PUTS IN A MEDIUM CASKET, minus the five Kourend banners - that
+// city does not exist in this build and a banner for it would advertise nowhere.
+
 [proc,trail_clue_medium_rare]
-def_int $random = random(18);
+def_int $random = random(110);
 
 switch_int ($random) {
-    case 0 : inv_add(trail_rewardinv, boots_ranger, 1);
-    case 1 : inv_add(trail_rewardinv, adamant_full_helm_trim, 1);
-    case 2 : inv_add(trail_rewardinv, adamant_platebody_trim, 1);
-    case 3 : inv_add(trail_rewardinv, adamant_platelegs_trim, 1);
-    case 4 : inv_add(trail_rewardinv, adamant_kiteshield_trim, 1);
-    case 5 : inv_add(trail_rewardinv, adamant_platebody_gold, 1);
-    case 6 : inv_add(trail_rewardinv, adamant_platelegs_gold, 1);
-    case 7 : inv_add(trail_rewardinv, adamant_full_helm_gold, 1);
-    case 8 : inv_add(trail_rewardinv, adamant_kiteshield_gold, 1);
-    case 9 : inv_add(trail_rewardinv, headband_red, 1);
-    case 10 : inv_add(trail_rewardinv, headband_black, 1);
-    case 11 : inv_add(trail_rewardinv, headband_brown, 1);
-    case 12 : inv_add(trail_rewardinv, boots_wizard, 1);
-    case 13 : inv_add(trail_rewardinv, adamant_heraldic_kiteshield1, 1);
-    case 14 : inv_add(trail_rewardinv, adamant_heraldic_kiteshield2, 1);
-    case 15 : inv_add(trail_rewardinv, adamant_heraldic_kiteshield3, 1);
-    case 16 : inv_add(trail_rewardinv, adamant_heraldic_kiteshield4, 1);
-    case 17 : inv_add(trail_rewardinv, adamant_heraldic_kiteshield5, 1);
+    case 0 : inv_add(trail_rewardinv, boots_ranger, 1);   // Ranger boots
+    case 1 : inv_add(trail_rewardinv, boots_wizard, 1);   // Wizard boots
+    case 2 : inv_add(trail_rewardinv, adamant_full_helm_trim, 1);   // Adamant full helm (t)
+    case 3 : inv_add(trail_rewardinv, adamant_platebody_trim, 1);   // Adamant platebody (t)
+    case 4 : inv_add(trail_rewardinv, adamant_platelegs_trim, 1);   // Adamant platelegs (t)
+    case 5 : inv_add(trail_rewardinv, adamant_kiteshield_trim, 1);   // Adamant kiteshield (t)
+    case 6 : inv_add(trail_rewardinv, adamant_full_helm_gold, 1);   // Adamant full helm (g)
+    case 7 : inv_add(trail_rewardinv, adamant_platebody_gold, 1);   // Adamant platebody (g)
+    case 8 : inv_add(trail_rewardinv, adamant_platelegs_gold, 1);   // Adamant platelegs (g)
+    case 9 : inv_add(trail_rewardinv, adamant_kiteshield_gold, 1);   // Adamant kiteshield (g)
+    case 10 : inv_add(trail_rewardinv, headband_red, 1);   // Red headband
+    case 11 : inv_add(trail_rewardinv, headband_black, 1);   // Black headband
+    case 12 : inv_add(trail_rewardinv, headband_brown, 1);   // Brown headband
+    case 13 : inv_add(trail_rewardinv, adamant_plateskirt_trim, 1);   // Adamant plateskirt (t)
+    case 14 : inv_add(trail_rewardinv, adamant_plateskirt_gold, 1);   // Adamant plateskirt (g)
+    case 15 : inv_add(trail_rewardinv, dragonhide_body_trim_gold, 1);   // Green d'hide body (g)
+    case 16 : inv_add(trail_rewardinv, dragonhide_body_trim, 1);   // Green d'hide body (t)
+    case 17 : inv_add(trail_rewardinv, dragonhide_chaps_trim_gold, 1);   // Green d'hide chaps (g)
+    case 18 : inv_add(trail_rewardinv, dragonhide_chaps_trim, 1);   // Green d'hide chaps (t)
+    case 19 : inv_add(trail_rewardinv, strawboater_red, 1);   // Red boater
+    case 20 : inv_add(trail_rewardinv, strawboater_green, 1);   // Green boater
+    case 21 : inv_add(trail_rewardinv, strawboater_orange, 1);   // Orange boater
+    case 22 : inv_add(trail_rewardinv, strawboater_black, 1);   // Black boater
+    case 23 : inv_add(trail_rewardinv, strawboater_blue, 1);   // Blue boater
+    case 24 : inv_add(trail_rewardinv, gnomish_firelighter, 1);   // Gnomish firelighter
+    case 25 : inv_add(trail_rewardinv, yew_comp_bow, 1);   // Yew comp bow
+    case 26 : inv_add(trail_rewardinv, strength_amulet_t, 1);   // Strength amulet (t)
+    case 27 : inv_add(trail_rewardinv, holy_sandals, 1);   // Holy sandals
+    case 28 : inv_add(trail_rewardinv, spiked_manacles, 1);   // Spiked manacles
+    case 29 : inv_add(trail_rewardinv, climbing_boots_g, 1);   // Climbing boots (g)
+    case 30 : inv_add(trail_rewardinv, adamant_shield_h1, 1);   // Adamant shield (h1)
+    case 31 : inv_add(trail_rewardinv, adamant_shield_h2, 1);   // Adamant shield (h2)
+    case 32 : inv_add(trail_rewardinv, adamant_shield_h3, 1);   // Adamant shield (h3)
+    case 33 : inv_add(trail_rewardinv, adamant_shield_h4, 1);   // Adamant shield (h4)
+    case 34 : inv_add(trail_rewardinv, adamant_shield_h5, 1);   // Adamant shield (h5)
+    case 35 : inv_add(trail_rewardinv, adamant_helm_h1, 1);   // Adamant helm (h1)
+    case 36 : inv_add(trail_rewardinv, adamant_helm_h2, 1);   // Adamant helm (h2)
+    case 37 : inv_add(trail_rewardinv, adamant_helm_h3, 1);   // Adamant helm (h3)
+    case 38 : inv_add(trail_rewardinv, adamant_helm_h4, 1);   // Adamant helm (h4)
+    case 39 : inv_add(trail_rewardinv, adamant_helm_h5, 1);   // Adamant helm (h5)
+    case 40 : inv_add(trail_rewardinv, adamant_platebody_h1, 1);   // Adamant platebody (h1)
+    case 41 : inv_add(trail_rewardinv, adamant_platebody_h2, 1);   // Adamant platebody (h2)
+    case 42 : inv_add(trail_rewardinv, adamant_platebody_h3, 1);   // Adamant platebody (h3)
+    case 43 : inv_add(trail_rewardinv, adamant_platebody_h4, 1);   // Adamant platebody (h4)
+    case 44 : inv_add(trail_rewardinv, adamant_platebody_h5, 1);   // Adamant platebody (h5)
+    case 45 : inv_add(trail_rewardinv, mithril_full_helm_g, 1);   // Mithril full helm (g)
+    case 46 : inv_add(trail_rewardinv, mithril_platebody_g, 1);   // Mithril platebody (g)
+    case 47 : inv_add(trail_rewardinv, mithril_platelegs_g, 1);   // Mithril platelegs (g)
+    case 48 : inv_add(trail_rewardinv, mithril_plateskirt_g, 1);   // Mithril plateskirt (g)
+    case 49 : inv_add(trail_rewardinv, mithril_kiteshield_g, 1);   // Mithril kiteshield (g)
+    case 50 : inv_add(trail_rewardinv, mithril_full_helm_t, 1);   // Mithril full helm (t)
+    case 51 : inv_add(trail_rewardinv, mithril_platebody_t, 1);   // Mithril platebody (t)
+    case 52 : inv_add(trail_rewardinv, mithril_platelegs_t, 1);   // Mithril platelegs (t)
+    case 53 : inv_add(trail_rewardinv, mithril_plateskirt_t, 1);   // Mithril plateskirt (t)
+    case 54 : inv_add(trail_rewardinv, mithril_kiteshield_t, 1);   // Mithril kiteshield (t)
+    case 55 : inv_add(trail_rewardinv, saradomin_mitre, 1);   // Saradomin mitre
+    case 56 : inv_add(trail_rewardinv, saradomin_cloak, 1);   // Saradomin cloak
+    case 57 : inv_add(trail_rewardinv, guthix_mitre, 1);   // Guthix mitre
+    case 58 : inv_add(trail_rewardinv, guthix_cloak, 1);   // Guthix cloak
+    case 59 : inv_add(trail_rewardinv, zamorak_mitre, 1);   // Zamorak mitre
+    case 60 : inv_add(trail_rewardinv, zamorak_cloak, 1);   // Zamorak cloak
+    case 61 : inv_add(trail_rewardinv, ancient_mitre, 1);   // Ancient mitre
+    case 62 : inv_add(trail_rewardinv, ancient_cloak, 1);   // Ancient cloak
+    case 63 : inv_add(trail_rewardinv, ancient_stole, 1);   // Ancient stole
+    case 64 : inv_add(trail_rewardinv, ancient_crozier, 1);   // Ancient crozier
+    case 65 : inv_add(trail_rewardinv, armadyl_mitre, 1);   // Armadyl mitre
+    case 66 : inv_add(trail_rewardinv, armadyl_cloak, 1);   // Armadyl cloak
+    case 67 : inv_add(trail_rewardinv, armadyl_stole, 1);   // Armadyl stole
+    case 68 : inv_add(trail_rewardinv, armadyl_crozier, 1);   // Armadyl crozier
+    case 69 : inv_add(trail_rewardinv, bandos_mitre, 1);   // Bandos mitre
+    case 70 : inv_add(trail_rewardinv, bandos_cloak, 1);   // Bandos cloak
+    case 71 : inv_add(trail_rewardinv, bandos_stole, 1);   // Bandos stole
+    case 72 : inv_add(trail_rewardinv, bandos_crozier, 1);   // Bandos crozier
+    case 73 : inv_add(trail_rewardinv, pink_boater, 1);   // Pink boater
+    case 74 : inv_add(trail_rewardinv, purple_boater, 1);   // Purple boater
+    case 75 : inv_add(trail_rewardinv, white_boater, 1);   // White boater
+    case 76 : inv_add(trail_rewardinv, white_headband, 1);   // White headband
+    case 77 : inv_add(trail_rewardinv, blue_headband, 1);   // Blue headband
+    case 78 : inv_add(trail_rewardinv, gold_headband, 1);   // Gold headband
+    case 79 : inv_add(trail_rewardinv, pink_headband, 1);   // Pink headband
+    case 80 : inv_add(trail_rewardinv, green_headband, 1);   // Green headband
+    case 81 : inv_add(trail_rewardinv, crier_hat, 1);   // Crier hat
+    case 82 : inv_add(trail_rewardinv, crier_coat, 1);   // Crier coat
+    case 83 : inv_add(trail_rewardinv, crier_bell, 1);   // Crier bell
+    case 84 : inv_add(trail_rewardinv, adamant_cane, 1);   // Adamant cane
+    case 85 : inv_add(trail_rewardinv, cabbage_round_shield, 1);   // Cabbage round shield
+    case 86 : inv_add(trail_rewardinv, black_unicorn_mask, 1);   // Black unicorn mask
+    case 87 : inv_add(trail_rewardinv, white_unicorn_mask, 1);   // White unicorn mask
+    case 88 : inv_add(trail_rewardinv, cat_mask, 1);   // Cat mask
+    case 89 : inv_add(trail_rewardinv, penguin_mask, 1);   // Penguin mask
+    case 90 : inv_add(trail_rewardinv, leprechaun_hat, 1);   // Leprechaun hat
+    case 91 : inv_add(trail_rewardinv, black_leprechaun_hat, 1);   // Black leprechaun hat
+    case 92 : inv_add(trail_rewardinv, wolf_mask, 1);   // Wolf mask
+    case 93 : inv_add(trail_rewardinv, wolf_cloak, 1);   // Wolf cloak
+    case 94 : inv_add(trail_rewardinv, purple_elegant_shirt, 1);   // Purple elegant shirt
+    case 95 : inv_add(trail_rewardinv, purple_elegant_blouse, 1);   // Purple elegant blouse
+    case 96 : inv_add(trail_rewardinv, purple_elegant_legs, 1);   // Purple elegant legs
+    case 97 : inv_add(trail_rewardinv, purple_elegant_skirt, 1);   // Purple elegant skirt
+    case 98 : inv_add(trail_rewardinv, black_elegant_shirt, 1);   // Black elegant shirt
+    case 99 : inv_add(trail_rewardinv, white_elegant_blouse, 1);   // White elegant blouse
+    case 100 : inv_add(trail_rewardinv, black_elegant_legs, 1);   // Black elegant legs
+    case 101 : inv_add(trail_rewardinv, white_elegant_skirt, 1);   // White elegant skirt
+    case 102 : inv_add(trail_rewardinv, pink_elegant_shirt, 1);   // Pink elegant shirt
+    case 103 : inv_add(trail_rewardinv, pink_elegant_blouse, 1);   // Pink elegant blouse
+    case 104 : inv_add(trail_rewardinv, pink_elegant_legs, 1);   // Pink elegant legs
+    case 105 : inv_add(trail_rewardinv, pink_elegant_skirt, 1);   // Pink elegant skirt
+    case 106 : inv_add(trail_rewardinv, gold_elegant_shirt, 1);   // Gold elegant shirt
+    case 107 : inv_add(trail_rewardinv, gold_elegant_blouse, 1);   // Gold elegant blouse
+    case 108 : inv_add(trail_rewardinv, gold_elegant_legs, 1);   // Gold elegant legs
+    case 109 : inv_add(trail_rewardinv, gold_elegant_skirt, 1);   // Gold elegant skirt
 }

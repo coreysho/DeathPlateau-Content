@@ -66,45 +66,304 @@ switch_int ($random) {
     case 19 : inv_add(trail_rewardinv, magic_longbow, 1);
 }
 
+// EVERY UNIQUE OLD SCHOOL PUTS IN A HARD CASKET.
+
 [proc,trail_clue_hard_rare]
-// 34 rares, not 33: the Thread of Elidinis is the last case. OSRS puts it in Tombs of Amascut, a
-// 2022 raid, and the top clue tier is where this build keeps one-off upgrades that have no
-// content of their own to come from - there is no elite tier here, hard IS the top.
-def_int $random = random(34);
+// One rare roll in eight goes to the elite and master table instead - see it below.
+if (random(8) = 0) {
+    gosub(trail_clue_master_rare);
+    return;
+}
+def_int $random = random(158);
 
 switch_int ($random) {
-    case 0 : inv_add(trail_rewardinv, robinhoodhat, 1);
-    case 1 : inv_add(trail_rewardinv, rune_full_helm_trim, 1);
-    case 2 : inv_add(trail_rewardinv, rune_platebody_trim, 1);
-    case 3 : inv_add(trail_rewardinv, rune_platelegs_trim, 1);
-    case 4 : inv_add(trail_rewardinv, rune_kiteshield_trim, 1);
-    case 5 : inv_add(trail_rewardinv, rune_full_helm_gold, 1);
-    case 6 : inv_add(trail_rewardinv, rune_platebody_gold, 1);
-    case 7 : inv_add(trail_rewardinv, rune_platelegs_gold, 1);
-    case 8 : inv_add(trail_rewardinv, rune_kiteshield_gold, 1);
-    case 9 : inv_add(trail_rewardinv, piratehat, 1);
-    case 10 : inv_add(trail_rewardinv, cavalier_brown, 1);
-    case 11 : inv_add(trail_rewardinv, cavalier_dark, 1);
-    case 12 : inv_add(trail_rewardinv, cavalier_black, 1);
-    case 13 : inv_add(trail_rewardinv, rune_full_helm_zamorak, 1);
-    case 14 : inv_add(trail_rewardinv, rune_platebody_zamorak, 1);
-    case 15 : inv_add(trail_rewardinv, rune_platelegs_zamorak, 1);
-    case 16 : inv_add(trail_rewardinv, rune_kiteshield_zamorak, 1);
-    case 17 : inv_add(trail_rewardinv, rune_full_helm_guthix, 1);
-    case 18 : inv_add(trail_rewardinv, rune_platebody_guthix, 1);
-    case 19 : inv_add(trail_rewardinv, rune_platelegs_guthix, 1);
-    case 20 : inv_add(trail_rewardinv, rune_kiteshield_guthix, 1);
-    case 21 : inv_add(trail_rewardinv, rune_full_helm_saradomin, 1);
-    case 22 : inv_add(trail_rewardinv, rune_platebody_saradomin, 1);
-    case 23 : inv_add(trail_rewardinv, rune_platelegs_saradomin, 1);
-    case 24 : inv_add(trail_rewardinv, rune_kiteshield_saradomin, 1);
-    case 25 : inv_add(trail_rewardinv, enchanted_hat, 1);
-    case 26 : inv_add(trail_rewardinv, enchanted_robetop, 1);
-    case 27 : inv_add(trail_rewardinv, enchanted_robelegs, 1);
-    case 28 : inv_add(trail_rewardinv, rune_heraldic_kiteshield1, 1);
-    case 29 : inv_add(trail_rewardinv, rune_heraldic_kiteshield2, 1);
-    case 30 : inv_add(trail_rewardinv, rune_heraldic_kiteshield3, 1);
-    case 31 : inv_add(trail_rewardinv, rune_heraldic_kiteshield4, 1);
-    case 32 : inv_add(trail_rewardinv, rune_heraldic_kiteshield5, 1);
-    case 33 : inv_add(trail_rewardinv, thread_of_elidinis, 1);
+    case 0 : inv_add(trail_rewardinv, robinhoodhat, 1);   // Robin Hood hat
+    case 1 : inv_add(trail_rewardinv, enchanted_hat, 1);   // Enchanted hat
+    case 2 : inv_add(trail_rewardinv, enchanted_robetop, 1);   // Enchanted top
+    case 3 : inv_add(trail_rewardinv, enchanted_robelegs, 1);   // Enchanted robe
+    case 4 : inv_add(trail_rewardinv, rune_full_helm_trim, 1);   // Rune full helm (t)
+    case 5 : inv_add(trail_rewardinv, rune_platebody_trim, 1);   // Rune platebody (t)
+    case 6 : inv_add(trail_rewardinv, rune_platelegs_trim, 1);   // Rune platelegs (t)
+    case 7 : inv_add(trail_rewardinv, rune_kiteshield_trim, 1);   // Rune kiteshield (t)
+    case 8 : inv_add(trail_rewardinv, rune_full_helm_gold, 1);   // Rune full helm (g)
+    case 9 : inv_add(trail_rewardinv, rune_platebody_gold, 1);   // Rune platebody (g)
+    case 10 : inv_add(trail_rewardinv, rune_platelegs_gold, 1);   // Rune platelegs (g)
+    case 11 : inv_add(trail_rewardinv, rune_kiteshield_gold, 1);   // Rune kiteshield (g)
+    case 12 : inv_add(trail_rewardinv, rune_full_helm_zamorak, 1);   // Zamorak full helm
+    case 13 : inv_add(trail_rewardinv, rune_platebody_zamorak, 1);   // Zamorak platebody
+    case 14 : inv_add(trail_rewardinv, rune_platelegs_zamorak, 1);   // Zamorak platelegs
+    case 15 : inv_add(trail_rewardinv, rune_kiteshield_zamorak, 1);   // Zamorak kiteshield
+    case 16 : inv_add(trail_rewardinv, rune_full_helm_guthix, 1);   // Guthix full helm
+    case 17 : inv_add(trail_rewardinv, rune_platebody_guthix, 1);   // Guthix platebody
+    case 18 : inv_add(trail_rewardinv, rune_platelegs_guthix, 1);   // Guthix platelegs
+    case 19 : inv_add(trail_rewardinv, rune_kiteshield_guthix, 1);   // Guthix kiteshield
+    case 20 : inv_add(trail_rewardinv, rune_full_helm_saradomin, 1);   // Saradomin full helm
+    case 21 : inv_add(trail_rewardinv, piratehat, 1);   // Pirate's hat
+    case 22 : inv_add(trail_rewardinv, cavalier_brown, 1);   // Tan cavalier
+    case 23 : inv_add(trail_rewardinv, cavalier_dark, 1);   // Dark cavalier
+    case 24 : inv_add(trail_rewardinv, cavalier_black, 1);   // Black cavalier
+    case 25 : inv_add(trail_rewardinv, rune_plateskirt_trim, 1);   // Rune plateskirt (t)
+    case 26 : inv_add(trail_rewardinv, rune_plateskirt_gold, 1);   // Rune plateskirt (g)
+    case 27 : inv_add(trail_rewardinv, rune_plateskirt_zamorak, 1);   // Zamorak plateskirt
+    case 28 : inv_add(trail_rewardinv, rune_plateskirt_guthix, 1);   // Guthix plateskirt
+    case 29 : inv_add(trail_rewardinv, blue_dragonhide_body_trim_gold, 1);   // Blue d'hide body (g)
+    case 30 : inv_add(trail_rewardinv, blue_dragonhide_body_trim, 1);   // Blue d'hide body (t)
+    case 31 : inv_add(trail_rewardinv, blue_dragonhide_chaps_trim_gold, 1);   // Blue d'hide chaps (g)
+    case 32 : inv_add(trail_rewardinv, blue_dragonhide_chaps_trim, 1);   // Blue d'hide chaps (t)
+    case 33 : inv_add(trail_rewardinv, trick_or_treat_head, 1);   // Zombie head
+    case 34 : inv_add(trail_rewardinv, rune_full_helm_goldplate, 1);   // Gilded full helm
+    case 35 : inv_add(trail_rewardinv, rune_platebody_goldplate, 1);   // Gilded platebody
+    case 36 : inv_add(trail_rewardinv, rune_platelegs_goldplate, 1);   // Gilded platelegs
+    case 37 : inv_add(trail_rewardinv, rune_plateskirt_goldplate, 1);   // Gilded plateskirt
+    case 38 : inv_add(trail_rewardinv, rune_kiteshield_goldplate, 1);   // Gilded kiteshield
+    case 39 : inv_add(trail_rewardinv, magic_comp_bow, 1);   // Magic comp bow
+    case 40 : inv_add(trail_rewardinv, amulet_of_glory_t4, 1);   // Amulet of glory (t4)
+    case 41 : inv_add(trail_rewardinv, dragon_boots_ornament_kit, 1);   // Dragon boots ornament kit
+    case 42 : inv_add(trail_rewardinv, rune_shield_h1, 1);   // Rune shield (h1)
+    case 43 : inv_add(trail_rewardinv, rune_shield_h2, 1);   // Rune shield (h2)
+    case 44 : inv_add(trail_rewardinv, rune_shield_h3, 1);   // Rune shield (h3)
+    case 45 : inv_add(trail_rewardinv, rune_shield_h4, 1);   // Rune shield (h4)
+    case 46 : inv_add(trail_rewardinv, rune_shield_h5, 1);   // Rune shield (h5)
+    case 47 : inv_add(trail_rewardinv, rune_helm_h1, 1);   // Rune helm (h1)
+    case 48 : inv_add(trail_rewardinv, rune_helm_h2, 1);   // Rune helm (h2)
+    case 49 : inv_add(trail_rewardinv, rune_helm_h3, 1);   // Rune helm (h3)
+    case 50 : inv_add(trail_rewardinv, rune_helm_h4, 1);   // Rune helm (h4)
+    case 51 : inv_add(trail_rewardinv, rune_helm_h5, 1);   // Rune helm (h5)
+    case 52 : inv_add(trail_rewardinv, rune_platebody_h1, 1);   // Rune platebody (h1)
+    case 53 : inv_add(trail_rewardinv, rune_platebody_h2, 1);   // Rune platebody (h2)
+    case 54 : inv_add(trail_rewardinv, rune_platebody_h3, 1);   // Rune platebody (h3)
+    case 55 : inv_add(trail_rewardinv, rune_platebody_h4, 1);   // Rune platebody (h4)
+    case 56 : inv_add(trail_rewardinv, rune_platebody_h5, 1);   // Rune platebody (h5)
+    case 57 : inv_add(trail_rewardinv, saradomin_platebody, 1);   // Saradomin platebody
+    case 58 : inv_add(trail_rewardinv, saradomin_platelegs, 1);   // Saradomin platelegs
+    case 59 : inv_add(trail_rewardinv, saradomin_plateskirt, 1);   // Saradomin plateskirt
+    case 60 : inv_add(trail_rewardinv, saradomin_kiteshield, 1);   // Saradomin kiteshield
+    case 61 : inv_add(trail_rewardinv, ancient_full_helm, 1);   // Ancient full helm
+    case 62 : inv_add(trail_rewardinv, ancient_platebody, 1);   // Ancient platebody
+    case 63 : inv_add(trail_rewardinv, ancient_platelegs, 1);   // Ancient platelegs
+    case 64 : inv_add(trail_rewardinv, ancient_plateskirt, 1);   // Ancient plateskirt
+    case 65 : inv_add(trail_rewardinv, ancient_kiteshield, 1);   // Ancient kiteshield
+    case 66 : inv_add(trail_rewardinv, armadyl_full_helm, 1);   // Armadyl full helm
+    case 67 : inv_add(trail_rewardinv, armadyl_platebody, 1);   // Armadyl platebody
+    case 68 : inv_add(trail_rewardinv, armadyl_platelegs, 1);   // Armadyl platelegs
+    case 69 : inv_add(trail_rewardinv, armadyl_plateskirt, 1);   // Armadyl plateskirt
+    case 70 : inv_add(trail_rewardinv, armadyl_kiteshield, 1);   // Armadyl kiteshield
+    case 71 : inv_add(trail_rewardinv, bandos_full_helm, 1);   // Bandos full helm
+    case 72 : inv_add(trail_rewardinv, bandos_platebody, 1);   // Bandos platebody
+    case 73 : inv_add(trail_rewardinv, bandos_platelegs, 1);   // Bandos platelegs
+    case 74 : inv_add(trail_rewardinv, bandos_plateskirt, 1);   // Bandos plateskirt
+    case 75 : inv_add(trail_rewardinv, bandos_kiteshield, 1);   // Bandos kiteshield
+    case 76 : inv_add(trail_rewardinv, red_dhide_body_g, 1);   // Red d'hide body (g)
+    case 77 : inv_add(trail_rewardinv, red_dhide_body_t, 1);   // Red d'hide body (t)
+    case 78 : inv_add(trail_rewardinv, red_dhide_chaps_g, 1);   // Red d'hide chaps (g)
+    case 79 : inv_add(trail_rewardinv, red_dhide_chaps_t, 1);   // Red d'hide chaps (t)
+    case 80 : inv_add(trail_rewardinv, saradomin_coif, 1);   // Saradomin coif
+    case 81 : inv_add(trail_rewardinv, saradomin_dhide_body, 1);   // Saradomin d'hide body
+    case 82 : inv_add(trail_rewardinv, saradomin_chaps, 1);   // Saradomin chaps
+    case 83 : inv_add(trail_rewardinv, saradomin_bracers, 1);   // Saradomin bracers
+    case 84 : inv_add(trail_rewardinv, saradomin_dhide_boots, 1);   // Saradomin d'hide boots
+    case 85 : inv_add(trail_rewardinv, saradomin_dhide_shield, 1);   // Saradomin d'hide shield
+    case 86 : inv_add(trail_rewardinv, guthix_coif, 1);   // Guthix coif
+    case 87 : inv_add(trail_rewardinv, guthix_dhide_body, 1);   // Guthix d'hide body
+    case 88 : inv_add(trail_rewardinv, guthix_chaps, 1);   // Guthix chaps
+    case 89 : inv_add(trail_rewardinv, guthix_bracers, 1);   // Guthix bracers
+    case 90 : inv_add(trail_rewardinv, guthix_dhide_boots, 1);   // Guthix d'hide boots
+    case 91 : inv_add(trail_rewardinv, guthix_dhide_shield, 1);   // Guthix d'hide shield
+    case 92 : inv_add(trail_rewardinv, zamorak_coif, 1);   // Zamorak coif
+    case 93 : inv_add(trail_rewardinv, zamorak_dhide_body, 1);   // Zamorak d'hide body
+    case 94 : inv_add(trail_rewardinv, zamorak_chaps, 1);   // Zamorak chaps
+    case 95 : inv_add(trail_rewardinv, zamorak_bracers, 1);   // Zamorak bracers
+    case 96 : inv_add(trail_rewardinv, zamorak_dhide_boots, 1);   // Zamorak d'hide boots
+    case 97 : inv_add(trail_rewardinv, zamorak_dhide_shield, 1);   // Zamorak d'hide shield
+    case 98 : inv_add(trail_rewardinv, bandos_coif, 1);   // Bandos coif
+    case 99 : inv_add(trail_rewardinv, bandos_dhide_body, 1);   // Bandos d'hide body
+    case 100 : inv_add(trail_rewardinv, bandos_chaps, 1);   // Bandos chaps
+    case 101 : inv_add(trail_rewardinv, bandos_bracers, 1);   // Bandos bracers
+    case 102 : inv_add(trail_rewardinv, bandos_dhide_boots, 1);   // Bandos d'hide boots
+    case 103 : inv_add(trail_rewardinv, bandos_dhide_shield, 1);   // Bandos d'hide shield
+    case 104 : inv_add(trail_rewardinv, armadyl_coif, 1);   // Armadyl coif
+    case 105 : inv_add(trail_rewardinv, armadyl_dhide_body, 1);   // Armadyl d'hide body
+    case 106 : inv_add(trail_rewardinv, armadyl_chaps, 1);   // Armadyl chaps
+    case 107 : inv_add(trail_rewardinv, armadyl_bracers, 1);   // Armadyl bracers
+    case 108 : inv_add(trail_rewardinv, armadyl_dhide_boots, 1);   // Armadyl d'hide boots
+    case 109 : inv_add(trail_rewardinv, armadyl_dhide_shield, 1);   // Armadyl d'hide shield
+    case 110 : inv_add(trail_rewardinv, ancient_coif, 1);   // Ancient coif
+    case 111 : inv_add(trail_rewardinv, ancient_dhide_body, 1);   // Ancient d'hide body
+    case 112 : inv_add(trail_rewardinv, ancient_chaps, 1);   // Ancient chaps
+    case 113 : inv_add(trail_rewardinv, ancient_bracers, 1);   // Ancient bracers
+    case 114 : inv_add(trail_rewardinv, ancient_dhide_boots, 1);   // Ancient d'hide boots
+    case 115 : inv_add(trail_rewardinv, ancient_dhide_shield, 1);   // Ancient d'hide shield
+    case 116 : inv_add(trail_rewardinv, saradomin_stole, 1);   // Saradomin stole
+    case 117 : inv_add(trail_rewardinv, saradomin_crozier, 1);   // Saradomin crozier
+    case 118 : inv_add(trail_rewardinv, guthix_stole, 1);   // Guthix stole
+    case 119 : inv_add(trail_rewardinv, guthix_crozier, 1);   // Guthix crozier
+    case 120 : inv_add(trail_rewardinv, zamorak_stole, 1);   // Zamorak stole
+    case 121 : inv_add(trail_rewardinv, zamorak_crozier, 1);   // Zamorak crozier
+    case 122 : inv_add(trail_rewardinv, cyclops_head, 1);   // Cyclops head
+    case 123 : inv_add(trail_rewardinv, red_cavalier, 1);   // Red cavalier
+    case 124 : inv_add(trail_rewardinv, white_cavalier, 1);   // White cavalier
+    case 125 : inv_add(trail_rewardinv, navy_cavalier, 1);   // Navy cavalier
+    case 126 : inv_add(trail_rewardinv, pith_helmet, 1);   // Pith helmet
+    case 127 : inv_add(trail_rewardinv, explorer_backpack, 1);   // Explorer backpack
+    case 128 : inv_add(trail_rewardinv, green_dragon_mask, 1);   // Green dragon mask
+    case 129 : inv_add(trail_rewardinv, blue_dragon_mask, 1);   // Blue dragon mask
+    case 130 : inv_add(trail_rewardinv, red_dragon_mask, 1);   // Red dragon mask
+    case 131 : inv_add(trail_rewardinv, black_dragon_mask, 1);   // Black dragon mask
+    case 132 : inv_add(trail_rewardinv, nunchaku, 1);   // Nunchaku
+    case 133 : inv_add(trail_rewardinv, rune_cane, 1);   // Rune cane
+    case 134 : inv_add(trail_rewardinv, dual_sai, 1);   // Dual sai
+    case 135 : inv_add(trail_rewardinv, thieving_bag, 1);   // Thieving bag
+    case 136 : inv_add(trail_rewardinv, rune_defender_ornament_kit, 1);   // Rune defender ornament kit
+    case 137 : inv_add(trail_rewardinv, berserker_necklace_ornament_kit, 1);   // Berserker necklace ornament kit
+    case 138 : inv_add(trail_rewardinv, tzhaar_ket_om_ornament_kit, 1);   // Tzhaar-ket-om ornament kit
+    case 139 : inv_add(trail_rewardinv, gilded_med_helm, 1);   // Gilded med helm
+    case 140 : inv_add(trail_rewardinv, gilded_chainbody, 1);   // Gilded chainbody
+    case 141 : inv_add(trail_rewardinv, gilded_sq_shield, 1);   // Gilded sq shield
+    case 142 : inv_add(trail_rewardinv, gilded_2h_sword, 1);   // Gilded 2h sword
+    case 143 : inv_add(trail_rewardinv, gilded_spear, 1);   // Gilded spear
+    case 144 : inv_add(trail_rewardinv, gilded_hasta, 1);   // Gilded hasta
+    case 145 : inv_add(trail_rewardinv, third_age_full_helmet, 1);   // 3rd age full helmet
+    case 146 : inv_add(trail_rewardinv, third_age_platebody, 1);   // 3rd age platebody
+    case 147 : inv_add(trail_rewardinv, third_age_platelegs, 1);   // 3rd age platelegs
+    case 148 : inv_add(trail_rewardinv, third_age_plateskirt, 1);   // 3rd age plateskirt
+    case 149 : inv_add(trail_rewardinv, third_age_kiteshield, 1);   // 3rd age kiteshield
+    case 150 : inv_add(trail_rewardinv, third_age_range_coif, 1);   // 3rd age range coif
+    case 151 : inv_add(trail_rewardinv, third_age_range_top, 1);   // 3rd age range top
+    case 152 : inv_add(trail_rewardinv, third_age_range_legs, 1);   // 3rd age range legs
+    case 153 : inv_add(trail_rewardinv, third_age_vambraces, 1);   // 3rd age vambraces
+    case 154 : inv_add(trail_rewardinv, third_age_mage_hat, 1);   // 3rd age mage hat
+    case 155 : inv_add(trail_rewardinv, third_age_robe_top, 1);   // 3rd age robe top
+    case 156 : inv_add(trail_rewardinv, third_age_robe, 1);   // 3rd age robe
+    case 157 : inv_add(trail_rewardinv, third_age_amulet, 1);   // 3rd age amulet
+}
+
+// THE ELITE AND MASTER UNIQUES, WHICH HAVE NOWHERE ELSE TO COME FROM.
+//
+// This build has easy, medium and hard trails and no elite or master, so everything Old
+// School puts behind those two would be unreachable: 3rd age druidic, the gilded tools, the
+// tuxedos, Ankou, the mummy, the demon masks, Bloodhound. They come out of the hard casket
+// instead, reached from its rare roll one time in eight - about 1 in 780 rolls, and with four
+// to six rolls a casket, roughly one hard casket in 150 for any of them at all. 112 entries,
+// so a particular one is a long way the other side of that.
+//
+// Kourend's scarves and hoods are left out for the same reason as its banners, and so are the
+// seven ornament kits whose base item this build does not have - occult, torture, anguish,
+// tormented, dragon full helm, dragon kiteshield and dragon platebody.
+
+[proc,trail_clue_master_rare]
+def_int $random = random(112);
+
+switch_int ($random) {
+    case 0 : inv_add(trail_rewardinv, dragon_chainbody_ornament_kit, 1);   // Dragon chainbody ornament kit
+    case 1 : inv_add(trail_rewardinv, dragon_legs_skirt_ornament_kit, 1);   // Dragon legs/skirt ornament kit
+    case 2 : inv_add(trail_rewardinv, dragon_sq_shield_ornament_kit, 1);   // Dragon sq shield ornament kit
+    case 3 : inv_add(trail_rewardinv, dragon_scimitar_ornament_kit, 1);   // Dragon scimitar ornament kit
+    case 4 : inv_add(trail_rewardinv, fury_ornament_kit, 1);   // Fury ornament kit
+    case 5 : inv_add(trail_rewardinv, light_infinity_colour_kit, 1);   // Light infinity colour kit
+    case 6 : inv_add(trail_rewardinv, dark_infinity_colour_kit, 1);   // Dark infinity colour kit
+    case 7 : inv_add(trail_rewardinv, royal_crown, 1);   // Royal crown
+    case 8 : inv_add(trail_rewardinv, royal_gown_top, 1);   // Royal gown top
+    case 9 : inv_add(trail_rewardinv, royal_gown_bottom, 1);   // Royal gown bottom
+    case 10 : inv_add(trail_rewardinv, royal_sceptre, 1);   // Royal sceptre
+    case 11 : inv_add(trail_rewardinv, musketeer_hat, 1);   // Musketeer hat
+    case 12 : inv_add(trail_rewardinv, musketeer_tabard, 1);   // Musketeer tabard
+    case 13 : inv_add(trail_rewardinv, musketeer_pants, 1);   // Musketeer pants
+    case 14 : inv_add(trail_rewardinv, black_dhide_body_g, 1);   // Black d'hide body (g)
+    case 15 : inv_add(trail_rewardinv, black_dhide_body_t, 1);   // Black d'hide body (t)
+    case 16 : inv_add(trail_rewardinv, black_dhide_chaps_g, 1);   // Black d'hide chaps (g)
+    case 17 : inv_add(trail_rewardinv, black_dhide_chaps_t, 1);   // Black d'hide chaps (t)
+    case 18 : inv_add(trail_rewardinv, rangers_tunic, 1);   // Rangers' tunic
+    case 19 : inv_add(trail_rewardinv, ranger_gloves, 1);   // Ranger gloves
+    case 20 : inv_add(trail_rewardinv, holy_wraps, 1);   // Holy wraps
+    case 21 : inv_add(trail_rewardinv, bronze_dragon_mask, 1);   // Bronze dragon mask
+    case 22 : inv_add(trail_rewardinv, iron_dragon_mask, 1);   // Iron dragon mask
+    case 23 : inv_add(trail_rewardinv, steel_dragon_mask, 1);   // Steel dragon mask
+    case 24 : inv_add(trail_rewardinv, mithril_dragon_mask, 1);   // Mithril dragon mask
+    case 25 : inv_add(trail_rewardinv, adamant_dragon_mask, 1);   // Adamant dragon mask
+    case 26 : inv_add(trail_rewardinv, rune_dragon_mask, 1);   // Rune dragon mask
+    case 27 : inv_add(trail_rewardinv, katana, 1);   // Katana
+    case 28 : inv_add(trail_rewardinv, dragon_cane, 1);   // Dragon cane
+    case 29 : inv_add(trail_rewardinv, bucket_helm, 1);   // Bucket helm
+    case 30 : inv_add(trail_rewardinv, blacksmith_s_helm, 1);   // Blacksmith's helm
+    case 31 : inv_add(trail_rewardinv, deerstalker, 1);   // Deerstalker
+    case 32 : inv_add(trail_rewardinv, afro, 1);   // Afro
+    case 33 : inv_add(trail_rewardinv, big_pirate_hat, 1);   // Big pirate hat
+    case 34 : inv_add(trail_rewardinv, top_hat, 1);   // Top hat
+    case 35 : inv_add(trail_rewardinv, monocle, 1);   // Monocle
+    case 36 : inv_add(trail_rewardinv, briefcase, 1);   // Briefcase
+    case 37 : inv_add(trail_rewardinv, sagacious_spectacles, 1);   // Sagacious spectacles
+    case 38 : inv_add(trail_rewardinv, dark_bow_tie, 1);   // Dark bow tie
+    case 39 : inv_add(trail_rewardinv, dark_tuxedo_jacket, 1);   // Dark tuxedo jacket
+    case 40 : inv_add(trail_rewardinv, dark_tuxedo_cuffs, 1);   // Dark tuxedo cuffs
+    case 41 : inv_add(trail_rewardinv, dark_trousers, 1);   // Dark trousers
+    case 42 : inv_add(trail_rewardinv, dark_tuxedo_shoes, 1);   // Dark tuxedo shoes
+    case 43 : inv_add(trail_rewardinv, light_bow_tie, 1);   // Light bow tie
+    case 44 : inv_add(trail_rewardinv, light_tuxedo_jacket, 1);   // Light tuxedo jacket
+    case 45 : inv_add(trail_rewardinv, light_tuxedo_cuffs, 1);   // Light tuxedo cuffs
+    case 46 : inv_add(trail_rewardinv, light_trousers, 1);   // Light trousers
+    case 47 : inv_add(trail_rewardinv, light_tuxedo_shoes, 1);   // Light tuxedo shoes
+    case 48 : inv_add(trail_rewardinv, rangers_tights, 1);   // Rangers' tights
+    case 49 : inv_add(trail_rewardinv, uri_s_hat, 1);   // Uri's hat
+    case 50 : inv_add(trail_rewardinv, giant_boot, 1);   // Giant boot
+    case 51 : inv_add(trail_rewardinv, fremennik_kilt, 1);   // Fremennik kilt
+    case 52 : inv_add(trail_rewardinv, ring_of_nature, 1);   // Ring of nature
+    case 53 : inv_add(trail_rewardinv, gilded_scimitar, 1);   // Gilded scimitar
+    case 54 : inv_add(trail_rewardinv, gilded_boots, 1);   // Gilded boots
+    case 55 : inv_add(trail_rewardinv, gilded_coif, 1);   // Gilded coif
+    case 56 : inv_add(trail_rewardinv, gilded_dhide_vambraces, 1);   // Gilded d'hide vambraces
+    case 57 : inv_add(trail_rewardinv, gilded_dhide_body, 1);   // Gilded d'hide body
+    case 58 : inv_add(trail_rewardinv, gilded_dhide_chaps, 1);   // Gilded d'hide chaps
+    case 59 : inv_add(trail_rewardinv, gilded_pickaxe, 1);   // Gilded pickaxe
+    case 60 : inv_add(trail_rewardinv, gilded_axe, 1);   // Gilded axe
+    case 61 : inv_add(trail_rewardinv, gilded_spade, 1);   // Gilded spade
+    case 62 : inv_add(trail_rewardinv, third_age_longsword, 1);   // 3rd age longsword
+    case 63 : inv_add(trail_rewardinv, third_age_wand, 1);   // 3rd age wand
+    case 64 : inv_add(trail_rewardinv, third_age_cloak, 1);   // 3rd age cloak
+    case 65 : inv_add(trail_rewardinv, third_age_bow, 1);   // 3rd age bow
+    case 66 : inv_add(trail_rewardinv, dragon_defender_ornament_kit, 1);   // Dragon defender ornament kit
+    case 67 : inv_add(trail_rewardinv, hood_of_darkness, 1);   // Hood of darkness
+    case 68 : inv_add(trail_rewardinv, robe_top_of_darkness, 1);   // Robe top of darkness
+    case 69 : inv_add(trail_rewardinv, gloves_of_darkness, 1);   // Gloves of darkness
+    case 70 : inv_add(trail_rewardinv, robe_bottom_of_darkness, 1);   // Robe bottom of darkness
+    case 71 : inv_add(trail_rewardinv, boots_of_darkness, 1);   // Boots of darkness
+    case 72 : inv_add(trail_rewardinv, samurai_kasa, 1);   // Samurai kasa
+    case 73 : inv_add(trail_rewardinv, samurai_shirt, 1);   // Samurai shirt
+    case 74 : inv_add(trail_rewardinv, samurai_gloves, 1);   // Samurai gloves
+    case 75 : inv_add(trail_rewardinv, samurai_greaves, 1);   // Samurai greaves
+    case 76 : inv_add(trail_rewardinv, samurai_boots, 1);   // Samurai boots
+    case 77 : inv_add(trail_rewardinv, old_demon_mask, 1);   // Old demon mask
+    case 78 : inv_add(trail_rewardinv, lesser_demon_mask, 1);   // Lesser demon mask
+    case 79 : inv_add(trail_rewardinv, greater_demon_mask, 1);   // Greater demon mask
+    case 80 : inv_add(trail_rewardinv, black_demon_mask, 1);   // Black demon mask
+    case 81 : inv_add(trail_rewardinv, jungle_demon_mask, 1);   // Jungle demon mask
+    case 82 : inv_add(trail_rewardinv, left_eye_patch, 1);   // Left eye patch
+    case 83 : inv_add(trail_rewardinv, bowl_wig, 1);   // Bowl wig
+    case 84 : inv_add(trail_rewardinv, ale_of_the_gods, 1);   // Ale of the gods
+    case 85 : inv_add(trail_rewardinv, obsidian_cape_r, 1);   // Obsidian cape (r)
+    case 86 : inv_add(trail_rewardinv, fancy_tiara, 1);   // Fancy tiara
+    case 87 : inv_add(trail_rewardinv, half_moon_spectacles, 1);   // Half moon spectacles
+    case 88 : inv_add(trail_rewardinv, armadyl_godsword_ornament_kit, 1);   // Armadyl godsword ornament kit
+    case 89 : inv_add(trail_rewardinv, bandos_godsword_ornament_kit, 1);   // Bandos godsword ornament kit
+    case 90 : inv_add(trail_rewardinv, saradomin_godsword_ornament_kit, 1);   // Saradomin godsword ornament kit
+    case 91 : inv_add(trail_rewardinv, zamorak_godsword_ornament_kit, 1);   // Zamorak godsword ornament kit
+    case 92 : inv_add(trail_rewardinv, ankou_mask, 1);   // Ankou mask
+    case 93 : inv_add(trail_rewardinv, ankou_top, 1);   // Ankou top
+    case 94 : inv_add(trail_rewardinv, ankou_gloves, 1);   // Ankou gloves
+    case 95 : inv_add(trail_rewardinv, ankou_s_leggings, 1);   // Ankou's leggings
+    case 96 : inv_add(trail_rewardinv, ankou_socks, 1);   // Ankou socks
+    case 97 : inv_add(trail_rewardinv, mummy_s_head, 1);   // Mummy's head
+    case 98 : inv_add(trail_rewardinv, mummy_s_body, 1);   // Mummy's body
+    case 99 : inv_add(trail_rewardinv, mummy_s_hands, 1);   // Mummy's hands
+    case 100 : inv_add(trail_rewardinv, mummy_s_legs, 1);   // Mummy's legs
+    case 101 : inv_add(trail_rewardinv, mummy_s_feet, 1);   // Mummy's feet
+    case 102 : inv_add(trail_rewardinv, bucket_helm_g, 1);   // Bucket helm (g)
+    case 103 : inv_add(trail_rewardinv, ring_of_coins, 1);   // Ring of coins
+    case 104 : inv_add(trail_rewardinv, third_age_druidic_robe_top, 1);   // 3rd age druidic robe top
+    case 105 : inv_add(trail_rewardinv, third_age_druidic_robe_bottoms, 1);   // 3rd age druidic robe bottoms
+    case 106 : inv_add(trail_rewardinv, third_age_druidic_cloak, 1);   // 3rd age druidic cloak
+    case 107 : inv_add(trail_rewardinv, third_age_druidic_staff, 1);   // 3rd age druidic staff
+    case 108 : inv_add(trail_rewardinv, third_age_pickaxe, 1);   // 3rd age pickaxe
+    case 109 : inv_add(trail_rewardinv, third_age_axe, 1);   // 3rd age axe
+    case 110 : inv_add(trail_rewardinv, bloodhound, 1);   // Bloodhound
+    case 111 : inv_add(trail_rewardinv, ring_of_third_age, 1);   // Ring of 3rd age
 }

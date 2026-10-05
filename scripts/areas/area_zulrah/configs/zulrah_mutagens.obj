@@ -1,0 +1,162 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[tanzanite_mutagen]
+name=Tanzanite mutagen
+desc=Triggers mutation in a serpentine helm.
+model=obj_tanzanite_mutagen
+2dzoom=905
+2dxan=189
+2dyan=215
+recol1s=15855
+recol1d=13305
+weight=50g
+cost=9500
+members=yes
+tradeable=no
+param=mutagen_from,serpentine_helm
+param=mutagen_into,tanzanite_helm
+param=mutagen_from2,serpentine_helm_uncharged
+param=mutagen_into2,tanzanite_helm_uncharged
+
+[magma_mutagen]
+name=Magma mutagen
+desc=Triggers mutation in a serpentine helm.
+model=obj_magma_mutagen
+2dzoom=905
+2dxan=189
+2dyan=215
+recol1s=15855
+recol1d=31009
+weight=50g
+cost=9500
+members=yes
+tradeable=no
+param=mutagen_from,serpentine_helm
+param=mutagen_into,magma_helm
+param=mutagen_from2,serpentine_helm_uncharged
+param=mutagen_into2,magma_helm_uncharged
+
+[tanzanite_helm]
+name=Tanzanite helm
+desc=Protects the wearer from poison and venom, and helps envenom monsters.
+model=obj_tanzanite_helm
+manwear=obj_tanzanite_helm_manwear,0
+womanwear=obj_tanzanite_helm_womanwear,0
+manhead=obj_tanzanite_helm_manhead
+womanhead=obj_tanzanite_helm_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dxan=215
+2dyan=1724
+2dyof=-17
+weight=900g
+cost=110500
+members=yes
+tradeable=no
+iop2=Wear
+iop3=Check
+iop4=Restore
+iop5=Uncharge
+tradeable=no
+iop2=Wear
+iop3=Check
+iop5=Uncharge
+category=serpentine_helm
+param=magicattack,-5
+param=rangeattack,-5
+param=stabdefence,52
+param=slashdefence,55
+param=crushdefence,58
+param=rangedefence,50
+param=strengthbonus,5
+param=serpentine_uncharged,tanzanite_helm_uncharged
+wearop1=Check
+
+[magma_helm]
+name=Magma helm
+desc=Protects the wearer from poison and venom, and helps envenom monsters.
+model=obj_magma_helm
+manwear=obj_magma_helm_manwear,0
+womanwear=obj_magma_helm_womanwear,0
+manhead=obj_magma_helm_manhead
+womanhead=obj_magma_helm_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dxan=215
+2dyan=1724
+2dyof=-17
+weight=900g
+cost=110500
+members=yes
+tradeable=no
+iop2=Wear
+iop3=Check
+iop4=Restore
+iop5=Uncharge
+tradeable=no
+iop2=Wear
+iop3=Check
+iop5=Uncharge
+category=serpentine_helm
+param=magicattack,-5
+param=rangeattack,-5
+param=stabdefence,52
+param=slashdefence,55
+param=crushdefence,58
+param=rangedefence,50
+param=strengthbonus,5
+param=serpentine_uncharged,magma_helm_uncharged
+wearop1=Check
+
+[tanzanite_helm_uncharged]
+name=Tanzanite helm (uncharged)
+desc=Needs to be charged with Zulrah's scales.
+model=obj_tanzanite_helm_uncharged
+manwear=obj_tanzanite_helm_uncharged_manwear,0
+womanwear=obj_tanzanite_helm_uncharged_womanwear,0
+manhead=obj_tanzanite_helm_uncharged_manhead
+womanhead=obj_tanzanite_helm_uncharged_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dyan=1724
+2dxof=-1
+2dyof=-1
+weight=900g
+cost=110400
+members=yes
+tradeable=no
+iop4=Restore
+category=serpentine_helm
+param=magicattack,-5
+param=rangeattack,-5
+param=serpentine_charged,tanzanite_helm
+
+[magma_helm_uncharged]
+name=Magma helm (uncharged)
+desc=Needs to be charged with Zulrah's scales.
+model=obj_magma_helm_uncharged
+manwear=obj_magma_helm_uncharged_manwear,0
+womanwear=obj_magma_helm_uncharged_womanwear,0
+manhead=obj_magma_helm_uncharged_manhead
+womanhead=obj_magma_helm_uncharged_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=700
+2dyan=1724
+2dxof=-1
+2dyof=-1
+weight=900g
+cost=110400
+members=yes
+tradeable=no
+iop4=Restore
+category=serpentine_helm
+param=magicattack,-5
+param=rangeattack,-5
+param=serpentine_charged,magma_helm

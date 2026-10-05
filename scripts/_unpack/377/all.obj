@@ -15363,6 +15363,8 @@ param=slashdefence,52
 param=crushdefence,48
 param=rangedefence,50
 param=defend_anim,human_shield_defence
+param=ornament_kit,dragon_sq_shield_ornament_kit
+param=ornament_into,dragon_sq_shield_g
 
 [cert_dragon_sq_shield]
 certlink=dragon_sq_shield
@@ -36473,6 +36475,8 @@ param=slashdefence,93
 param=crushdefence,98
 param=magicdefence,-3
 param=rangedefence,82
+param=ornament_kit,dragon_chainbody_ornament_kit
+param=ornament_into,dragon_chainbody_g
 
 [cert_dragon_chainbody]
 certlink=dragon_chainbody
@@ -48019,6 +48023,8 @@ param=slashdefence,66
 param=crushdefence,63
 param=magicdefence,-4
 param=rangedefence,65
+param=ornament_kit,dragon_legs_skirt_ornament_kit
+param=ornament_into,dragon_platelegs_g
 
 [cert_dragon_platelegs]
 certlink=dragon_platelegs
@@ -54399,6 +54405,8 @@ param=slashdefence,66
 param=crushdefence,63
 param=magicdefence,-4
 param=rangedefence,65
+param=ornament_kit,dragon_legs_skirt_ornament_kit
+param=ornament_into,dragon_plateskirt_g
 
 [cert_dragon_plateskirt]
 certlink=dragon_plateskirt
@@ -54432,6 +54440,8 @@ param=slash_sound,hacksword_slash
 param=stab_sound,hacksword_stab
 param=specwep,^true
 param=sa_energy,550
+param=ornament_kit,dragon_scimitar_ornament_kit
+param=ornament_into,dragon_scimitar_or
 
 [cert_dragon_scimitar]
 certlink=dragon_scimitar
@@ -83005,6 +83015,8 @@ param=magicdefence,15
 param=rangedefence,15
 param=strengthbonus,8
 param=prayerbonus,5
+param=ornament_kit,fury_ornament_kit
+param=ornament_into,amulet_of_fury_or
 
 [cert_enchanted_onyx_amulet]
 certlink=enchanted_onyx_amulet
@@ -87842,6 +87854,10 @@ weight=5lb
 category=armour_body
 param=magicattack,22
 param=magicdefence,22
+param=ornament_kit,light_infinity_colour_kit
+param=ornament_into,light_infinity_top
+param=ornament_kit2,dark_infinity_colour_kit
+param=ornament_into2,dark_infinity_top
 
 [cert_magictraining_infinitytop]
 certlink=magictraining_infinitytop
@@ -87866,6 +87882,10 @@ weight=1lb
 category=armour_helmet
 param=magicattack,6
 param=magicdefence,6
+param=ornament_kit,light_infinity_colour_kit
+param=ornament_into,light_infinity_hat
+param=ornament_kit2,dark_infinity_colour_kit
+param=ornament_into2,dark_infinity_hat
 
 [cert_magictraining_infinityhat]
 certlink=magictraining_infinityhat
@@ -87937,6 +87957,10 @@ weight=4lb
 category=armour_legs
 param=magicattack,17
 param=magicdefence,17
+param=ornament_kit,light_infinity_colour_kit
+param=ornament_into,light_infinity_bottoms
+param=ornament_kit2,dark_infinity_colour_kit
+param=ornament_into2,dark_infinity_bottoms
 
 [cert_magictraining_infinitybottom]
 certlink=magictraining_infinitybottom

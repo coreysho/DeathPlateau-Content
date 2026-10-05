@@ -406,3 +406,8 @@
 ^swamp_trident_level = 78
 ^swamp_trident_max_charges = 2500
 ^swamp_trident_maxhit_offset = 2
+
+// THE TWO MUTAGENS, 1/13,106 a kill each in Old School - the rarest thing it drops. Rolled once
+// per kill rather than per roll: the wiki's number is a KILL rate and Zulrah rolls its table
+// twice, so putting it on a roll would hand them out at double the rate.
+^zulrah_mutagen_rate = 13106

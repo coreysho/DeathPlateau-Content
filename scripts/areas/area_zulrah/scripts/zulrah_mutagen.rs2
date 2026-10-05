@@ -1,0 +1,51 @@
+// THE TWO MUTAGENS (2026-10-04). Zulrah's rarest drops: a tanzanite mutagen and a magma mutagen,
+// each of which permanently recolours a serpentine helm.
+//
+// A MUTAGEN IS PAINT AND NOTHING ELSE. The tanzanite and magma helms have the serpentine helm's
+// numbers exactly, take the same scales, degrade on the same clock and check the same way - which
+// is why serpentine_helm.rs2 now works off the category and two params instead of naming its two
+// records in six places. The mutated pairs got all of that for free.
+//
+// AND IT IS PERMANENT, which is the one thing here that cannot be undone. Old School does not let
+// you take a mutagen back off, so this asks first - the only confirmation in either of these two
+// files, and it earns it.
+//
+// EITHER STATE OF THE HELM takes a mutagen and the result keeps that state: charged in, charged
+// out, with the scales untouched (they live in %serpentine_helm_charges, on the player, so the
+// swap never touches them). That is what the second param slot is for.
+//
+// There is no [opheldu,] on the mutagens. The helm already carries one for its scales and
+// OpHeldUHandler tries both halves of a use, so a second trigger here would be two scripts racing
+// for the same click - serpentine_helm.rs2 hands the mutagen straight to this file instead.
+
+[label,zulrah_mutagen_use](obj $mutagen, obj $helm, int $slot)
+def_namedobj $into = null;
+if ($helm = oc_param($mutagen, mutagen_from)) {
+    $into = oc_param($mutagen, mutagen_into);
+} else if ($helm = oc_param($mutagen, mutagen_from2)) {
+    $into = oc_param($mutagen, mutagen_into2);
+}
+if ($into = null) {
+    // An already-mutated helm is the likely wrong target: it is a serpentine helm in every way
+    // that matters and a player may well not remember which one they are holding.
+    if (oc_category($helm) = serpentine_helm) {
+        mes("That helm has already been mutated.");
+    } else {
+        ~displaymessage(^dm_default);
+    }
+    return;
+}
+def_int $keep = %serpentine_helm_charges;
+~mesbox("Using the <lowercase(oc_name($mutagen))> on your <lowercase(oc_name($helm))> cannot be undone.");
+if (~p_choice2("Use the <lowercase(oc_name($mutagen))>.", 1, "Leave it alone.", 2) ! 1) {
+    return;
+}
+if (inv_getobj(inv, $slot) ! $helm) {
+    return;    // they moved it while the box was up
+}
+inv_del(inv, $mutagen, 1);
+inv_setslot(inv, $slot, $into, 1);
+// The scales are the player's varp and the swap does not touch them; this only says so, because
+// "will I lose my charges" is the question anybody holding a 1,100-scale helm would be asking.
+%serpentine_helm_charges = $keep;
+~objbox($into, "The mutagen soaks into the helm. It is a <lowercase(oc_name($into))> now, and its scales are untouched.", 250, 0, 0);

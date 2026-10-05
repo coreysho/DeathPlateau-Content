@@ -1,0 +1,40 @@
+// The Al Kharid Rooftop Course - https://oldschool.runescape.wiki/w/Al_Kharid_Rooftop_Course
+//
+// Agility 20, eight obstacles, 216 experience a lap. Every number here is the wiki's.
+^alkharid_level = 20
+^alkharid_obstacles = 8
+^alkharid_xp_wall = 12
+^alkharid_xp_rope1 = 36
+^alkharid_xp_cable = 48
+^alkharid_xp_zip = 48
+^alkharid_xp_tree = 12
+^alkharid_xp_beams = 6
+^alkharid_xp_rope2 = 18
+^alkharid_xp_gap = 36
+
+// WHERE EACH ONE PUTS YOU DOWN. Unlike Draynor this course climbs: the zip line drops you to
+// level 1, the tree swings you up to 2, the beams take you back to 3 and the gap drops you to the
+// street. Every tile below was read off the grafted map and checked against the engine's own
+// collision - tools/sim/alkharidcourse.ts walks the lap and fails if any of them is blocked, off
+// the roof, or unreachable from the obstacle before it.
+^alkharid_land_wall = 3_51_49_9_56      // 3273,3192 - the roof over Ellis the Tanner's
+^alkharid_land_rope1 = 3_51_49_8_36     // 3272,3172
+^alkharid_land_cable = 3_51_49_19_30    // 3283,3166 - the west edge of the long roof
+^alkharid_land_zip = 1_51_49_50_27      // 3314,3163 - and down two floors
+^alkharid_land_tree = 2_51_49_53_33     // 3317,3169 - up into the canopy
+^alkharid_land_beams = 3_51_49_52_44    // 3316,3180
+^alkharid_land_rope2 = 3_51_49_37_50    // 3301,3186
+^alkharid_land_gap = 0_51_49_36_59      // 3300,3195 - the street, east of the scimitar shop
+
+// AND WHERE THE WALKED ONES START. ~agility_walk spends its diagonal first, so a crossing whose
+// start and finish are not on one row walks beside the rope instead of along it - which is how
+// both of Draynor's tightropes shipped, and the reason this is written down rather than left to
+// wherever the player happened to stop.
+^alkharid_rope1_start = 3_51_49_8_44    // 3272,3180 - south along x 3272
+^alkharid_rope2_start = 3_51_49_48_50   // 3312,3186 - west along z 3186
+
+// The rough wall is climbed from the street north of Ellis's building; from inside you are past it.
+^alkharid_wall_z = 3194
+
+// Ours, as Draynor's is: the wiki publishes no mark rate for any rooftop course.
+^alkharid_mark_chance = 4

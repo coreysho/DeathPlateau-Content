@@ -1,0 +1,34 @@
+// GRACE, in the Rogues' Den, where Old School puts her.
+//
+// SHE SELLS NOTHING YET (2026-10-04). Her shop held the Graceful outfit for Marks of Grace; the
+// owner is implementing Graceful another way, so the stock is gone, her Trade option with it, and
+// this is her Talk-to. The shop plumbing is still in grace.npc and grace.inv - restoring it is a
+// stock list and one op line, not a rewrite.
+//
+// She still counts your marks, because that is the one thing a player wants from her today: the
+// rooftop courses hand them out and nothing else in the world mentions them.
+
+[opnpc1,grace]
+~chatnpc("<p,happy>Hello. Been up on the rooftops, have you?");
+def_int $marks = inv_total(inv, mark_of_grace);
+def_int $choice = ~p_choice3("What is a mark of grace?", 1,
+                             "How many have I got?", 2,
+                             "Nothing, thanks.", 3);
+if ($choice = 3) {
+    ~chatplayer("<p,neutral>Nothing, thanks.");
+    ~chatnpc("<p,neutral>Mind your footing out there.");
+    return;
+}
+if ($choice = 1) {
+    ~chatplayer("<p,quiz>What is a mark of grace?");
+    ~chatnpc("<p,happy>They turn up on the rooftops, for those quick enough to spot them. | Hold on to them. I will have something worth your while before long.");
+    return;
+}
+~chatplayer("<p,quiz>How many have I got?");
+if ($marks = 0) {
+    ~chatnpc("<p,neutral>Not one. Try the rooftops.");
+} else if ($marks = 1) {
+    ~chatnpc("<p,happy>A single mark. It is a start.");
+} else {
+    ~chatnpc("<p,happy>You are carrying <tostring($marks)> of them.");
+}

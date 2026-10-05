@@ -1,0 +1,34 @@
+// ORNAMENT KITS. The pairing lives on the ITEMS, not in a table in the script - the same shape
+// imbue_scroll.param uses, and for the same reason: sixteen kits and twenty-one results named in
+// one switch would be sixteen chances to get a pair wrong, and a seventeenth kit would mean
+// editing the script instead of the config.
+//
+// THE PARAMS GO ON THE BASE ITEM, not on the kit, because a kit is not always one-to-one. The
+// dragon legs/skirt kit takes either leg, and each infinity colour kit takes all three robes, so
+// "what does this kit make" has no single answer while "what does this item become" always does.
+
+// On a plain item: which kit works on it.
+[ornament_kit]
+type=namedobj
+default=null
+
+// On a plain item: what it becomes once that kit is applied.
+[ornament_into]
+type=namedobj
+default=null
+
+// On an ornamented item: the plain item it was made from. The kit is read back off that.
+[ornament_from]
+type=namedobj
+default=null
+
+// A SECOND PAIRING, because the infinity robes take EITHER colour kit. One param each would
+// have made the dark kit a dead item - it drops, and there is nothing it fits. Only the three
+// robes use these; everything else is one kit to one item.
+[ornament_kit2]
+type=namedobj
+default=null
+
+[ornament_into2]
+type=namedobj
+default=null
