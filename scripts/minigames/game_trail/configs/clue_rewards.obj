@@ -1843,8 +1843,13 @@ recol2d=32453
 weight=907g
 cost=50
 iop2=Wear
-// Nothing in this build to copy from, so these are Old School's own.
-param=prayerbonus,6
+// A repaint of monkrobetop, so the same armour - set by hand for the reason the (t) top was:
+// this build calls BOTH halves of a monk's robe "Monk's robe", so "Monk's robe top" is no
+// obj's display name and the lift could not see monkrobetop sitting right there. It fell
+// through to the modern cache, which is prayerbonus 6 and no Saradomin flag; the base here is
+// 5 and carries it. tools/models/checkosrsstats.py is what found this one.
+param=prayerbonus,5
+param=saradominitem,^true
 
 [monk_s_robe_g]
 name=Monk's robe (g)

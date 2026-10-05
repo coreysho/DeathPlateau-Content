@@ -888,10 +888,15 @@ slot14=wornicons,10:41,-159
 option1=Remove
 
 [bonuses]
+// 141 AND NOT 147, so that a scrollbar would have somewhere to go. Client.drawInterface draws one
+// at x + width, sixteen wide: at 147 that is 505..520 and this window ends at 515. Nothing shows it
+// today because scroll (110) is under height (234), so no bar is drawn at all - it would appear the
+// first time this list grew past the box, which is how the collection log's did. The widest thing
+// inside reaches 125, so there is nothing to clip; the six pixels were slack.
 type=layer
 x=358
 y=70
-width=147
+width=141
 height=234
 scroll=110
 
