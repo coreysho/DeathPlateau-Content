@@ -1,0 +1,19 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_14898]
+// OSRS loc 14898
+name=Rough wall
+model=osrsloc_14898
+active=yes
+forcedecor=yes
+op1=Climb
+
+[osrsloc_24188]
+// OSRS loc 24188
+model=osrsloc_24188
+active=no
+sharelight=yes
+offsety=1
+ambient=20
+contrast=75

@@ -1,0 +1,45 @@
+// The Falador Rooftop Course - https://oldschool.runescape.wiki/w/Falador_Rooftop_Course
+//
+// Agility 50, 586 experience a lap. The wiki counts thirteen obstacles; the map carries FOURTEEN
+// locs, because what the wiki writes as four Ledges is five in the cache. The four ledge values
+// (14, 13, 13, 14 - fifty-four between them) are spread over the five that exist, so the lap
+// still pays 586 and no ledge is a free step.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: stat_advance takes xp * 10.
+^falador_level = 50
+^falador_obstacles = 14
+^falador_xp_wall = 110        // 11
+^falador_xp_rope1 = 220       // 22
+^falador_xp_handholds = 610   // 61
+^falador_xp_gap1 = 270        // 27
+^falador_xp_gap2 = 260        // 26
+^falador_xp_rope2 = 610       // 61
+^falador_xp_rope3 = 530       // 53
+^falador_xp_gap3 = 300        // 30
+^falador_xp_ledge1 = 110      // the wiki's 54 over five ledges: 11, 11, 11, 11, 10
+^falador_xp_ledge2 = 110
+^falador_xp_ledge3 = 110
+^falador_xp_ledge4 = 110
+^falador_xp_ledge5 = 100
+^falador_xp_edge = 2410       // 241
+
+// m47_52: base x 3008, base z 3328. EACH OBSTACLE PUTS YOU DOWN BESIDE THE NEXT ONE, which is
+// what Old School does and what tools/sim/courseplan.ts picks: the walkable tile adjacent to the
+// next obstacle, on the side you are coming from. A landing chosen off a map picture can be an
+// island or have an approach no player can stand on; this cannot.
+^falador_land_wall = 3_47_52_31_15       // 3039,3343
+^falador_land_rope1 = 3_47_52_41_22      // 3049,3350
+^falador_land_handholds = 3_47_52_41_31  // 3049,3359
+^falador_land_gap1 = 3_47_52_37_33       // 3045,3361
+^falador_land_gap2 = 3_47_52_27_33       // 3035,3361
+^falador_land_rope2 = 3_47_52_19_25      // 3027,3353
+^falador_land_rope3 = 3_47_52_9_24       // 3017,3352
+^falador_land_gap3 = 3_47_52_8_17        // 3016,3345
+^falador_land_ledge1 = 3_47_52_4_15      // 3012,3343
+^falador_land_ledge2 = 3_47_52_3_6       // 3011,3334
+^falador_land_ledge3 = 3_47_52_5_7       // 3013,3335
+^falador_land_ledge4 = 3_47_52_9_4       // 3017,3332
+^falador_land_ledge5 = 3_47_52_16_4      // 3024,3332
+^falador_land_edge = 0_47_52_18_4        // 3026,3332 - the street
+
+^falador_mark_chance = 4

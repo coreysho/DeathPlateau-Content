@@ -1,0 +1,141 @@
+// The Falador Rooftop Course - https://oldschool.runescape.wiki/w/Falador_Rooftop_Course
+//
+// Agility 50, fourteen obstacles, 586 experience a lap. The longest of these so far, and a full
+// circuit of the city's north side: up the wall by the gem stall, east over the shops, north and
+// then west along the whole terrace, and back down to the street by the park.
+//
+// EVERY OBSTACLE IS AN EXACTMOVE WITH A TELEJUMP BEHIND IT, the tightropes included. A tightrope
+// here is not walkable the way Draynor's is: Falador's spans are blocked tiles, so ~agility_walk
+// would be stepping through walls. The log-balance animation keeps it reading as a crossing.
+
+
+[oploc1,osrsloc_14898]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the rough wall...");
+~agility_climb_up(^falador_xp_wall, ^falador_land_wall);
+~falador_progress(1);
+
+[oploc1,osrsloc_14899]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+~falador_move(^falador_xp_rope1, ^falador_land_rope1, human_walk_logbalance);
+~falador_progress(2);
+
+[oploc1,osrsloc_14901]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You cross the hand holds.");
+~falador_move(^falador_xp_handholds, ^falador_land_handholds, human_walk_logbalance);
+~falador_progress(3);
+
+[oploc1,osrsloc_14903]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~falador_move(^falador_xp_gap1, ^falador_land_gap1, human_spot_jump);
+~falador_progress(4);
+
+[oploc1,osrsloc_14904]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~falador_move(^falador_xp_gap2, ^falador_land_gap2, human_spot_jump);
+~falador_progress(5);
+
+[oploc1,osrsloc_14905]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+~falador_move(^falador_xp_rope2, ^falador_land_rope2, human_walk_logbalance);
+~falador_progress(6);
+
+[oploc1,osrsloc_14911]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+~falador_move(^falador_xp_rope3, ^falador_land_rope3, human_walk_logbalance);
+~falador_progress(7);
+
+[oploc1,osrsloc_14919]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~falador_move(^falador_xp_gap3, ^falador_land_gap3, human_spot_jump);
+~falador_progress(8);
+
+[oploc1,osrsloc_14920]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb along the ledge.");
+~falador_move(^falador_xp_ledge1, ^falador_land_ledge1, human_spot_jump);
+~falador_progress(9);
+
+[oploc1,osrsloc_14921]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb along the ledge.");
+~falador_move(^falador_xp_ledge2, ^falador_land_ledge2, human_spot_jump);
+~falador_progress(10);
+
+[oploc1,osrsloc_14922]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb along the ledge.");
+~falador_move(^falador_xp_ledge3, ^falador_land_ledge3, human_spot_jump);
+~falador_progress(11);
+
+[oploc1,osrsloc_14923]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb along the ledge.");
+~falador_move(^falador_xp_ledge4, ^falador_land_ledge4, human_spot_jump);
+~falador_progress(12);
+
+[oploc1,osrsloc_14924]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb along the ledge.");
+~falador_move(^falador_xp_ledge5, ^falador_land_ledge5, human_spot_jump);
+~falador_progress(13);
+
+[oploc1,osrsloc_14925]
+if (~falador_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump off the edge...");
+~falador_move(^falador_xp_edge, ^falador_land_edge, human_spot_jump);
+~falador_progress(14);
+
+[proc,falador_blocked]()(boolean)
+if (stat(agility) < ^falador_level) {
+    ~mesbox("You need an Agility level of <tostring(^falador_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+// The exactmove is the motion you watch; the telejump is what actually lands you, because
+// p_exactmove moves within the level the player is already on - Al Kharid's zip line proved that
+// and Falador's edge drops three floors.
+[proc,falador_move](int $xp, coord $end, seq $anim)
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
+p_telejump($end);
+~agility_xp($xp);
+
+[proc,falador_progress](int $completed)
+if (calc(%falador_course_progress + 1) >= $completed) {
+    %falador_course_progress = $completed;
+}
+if (%falador_course_progress < ^falador_obstacles) { return; }
+%falador_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_falador);
+~falador_mark_roll;
+
+[proc,falador_mark_roll]
+if (random(^falador_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");
