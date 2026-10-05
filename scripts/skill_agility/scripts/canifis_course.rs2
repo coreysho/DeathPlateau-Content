@@ -1,0 +1,104 @@
+// The Canifis Rooftop Course - https://oldschool.runescape.wiki/w/Canifis_Rooftop_Course
+//
+// Agility 40, eight obstacles, 240 experience a lap, and an anticlockwise loop of the village:
+// up the tall tree on the east side, north over the roofs, west along the top, down the west
+// side, vaulted across the south and back east to where you started.
+//
+// Every obstacle is a jump, so every one is an exactmove with a telejump behind it - an exactmove
+// moves within the level the player is already on, which Al Kharid's zip line proved the hard way,
+// and the last gap drops three floors to the street.
+
+[oploc1,osrsloc_14843]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the tall tree...");
+~agility_climb_up(^canifis_xp_tree, ^canifis_land_tree);
+mes("...and pull yourself onto the roof.");
+~canifis_progress(1);
+
+[oploc1,osrsloc_14844]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~canifis_jump(^canifis_xp_gap1, ^canifis_land_gap1, ^exact_north);
+~canifis_progress(2);
+
+[oploc1,osrsloc_14845]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~canifis_jump(^canifis_xp_gap2, ^canifis_land_gap2, ^exact_west);
+~canifis_progress(3);
+
+[oploc1,osrsloc_14848]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~canifis_jump(^canifis_xp_gap3, ^canifis_land_gap3, ^exact_west);
+// The one Old School lets you fail. A slip costs hitpoints and nothing else here - see the note
+// in alkharid_course.rs2; a fall needs a street tile per obstacle and that is guesswork.
+~canifis_slip;
+~canifis_progress(4);
+
+[oploc1,osrsloc_14846]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~canifis_jump(^canifis_xp_gap4, ^canifis_land_gap4, ^exact_south);
+~canifis_progress(5);
+
+[oploc1,osrsloc_14894]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You vault across.");
+~canifis_jump(^canifis_xp_vault, ^canifis_land_vault, ^exact_east);
+~canifis_progress(6);
+
+[oploc1,osrsloc_14847]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~canifis_jump(^canifis_xp_gap5, ^canifis_land_gap5, ^exact_east);
+~canifis_progress(7);
+
+[oploc1,osrsloc_14897]
+if (~canifis_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump down to the ground.");
+~canifis_jump(^canifis_xp_gap6, ^canifis_land_gap6, ^exact_east);
+~canifis_progress(8);
+
+[proc,canifis_blocked]()(boolean)
+if (stat(agility) < ^canifis_level) {
+    ~mesbox("You need an Agility level of <tostring(^canifis_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+[proc,canifis_jump](int $xp, coord $end, int $direction)
+~agility_exactmove(human_spot_jump, 0, 2, coord, $end, 15, 50, $direction, false);
+p_telejump($end);
+~agility_xp($xp);
+
+[proc,canifis_slip]
+if (random(^canifis_mark_chance) ! 0) { return; }
+mes("You slip, and catch yourself just in time.");
+~damage_self(calc(1 + random(5)));
+
+[proc,canifis_progress](int $completed)
+if (calc(%canifis_course_progress + 1) >= $completed) {
+    %canifis_course_progress = $completed;
+}
+if (%canifis_course_progress < ^canifis_obstacles) { return; }
+%canifis_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_canifis);
+~canifis_mark_roll;
+
+[proc,canifis_mark_roll]
+if (random(^canifis_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

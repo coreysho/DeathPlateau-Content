@@ -1,0 +1,29 @@
+// The Canifis Rooftop Course - https://oldschool.runescape.wiki/w/Canifis_Rooftop_Course
+//
+// Agility 40, eight obstacles, 240 experience a lap. All eight are in the map, which makes this
+// the first rooftop course here that is Old School's whole course and not a subset of it.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: stat_advance takes xp * 10.
+^canifis_level = 40
+^canifis_obstacles = 8
+^canifis_xp_tree = 100     // 10
+^canifis_xp_gap1 = 80      // 8
+^canifis_xp_gap2 = 80      // 8
+^canifis_xp_gap3 = 100     // 10 - the one Old School lets you fail
+^canifis_xp_gap4 = 80      // 8
+^canifis_xp_vault = 100    // 10
+^canifis_xp_gap5 = 110     // 11
+^canifis_xp_gap6 = 1750    // 175, the lap's own reward
+
+// m54_54: base x 3456, base z 3456. Read off the grafted roofs, checked against the engine's
+// collision, and then walked - a free tile is not the same as a tile you can get to or leave.
+^canifis_land_tree = 3_54_54_49_36   // 3505,3492
+^canifis_land_gap1 = 3_54_54_48_47   // 3504,3503
+^canifis_land_gap2 = 3_54_54_37_48   // 3493,3504
+^canifis_land_gap3 = 3_54_54_23_42   // 3479,3498
+^canifis_land_gap4 = 3_54_54_22_31   // 3478,3487
+^canifis_land_vault = 3_54_54_34_21  // 3490,3477
+^canifis_land_gap5 = 3_54_54_53_20   // 3509,3476
+^canifis_land_gap6 = 0_54_54_54_29   // 3510,3485 - the street, where the lap ends
+
+^canifis_mark_chance = 4
