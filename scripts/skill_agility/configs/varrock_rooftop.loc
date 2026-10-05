@@ -1,0 +1,117 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_4489]
+// OSRS loc 4489
+name=Pigeon
+model=osrsloc_4489
+active=yes
+offsety=-61
+ambient=10
+contrast=50
+anim=osrsloc_anim_4133
+
+[osrsloc_14413]
+// OSRS loc 14413
+name=Clothes line
+model=osrsloc_14413
+active=yes
+hillskew=yes
+forcedecor=yes
+forceapproach=east
+op1=Cross
+
+[osrsloc_14414]
+// OSRS loc 14414
+name=Gap
+model=osrsloc_14414
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizez=256
+forceapproach=east
+op1=Leap
+
+[osrsloc_14834]
+// OSRS loc 14834
+name=Gap
+model=osrsloc_14834
+length=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizez=640
+forceapproach=west
+op1=Leap
+
+[osrsloc_14835]
+// OSRS loc 14835
+name=Gap
+model=osrsloc_14835
+width=2
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=410
+resizez=248
+forceapproach=west
+op1=Leap
+
+[osrsloc_14836]
+// OSRS loc 14836
+name=Ledge
+model=osrsloc_14836
+width=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=640
+forceapproach=south
+op1=Hurdle
+
+[osrsloc_14841]
+// OSRS loc 14841
+name=Edge
+model=osrsloc_14841
+width=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=640
+forceapproach=south
+op1=Jump-off
+
+[osrsloc_14842]
+// OSRS loc 14842
+model=osrsloc_14842
+blockrange=no
+active=no
+hillskew=yes
+sharelight=yes
+resizey=32
+
+[osrsloc_15552]
+// OSRS loc 15552 - THE ROOF ITSELF, and the surface the course is run on.
+//
+// blockwalk=no is not in the cache record and has to be here. GameMap gives collision to any loc
+// whose type blocks, and this one is laid roof_flat across every tile of the Varrock roofs - so
+// without it the whole course is a wall and the only reachable tiles are the handful the roof
+// does not cover. Draynor and Al Kharid never showed this because their decks are TERRAIN with
+// the roof locs beside them; Varrock's deck IS the loc.
+blockwalk=no
+model=osrsloc_15552
+sharelight=yes
+ambient=25
+contrast=125
+
+[osrsloc_60732]
+// OSRS loc 60732
+name=Ladder
+model=osrsloc_60732
+sharelight=yes
+forcedecor=yes
+mapscene=7
+forceapproach=south
+op1=Climb-down

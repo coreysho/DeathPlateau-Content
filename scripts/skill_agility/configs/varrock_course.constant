@@ -1,0 +1,41 @@
+// The Varrock Rooftop Course - https://oldschool.runescape.wiki/w/Varrock_Rooftop_Course
+//
+// Agility 30. Old School has NINE obstacles for 269.7 experience a lap; the map this build grafts
+// from carries SEVEN of them - the Wall (28) and one of the four Gaps (10) are not placed in it at
+// any level, so a lap here pays 231.7 until they turn up. Everything that is here is the wiki's
+// own number.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT. stat_advance takes xp * 10, which is also why Varrock's
+// halves work out exactly: 13.5 is 135 and 143.7 is 1437.
+^varrock_level = 30
+^varrock_obstacles = 7
+^varrock_xp_wall = 135        // 13.5
+^varrock_xp_clothesline = 230 // 23
+^varrock_xp_gap1 = 190        // 19
+^varrock_xp_gap2 = 245        // 24.5
+^varrock_xp_gap3 = 45         // 4.5
+^varrock_xp_ledge = 35        // 3.5
+^varrock_xp_edge = 1437       // 143.7
+
+// Read off the grafted roofs and checked against the engine's own collision.
+// m50_53's bases are x 3200 and z 3392. The first pass used Al Kharid's and put every landing
+// eight tiles east and sixteen north; the lap in tools/sim/rooftops.ts is what noticed, because
+// the wrong tiles were all free and the landing check alone was happy with them.
+^varrock_land_wall = 3_50_53_20_22        // 3220,3414
+^varrock_land_clothesline = 3_50_53_8_22 // 3208,3414
+^varrock_land_gap1 = 3_50_53_2_11        // 3202,3403
+// 3214,3397 looked right on the map and is an ISLAND - one free tile the roof happens not to
+// cover, with nothing walkable beside it. 3218,3397 is the west edge of the long roof.
+^varrock_land_gap2 = 3_50_53_18_5
+^varrock_land_gap3 = 3_50_53_36_13        // 3236,3405
+^varrock_land_ledge = 3_50_53_36_22       // 3236,3414
+^varrock_land_edge = 0_50_53_36_26        // 3236,3418 - the street
+
+// The clothes line is the one crossing you walk; ~agility_walk spends its diagonal first, so it
+// starts on the line rather than wherever the player stopped.
+^varrock_clothesline_start = 3_50_53_12_22 // 3212,3414
+
+// The rough wall is climbed from the street; from the roof you are past it.
+^varrock_wall_z = 3415
+
+^varrock_mark_chance = 4
