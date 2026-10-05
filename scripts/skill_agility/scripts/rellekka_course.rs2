@@ -65,9 +65,7 @@ if (stat(agility) < ^rellekka_level) {
 return(false);
 
 [proc,rellekka_move](int $xp, coord $end, seq $anim)
-~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
-p_telejump($end);
-~agility_xp($xp);
+~agility_roof_move($xp, $end, $anim, ^exact_north);
 
 [proc,rellekka_progress](int $completed)
 if (calc(%rellekka_course_progress + 1) >= $completed) {

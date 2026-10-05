@@ -76,9 +76,7 @@ if (stat(agility) < ^canifis_level) {
 return(false);
 
 [proc,canifis_jump](int $xp, coord $end, int $direction)
-~agility_exactmove(human_spot_jump, 0, 2, coord, $end, 15, 50, $direction, false);
-p_telejump($end);
-~agility_xp($xp);
+~agility_roof_move($xp, $end, human_spot_jump, $direction);
 
 [proc,canifis_slip]
 if (random(^canifis_mark_chance) ! 0) { return; }
