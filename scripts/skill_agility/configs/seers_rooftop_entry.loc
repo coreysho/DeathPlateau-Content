@@ -1,0 +1,23 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_14927]
+// OSRS loc 14927
+name=Wall
+model=osrsloc_14927
+active=yes
+hillskew=yes
+forcedecor=yes
+resizey=300
+resizez=16
+offsetz=32
+op1=Climb-up
+
+[osrsloc_25899]
+// OSRS loc 25899
+model=osrsloc_25899
+active=no
+wallwidth=16
+offsety=1
+ambient=30
+contrast=125

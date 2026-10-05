@@ -1,0 +1,80 @@
+// The Seers' Village Rooftop Course - https://oldschool.runescape.wiki/w/Seers'_Village_Rooftop_Course
+//
+// Agility 60, six obstacles, 570 experience a lap, and three quarters of that is the last jump.
+// It climbs and drops the whole way: 3, 2, 2, 3, 2 and then the street, so every obstacle is an
+// exactmove with a telejump behind it - p_exactmove cannot change floor on its own.
+
+[oploc1,osrsloc_14927]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the wall...");
+~agility_climb_up(^seers_xp_wall, ^seers_land_wall);
+mes("...and pull yourself onto the roof.");
+~seers_progress(1);
+
+[oploc1,osrsloc_14928]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~seers_move(^seers_xp_gap1, ^seers_land_gap1, human_spot_jump);
+~seers_progress(2);
+
+[oploc1,osrsloc_14932]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+sound_synth(tightrope, 5, 0);
+~seers_move(^seers_xp_rope, ^seers_land_rope, human_walk_logbalance);
+~seers_progress(3);
+
+[oploc1,osrsloc_14929]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~seers_move(^seers_xp_gap2, ^seers_land_gap2, human_spot_jump);
+~seers_progress(4);
+
+[oploc1,osrsloc_14930]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~seers_move(^seers_xp_gap3, ^seers_land_gap3, human_spot_jump);
+~seers_progress(5);
+
+[oploc1,osrsloc_14931]
+if (~seers_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump off the edge...");
+~seers_move(^seers_xp_edge, ^seers_land_edge, human_spot_jump);
+mes("...and land in the street below.");
+~seers_progress(6);
+
+[proc,seers_blocked]()(boolean)
+if (stat(agility) < ^seers_level) {
+    ~mesbox("You need an Agility level of <tostring(^seers_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+[proc,seers_move](int $xp, coord $end, seq $anim)
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
+p_telejump($end);
+~agility_xp($xp);
+
+[proc,seers_progress](int $completed)
+if (calc(%seers_course_progress + 1) >= $completed) {
+    %seers_course_progress = $completed;
+}
+if (%seers_course_progress < ^seers_obstacles) { return; }
+%seers_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_seers);
+~seers_mark_roll;
+
+[proc,seers_mark_roll]
+if (random(^seers_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

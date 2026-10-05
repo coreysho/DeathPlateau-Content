@@ -1,0 +1,26 @@
+// The Seers' Village Rooftop Course - https://oldschool.runescape.wiki/w/Seers'_Village_Rooftop_Course
+//
+// Agility 60, six obstacles, 570 experience a lap - short, and most of it in the last jump.
+// The course does not stay on one floor: the first gap is at level 3, the tightrope and the
+// second gap at level 2, the third gap back at 3, the edge at 2 and then the street.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: stat_advance takes xp * 10.
+^seers_level = 60
+^seers_obstacles = 6
+^seers_xp_wall = 450    // 45
+^seers_xp_gap1 = 200    // 20
+^seers_xp_rope = 200    // 20
+^seers_xp_gap2 = 350    // 35
+^seers_xp_gap3 = 150    // 15
+^seers_xp_edge = 4350   // 435, the lap's own reward
+
+// m42_54: base x 2688, base z 3456. Picked by tools/sim/courseplan.ts - each obstacle puts you
+// down BESIDE the next one, on the side you are coming from.
+^seers_land_wall = 3_42_54_33_36   // 2721,3492
+^seers_land_gap1 = 2_42_54_23_33   // 2711,3489
+^seers_land_rope = 2_42_54_22_21   // 2710,3477
+^seers_land_gap2 = 3_42_54_13_13   // 2701,3469
+^seers_land_gap3 = 2_42_54_14_5    // 2702,3461
+^seers_land_edge = 0_42_54_16_5    // 2704,3461 - the street
+
+^seers_mark_chance = 4

@@ -1,0 +1,323 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_14928]
+// OSRS loc 14928
+name=Gap
+model=osrsloc_14928
+length=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=160
+resizez=640
+forceapproach=east
+op1=Jump
+
+[osrsloc_14929]
+// OSRS loc 14929
+name=Gap
+model=osrsloc_14929
+width=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=640
+resizez=160
+forceapproach=north
+op1=Jump
+
+[osrsloc_14930]
+// OSRS loc 14930
+name=Gap
+model=osrsloc_14930
+width=4
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=512
+forceapproach=north
+op1=Jump
+
+[osrsloc_14931]
+// OSRS loc 14931
+name=Edge
+model=osrsloc_14931
+length=5
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=160
+resizez=640
+forceapproach=west
+op1=Jump
+
+[osrsloc_14932]
+// OSRS loc 14932
+name=Tightrope
+model=osrsloc_14932
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+op1=Cross
+
+[osrsloc_14933]
+// OSRS loc 14933
+model=osrsloc_14933
+active=no
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+
+[osrsloc_14934]
+// OSRS loc 14934
+name=Crate
+model=osrsloc_14934
+op1=Search
+
+[osrsloc_16407]
+// OSRS loc 16407
+model=osrsloc_16407
+active=no
+
+[osrsloc_25895]
+// OSRS loc 25895
+model=osrsloc_25895
+active=no
+wallwidth=16
+ambient=30
+contrast=125
+
+[osrsloc_25903]
+// OSRS loc 25903
+model=osrsloc_25903
+active=no
+wallwidth=16
+ambient=30
+contrast=125
+
+[osrsloc_25913]
+// OSRS loc 25913
+model=osrsloc_25913
+sharelight=yes
+ambient=30
+contrast=125
+
+[osrsloc_25926]
+// OSRS loc 25926
+model=osrsloc_25926
+active=no
+forcedecor=yes
+offsety=-1
+ambient=35
+contrast=125
+
+[osrsloc_25982]
+// OSRS loc 25982
+model=osrsloc_25982
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25983]
+// OSRS loc 25983
+model=osrsloc_25983
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25984]
+// OSRS loc 25984
+model=osrsloc_25984
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25985]
+// OSRS loc 25985
+model=osrsloc_25985
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25986]
+// OSRS loc 25986
+model=osrsloc_25986
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25987]
+// OSRS loc 25987
+model=osrsloc_25987
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25988]
+// OSRS loc 25988
+model=osrsloc_25988
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25989]
+// OSRS loc 25989
+model=osrsloc_25989
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25990]
+// OSRS loc 25990
+model=osrsloc_25990
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25991]
+// OSRS loc 25991
+model=osrsloc_25991
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25992]
+// OSRS loc 25992
+model=osrsloc_25992
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25993]
+// OSRS loc 25993
+model=osrsloc_25993
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25994]
+// OSRS loc 25994
+model=osrsloc_25994
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25995]
+// OSRS loc 25995
+model=osrsloc_25995
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25996]
+// OSRS loc 25996
+model=osrsloc_25996
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_25997]
+// OSRS loc 25997
+model=osrsloc_25997
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_25998]
+// OSRS loc 25998
+model=osrsloc_25998
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26000]
+// OSRS loc 26000
+model=osrsloc_26000
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26002]
+// OSRS loc 26002
+model=osrsloc_26002
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26004]
+// OSRS loc 26004
+model=osrsloc_26004
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26005]
+// OSRS loc 26005
+model=osrsloc_26005
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26006]
+// OSRS loc 26006
+model=osrsloc_26006
+active=no
+mirror=yes
+ambient=20
+contrast=75
+
+[osrsloc_26007]
+// OSRS loc 26007
+model=osrsloc_26007
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26008]
+// OSRS loc 26008
+model=osrsloc_26008
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_26119]
+// OSRS loc 26119
+name=Trapdoor
+model=osrsloc_26119
+active=yes
+forcedecor=yes
+ambient=25
+contrast=125
+forceapproach=west
+op1=Climb-down
+
+[osrsloc_39522]
+// OSRS loc 39522
+model=osrsloc_39522
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+forcedecor=yes
+offsety=-1
+ambient=20
+
+[osrsloc_39626]
+// OSRS loc 39626
+model=osrsloc_39626
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+forcedecor=yes
+offsety=-1
+ambient=20
