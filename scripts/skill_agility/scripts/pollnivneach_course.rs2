@@ -1,0 +1,103 @@
+// The Pollnivneach Rooftop Course - https://oldschool.runescape.wiki/w/Pollnivneach_Rooftop_Course
+//
+// Agility 70, nine obstacles, 890 experience a lap. The only one of these that starts on the
+// GROUND and climbs: a basket, then a market stall, then a banner, and only then the roofs.
+//
+// Old School pays 1016 with the Desert hard diary. This build has no diaries, so the base 890 is
+// the whole of it - there is nothing here to gate the extra 126 behind.
+
+[oploc1,osrsloc_14935]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb onto the basket.");
+~agility_climb_up(^pollnivneach_xp_basket, ^pollnivneach_land_basket);
+~pollnivneach_progress(1);
+
+[oploc1,osrsloc_14936]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump onto the market stall.");
+~pollnivneach_move(^pollnivneach_xp_stall, ^pollnivneach_land_stall, human_spot_jump);
+~pollnivneach_progress(2);
+
+[oploc1,osrsloc_14937]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You grab the banner and swing across.");
+~pollnivneach_move(^pollnivneach_xp_banner, ^pollnivneach_land_banner, human_ropeswing_long);
+~pollnivneach_progress(3);
+
+[oploc1,osrsloc_14938]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You leap across the gap.");
+~pollnivneach_move(^pollnivneach_xp_gap, ^pollnivneach_land_gap, human_spot_jump);
+~pollnivneach_progress(4);
+
+[oploc1,osrsloc_14939]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump to the tree.");
+~pollnivneach_move(^pollnivneach_xp_tree1, ^pollnivneach_land_tree1, human_spot_jump);
+~pollnivneach_progress(5);
+
+[oploc1,osrsloc_14940]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the rough wall.");
+~agility_climb_up(^pollnivneach_xp_wall, ^pollnivneach_land_wall);
+~pollnivneach_progress(6);
+
+[oploc1,osrsloc_14941]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You swing across the monkeybars.");
+~pollnivneach_move(^pollnivneach_xp_bars, ^pollnivneach_land_bars, human_ropeswing_long);
+~pollnivneach_progress(7);
+
+[oploc1,osrsloc_14944]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump onto the tree.");
+~pollnivneach_move(^pollnivneach_xp_tree2, ^pollnivneach_land_tree2, human_spot_jump);
+~pollnivneach_progress(8);
+
+[oploc1,osrsloc_14945]
+if (~pollnivneach_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump to the drying line...");
+~pollnivneach_move(^pollnivneach_xp_line, ^pollnivneach_land_line, human_spot_jump);
+mes("...and drop into the street below.");
+~pollnivneach_progress(9);
+
+[proc,pollnivneach_blocked]()(boolean)
+if (stat(agility) < ^pollnivneach_level) {
+    ~mesbox("You need an Agility level of <tostring(^pollnivneach_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+// The exactmove is the motion; the telejump is what lands you, because p_exactmove moves within
+// the level the player is already on and this course climbs from the ground to level 2.
+[proc,pollnivneach_move](int $xp, coord $end, seq $anim)
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
+p_telejump($end);
+~agility_xp($xp);
+
+[proc,pollnivneach_progress](int $completed)
+if (calc(%pollnivneach_course_progress + 1) >= $completed) {
+    %pollnivneach_course_progress = $completed;
+}
+if (%pollnivneach_course_progress < ^pollnivneach_obstacles) { return; }
+%pollnivneach_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_pollnivneach);
+~pollnivneach_mark_roll;
+
+[proc,pollnivneach_mark_roll]
+if (random(^pollnivneach_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

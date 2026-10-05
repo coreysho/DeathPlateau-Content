@@ -1,0 +1,225 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_367]
+// OSRS loc 367
+name=Cupboard
+model=osrsloc_367
+length=2
+forceapproach=east
+op1=Open
+
+[osrsloc_368]
+// OSRS loc 368
+name=Cupboard
+model=osrsloc_368
+length=2
+forceapproach=east
+op1=Open
+
+[osrsloc_602]
+// OSRS loc 602
+name=Table
+model=osrsloc_602
+blockrange=no
+
+[osrsloc_706]
+// OSRS loc 706
+model=osrsloc_706
+
+[osrsloc_1532]
+// OSRS loc 1532
+model=osrsloc_1532
+active=no
+raiseobject=no
+
+[osrsloc_1533]
+// OSRS loc 1533
+name=Curtain
+model=osrsloc_1533
+active=yes
+offsety=1
+raiseobject=no
+op1=Open
+
+[osrsloc_1534]
+// OSRS loc 1534
+name=Curtain
+model=osrsloc_1534
+blockwalk=no
+blockrange=no
+active=yes
+offsety=1
+raiseobject=no
+op1=Close
+
+[osrsloc_6236]
+// OSRS loc 6236
+name=Stop!
+model=osrsloc_6236
+width=2
+ambient=40
+
+[osrsloc_6261]
+// OSRS loc 6261
+name=Ladder
+model=osrsloc_6261
+active=yes
+mapscene=7
+resizey=113
+forceapproach=south
+op1=Climb-up
+
+[osrsloc_14936]
+// OSRS loc 14936
+name=Market stall
+model=osrsloc_14936
+width=2
+length=3
+active=yes
+hillskew=yes
+forcedecor=yes
+resizez=384
+op1=Jump-on
+
+[osrsloc_14937]
+// OSRS loc 14937
+name=Banner
+model=osrsloc_14937
+width=2
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizez=256
+offsety=-50
+op1=Grab
+
+[osrsloc_14938]
+// OSRS loc 14938
+name=Gap
+model=osrsloc_14938
+width=2
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizez=256
+op1=Leap
+
+[osrsloc_14939]
+// OSRS loc 14939
+name=Tree
+model=osrsloc_14939
+width=3
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=396
+resizey=256
+resizez=256
+offsety=-60
+op1=Jump-to
+
+[osrsloc_14940]
+// OSRS loc 14940
+name=Rough wall
+model=osrsloc_14940
+active=yes
+forcedecor=yes
+op1=Climb
+
+[osrsloc_14941]
+// OSRS loc 14941
+name=Monkeybars
+model=osrsloc_14941
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizey=512
+resizez=256
+forceapproach=south
+op1=Cross
+
+[osrsloc_14943]
+// OSRS loc 14943
+model=osrsloc_14943
+blockwalk=no
+blockrange=no
+active=no
+
+[osrsloc_14944]
+// OSRS loc 14944
+name=Tree
+model=osrsloc_14944
+width=3
+length=3
+active=yes
+op1=Jump-on
+
+[osrsloc_14945]
+// OSRS loc 14945
+name=Drying line
+model=osrsloc_14945
+width=2
+length=2
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizez=256
+op1=Jump-to
+
+[osrsloc_26585]
+// OSRS loc 26585
+model=osrsloc_26585
+active=no
+sharelight=yes
+occlude=yes
+offsety=-59
+ambient=20
+contrast=125
+
+[osrsloc_26586]
+// OSRS loc 26586
+model=osrsloc_26586
+active=no
+sharelight=yes
+offsety=-119
+ambient=20
+contrast=125
+
+[osrsloc_26594]
+// OSRS loc 26594
+name=Dyed fabric
+model=osrsloc_26594
+active=yes
+hillskew=yes
+shadow=no
+offsetz=40
+ambient=35
+
+[osrsloc_26595]
+// OSRS loc 26595
+name=Dyed fabric
+model=osrsloc_26595
+active=yes
+hillskew=yes
+mirror=yes
+shadow=no
+offsetz=40
+ambient=35
+
+[osrsloc_26596]
+// OSRS loc 26596
+name=Dyed fabric
+model=osrsloc_26596
+active=yes
+hillskew=yes
+shadow=no
+offsetz=40
+ambient=35
