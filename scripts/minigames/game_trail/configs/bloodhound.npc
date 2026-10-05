@@ -1,0 +1,25 @@
+// OSRS npcs imported by tools/models/importosrsnpc.py. Models re-encoded by osrs2ob2.py with
+// the npc recolours baked in; stats and level from the cache, the rest by hand.
+
+[bosspet_bloodhound]
+// OSRS npc 6296
+name=Bloodhound
+model1=npc_bosspet_bloodhound_1
+head1=npc_bosspet_bloodhound_head1
+readyanim=osrs_seq_7269
+walkanim=osrs_seq_7280
+// THE PET, wired exactly as bosspet_snakeling is: the category is what npc/scripts/pet_variants.rs2
+// and the follower system look for, and the two params are the pair that lets either half find the
+// other - the item names the npc, the npc names the item.
+desc=A loyal hound with a nose for treasure.
+size=1
+vislevel=hide
+timer=1
+// Old School has these the other way round from this fork's pets; Pick-up on op1 is what every
+// other pet here uses and what a player reaches for first.
+op1=Pick-up
+op3=Talk-to
+minimap=no
+category=bosspet
+follower=yes
+param=pet_item_id,bloodhound

@@ -64,13 +64,16 @@ switch_int($damagestyle) {
 
 // returns the swing anim to use for this weapon and selected style.
 [proc,combat_swing_anim_and_synth](obj $weapon, int $damagetype, int $damagestyle, int $attackstyle)(seq, synth)
-// unarmed
-if ($weapon = null | (map_members = ^false & oc_members($weapon) = true) | oc_category($weapon) = null) {
-    switch_int ($attackstyle) {
-        case 0 : return(human_unarmedpunch, unarmed_punch);
-        case 1 : return(human_unarmedkick, unarmed_kick);
-        case 2 : return(human_unarmedpunch, unarmed_punch);
-    }
+// UNARMED, AND THE NULL CHECKED ON ITS OWN. `|` does not short-circuit here - every operand is
+// evaluated - so the old one-line test still ran oc_members(null) and oc_category(null) when the
+// hand was empty and threw "An input for a Obj type was not valid to use. Input was -1". That
+// fired on EVERY bare-handed login: [login,_] -> ~update_all -> ~player_combat_stat -> here, and
+// a throw aborts the rest of the login script. The same trap ~on_unequip documents.
+if ($weapon = null) {
+    return(~combat_unarmed_swing($attackstyle));
+}
+if ((map_members = ^false & oc_members($weapon) = true) | oc_category($weapon) = null) {
+    return(~combat_unarmed_swing($attackstyle));
 }
 // manually handle scythe defensive
 if (oc_category($weapon) = weapon_scythe) {
@@ -206,3 +209,12 @@ if ($weapon = null | (map_members = ^false & oc_members($weapon) = true)) {
     return(human_unarmedblock);
 }
 return(oc_param($weapon, defend_anim));
+
+// CASE DEFAULT MATTERS. The old switch listed 0, 1 and 2 and fell straight through for anything
+// else - and a fall-through went on to the oc_category line below with the same null weapon that
+// had just been recognised as unarmed.
+[proc,combat_unarmed_swing](int $attackstyle)(seq, synth)
+switch_int ($attackstyle) {
+    case 1 : return(human_unarmedkick, unarmed_kick);
+    case default : return(human_unarmedpunch, unarmed_punch);
+}

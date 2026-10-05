@@ -11380,6 +11380,12 @@ members=yes
 tradeable=no
 iop5=Drop
 // No combat bonuses - this one is worn for the look.
+// A PET, not an ornament. It came off the master reward table as an item like any
+// other and sat there doing nothing; these two lines are what the follower system
+// reads - see bosspet_snakeling, which is the same pair the other way round.
+tradeable=no
+category=bosspet
+param=follower_id,bosspet_bloodhound
 
 [ring_of_third_age]
 name=Ring of 3rd Age
