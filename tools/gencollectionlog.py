@@ -89,9 +89,19 @@ NAME_Y, LINE1_Y, LINE2_Y = 74, 90, 104
 PAGE_W = 294
 RIGHT_ALIGNED = (0, 2)
 RULE_Y = 119
-GRID_X, GRID_Y, GRID_W, GRID_H = 194, 124, 292, 172
 COLS, MARGIN_X, MARGIN_Y = 8, 4, 2
 PITCH_Y = 32 + MARGIN_Y
+# THE SCROLLBAR IS DRAWN OUTSIDE THE LAYER IT SCROLLS. Client.drawInterface puts it at x + width and
+# makes it SCROLLBAR_W wide, so a grid sized to fill the panel hangs its bar over the panel's border.
+# That is what it did: the panel used to be derived from the grid (pagebox ended at GRID_X + GRID_W +
+# 4) which left the bar twelve pixels out on the window's steel edge however the numbers were set.
+# So the PANEL is the fixed thing now - it is the window that cannot grow - and the grid is measured
+# back from its inner edge, leaving the bar exactly inside it.
+SCROLLBAR_W = 16
+PANEL_R = 490                                       # the page panel's right edge, at the window's
+GRID_Y, GRID_H = 124, 172
+GRID_W = COLS * (32 + MARGIN_X) - MARGIN_X          # eight whole cells and no more: 284
+GRID_X = PANEL_R - SCROLLBAR_W - GRID_W             # 190
 COUNTERS = 3        # two lines: "Obtained" and counter 0, then counters 1 and 2
 
 ORANGE, WHITE = '0xFF981F', '0xFFFFFF'
@@ -307,7 +317,7 @@ def components(spec, entries):
     # Two ruled boxes, the list and the page, the way Old School's window divides.
     coms.append(('listbox', dict(type='rect', x=LIST_X - 2, y=LIST_Y - 2, width=LIST_W + 4,
                                  height=LIST_H + 4, colour=LINE)))
-    coms.append(('pagebox', dict(type='rect', x=PANEL_X - 4, y=LIST_Y - 2, width=GRID_X + GRID_W - PANEL_X + 8,
+    coms.append(('pagebox', dict(type='rect', x=PANEL_X - 4, y=LIST_Y - 2, width=PANEL_R - PANEL_X + 4,
                                  height=LIST_H + 4, colour=LINE)))
     rows = list_rows(spec)
     scroll = rows * ROW_H if rows * ROW_H > LIST_H else 0
@@ -332,7 +342,7 @@ def components(spec, entries):
         x, y = PANEL_X, lines[i]
         coms.append(('counter%d' % i, dict(type='text', x=x, y=y, width=PAGE_W, height=13,
                                            font='p12_full', shadowed='yes', text='', colour=ORANGE)))
-    coms.append(('rule', dict(type='rect', x=PANEL_X - 2, y=RULE_Y, width=GRID_X + GRID_W - PANEL_X + 4,
+    coms.append(('rule', dict(type='rect', x=PANEL_X - 2, y=RULE_Y, width=PANEL_R - PANEL_X,
                               height=1, fill='yes', colour=LINE)))
     grows = grid_rows(entries)
     gscroll = grows * PITCH_Y if grows * PITCH_Y - MARGIN_Y > GRID_H else 0

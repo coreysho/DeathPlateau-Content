@@ -845,7 +845,7 @@
                 {
                     "key": "clue_shared",
                     "name": "Shared Clue Rewards",
-                    "_items": "The clue hunter outfit rolls in every tier, so it gets Old School's shared page rather than a place on one tier.",
+                    "_items": "The clue hunter outfit rolls in every tier, so it gets Old School's shared page rather than a place on one tier. So do the god pages - trail_god_pages.rs2 rolls them ahead of all three tiers' tables - and this is the only page they appear on, which is Old School's arrangement too. Twelve, not Old School's twenty-four: the Armadyl, Bandos and Ancient books came years after this era, so trail_god_pages.enum has Saradomin, Zamorak and Guthix only and this list is that enum in its own order.",
                     "counters": [],
                     "items": [
                         "helm_of_raedwald",
@@ -853,7 +853,19 @@
                         "clue_hunter_gloves",
                         "clue_hunter_trousers",
                         "clue_hunter_boots",
-                        "clue_hunter_cloak"
+                        "clue_hunter_cloak",
+                        "holy_book_s_page1",
+                        "holy_book_s_page2",
+                        "holy_book_s_page3",
+                        "holy_book_s_page4",
+                        "holy_book_z_page1",
+                        "holy_book_z_page2",
+                        "holy_book_z_page3",
+                        "holy_book_z_page4",
+                        "holy_book_g_page1",
+                        "holy_book_g_page2",
+                        "holy_book_g_page3",
+                        "holy_book_g_page4"
                     ]
                 }
             ]
