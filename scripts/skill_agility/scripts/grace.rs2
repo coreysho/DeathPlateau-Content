@@ -1,0 +1,36 @@
+// GRACE, in the Rogues' Den, and the first thing in this build that will take a Mark of Grace.
+//
+// Trade is the shop_keeper category trigger's (shop/scripts/shop.rs2) - her npc config carries
+// param=shop_currency,mark_of_grace and the shop system has read that param since the TzHaar
+// traders, so there is no second shop implementation here. This file is only her Talk-to, which
+// a type trigger takes over from the category's generic one.
+//
+// She tells you how many marks you are carrying, because the alternative is counting them in your
+// pack against a price list you cannot see.
+
+[opnpc1,grace]
+~chatnpc("<p,happy>Hello. Looking for something a little more graceful?");
+def_int $marks = inv_total(inv, mark_of_grace);
+def_int $choice = ~p_choice3("What have you got?", 1,
+                             "What is a mark of grace?", 2,
+                             "Nothing, thanks.", 3);
+if ($choice = 3) {
+    ~chatplayer("<p,neutral>Nothing, thanks.");
+    ~chatnpc("<p,neutral>Mind your footing out there.");
+    return;
+}
+if ($choice = 2) {
+    ~chatplayer("<p,quiz>What is a mark of grace?");
+    ~chatnpc("<p,happy>They turn up on the rooftops, for those quick enough to spot them. | Bring them to me and I will see you properly dressed.");
+    ~chatnpc("<p,neutral>The whole outfit is 260 of them. It is lighter than it looks, | and it gives your run back faster than anything else you could wear.");
+    return;
+}
+~chatplayer("<p,quiz>What have you got?");
+if ($marks = 0) {
+    ~chatnpc("<p,neutral>Graceful clothing - though you have no marks to pay with. | Try the rooftops.");
+} else if ($marks = 1) {
+    ~chatnpc("<p,happy>Graceful clothing. You have a single mark on you.");
+} else {
+    ~chatnpc("<p,happy>Graceful clothing. You have <tostring($marks)> marks on you.");
+}
+~openshop_activenpc;

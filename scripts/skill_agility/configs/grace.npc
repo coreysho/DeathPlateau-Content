@@ -1,0 +1,52 @@
+// OSRS npcs imported by tools/models/importosrsnpc.py. Models re-encoded by osrs2ob2.py with
+// the npc recolours baked in; stats and level from the cache, the rest by hand.
+//
+// GRACE, in the Rogues' Den, where Old School puts her - 3053,4969, the room with the bank chest
+// and the maze entrance. She is what Marks of Grace are for: until now the rooftop courses handed
+// them out and nothing in the world would take them.
+//
+// She trades in marks rather than coins. The shop system has read param=shop_currency since the
+// TzHaar traders needed Tokkul (shop/configs/shopkeeper.param), so this needs no new machinery.
+//
+// op4 "View Laps" and op5 "Toggle Counter" are dropped: both are Old School interfaces this build
+// has no equivalent of, and an option that does nothing is worse than no option.
+
+[grace]
+// OSRS npc 5919
+name=Grace
+desc=She looks like she knows her way around a rooftop.
+model1=npc_grace_1
+model2=npc_grace_2
+model3=npc_grace_3
+model4=npc_grace_4
+model5=npc_grace_5
+model6=npc_grace_6
+model7=npc_grace_7
+head1=npc_grace_head1
+head2=npc_grace_head2
+readyanim=human_ready
+walkanim=human_walk_f
+vislevel=hide
+wanderrange=0
+op1=Talk-to
+op3=Trade
+category=shop_keeper
+param=owned_shop,grace_shop
+param=shop_currency,mark_of_grace
+// SELLS AT THE ITEM'S OWN COST. The six graceful pieces already carry
+// Old School's mark prices as their cost - 35, 40, 55, 60, 30, 40, 260 for the set - so full price
+// both ways is the real price list with no arithmetic in the middle. delta 0 because a mark price
+// is a fixed price: it must not drift with how many she happens to be holding.
+//
+// 1000 IS FULL PRICE, NOT 100. ~calc_shop_value ends in scale($mult, 1000, $cost), so these are
+// per mille - the TzHaar traders say 1000/600 for the same reason. 100 here charged a tenth: the
+// graceful legs came out at 6 marks. (shopkeeper.param's own defaults, 100 and 60, have the same
+// problem, so a shopkeeper added later that leaves them out sells at a tenth price.)
+param=shop_sell_multiplier,1000
+// SHE WILL NOT ACTUALLY BUY ANY OF IT BACK, and this number is what she would pay if she could.
+// ~can_sell_obj refuses an untradeable item at any shop in this build, and every graceful piece is
+// untradeable - so the buy-back Old School allows is off here. Left at full price rather than 0
+// because the day that rule changes, full price is the right answer, not nothing.
+param=shop_buy_multiplier,1000
+param=shop_delta,0
+param=shop_title,Grace's Graceful Clothing
