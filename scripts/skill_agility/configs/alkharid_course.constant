@@ -3,14 +3,17 @@
 // Agility 20, eight obstacles, 216 experience a lap. Every number here is the wiki's.
 ^alkharid_level = 20
 ^alkharid_obstacles = 8
-^alkharid_xp_wall = 12
-^alkharid_xp_rope1 = 36
-^alkharid_xp_cable = 48
-^alkharid_xp_zip = 48
-^alkharid_xp_tree = 12
-^alkharid_xp_beams = 6
-^alkharid_xp_rope2 = 18
-^alkharid_xp_gap = 36
+// EXPERIENCE IS IN TENTHS OF A POINT. stat_advance takes xp * 10 - Monk's Friend hands over
+// 20000 for its 2000, the Grand Tree 79000 for 7900, a normal log 250 for 25 - so these are
+// the wiki's numbers times ten. Written as whole points first, which paid a tenth of the rate.
+^alkharid_xp_wall = 120
+^alkharid_xp_rope1 = 360
+^alkharid_xp_cable = 480
+^alkharid_xp_zip = 480
+^alkharid_xp_tree = 120
+^alkharid_xp_beams = 60
+^alkharid_xp_rope2 = 180
+^alkharid_xp_gap = 360
 
 // WHERE EACH ONE PUTS YOU DOWN. Unlike Draynor this course climbs: the zip line drops you to
 // level 1, the tree swings you up to 2, the beams take you back to 3 and the gap drops you to the

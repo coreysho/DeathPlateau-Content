@@ -1,13 +1,16 @@
 // The Draynor Village Rooftop Course. Experience is the wiki's, obstacle by obstacle; the seven add
 // to the 120 a lap is worth, and the crate's 79 is where the lap bonus lives.
 ^draynor_obstacles = 7
-^draynor_xp_wall = 5
-^draynor_xp_rope1 = 8
-^draynor_xp_rope2 = 7
-^draynor_xp_narrow = 7
-^draynor_xp_jumpup = 10
-^draynor_xp_gap = 4
-^draynor_xp_crate = 79
+// EXPERIENCE IS IN TENTHS OF A POINT. stat_advance takes xp * 10 - Monk's Friend hands over
+// 20000 for its 2000, the Grand Tree 79000 for 7900, a normal log 250 for 25 - so these are
+// the wiki's numbers times ten. Written as whole points first, which paid a tenth of the rate.
+^draynor_xp_wall = 50
+^draynor_xp_rope1 = 80
+^draynor_xp_rope2 = 70
+^draynor_xp_narrow = 70
+^draynor_xp_jumpup = 100
+^draynor_xp_gap = 40
+^draynor_xp_crate = 790
 
 // WHERE EACH OBSTACLE PUTS YOU DOWN, read off the grafted roofs rather than guessed -
 // Engine-TS tools/sim/draynorroof.ts draws them and tools/sim/draynorcourse.ts walks the lap and
