@@ -80,9 +80,7 @@ return(false);
 // The exactmove is the motion; the telejump is what lands you, because p_exactmove moves within
 // the level the player is already on and this course climbs from the ground to level 2.
 [proc,pollnivneach_move](int $xp, coord $end, seq $anim)
-~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
-p_telejump($end);
-~agility_xp($xp);
+~agility_roof_move($xp, $end, $anim, ^exact_north);
 
 [proc,pollnivneach_progress](int $completed)
 if (calc(%pollnivneach_course_progress + 1) >= $completed) {

@@ -67,9 +67,7 @@ if (stat(agility) < ^ardougne_level) {
 return(false);
 
 [proc,ardougne_move](int $xp, coord $end, seq $anim)
-~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
-p_telejump($end);
-~agility_xp($xp);
+~agility_roof_move($xp, $end, $anim, ^exact_north);
 
 // Old School stops you failing at 95, so this does too.
 [proc,ardougne_slip]

@@ -9,6 +9,26 @@
 // half - so the delay is 1 rather than the 0 that let the old one be cut off after a frame or two.
 // It is a separate proc rather than a change to agility_climb_up because that one is also what
 // Grand Tree, Eagles' Peak, Watchtower and the gnome course climb with, and a ladder is not a wall.
+// A ROOFTOP LANDING, GLIDED ONCE. p_exactmove is not only a visual: Player.exactMove teleports you
+// to the end tile and then tells the client to glide you there from the start, so a p_telejump
+// after it is a SECOND teleport arriving after the glide was set up - the client gets the move,
+// then a position update that contradicts it, and the player is dragged back before the animation
+// plays. Seven courses did that on every obstacle.
+//
+// It cannot just be dropped, because exactMove teleports to the end x and z on THE FLOOR YOU ARE
+// ALREADY ON - it cannot change storey, which is what the telejump was really doing on the
+// obstacles that drop you a floor. So the floor is checked: same floor glides, another floor
+// animates where it stands and then jumps.
+[proc,agility_roof_move](int $xp, coord $end, seq $anim, int $direction)
+if (coordy($end) ! coordy(coord)) {
+    anim($anim, 0);
+    p_delay(1);
+    ~agility_xp($xp);
+    p_telejump($end);
+    return;
+}
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, $direction, false);
+~agility_xp($xp);
 [proc,agility_roof_climb](int $xp, coord $coord)
 anim(human_climbing, 0);
 p_delay(1);

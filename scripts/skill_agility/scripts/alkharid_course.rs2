@@ -141,8 +141,15 @@ p_delay(0);
 // not be found at all. The telejump afterwards is what actually lands them; the exactmove is the
 // motion you watch on the way. Three of these eight change floor, so it is not a special case.
 [proc,alkharid_swing](int $xp, coord $end, int $direction)
-~agility_exactmove(human_ropeswing_long, 20, 3, coord, $end, 30, 70, $direction, false);
-p_telejump($end);
+// The swing keeps its own timing - a rope swing is slower than a jump - but not the second
+// teleport: exactMove has already moved the player, and a p_telejump after it drags them back.
+if (coordy($end) ! coordy(coord)) {
+    anim(human_ropeswing_long, 0);
+    p_delay(3);
+    p_telejump($end);
+} else {
+    ~agility_exactmove(human_ropeswing_long, 20, 3, coord, $end, 30, 70, $direction, false);
+}
 ~agility_xp($xp);
 
 // A slip costs hitpoints and nothing else - see the note at the top.
