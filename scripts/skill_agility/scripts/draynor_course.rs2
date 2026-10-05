@@ -68,7 +68,7 @@ mes("...and land on the far roof.");
 [oploc1,osrsloc_11632]
 p_arrivedelay;
 mes("You climb down onto the crate and jump to the ground.");
-~agility_roof_climb(^draynor_xp_crate, ^draynor_land_crate);
+~agility_roof_climb_down(^draynor_xp_crate, ^draynor_land_crate);
 ~draynor_progress(7);
 
 // ---------------------------------------------------------------- crossing one of them
