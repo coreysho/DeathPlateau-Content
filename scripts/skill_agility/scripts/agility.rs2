@@ -32,9 +32,12 @@ if (coordy($end) ! coordy(coord)) {
 // AND ITS OPPOSITE. The last obstacle of a course drops you back into the street, and playing
 // the climbing-UP animation at it reads as the player hauling themselves up thin air. Reported
 // from play on Draynor's crate: "the final obstacle where you jump down, it shows a climbing up
-// animation". human_climbing_down (seq 740) is the same motion reversed.
+// animation". The cache's human_climbing_down is the right motion, but it carries loops=8 - a
+// loop point back to its last frame, because bas.rs2 uses it as a WALK seq. Played one-shot it
+// loops on that frame for ever and the player reaches the street stuck in a climbing pose.
+// agility_climbing_down is the same motion and timings with nothing to loop back to.
 [proc,agility_roof_climb_down](int $xp, coord $coord)
-anim(human_climbing_down, 0);
+anim(agility_climbing_down, 0);
 p_delay(1);
 ~agility_xp($xp);
 p_telejump($coord);

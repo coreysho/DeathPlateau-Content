@@ -1,0 +1,34 @@
+// A ONE-SHOT CLIMB DOWN, because the cache's is not one.
+//
+// human_climbing_down is the right motion - human_climbing's eight frames in reverse - and it has
+// perfectly good timings, 3,4,5,6,3,4,5,6. What it also has is loops=8: a loop point back to its
+// last frame. That is deliberate, because it is authored as a WALK animation and bas.rs2 uses it as
+// one (~set_readywalk_bas, for the quests that climb down a rope while moving). Played as a one-shot
+// it reaches the end and loops on the final frame for ever, so Draynor's crate left the player
+// standing in the street stuck in a climbing pose. Reported as "it persists afterwards".
+//
+// human_climbing, the up motion, has no loop point and ends. This is the down motion given the same
+// treatment: identical frames and delays to the cache's, and nothing to loop back to.
+//
+// A new seq rather than the loop point removed from the cache's, because that loop is what makes
+// human_climbing_down work as a walk for Desert Treasure, Troll Stronghold and the Zombie Queen.
+
+[agility_climbing_down]
+replaceheldleft=hide
+replaceheldright=hide
+frame1=anim_2347
+delay1=3
+frame2=anim_2044
+delay2=4
+frame3=anim_1745
+delay3=5
+frame4=anim_1446
+delay4=6
+frame5=anim_1159
+delay5=3
+frame6=anim_879
+delay6=4
+frame7=anim_586
+delay7=5
+frame8=anim_2306
+delay8=6
