@@ -8,7 +8,7 @@
 if (~seers_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the wall...");
-~agility_climb_up(^seers_xp_wall, ^seers_land_wall);
+~agility_roof_climb(^seers_xp_wall, ^seers_land_wall);
 mes("...and pull yourself onto the roof.");
 ~seers_progress(1);
 

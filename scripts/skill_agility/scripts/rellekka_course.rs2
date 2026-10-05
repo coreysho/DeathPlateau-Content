@@ -11,7 +11,7 @@
 if (~rellekka_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the rough wall.");
-~agility_climb_up(^rellekka_xp_wall, ^rellekka_land_wall);
+~agility_roof_climb(^rellekka_xp_wall, ^rellekka_land_wall);
 ~rellekka_progress(1);
 
 [oploc1,osrsloc_14947]
