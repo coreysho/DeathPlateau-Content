@@ -1,0 +1,81 @@
+// ORNAMENT KITS (2026-10-04). Sixteen of them come out of the hard, elite and master reward
+// tables; each turns one item into a gilded or recoloured version of itself, and each can be taken
+// straight back off.
+//
+// ONE TRIGGER, SIXTEEN KITS, NO TABLE. Every kitt-able item carries param=ornament_kit naming the
+// kit that works on it and param=ornament_into naming what it becomes, and every ornamented item
+// carries param=ornament_from naming the plain one - so this file never names a pair. Adding a
+// seventeenth kit is a config change and nothing here has to know.
+//
+// THE PARAMS ARE ON THE BASE ITEM rather than the kit, because a kit is not always one-to-one: the
+// dragon legs/skirt kit takes either leg and each infinity colour kit takes all three robes. "What
+// does this item become" always has one answer; "what does this kit make" does not.
+//
+// WHY THE TRIGGER IS ON THE KIT CATEGORY. [opheldu,X] is looked up on both halves of a use and the
+// engine swaps last_item/last_useitem so last_item is always the half that carried the trigger
+// (network/game/client/handler/OpHeldUHandler.ts). One trigger on the kits catches the click
+// whichever way round the player does it - the same reasoning imbue_scroll.rs2 writes out.
+//
+// NOTHING IS LOST. Every kit is reversible with the Revert option on the result, which hands back
+// the plain item AND the kit, so there is no confirmation box on the way in: there is nothing to
+// protect anybody from.
+
+[opheldu,_ornament_kit]
+~ornament_kit_apply(last_item, last_useitem);
+
+[proc,ornament_kit_apply](obj $kit, obj $target)
+// TWO SLOTS, because the infinity robes take either colour kit and one slot would leave the
+// dark one a drop with nothing it fits. Nothing else uses the second.
+def_namedobj $into = null;
+if ($kit = oc_param($target, ornament_kit)) {
+    $into = oc_param($target, ornament_into);
+} else if ($kit = oc_param($target, ornament_kit2)) {
+    $into = oc_param($target, ornament_into2);
+}
+if ($into = null) {
+    // THE WRONG PAIRING IS THE LIKELY MISTAKE, not a random click - sixteen kits that all look
+    // like a small pile of gold leaf invite being tried on the wrong thing. Say which item this
+    // one is for rather than "nothing interesting happens".
+    ~ornament_kit_refuse($kit, $target);
+    return;
+}
+inv_del(inv, $kit, 1);
+inv_del(inv, $target, 1);
+inv_add(inv, $into, 1);
+~objbox($into, "You use the <lowercase(oc_name($kit))> on your <lowercase(oc_name($target))>.", 250, 0, 0);
+
+// What this kit IS for, found by asking the items rather than by a table here: the kit knows
+// nothing, so the only way to answer is to look for the item that names it.
+[proc,ornament_kit_refuse](obj $kit, obj $target)
+if (oc_param($target, ornament_from) ! null) {
+    mes("Your <lowercase(oc_name($target))> is already decorated.");
+    return;
+}
+mes("The <lowercase(oc_name($kit))> doesn't fit on that.");
+
+// ---------------------------------------------------------------- taking it back off
+//
+// Two items arrive where one left, so a full pack needs a free slot. Checked before anything is
+// deleted - the alternative is a reverted item on the floor, and this is the one place a player
+// would not be looking for it.
+[opheld4,_ornamented]
+~ornament_kit_revert(last_item);
+
+[proc,ornament_kit_revert](obj $item)
+def_namedobj $back = oc_param($item, ornament_from);
+if ($back = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_namedobj $kit = oc_param($back, ornament_kit);
+if ($item = oc_param($back, ornament_into2)) {
+    $kit = oc_param($back, ornament_kit2);
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need a free inventory slot to take the decoration back off.");
+    return;
+}
+inv_del(inv, $item, 1);
+inv_add(inv, $back, 1);
+inv_add(inv, $kit, 1);
+~objbox($kit, "You take the <lowercase(oc_name($kit))> back off your <lowercase(oc_name($back))>.", 250, 0, 0);
