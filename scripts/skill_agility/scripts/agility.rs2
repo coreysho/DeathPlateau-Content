@@ -1,5 +1,20 @@
 // Delay and 'climb' to a coord, similar to ladders. 
 // Generally used for net obstacles
+// THE ROOFTOP CLIMB. ~agility_climb_up plays human_reachforladder, which is a hand going up for a
+// rung - right for the ladders and tree branches its twenty-odd callers use it for, and wrong for
+// hauling yourself up a wall. Every rooftop course was using it, so a lap was a string of
+// ladder-reaches and blinks: the courses themselves contain no anim() of their own at all.
+//
+// human_climbing (seq 737) is the wall motion, eight frames over 44 client cycles - a tick and a
+// half - so the delay is 1 rather than the 0 that let the old one be cut off after a frame or two.
+// It is a separate proc rather than a change to agility_climb_up because that one is also what
+// Grand Tree, Eagles' Peak, Watchtower and the gnome course climb with, and a ladder is not a wall.
+[proc,agility_roof_climb](int $xp, coord $coord)
+anim(human_climbing, 0);
+p_delay(1);
+~agility_xp($xp);
+p_telejump($coord);
+
 [proc,agility_climb_up](int $xp, coord $coord)
 anim(human_reachforladder, 0);
 p_delay(0);

@@ -12,7 +12,7 @@
 if (~canifis_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the tall tree...");
-~agility_climb_up(^canifis_xp_tree, ^canifis_land_tree);
+~agility_roof_climb(^canifis_xp_tree, ^canifis_land_tree);
 mes("...and pull yourself onto the roof.");
 ~canifis_progress(1);
 

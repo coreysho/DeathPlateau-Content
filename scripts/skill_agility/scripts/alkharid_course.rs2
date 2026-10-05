@@ -27,7 +27,7 @@ if (coordz(coord) <= ^alkharid_wall_z) {
 }
 p_arrivedelay;
 mes("You climb the rough wall...");
-~agility_climb_up(^alkharid_xp_wall, ^alkharid_land_wall);
+~agility_roof_climb(^alkharid_xp_wall, ^alkharid_land_wall);
 mes("...and pull yourself onto the roof.");
 ~alkharid_progress(1);
 
@@ -84,7 +84,7 @@ if (~alkharid_blocked = true) {
 }
 p_arrivedelay;
 mes("You climb up onto the beams.");
-~agility_climb_up(^alkharid_xp_beams, ^alkharid_land_beams);
+~agility_roof_climb(^alkharid_xp_beams, ^alkharid_land_beams);
 ~alkharid_progress(6);
 
 // ---------------------------------------------------------------- 7. the second tightrope

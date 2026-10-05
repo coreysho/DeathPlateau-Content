@@ -11,7 +11,7 @@
 if (~ardougne_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the wooden beams.");
-~agility_climb_up(^ardougne_xp_beams, ^ardougne_land_beams);
+~agility_roof_climb(^ardougne_xp_beams, ^ardougne_land_beams);
 ~ardougne_progress(1);
 
 [oploc1,osrsloc_15609]

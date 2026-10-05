@@ -10,7 +10,7 @@
 if (~pollnivneach_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb onto the basket.");
-~agility_climb_up(^pollnivneach_xp_basket, ^pollnivneach_land_basket);
+~agility_roof_climb(^pollnivneach_xp_basket, ^pollnivneach_land_basket);
 ~pollnivneach_progress(1);
 
 [oploc1,osrsloc_14936]
@@ -45,7 +45,7 @@ mes("You jump to the tree.");
 if (~pollnivneach_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the rough wall.");
-~agility_climb_up(^pollnivneach_xp_wall, ^pollnivneach_land_wall);
+~agility_roof_climb(^pollnivneach_xp_wall, ^pollnivneach_land_wall);
 ~pollnivneach_progress(6);
 
 [oploc1,osrsloc_14941]

@@ -22,7 +22,7 @@ if (coordz(coord) > ^draynor_wall_z) {
 }
 p_arrivedelay;
 mes("You climb the rough wall...");
-~agility_climb_up(^draynor_xp_wall, ^draynor_land_wall);
+~agility_roof_climb(^draynor_xp_wall, ^draynor_land_wall);
 mes("...and pull yourself onto the roof.");
 ~draynor_progress(1);
 
@@ -53,7 +53,7 @@ mes("You balance along the narrow wall.");
 [oploc1,osrsloc_11630]
 p_arrivedelay;
 mes("You jump up the wall...");
-~agility_climb_up(^draynor_xp_jumpup, ^draynor_land_jumpup);
+~agility_roof_climb(^draynor_xp_jumpup, ^draynor_land_jumpup);
 ~draynor_progress(5);
 
 // ---------------------------------------------------------------- 6. the gap
@@ -68,7 +68,7 @@ mes("...and land on the far roof.");
 [oploc1,osrsloc_11632]
 p_arrivedelay;
 mes("You climb down onto the crate and jump to the ground.");
-~agility_climb_up(^draynor_xp_crate, ^draynor_land_crate);
+~agility_roof_climb(^draynor_xp_crate, ^draynor_land_crate);
 ~draynor_progress(7);
 
 // ---------------------------------------------------------------- crossing one of them

@@ -17,7 +17,7 @@ if (coordz(coord) > ^varrock_wall_z) {
 }
 p_arrivedelay;
 mes("You climb the rough wall...");
-~agility_climb_up(^varrock_xp_wall, ^varrock_land_wall);
+~agility_roof_climb(^varrock_xp_wall, ^varrock_land_wall);
 mes("...and pull yourself onto the roof.");
 ~varrock_progress(1);
 

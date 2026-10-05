@@ -13,7 +13,7 @@
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb the rough wall...");
-~agility_climb_up(^falador_xp_wall, ^falador_land_wall);
+~agility_roof_climb(^falador_xp_wall, ^falador_land_wall);
 ~falador_progress(1);
 
 [oploc1,osrsloc_14899]
