@@ -1,0 +1,113 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_14947]
+// OSRS loc 14947
+name=Gap
+model=osrsloc_14947
+width=3
+length=3
+blockrange=no
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=386
+resizez=386
+forceapproach=south
+op1=Leap
+
+[osrsloc_14987]
+// OSRS loc 14987
+name=Tightrope
+model=osrsloc_14987
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+forceapproach=west
+op1=Cross
+
+[osrsloc_14989]
+// OSRS loc 14989
+model=osrsloc_14989
+width=2
+active=no
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+
+[osrsloc_14990]
+// OSRS loc 14990
+name=Gap
+model=osrsloc_14990
+width=4
+length=2
+blockrange=no
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=512
+resizez=256
+forceapproach=south
+op1=Leap
+
+[osrsloc_14991]
+// OSRS loc 14991
+name=Gap
+model=osrsloc_14991
+width=2
+length=2
+blockrange=no
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=256
+resizez=256
+forceapproach=south
+op1=Hurdle
+
+[osrsloc_14992]
+// OSRS loc 14992
+name=Tightrope
+model=osrsloc_14992
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+forceapproach=south
+op1=Cross
+
+[osrsloc_14994]
+// OSRS loc 14994
+name=Pile of fish
+model=osrsloc_14994
+blockrange=no
+active=yes
+hillskew=yes
+forcedecor=yes
+resizex=382
+resizez=382
+forceapproach=east
+op1=Jump-in
+
+[osrsloc_26597]
+// OSRS loc 26597
+model=osrsloc_26597
+active=no
+sharelight=yes
+offsety=-120
+
+[osrsloc_26598]
+// OSRS loc 26598
+model=osrsloc_26598
+active=no
+sharelight=yes
+offsety=-120
+
+[osrsloc_26599]
+// OSRS loc 26599
+model=osrsloc_26599
+active=no
+sharelight=yes
+mirror=yes
+offsety=-120

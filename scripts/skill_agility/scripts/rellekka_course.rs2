@@ -1,0 +1,88 @@
+// The Rellekka Rooftop Course - https://oldschool.runescape.wiki/w/Rellekka_Rooftop_Course
+//
+// Agility 80, seven obstacles, 780 experience a lap, and it ends by jumping into a pile of fish.
+// The course crosses a map square boundary: the first gap and tightrope are in m40_57, the rest
+// in m41_57.
+//
+// Old School pays 920 with the Fremennik hard diary. This build has no diaries, so the base 780
+// is the whole of it.
+
+[oploc1,osrsloc_14946]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the rough wall.");
+~agility_climb_up(^rellekka_xp_wall, ^rellekka_land_wall);
+~rellekka_progress(1);
+
+[oploc1,osrsloc_14947]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You leap across the gap.");
+~rellekka_move(^rellekka_xp_gap1, ^rellekka_land_gap1, human_spot_jump);
+~rellekka_progress(2);
+
+[oploc1,osrsloc_14987]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+~rellekka_move(^rellekka_xp_rope1, ^rellekka_land_rope1, human_walk_logbalance);
+~rellekka_progress(3);
+
+[oploc1,osrsloc_14990]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You leap across the gap.");
+~rellekka_move(^rellekka_xp_gap2, ^rellekka_land_gap2, human_spot_jump);
+~rellekka_progress(4);
+
+[oploc1,osrsloc_14991]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You hurdle the gap.");
+~rellekka_move(^rellekka_xp_gap3, ^rellekka_land_gap3, human_spot_jump);
+~rellekka_progress(5);
+
+[oploc1,osrsloc_14992]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+~rellekka_move(^rellekka_xp_rope2, ^rellekka_land_rope2, human_walk_logbalance);
+~rellekka_progress(6);
+
+[oploc1,osrsloc_14994]
+if (~rellekka_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump into the pile of fish...");
+~rellekka_move(^rellekka_xp_fish, ^rellekka_land_fish, human_spot_jump);
+mes("...and clamber out onto the sand.");
+~rellekka_progress(7);
+
+[proc,rellekka_blocked]()(boolean)
+if (stat(agility) < ^rellekka_level) {
+    ~mesbox("You need an Agility level of <tostring(^rellekka_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+[proc,rellekka_move](int $xp, coord $end, seq $anim)
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
+p_telejump($end);
+~agility_xp($xp);
+
+[proc,rellekka_progress](int $completed)
+if (calc(%rellekka_course_progress + 1) >= $completed) {
+    %rellekka_course_progress = $completed;
+}
+if (%rellekka_course_progress < ^rellekka_obstacles) { return; }
+%rellekka_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_rellekka);
+~rellekka_mark_roll;
+
+[proc,rellekka_mark_roll]
+if (random(^rellekka_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

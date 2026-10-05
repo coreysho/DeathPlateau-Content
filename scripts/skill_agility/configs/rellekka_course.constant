@@ -1,0 +1,32 @@
+// The Rellekka Rooftop Course - https://oldschool.runescape.wiki/w/Rellekka_Rooftop_Course
+//
+// Agility 80, seven obstacles, 780 experience a lap. Old School pays 920 with the Fremennik hard
+// diary; this build has no diaries, so the base 780 is the whole of it.
+//
+// The course crosses a MAP SQUARE BOUNDARY - the first gap and the first tightrope are in m40_57
+// and everything else in m41_57 - which is why the graft names two regions.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: stat_advance takes xp * 10.
+^rellekka_level = 80
+^rellekka_obstacles = 7
+^rellekka_xp_wall = 200
+^rellekka_xp_gap1 = 300
+^rellekka_xp_rope1 = 400
+^rellekka_xp_gap2 = 850
+^rellekka_xp_gap3 = 250
+^rellekka_xp_rope2 = 1050
+^rellekka_xp_fish = 4750
+
+// Picked by tools/sim/courseplan.ts - each obstacle puts you down beside the next one.
+^rellekka_land_wall = 3_40_57_62_21
+^rellekka_land_gap1 = 3_40_57_62_10
+^rellekka_land_rope1 = 3_41_57_4_8
+^rellekka_land_gap2 = 3_41_57_18_6
+^rellekka_land_gap3 = 3_41_57_22_15
+// NOT THE WEST SIDE. The pile of fish refuses an approach from 2653,3676 with "I can't reach
+// that!" and takes one from anywhere else, so the tightrope lands you north of it instead of
+// on the tile nearest where you came from.
+^rellekka_land_rope2 = 3_41_57_30_29
+^rellekka_land_fish = 0_41_57_31_28
+
+^rellekka_mark_chance = 4
