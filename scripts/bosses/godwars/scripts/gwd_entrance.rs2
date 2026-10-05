@@ -1,33 +1,14 @@
-// God Wars Dungeon: getting in, and getting down.
+// God Wars Dungeon: the rope down the shaft.
 //
-// Two steps, as Old School has them. The boulder on the Trollheim summit wants 60 Strength and puts
-// you on the dungeon's top floor; the rope from there drops you onto the floor the four faction
-// doors are on. The crack beside where you land is the way back out.
+// Getting as far as the shaft is gwd_surface.rs2's business now - the boulder, the crack and the
+// hole are all out on the battlefield. What is left here is the rope at the bottom of the hole,
+// which is the step Old School has between the shaft floor and the chamber the four faction doors
+// open onto: loc 26422 "Climb-down" on the upper floor, loc 26370 "Climb" on the lower, both on
+// the same tile.
 //
-// Where the boulder stands is a deviation and gwd.constant says why: Old School's tile is inside
-// the mountain on this build.
-
-[oploc1,gwd_boulder]
-if (stat(strength) < ^gwd_entrance_strength) {
-    mes("You need a Strength level of <tostring(^gwd_entrance_strength)> to shift this boulder.");
-    return;
-}
-mes("You brace against the boulder and heave it aside.");
-anim(human_pickupfloor, 0);
-p_delay(2);
-mes("Behind it, a crack in the mountainside drops away into the dark. You squeeze through.");
-p_telejump(^gwd_entrance_inside);
-
-// Back out the way you came in.
-[oploc1,gwd_crack]
-mes("You squeeze back through the crack and out onto the mountainside.");
-anim(human_pickupfloor, 0);
-p_delay(2);
-p_telejump(^gwd_entrance_outside);
-
-// ---------------------------------------------------------------- the rope
 // The two ends are the same tile on different floors, so each lands you BESIDE the rope rather than
 // inside it - a rope blocks the tile it hangs on.
+
 [oploc1,gwd_rope_top]
 mes("You climb down the rope.");
 anim(human_pickupfloor, 0);

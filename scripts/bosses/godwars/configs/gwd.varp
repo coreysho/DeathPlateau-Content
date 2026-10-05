@@ -43,3 +43,12 @@ protect=no
 // imbued heart's does.
 [gwd_altar_minute]
 scope=perm
+
+// Whether this player has tied a rope to the hole on the God Wars battlefield. Permanent: Old
+// School's hole "stays roped" once you have done it, so the rope is spent once and the Climb-down
+// option is yours from then on. It drives the gwd_hole multiloc, so the model changes with it.
+[gwd_rope_tied]
+scope=perm
+protect=no
+type=int
+

@@ -1,0 +1,38 @@
+// THE KILLCOUNT ON SCREEN, as Old School shows it.
+//
+// Asked for after the entrance work: "add the killcount of followers to the screen like osrs". The
+// four counts were already kept - gwd_kc_* in gwd.varp, one per god, permanent - but the only way
+// to find out where you stood was to walk up to a door and be told what you were short of.
+//
+// SET FROM THE SERVER, not read by the client. The 377 client can compute an interface's text for
+// itself (area_wilderness/interfaces/wilderness_overlay.if builds its level number out of coordz
+// and a divide), but that path formats one number into one string and this panel wants four, so
+// the texts are written with if_settext the way boss_kills.rs2 writes its own.
+//
+// REDRAWN ON EVERY SHOW. The client throws away server-set state on a component when the interface
+// holding it is replaced, so an overlay that was only written when a count changed would come back
+// blank - open the panel, kill nothing, and read four stale zeroes. ~gwd_kc_overlay runs on entry
+// as well as after every kill.
+
+[proc,gwd_kc_overlay]
+if_settext(gwd_killcount:armadyl, "Armadyl: <tostring(%gwd_kc_armadyl)>");
+if_settext(gwd_killcount:bandos, "Bandos: <tostring(%gwd_kc_bandos)>");
+if_settext(gwd_killcount:saradomin, "Saradomin: <tostring(%gwd_kc_saradomin)>");
+if_settext(gwd_killcount:zamorak, "Zamorak: <tostring(%gwd_kc_zamorak)>");
+
+[proc,gwd_kc_overlay_open]
+~gwd_kc_overlay;
+if_openoverlay(gwd_killcount);
+
+// The dungeon is four map squares and the panel belongs on all of them - the chamber, the four
+// encampments and the shaft floor are spread across the lot. Walking between two of them closes
+// and reopens it, which is why the open path writes the texts rather than trusting what is there.
+[mapzone,0_44_82] ~gwd_kc_overlay_open;
+[mapzone,0_45_82] ~gwd_kc_overlay_open;
+[mapzone,0_44_83] ~gwd_kc_overlay_open;
+[mapzone,0_45_83] ~gwd_kc_overlay_open;
+
+[mapzoneexit,0_44_82] if_openoverlay(null);
+[mapzoneexit,0_45_82] if_openoverlay(null);
+[mapzoneexit,0_44_83] if_openoverlay(null);
+[mapzoneexit,0_45_83] if_openoverlay(null);

@@ -141,7 +141,10 @@
 [mapzone,0_45_55] @music_playbyregion(coord);
 [mapzone,0_45_56] @music_playbyregion(coord);
 [mapzone,0_45_57] @music_playbyregion(coord);
-[mapzone,0_45_58] @music_playbyregion(coord);
+// [mapzone,0_45_58] lives in bosses/godwars/scripts/gwd_surface.rs2 - the God Wars battlefield
+// needs the snow overlay and the chill timer on that square, and a square carries only one
+// mapzone trigger, so it took this one over and makes the music call itself. 0_44_58 moved to
+// area_trollweiss/scripts/chill.rs2 the same way.
 [mapzone,0_46_45] @music_playbyregion(coord);
 [mapzone,0_46_46] @music_playbyregion(coord);
 [mapzone,0_46_47] @music_playbyregion(coord);

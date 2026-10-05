@@ -1,0 +1,124 @@
+// THE GOD WARS BATTLEFIELD - the surface between Trollheim and the hole.
+//
+// Reported from play: "the boulder shouldn't take you directly into the GWD, you should have to go
+// through the wolves and the ice that decays you slowly". It did, and that was the whole of the
+// entrance: one click on the boulder and you were on the dungeon's shaft floor.
+//
+// Old School puts a walk between the two. Past the boulder you are still outside, on the snowfield
+// north of Trollheim - a battlefield, strewn with spikes, armour, a broken catapult and a battering
+// ram, all of which the map graft brought in with the ground. You run north across it to the hole
+// at 2917,3745, tie a rope to it, and climb down. Two things happen on the way: the chill, which
+// "drains your stats by 1 every few seconds, and will also drain all of your run and special
+// energy", and the ice wolves.
+//
+// The chill is not new code. Trollweiss has had it since area_trollweiss/scripts/chill.rs2 -
+// ~apply_chill takes a point off every stat, puts the hitpoints one through damage_player, and
+// empties run energy and the special bar - and the battlefield is simply another zone in
+// chill_zones. Its mapzone hook had to move here from music/scripts/move.rs2, which held the only
+// [mapzone,0_45_58] in the tree; that is the same thing chill.rs2 did to 0_44_58, and it carries
+// the music call across for the same reason.
+
+[mapzone,0_45_58]
+if_openoverlay(overlay_atmosphere_snow_flakes);
+~refresh_chill;
+@music_playbyregion(coord);
+
+[mapzoneexit,0_45_58]
+if_openoverlay(null);
+~refresh_chill;
+
+// THE CHILL HAS TO BE REFRESHED BY HAND HERE. [mapzone,0_45_58] only fires when the square
+// changes, and both sides of this rock are in square 45_58 - you walk up into it from Trollheim
+// at z=3712, well south of the boulder, and the hop over the boulder never leaves it. Without
+// this the timer would be started on the way up the mountain, find you outside the zone, be
+// cleared, and never start again. ~refresh_chill is safe either way round: it starts the timer
+// when the tile is in chill_zones and clears it when it is not, so the trip back south ends it.
+// ---------------------------------------------------------------- the boulder
+// stat_base, NOT stat, on both ways past this rock - which is this tree's convention for a level
+// requirement anyway (levelrequire.rs2, and the Saradomin ropes next door). It also has to be: the
+// chill drains a point off every stat every ten ticks, so a player who walks in on exactly 60
+// Strength is down to 55 within a minute, and against the current level the boulder would then
+// refuse to let them back out. The crack wants 60 Agility and would have been drained too, which
+// leaves a drained player shut on the wrong side of the mountain with their stats still falling.
+// 60 Strength, and it moves you to the other side of itself rather than anywhere else. Which side
+// you end up on is read off where you are standing, so it works both ways: in from Trollheim, and
+// back out again. The footprint is 4x3 and blocks, so the two tiles are not adjacent and this is a
+// step over rather than a walk.
+[oploc1,gwd_boulder]
+if (stat_base(strength) < ^gwd_entrance_strength) {
+    mes("You need a Strength level of <tostring(^gwd_entrance_strength)> to shift this boulder.");
+    return;
+}
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You brace against the boulder and heave it aside.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+if (coordz(coord) < coordz(loc_coord)) {
+    mes("Beyond it the mountain opens out into snow, and the wind picks up.");
+    p_telejump(^gwd_boulder_north);
+    ~refresh_chill;
+} else {
+    mes("You squeeze back through onto the Trollheim path.");
+    p_telejump(^gwd_boulder_south);
+    ~refresh_chill;
+}
+
+// ---------------------------------------------------------------- the little crack
+// The Agility way past the same rock - "either Strength 60 or Agility 60". Old School places the
+// crack twice, at 2900,3713 and 2904,3719, which are its two ends; this build also places it on the
+// dungeon's shaft floor as the way out, so the level decides which job it is doing.
+[oploc1,gwd_crack]
+if (coordy(coord) ! 0) {
+    mes("You squeeze back through the crack and out onto the mountainside.");
+    anim(human_pickupfloor, 0);
+    p_delay(2);
+    p_telejump(^gwd_hole_side);
+    return;
+}
+if (stat_base(agility) < ^gwd_entrance_agility) {
+    mes("You need an Agility level of <tostring(^gwd_entrance_agility)> to squeeze through there.");
+    return;
+}
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You squeeze into the crack.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+if (coordz(coord) < ^gwd_crack_divide) {
+    p_telejump(^gwd_crack_north);
+    ~refresh_chill;
+} else {
+    p_telejump(^gwd_crack_south);
+    ~refresh_chill;
+}
+
+// ---------------------------------------------------------------- the hole
+// Old School's hole is a two-state multiloc: Tie-rope while it is bare, Climb-down for ever after,
+// because "the hole stays roped". gwd_rope_tied is that state, permanent and per player, so each
+// player ties their own rope once.
+//
+// The trigger is on the PARENT, not on either child - that is how this build dispatches a multiloc
+// (area_abyss/scripts/abyss_outer.rs2 hooks rcu_outer_multi1, never its barriers). The client takes
+// the option text from whichever child the varp is showing, so the two ops read correctly; the
+// branch below has to repeat the test to know which one was clicked.
+[oploc1,gwd_hole]
+p_arrivedelay;
+facesquare(loc_coord);
+if (%gwd_rope_tied = 1) {
+    mes("You climb down the rope into the dark.");
+    anim(human_pickupfloor, 0);
+    p_delay(2);
+    p_telejump(^gwd_entrance_inside);
+    return;
+}
+if (inv_total(inv, rope) < 1) {
+    mes("The hole drops away further than you can see. You would need a rope.");
+    return;
+}
+mes("You tie your rope firmly to the rock at the edge of the hole.");
+anim(human_pickupfloor, 0);
+p_delay(2);
+inv_del(inv, rope, 1);
+%gwd_rope_tied = 1;
+mes("It will stay there now.");

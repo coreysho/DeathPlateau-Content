@@ -42987,6 +42987,12 @@ vislevel=hide
 head1=npc_1125_head
 head2=npc_1125_headi2
 
+// AGGRESSIVE, not cowardly. These five spawn in exactly one place in the tree - the eighteen of
+// them on the God Wars battlefield north of Trollheim, where the 2006 map already put them - and
+// out there Old School's are "high-level ice wolves" you have to pray against rather than animals
+// that run away. Nothing else uses them: Troll Romance has its own copies
+// (quest_troll_love.npc), so this changes the God Wars wolves and only those. ice_wolf_6 is
+// the same change, further down.
 [ice_wolf_1]
 name=Ice wolf
 desc=Not man's best friend.
@@ -43015,7 +43021,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [ice_wolf_2]
@@ -43048,7 +43054,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [ice_wolf_3]
@@ -43081,7 +43087,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [ice_wolf_4]
@@ -43114,7 +43120,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [ice_wolf_5]
@@ -43147,7 +43153,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [ice_wolf_6]
@@ -43180,7 +43186,7 @@ param=damagetype,^stab_style
 param=attack_anim,dog_attack
 param=defend_anim,dog_block
 param=death_anim,dog_death
-huntmode=cowardly
+huntmode=aggressive_melee
 param=death_drop,wolf_bones
 
 [desert_treasure_invisible_npc]
