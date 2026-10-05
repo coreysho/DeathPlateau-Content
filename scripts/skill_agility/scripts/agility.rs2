@@ -29,6 +29,16 @@ if (coordy($end) ! coordy(coord)) {
 }
 ~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, $direction, false);
 ~agility_xp($xp);
+// AND ITS OPPOSITE. The last obstacle of a course drops you back into the street, and playing
+// the climbing-UP animation at it reads as the player hauling themselves up thin air. Reported
+// from play on Draynor's crate: "the final obstacle where you jump down, it shows a climbing up
+// animation". human_climbing_down (seq 740) is the same motion reversed.
+[proc,agility_roof_climb_down](int $xp, coord $coord)
+anim(human_climbing_down, 0);
+p_delay(1);
+~agility_xp($xp);
+p_telejump($coord);
+
 [proc,agility_roof_climb](int $xp, coord $coord)
 anim(human_climbing, 0);
 p_delay(1);
