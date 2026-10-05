@@ -47,14 +47,23 @@
 ^gwd_crack_divide = 3716
 
 // The hole itself is at 2917,3745, 4x4; this is the tile beside it that you stand on and come back
-// out onto. Climbing down lands you on the shaft floor, where the rope to the chamber hangs.
+// out onto.
 ^gwd_hole_side = 0_45_58_37_32
-^gwd_entrance_inside = 3_45_82_0_63
 
-// The rope between the entrance floor and the dungeon proper. Both ends are the same tile on
-// different levels, so each lands you beside it rather than in it.
+// AND THE HOLE DROPS YOU STRAIGHT INTO THE CHAMBER. It used to land on plane 3 of m45_82, on the
+// strength of Old School having a shaft floor between the hole and the rope - but PLANE 3 OF THAT
+// SQUARE HAS NO TERRAIN. The graft brought 2,061 locs across for it and not one tile of floor, so
+// every tile up there is undrawn: the black square the owner was standing on, with nothing under
+// it and no npc on the whole plane. Plane 2 is the dungeon - 1,829 drawn tiles and all eighteen
+// spiritual spawns - so the hole goes there, beside the rope, which is where climbing down the
+// rope used to put you.
+^gwd_entrance_inside = 2_45_82_0_62
+
+// AND CLIMBING BACK UP COMES OUT ON THE SURFACE, next to the hole. It used to go to plane 3 as
+// well, which left the only way out of the dungeon leading into the same void. gwd_rope_top, the
+// matching loc up there, is unreachable now and should be: there is no room for it to stand in.
 ^gwd_rope_bottom = 2_45_82_0_62
-^gwd_rope_topside = 3_45_82_0_63
+^gwd_rope_topside = 0_45_58_37_32
 
 // ---------------------------------------------------------------- the four ways through
 // Old School gates each encampment behind one level-70 skill. The obstacles are the cache's own
@@ -117,3 +126,11 @@
 // Ranged 69 - the biggest hit in the dungeon - magic 21, melee 25 (his strength bonus carries that).
 ^kreearra_ranged_max = 69
 ^kreearra_magic_max = 21
+
+// THE DUNGEON, as a box. Four map squares - 44_82, 45_82, 44_83 and 45_83 - and the killcount
+// reset needs to know whether a player who just left one of them left the dungeon or only walked
+// into the next square along.
+^gwd_dungeon_x1 = 2816
+^gwd_dungeon_x2 = 2943
+^gwd_dungeon_z1 = 5248
+^gwd_dungeon_z2 = 5375

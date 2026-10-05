@@ -32,7 +32,9 @@ if_openoverlay(gwd_killcount);
 [mapzone,0_44_83] ~gwd_kc_overlay_open;
 [mapzone,0_45_83] ~gwd_kc_overlay_open;
 
-[mapzoneexit,0_44_82] if_openoverlay(null);
-[mapzoneexit,0_45_82] if_openoverlay(null);
-[mapzoneexit,0_44_83] if_openoverlay(null);
-[mapzoneexit,0_45_83] if_openoverlay(null);
+// Leaving a square closes the panel AND starts the killcount check - see the bottom of
+// gwd_killcount.rs2 for why that check waits a tick.
+[mapzoneexit,0_44_82] @gwd_left_a_square;
+[mapzoneexit,0_45_82] @gwd_left_a_square;
+[mapzoneexit,0_44_83] @gwd_left_a_square;
+[mapzoneexit,0_45_83] @gwd_left_a_square;
