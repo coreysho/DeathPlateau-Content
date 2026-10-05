@@ -1,22 +1,16 @@
 // God Wars Dungeon: the rope down the shaft.
 //
-// Getting as far as the shaft is gwd_surface.rs2's business now - the boulder, the crack and the
-// hole are all out on the battlefield. What is left here is the rope at the bottom of the hole,
-// which is the step Old School has between the shaft floor and the chamber the four faction doors
-// open onto: loc 26422 "Climb-down" on the upper floor, loc 26370 "Climb" on the lower, both on
-// the same tile.
+// Getting as far as the hole is gwd_surface.rs2's business - the boulder, the crack and the hole
+// are all out on the battlefield. What is left here is the rope out of the chamber.
 //
-// The two ends are the same tile on different floors, so each lands you BESIDE the rope rather than
-// inside it - a rope blocks the tile it hangs on.
-
-[oploc1,gwd_rope_top]
-mes("You climb down the rope.");
-anim(human_pickupfloor, 0);
-p_delay(2);
-p_telejump(^gwd_rope_bottom);
+// OLD SCHOOL HAS A SHAFT FLOOR BETWEEN THE TWO and this build does not, because plane 3 of m45_82
+// came across the graft with 2,061 locs and no terrain at all - every tile of it undrawn, no npc on
+// any of it. So the hole goes straight to the chamber on plane 2 and this rope comes straight back
+// out to the surface. gwd_rope_top, the "Climb-down" loc placed up on plane 3, is unreachable and
+// stays that way until there is a floor for it to stand on.
 
 [oploc1,gwd_rope_down]
-mes("You climb up the rope.");
+mes("You climb up the rope, and out into the snow.");
 anim(human_pickupfloor, 0);
 p_delay(2);
 p_telejump(^gwd_rope_topside);

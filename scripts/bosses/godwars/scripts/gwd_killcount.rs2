@@ -2,7 +2,8 @@
 //
 // Each god's followers are tagged with param=gwd_god (configs/gwd.param). Kill one and that god's
 // count goes up; the door spends ^gwd_killcount_needed of them to let you in. The count is per god
-// and survives a logout, as it does in Old School.
+// and lasts as long as you stay down there: LEAVING THE DUNGEON WIPES IT, which is Old School's
+// rule and the reason a trip is a trip rather than a running total. See the bottom of this file.
 //
 // The doors are the 474 and OSRS locs the map import brought in, renamed so this file can read:
 // gwd_door_armadyl, gwd_door_bandos, gwd_door_zamorak and gwd_door_saradomin. All four are called
@@ -114,3 +115,38 @@ if ($n = 1) {
 } else {
     mes("You have killed <tostring($n)> followers of <~gwd_god_name($god)>.");
 }
+
+// ---------------------------------------------------------------- leaving wipes it
+//
+// "Players must leave and re-enter the dungeon to reset their killcount" - so it goes when they do.
+//
+// THE CHECK IS A TICK LATE ON PURPOSE. The dungeon is four map squares and walking from one to the
+// next fires [mapzoneexit] for the square behind before [mapzone] for the square ahead; resetting
+// on the exit itself would wipe the count every time somebody crossed 2880 or 5312, which is a
+// line straight through the middle of the chamber. A queue a tick later asks where the player
+// actually ended up, and only then decides.
+[label,gwd_left_a_square]
+if_openoverlay(null);
+queue(gwd_kc_leave, 1, 0);
+
+[queue,gwd_kc_leave]
+if (~gwd_in_dungeon = true) {
+    return;
+}
+if (add(add(%gwd_kc_armadyl, %gwd_kc_bandos), add(%gwd_kc_saradomin, %gwd_kc_zamorak)) = 0) {
+    return;
+}
+%gwd_kc_armadyl = 0;
+%gwd_kc_bandos = 0;
+%gwd_kc_saradomin = 0;
+%gwd_kc_zamorak = 0;
+mes("You leave the God Wars Dungeon, and your killcount with it.");
+
+[proc,gwd_in_dungeon]()(boolean)
+if (coordx(coord) < ^gwd_dungeon_x1 | coordx(coord) > ^gwd_dungeon_x2) {
+    return(false);
+}
+if (coordz(coord) < ^gwd_dungeon_z1 | coordz(coord) > ^gwd_dungeon_z2) {
+    return(false);
+}
+return(true);
