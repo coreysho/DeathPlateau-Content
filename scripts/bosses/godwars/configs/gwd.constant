@@ -33,7 +33,22 @@
 //
 // _outside is the tile you stand on to click it, immediately south of its 4x3 footprint.
 ^gwd_entrance_strength = 60
-^gwd_entrance_outside = 0_45_58_18_3
+^gwd_entrance_agility = 60
+
+// The two sides of the boulder. Its footprint is x2898..2901, z3716..3718 and it blocks, so these
+// are the standing tiles either side of it rather than neighbours.
+^gwd_boulder_south = 0_45_58_18_3
+^gwd_boulder_north = 0_45_58_18_7
+
+// The two ends of the little crack, Old School's Agility way past the same rock: 2900,3713 and
+// 2904,3719. _divide is the z that separates them - south of it you are coming up from Trollheim.
+^gwd_crack_south = 0_45_58_19_1
+^gwd_crack_north = 0_45_58_24_8
+^gwd_crack_divide = 3716
+
+// The hole itself is at 2917,3745, 4x4; this is the tile beside it that you stand on and come back
+// out onto. Climbing down lands you on the shaft floor, where the rope to the chamber hangs.
+^gwd_hole_side = 0_45_58_37_32
 ^gwd_entrance_inside = 3_45_82_0_63
 
 // The rope between the entrance floor and the dungeon proper. Both ends are the same tile on

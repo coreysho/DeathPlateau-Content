@@ -1,0 +1,35 @@
+// OSRS locs imported by tools/models/importosrslocs.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[gwd_hole_tied]
+// OSRS loc 26418
+name=Hole
+model=gwd_hole_tied
+width=4
+length=4
+blockrange=no
+active=yes
+sharelight=yes
+op1=Climb-down
+
+// THE HOLE at the top of the God Wars battlefield - the way down into the dungeon.
+//
+// Two states, as Old School has them: unroped it offers Tie-rope, and once you have tied one on it
+// offers Climb-down for good ("the hole stays roped"). That is a multiloc on gwd_rope_tied, which
+// is per-player and permanent, so each player ties their own rope once and never again.
+//
+// Old School places loc 26419 here, a multiloc whose two children are 26417 (Tie-rope, unroped
+// model) and 26418 (Climb-down, roped). The graft imported 26417 with the map; 26418 came in
+// separately as gwd_hole_tied. This parent is ours, because 26419 carries its state in a varbit
+// this build has no equivalent of.
+
+[gwd_hole]
+multivar=gwd_rope_tied
+multiloc=0,gwd_hole_untied
+multiloc=1,gwd_hole_tied
+width=4
+length=4
+blockrange=no
+active=yes
+sharelight=yes
+

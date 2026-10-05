@@ -2,3 +2,8 @@
 table=coord_pair_table
 // Trollweiss Mountain
 data=coord_pair,0_44_58_6_31,0_44_58_10_33
+// The God Wars battlefield, north of the boulder on Trollheim: x2893..2932, z3719..3759. Same
+// effect, same timer - Old School's chill there "drains your stats by 1 every few seconds, and
+// will also drain all of your run and special energy", which is what ~apply_chill already does.
+// It starts north of the boulder on purpose: the Trollheim path up to it is not chilled.
+data=coord_pair,0_45_58_13_7,0_45_58_52_47

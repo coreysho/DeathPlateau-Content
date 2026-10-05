@@ -96,6 +96,7 @@ if ($have < ^gwd_killcount_needed) {
     return;
 }
 ~gwd_killcount_set($god, sub($have, ^gwd_killcount_needed));
+~gwd_kc_overlay;
 mes("The door opens, and shuts again behind you.");
 p_telejump($inside);
 
@@ -107,6 +108,7 @@ p_telejump($inside);
 // Re-reads the count rather than being handed it, so the number said is the number stored.
 [queue,gwd_killcount_say](int $god)
 def_int $n = ~gwd_killcount($god);
+~gwd_kc_overlay;
 if ($n = 1) {
     mes("You have killed 1 follower of <~gwd_god_name($god)>.");
 } else {
