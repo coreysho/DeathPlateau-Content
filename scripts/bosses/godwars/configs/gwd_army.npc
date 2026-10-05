@@ -1,0 +1,285 @@
+// Imported from the rev 474 cache by tools/models/importnpc474batch.py: models copied
+// byte-for-byte, chatheads brought across, and one copy of each model shared between
+// every npc that wears it. Combat stats, huntmode and drops are by hand - the cache
+// carries none of them.
+// Combat numbers are Old School's own - 474 carries no stats - matched npc for npc by name and level.
+
+[gwd_ork_1]
+// rev 474 npc 6271
+name=Ork
+desc=Ork.
+model1=npc_gwd_ork_1_1
+model2=npc_gwd_ork_1_2
+model3=npc_gwd_ork_1_3
+size=1
+readyanim=gwd_seq_4318
+walkanim=gwd_seq_4319
+op2=Attack
+vislevel=107
+param=attack_anim,gwd_seq_4320
+param=defend_anim,gwd_seq_4322
+param=death_anim,gwd_seq_4321
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_bandos
+// Old School npc 2237: its stats, from the cache that carries them - 474 does not.
+attack=100
+defence=60
+strength=100
+hitpoints=110
+ranged=1
+magic=1
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_ork_2]
+// rev 474 npc 6272
+name=Ork
+desc=Ork.
+model1=npc_gwd_ork_2_1
+model2=npc_gwd_ork_2_2
+model3=npc_gwd_ork_1_3
+size=1
+readyanim=gwd_seq_4318
+walkanim=gwd_seq_4319
+op2=Attack
+vislevel=107
+param=attack_anim,gwd_seq_4320
+param=defend_anim,gwd_seq_4322
+param=death_anim,gwd_seq_4321
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_bandos
+// Old School npc 2238: its stats, from the cache that carries them - 474 does not.
+attack=100
+defence=60
+strength=100
+hitpoints=110
+ranged=1
+magic=1
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_ork_3]
+// rev 474 npc 6273
+name=Ork
+desc=Ork.
+model1=npc_gwd_ork_1_1
+model2=npc_gwd_ork_2_2
+model3=npc_gwd_ork_1_3
+size=1
+readyanim=gwd_seq_4318
+walkanim=gwd_seq_4319
+op2=Attack
+recol1s=8452
+recol1d=8421
+recol2s=7395
+recol2d=7364
+recol3s=5281
+recol3d=5250
+recol4s=16910
+recol4d=24275
+recol5s=15853
+recol5d=23218
+recol6s=13739
+recol6d=22161
+vislevel=107
+param=attack_anim,gwd_seq_4320
+param=defend_anim,gwd_seq_4322
+param=death_anim,gwd_seq_4321
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_bandos
+// Old School npc 2239: its stats, from the cache that carries them - 474 does not.
+attack=100
+defence=60
+strength=100
+hitpoints=110
+ranged=1
+magic=1
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_ork_4]
+// rev 474 npc 6274
+name=Ork
+desc=Ork.
+model1=npc_gwd_ork_2_1
+model2=npc_gwd_ork_1_2
+model3=npc_gwd_ork_1_3
+size=1
+readyanim=gwd_seq_4318
+walkanim=gwd_seq_4319
+op2=Attack
+recol1s=8452
+recol1d=4226
+recol2s=7395
+recol2d=3169
+recol3s=5281
+recol3d=1088
+vislevel=107
+param=attack_anim,gwd_seq_4320
+param=defend_anim,gwd_seq_4322
+param=death_anim,gwd_seq_4321
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_bandos
+// Old School npc 2240: its stats, from the cache that carries them - 474 does not.
+attack=100
+defence=60
+strength=100
+hitpoints=110
+ranged=1
+magic=1
+huntmode=gwd_aggressive_bandos
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_gorak]
+// rev 474 npc 6218
+name=Gorak
+desc=Gorak.
+model1=npc_gwd_gorak_1
+size=2
+readyanim=gwd_seq_4299
+walkanim=gwd_seq_4298
+resizeh=100
+resizev=100
+op2=Attack
+vislevel=149
+param=attack_anim,gwd_seq_4300
+param=defend_anim,gwd_seq_4299
+param=death_anim,gwd_seq_4302
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,big_bones
+param=gwd_god,^gwd_god_zamorak
+// Old School npc 3141: its stats, from the cache that carries them - 474 does not.
+attack=133
+defence=135
+strength=126
+hitpoints=128
+ranged=1
+magic=1
+huntmode=gwd_aggressive_zamorak
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_saradomin_priest]
+// rev 474 npc 6254
+name=Saradomin priest
+desc=Saradomin priest.
+model1=npc_gwd_saradomin_priest_1
+model2=npc_gwd_saradomin_priest_2
+model3=npc_gwd_saradomin_priest_3
+model4=npc_gwd_saradomin_priest_4
+readyanim=gwd_seq_808
+walkanim=gwd_seq_819
+op2=Attack
+vislevel=113
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_saradomin
+// Old School npc 2209: its stats, from the cache that carries them - 474 does not.
+attack=120
+defence=120
+strength=46
+hitpoints=89
+ranged=1
+magic=125
+huntmode=gwd_aggressive_saradomin
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_saradomin_knight_1]
+// rev 474 npc 6258
+name=Knight of Saradomin
+desc=Knight of Saradomin.
+model1=npc_gwd_saradomin_knight_1_1
+model2=npc_gwd_saradomin_knight_1_2
+model3=npc_gwd_saradomin_knight_1_3
+model4=npc_gwd_saradomin_knight_1_4
+readyanim=gwd_seq_808
+walkanim=gwd_seq_819
+op2=Attack
+recol1s=13344
+recol1d=2214
+vislevel=103
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_saradomin
+// Old School npc 2213: its stats, from the cache that carries them - 474 does not.
+attack=75
+defence=70
+strength=85
+hitpoints=135
+ranged=1
+magic=60
+huntmode=gwd_aggressive_saradomin
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks
+
+[gwd_saradomin_knight_2]
+// rev 474 npc 6259
+name=Knight of Saradomin
+desc=Knight of Saradomin.
+model1=npc_gwd_saradomin_knight_2_1
+model2=npc_gwd_saradomin_knight_1_2
+model3=npc_gwd_saradomin_knight_1_3
+model4=npc_gwd_saradomin_knight_2_4
+readyanim=gwd_seq_808
+walkanim=gwd_seq_819
+op2=Attack
+recol1s=12686
+recol1d=13777
+recol2s=11629
+recol2d=11663
+recol3s=10572
+recol3d=7471
+recol4s=19028
+recol4d=21138
+recol5s=17970
+recol5d=19023
+recol6s=15856
+recol6d=16910
+vislevel=101
+param=attack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=death_anim,human_death
+// No loot table of its own yet, so the bones it leaves are all it leaves.
+param=death_drop,bones
+param=gwd_god,^gwd_god_saradomin
+// Old School npc 2214: its stats, from the cache that carries them - 474 does not.
+attack=75
+defence=82
+strength=90
+hitpoints=108
+ranged=1
+magic=60
+huntmode=gwd_aggressive_saradomin
+huntrange=8
+category=gwd_army
+// [ai_timer] does not fire without one - see scripts/gwd_skirmish.rs2.
+timer=^gwd_skirmish_ticks

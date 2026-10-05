@@ -134,3 +134,11 @@
 ^gwd_dungeon_x2 = 2943
 ^gwd_dungeon_z1 = 5248
 ^gwd_dungeon_z2 = 5375
+
+// THE SKIRMISH. The timer on each follower fires every ^gwd_skirmish_ticks, and a swing comes out
+// of one firing in ^gwd_skirmish_odds - so a given follower swings about every half a minute. Slow
+// on purpose: the chamber should look like a running battle, not empty itself in a minute, and a
+// follower killed by another follower drops nothing and respawns.
+^gwd_skirmish_ticks = 10
+^gwd_skirmish_odds = 5
+^gwd_skirmish_maxhit = 4

@@ -1,0 +1,61 @@
+// THE FREE-FOR-ALL (2026-10-05). "This is where the majority of the fighting takes place, with a
+// free-for-all between each god's forces" - and until now the four armies stood in their quarters
+// ignoring each other entirely.
+//
+// WHY THIS IS NOT A HUNT. The obvious answer is a hunt with type=npc, and it does not work: an npc
+// carries ONE huntmode and all four armies already spend theirs on the player aggression
+// (gwd.hunt), which is the thing nobody wants to lose. Nor is there an npc-versus-npc combat path
+// to hand it to - [ai_opnpc3,_] follows and does not fight, and skill_combat's whole chain is a
+// monster hitting a player.
+//
+// So the skirmish is driven off each follower's own timer, and the damage goes down the one route
+// this build already has for it: npc_huntall to pick up everything adjacent, then
+// ~npc_default_damage on each. That is exactly what Commander Montai's catapult does to the
+// Khazard troops, and npc_combat.rs2 names it - "for npc-vs-npc damage (commander_montai) it is
+// null, finduid returns false, and the override correctly does nothing".
+//
+// NOBODY GETS CREDIT FOR THESE KILLS, which is right and is handled for free: every drop table in
+// the build opens with "if (npc_findhero = ^false) { return; }", and a follower killed by another
+// follower has no hero. They die, they drop nothing, they respawn. Killcount does not move either -
+// gwd_killcount_add has the same guard at the top.
+
+// ---------------------------------------------------------------- who swings, and when
+// One trigger per army category. The four exist already for the drop tables, which is lucky: a
+// second category on an npc is not possible, and this needs no new ones.
+[ai_timer,_gwd_spiritual_warrior] @gwd_skirmish;
+[ai_timer,_gwd_spiritual_ranger] @gwd_skirmish;
+[ai_timer,_gwd_spiritual_mage] @gwd_skirmish;
+[ai_timer,_gwd_aviansie] @gwd_skirmish;
+// The rest of the armies - configs/gwd_army.npc and configs/gwd_rabble.npc - share one, which
+// they can because no drop table is keyed off it, unlike the spirituals.
+[ai_timer,_gwd_army] @gwd_skirmish;
+
+[label,gwd_skirmish]
+def_int $god = npc_param(gwd_god);
+if ($god = ^gwd_god_none) {
+    return;
+}
+// A PLAYER IN THE FIGHT OWNS IT. npc_findhero is true once anybody has damaged this npc, and while
+// that holds the aggression hunt is driving it - interrupting with a swing at a neighbour would
+// cut the attack animation the player is reading the timing off.
+if (npc_findhero = ^true) {
+    return;
+}
+if (random(^gwd_skirmish_odds) ! 0) {
+    return;
+}
+// Read everything off the attacker BEFORE npc_huntall, because npc_findnext makes each target the
+// active npc in turn and the attacker is not reachable again afterwards.
+def_coord $at = npc_coord;
+def_seq $swing = npc_param(attack_anim);
+if ($swing ! null) {
+    npc_anim($swing, 0);
+}
+// Adjacent only - this is a melee swing at whoever is in reach, not an area attack. The attacker
+// is at distance 0 and excluded by the god test below rather than by range.
+npc_huntall($at, 1, 1);
+while (npc_findnext = true) {
+    if (npc_param(gwd_god) ! ^gwd_god_none & npc_param(gwd_god) ! $god) {
+        ~npc_default_damage(random(^gwd_skirmish_maxhit));
+    }
+}

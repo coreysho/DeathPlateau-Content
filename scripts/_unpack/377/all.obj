@@ -44452,6 +44452,11 @@ weight=1g
 certlink=viking_red_splat
 certtemplate=template_for_cert
 
+// NOT THE BERSERKER HELM, despite being the first thing an id search for one turns up. This is the
+// plain Fremennik helm, 3748, and the Berserker helm is viking_helmet_crush at 3751 - already in
+// this build, already +3 strength, and with the defences to match (31/29/33/30 against this one's
+// 19/21/16/19). This nearly took a +3 it should not have had, to make the PK kits work, while the
+// real helm sat four ids away with the bonus already on it.
 [viking_helmet]
 name=Fremennik helm
 desc=A sturdy helm worn only by Fremennik clan members.
