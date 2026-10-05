@@ -11399,3 +11399,278 @@ cost=12000
 iop1=Wear
 
 // No combat bonuses - this one is worn for the look.
+// THE FIFTEEN BEGINNER TREASURE TRAIL UNIQUES (tools/models/batches/batch_beginner_clues.txt).
+// This build has no beginner tier - the 377 cache has easy, medium and hard, and Beginner Treasure
+// Trails is a 2018 addition - so they are rolled from the EASY table instead of inventing a fourth
+// tier. scripts/easy/trail_clue_easy_reward.rs2 is where they come out.
+
+
+[bear_feet]
+name=Bear feet
+desc=Vicious bear slippers.
+model=obj_bear_feet
+manwear=obj_bear_feet_manwear,0
+womanwear=obj_bear_feet_womanwear,0
+wearpos=feet
+2dzoom=750
+2dxan=68
+2dyan=141
+2dyof=3
+weight=200g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[mole_slippers]
+name=Mole slippers
+desc=Cute mole slippers.
+model=obj_mole_slippers
+manwear=obj_mole_slippers_manwear,0
+womanwear=obj_mole_slippers_womanwear,0
+wearpos=feet
+2dzoom=828
+2dxan=149
+2dyan=165
+2dxof=5
+2dyof=-9
+weight=200g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[frog_slippers]
+name=Frog slippers
+desc=Cute frog slippers.
+model=obj_frog_slippers
+manwear=obj_frog_slippers_manwear,0
+womanwear=obj_frog_slippers_womanwear,0
+wearpos=feet
+2dzoom=956
+2dxan=191
+2dyan=147
+2dxof=4
+2dyof=-7
+weight=200g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[demon_feet]
+name=Demon feet
+desc=Vicious demon slippers.
+model=obj_demon_feet
+manwear=obj_demon_feet_manwear,0
+womanwear=obj_demon_feet_womanwear,0
+wearpos=feet
+2dzoom=828
+2dxan=149
+2dyan=156
+2dxof=3
+2dyof=-7
+weight=200g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[sandwich_lady_hat]
+name=Sandwich lady hat
+desc=A hat worn by a sandwich lady.
+model=obj_sandwich_lady_hat
+manwear=obj_sandwich_lady_hat_manwear,0
+womanwear=obj_sandwich_lady_hat_womanwear,0
+manhead=obj_sandwich_lady_hat_manhead
+womanhead=obj_sandwich_lady_hat_womanhead
+wearpos=hat
+2dzoom=452
+2dxan=128
+2dyan=54
+weight=907g
+cost=200
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[sandwich_lady_top]
+name=Sandwich lady top
+desc=A top worn by a sandwich lady.
+model=obj_sandwich_lady_top
+manwear=obj_sandwich_lady_top_manwear,0
+manwear2=obj_sandwich_lady_top_manwear2
+womanwear=obj_sandwich_lady_top_womanwear,0
+womanwear2=obj_sandwich_lady_top_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1106
+2dxan=536
+2dxof=1
+recol1s=14724
+recol1d=28274
+weight=907g
+cost=500
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[sandwich_lady_bottom]
+name=Sandwich lady bottom
+desc=Bottoms worn by a sandwich lady.
+model=obj_sandwich_lady_bottom
+manwear=obj_sandwich_lady_bottom_manwear,0
+womanwear=obj_sandwich_lady_bottom_womanwear,0
+wearpos=legs
+2dzoom=1940
+2dxan=572
+2dyof=1
+recol1s=2340
+recol1d=28274
+recol2s=6342
+recol2d=28274
+weight=907g
+cost=300
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[jester_cape]
+name=Jester cape
+desc=A jester cape.
+model=obj_jester_cape
+manwear=obj_jester_cape_manwear,0
+womanwear=obj_jester_cape_womanwear,0
+wearpos=back
+2dzoom=1874
+2dxan=352
+2dyan=1996
+2dxof=3
+2dyof=12
+weight=453g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[shoulder_parrot]
+name=Shoulder parrot
+desc=Polly want a cracker?
+model=obj_shoulder_parrot
+manwear=obj_shoulder_parrot_manwear,0
+womanwear=obj_shoulder_parrot_womanwear,5
+wearpos=back
+2dzoom=400
+2dxan=25
+2dyan=185
+2dxof=1
+2dyof=1
+weight=453g
+cost=1000
+iop2=Wear
+// No combat bonuses - this one is worn for the look.
+
+[monk_s_robe_top_t]
+name=Monk's robe top (t)
+desc=I feel the gods don't enjoy my materialistic obsessions.
+model=obj_monk_s_robe_top_t
+manwear=obj_monk_s_robe_top_t_manwear,0
+manwear2=obj_monk_s_robe_top_t_manwear2
+womanwear=obj_monk_s_robe_top_t_womanwear,0
+womanwear2=obj_monk_s_robe_top_t_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1370
+2dxan=536
+2dyof=7
+recol1s=14724
+recol1d=13539
+recol2s=6342
+recol2d=22399
+weight=907g
+cost=500
+iop2=Wear
+// A repaint of monkrobetop, so the same armour - set by hand because the match could not find it:
+// this cache calls BOTH halves "Monk's robe", so "Monk's robe top" matches nothing and the fill
+// fell back to Old School's own numbers, which are prayerbonus 6 and no Saradomin flag. The base
+// item here is 5 and carries the flag, exactly as monkrobebottom does for the (t) legs below.
+// It is the same trap "Black kiteshield(h)" set when these rewards were first imported.
+param=prayerbonus,5
+param=saradominitem,^true
+
+[monk_s_robe_t]
+name=Monk's robe (t)
+desc=I feel the gods don't enjoy my materialistic obsessions.
+model=obj_monk_s_robe_t
+manwear=obj_monk_s_robe_t_manwear,0
+womanwear=obj_monk_s_robe_t_womanwear,0
+wearpos=legs
+2dzoom=1940
+2dxan=572
+2dyof=1
+recol1s=2340
+recol1d=13539
+recol2s=6342
+recol2d=22399
+weight=907g
+cost=500
+iop2=Wear
+// A repaint of monkrobebottom, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+param=prayerbonus,6
+param=saradominitem,^true
+
+[amulet_of_defence_t]
+name=Amulet of defence (t)
+desc=An enchanted emerald amulet of protection that looks good.
+model=obj_amulet_of_defence_t
+manwear=obj_amulet_of_defence_t_manwear,0
+womanwear=obj_amulet_of_defence_t_womanwear,0
+wearpos=front
+2dzoom=528
+2dxan=320
+2dyan=110
+2dxof=1
+2dyof=7
+recol1s=32767
+recol1d=1666
+recol2s=13537
+recol2d=32767
+recol3s=8321
+recol3d=32767
+weight=10g
+cost=1275
+iop2=Wear
+// A repaint of amulet_of_defence, so the same armour: stats copied from it, not from
+// the modern cache, which has rebalanced some of these since 2006.
+param=stabdefence,7
+param=slashdefence,7
+param=crushdefence,7
+param=magicdefence,7
+param=rangedefence,7
+
+[rune_scimitar_ornament_kit_guthix]
+name=Rune scimitar ornament kit (Guthix)
+desc=Use on a rune scimitar to make it look fancier!
+model=obj_rune_scimitar_ornament_kit_guthix
+2dzoom=1592
+2dxan=564
+weight=500g
+cost=5000
+// No combat bonuses - this one is worn for the look.
+category=ornament_kit
+
+[rune_scimitar_ornament_kit_saradomin]
+name=Rune scimitar ornament kit (Saradomin)
+desc=Use on a rune scimitar to make it look fancier!
+model=obj_rune_scimitar_ornament_kit_saradomin
+2dzoom=1592
+2dxan=564
+weight=500g
+cost=5000
+// No combat bonuses - this one is worn for the look.
+category=ornament_kit
+
+[rune_scimitar_ornament_kit_zamorak]
+name=Rune scimitar ornament kit (Zamorak)
+desc=Use on a rune scimitar to make it look fancier!
+model=obj_rune_scimitar_ornament_kit_zamorak
+2dzoom=1592
+2dxan=564
+weight=500g
+cost=5000
+
+// No combat bonuses - this one is worn for the look.
+category=ornament_kit

@@ -84,7 +84,7 @@ switch_int ($random) {
 // sitting unused in the 377 cache or imported on 2026-10-04 (clue_rewards.obj).
 
 [proc,trail_clue_easy_rare]
-def_int $random = random(130);
+def_int $random = random(145);
 
 switch_int ($random) {
     case 0 : inv_add(trail_rewardinv, black_full_helm_trim, 1);   // Black full helm (t)
@@ -217,4 +217,24 @@ switch_int ($random) {
     case 127 : inv_add(trail_rewardinv, amulet_of_power_t, 1);   // Amulet of power (t)
     case 128 : inv_add(trail_rewardinv, ham_joint, 1);   // Ham joint
     case 129 : inv_add(trail_rewardinv, rain_bow, 1);   // Rain bow
+    // OLD SCHOOL'S FIFTEEN BEGINNER UNIQUES, on this table because there is no other.
+    // Beginner Treasure Trails is a 2018 addition and the 377 cache has easy, medium and hard,
+    // so a fourth tier would be inventing one; easy is the tier they sit next to in Old School
+    // and the one a new player runs. They take the same share of this roll as every other
+    // entry - the bound below is 145 now, not 130.
+    case 130 : inv_add(trail_rewardinv, bear_feet, 1);   // Bear feet
+    case 131 : inv_add(trail_rewardinv, mole_slippers, 1);   // Mole slippers
+    case 132 : inv_add(trail_rewardinv, frog_slippers, 1);   // Frog slippers
+    case 133 : inv_add(trail_rewardinv, demon_feet, 1);   // Demon feet
+    case 134 : inv_add(trail_rewardinv, sandwich_lady_hat, 1);   // Sandwich lady hat
+    case 135 : inv_add(trail_rewardinv, sandwich_lady_top, 1);   // Sandwich lady top
+    case 136 : inv_add(trail_rewardinv, sandwich_lady_bottom, 1);   // Sandwich lady bottom
+    case 137 : inv_add(trail_rewardinv, jester_cape, 1);   // Jester cape
+    case 138 : inv_add(trail_rewardinv, shoulder_parrot, 1);   // Shoulder parrot
+    case 139 : inv_add(trail_rewardinv, monk_s_robe_top_t, 1);   // Monk's robe top (t)
+    case 140 : inv_add(trail_rewardinv, monk_s_robe_t, 1);   // Monk's robe (t)
+    case 141 : inv_add(trail_rewardinv, amulet_of_defence_t, 1);   // Amulet of defence (t)
+    case 142 : inv_add(trail_rewardinv, rune_scimitar_ornament_kit_guthix, 1);   // Rune scimitar ornament kit (Guthix)
+    case 143 : inv_add(trail_rewardinv, rune_scimitar_ornament_kit_saradomin, 1);   // Rune scimitar ornament kit (Saradomin)
+    case 144 : inv_add(trail_rewardinv, rune_scimitar_ornament_kit_zamorak, 1);   // Rune scimitar ornament kit (Zamorak)
 }

@@ -24,13 +24,17 @@
 ~ornament_kit_apply(last_item, last_useitem);
 
 [proc,ornament_kit_apply](obj $kit, obj $target)
-// TWO SLOTS, because the infinity robes take either colour kit and one slot would leave the
-// dark one a drop with nothing it fits. Nothing else uses the second.
+// THREE SLOTS. The infinity robes take either colour kit, which is what the second was for; the
+// rune scimitar takes a kit for each of Guthix, Saradomin and Zamorak, which is what the third is.
+// One slot per kit a single item can accept, and the alternative each time is a reward that drops
+// with nothing it fits.
 def_namedobj $into = null;
 if ($kit = oc_param($target, ornament_kit)) {
     $into = oc_param($target, ornament_into);
 } else if ($kit = oc_param($target, ornament_kit2)) {
     $into = oc_param($target, ornament_into2);
+} else if ($kit = oc_param($target, ornament_kit3)) {
+    $into = oc_param($target, ornament_into3);
 }
 if ($into = null) {
     // THE WRONG PAIRING IS THE LIKELY MISTAKE, not a random click - sixteen kits that all look
@@ -67,9 +71,14 @@ if ($back = null) {
     ~displaymessage(^dm_default);
     return;
 }
+// WHICH OF THE THREE KITS THIS ONE WAS. ornament_from only says what the plain item is, and a
+// base item that accepts more than one kit has more than one result - so handing back
+// ornament_kit blindly would turn a Zamorak scimitar into a Guthix kit. Match the result.
 def_namedobj $kit = oc_param($back, ornament_kit);
 if ($item = oc_param($back, ornament_into2)) {
     $kit = oc_param($back, ornament_kit2);
+} else if ($item = oc_param($back, ornament_into3)) {
+    $kit = oc_param($back, ornament_kit3);
 }
 if (inv_freespace(inv) < 1) {
     mes("You need a free inventory slot to take the decoration back off.");

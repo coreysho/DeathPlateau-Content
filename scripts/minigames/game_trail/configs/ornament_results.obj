@@ -815,3 +815,116 @@ param=gwd_prot_zamorak,1
 param=ornament_from,zamorak_godsword
 category=ornamented
 iop4=Revert
+
+[rune_scimitar_guthix]
+name=Rune scimitar
+desc=A vicious, curved sword.
+model=obj_rune_scimitar_guthix
+manwear=obj_rune_scimitar_guthix_manwear,0
+womanwear=obj_rune_scimitar_guthix_womanwear,6
+wearpos=righthand
+2dzoom=1180
+2dxan=300
+2dyan=1120
+2dxof=-6
+2dyof=4
+weight=1814g
+cost=25600
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of rune_scimitar, so the same weapon in every respect. The bonuses the cache gave
+// already matched this build's; the CATEGORY and the four anim/sound params did not come across
+// and are copied here, because without weapon_slash a scimitar has no row in combat_style_table
+// and ~combat_get_weapon_style_data falls through to the unarmed table.
+category=weapon_slash
+param=stabattack,7
+param=slashattack,45
+param=crushattack,-2
+param=slashdefence,1
+param=strengthbonus,44
+param=slashattack_anim,human_sword_slash
+param=stabattack_anim,human_sword_stab
+param=defend_anim,human_sword_def
+param=slash_sound,hacksword_slash
+param=stab_sound,hacksword_stab
+param=ornament_from,rune_scimitar
+category=ornamented
+iop4=Revert
+
+[rune_scimitar_saradomin]
+name=Rune scimitar
+desc=A vicious, curved sword.
+model=obj_rune_scimitar_saradomin
+manwear=obj_rune_scimitar_saradomin_manwear,0
+womanwear=obj_rune_scimitar_saradomin_womanwear,6
+wearpos=righthand
+2dzoom=1180
+2dxan=300
+2dyan=1120
+2dxof=-6
+2dyof=4
+recol1s=15855
+recol1d=6476
+weight=1814g
+cost=25600
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+// A repaint of rune_scimitar, so the same weapon in every respect. The bonuses the cache gave
+// already matched this build's; the CATEGORY and the four anim/sound params did not come across
+// and are copied here, because without weapon_slash a scimitar has no row in combat_style_table
+// and ~combat_get_weapon_style_data falls through to the unarmed table.
+category=weapon_slash
+param=stabattack,7
+param=slashattack,45
+param=crushattack,-2
+param=slashdefence,1
+param=strengthbonus,44
+param=slashattack_anim,human_sword_slash
+param=stabattack_anim,human_sword_stab
+param=defend_anim,human_sword_def
+param=slash_sound,hacksword_slash
+param=stab_sound,hacksword_stab
+param=ornament_from,rune_scimitar
+category=ornamented
+iop4=Revert
+
+[rune_scimitar_zamorak]
+name=Rune scimitar
+desc=A vicious, curved sword.
+model=obj_rune_scimitar_zamorak
+manwear=obj_rune_scimitar_zamorak_manwear,0
+womanwear=obj_rune_scimitar_zamorak_womanwear,6
+wearpos=righthand
+2dzoom=1180
+2dxan=300
+2dyan=1120
+2dxof=-6
+2dyof=4
+recol1s=15855
+recol1d=6476
+weight=1814g
+cost=25600
+tradeable=no
+iop2=Wield
+iop5=Dismantle
+
+// A repaint of rune_scimitar, so the same weapon in every respect. The bonuses the cache gave
+// already matched this build's; the CATEGORY and the four anim/sound params did not come across
+// and are copied here, because without weapon_slash a scimitar has no row in combat_style_table
+// and ~combat_get_weapon_style_data falls through to the unarmed table.
+category=weapon_slash
+param=stabattack,7
+param=slashattack,45
+param=crushattack,-2
+param=slashdefence,1
+param=strengthbonus,44
+param=slashattack_anim,human_sword_slash
+param=stabattack_anim,human_sword_stab
+param=defend_anim,human_sword_def
+param=slash_sound,hacksword_slash
+param=stab_sound,hacksword_stab
+param=ornament_from,rune_scimitar
+category=ornamented
+iop4=Revert

@@ -18194,9 +18194,18 @@ param=stab_sound,hacksword_stab
 certlink=adamant_scimitar
 certtemplate=template_for_cert
 
+// Three ornament kits, one for each god, from the easy reward table - and so all three of this
+// item's kit slots (configs/ornament_kit.param, minigames/game_trail). The results are named for
+// their god here and share the plain "Rune scimitar" in game, as Old School's do.
 [rune_scimitar]
 name=Rune scimitar
 desc=A vicious, curved sword.
+param=ornament_kit,rune_scimitar_ornament_kit_guthix
+param=ornament_into,rune_scimitar_guthix
+param=ornament_kit2,rune_scimitar_ornament_kit_saradomin
+param=ornament_into2,rune_scimitar_saradomin
+param=ornament_kit3,rune_scimitar_ornament_kit_zamorak
+param=ornament_into3,rune_scimitar_zamorak
 recol1s=15855
 recol1d=6476
 cost=25600

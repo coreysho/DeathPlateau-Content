@@ -32,3 +32,14 @@ default=null
 [ornament_into2]
 type=namedobj
 default=null
+
+// A THIRD, because a rune scimitar takes a kit for each of THREE gods - Guthix, Saradomin and
+// Zamorak - and two slots would have left one of them a reward with nothing it fits. That is the
+// same thing the second slot was added to prevent, one god further.
+[ornament_kit3]
+type=namedobj
+default=null
+
+[ornament_into3]
+type=namedobj
+default=null
