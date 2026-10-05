@@ -29,14 +29,15 @@ walkanim=human_walk_f
 vislevel=hide
 wanderrange=0
 op1=Talk-to
-op3=Trade
+// NO op3=Trade WHILE THE SHOP IS EMPTY - an option that opens a window with nothing in it is
+// worse than no option. The shop itself is still wired below; restoring the stock in grace.inv
+// and this one line is all it takes.
 category=shop_keeper
 param=owned_shop,grace_shop
 param=shop_currency,mark_of_grace
-// SELLS AT THE ITEM'S OWN COST. The six graceful pieces already carry
-// Old School's mark prices as their cost - 35, 40, 55, 60, 30, 40, 260 for the set - so full price
-// both ways is the real price list with no arithmetic in the middle. delta 0 because a mark price
-// is a fixed price: it must not drift with how many she happens to be holding.
+// SELLS AT THE ITEM'S OWN COST, whenever she has something to sell again. Keeping these here
+// rather than deleting them means the stock list is the only thing that has to come back.
+// delta 0 because a mark price is a fixed price: it must not drift with how many she holds.
 //
 // 1000 IS FULL PRICE, NOT 100. ~calc_shop_value ends in scale($mult, 1000, $cost), so these are
 // per mille - the TzHaar traders say 1000/600 for the same reason. 100 here charged a tenth: the

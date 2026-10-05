@@ -1,20 +1,12 @@
-// Grace's stock: the Graceful outfit, and nothing else. Old School sells amylase and recolour
-// kits here too; both are a long way past 2006 and neither has anything behind it in this build.
+// Grace's shop, EMPTY ON PURPOSE (2026-10-04). It held the six Graceful pieces at Old School's
+// mark prices; the owner is implementing Graceful another way, so the stock is gone and the
+// plumbing is not. Putting it back is six stock lines here and op3 in grace.npc.
 //
-// allstock=no so she only ever deals in these six - a player cannot sell her a bronze dagger for
-// Marks of Grace, which with allstock=yes they could.
-//
-// The prices are the items' own cost, read straight by the shop at 100% - see grace.npc.
-// 35 + 40 + 55 + 60 + 30 + 40 = 260 marks for the set, which is Old School's number.
+// allstock=no matters even with no stock: with allstock=yes an empty shop will buy ANY item, so
+// a player could turn a bronze dagger into Marks of Grace.
 [grace_shop]
 scope=shared
 size=6
 restock=yes
 stackall=no
 allstock=no
-stock1=graceful_hood,1,100
-stock2=graceful_top,1,100
-stock3=graceful_legs,1,100
-stock4=graceful_gloves,1,100
-stock5=graceful_boots,1,100
-stock6=graceful_cape,1,100

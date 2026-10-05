@@ -1,0 +1,182 @@
+// The Al Kharid Rooftop Course - https://oldschool.runescape.wiki/w/Al_Kharid_Rooftop_Course
+//
+// The second rooftop course, and a different shape from Draynor's. Agility 20, eight obstacles,
+// 216 experience a lap, and it does not stay on one floor: the zip line drops you two levels, the
+// tropical tree swings you back up one, the roof top beams take you to the top again and the gap
+// puts you in the street. Three of the eight are SWINGS rather than walks - the cable, the zip
+// line and the tree - so they go through ~agility_exactmove with a rope-swing animation instead of
+// ~agility_walk, which would have the player stroll through the air.
+//
+// THE ROOFS ARE OLD SCHOOL'S OWN, grafted onto m51_49 at levels 1 to 3 by
+// tools/models/graftosrsmap.py. Only the course corridor was taken: the town's ground floor, and
+// everything outside the zip line's own box at levels 1 and 2, is this build's.
+//
+// FAILING COSTS HITPOINTS AND NOTHING ELSE. The wiki records the tightrope and the zip line as
+// failable for 1-5 damage and says a fail does not stop your progress, so that is what this does.
+// If Old School in fact drops you to the street, the fall coordinate is the only thing missing -
+// the roll and the damage are already here.
+
+// ---------------------------------------------------------------- 1. the rough wall
+[oploc1,osrsloc_11633]
+if (~alkharid_blocked = true) {
+    return;
+}
+if (coordz(coord) <= ^alkharid_wall_z) {
+    mes("You can't reach the wall from here.");
+    return;
+}
+p_arrivedelay;
+mes("You climb the rough wall...");
+~agility_climb_up(^alkharid_xp_wall, ^alkharid_land_wall);
+mes("...and pull yourself onto the roof.");
+~alkharid_progress(1);
+
+// ---------------------------------------------------------------- 2. the tightrope
+[oploc1,osrsloc_14398]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+sound_synth(tightrope, 5, 0);
+~alkharid_cross(^alkharid_xp_rope1, ^alkharid_rope1_start, ^alkharid_land_rope1);
+~alkharid_slip(5);
+~alkharid_progress(2);
+
+// ---------------------------------------------------------------- 3. the cable
+[oploc1,osrsloc_14402]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You swing across on the cable...");
+~alkharid_swing(^alkharid_xp_cable, ^alkharid_land_cable, ^exact_east);
+mes("...and land on the next roof.");
+~alkharid_progress(3);
+
+// ---------------------------------------------------------------- 4. the zip line
+[oploc1,osrsloc_14403]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You grip the zip line with your teeth...");
+~alkharid_swing(^alkharid_xp_zip, ^alkharid_land_zip, ^exact_east);
+mes("...and let go at the far end.");
+~alkharid_slip(5);
+~alkharid_progress(4);
+
+// ---------------------------------------------------------------- 5. the tropical tree
+[oploc1,osrsloc_14404]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You swing up into the tree...");
+~alkharid_swing(^alkharid_xp_tree, ^alkharid_land_tree, ^exact_north);
+mes("...and climb out onto the branches.");
+~alkharid_progress(5);
+
+// ---------------------------------------------------------------- 6. the roof top beams
+[oploc1,osrsloc_11634]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You climb up onto the beams.");
+~agility_climb_up(^alkharid_xp_beams, ^alkharid_land_beams);
+~alkharid_progress(6);
+
+// ---------------------------------------------------------------- 7. the second tightrope
+[oploc1,osrsloc_14409]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You carefully cross the tightrope.");
+sound_synth(tightrope, 5, 0);
+~alkharid_cross(^alkharid_xp_rope2, ^alkharid_rope2_start, ^alkharid_land_rope2);
+~alkharid_progress(7);
+
+// ---------------------------------------------------------------- 8. the gap, down to the street
+[oploc1,osrsloc_14399]
+if (~alkharid_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You leap off the roof...");
+~alkharid_swing(^alkharid_xp_gap, ^alkharid_land_gap, ^exact_north);
+mes("...and land in the street below.");
+~alkharid_progress(8);
+
+// ---------------------------------------------------------------- the level gate
+//
+// One proc rather than eight copies of the same three lines, and it returns a boolean so each
+// obstacle reads as "if you cannot be here, stop".
+[proc,alkharid_blocked]()(boolean)
+if (stat(agility) < ^alkharid_level) {
+    ~mesbox("You need an Agility level of <tostring(^alkharid_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+// ---------------------------------------------------------------- crossing and swinging
+//
+// A WALK STARTS ON THE OBSTACLE. ~agility_walk moves a tile a tick and spends its diagonal first,
+// so a crossing whose start and finish are not on one row leaves the rope on the first step and
+// never comes back - which is exactly how both of Draynor's tightropes shipped. The one-tile snap
+// onto the near end is invisible and makes the whole span a straight line.
+[proc,alkharid_cross](int $xp, coord $start, coord $end)
+p_teleport($start);
+p_delay(0);
+~agility_force_move($xp, human_walk_logbalance, $end);
+
+// A SWING IS NOT A WALK. The cable, the zip line and the tree carry the player through the air and
+// between floors, so they are an exactmove from where they stand to where they land - walking
+// those would be a stroll across open sky, and across a two-level drop at that.
+//
+// AND AN EXACTMOVE CANNOT CHANGE FLOOR. p_exactmove moves within the level the player is already
+// on, so the zip line put them down at 3314,3163 on level THREE instead of level one, two floors
+// above the roof they had just slid to - and the tropical tree, which is a level-1 loc, then could
+// not be found at all. The telejump afterwards is what actually lands them; the exactmove is the
+// motion you watch on the way. Three of these eight change floor, so it is not a special case.
+[proc,alkharid_swing](int $xp, coord $end, int $direction)
+~agility_exactmove(human_ropeswing_long, 20, 3, coord, $end, 30, 70, $direction, false);
+p_telejump($end);
+~agility_xp($xp);
+
+// A slip costs hitpoints and nothing else - see the note at the top.
+[proc,alkharid_slip](int $max)
+if (random(^alkharid_mark_chance) ! 0) {
+    return;
+}
+mes("You slip, and catch yourself just in time.");
+~damage_self(calc(1 + random($max)));
+
+// ---------------------------------------------------------------- the lap
+//
+// Progress only moves forward one obstacle at a time, so a player who climbs back up halfway
+// through does not collect a lap for half a lap's work.
+[proc,alkharid_progress](int $completed)
+if (calc(%alkharid_course_progress + 1) >= $completed) {
+    %alkharid_course_progress = $completed;
+}
+if (%alkharid_course_progress < ^alkharid_obstacles) {
+    return;
+}
+%alkharid_course_progress = 0;
+// The gap's 36 experience is the last obstacle's, not a bonus: the eight add to the 216 a lap is
+// worth and nothing extra is paid here.
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_alkharid);
+~alkharid_mark_roll;
+
+[proc,alkharid_mark_roll]
+if (random(^alkharid_mark_chance) ! 0) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");
