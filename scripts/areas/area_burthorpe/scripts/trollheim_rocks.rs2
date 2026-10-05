@@ -1,0 +1,28 @@
+// The climbing rocks on Trollheim that nobody had wired.
+//
+// Reported from play: "the rock climbing doesn't work on trollheim", with the console saying
+// "No trigger for [oploc1,loc_9303]" and the same for loc_9304. Five of the mountain's Rocks have
+// op1=Climb from the 377 cache and no script behind it, so clicking them did nothing at all:
+//
+//   loc_9303   2870,3671 and 2871,3671      the lower slope, coming up from Burthorpe
+//   loc_9304   2878,3666 and 2878,3667
+//   loc_9305   2908,3682 and 2909,3683
+//   loc_9306   2901,3680 and 2902,3680
+//   loc_9327   2949,3680                     the eastern shoulder
+//
+// These are also part of the way to the God Wars Dungeon, whose entrance is at the top of the
+// mountain - though they were not the whole reason there was no way in. The valley the entrance
+// stands in did not exist on this build's map at all and had to be grafted from a newer cache;
+// see bosses/godwars/configs/gwd_surface.loc.
+//
+// @rockslide_obstacle (quest_upass/scripts/upass_obstacles.rs2) is already general - it works out
+// which side you are standing on from your coord against the rock's, steps you to the opposite
+// side, and rolls Agility for a slip. The quest's own [oploc1,troll_climbingrocks] hands off to
+// exactly this. No requirement is added: the neighbouring rocks that ARE scripted gate on Troll
+// Stronghold because they are the quest's route, and these are the open mountainside.
+
+[oploc1,loc_9303] @rockslide_obstacle;
+[oploc1,loc_9304] @rockslide_obstacle;
+[oploc1,loc_9305] @rockslide_obstacle;
+[oploc1,loc_9306] @rockslide_obstacle;
+[oploc1,loc_9327] @rockslide_obstacle;

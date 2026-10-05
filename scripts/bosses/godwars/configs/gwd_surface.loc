@@ -1,0 +1,342 @@
+// The Trollheim summit and the God Wars valley, grafted from the OSRS map by
+// tools/models/graftosrsmap.py (--levels 0 --box 2893,3702,2932,3759).
+//
+// Why the map had to come from a newer cache: the 377 square has no God Wars approach at all. The
+// dungeon opened in August 2007, a year after this revision, and the valley it sits in was carved
+// into Trollheim then. Our m45_58 had the whole of it as solid rock - 2898,3716, where the boulder
+// belongs, was a single isolated walkable tile with nothing adjoining it, which is why no climbing
+// rock could ever have led there. 474 is no better: its terrain stops at the same z=3695 as ours,
+// and this cache has no XTEA key for l45_57 or l45_58, so its locs cannot be read at all.
+//
+// The graft is the 813 tiles of ground OSRS has here and we did not, meeting our mountain at the
+// north-east shoulder (2899..2902, 3701..3702). Nothing functional was displaced: all 22 kinds of
+// 377 loc inside the box are scenery - snow, dug-up soil, ice chunks, mountain rocks - with no
+// right-click option on any of them and not one reference from any script.
+//
+// osrsloc_26415 and osrsloc_26382 below are the Boulder and the Little crack, which this tree
+// already carries as gwd_boulder and gwd_crack in gwd_entrance.loc with the ops and the scripts on
+// them. The two map placements were repointed to those, so the pair here is unused. They are left
+// defined rather than deleted because loc.pack numbers by position: dropping them would renumber
+// every loc the graft appended after them, and the .jm2 files already name those ids.
+
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_16430]
+// OSRS loc 16430
+model=osrsloc_16430
+active=no
+
+[osrsloc_16432]
+// OSRS loc 16432
+model=osrsloc_16432
+active=no
+
+[osrsloc_26304]
+// OSRS loc 26304
+model=osrsloc_26304
+active=no
+
+[osrsloc_26305]
+// OSRS loc 26305
+model=osrsloc_26305
+active=no
+
+[osrsloc_26307]
+// OSRS loc 26307
+name=Broken catapult
+model=osrsloc_26307
+width=2
+length=3
+hillskew=yes
+
+[osrsloc_26309]
+// OSRS loc 26309
+name=Chain
+model=osrsloc_26309
+hillskew=yes
+
+[osrsloc_26310]
+// OSRS loc 26310
+name=Battering ram
+model=osrsloc_26310
+width=2
+length=3
+hillskew=yes
+
+[osrsloc_26314]
+// OSRS loc 26314
+name=Wheel
+model=osrsloc_26314
+width=2
+length=2
+hillskew=yes
+ambient=25
+
+[osrsloc_26321]
+// OSRS loc 26321
+model=osrsloc_26321
+hillskew=yes
+ambient=25
+
+[osrsloc_26328]
+// OSRS loc 26328
+name=Crate
+model=osrsloc_26328
+hillskew=yes
+ambient=25
+
+[osrsloc_26329]
+// OSRS loc 26329
+name=Spikes
+model=osrsloc_26329
+hillskew=yes
+ambient=25
+
+[osrsloc_26333]
+// OSRS loc 26333
+name=Catapult
+model=osrsloc_26333
+hillskew=yes
+ambient=25
+
+[osrsloc_26335]
+// OSRS loc 26335
+name=Crates
+model=osrsloc_26335
+blockrange=no
+hillskew=yes
+ambient=25
+
+[osrsloc_26336]
+// OSRS loc 26336
+name=Crossbow
+model=osrsloc_26336
+hillskew=yes
+ambient=25
+
+[osrsloc_26337]
+// OSRS loc 26337
+name=Crates
+model=osrsloc_26337
+hillskew=yes
+ambient=25
+
+[osrsloc_26338]
+// OSRS loc 26338
+name=Crates
+model=osrsloc_26338
+hillskew=yes
+ambient=25
+
+[osrsloc_26344]
+// OSRS loc 26344
+name=Barrels
+model=osrsloc_26344
+hillskew=yes
+ambient=25
+
+[osrsloc_26345]
+// OSRS loc 26345
+name=Boards
+model=osrsloc_26345
+hillskew=yes
+ambient=25
+
+[osrsloc_26382]
+// OSRS loc 26382
+name=Little crack
+model=osrsloc_26382
+active=yes
+sharelight=yes
+ambient=25
+contrast=125
+op1=Crawl-through
+
+[osrsloc_26383]
+// OSRS loc 26383
+name=Knight
+model=osrsloc_26383
+width=2
+length=2
+blockrange=no
+active=yes
+op3=Search
+
+[osrsloc_26385]
+// OSRS loc 26385
+model=osrsloc_26385
+width=2
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=20
+contrast=100
+
+[osrsloc_26386]
+// OSRS loc 26386
+model=osrsloc_26386
+width=2
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+ambient=20
+contrast=100
+
+[osrsloc_26387]
+// OSRS loc 26387
+model=osrsloc_26387
+width=2
+active=no
+sharelight=yes
+ambient=20
+contrast=100
+
+[osrsloc_26388]
+// OSRS loc 26388
+model=osrsloc_26388
+active=no
+sharelight=yes
+ambient=20
+contrast=100
+
+[osrsloc_26389]
+// OSRS loc 26389
+model=osrsloc_26389
+active=no
+
+[osrsloc_26393]
+// OSRS loc 26393
+model=osrsloc_26393
+active=no
+hillskew=yes
+
+[osrsloc_26395]
+// OSRS loc 26395
+model=osrsloc_26395
+width=2
+length=2
+blockrange=no
+active=no
+ambient=15
+
+[osrsloc_26399]
+// OSRS loc 26399
+model=osrsloc_26399
+width=2
+length=2
+blockrange=no
+active=no
+hillskew=yes
+
+[osrsloc_26400]
+// OSRS loc 26400
+name=Rocky handholds
+model=osrsloc_26400
+hillskew=yes
+forcedecor=yes
+mapscene=11
+op1=Climb
+
+[osrsloc_26402]
+// OSRS loc 26402
+name=Rocky handholds
+model=osrsloc_26402
+hillskew=yes
+forcedecor=yes
+mapscene=11
+op1=Climb
+
+[osrsloc_26403]
+// OSRS loc 26403
+model=osrsloc_26403
+hillskew=yes
+forcedecor=yes
+
+[osrsloc_26408]
+// OSRS loc 26408
+model=osrsloc_26408
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+
+[osrsloc_26409]
+// OSRS loc 26409
+model=osrsloc_26409
+blockwalk=no
+blockrange=no
+active=no
+hillskew=yes
+
+[osrsloc_26411]
+// OSRS loc 26411
+model=osrsloc_26411
+length=3
+blockrange=no
+active=no
+mapscene=11
+ambient=25
+
+[osrsloc_26412]
+// OSRS loc 26412
+model=osrsloc_26412
+width=2
+length=2
+blockrange=no
+active=no
+mapscene=11
+ambient=25
+
+[osrsloc_26413]
+// OSRS loc 26413
+model=osrsloc_26413
+width=3
+length=3
+blockrange=no
+active=no
+mapscene=11
+ambient=25
+
+[osrsloc_26414]
+// OSRS loc 26414
+model=osrsloc_26414
+blockrange=no
+active=no
+mapscene=11
+ambient=25
+
+[osrsloc_26415]
+// OSRS loc 26415
+name=Boulder
+model=osrsloc_26415
+width=4
+length=3
+blockrange=no
+active=yes
+ambient=25
+op1=Move
+
+[osrsloc_26417]
+// OSRS loc 26417
+name=Hole
+model=osrsloc_26417
+width=4
+length=4
+blockrange=no
+active=yes
+sharelight=yes
+op1=Tie-rope
+
+[osrsloc_33317]
+// OSRS loc 33317
+name=Old fire pit
+model=osrsloc_33317
+active=yes
+offsety=-4
+ambient=35
+contrast=127
+op1=Build
+anim=osrsloc_anim_8170
