@@ -62,8 +62,43 @@ mes("The <lowercase(oc_name($kit))> doesn't fit on that.");
 // Two items arrive where one left, so a full pack needs a free slot. Checked before anything is
 // deleted - the alternative is a reverted item on the floor, and this is the one place a player
 // would not be looking for it.
-[opheld4,_ornamented]
-~ornament_kit_revert(last_item);
+// ONE TRIGGER PER ITEM, AND IT HAS TO BE. This was [opheld4,_ornamented], against a category
+// every result carried - and an obj has ONE category, not a list: the packer writes code 94 per
+// category= line and ObjType.decode assigns, so the second line silently replaced the first.
+// Every ornamented WEAPON was therefore categoryless as far as combat was concerned, which sent
+// ~combat_get_weapon_style_data to weapon_unarmed_table: a godsword (or) fought with unarmed
+// styles and an unarmed attack speed while still animating like a godsword, because the anims
+// are params and params do not clash. The two defenders lost armour_shield the same way.
+//
+// So the results keep their real category and name themselves here. It costs this list - the
+// one thing the rest of this file was written to avoid - and the alternative was teaching
+// twenty-odd oc_category call sites across combat to look through ornament_from, which is a
+// great deal more surface for the same end. tools/sim/ornamentkits.ts walks every pairing, so
+// an item left off this list fails there rather than in a player's hands.
+[opheld4,amulet_of_fury_or] ~ornament_kit_revert(last_item);
+[opheld4,armadyl_godsword_or] ~ornament_kit_revert(last_item);
+[opheld4,bandos_godsword_or] ~ornament_kit_revert(last_item);
+[opheld4,berserker_necklace_or] ~ornament_kit_revert(last_item);
+[opheld4,dark_infinity_bottoms] ~ornament_kit_revert(last_item);
+[opheld4,dark_infinity_hat] ~ornament_kit_revert(last_item);
+[opheld4,dark_infinity_top] ~ornament_kit_revert(last_item);
+[opheld4,dragon_boots_g] ~ornament_kit_revert(last_item);
+[opheld4,dragon_chainbody_g] ~ornament_kit_revert(last_item);
+[opheld4,dragon_defender_t] ~ornament_kit_revert(last_item);
+[opheld4,dragon_platelegs_g] ~ornament_kit_revert(last_item);
+[opheld4,dragon_plateskirt_g] ~ornament_kit_revert(last_item);
+[opheld4,dragon_scimitar_or] ~ornament_kit_revert(last_item);
+[opheld4,dragon_sq_shield_g] ~ornament_kit_revert(last_item);
+[opheld4,light_infinity_bottoms] ~ornament_kit_revert(last_item);
+[opheld4,light_infinity_hat] ~ornament_kit_revert(last_item);
+[opheld4,light_infinity_top] ~ornament_kit_revert(last_item);
+[opheld4,rune_defender_t] ~ornament_kit_revert(last_item);
+[opheld4,rune_scimitar_guthix] ~ornament_kit_revert(last_item);
+[opheld4,rune_scimitar_saradomin] ~ornament_kit_revert(last_item);
+[opheld4,rune_scimitar_zamorak] ~ornament_kit_revert(last_item);
+[opheld4,saradomin_godsword_or] ~ornament_kit_revert(last_item);
+[opheld4,tzhaar_ket_om_t] ~ornament_kit_revert(last_item);
+[opheld4,zamorak_godsword_or] ~ornament_kit_revert(last_item);
 
 [proc,ornament_kit_revert](obj $item)
 def_namedobj $back = oc_param($item, ornament_from);
