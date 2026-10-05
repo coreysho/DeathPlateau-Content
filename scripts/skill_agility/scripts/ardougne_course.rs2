@@ -1,0 +1,97 @@
+// The Ardougne Rooftop Course - https://oldschool.runescape.wiki/w/Ardougne_Rooftop_Course
+//
+// Agility 90, seven obstacles, 889 experience a lap - the last of them and the fastest, which is
+// most of the reason anyone trains Agility past 80.
+//
+// Old School lets you fail the first and second gaps until 95 Agility. A fall needs a street tile
+// per obstacle and guessing one is worse than leaving it out, so a slip here costs hitpoints and
+// nothing else - the same choice as Al Kharid and Canifis.
+
+[oploc1,osrsloc_15608]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the wooden beams.");
+~agility_climb_up(^ardougne_xp_beams, ^ardougne_land_beams);
+~ardougne_progress(1);
+
+[oploc1,osrsloc_15609]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~ardougne_move(^ardougne_xp_gap1, ^ardougne_land_gap1, human_spot_jump);
+~ardougne_slip;
+~ardougne_progress(2);
+
+[oploc1,osrsloc_26635]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You walk carefully along the plank.");
+~ardougne_move(^ardougne_xp_plank, ^ardougne_land_plank, human_walk_logbalance);
+~ardougne_progress(3);
+
+[oploc1,osrsloc_15610]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~ardougne_move(^ardougne_xp_gap2, ^ardougne_land_gap2, human_spot_jump);
+~ardougne_slip;
+~ardougne_progress(4);
+
+[oploc1,osrsloc_15611]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump across the gap.");
+~ardougne_move(^ardougne_xp_gap3, ^ardougne_land_gap3, human_spot_jump);
+~ardougne_progress(5);
+
+[oploc1,osrsloc_28912]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You balance across the steep roof.");
+~ardougne_move(^ardougne_xp_roof, ^ardougne_land_roof, human_walk_logbalance);
+~ardougne_progress(6);
+
+[oploc1,osrsloc_15612]
+if (~ardougne_blocked = true) { return; }
+p_arrivedelay;
+mes("You jump down from the roof...");
+~ardougne_move(^ardougne_xp_gap4, ^ardougne_land_gap4, human_spot_jump);
+mes("...and land in the street below.");
+~ardougne_progress(7);
+
+[proc,ardougne_blocked]()(boolean)
+if (stat(agility) < ^ardougne_level) {
+    ~mesbox("You need an Agility level of <tostring(^ardougne_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+[proc,ardougne_move](int $xp, coord $end, seq $anim)
+~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, ^exact_north, false);
+p_telejump($end);
+~agility_xp($xp);
+
+// Old School stops you failing at 95, so this does too.
+[proc,ardougne_slip]
+if (stat(agility) >= 95) { return; }
+if (random(^ardougne_mark_chance) ! 0) { return; }
+mes("You slip, and catch yourself just in time.");
+~damage_self(calc(1 + random(5)));
+
+[proc,ardougne_progress](int $completed)
+if (calc(%ardougne_course_progress + 1) >= $completed) {
+    %ardougne_course_progress = $completed;
+}
+if (%ardougne_course_progress < ^ardougne_obstacles) { return; }
+%ardougne_course_progress = 0;
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_ardougne);
+~ardougne_mark_roll;
+
+[proc,ardougne_mark_roll]
+if (random(^ardougne_mark_chance) ! 0) { return; }
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

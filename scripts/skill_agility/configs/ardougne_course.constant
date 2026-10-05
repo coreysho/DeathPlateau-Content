@@ -1,0 +1,26 @@
+// The Ardougne Rooftop Course - https://oldschool.runescape.wiki/w/Ardougne_Rooftop_Course
+//
+// Agility 90, seven obstacles, 889 experience a lap - the last and the best of them, and the
+// reason anyone trains Agility past 80.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: stat_advance takes xp * 10.
+^ardougne_level = 90
+^ardougne_obstacles = 7
+^ardougne_xp_beams = 430
+^ardougne_xp_gap1 = 650
+^ardougne_xp_plank = 500
+^ardougne_xp_gap2 = 210
+^ardougne_xp_gap3 = 280
+^ardougne_xp_roof = 570
+^ardougne_xp_gap4 = 6250
+
+// Picked by tools/sim/courseplan.ts - each obstacle puts you down beside the next one.
+^ardougne_land_beams = 3_41_51_47_46
+^ardougne_land_gap1 = 3_41_51_38_54
+^ardougne_land_plank = 3_41_51_30_53
+^ardougne_land_gap2 = 3_41_51_29_45
+^ardougne_land_gap3 = 3_41_51_29_36
+^ardougne_land_roof = 3_41_51_31_32
+^ardougne_land_gap4 = 0_41_51_33_32
+
+^ardougne_mark_chance = 4
