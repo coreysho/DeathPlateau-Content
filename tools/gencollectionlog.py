@@ -80,6 +80,14 @@ OWN_BASE = 100
 # The tab strip shares 472px between however many tabs the spec has: four are 115px each.
 TAB_Y, TAB_H, TAB_X, TAB_SPAN, TAB_GAP = 50, 16, 20, 472, 4
 LIST_X, LIST_Y, LIST_W, LIST_H, ROW_H = 20, 72, 150, 226, 15
+# THE ENTRY LIST HAS THE SAME SCROLLBAR PROBLEM THE GRID HAD, waiting for a sixteenth entry. Fifteen
+# rows fit in LIST_H and nothing scrolls today, so nothing looked wrong - but the bar is drawn at
+# LIST_X + LIST_W and the panel used to end four pixels later, so the first tab to outgrow the box
+# would have put it out in the gutter. Measured now, not the day it happens.
+#
+# The list keeps its full width: the panel grows into the sixteen pixels of empty gutter between it
+# and the page panel instead, which leaves the rows as wide as they were and a two-pixel gap at 188.
+LIST_R = LIST_X + LIST_W + 16                       # 186, and pagebox starts at 188
 PANEL_X = 192
 NAME_Y, LINE1_Y, LINE2_Y = 74, 90, 104
 # The counters share their lines with "Obtained": counter 0 on its line and counter 2 on the next are
@@ -315,7 +323,7 @@ def components(spec, entries):
                                        text=tab['name'], colour=ORANGE, overcolour=WHITE,
                                        option='View')))
     # Two ruled boxes, the list and the page, the way Old School's window divides.
-    coms.append(('listbox', dict(type='rect', x=LIST_X - 2, y=LIST_Y - 2, width=LIST_W + 4,
+    coms.append(('listbox', dict(type='rect', x=LIST_X - 2, y=LIST_Y - 2, width=LIST_R - LIST_X + 2,
                                  height=LIST_H + 4, colour=LINE)))
     coms.append(('pagebox', dict(type='rect', x=PANEL_X - 4, y=LIST_Y - 2, width=PANEL_R - PANEL_X + 4,
                                  height=LIST_H + 4, colour=LINE)))
