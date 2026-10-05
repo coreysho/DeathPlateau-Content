@@ -55,6 +55,8 @@ cost=110000
 members=yes
 param=magicattack,-5
 param=rangeattack,-5
+category=serpentine_helm
+param=serpentine_charged,serpentine_helm
 
 [cert_serpentine_helm_uncharged]
 certlink=serpentine_helm_uncharged
@@ -91,6 +93,8 @@ param=slashdefence,55
 param=crushdefence,58
 param=rangedefence,50
 param=strengthbonus,5
+category=serpentine_helm
+param=serpentine_uncharged,serpentine_helm_uncharged
 
 [magic_fang]
 name=Magic fang

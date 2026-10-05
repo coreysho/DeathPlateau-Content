@@ -47,28 +47,36 @@ mes("You carve the visage into a helm.");
 // ---------------------------------------------------------------------------------------------
 // Wearing, checking, charging, uncharging
 // ---------------------------------------------------------------------------------------------
-[opheld2,serpentine_helm] @levelrequire_defence(^serpentine_helm_level, last_slot);
+// ALL THREE HELMS, through the category. The mutagens make a tanzanite and a magma helm that
+// behave exactly as this one does - every trigger below is on the family rather than on
+// serpentine_helm by name, and the two records each helm has are read off its own params.
+[opheld2,_serpentine_helm] @levelrequire_defence(^serpentine_helm_level, last_slot);
 
-[opheld3,serpentine_helm] ~serpentine_helm_check;
-[label,wearop1_serpentine_helm] ~serpentine_helm_check;
+[opheld3,_serpentine_helm] ~serpentine_helm_check(last_item);
+[label,wearop1__serpentine_helm] ~serpentine_helm_check(last_item);
 
-[proc,serpentine_helm_check]
+[proc,serpentine_helm_check](obj $helm)
 if (%serpentine_helm_charges = 1) {
-    mes("Your serpentine helm has 1 scale in it.");
+    mes("Your <lowercase(oc_name($helm))> has 1 scale in it.");
     return;
 }
-mes("Your serpentine helm has <tostring(%serpentine_helm_charges)> scales in it.");
+mes("Your <lowercase(oc_name($helm))> has <tostring(%serpentine_helm_charges)> scales in it.");
 
 // Scales on either helm fill it as far as what is in the pack will go.
-[opheldu,serpentine_helm] @serpentine_helm_charge(last_item, last_useitem, last_slot, last_useslot);
-[opheldu,serpentine_helm_uncharged] @serpentine_helm_charge(last_item, last_useitem, last_slot, last_useslot);
+[opheldu,_serpentine_helm] @serpentine_helm_charge(last_item, last_useitem, last_slot, last_useslot);
 
 [label,serpentine_helm_charge](obj $a, obj $b, int $aslot, int $bslot)
 def_int $slot = $aslot;
 def_obj $other = $b;
-if ($b = serpentine_helm | $b = serpentine_helm_uncharged) {
+if (oc_category($b) = serpentine_helm) {
     $slot = $bslot;
     $other = $a;
+}
+// A MUTAGEN IS THE OTHER THING YOU CAN PUT ON A HELM, and it arrives here rather than through
+// its own [opheldu,] because the helm already carries one and a second trigger on the other
+// half would be two scripts racing for the same click.
+if (oc_param($other, mutagen_into) ! null) {
+    @zulrah_mutagen_use($other, inv_getobj(inv, $slot), $slot);
 }
 if ($other ! zulrahs_scales) {
     ~displaymessage(^dm_default);
@@ -85,8 +93,9 @@ if ($n <= 0) {
 }
 inv_del(inv, zulrahs_scales, $n);
 %serpentine_helm_charges = add(%serpentine_helm_charges, $n);
-if (inv_getobj(inv, $slot) = serpentine_helm_uncharged) {
-    inv_setslot(inv, $slot, serpentine_helm, 1);
+def_namedobj $charged = oc_param(inv_getobj(inv, $slot), serpentine_charged);
+if ($charged ! null) {
+    inv_setslot(inv, $slot, $charged, 1);
 }
 mes("You add <tostring($n)> scale<~serpentine_helm_plural($n)> to the helm. It now holds <tostring(%serpentine_helm_charges)>.");
 
@@ -96,8 +105,9 @@ return("s");
 
 // "Players can retrieve unused scales by uncharging the helm" - all of them, and the helm goes back
 // to the uncharged record.
-[opheld5,serpentine_helm]
+[opheld5,_serpentine_helm]
 def_int $slot = last_slot;
+def_namedobj $bare = oc_param(last_item, serpentine_uncharged);
 def_int $n = %serpentine_helm_charges;
 if ($n > 0) {
     if (inv_total(inv, zulrahs_scales) = 0 & inv_freespace(inv) < 1) {
@@ -107,7 +117,7 @@ if ($n > 0) {
     inv_add(inv, zulrahs_scales, $n);
 }
 %serpentine_helm_charges = 0;
-inv_setslot(inv, $slot, serpentine_helm_uncharged, 1);
+inv_setslot(inv, $slot, $bare, 1);
 mes("You uncharge the helm.");
 
 // ---------------------------------------------------------------------------------------------
@@ -120,7 +130,18 @@ mes("You uncharge the helm.");
 // %barrows_lastcombat, "refreshed from both sides of a fight".
 
 [proc,serpentine_helm_combat_entry]
-if (inv_getobj(worn, ^wearpos_hat) ! serpentine_helm) {
+// A CHARGED family helm is the one with an uncharged record to fall back to; an uncharged one
+// has none and burns nothing.
+//
+// THE EMPTY-SLOT GUARD IS NOT OPTIONAL. Every fight in the game reaches here, and most of them
+// with nothing on the head: oc_param(null, ...) is not null, it THROWS - "An input for a Obj
+// type was not valid to use. Input was -1" - and a throw here aborts the whole combat trigger.
+// The old line compared the worn obj against serpentine_helm and never had to care.
+def_obj $hat = inv_getobj(worn, ^wearpos_hat);
+if ($hat = null) {
+    return;
+}
+if (oc_param($hat, serpentine_uncharged) = null) {
     return;
 }
 if (gettimer(serpentine_helm) ! -1) {
@@ -139,7 +160,13 @@ if (add(%barrows_lastcombat, 8) < map_clock) {
 ~serpentine_helm_burn;
 
 [proc,serpentine_helm_burn]
-if (inv_getobj(worn, ^wearpos_hat) ! serpentine_helm) {
+def_obj $hat = inv_getobj(worn, ^wearpos_hat);
+if ($hat = null) {
+    cleartimer(serpentine_helm);
+    return;
+}
+def_namedobj $bare = oc_param($hat, serpentine_uncharged);
+if ($bare = null) {
     cleartimer(serpentine_helm);
     return;
 }
@@ -149,10 +176,10 @@ if (%serpentine_helm_charges > 0) {
 }
 // Run dry in the hands: it stays on your head as the uncharged one, which is the one case OSRS
 // lets an uncharged helm be worn in.
-inv_setslot(worn, ^wearpos_hat, serpentine_helm_uncharged, 1);
+inv_setslot(worn, ^wearpos_hat, $bare, 1);
 ~update_all(null);
 cleartimer(serpentine_helm);
-mes("@red@Your serpentine helm has run out of scales.");
+mes("@red@Your helm has run out of scales.");
 
 // ---------------------------------------------------------------------------------------------
 // What a charged helm does

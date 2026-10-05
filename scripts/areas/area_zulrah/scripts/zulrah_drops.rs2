@@ -66,6 +66,17 @@ if ($tele = null) {
 obj_add($tele, zul_andra_teleport, 1, ^lootdrop_duration);
 // The tertiaries, one roll each.
 ~trail_hardcluedrop(^zulrah_elite_clue_rate, $at);
+// THE MUTAGENS, before the jar and on the same once-a-kill footing. Nothing else about the kill
+// changes: a mutagen is an extra on top of whatever the two rolls produced, which is how Old
+// School has it.
+if (random(^zulrah_mutagen_rate) = 0) {
+    ~zulrah_rare_at($at, tanzanite_mutagen, 1);
+    session_log(^log_adventure, "Defeated <npc_name> and received a Tanzanite mutagen!");
+}
+if (random(^zulrah_mutagen_rate) = 0) {
+    ~zulrah_rare_at($at, magma_mutagen, 1);
+    session_log(^log_adventure, "Defeated <npc_name> and received a Magma mutagen!");
+}
 if (random(^zulrah_jar_rate) = 0) {
     ~zulrah_rare_at($at, jar_of_swamp, 1);
 }
