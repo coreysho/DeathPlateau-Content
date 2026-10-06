@@ -11,6 +11,7 @@ switch_obj (last_useitem) {
 [opheldu,uncooked_stew]
 switch_obj (last_useitem) {
     case spicespot : @make_curry;
+    case default : ~displaymessage(^dm_default);
 };
 
 [opheldu,spicespot]
@@ -19,6 +20,7 @@ switch_obj (last_useitem) {
     // Recipe for Disaster, Freeing the Goblin generals: General Bentnoze wants his maggots spiced.
     // @hundred_goblin_spicy_maggots is in quest_100/scripts/hundred_goblins.rs2.
     case fishing_bait : @hundred_goblin_spicy_maggots;
+    case default : ~displaymessage(^dm_default);
 };
 
 [opheld1,burnt_stew]

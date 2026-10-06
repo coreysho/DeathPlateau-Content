@@ -66,11 +66,17 @@ if(%haunted_manor_fountain_poisoned = 1) {
     ~chatplayer("<p,confused>... and a lot of piranhas!|I can't get the gauge out.");
 }
 
+// BOTH HALVES REFUSE OUT LOUD. A use-on reaches only the item the player clicked SECOND, so a
+// script that recognises nothing has to say ^dm_default - that is what hands the click to the other
+// half (~displaymessage, and opheldu_decline behind it). These two returned in silence, which left
+// "use a looting bag on poison" and 26 other pairs doing nothing at all.
 [opheldu,poison]
 if(last_useitem = fish_food) @poison_fish_food;
+~displaymessage(^dm_default);
 
 [opheldu,fish_food]
 if(last_useitem = poison) @poison_fish_food;
+~displaymessage(^dm_default);
 
 [label,poison_fish_food]
 inv_del(inv, fish_food, 1);

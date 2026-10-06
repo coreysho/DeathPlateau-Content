@@ -10,7 +10,7 @@ if (last_useitem = sheepbonesa) {
 } else if (oc_category(last_useitem) = category_91) {
     ~mesbox("This is a special incinerator for hazardous waste.|It is not suitable for crafting or smithing.");
 } else {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
 }
 
 [label,incinerate_bones](int $starting_bit) {

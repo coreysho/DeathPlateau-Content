@@ -173,8 +173,12 @@ if(~obj_gettotal(lens_mould) > 0) {
 mes("Underneath the sack you find a peculiar mould.");
 inv_add(inv, lens_mould, 1);
 
+// A use-on reaches only the item the player clicked SECOND, so a trigger that recognises nothing
+// has to say ^dm_default: that is what hands the click to the other half (~displaymessage and
+// opheldu_decline behind it). Falling off the end in silence swallowed it.
 [opheldu,lens_mould]
 if (last_useitem = molten_glass) @craft_telescope_disc;
+~displaymessage(^dm_default);
 
 [label,craft_telescope_disc]
 if(inv_total(inv, lens) > 0) {

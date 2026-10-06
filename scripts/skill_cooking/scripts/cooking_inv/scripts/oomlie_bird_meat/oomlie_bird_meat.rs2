@@ -1,11 +1,16 @@
+// A use-on reaches only the item the player clicked SECOND, so a trigger that recognises nothing
+// has to say ^dm_default: that is what hands the click to the other half (~displaymessage and
+// opheldu_decline behind it). Falling off the end in silence swallowed it.
 [opheldu,palm_leaf]
 switch_obj (last_useitem) {
     case raw_oomlie : @make_oomlie_wrap;
+    case default : ~displaymessage(^dm_default);
 };
 
 [opheldu,raw_oomlie]
 switch_obj (last_useitem) {
     case palm_leaf : @make_oomlie_wrap;
+    case default : ~displaymessage(^dm_default);
 };
 
 [label,make_oomlie_wrap]

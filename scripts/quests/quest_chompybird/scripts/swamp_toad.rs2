@@ -87,5 +87,5 @@ switch_obj(last_useitem) {
         npc_del;
 
     case default :
-        mes("Nothing interesting happens.");
+        ~displaymessage(^dm_default);
 }

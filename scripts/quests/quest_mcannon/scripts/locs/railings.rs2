@@ -12,7 +12,7 @@
 // Undamaged Railing
 [oploc1,mcannonplain]
 if (%mcannon = ^mcannon_not_started) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
 } else if (%mcannon = ^mcannon_tasked_with_fixing_railings) {
     @mcannon_fix_regular_railing;
 } else {
@@ -41,7 +41,7 @@ if (%mcannon = ^mcannon_not_started) {
 
 [label,damaged_railings](int $railing_num)
 if (%mcannon = ^mcannon_not_started) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
 } else if (%mcannon = ^mcannon_tasked_with_fixing_railings) {
     @mcannon_fix_broken_railing($railing_num);
 } else {

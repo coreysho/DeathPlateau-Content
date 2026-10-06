@@ -570,6 +570,10 @@ switch_obj (last_useitem) {
         inv_del(inv, ibans_ashes, 1);
         %ibanmulti = setbit(%ibanmulti, ^upass_ashes_on_doll);
         mes("You rub the ashes into the doll.");
+    // A use-on reaches only the item clicked SECOND, so a trigger that recognises nothing has to say
+    // ^dm_default - that is what hands the click to the other half (~displaymessage, and
+    // opheldu_decline behind it). With no default this switch swallowed 29 pairs in silence.
+    case default : ~displaymessage(^dm_default);
 }
 
 [oploc1,upass_templedoor_closed_right] @open_iban_door;

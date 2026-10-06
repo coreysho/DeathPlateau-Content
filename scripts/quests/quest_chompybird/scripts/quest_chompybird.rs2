@@ -26,7 +26,7 @@ switch_obj(last_useitem) {
     case filled_ogre_bellow3 : 
         mes("These bellows are already full of swamp gas!");
     case default :
-        mes("Nothing interesting happens.");
+        ~displaymessage(^dm_default);
 }
 
 [proc,ogre_bellows_suck](obj $bellows)

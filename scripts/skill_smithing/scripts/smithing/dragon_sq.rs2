@@ -1,15 +1,21 @@
+// A use-on reaches only the item the player clicked SECOND, so a trigger that recognises nothing
+// has to say ^dm_default: that is what hands the click to the other half (~displaymessage and
+// opheldu_decline behind it). Falling off the end in silence swallowed it.
 [opheldu,dragonshield_a]
 if (last_useitem = dragonshield_b) {
     // supposed to be both shield halves in the obj box
     ~objbox(dragonshield_a, "You'll need to repair the shield at an anvil, with a hammer.", 250, 0, divide(^objbox_height, 2));
     return;
 }
+~displaymessage(^dm_default);
+
 [opheldu,dragonshield_b]
 if (last_useitem = dragonshield_a) {
     // supposed to be both shield halves in the obj box
     ~objbox(dragonshield_a, "You'll need to repair the shield at an anvil, with a hammer.", 250, 0, divide(^objbox_height, 2));
     return;
 }
+~displaymessage(^dm_default);
 
 
 [label,make_dragon_sq]
