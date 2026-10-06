@@ -125,17 +125,12 @@ op1=Climb
 [osrsloc_14404]
 name=Tropical tree
 model=osrsloc_14404
-// STILL NOT USABLE, and it is the map and not this config. The zip line lands the player in a
-// pocket six tiles across - 3313 to 3318, z 3160 to 3165 - with EVERY tile north of 3165
-// blocked, so 3318,3165 is the only tile they can ever stand on and the engine refuses that
-// side with "I can't reach that!". The swing itself is correct: it fires from the east, west
-// and north, which are tiles no player can walk to.
-//
-// Four things tried and measured, none of which changed it, so none of them is here:
-//   forceapproach=south; length 1 against the cache's 2; blockwalk=no; and moving the loc one
-//   tile north, which only moved the blocked tile with it.
-// Whatever closes that south face is in the level-1 map around 3318,3166 and wants looking at
-// in game. tools/sim/alkharidcourse.ts pins the failure so the day it clears, it says so.
+// The swing fires from the east, west and north - tiles no player can walk to - so the only side
+// that can ever be used is the south, from 3318,3165. That face was closed for a long time and the
+// note here blamed the level-1 map; it was not the map. osrsloc_26587, a roof edge at 3318,3166,
+// was placed as a shape-0 wall across it. Old School carries opcode 27 on that loc and this build's
+// importer has no equivalent, so theirs is passable and ours was solid. blockwalk=no on the edge
+// fixed it - see alkharid_rooftop.loc's osrsloc_26587, and alkharidcourse.ts, which walks the lap.
 length=2
 active=yes
 resizex=164
