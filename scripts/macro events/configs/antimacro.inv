@@ -1,0 +1,10 @@
+// WHAT IS IN THE COFFIN YOU ARE HOLDING, for as long as the window is open.
+//
+// The Gravedigger's grave goods are all called "Item" and all examine as "It seems bleached with
+// age", which is the whole puzzle: you have to look at them. This is the inv the macro_digger_coffin
+// window transmits, refilled from macro_digger_goods_* every time a coffin is checked. Nothing is
+// ever kept in it - temp, and cleared before each fill - so it cannot become a ninth bank tab.
+[macro_digger_coffin_inv]
+size=9
+scope=temp
+stackall=yes

@@ -1,0 +1,91 @@
+// LEO'S FIVE DEAD, and what went into the ground with them.
+//
+// The cache gives five "Its a symbol" stones - stonecook, stonespade, stoneaxe, stonemine,
+// stonevase - and sixteen "It seems bleached with age" grave goods, plus a skull and a pile of
+// bones. Five symbols, five trades: that is the whole of the puzzle's data, and it is why the five
+// professions below are the five they are rather than five somebody made up.
+//
+// WHICH GOOD BELONGS TO WHICH TRADE IS NOT RECORDED ANYWHERE. runescape.wiki's page on the event
+// was kept "for historical purposes" when it was removed in 2012 and never listed the coffins'
+// contents; neither does the Old School page. So the split below is read off the models' own names,
+// which are unambiguous for all sixteen - a chef's hat is a cook's, a dibber is a farmer's. If it
+// is ever found to be wrong it is wrong in one place.
+
+// ^macro_digger_cook .. ^macro_digger_potter, in macro_events.constant.
+[macro_digger_symbol]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,macro_digger_stonecook
+val=2,macro_digger_stonespade
+val=3,macro_digger_stoneaxe
+val=4,macro_digger_stonemine
+val=5,macro_digger_stonevase
+
+[macro_digger_trade]
+inputtype=int
+outputtype=string
+default=
+val=1,cook
+val=2,farmer
+val=3,lumberjack
+val=4,miner
+val=5,potter
+
+// THE GOODS, keyed trade * 8 + slot so one lookup serves all five - a proc cannot pick an enum by
+// name, and five enums would mean five copies of the loop that reads them. Eight slots a trade is
+// more than any of them use; the first null ends the coffin.
+//
+// The skull and the bones are in every coffin and are added by the script rather than listed here.
+// They are the body, not the trade, and a coffin without them would be an empty box.
+[macro_digger_goods]
+inputtype=int
+outputtype=namedobj
+default=null
+// 1, the cook
+val=8,macro_digger_chefshat
+val=9,macro_digger_apron
+val=10,macro_digger_cake
+val=11,macro_digger_kebab
+// 2, the farmer
+val=16,macro_digger_dibber
+val=17,macro_digger_secateurs
+val=18,macro_digger_potato_seeded
+val=19,macro_digger_plant_pot_empty
+// 3, the lumberjack
+val=24,macro_digger_hatchet
+val=25,macro_digger_woodlogs
+val=26,macro_digger_knife
+// 4, the miner
+val=32,macro_digger_pick_axe
+val=33,macro_digger_nuggets
+// 5, the potter
+val=40,macro_digger_pot_empty
+val=41,macro_digger_bowl_empty
+
+// THE COFFIN IN YOUR PACK, one item id per trade. All five are called "Coffin" and examine the
+// same, so carrying three of them tells you nothing - which is the point. The id is how the script
+// remembers whose coffin it is while you walk it across the cemetery.
+[macro_digger_coffin_obj]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,macro_digger_coffin_object_1
+val=2,macro_digger_coffin_object_2
+val=3,macro_digger_coffin_object_3
+val=4,macro_digger_coffin_object_4
+val=5,macro_digger_coffin_object_5
+
+// WHAT LEO PAYS, two of them per cemetery and never the same one twice: the five pieces of the
+// zombie outfit and the two zombie emotes. emotes.rs2 has been telling players for a while that the
+// walk and the dance "can be unlocked during the gravedigger random event"; now they can be.
+// 1-5 are items, 6 and 7 the emotes - see ~macro_digger_pay.
+[macro_digger_reward_obj]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,macro_digger_mask
+val=2,macro_digger_shirt
+val=3,macro_digger_legs
+val=4,macro_digger_gloves
+val=5,macro_digger_boots

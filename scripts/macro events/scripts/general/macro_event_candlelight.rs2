@@ -20,13 +20,8 @@ if (p_finduid(uid) = true) {
     npc_del;
 }
 
-[mapzone,0_30_78] 
-~macro_events_hide_tabs;
-@music_playbyregion(coord);
-
-[mapzoneexit,0_30_78]
-~macro_events_varps_reset;
-~initalltabs;
+// The two triggers that used to be here are in macro_event_square_30_78.rs2: the square holds
+// Leo's cemetery as well as Pete's chapel now, and a mapzone trigger covers the whole 64x64.
 
 [opnpc1,macro_pious_pete]
 if(%macro_transmit = 0) {

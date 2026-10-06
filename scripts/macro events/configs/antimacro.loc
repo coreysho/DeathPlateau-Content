@@ -721,3 +721,33 @@ multiloc=0,loc_10075
 multiloc=1,loc_10072
 multiloc=2,loc_10073
 multiloc=3,loc_10074
+
+// LEO'S CEMETERY. The room, the five graves, the five headstones and the mausoleum are all built
+// and placed in map square 30_78 already - the only thing it has ever been missing is a script.
+//
+// A GRAVE IS A MULTILOC, not a loc_change. loc_change rewrites the loc for everyone standing in the
+// zone, and two players digging in the same cemetery would be moving each other's coffins about.
+// macro_digger_grave_1..5 are varbits, so what each player sees is their own; the five bases stay
+// where the map put them and only the picture changes. The drill demon's four posts are wired the
+// same way - see loc_10068 below.
+[macro_digger_grave_filled]
+name=Grave
+desc=A grave with a coffin in.
+model=loc_12721
+model2=loc_12721i2
+op1=Take-Coffin
+length=2
+hillskew=yes
+forceapproach=south
+
+// NO OPS ON PURPOSE. A coffin goes into a grave by being used on it, the way you would carry one:
+// all five coffins are called "Coffin" and look alike, so a "Fill" option would have to ask which
+// of the ones you are carrying you meant. Clicking the one in your pack onto the hole says it
+// without a menu.
+[macro_digger_grave_empty]
+name=Grave
+desc=An empty grave.
+model=loc_12726
+length=2
+hillskew=yes
+forceapproach=south

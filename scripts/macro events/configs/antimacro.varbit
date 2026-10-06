@@ -123,30 +123,34 @@ basevar=macro_digger_var
 startbit=13
 endbit=15
 
+// WHICH TRADE'S COFFIN BELONGS IN EACH GRAVE - the answer, and the only part of the puzzle the
+// player is not looking at. It lives on macro_digger_var_4 rather than beside the grave states
+// because macro_digger_var is transmitted for the multilocs, and a varp on the wire is a varp a
+// client can read.
 [macro_digger_coffin_1]
-basevar=macro_digger_var
-startbit=16
-endbit=18
+basevar=macro_digger_var_4
+startbit=4
+endbit=6
 
 [macro_digger_coffin_2]
-basevar=macro_digger_var
-startbit=19
-endbit=21
+basevar=macro_digger_var_4
+startbit=7
+endbit=9
 
 [macro_digger_coffin_3]
-basevar=macro_digger_var
-startbit=22
-endbit=24
+basevar=macro_digger_var_4
+startbit=10
+endbit=12
 
 [macro_digger_coffin_4]
-basevar=macro_digger_var
-startbit=25
-endbit=27
+basevar=macro_digger_var_4
+startbit=13
+endbit=15
 
 [macro_digger_coffin_5]
-basevar=macro_digger_var
-startbit=28
-endbit=30
+basevar=macro_digger_var_4
+startbit=16
+endbit=18
 
 [macro_digger_checkvar]
 basevar=macro_digger_var
@@ -188,15 +192,18 @@ basevar=macro_digger_var_2
 startbit=15
 endbit=18
 
+// name_3 had five bits where the other four have four, which pushed name_4 along and left name_5
+// starting on bit 27 - the bit name_4 ends on. Two of the five names were the same number. Nothing
+// reads these yet, so nothing was broken by it; it is fixed here rather than left as a trap.
 [macro_digger_name_3]
 basevar=macro_digger_var_2
 startbit=19
-endbit=23
+endbit=22
 
 [macro_digger_name_4]
 basevar=macro_digger_var_2
-startbit=24
-endbit=27
+startbit=23
+endbit=26
 
 [macro_digger_name_5]
 basevar=macro_digger_var_2

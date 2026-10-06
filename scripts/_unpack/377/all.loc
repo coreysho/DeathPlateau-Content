@@ -86092,30 +86092,35 @@ name=Gravestone
 desc=This will show me who is supposed to go here.
 model=loc_12716
 op1=Read
+category=macro_digger_gravestone
 
 [loc_12717]
 name=Gravestone
 desc=This will show me who is supposed to go here.
 model=loc_12717
 op1=Read
+category=macro_digger_gravestone
 
 [loc_12718]
 name=Gravestone
 desc=This will show me who is supposed to go here.
 model=loc_12718
 op1=Read
+category=macro_digger_gravestone
 
 [loc_12719]
 name=Gravestone
 desc=This will show me who is supposed to go here.
 model=loc_12717
 op1=Read
+category=macro_digger_gravestone
 
 [loc_12720]
 name=Gravestone
 desc=This will show me who is supposed to go here.
 model=loc_12716
 op1=Read
+category=macro_digger_gravestone
 
 [loc_12721]
 name=Grave
@@ -86126,6 +86131,18 @@ op1=Take-Coffin
 length=2
 hillskew=yes
 forceapproach=south
+// Grave 1 of Leo's five. What it looks like is the player's own macro_digger_grave_1, so two
+// people can dig in the same cemetery without moving each other's coffins - see
+// "macro events"/configs/antimacro.loc. The op above is never the one the client offers; the
+// variant's is.
+category=macro_digger_grave
+multivar=macro_digger_grave_1
+multiloc=0,macro_digger_grave_empty
+multiloc=1,macro_digger_grave_filled
+multiloc=2,macro_digger_grave_filled
+multiloc=3,macro_digger_grave_filled
+multiloc=4,macro_digger_grave_filled
+multiloc=5,macro_digger_grave_filled
 
 [loc_12722]
 name=Grave
@@ -86136,6 +86153,18 @@ op1=Take-Coffin
 length=2
 hillskew=yes
 forceapproach=south
+// Grave 2 of Leo's five. What it looks like is the player's own macro_digger_grave_2, so two
+// people can dig in the same cemetery without moving each other's coffins - see
+// "macro events"/configs/antimacro.loc. The op above is never the one the client offers; the
+// variant's is.
+category=macro_digger_grave
+multivar=macro_digger_grave_2
+multiloc=0,macro_digger_grave_empty
+multiloc=1,macro_digger_grave_filled
+multiloc=2,macro_digger_grave_filled
+multiloc=3,macro_digger_grave_filled
+multiloc=4,macro_digger_grave_filled
+multiloc=5,macro_digger_grave_filled
 
 [loc_12723]
 name=Grave
@@ -86146,6 +86175,18 @@ op1=Take-Coffin
 length=2
 hillskew=yes
 forceapproach=south
+// Grave 3 of Leo's five. What it looks like is the player's own macro_digger_grave_3, so two
+// people can dig in the same cemetery without moving each other's coffins - see
+// "macro events"/configs/antimacro.loc. The op above is never the one the client offers; the
+// variant's is.
+category=macro_digger_grave
+multivar=macro_digger_grave_3
+multiloc=0,macro_digger_grave_empty
+multiloc=1,macro_digger_grave_filled
+multiloc=2,macro_digger_grave_filled
+multiloc=3,macro_digger_grave_filled
+multiloc=4,macro_digger_grave_filled
+multiloc=5,macro_digger_grave_filled
 
 [loc_12724]
 name=Grave
@@ -86156,6 +86197,18 @@ op1=Take-Coffin
 length=2
 hillskew=yes
 forceapproach=south
+// Grave 4 of Leo's five. What it looks like is the player's own macro_digger_grave_4, so two
+// people can dig in the same cemetery without moving each other's coffins - see
+// "macro events"/configs/antimacro.loc. The op above is never the one the client offers; the
+// variant's is.
+category=macro_digger_grave
+multivar=macro_digger_grave_4
+multiloc=0,macro_digger_grave_empty
+multiloc=1,macro_digger_grave_filled
+multiloc=2,macro_digger_grave_filled
+multiloc=3,macro_digger_grave_filled
+multiloc=4,macro_digger_grave_filled
+multiloc=5,macro_digger_grave_filled
 
 [loc_12725]
 name=Grave
@@ -86166,6 +86219,18 @@ op1=Take-Coffin
 length=2
 hillskew=yes
 forceapproach=south
+// Grave 5 of Leo's five. What it looks like is the player's own macro_digger_grave_5, so two
+// people can dig in the same cemetery without moving each other's coffins - see
+// "macro events"/configs/antimacro.loc. The op above is never the one the client offers; the
+// variant's is.
+category=macro_digger_grave
+multivar=macro_digger_grave_5
+multiloc=0,macro_digger_grave_empty
+multiloc=1,macro_digger_grave_filled
+multiloc=2,macro_digger_grave_filled
+multiloc=3,macro_digger_grave_filled
+multiloc=4,macro_digger_grave_filled
+multiloc=5,macro_digger_grave_filled
 
 [loc_12726]
 name=Grave
