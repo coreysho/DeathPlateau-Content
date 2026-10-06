@@ -54,7 +54,14 @@ def build(spec):
             L.append('desc=%s' % p['desc'])
         L.append('model=obj_%s' % p['local'])
         L.append('manwear=obj_%s_manwear,0' % p['local'])
+        # THE SECOND WORN MODEL IS THE SLEEVES, and leaving it out is not a missing detail: the garb
+        # also carries wearpos2 'arms', which HIDES the player's own arms. One without the other is a
+        # torso with nothing below the shoulders, in every animation.
+        if p.get('manwear2'):
+            L.append('manwear2=obj_%s_manwear2' % p['local'])
         L.append('womanwear=obj_%s_womanwear,0' % p['local'])
+        if p.get('womanwear2'):
+            L.append('womanwear2=obj_%s_womanwear2' % p['local'])
         if p.get('manhead'):
             L.append('manhead=obj_%s_manhead' % p['local'])
         if p.get('womanhead'):
