@@ -10,6 +10,12 @@ val=5,macro_triffidseed
 // Named here for the count and for follow_player_on_logout; which of the six actually spawns is
 // ~macro_event_npc's business, because this one scales with your combat level.
 val=6,macro_evil_chicken_6
+val=7,macro_highwayman
+val=8,macro_pirate
+// Any of the three brothers; which one you get is ~macro_event_npc's business, the same way the
+// Evil Chicken's bracket is.
+val=9,macro_niles
+val=10,macro_doctor
 
 [general_macro_events_free]
 inputtype=int
@@ -19,6 +25,94 @@ val=1,macro_swarm
 val=2,macro_geni
 val=3,macro_dwarf
 val=4,macro_mage
+// 5 and 6 are the strange plant and the Evil Chicken, which are members'. The gap is why the two
+// _pick tables below exist.
+val=7,macro_highwayman
+val=8,macro_pirate
+val=9,macro_niles
+val=10,macro_doctor
+
+// WHICH EVENTS A WORLD ROLLS, as a list rather than a count. ~macro_event_set_random used to roll
+// 1..enum_getoutputcount over the tables above, which quietly required the ids to run 1..N with no
+// gaps - so a members-only event could not be added without either giving it a free id as well or
+// shifting every id after it, and %macro_event stores an id across a logout. These say outright
+// which ids each world picks from, and the tables above are then free to have holes.
+[general_macro_events_members_pick]
+inputtype=int
+outputtype=int
+default=0
+val=0,1
+val=1,2
+val=2,3
+val=3,4
+val=4,5
+val=5,6
+val=6,7
+val=7,8
+val=8,9
+val=9,10
+
+[general_macro_events_free_pick]
+inputtype=int
+outputtype=int
+default=0
+val=0,1
+val=1,2
+val=2,3
+val=3,4
+val=4,7
+val=5,8
+val=6,9
+val=7,10
+
+// WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
+// the question is "do you know what that is" rather than "can you tell two kinds of ore apart at
+// 200% scale". The answer and both decoys are drawn from this one list.
+[macro_certer_items]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,bucket_empty
+val=1,bowl_empty
+val=2,jug_empty
+val=3,pot_empty
+val=4,tinderbox
+val=5,chisel
+val=6,hammer
+val=7,shears
+val=8,knife
+val=9,rope
+val=10,spade
+val=11,bronze_pickaxe
+val=12,bronze_axe
+val=13,feather
+val=14,logs
+val=15,raw_shrimp
+
+// WHAT DR FORD ASKS FOR. Cheap, common things somebody might actually have on them - he takes it,
+// and what he gives back off the shared table is worth more than any of these.
+[macro_dr_ford_wants]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,bucket_empty
+val=1,jug_empty
+val=2,pot_empty
+val=3,tinderbox
+val=4,rope
+val=5,logs
+val=6,bread
+val=7,bucket_water
+val=8,cooked_meat
+val=9,feather
+
+[macro_event_certer_brothers]
+inputtype=int
+outputtype=npc
+default=null
+val=0,macro_niles
+val=1,macro_miles
+val=2,macro_giles
 
 [macro_event_evil_chicken_levels]
 inputtype=int

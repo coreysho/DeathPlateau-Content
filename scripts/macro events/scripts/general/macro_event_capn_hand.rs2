@@ -1,0 +1,68 @@
+// CAP'N HAND, who mistakes you for one of his crew. The character is macro_pirate in antimacro.npc.
+//
+// WHAT HE DOES, per oldschool.runescape.wiki/w/Cap'n_Hand: ignore him and "he would attack the
+// player with a crossbow... usually keep shooting the player to the death"; talk to him mid-volley
+// and "he would stop attacking them and they would receive a small reward".
+//
+// SO TALKING TO HIM ALWAYS WORKS, even once he has started shooting, and that is the whole character
+// of the event. [opnpc1] below puts him back on playerfollow before it pays out, which is what makes
+// the volley stoppable rather than a death sentence.
+
+[proc,macro_capn_hand_spawn]
+npc_say("There ye are! Get back to the ship, ye bilge rat!");
+%npc_macro_event_target = uid;
+npc_setmode(playerfollow);
+
+[ai_timer,macro_pirate]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+if (%npc_int = 0) {
+    npc_say("Oi! I'm talkin' to you, <displayname>!");
+} else if (%npc_int = 1) {
+    npc_say("Mutiny, is it?");
+} else if (%npc_int = 2) {
+    npc_say("Right. Ye asked for this.");
+} else if (%npc_int = 3) {
+    // The crossbow. He is hostile from here until you talk to him - %aggressive_npc so the PJ timer
+    // and the combat scripts know who has hold of you, the same line every hostile random sets.
+    %macro_event = ^no_macro_event;
+    %aggressive_npc = npc_uid;
+    npc_setmode(opplayer2);
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[ai_queue5,macro_pirate] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,macro_pirate] // paid up, now go
+npc_anim(emote_wave, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+[opnpc1,macro_pirate]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,angry>Ye're not the one I'm after. <.displayname> is.");
+        return;
+    }
+    ~chatnpc("<p,angry>Ye're not the one I'm after.");
+    return;
+}
+if (%npc_int = ^capn_hand_done) {
+    ~chatnpc("<p,happy>Off ye go then.");
+    return;
+}
+// Stops the shooting, which is the point - he is reachable even once he has started.
+npc_setmode(playerfollow);
+%npc_int = ^capn_hand_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+npc_queue(6, 0, 2);
+~chatnpc("<p,happy>Ah - my mistake, ye're not one o' mine at all. Here, somethin' for yer trouble.");
+~macro_event_give_reward;

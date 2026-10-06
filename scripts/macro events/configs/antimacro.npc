@@ -2190,6 +2190,7 @@ op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=obj_highwaymanmask_manhead
 head3=npc_master_fisher_head
+timer=20
 
 [macro_niles]
 name=Niles
@@ -2222,6 +2223,8 @@ alwaysontop=yes
 op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=idk_man_jaw_moustache_head
+category=macro_event_certer
+timer=20
 
 [macro_miles]
 name=Miles
@@ -2252,6 +2255,8 @@ alwaysontop=yes
 op1=Talk-to
 head1=idk_man_hair_tonsure_head
 head2=idk_man_jaw_moustache_head
+category=macro_event_certer
+timer=20
 
 [macro_giles]
 name=Giles
@@ -2284,6 +2289,8 @@ alwaysontop=yes
 op1=Talk-to
 head1=obj_leather_cowl_manhead2
 head2=idk_man_jaw_moustache_head
+category=macro_event_certer
+timer=20
 
 [macro_pirate]
 name=Cap'n Hand
@@ -2314,6 +2321,7 @@ op1=Talk-to
 head1=idk_man_hair_long_head
 head2=idk_man_jaw_long_head
 head3=obj_piratehat_manhead
+timer=20
 
 [macro_jekyll]
 name=Dr Jekyll
@@ -2526,6 +2534,7 @@ op1=Talk-to
 head1=npc_drunk1_head
 head2=idk_man_jaw_goatee_head
 head3=npc_councillor_halgrive_head
+timer=20
 
 [macro_drilldemon]
 name=Sergeant Damien

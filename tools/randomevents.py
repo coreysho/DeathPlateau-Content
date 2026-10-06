@@ -20,6 +20,11 @@ import sys
 HERE = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(HERE)
 EVENTS_DIR = os.path.join(ROOT, 'scripts', 'macro events')
+# THE CAST IS NOT IN THE 377 CACHE and looking for it there is how this tool first reported that
+# seventeen events needed a character imported from a later cache. They do not: somebody built the
+# whole lot out of 377 parts - idk_* heads and jaws, obj_*_manwear pieces, recolours - and they are
+# sitting in "macro events"/configs/antimacro.npc with their own animations, waiting for a script.
+ANTIMACRO_NPC = os.path.join(ROOT, 'scripts', 'macro events', 'configs', 'antimacro.npc')
 ALL_NPC = os.path.join(ROOT, 'scripts', '_unpack', '377', 'all.npc')
 
 # (group, wiki name, the proc or script that would implement it, the cache npc it needs)
@@ -49,26 +54,26 @@ EVENTS = [
     ('Monster spawns', 'Poison cloud', 'macro_event_poisonous_gas', None),
     ('Monster spawns', 'Zombie', 'macro_event_zombie', None),
     ('Monster spawns', 'Shade', 'macro_event_shade', None),
-    ("Npc's", "Cap'n Hand", 'macro_event_capn_hand', 'macro_capn_hand'),
-    ("Npc's", 'Jekyll and Hyde', 'macro_event_jekyll', 'macro_dr_jekyll'),
-    ("Npc's", 'Evil Bob', 'macro_event_evil_bob', 'macro_evil_bob'),
-    ("Npc's", "Cap'n Arnav", 'macro_event_arnav', 'macro_capn_arnav'),
-    ("Npc's", 'The certers', 'macro_event_certer', 'macro_certer'),
-    ("Npc's", 'Dr. Ford', 'macro_event_dr_ford', 'macro_dr_ford'),
+    ("Npc's", "Cap'n Hand", 'macro_event_capn_hand', 'macro_pirate'),
+    ("Npc's", 'Jekyll and Hyde', 'macro_event_jekyll', 'macro_jekyll'),
+    ("Npc's", 'Evil Bob', 'macro_event_evil_bob', 'macro_evil_bob_outside'),
+    ("Npc's", "Cap'n Arnav", 'macro_event_arnav', 'macro_combilock_pirate'),
+    ("Npc's", 'The certers', 'macro_event_certer', 'macro_niles'),
+    ("Npc's", 'Dr. Ford', 'macro_event_dr_ford', 'macro_doctor'),
     ("Npc's", 'Candlelight', 'macro_event_candlelight', None),
-    ("Npc's", 'Drill Demon', 'macro_event_drill_demon', 'macro_sergeant_damien'),
+    ("Npc's", 'Drill Demon', 'macro_event_drill_demon', 'macro_drilldemon'),
     ("Npc's", 'Drunken dwarf', 'macro_event_drunken_dwarf', None),
-    ("Npc's", 'Freaky forester', 'macro_event_freaky_forester', 'macro_freaky_forester'),
+    ("Npc's", 'Freaky forester', 'macro_event_freaky_forester', 'macro_forester_m'),
     ("Npc's", 'Genie', 'macro_event_genie', None),
-    ("Npc's", 'Gravedigger', 'macro_event_gravedigger', 'macro_leo'),
+    ("Npc's", 'Gravedigger', 'macro_event_gravedigger', 'macro_gravedigger'),
     ("Npc's", 'Kiss the frog', 'macro_event_frog', 'macro_frog_prince'),
     ("Npc's", 'Mime', 'macro_event_mime', 'macro_mime'),
     ("Npc's", 'Mysterious old man', 'macro_event_mysterious_old_man', None),
-    ("Npc's", 'Pillory', 'macro_event_pillory', 'macro_rick_turpentine'),
-    ("Npc's", 'Prison pete', 'macro_event_prison_pete', 'macro_prison_pete'),
-    ("Npc's", 'Quiz master', 'macro_event_quiz_master', 'macro_quiz_master'),
-    ("Npc's", 'Rick Turpentine', 'macro_event_rick_turpentine', 'macro_rick_turpentine'),
-    ("Npc's", 'Sandwich Lady', 'macro_event_sandwich_lady', 'macro_sandwich_lady'),
+    ("Npc's", 'Pillory', 'macro_event_pillory', 'macro_pillory_guard'),
+    ("Npc's", 'Prison pete', 'macro_event_prison_pete', 'prisonpete_pete'),
+    ("Npc's", 'Quiz master', 'macro_event_quiz_master', 'macro_magneson'),
+    ("Npc's", 'Rick Turpentine', 'macro_event_rick_turpentine', 'macro_highwayman'),
+    ("Npc's", 'Sandwich Lady', 'macro_event_sandwich_lady', 'macro_sandwich_lady_npc'),
     ('Other', 'Strange box', 'macro_event_strange_box', None),
     ('Other', 'Strange plant', 'macro_event_triffid', None),
 ]
@@ -93,15 +98,16 @@ def implemented():
 
 
 def cache_npcs():
-    """Every npc debugname the 377 cache unpack declares."""
+    """Every npc debugname this build declares, cache and random-event cast alike."""
     out = set()
-    if not os.path.exists(ALL_NPC):
-        return out
-    with open(ALL_NPC, encoding='utf8', errors='replace') as fh:
-        for line in fh:
-            line = line.strip()
-            if line.startswith('[') and line.endswith(']'):
-                out.add(line[1:-1])
+    for path in (ANTIMACRO_NPC, ALL_NPC):
+        if not os.path.exists(path):
+            continue
+        with open(path, encoding='utf8', errors='replace') as fh:
+            for line in fh:
+                line = line.strip()
+                if line.startswith('[') and line.endswith(']'):
+                    out.add(line[1:-1])
     return out
 
 

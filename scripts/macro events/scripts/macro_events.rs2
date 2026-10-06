@@ -48,6 +48,10 @@ switch_int ($event) {
     case ^macro_geni : ~macro_geni_spawn;
     case ^macro_mysterious_old_man : ~macro_mysterious_old_man_spawn;
     case ^macro_evil_chicken : ~macro_evil_chicken_spawn;
+    case ^macro_rick_turpentine : ~macro_rick_turpentine_spawn;
+    case ^macro_capn_hand : ~macro_capn_hand_spawn;
+    case ^macro_certer : ~macro_certer_spawn;
+    case ^macro_dr_ford : ~macro_dr_ford_spawn;
 }
 
 // this proc is used for random events teleing to follow the player
@@ -113,6 +117,11 @@ if (npc_finduid(%macro_event_uid) = true) {
 if ($event = ^macro_evil_chicken) {
     return(enum(int, npc, macro_event_evil_chicken_levels, ~macro_event_combat_level));
 }
+// THE CERTERS ARE THREE BROTHERS and the table can only name one. Which of Niles, Miles and Giles
+// turns up is a coin toss each time, exactly as it is in the game.
+if ($event = ^macro_certer) {
+    return(enum(int, npc, macro_event_certer_brothers, random(enum_getoutputcount(macro_event_certer_brothers))));
+}
 def_npc $event_npc;
 if (map_members = ^true) {
     $event_npc = enum(int, npc, general_macro_events_members, $event);
@@ -121,19 +130,26 @@ if (map_members = ^true) {
 }
 return($event_npc);
 
+// WHICH EVENT TO SPAWN, picked from a list rather than counted. This used to roll
+// 1..enum_getoutputcount over the npc table, which quietly required that table's ids to run 1..N
+// with no gaps - so a members-only event could not be added without either giving it a free id too
+// or shifting every id after it, and %macro_event stores an id across a logout. The _pick enums say
+// outright which ids each world draws from, so the npc tables are free to have holes.
 [proc,macro_event_set_random]()(int)
 if (map_members = ^true) {
-    return(~random_range(1, enum_getoutputcount(general_macro_events_members)));
+    return(enum(int, int, general_macro_events_members_pick, random(enum_getoutputcount(general_macro_events_members_pick))));
 } else {
-    return(~random_range(1, enum_getoutputcount(general_macro_events_free)));
+    return(enum(int, int, general_macro_events_free_pick, random(enum_getoutputcount(general_macro_events_free_pick))));
 }
 
-// used for skilling random events
+// used for skilling random events: how many general events this world has, which is what the skill
+// dispatchers weight their own events against. The _pick tables, so a members-only event does not
+// count towards a free world's odds.
 [proc,macro_event_general_count]()(int)
 if (map_members = ^true) {
-    return(enum_getoutputcount(general_macro_events_members));
+    return(enum_getoutputcount(general_macro_events_members_pick));
 }
-return(enum_getoutputcount(general_macro_events_free));
+return(enum_getoutputcount(general_macro_events_free_pick));
 
 // teleports the player to a random location, using the coords in configs/macro_events_teleports.enum
 [queue,macro_event_fail_teleport]

@@ -1,0 +1,59 @@
+// THE RANDOM EVENT DROP TABLE, which several of the talking events share.
+//
+// It was already written down - commented out, in full, above
+// ~macro_mysterious_old_man_reward - with its own sourcing: Old School's table, confirmed against a
+// 2004 thread in the Internet Archive. Rick Turpentine, the certers and Dr Ford all pay from the
+// same table (oldschool.runescape.wiki says so for each of them), so it lives here once instead of
+// four times, and the old man's own reduced table is left exactly as it was.
+//
+// 150 ROLLS, and the comments are the odds out of them:
+//   50/150  coins, 80 / 160 / 320 / 640 - 2^(3..6) tens
+//   32/150  uncut sapphire        16/150  kebab          16/150  uncut emerald
+//   14/150  spinach roll           8/150  uncut ruby      6/150  240 coins
+//    4/150  cosmic talisman        2/150  uncut diamond   1/150 each half of a crystal key
+[proc,macro_event_reward]()(namedobj, int)
+def_int $random = random(150);
+if ($random < 50) {
+    return(coins, multiply(pow(2, ~random_range(3, 6)), 10));
+}
+if ($random < 82) {
+    return(uncut_sapphire, 1);
+}
+if ($random < 98) {
+    return(kebab, 1);
+}
+if ($random < 114) {
+    return(uncut_emerald, 1);
+}
+if ($random < 128) {
+    return(spinach_roll, 1);
+}
+if ($random < 136) {
+    return(uncut_ruby, 1);
+}
+if ($random < 142) {
+    return(coins, 240);
+}
+if ($random < 146) {
+    return(cosmic_talisman, 1);
+}
+if ($random < 148) {
+    return(uncut_diamond, 1);
+}
+if ($random < 149) {
+    return(keyhalf1, 1);
+}
+return(keyhalf2, 1);
+
+// Hand it over, or drop it at their feet when there is nowhere to put it. A reward that silently
+// failed to arrive because the pack was full is the one thing worse than no reward at all.
+[proc,macro_event_give_reward]
+def_namedobj $item;
+def_int $count;
+$item, $count = ~macro_event_reward;
+if (inv_freespace(inv) = 0 & inv_total(inv, $item) = 0) {
+    obj_add(coord, $item, $count, ^lootdrop_duration);
+    mes("You have no room for it, so it lands at your feet.");
+    return;
+}
+inv_add(inv, $item, $count);
