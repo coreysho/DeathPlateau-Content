@@ -7,6 +7,9 @@ val=2,macro_geni
 val=3,macro_dwarf
 val=4,macro_mage
 val=5,macro_triffidseed
+// Named here for the count and for follow_player_on_logout; which of the six actually spawns is
+// ~macro_event_npc's business, because this one scales with your combat level.
+val=6,macro_evil_chicken_6
 
 [general_macro_events_free]
 inputtype=int
@@ -16,6 +19,17 @@ val=1,macro_swarm
 val=2,macro_geni
 val=3,macro_dwarf
 val=4,macro_mage
+
+[macro_event_evil_chicken_levels]
+inputtype=int
+outputtype=npc
+default=null
+val=1,macro_evil_chicken_1
+val=2,macro_evil_chicken_2
+val=3,macro_evil_chicken_3
+val=4,macro_evil_chicken_4
+val=5,macro_evil_chicken_5
+val=6,macro_evil_chicken_6
 
 [macro_event_zombie_levels]
 inputtype=int

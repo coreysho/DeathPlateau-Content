@@ -5,6 +5,12 @@
 
 ^macro_triffidseed = 5
 
+// THE EVIL CHICKEN, members only. Not a judgement about the chicken: general_macro_events_free has
+// to stay contiguous because ~macro_event_set_random rolls 1..enum_getoutputcount over it, so a
+// sixth members event cannot also be a fifth free one without the same event having two ids - and
+// %macro_event stores that id across a logout.
+^macro_evil_chicken = 6
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0

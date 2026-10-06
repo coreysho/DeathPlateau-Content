@@ -1730,6 +1730,15 @@ resizev=30
 vislevel=3
 
 //TODO: Evil chicken stats and drops
+// THE EVIL CHICKEN'S SIX RECORDS WERE STUBS - a model, two animations and a level, and nothing to
+// fight: no hitpoints, no stats, no category, so there was no event behind them and could not be.
+// The numbers below are the zombie's ladder read off at each of these levels, so the chicken is as
+// dangerous as the other hostile randoms at the same combat level and no more. Its attack, block
+// and death animations were in the cache all along (roosterattack / roosterparry / roosterdeath).
+// The event itself is in "macro events"/scripts/general/macro_event_evil_chicken.rs2.
+//
+// The six macro_evil_chicken_underwater_* records below are left as they are: nothing spawns them,
+// and wiring a chicken this build cannot reach would be inventing content rather than finishing it.
 [macro_evil_chicken_1]
 name=Evil Chicken
 desc=A fowl beast.
@@ -1741,6 +1750,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=19
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=25
+attack=13
+strength=13
+defence=13
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_evil_chicken_2]
 name=Evil Chicken
@@ -1753,6 +1779,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=38
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=48
+attack=29
+strength=29
+defence=29
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_evil_chicken_3]
 name=Evil Chicken
@@ -1765,6 +1808,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=69
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=72
+attack=56
+strength=56
+defence=56
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_evil_chicken_4]
 name=Evil Chicken
@@ -1777,6 +1837,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=81
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=88
+attack=67
+strength=67
+defence=67
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_evil_chicken_5]
 name=Evil Chicken
@@ -1789,6 +1866,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=121
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=122
+attack=101
+strength=101
+defence=101
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_evil_chicken_6]
 name=Evil Chicken
@@ -1801,6 +1895,23 @@ readyanim=roosterready
 op2=Attack
 alwaysontop=yes
 vislevel=159
+minimap=no
+wanderrange=3
+maxrange=5
+timer=20
+hitpoints=170
+attack=130
+strength=130
+defence=130
+category=macro_event_evil_chicken
+param=damagetype,^stab_style
+param=attack_anim,roosterattack
+param=defend_anim,roosterparry
+param=death_anim,roosterdeath
+param=attack_sound,null
+param=defend_sound,null
+param=death_sound,null
+param=combat_xp_multiplier,25
 
 [macro_frog_royal]
 name=Frog
