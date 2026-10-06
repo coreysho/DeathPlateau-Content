@@ -61,7 +61,7 @@ EVENTS = [
     ("Npc's", 'The certers', 'macro_event_certer', 'macro_niles'),
     ("Npc's", 'Dr. Ford', 'macro_event_dr_ford', 'macro_doctor'),
     ("Npc's", 'Candlelight', 'macro_event_candlelight', None),
-    ("Npc's", 'Drill Demon', 'macro_event_drill_demon', 'macro_drilldemon'),
+    ("Npc's", 'Drill Demon', 'macro_event_drilldemon', 'macro_drilldemon'),
     ("Npc's", 'Drunken dwarf', 'macro_event_drunken_dwarf', None),
     ("Npc's", 'Freaky forester', 'macro_event_freaky_forester', 'macro_forester_m'),
     ("Npc's", 'Genie', 'macro_event_genie', None),

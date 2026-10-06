@@ -1,0 +1,58 @@
+// SERGEANT DAMIEN'S FOUR EXERCISES.
+//
+// WHICH SIGN MEANS WHAT WAS READ OFF THE MODELS, not guessed. loc_10068..10071 are the four
+// signposts and their multiloc list is 0,loc_10075 1,loc_10072 2,loc_10073 3,loc_10074 - four
+// boards, one per exercise, and nothing in the cache says which board is which. Rendering the four
+// faces front-on with tools/models/ob2render.py settles it:
+//   loc_10075  a figure side-on, arms and legs bent mid-stride    running
+//   loc_10072  a figure on its back with knees drawn up            sit-ups
+//   loc_10073  a figure flat out, head to one side                 push-ups
+//   loc_10074  a figure head up, arms and legs flung wide          star jumps
+// which is also, in that order, the four the wiki names. The numbers below are those multiloc
+// indexes, so a post's varbit IS the exercise it is showing and there is no second table to keep
+// in step.
+
+// ^macro_drill_run .. ^macro_drill_starjump, in macro_events.constant.
+[macro_drill_anim]
+inputtype=int
+outputtype=seq
+default=null
+val=0,run_on_spot
+val=1,situps_5
+val=2,pushups_5
+val=3,starjump_5
+
+// How long to hold the player while the exercise plays. The seqs carry no per-frame delays, so
+// these are their frame counts measured against human_pickupfloor - ten frames, which the content
+// everywhere pairs with p_delay(2).
+[macro_drill_ticks]
+inputtype=int
+outputtype=int
+default=4
+val=0,6
+val=1,7
+val=2,6
+val=3,11
+
+// What Damien bellows for. Written here rather than in the script so the order and the insult
+// cannot drift apart.
+[macro_drill_order]
+inputtype=int
+outputtype=string
+default=
+val=0,Run on the spot
+val=1,Sit-ups
+val=2,Press-ups
+val=3,Star jumps
+
+// THE CAMO OUTFIT, which is what runescape.wiki/w/Drill_Demon says the event paid: "a costume point
+// for a piece of Camouflage clothing". All three are in the 377 cache as drill_top, drill_bottoms
+// and drill_helm - named "Camo top", "Camo bottoms" and "Camo helmet" - and the Construction
+// costume room already has shelves for them, so nothing in this world has ever handed one out.
+[macro_drill_reward]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,drill_helm
+val=1,drill_top
+val=2,drill_bottoms

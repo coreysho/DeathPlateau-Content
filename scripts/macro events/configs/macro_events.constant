@@ -26,6 +26,10 @@
 // built and Leo is standing in it; see macro_event_gravedigger.rs2.
 ^macro_gravedigger = 12
 
+// SERGEANT DAMIEN. His yard, his four mats and his four signposts are built and placed in map
+// square 49_75; see macro_event_drilldemon.rs2.
+^macro_drilldemon = 13
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
@@ -73,6 +77,19 @@
 // Map square 30_78 holds Pete's chapel (east) and Leo's cemetery (west). The cemetery ends at
 // x=1934 and the chapel starts at x=1965; this is the wall between them.
 ^macro_room_30_78_split = 1950
+
+// THE FOUR EXERCISES, numbered as the signposts' own multiloc indexes so that a post's varbit is
+// the exercise it is showing - see macro_events_drilldemon.enum for how the boards were identified.
+^macro_drill_run = 0
+^macro_drill_situps = 1
+^macro_drill_pushups = 2
+^macro_drill_starjump = 3
+^macro_drill_exercises = 4
+// All four bits of %macro_drilldemon_done set.
+^macro_drill_all_done = 15
+
+// In front of the mats, where Damien can see you.
+^macro_drilldemon_landing = 0_49_75_29_16
 
 // How many things are on her tray. Named because the roll at spawn and the slot table have to agree
 // about it, and multiobj7 is built for exactly this many.

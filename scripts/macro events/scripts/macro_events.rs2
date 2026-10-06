@@ -54,6 +54,7 @@ switch_int ($event) {
     case ^macro_dr_ford : ~macro_dr_ford_spawn;
     case ^macro_sandwich_lady : ~macro_sandwich_lady_spawn;
     case ^macro_gravedigger : ~macro_gravedigger_spawn;
+    case ^macro_drilldemon : ~macro_drilldemon_spawn;
 }
 
 // this proc is used for random events teleing to follow the player
