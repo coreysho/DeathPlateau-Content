@@ -501,35 +501,28 @@ height=34
 text=Show Items Kept on Death
 
 // CALL FOLLOWER, the third thing Old School puts on this tab beside Equipment Stats and Items Kept
-// on Death. NOT part of the 474 conversion above - 474 had only the two, because Summoning and its
-// followers came later - so a rerun of tools/models/port474if.py will drop these two records and
-// they have to go back.
+// on Death. NOT part of the 474 conversion above - 474 had only the two, because followers came
+// later - so a rerun of tools/models/port474if.py will drop these two records and they have to go
+// back.
 //
-// A LINE OF TEXT RATHER THAN A THIRD ICON, because there is no icon for it to use: of the
-// thirty-seven 32x32 sprites this cache has, every one is a 474 options-tab icon or a piece of
-// button frame, and none of them is a pet. Inventing one or importing Old School's is a job of its
-// own; this reads plainly in the meantime and sits in the strip under the two buttons' frames,
-// which end at y=247 on a 261-tall tab.
+// THE ICON AND THE PLACE ARE OLD SCHOOL'S OWN. Its interface 387 puts four buttons along the bottom
+// at x=7, 52, 97 and 142, and Call follower is the last of them, drawn from sprite group 1343 - the
+// whistle, in sprites/osrs_call_follower.png. This tab has two of the four (474 had no guide prices
+// either), at x=45 and x=113, so the whistle goes to the right of them where its own order puts it.
 [call_follower]
-type=text
-x=20
-y=248
+type=graphic
+x=152
+y=211
 buttontype=normal
-width=150
-height=13
-center=yes
-font=p12_full
-shadowed=yes
-text=Call follower
-colour=0xFF981F
-overcolour=0xFFFFFF
+width=32
+height=32
+graphic=osrs_call_follower,0
 option=Call follower
 
 [call_follower_tip]
 type=8
-x=20
-y=248
-width=150
-height=13
-text=Bring your follower to you
-
+x=148
+y=207
+width=40
+height=40
+text=Call follower
