@@ -94,6 +94,9 @@
   },
   {
    "local": "clue_hunter_garb",
+  "_manwear2": "THE SLEEVES. A body item in this build is TWO worn models - the torso in manwear and the arms in manwear2 - and wearpos2 'arms' hides the player's own bare arms to make room for them. The garb is the only piece of the six with a second model (OSRS 19689 maleModel1 31629 / femaleModel1 31636); the first version of this spec left both out, so the config hid the arms and drew nothing in their place and the outfit walked around armless.",
+  "manwear2": 31629,
+  "womanwear2": 31636,
    "osrs_id": 19689,
    "osrs_name": "Clue hunter garb",
    "desc": "Stark and full of vigour.",

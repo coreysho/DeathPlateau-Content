@@ -39,7 +39,7 @@ if ($b = kraken_tentacle_item) {
     $tslot = $aslot;
     $target = $a;
 } else if ($a ! kraken_tentacle_item) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
     return;
 }
 if ($target = abyssal_whip) {
@@ -67,7 +67,7 @@ if ($target = abyssal_tentacle) {
     ~abyssal_tentacle_check;
     return;
 }
-mes("Nothing interesting happens.");
+~displaymessage(^dm_default);
 
 [proc,abyssal_tentacle_add_charges]
 %abyssal_tentacle_charges = min(add(%abyssal_tentacle_charges, ^abyssal_tentacle_charges_per), ^abyssal_tentacle_max_charges);

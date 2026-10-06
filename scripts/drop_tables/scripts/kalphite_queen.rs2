@@ -109,7 +109,7 @@ if ($random < 14) { // 14/128 guess: drop log 16/128, 4/128 osrs
 } else if ($random < 47) { // 2/128: drop log 2/128
     obj_add(npc_coord, rune_arrow, 100, ^lootdrop_duration);
 } else if ($random < 50) { // 3/128 guess: missing from drop log
-    obj_add(npc_coord, bigoysterpearls, 40, ^lootdrop_duration);
+    obj_add(npc_coord, cert_bigoysterpearls, 40, ^lootdrop_duration);
 } else if ($random < 70) { // 20/128 guess: drop log 23/128, 6/128 osrs
     obj_add(npc_coord, bloodrune, 19, ^lootdrop_duration);
 } else if ($random < 84) { // 14/128: drop log 14/128

@@ -33,7 +33,7 @@ def_int $dropint = random(128);
 if ($dropint < 4) {
     obj_add(npc_coord, earth_battlestaff, 1, ^lootdrop_duration);
 } else if ($dropint < 7) {
-    obj_add(npc_coord, battlestaff, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_battlestaff, 10, ^lootdrop_duration);
 } else if ($dropint < 10) {
     obj_add(npc_coord, rune_axe, 1, ^lootdrop_duration);
 } else if ($dropint < 12) {
@@ -67,15 +67,15 @@ if ($dropint < 4) {
 } else if ($dropint < 63) {
     obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
 } else if ($dropint < 71) {
-    obj_add(npc_coord, blankrune_high, 250, ^lootdrop_duration);
+    obj_add(npc_coord, cert_blankrune_high, 250, ^lootdrop_duration);
 } else if ($dropint < 77) {
-    obj_add(npc_coord, magic_logs, 35, ^lootdrop_duration);
+    obj_add(npc_coord, cert_magic_logs, 35, ^lootdrop_duration);
 } else if ($dropint < 83) {
-    obj_add(npc_coord, adamantite_bar, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_adamantite_bar, 10, ^lootdrop_duration);
 } else if ($dropint < 86) {
-    obj_add(npc_coord, iron_ore, 200, ^lootdrop_duration);
+    obj_add(npc_coord, cert_iron_ore, 200, ^lootdrop_duration);
 } else if ($dropint < 88) {
-    obj_add(npc_coord, uncut_ruby, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_uncut_ruby, 10, ^lootdrop_duration);
 } else if ($dropint < 90) {
     obj_add(npc_coord, uncut_diamond, 5, ^lootdrop_duration);
 } else if ($dropint < 102) {
@@ -85,7 +85,7 @@ if ($dropint < 4) {
 } else if ($dropint < 117) {
     obj_add(npc_coord, 4doseprayerrestore, 2, ^lootdrop_duration);
 } else if ($dropint < 119) {
-    obj_add(npc_coord, stafforb, 75, ^lootdrop_duration);
+    obj_add(npc_coord, cert_stafforb, 75, ^lootdrop_duration);
 } else if ($dropint < 121) {
     obj_add(npc_coord, ranarr_seed, 3, ^lootdrop_duration);
 } else if ($dropint < 123) {

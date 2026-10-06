@@ -18,6 +18,9 @@
 ^pet_form_golem_hi = 11
 ^pet_form_tangleroot_lo = 12
 ^pet_form_tangleroot_hi = 12
+// three forms - green, magma, tanzanite - so two bits
+^pet_form_snakeling_lo = 14
+^pet_form_snakeling_hi = 15
 
 // The rift guardian's Locking op: one bit, and the only bit of %pet_form that is not a form
 // number. Locked means crafting at an altar still UNLOCKS that colour but no longer repaints the

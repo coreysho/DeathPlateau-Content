@@ -82,7 +82,7 @@ if ($other = magic_fang) {
     return;
 }
 if ($other ! deathrune & $other ! chaosrune & $other ! firerune & $other ! coins) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
     return;
 }
 def_int $room = sub(^trident_max_charges, %trident_charges);

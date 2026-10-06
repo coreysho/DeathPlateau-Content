@@ -2,12 +2,17 @@
 if (last_useitem = bucket_empty) @sand_fill;
 ~displaymessage(^dm_default);
 
+// A use-on reaches only the item the player clicked SECOND, so a trigger that recognises nothing
+// has to say ^dm_default: that is what hands the click to the other half (~displaymessage and
+// opheldu_decline behind it). Falling off the end in silence swallowed it.
 [opheldu,glassblowingpipe]
 if (last_useitem = molten_glass) @craft_glass_interface;
+~displaymessage(^dm_default);
 
 [opheldu,molten_glass]
 if (last_useitem = glassblowingpipe) @craft_glass_interface;
 if (last_useitem = lens_mould) @craft_telescope_disc;
+~displaymessage(^dm_default);
 
 [label,sand_fill]
 if (map_members = ^false) {

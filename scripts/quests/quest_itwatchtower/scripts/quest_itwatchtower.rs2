@@ -237,20 +237,26 @@ p_teleport(0_40_47_16_21);
 mes("You climb down the ladder.");
 p_teleport(0_39_46_4_44);
 
+// A use-on reaches only the item the player clicked SECOND, so a trigger that recognises nothing
+// has to say ^dm_default: that is what hands the click to the other half (~displaymessage and
+// opheldu_decline behind it). Falling off the end in silence swallowed it.
 [opheldu,relicpart1]
 if(last_useitem = relicpart2 | last_useitem = relicpart3) {
     @player_make_ogre_statue;
 }
+~displaymessage(^dm_default);
 
 [opheldu,relicpart2]
 if(last_useitem = relicpart1 | last_useitem = relicpart3) {
     @player_make_ogre_statue;
 }
+~displaymessage(^dm_default);
 
 [opheldu,relicpart3]
 if(last_useitem = relicpart1 | last_useitem = relicpart2) {
     @player_make_ogre_statue;
 }
+~displaymessage(^dm_default);
 
 [label,player_make_ogre_statue]
 mes("I think these fit together, but I can't seem to make them fit.");

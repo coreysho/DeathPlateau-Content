@@ -11,7 +11,7 @@
 if (last_useitem = bronze_axe) {
     @tut_woodcutting;
 } else {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
 }
 
 [label,tut_woodcutting]

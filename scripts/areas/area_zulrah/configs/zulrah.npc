@@ -311,11 +311,11 @@ param=death_drop,null
 // [ai_timer,_bosspet] can teleport it back to its owner, category=bosspet for the shared ops and
 // follower=yes for the minimap dot and the owner-only right-clicks.
 //
-// OSRS's Pet snakeling has THREE colours and a Metamorphosis right-click (npcs 2130/2131/2132).
-// That is not wired here: a metamorphosis ring lives in the shared npc/configs/pet_forms.npc and
-// npc/configs/pet_forms.constant, and three batteries count what is in those files. The Kraken pet
-// took the same shape for the same reason. The other two colours are a later round's; this one is
-// green, which is the form OSRS gives you.
+// OSRS's Pet snakeling has THREE colours and a Metamorphosis right-click (npcs 2130/2131/2132):
+// green, magma and tanzanite, the snake's own three forms. This record is the green one and the
+// first member of the ring; the other two are in the shared npc/configs/pet_forms.npc, joined by
+// param=metamorph_next, and npc/scripts/pet_metamorph.rs2 walks it. op4 rather than OSRS's op3
+// because the op NUMBERS belong to the bosspet category, which serves every pet in the tree.
 
 [bosspet_snakeling]
 name=Pet Snakeling
@@ -329,9 +329,11 @@ vislevel=hide
 timer=1
 op1=Pick-up
 op3=Talk-to
+op4=Metamorphosis
 category=bosspet
 follower=yes
 param=pet_item_id,bosspet_snakeling_item
+param=metamorph_next,bosspet_snakeling_magma
 
 // ZUL-ANDRA'S TWO PRIESTESSES. Both are OSRS's own records; their animations are OSRS's player
 // skeleton, which animconvosrs.py puts on its own base (base_osrs_*) so the client never tries to

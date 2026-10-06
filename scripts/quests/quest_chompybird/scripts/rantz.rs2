@@ -228,7 +228,7 @@ switch_obj(last_useitem) {
         ~chatnpc("<p,neutral>Yeah, it's a goodly stabbie chucker, but you's is too weedy to use it like Rantz.");
 
     case default :
-        mes("Nothing interesting happens.");
+        ~displaymessage(^dm_default);
 }
 
 [label,return_to_rantz]

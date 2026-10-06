@@ -57,7 +57,7 @@ if ($dropint < 28) {
 } else if ($dropint < 91) {
     obj_add(npc_coord, dragon_dagger, 1, ^lootdrop_duration);
 } else if ($dropint < 94) {
-    obj_add(npc_coord, mithril_bar, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_mithril_bar, 10, ^lootdrop_duration);
 } else if ($dropint < 96) {
     obj_add(npc_coord, ugthanki_kebab, 4, ^lootdrop_duration);
 } else if ($dropint < 97) {

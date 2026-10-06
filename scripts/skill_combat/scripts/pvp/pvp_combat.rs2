@@ -132,8 +132,8 @@ if (map_multiway(coord) = false) {
         mes("I'm already under attack.");
         return(false);
     }
-    // a monster has me: the shorter hold, and it has to still be around
-    if (add(%lastcombat, ^pj_timer_npc) > map_clock & npc_finduid(%aggressive_npc) = true) {
+    // a monster has me: the shorter hold, and it has to still be around AND be a monster
+    if (add(%lastcombat, ^pj_timer_npc) > map_clock & ~pj_blocking_npc(%aggressive_npc) = true) {
         mes("I'm already under attack.");
         return(false);
     }
@@ -145,10 +145,33 @@ if (map_multiway(.coord) = false) {
         mes("Someone else is already fighting your opponent.");
         return(false);
     }
-    if (add(.%lastcombat, ^pj_timer_npc) > map_clock & npc_finduid(.%aggressive_npc) = true) {
+    if (add(.%lastcombat, ^pj_timer_npc) > map_clock & ~pj_blocking_npc(.%aggressive_npc) = true) {
         mes("Someone else is already fighting your opponent.");
         return(false);
     }
+}
+return(true);
+
+// IS THIS NPC ONE THAT MAY CLOSE A PVP FIGHT? A monster that has hold of you keeps other players
+// off you for ^pj_timer_npc, which is the point: you are busy, and somebody else's hit would be a
+// pile-on. A RANDOM EVENT IS NOT THAT. It walked up to you, it chose the moment, and neither player
+// did anything to invite it - so letting it set the hold hands a third party the power to end a
+// fight, which is what "aggressive random events can pj a pvp fight" means.
+//
+// Every random event marks its npc with %npc_macro_event_target, the player it came for (see
+// "macro events"/scripts/macro_events.rs2 and the six skill events that spawn their own npc), and
+// nothing else in the game sets it. So that var IS the question. The event still attacks and still
+// has to be dealt with; it just cannot close the fight.
+//
+// npc_finduid leaves that npc active, which is why this reads the var rather than returning the uid
+// to a caller that would have to find it again. Nothing after the two calls below wants an active
+// npc of its own.
+[proc,pj_blocking_npc](npc_uid $npc_uid)(boolean)
+if (npc_finduid($npc_uid) = false) {
+    return(false);
+}
+if (%npc_macro_event_target ! null) {
+    return(false);
 }
 return(true);
 

@@ -30,7 +30,11 @@ if(stat(herblore) < 14) {
 }
 switch_obj(last_useitem) {
   case guam_leaf : ~potion_explosion(guam_leaf, jangervial, "You mix the guam leaf into the liquid.");
-  case guamvial : ~potion_explosion(ground_bat_bones, jangervial, "You mix the ground bones into the liquid.");
+  // ground_bat_bones, not guamvial. The guard above only lets guam_leaf and ground_bat_bones past,
+  // so the guamvial case could never run and the bones fell off the end of the switch in silence -
+  // which is why "use a janger vial on ground bat bones" worked and the other way round did nothing.
+  case ground_bat_bones : ~potion_explosion(ground_bat_bones, jangervial, "You mix the ground bones into the liquid.");
+  case default : ~displaymessage(^dm_default);
 }
 
 [opheldu,guamjangervial]

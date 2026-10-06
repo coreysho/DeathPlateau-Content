@@ -1,2 +1,19 @@
+// THE ONE PLACE A SCRIPT SAYS "that doesn't do anything", and so the one place a use-on can be
+// handed to the other item.
+//
+// "Use a on b" reaches only ONE of the two items' triggers - b's, b being whichever one the player
+// clicked second - so a script that does not recognise its partner used to end the click there.
+// That is why a chisel used on a serpentine visage carved a helm and a visage used on a chisel did
+// nothing: [opheldu,chisel] has a case list and the visage was not on it. 963 pairs of items worked
+// one way round only (Engine-TS/tools/sim/opheldu.ts).
+//
+// ^dm_default IS that refusal - all 787 of its call sites mean "these two do not go together" -
+// so it is exactly the right place to ask. opheldu_decline hands the click to the other half and
+// returns true, and this says nothing; it returns false when there is nobody left to ask, when the
+// click has already been handed over once, or when the caller is not a use-on at all, and then the
+// message is printed as it always was.
 [proc,displaymessage](int $index)
+if ($index = ^dm_default & opheldu_decline = true) {
+    return;
+}
 mes(enum(int, string, displaymessage_enum, $index));

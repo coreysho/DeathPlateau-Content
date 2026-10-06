@@ -53,7 +53,7 @@ if ($dropint < 4) {
 } else if ($dropint < 51) {
     obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
 } else if ($dropint < 56) {
-    obj_add(npc_coord, blankrune_high, 60, ^lootdrop_duration);
+    obj_add(npc_coord, cert_blankrune_high, 60, ^lootdrop_duration);
 } else if ($dropint < 58) {
     obj_add(npc_coord, adamantite_bar, 1, ^lootdrop_duration);
 } else if ($dropint < 93) {

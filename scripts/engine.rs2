@@ -177,6 +177,12 @@
 [command,last_slot]()(int)
 // info: Get the last used item (useitem on item)
 [command,last_useitem]()(obj)
+// info: Inside [opheldu,x] only: this script does not know what to do with these two items, so let
+// info: the OTHER half of the use have a go. True when the click was handed over - say nothing more
+// info: and return. False when there is nobody to hand it to, or this click was already handed over
+// info: once, or the caller is not an opheldu at all. ~displaymessage(^dm_default) asks for every
+// info: script that refuses a pair the way the content always has.
+[command,opheldu_decline]()(boolean)
 // info: Get the last used item's slot
 [command,last_useslot]()(int)
 // info: Send a message to the chatbox

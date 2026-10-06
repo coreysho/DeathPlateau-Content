@@ -82,12 +82,12 @@ return(-1);
 [label,horror_godbook_addpage](int $god)
 def_int $index = ~horror_godpage_index(last_useitem);
 if ($index = -1) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
     return;
 }
 if (divide($index, 4) ! calc($god - 1)) {
     // another god's page: it does not belong in this book
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
     return;
 }
 def_int $bit = calc(^horror_godbook_page_bit + $index);
@@ -218,7 +218,7 @@ if (last_useitem = stringstar & ($god = 1 | $god = 3)) {
     $product = blessedsnake;
 }
 if ($product = null) {
-    mes("Nothing interesting happens.");
+    ~displaymessage(^dm_default);
     return;
 }
 if (stat_base(prayer) < 50) {
