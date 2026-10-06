@@ -24,12 +24,16 @@
 ^alkharid_land_rope1 = 3_51_49_8_36     // 3272,3172
 ^alkharid_land_cable = 3_51_49_19_30    // 3283,3166 - the west edge of the long roof
 ^alkharid_land_zip = 1_51_49_50_27      // 3314,3163 - and down two floors
-^alkharid_land_tree = 2_51_49_54_37     // 3318,3173 - the south edge of the level 2 roof
-// The tree stands at 3318,3166 on level 1 and this is straight north of it. It used to say
-// 3317,3169, which is open air: the level 2 roof does not begin until z3173, in Old School
-// as well as here, so the swing left the player standing on top of the tree with nothing
-// under them. The next obstacle, the roof top beams, is at 3316,3179 on level 2, and that
-// roof runs unbroken from z3173 to z3182, so the walk to it is clear.
+^alkharid_land_tree = 2_51_49_53_38     // 3317,3174 - the south-east corner of the level 2 roof
+// Two wrong answers came before this one, and both looked right on a map. 3317,3169 is open air -
+// the level 2 roof does not start until z3173 - so the swing left the player on top of the tree.
+// 3318,3173 has a floor drawn on it and is still not somewhere you can stand: the whole z3173 row
+// and the whole x3318 column are the roof's blocked rim, so that landing was a one-tile island
+// with blocked on all four sides, and you could not move afterwards.
+//
+// The roof you can actually walk is x3315-3317 from z3174 to z3178, opening west at z3179 where
+// the roof top beams stand at 3316,3179. This is its south-east corner, the nearest walkable tile
+// to the tree at 3318,3166. Asked of the engine's own collision, not read off the overlays.
 ^alkharid_land_beams = 3_51_49_52_44    // 3316,3180
 ^alkharid_land_rope2 = 3_51_49_37_50    // 3301,3186
 ^alkharid_land_gap = 0_51_49_36_59      // 3300,3195 - the street, east of the scimitar shop
