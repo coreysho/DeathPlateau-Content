@@ -143,12 +143,23 @@ p_delay(0);
 [proc,alkharid_swing](int $xp, coord $end, int $direction)
 // The swing keeps its own timing - a rope swing is slower than a jump - but not the second
 // teleport: exactMove has already moved the player, and a p_telejump after it drags them back.
+//
+// AND IT STARTS AT CYCLE 0. Player.exactMove teleports you to the end BEFORE it sets the mask, so
+// the server has you at the far roof from the moment it runs. The mask then tells the client to
+// draw you at the START until start_cycle. That gap is a window where your real tile and the tile
+// you are drawn on are fourteen squares apart, and the camera follows you through it: forward to
+// the landing, back to the rope, forward again, and only then the animation. Reported exactly that
+// way. This used to wait 30 cycles - a full tick at 20ms a cycle - with the swing itself held back
+// another 20. Both now start at once, so the only movement on screen is the one slide.
+//
+// This is the only one of the eight that comes through here. The zip line, the tree and the gap all
+// change floor, and an exactmove cannot, so they take the branch above.
 if (coordy($end) ! coordy(coord)) {
     anim(human_ropeswing_long, 0);
     p_delay(3);
     p_telejump($end);
 } else {
-    ~agility_exactmove(human_ropeswing_long, 20, 3, coord, $end, 30, 70, $direction, false);
+    ~agility_exactmove(human_ropeswing_long, 0, 3, coord, $end, 0, 70, $direction, false);
 }
 ~agility_xp($xp);
 
