@@ -1,0 +1,99 @@
+// THE ROGUES' DEN WALL SAFES, which had a Crack option and no script behind it.
+//
+// FOUR OF THEM, in the waiting room you land in from the trapdoor under the Toad and Chicken:
+// 1,3055,4970 / 1,3055,4977 / 1,3057,4970 / 1,3057,4977. Reachable, once the door beside the
+// trapdoor is opened - Engine-TS/tools/sim/rdreach.ts walks it.
+//
+// THE CACHE SEPARATES THE TWO KINDS OF SAFE and so does Old School. roguesden_walldecor_safe is
+// the waiting room's, which is this file: 50 Thieving, 70 experience, coins or an uncut gem.
+// roguesden_walldecor_mazesafe is the EIGHT on the pillar at the centre of the maze, which pay the
+// Rogue kit and the equipment crate - those are not wired here, because the maze itself is not:
+// every roguesden_obstacle_* and roguesden_puzzle_door_* on the map is scenery with an op and no
+// script, and the safes behind them cannot be walked to.
+//
+// NO STETHOSCOPE EXISTS TO FIND YET. The bonus below is real and reads the item the cache already
+// has (roguesden_stethoscope), but Martin Thwait's Lost and Found shop is not implemented, so
+// nothing sells one. The branch costs nothing and is right the day the shop lands.
+
+[oploc1,roguesden_walldecor_safe] @roguesden_safe_crack;
+
+[label,roguesden_safe_crack]
+if (stat(thieving) < ^roguesden_safe_level) {
+    mes("You need a Thieving level of <tostring(^roguesden_safe_level)> to crack this safe.");
+    return;
+}
+// Checked before the attempt rather than after it, so a full pack costs you nothing. Coins stack,
+// but a gem does not, and the roll has not happened yet.
+if (inv_freespace(inv) = 0) {
+    mes("You don't have enough inventory space to do that.");
+    return;
+}
+mes("You attempt to crack the safe.");
+anim(human_lockedchest, 0);
+sound_synth(locked, 1, 0);
+p_delay(2);
+
+if (~roguesden_safe_success = false) {
+    @roguesden_safe_fail;
+}
+
+mes("You crack the safe open.");
+sound_synth(chest_open, 1, 0);
+loc_change(roguesden_walldecor_safe_open, ^roguesden_safe_open_ticks);
+// ~thieving_xp rather than stat_advance, so the Rogues' Den's own outfit rolls off the Rogues'
+// Den's own safe (skilling_outfits/scripts/outfit_xp.rs2).
+~thieving_xp(^roguesden_safe_xp);
+~roguesden_safe_reward;
+
+// Both ends of the curve are raised by the stethoscope rather than the result, so the bonus is the
+// same fifth at every level instead of being worth most to whoever needs it least.
+[proc,roguesden_safe_success]()(boolean)
+def_int $low = ^roguesden_safe_chance_low;
+def_int $high = ^roguesden_safe_chance_high;
+if (inv_total(inv, roguesden_stethoscope) > 0 | inv_total(worn, roguesden_stethoscope) > 0) {
+    $low = scale(^roguesden_safe_stethoscope_num, ^roguesden_safe_stethoscope_div, $low);
+    $high = scale(^roguesden_safe_stethoscope_num, ^roguesden_safe_stethoscope_div, $high);
+}
+return(stat_random(thieving, $low, $high));
+
+[label,roguesden_safe_fail]
+mes("You fail to crack the safe.");
+if (random(^roguesden_safe_spike_chance) = 0) {
+    mes("The floor spikes catch you!");
+    ~damage_self(~random_range(^roguesden_safe_spike_min, ^roguesden_safe_spike_max));
+}
+
+[proc,roguesden_safe_reward]
+def_int $roll = random(^roguesden_safe_loot_total);
+if ($roll < ^roguesden_safe_loot_coins20) {
+    ~roguesden_safe_give(coins, 20);
+    return;
+}
+if ($roll < ^roguesden_safe_loot_coins40) {
+    ~roguesden_safe_give(coins, 40);
+    return;
+}
+if ($roll < ^roguesden_safe_loot_sapphire) {
+    ~roguesden_safe_give(uncut_sapphire, 1);
+    return;
+}
+if ($roll < ^roguesden_safe_loot_emerald) {
+    ~roguesden_safe_give(uncut_emerald, 1);
+    return;
+}
+if ($roll < ^roguesden_safe_loot_ruby) {
+    ~roguesden_safe_give(uncut_ruby, 1);
+    return;
+}
+~roguesden_safe_give(uncut_diamond, 1);
+
+// The pack was checked before the attempt, but a count dialogue or a drop can empty a slot while
+// the two-tick animation runs, so what cannot be carried goes on the floor rather than vanishing.
+[proc,roguesden_safe_give](namedobj $item, int $count)
+if (inv_freespace(inv) = 0 & inv_total(inv, $item) = 0) {
+    obj_add(coord, $item, $count, ^lootdrop_duration);
+    mes("You find <oc_name($item)> inside, and drop it - your pack is full.");
+    return;
+}
+inv_add(inv, $item, $count);
+mes("You find <oc_name($item)> inside.");

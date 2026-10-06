@@ -1,0 +1,40 @@
+// THE ROGUES' DEN WALL SAFES. Numbers from oldschool.runescape.wiki/w/Rogues'_Den and
+// runescape.wiki/w/Wall_safe, read 2026-10-05: level 50 Thieving, 70 experience a crack, "uncut
+// gems (up to diamonds), 20 or 40 coins", a stethoscope in the pack raising the success rate, and
+// floor spikes on about half the failures.
+^roguesden_safe_level = 50
+// stat_advance takes tenths of a point, so 70 experience is 700
+^roguesden_safe_xp = 700
+
+// stat_random's two ends: the chance out of 256 at level 1 and at level 99, interpolated between.
+// Level 1 is academic here - the safe needs 50 - but the pair is what fixes the curve. At the
+// requirement itself this is (64 + 230) / 2 + 1 = 148/256, about four cracks in seven; at 99 it is
+// 231/256, about nine in ten. Neither wiki publishes the rate, so these are chosen to make the
+// level requirement mean something and to still leave failures at the top.
+^roguesden_safe_chance_low = 64
+^roguesden_safe_chance_high = 230
+
+// "A stethoscope boosts the chance of successfully cracking a wall safe while in your inventory."
+// A fifth more, applied to both ends so it is a fifth at every level - the same shape as the
+// Thieving cape's pickpocketing perk, which is a tenth.
+^roguesden_safe_stethoscope_num = 6
+^roguesden_safe_stethoscope_div = 5
+
+// The safe stands open for a moment and then shuts. 3.6 seconds is the respawn the wiki gives.
+^roguesden_safe_open_ticks = 6
+
+// The spikes, on half the failures: 20-60 life points in the modern game, which is 2-6 hitpoints
+// here. They end the attempt; the other half of the failures simply cost you the click.
+^roguesden_safe_spike_chance = 2
+^roguesden_safe_spike_min = 2
+^roguesden_safe_spike_max = 6
+
+// The loot, weighted out of 256. The ratios are the published ones - roughly four coin drops to
+// every gem, and sapphire far commoner than emerald, emerald than ruby - with a diamond at the
+// bottom because Old School says the gems go "up to diamonds".
+^roguesden_safe_loot_total = 256
+^roguesden_safe_loot_coins20 = 102
+^roguesden_safe_loot_coins40 = 205
+^roguesden_safe_loot_sapphire = 231
+^roguesden_safe_loot_emerald = 247
+^roguesden_safe_loot_ruby = 254
