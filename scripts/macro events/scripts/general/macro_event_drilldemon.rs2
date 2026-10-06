@@ -1,0 +1,211 @@
+// SERGEANT DAMIEN'S EXERCISE YARD - the second random event here that needed a place, and like the
+// cemetery the place was already built. Map square 49_75 holds an army camp with a gate, a
+// flagpole, catapults, carts, crates, an obstacle course nobody can reach, four coloured exercise
+// mats and Damien standing in front of them. Four signposts stand one tile behind the mats, each
+// one a multiloc over macro_drilldemon_post_1..4, which have been in antimacro.varbit the whole
+// time with nothing to write them.
+//
+// WHAT IT IS, per runescape.wiki/w/Drill_Demon: the player is taken to "a cordoned exercise area
+// featuring an unreachable obstacle course", and "the sergeant commanded completion of four
+// different exercises, each with its own mat and descriptive signpost". Doing the wrong one gets
+// you shouted at. "After completing one exercise, the mat automatically relocated, preventing
+// repetition without changing physical position" - which is what the four post varbits are for:
+// the signs are reshuffled after every order, so the mat you stood on last time is now somebody
+// else's exercise.
+//
+// THE SIGNS ARE NOT SERVER ENTITIES and do not need to be. GameMap only adds a loc to a zone when
+// its type is active, and loc_10068..10071 are not - they have no options, because a signpost is
+// something you look at. The client draws them from the map and resolves the multiloc itself out of
+// macro_transmit, which the post varbits sit on and which is already transmit=yes. Writing the
+// varbit is the whole of changing the sign.
+//
+// WHAT HE SAYS IS MINE. The wiki records that he "will shout insults at players who perform the
+// incorrect exercise" and nothing of the wording, so the lines below are written here.
+
+// ============================================================================ arriving and leaving
+
+// Same two-step as Leo's: p_teleport needs protected access and ~macro_event_general_spawn is
+// reached from [timer,general_macro_events], which has none. The Damien who fetches you deletes
+// himself; the one in the yard has been standing there all along.
+[proc,macro_drilldemon_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+~macro_drill_setup;
+queue(macro_drill_arrive, 0, 0);
+npc_del;
+
+[queue,macro_drill_arrive]
+mes("A drill sergeant marches you off to his yard.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_drilldemon_landing);
+~macro_drill_order;
+
+[proc,macro_drill_leave]
+~macro_drill_reset;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+[proc,macro_drill_reset]
+%macro_drilldemon_done = 0;
+%macro_drilldemon_order = 0;
+%macro_drilldemon_post_1 = 0;
+%macro_drilldemon_post_2 = 0;
+%macro_drilldemon_post_3 = 0;
+%macro_drilldemon_post_4 = 0;
+
+// Leaving the yard by any route lets go of %macro_event, without which no random event could ever
+// spawn for this player again. The square is Damien's and nothing else's, so unlike 30_78 there is
+// only one room to answer for.
+[mapzone,0_49_75]
+@music_playbyregion(coord);
+
+[mapzoneexit,0_49_75]
+~macro_events_varps_reset;
+~macro_drill_reset;
+
+// ============================================================================ the parade
+
+[proc,macro_drill_setup]
+%macro_drilldemon_done = 0;
+%macro_drilldemon_order = 0;
+~macro_drill_shuffle;
+
+// Fisher-Yates over the four signs. Every post carries a different exercise, so exactly one mat is
+// ever the right answer.
+[proc,macro_drill_shuffle]
+def_int $i = 1;
+while ($i <= ^macro_drill_exercises) {
+    ~macro_drill_post_set($i, calc($i - 1));
+    $i = calc($i + 1);
+}
+$i = ^macro_drill_exercises;
+def_int $j;
+def_int $t;
+while ($i > 1) {
+    $j = calc(random($i) + 1);
+    $t = ~macro_drill_post_get($i);
+    ~macro_drill_post_set($i, ~macro_drill_post_get($j));
+    ~macro_drill_post_set($j, $t);
+    $i = calc($i - 1);
+}
+
+// THE NEXT ORDER, which is one of the exercises not done yet. %macro_drilldemon_done is a four bit
+// mask rather than a count because he picks at random and must not pick the same one twice.
+[proc,macro_drill_order]
+if (%macro_drilldemon_done = ^macro_drill_all_done) {
+    %macro_drilldemon_order = 0;
+    ~macro_drill_shout("At EASE! Come and see me, <displayname>.");
+    return;
+}
+def_int $pick = random(^macro_drill_exercises);
+def_int $guard = 0;
+while (testbit(%macro_drilldemon_done, $pick) = 1 & $guard < 32) {
+    $pick = random(^macro_drill_exercises);
+    $guard = calc($guard + 1);
+}
+// The signs move between orders, so the mat you used last time is now somebody else's exercise.
+~macro_drill_shuffle;
+%macro_drilldemon_order = calc($pick + 1);
+~macro_drill_shout("<enum(int, string, macro_drill_order, $pick)>! On the mat! NOW!");
+
+// He is a static npc in the yard, not the one that fetched you, so he has to be found before he can
+// be made to shout.
+[proc,macro_drill_shout](string $line)
+if (npc_find(coord, macro_drilldemon, 20, 0) = true) {
+    npc_say($line);
+}
+
+[proc,macro_drill_post_get](int $post)(int)
+switch_int ($post) {
+    case 1 : return(%macro_drilldemon_post_1);
+    case 2 : return(%macro_drilldemon_post_2);
+    case 3 : return(%macro_drilldemon_post_3);
+    case 4 : return(%macro_drilldemon_post_4);
+}
+return(0);
+
+[proc,macro_drill_post_set](int $post, int $value)
+switch_int ($post) {
+    case 1 : %macro_drilldemon_post_1 = $value;
+    case 2 : %macro_drilldemon_post_2 = $value;
+    case 3 : %macro_drilldemon_post_3 = $value;
+    case 4 : %macro_drilldemon_post_4 = $value;
+}
+
+// The four mats are four loc types, one per colour, which is how a click says which one it was -
+// and each stands directly in front of the post whose varbit it answers to.
+[proc,macro_drill_mat_post](loc $loc)(int)
+switch_loc ($loc) {
+    case loc_10076 : return(1);
+    case loc_10077 : return(2);
+    case loc_10078 : return(3);
+    case loc_10079 : return(4);
+}
+return(0);
+
+// ============================================================================ the mats
+
+[oploc1,_macro_drilldemon_mat]
+def_int $post = ~macro_drill_mat_post(loc_type);
+if ($post = 0) {
+    return;
+}
+if (%macro_event ! ^macro_drilldemon | %macro_drilldemon_order = 0) {
+    mes("Nobody has told you to do anything.");
+    return;
+}
+def_int $ordered = calc(%macro_drilldemon_order - 1);
+def_int $shown = ~macro_drill_post_get($post);
+if ($shown ! $ordered) {
+    ~macro_drill_shout("That is not what I said, <displayname>! Are you deaf as well as idle?");
+    mes("That mat is for <lowercase(enum(int, string, macro_drill_order, $shown))>.");
+    return;
+}
+anim(enum(int, seq, macro_drill_anim, $ordered), 0);
+p_delay(enum(int, int, macro_drill_ticks, $ordered));
+%macro_drilldemon_done = setbit(%macro_drilldemon_done, $ordered);
+mes("You do your <lowercase(enum(int, string, macro_drill_order, $ordered))>.");
+~macro_drill_order;
+
+// ============================================================================ Damien
+
+[opnpc1,macro_drilldemon]
+if (%macro_event ! ^macro_drilldemon) {
+    ~chatnpc("<p,angry>Nothing for you today. Clear off my parade ground.");
+    return;
+}
+if (%macro_drilldemon_done = ^macro_drill_all_done) {
+    ~chatnpc("<p,happy>Not bad. Not bad at all. Dismissed!");
+    ~macro_drill_pay;
+    ~macro_drill_leave;
+    return;
+}
+~chatnpc("<p,angry>You are not finished, <displayname>. <enum(int, string, macro_drill_order, calc(%macro_drilldemon_order - 1))>! Read the signs!");
+def_int $choice = ~p_choice2("Sir, yes sir!", 1, "I've had enough of this. Send me back.", 2);
+if ($choice = 2) {
+    ~chatnpc("<p,angry>Then get out of my sight.");
+    ~macro_drill_leave;
+    return;
+}
+// Saying the order again is no use if the signs have not moved since, so they have.
+~macro_drill_order;
+
+// THE CAMO OUTFIT, a piece at a time and never one you are already carrying. Three pieces, so a
+// player doing this four times over ends up with the set and then with the ordinary table.
+[proc,macro_drill_pay]
+def_int $i = 0;
+def_namedobj $piece;
+while ($i < enum_getoutputcount(macro_drill_reward)) {
+    $piece = enum(int, namedobj, macro_drill_reward, $i);
+    if (inv_total(inv, $piece) = 0 & inv_total(bank, $piece) = 0 & inv_total(worn, $piece) = 0) {
+        ~macro_event_give_obj($piece, 1);
+        return;
+    }
+    $i = calc($i + 1);
+}
+~macro_event_give_reward;

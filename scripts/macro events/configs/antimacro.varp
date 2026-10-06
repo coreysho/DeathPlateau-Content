@@ -20,9 +20,15 @@ type=coord
 scope=perm
 protect=no
 
+// Shared by the room events, one at a time: Candlelight's stage, and the four signposts in
+// Sergeant Damien's yard (macro_drilldemon_post_1..4 sit on its low byte). transmit=yes because the
+// client resolves the signposts' multilocs out of it; protect=no because the yard is laid out from
+// ~macro_event_general_spawn, which is reached from [timer,general_macro_events] and has no
+// protected access.
 [macro_transmit]
 transmit=yes
 scope=perm
+protect=no
 
 [macro_candlelight_var]
 transmit=yes
@@ -48,4 +54,10 @@ protect=no
 protect=no
 
 [macro_digger_var_4]
+protect=no
+
+// Sergeant Damien's two: which exercise he has just called for and which of the four have been
+// done. NOT transmitted - the four signposts are, on macro_transmit, and they are all the client
+// needs to draw the yard. protect=no for the same reason as the gravedigger's above.
+[macro_drilldemon_var]
 protect=no

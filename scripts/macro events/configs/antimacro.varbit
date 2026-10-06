@@ -98,6 +98,19 @@ basevar=macro_transmit
 startbit=6
 endbit=7
 
+// 0 for "stand still", otherwise the exercise he called for plus one.
+[macro_drilldemon_order]
+basevar=macro_drilldemon_var
+startbit=0
+endbit=2
+
+// One bit per exercise, set when it has been done. A mask and not a count because he picks at
+// random and must never call for the same one twice.
+[macro_drilldemon_done]
+basevar=macro_drilldemon_var
+startbit=3
+endbit=6
+
 [macro_digger_grave_1]
 basevar=macro_digger_var
 startbit=1
