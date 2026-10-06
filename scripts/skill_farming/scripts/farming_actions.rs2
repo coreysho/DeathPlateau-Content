@@ -54,6 +54,10 @@ def_int $extra = calc(($amount * $bonus) / 1000);
 // farmer's outfit does not make its own successor come faster.
 ~compost_bucket_roll($amount);
 stat_advance(farming, calc($amount + $extra));
+// Farming had no random events at all until now - see "macro events"/scripts/farming. This proc is
+// already the single chokepoint every farming action's experience goes through, which is also what
+// makes it the right place to roll for one: the roll follows the work rather than the click.
+~macro_randomfarming;
 
 // ============================================================================ op1 - the context action
 

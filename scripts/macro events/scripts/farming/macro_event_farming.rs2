@@ -1,0 +1,22 @@
+// Farming's own random-event roll. Every other skill with a random of its own has one of these; up
+// to now Farming had none at all, so a farmer got no random events whatsoever.
+//
+// HUNG OFF ~farming_xp, which skill_farming/scripts/farming_actions.rs2 already describes as the
+// single chokepoint every farming action's experience goes through - the same place cooking and
+// crafting hang theirs. That means the roll follows the work rather than the click: raking a patch
+// is one roll, and so is harvesting it.
+//
+// A proc rather than a label like the other skills' dispatchers, because those are jumped to from
+// labels and this is called from a proc - and a label cannot be jumped to from inside one.
+[proc,macro_randomfarming]
+if (~macro_event_allowed = false) {
+    return;
+}
+// One skill-specific event against the general table, weighted the way the other skills weight
+// theirs: one slot for the spade, one for each general event. The spade event hands the roll back
+// to the general table when there is no spade in reach, so a planting-only farmer is not quietly
+// getting fewer randoms than anyone else.
+switch_int (random(calc(~macro_event_general_count + 1))) {
+    case 0 : ~macro_event_lost_spade_spawn;
+    case default : ~macro_event_general_spawn(~macro_event_set_random);
+}

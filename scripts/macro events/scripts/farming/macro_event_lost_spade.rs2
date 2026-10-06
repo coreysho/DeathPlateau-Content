@@ -1,0 +1,67 @@
+// SPADE BREAKING, the Farming random 2006scape lists and this build did not have. The head comes off
+// while you are digging, flies to a square nearby, and leaves you holding the handle; the two go
+// back together by using one on the other.
+//
+// NO NEW ART AND NO NEW OBJS. spade_handle and spade_head are both in the 377 cache (all.obj) and
+// were referenced by nothing at all until now - the same state the axe and pickaxe heads were in
+// before their events were written. The animation, the flying spotanim and the two sounds are the
+// pickaxe event's, which is also what the axe event reuses: there is no spade-specific art in this
+// cache, and a borrowed clink is better than silence.
+//
+// ONE SPADE, SO NO PARAMS. The axe and pickaxe events read axe_head / pickaxe_head off the tool
+// because there are six of each; there is exactly one spade, so the pairing is written here.
+
+[proc,macro_event_lost_spade_spawn]
+// NOT EVERY FARMING ACTION USES A SPADE - raking, planting and watering do not - so an event that
+// took the spade apart on those would be taking apart a tool you were not using, and from the
+// pack rather than from your hands. Without one in reach the roll falls through to a general
+// event, exactly as the pickaxe event does when there is no pickaxe.
+if (inv_total(inv, spade) < 1 & inv_total(worn, spade) < 1) {
+    ~macro_event_general_spawn(~macro_event_set_random);
+    return;
+}
+if (inv_freespace(inv) < 1 & inv_total(inv, spade) > 0) {
+    // The handle replaces the spade slot for slot, so a full pack is only a problem for the worn
+    // case below - but a pack with no room cannot take the head back either. Leave it alone.
+    return;
+}
+
+if (inv_total(worn, spade) > 0) {
+    inv_del(worn, spade, 1);
+    inv_setslot(worn, ^wearpos_rhand, spade_handle, 1);
+    ~update_all(spade);
+} else {
+    inv_del(inv, spade, 1);
+    inv_add(inv, spade_handle, 1);
+}
+
+def_coord $spade_coord = map_findsquare(coord, 1, 7, ^map_findsquare_lineofwalk);
+anim(human_farming, 0);
+sound_synth(lost_pickaxe, 1, 0);
+%macro_event = ^no_macro_event;
+mes("You dig into the soil.");
+def_int $delay = ~coord_projectile(coord, $spade_coord, pickaxe_travel_spotanim, 35, 0, 14, 16, -2, 64, 10);
+p_delay(calc($delay / 60));
+obj_add($spade_coord, spade_head, 1, ^lootdrop_duration);
+session_log(^log_adventure, "Lost their spade head");
+
+[label,reattach_spade]
+if (inv_total(inv, spade_handle) > 0 & inv_total(inv, spade_head) > 0) {
+    inv_del(inv, spade_handle, 1);
+    inv_del(inv, spade_head, 1);
+    inv_add(inv, spade, 1);
+    sound_synth(attach_handle, 1, 0);
+    mes("You carefully attach the two pieces together.");
+}
+
+[opheldu,spade_handle]
+if (last_useitem = spade_head) {
+    @reattach_spade;
+}
+~displaymessage(^dm_default);
+
+[opheldu,spade_head]
+if (last_useitem = spade_handle) {
+    @reattach_spade;
+}
+~displaymessage(^dm_default);

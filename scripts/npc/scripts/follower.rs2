@@ -81,6 +81,22 @@ if (coordy(coord) = coordy(npc_coord) & npc_range(coord) <= ^follower_keepup_ran
 npc_tele(map_findsquare(coord, 1, 1, ^map_findsquare_lineofwalk));
 npc_setmode(playerfollow);
 
+// CALL FOLLOWER - the Worn Equipment tab's third button (interfaces/wornitems.if).
+//
+// ~follower_keepup already fetches a pet that is on another floor or more than
+// ^follower_keepup_range away, every tick. What it does not fetch is one that is close enough and
+// on the right floor and still cannot get to you - the far side of a fence, a door it did not
+// follow you through, a corner of a cave. That is the pet a player is looking at when they go
+// hunting for a button, so this is the same two lines without the distance test.
+[proc,call_follower]
+if (npc_finduid(%follower_uid) = false) {
+    mes("You don't have a follower.");
+    return;
+}
+npc_tele(map_findsquare(coord, 1, 1, ^map_findsquare_lineofwalk));
+npc_setmode(playerfollow);
+mes("You call your follower.");
+
 // Logout: the npc goes, the item the slot remembers does not. %follower_uid is scope=temp and would
 // be dropped anyway; clearing it here keeps the two in step for the rest of the logout script.
 [proc,follower_logout]

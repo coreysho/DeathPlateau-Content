@@ -499,3 +499,30 @@ y=204
 width=34
 height=34
 text=Show Items Kept on Death
+
+// CALL FOLLOWER, the third thing Old School puts on this tab beside Equipment Stats and Items Kept
+// on Death. NOT part of the 474 conversion above - 474 had only the two, because followers came
+// later - so a rerun of tools/models/port474if.py will drop these two records and they have to go
+// back.
+//
+// THE ICON AND THE PLACE ARE OLD SCHOOL'S OWN. Its interface 387 puts four buttons along the bottom
+// at x=7, 52, 97 and 142, and Call follower is the last of them, drawn from sprite group 1343 - the
+// whistle, in sprites/osrs_call_follower.png. This tab has two of the four (474 had no guide prices
+// either), at x=45 and x=113, so the whistle goes to the right of them where its own order puts it.
+[call_follower]
+type=graphic
+x=152
+y=211
+buttontype=normal
+width=32
+height=32
+graphic=osrs_call_follower,0
+option=Call follower
+
+[call_follower_tip]
+type=8
+x=148
+y=207
+width=40
+height=40
+text=Call follower

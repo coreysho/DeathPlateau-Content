@@ -1,0 +1,115 @@
+// THE CERTERS - Niles, Miles and Giles, who are three records in antimacro.npc and one event. Which
+// brother turns up is a coin toss, in ~macro_event_npc.
+//
+// WHAT THEY DO, per oldschool.runescape.wiki/w/Certer: the certer "displays an object with three
+// possible answers", and naming it right pays off the shared random-event table. Get it wrong and
+// "the certer will not give an award and will teleport away".
+//
+// THE 2006 PUNISHMENT IS NOT HERE, and deliberately. Before the rework a certer gave four warnings
+// and then "converted the player's inventory and equipment into bank notes" before teleporting them
+// off. Noting somebody's worn gear is destructive in a way nothing else in this tree does to a
+// player who simply walked away from their keyboard, so ignoring a certer does what ignoring every
+// other talking random here does: the ordinary fail teleport. Ask and it can be the other way.
+//
+// THE QUESTION IS AN OBJ AND THREE NAMES, which ~multiobj3 already draws - the same chooser the
+// potter's wheel uses. The decoys come from the same table as the answer, so they are always three
+// things a certer might plausibly be holding and never three things that give the answer away.
+
+[proc,macro_certer_spawn]
+npc_say("Noted items! Get yer noted items here!");
+%npc_macro_event_target = uid;
+npc_setmode(playerfollow);
+
+[ai_timer,_macro_event_certer]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+if (%npc_int = 0) {
+    npc_say("A moment of your time, <displayname>?");
+} else if (%npc_int = 1) {
+    npc_say("I've a question for you, if you're listening.");
+} else if (%npc_int = 2) {
+    npc_say("It's rude to walk away mid-sentence, you know.");
+} else if (%npc_int = 3) {
+    npc_say("Fine. Have it your way.");
+    npc_anim(human_castteleport, 0);
+    %macro_event = ^no_macro_event;
+    queue(macro_event_fail_teleport, 0, 0);
+    npc_delay(0);
+    npc_del;
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[ai_queue5,_macro_event_certer] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,_macro_event_certer] // done with you
+npc_anim(emote_bow, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+[opnpc1,_macro_event_certer]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,neutral>I'm in the middle of something with <.displayname>.");
+        return;
+    }
+    ~chatnpc("<p,neutral>I'm in the middle of something.");
+    return;
+}
+if (%npc_int = ^certer_done) {
+    ~chatnpc("<p,neutral>That's that, then.");
+    return;
+}
+%npc_int = ^certer_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+
+// Three names, one of them right. The right one is drawn first and then dropped in at a random
+// place, so the answer is not always in the same slot.
+def_int $answer = random(enum_getoutputcount(macro_certer_items));
+def_int $a = $answer;
+def_int $b = ~macro_certer_other($answer, -1);
+def_int $c = ~macro_certer_other($answer, $b);
+def_int $slot = random(3);
+if ($slot = 1) {
+    $a = $b;
+    $b = $answer;
+} else if ($slot = 2) {
+    $a = $c;
+    $c = $answer;
+}
+def_namedobj $shown = enum(int, namedobj, macro_certer_items, $answer);
+
+~chatnpc("<p,neutral>Quick now - what am I holding?");
+def_namedobj $picked = ~multiobj3("What is it?",
+    enum(int, namedobj, macro_certer_items, $a), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $a)), 0, 0,
+    enum(int, namedobj, macro_certer_items, $b), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $b)), 0, 0,
+    enum(int, namedobj, macro_certer_items, $c), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $c)), 0, 0);
+
+npc_queue(6, 0, 2);
+if ($picked = $shown) {
+    ~chatnpc("<p,happy>Right you are. Here, for your trouble.");
+    ~macro_event_give_reward;
+    return;
+}
+// Wrong, and he simply leaves with nothing - which is what the wiki says the modern one does, and
+// the only part of the original punishment that is not destructive.
+~chatnpc("<p,sad>Not even close. Good day to you.");
+
+// An index into macro_certer_items that is neither of the two given. A certer holding the same thing
+// twice would give the answer away, which is why this loops rather than rolling once.
+[proc,macro_certer_other](int $not1, int $not2)(int)
+def_int $n = enum_getoutputcount(macro_certer_items);
+def_int $pick = random($n);
+def_int $guard = 0;
+while (($pick = $not1 | $pick = $not2) & $guard < 32) {
+    $pick = random($n);
+    $guard = calc($guard + 1);
+}
+return($pick);

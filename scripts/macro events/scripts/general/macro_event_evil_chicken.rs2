@@ -1,0 +1,53 @@
+// THE EVIL CHICKEN, which 2006scape lists under "Monster spawns": "A chicken spawns at anytime to
+// attack you." A general event rather than a skilling one, so it can turn up doing anything.
+//
+// SIX RECORDS, ONE PER COMBAT BRACKET, like every other hostile random here. The cache has exactly
+// one Evil Chicken (chickenquest_evil_chicken, vislevel 159 and no combat stats at all) and setting
+// a level 3 player on that would not be a random event, it would be a death. The six in
+// antimacro.npc reuse its model and its two animations and carry the brackets
+// ~macro_event_combat_level gives, which is what the zombie, the shade and the tree spirit do.
+//
+// IT IS SPAWNED BY THE GENERAL TABLE, so ~macro_event_npc has to answer with the right one of the
+// six rather than a fixed npc - see the bracket lookup there. The enum entry exists for the count
+// and for follow_player_on_logout, and names the top bracket.
+
+// NO npc_delay IN HERE, which the hostile SKILL events all have. This one is reached through
+// ~macro_event_general_spawn, and a delay inside that proc corrupts p_active_player for every
+// caller of it - alchemy, cooking, crafting, the lot - which the compiler says plainly and will
+// not build. The swarm, the other hostile general event, does it this way for the same reason.
+[proc,macro_evil_chicken_spawn]
+// https://2006scape.fandom.com/wiki/Random_Event - the chicken simply appears and attacks.
+npc_say("Bwa-ha-ha-ha!");
+%npc_macro_event_target = uid;
+%macro_event = ^no_macro_event;
+spotanim_map(smokepuff, npc_coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+%aggressive_npc = npc_uid; // interupt the player if they're in combat https://youtu.be/tw66JWQzpD0?t=32
+npc_setmode(opplayer2);
+
+[ai_timer,_macro_event_evil_chicken]
+if (~macro_event_lost_hostile = true) {
+    npc_del;
+    return;
+}
+
+[ai_queue3,_macro_event_evil_chicken]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+// FEATHERS AND AN EGG, which is what a chicken has to give. The rare at the end is a hundred of
+// them in one go - feathers stack, so it is one slot and a fletcher's afternoon. There is no noted
+// feather in this cache to drop instead, and nothing here invents one.
+def_int $random = random(128);
+if ($random < 60) {
+    obj_add(npc_coord, feather, calc(random(11) + 5), ^lootdrop_duration);
+} else if ($random < 95) {
+    obj_add(npc_coord, egg, 1, ^lootdrop_duration);
+} else if ($random < 110) {
+    obj_add(npc_coord, raw_chicken, 1, ^lootdrop_duration);
+} else if ($random < 126) {
+    obj_add(npc_coord, bones, 1, ^lootdrop_duration);
+} else {
+    obj_add(npc_coord, feather, 100, ^lootdrop_duration);
+}

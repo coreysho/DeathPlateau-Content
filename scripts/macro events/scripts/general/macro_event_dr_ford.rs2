@@ -1,0 +1,80 @@
+// DR FORD, who is macro_doctor in antimacro.npc. 2006scape's own line is the whole brief:
+// "He asks you for an item, if you dont have it he will go away, if you do he'll reward you."
+//
+// WHAT HE ASKS FOR is something anybody might be carrying - a plain, cheap, common thing - because
+// an event that asks for a rune platebody is an event nobody ever completes. The list is in
+// macro_events.enum as macro_dr_ford_wants.
+//
+// HE TAKES IT. That is what makes it a trade rather than a quiz, and it is why the list is cheap
+// things: the reward off the shared table is worth more than anything on it.
+
+[proc,macro_dr_ford_spawn]
+npc_say("Excuse me - you there!");
+%npc_macro_event_target = uid;
+npc_setmode(playerfollow);
+// WHICH ITEM, decided at spawn and remembered on the npc, so he asks for the same thing every time
+// you talk to him instead of a fresh one each click.
+%npc_int2 = random(enum_getoutputcount(macro_dr_ford_wants));
+
+[ai_timer,macro_doctor]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+if (%npc_int = 0) {
+    npc_say("I say! Over here!");
+} else if (%npc_int = 1) {
+    npc_say("It really is rather urgent, <displayname>.");
+} else if (%npc_int = 2) {
+    npc_say("Oh, never mind. I'll ask somebody else.");
+    %macro_event = ^no_macro_event;
+    npc_delay(2);
+    ~macro_event_disappear;
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[ai_queue5,macro_doctor] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,macro_doctor] // done
+npc_anim(emote_bow, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+[opnpc1,macro_doctor]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,neutral>Forgive me, I was asking <.displayname>.");
+        return;
+    }
+    ~chatnpc("<p,neutral>Forgive me, I was asking somebody else.");
+    return;
+}
+if (%npc_int = ^dr_ford_done) {
+    ~chatnpc("<p,happy>Thank you again!");
+    return;
+}
+def_namedobj $wants = enum(int, namedobj, macro_dr_ford_wants, %npc_int2);
+~chatnpc("<p,neutral>Terribly sorry to trouble you. I don't suppose you have <oc_name($wants)> about you?");
+if (inv_total(inv, $wants) < 1) {
+    // No scolding and no teleport: the brief says he simply goes away.
+    ~chatplayer("<p,sad>Sorry, I don't.");
+    ~chatnpc("<p,sad>Ah well. Thank you anyway.");
+    %npc_int = ^dr_ford_done;
+    %macro_event = ^no_macro_event;
+    npc_settimer(0);
+    npc_queue(6, 0, 2);
+    return;
+}
+~chatplayer("<p,happy>As it happens, I do.");
+inv_del(inv, $wants, 1);
+%npc_int = ^dr_ford_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+npc_queue(6, 0, 2);
+~chatnpc("<p,happy>Marvellous! You've saved me a trip. Here, take this for your trouble.");
+~macro_event_give_reward;

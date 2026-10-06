@@ -1,0 +1,83 @@
+// RICK TURPENTINE, the reformed highwayman. 2006scape lists him under Npc's; the character has been
+// sitting in antimacro.npc as macro_highwayman with his own models and chathead since long before
+// this script.
+//
+// WHAT HE DOES, per oldschool.runescape.wiki/w/Rick_Turpentine: he walks up, and talking to him
+// gets you something off the shared random-event table "as atonement for his past crimes". Ignore
+// him and the pre-2014 behaviour - which is this build's era - is that he robs you and goes.
+//
+// THE ROBBERY IS COINS ONLY and only what you are carrying loose: he is a highwayman, not a death.
+// A tenth of your purse up to 500, which at the top of the table is less than he gives away.
+
+[proc,macro_rick_turpentine_spawn]
+npc_say("Stand and deliver!");
+%npc_macro_event_target = uid;
+npc_setmode(playerfollow);
+
+[ai_timer,macro_highwayman]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+// Three warnings and then the purse, which is the shape every talking random uses here - see
+// [ai_timer,macro_mage]. %npc_int counts them.
+if (%npc_int = 0) {
+    npc_say("Oi! I'm talking to you, <displayname>.");
+} else if (%npc_int = 1) {
+    npc_say("Don't make me do this the old way...");
+} else if (%npc_int = 2) {
+    npc_say("Last chance. I'm trying to go straight here.");
+} else if (%npc_int = 3) {
+    @macro_rick_turpentine_rob;
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[label,macro_rick_turpentine_rob]
+npc_say("Old habits die hard!");
+npc_anim(human_pickpocket, 0);
+%macro_event = ^no_macro_event;
+def_int $purse = inv_total(inv, coins);
+def_int $take = divide($purse, 10);
+if ($take > 500) {
+    $take = 500;
+}
+if ($take > 0) {
+    inv_del(inv, coins, $take);
+    mes("Rick Turpentine lifts <tostring($take)> coins from your purse.");
+} else {
+    mes("Rick Turpentine finds nothing worth taking.");
+}
+npc_delay(2);
+~macro_event_disappear;
+
+[ai_queue5,macro_highwayman] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,macro_highwayman] // said goodbye, now go
+npc_anim(emote_bow, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+[opnpc1,macro_highwayman]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,neutral>I'm making amends with <.displayname>, not you.");
+        return;
+    }
+    ~chatnpc("<p,neutral>I'm making amends with somebody else.");
+    return;
+}
+if (%npc_int = ^rick_turpentine_done) {
+    ~chatnpc("<p,happy>Go on, be about your business.");
+    return;
+}
+%npc_int = ^rick_turpentine_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+npc_queue(6, 0, 2);
+~chatnpc("<p,happy>I've given up the robbing, you know. Here - take this, by way of apology for all the times I didn't.");
+~macro_event_give_reward;

@@ -5,6 +5,19 @@
 
 ^macro_triffidseed = 5
 
+// THE EVIL CHICKEN, members only. Not a judgement about the chicken: general_macro_events_free has
+// to stay contiguous because ~macro_event_set_random rolls 1..enum_getoutputcount over it, so a
+// sixth members event cannot also be a fifth free one without the same event having two ids - and
+// %macro_event stores that id across a logout.
+^macro_evil_chicken = 6
+
+// The four cheapest of 2006scape's missing randoms: a character apiece, all four already built out
+// of 377 parts in antimacro.npc, and nothing to walk into or click but a chat box.
+^macro_rick_turpentine = 7
+^macro_capn_hand = 8
+^macro_certer = 9
+^macro_dr_ford = 10
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
@@ -28,6 +41,13 @@
 ^genie_happy = -1
 
 ^mysterious_old_man_happy = -1
+
+// The same marker the three above use, one per talking event this round added: a value %npc_int can
+// never reach by counting warnings, so "already dealt with" and "warned once" cannot be confused.
+^rick_turpentine_done = -1
+^capn_hand_done = -1
+^certer_done = -1
+^dr_ford_done = -1
 
 ^macro_event_cmb_14 = 1
 ^macro_event_cmb_29 = 2
