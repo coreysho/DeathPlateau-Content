@@ -21,14 +21,14 @@
 
 // m52_46: base x 3328, base z 2944. Picked by tools/sim/courseplan.ts - each obstacle puts you
 // down beside the next one, on the side you are coming from.
-^pollnivneach_land_basket = 1_52_46_22_26
-^pollnivneach_land_stall = 1_52_46_27_34
+^pollnivneach_land_basket = 1_52_46_22_26   // 3350,2970 - an island on purpose: you land and click the market stall beside you
+^pollnivneach_land_stall = 1_52_46_27_34   // 3355,2978 - an island on purpose: the banner is beside you
 ^pollnivneach_land_banner = 1_52_46_34_32
 ^pollnivneach_land_gap = 1_52_46_38_33
 ^pollnivneach_land_tree1 = 1_52_46_38_38
 ^pollnivneach_land_wall = 2_52_46_31_41
 ^pollnivneach_land_bars = 2_52_46_30_52
-^pollnivneach_land_tree2 = 2_52_46_34_56
-^pollnivneach_land_line = 0_52_46_36_56
+^pollnivneach_land_tree2 = 2_52_46_34_56   // 3362,3000 - an island on purpose: the drying line is beside you
+^pollnivneach_land_line = 0_52_46_36_56   // 3364,3000 - the street, and you walk from here
 
 ^pollnivneach_mark_chance = 4
