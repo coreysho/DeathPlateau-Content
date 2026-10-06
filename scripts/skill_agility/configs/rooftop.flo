@@ -9,3 +9,19 @@
 [roofdeck_greyslate]
 overlay=yes
 texture=roof2
+
+
+// AND THE FLOOR OF AL KHARID'S, which is a desert roof and not a slate one.
+//
+// Old School paints Al Kharid's walkable deck #505050 - a plain mid grey, distinct from the roof it
+// sits on. Ours had it on `desertroof`, #fffff5, the same near-white 377 paints the roofs themselves
+// with: so the deck and the roof were one unbroken pale slab with no texture on it, which is the
+// flat untextured look that was reported, and nothing on the roof showed you where the course went.
+//
+// The colour is Old School's own. The texture is this build's, for the reason written above: a flat
+// grey with nothing on it reads as a missing texture here, and stone_tiles is what a flat stone roof
+// over a sandstone building wears.
+[roofdeck_desert]
+overlay=yes
+colour=0x505050
+texture=stone_tiles
