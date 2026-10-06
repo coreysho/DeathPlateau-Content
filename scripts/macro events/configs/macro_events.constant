@@ -18,6 +18,10 @@
 ^macro_certer = 9
 ^macro_dr_ford = 10
 
+// The fifth of that set, and the only one that needed anything built: her tray is seven things and
+// the chooser family stopped at four. multiobj7 is the whole of the extra work.
+^macro_sandwich_lady = 11
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
@@ -48,6 +52,11 @@
 ^capn_hand_done = -1
 ^certer_done = -1
 ^dr_ford_done = -1
+^sandwich_lady_done = -1
+
+// How many things are on her tray. Named because the roll at spawn and the slot table have to agree
+// about it, and multiobj7 is built for exactly this many.
+^macro_sandwich_lady_foods = 7
 
 ^macro_event_cmb_14 = 1
 ^macro_event_cmb_29 = 2

@@ -1,0 +1,165 @@
+// THE SANDWICH LADY, added to RuneScape on 10 January 2006 (The Hand in the Sand) and so squarely
+// this build's era. The character has been in antimacro.npc all along as macro_sandwich_lady_npc,
+// with walk and ready animations of her own; the only thing missing was a chooser wide enough for
+// her tray, which is what multiobj7 is.
+//
+// WHAT SHE DOES. runescape.wiki/w/Sandwich_lady: "She used to appear anywhere to offer players a
+// selection from her tray of sandwiches, instead of teleporting them to her cafe" - the cafe is a
+// later rework, so in 2006 she simply walks up to you, which is what the walkanim in her record and
+// the timing note at the top of antimacro.npc both say she does. Seven things on the tray, she
+// offers you one of them, and you have to take the one she offered.
+//
+// GET IT WRONG and she "would yell 'Hey, that's not what I offered you! Thief! Thief! Thief!' and
+// would knock the player out and teleport them somewhere else". That line is quoted; the knocking
+// out is not invention either - the 377 cache carries a seq called macro_sandwich_lady_knockout
+// which is frame for frame human_death with its final hold cut from 20000 to 2000 and the
+// hide-your-weapon flags dropped. It is the player collapsing and lying there, built for exactly
+// this. She swings with macro_sandwich_lady_attack, which is hers.
+//
+// NOTHING IS TAKEN FROM YOU. The teleport is the whole punishment, the same one the genie and the
+// old man use, and no item is lost - which is the 2006 behaviour after Jagex stopped sending failed
+// randoms to the Wilderness.
+//
+// IGNORE HER and she gives up and goes. No source describes a penalty for walking away from her, so
+// there is none here; three warnings and then the poof.
+
+[proc,macro_sandwich_lady_spawn]
+npc_say("Sandwiches! Baguettes! Get 'em while they're fresh!");
+%npc_macro_event_target = uid;
+// WHAT SHE IS OFFERING IS DECIDED NOW, not when you click her, and kept in her own %npc_int2 the
+// way Dr Ford keeps what he is asking for. She walks up already carrying the offer, so clicking her
+// twice could never change it under you.
+%npc_int2 = random(^macro_sandwich_lady_foods);
+npc_setmode(playerfollow);
+
+[ai_timer,macro_sandwich_lady_npc]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+// timer=20 and four steps is 80 ticks, which is the "a little over 50 seconds" the note at the top
+// of antimacro.npc measured off a 2006 video of her.
+if (%npc_int = 0) {
+    npc_say("Don't be shy, <displayname>. Something to eat?");
+} else if (%npc_int = 1) {
+    npc_say("It'll only go stale, you know.");
+} else if (%npc_int = 2) {
+    npc_say("Last call for sandwiches!");
+} else if (%npc_int = 3) {
+    npc_say("Suit yourself.");
+    %macro_event = ^no_macro_event;
+    npc_queue(6, 0, 2);
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[ai_queue5,macro_sandwich_lady_npc] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,macro_sandwich_lady_npc] // done here, now go
+npc_anim(emote_wave, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+[ai_queue7,macro_sandwich_lady_npc] // left in a huff, no wave
+~macro_event_disappear;
+
+[opnpc1,macro_sandwich_lady_npc]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,neutral>I'm serving <.displayname>, love. Wait your turn.");
+        return;
+    }
+    ~chatnpc("<p,neutral>I'm serving somebody else, love.");
+    return;
+}
+if (%npc_int = ^sandwich_lady_done) {
+    ~chatnpc("<p,happy>That's your lot, dearie.");
+    return;
+}
+%npc_int = ^sandwich_lady_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+
+// The tray is the tray: seven things, always in the same order, because that is what it looked like.
+// What changes is which one she offers.
+def_namedobj $o0;
+def_namedobj $o1;
+def_namedobj $o2;
+def_namedobj $o3;
+def_namedobj $o4;
+def_namedobj $o5;
+def_namedobj $o6;
+def_string $l0;
+def_string $l1;
+def_string $l2;
+def_string $l3;
+def_string $l4;
+def_string $l5;
+def_string $l6;
+$o0, $l0 = ~macro_sandwich_lady_slot(0);
+$o1, $l1 = ~macro_sandwich_lady_slot(1);
+$o2, $l2 = ~macro_sandwich_lady_slot(2);
+$o3, $l3 = ~macro_sandwich_lady_slot(3);
+$o4, $l4 = ~macro_sandwich_lady_slot(4);
+$o5, $l5 = ~macro_sandwich_lady_slot(5);
+$o6, $l6 = ~macro_sandwich_lady_slot(6);
+
+def_namedobj $want;
+def_string $wantlabel;
+$want, $wantlabel = ~macro_sandwich_lady_slot(%npc_int2);
+
+~chatnpc("<p,happy>Hello, dearie! Here - have a <lowercase(oc_name($want))>, on the house. Help yourself off the tray.");
+// The title does not name it again on purpose. Reading what she offered IS the event; the labels
+// under the pictures are the key Jagex added when players could not tell a roll from a baguette.
+def_namedobj $picked = ~multiobj7("Take the one she offered you.",
+    $o0, 0, 0, 290, $l0, 0, 0,
+    $o1, 0, 0, 290, $l1, 0, 0,
+    $o2, 0, 0, 290, $l2, 0, 0,
+    $o3, 0, 0, 290, $l3, 0, 0,
+    $o4, 0, 0, 290, $l4, 0, 0,
+    $o5, 0, 0, 290, $l5, 0, 0,
+    $o6, 0, 0, 290, $l6, 0, 0);
+
+if ($picked = $want) {
+    npc_queue(6, 0, 2);
+    ~chatnpc("<p,happy>There you go. Enjoy it, dearie.");
+    ~macro_event_give_obj($want, 1);
+    return;
+}
+// Closing the tray without taking anything is not stealing - she tuts and goes.
+if ($picked = null) {
+    npc_queue(6, 0, 2);
+    ~chatnpc("<p,neutral>Made your mind up, have you? Off you go, then.");
+    return;
+}
+@macro_sandwich_lady_caught;
+
+// Her line is quoted from runescape.wiki/w/Sandwich_lady.
+[label,macro_sandwich_lady_caught]
+npc_say("Hey, that's not what I offered you! Thief! Thief! Thief!");
+npc_anim(macro_sandwich_lady_attack, 0);
+// She leaves in her own context rather than here: ~macro_event_disappear deletes the active npc,
+// and this script's business after this line is the player lying on the floor.
+npc_queue(7, 0, 3);
+anim(macro_sandwich_lady_knockout, 0);
+queue(macro_event_fail_teleport, 3, 0);
+
+// HER TRAY, one slot at a time: the item and the label that goes under its picture. The label is
+// broken over two lines by hand where the name is wider than a 66px column in q8_full - the client
+// does not wrap text, it only splits on a literal backslash-n, so a name that does not fit would
+// spill over its neighbours. See multiobj7.if for the measurements.
+[proc,macro_sandwich_lady_slot](int $slot)(namedobj, string)
+switch_int ($slot) {
+    case 0 : return(baguette, "Baguette");
+    case 1 : return(triangle_sandwich, "Triangle\\nsandwich");
+    case 2 : return(square_sandwich, "Square\\nsandwich");
+    case 3 : return(chocolate_bar, "Chocolate\\nbar");
+    case 4 : return(kebab, "Kebab");
+    case 5 : return(roll, "Roll");
+    case 6 : return(meat_pie, "Meat pie");
+}
+return(null, "");

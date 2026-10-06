@@ -51,6 +51,11 @@ return(keyhalf2, 1);
 def_namedobj $item;
 def_int $count;
 $item, $count = ~macro_event_reward;
+~macro_event_give_obj($item, $count);
+
+// The handing over on its own, because not every event pays from the table above: the sandwich lady
+// gives you the one thing off her tray that you picked right.
+[proc,macro_event_give_obj](namedobj $item, int $count)
 if (inv_freespace(inv) = 0 & inv_total(inv, $item) = 0) {
     obj_add(coord, $item, $count, ^lootdrop_duration);
     mes("You have no room for it, so it lands at your feet.");
