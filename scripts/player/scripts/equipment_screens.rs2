@@ -125,3 +125,9 @@ inv_stoptransmit(items_kept:kept);
 inv_stoptransmit(items_kept:lost);
 inv_clear(deathpreview_keep);
 inv_clear(deathpreview_lose);
+
+// ---- CALL FOLLOWER. No p_finduid guard like the two above: those open a window and so need the
+// player to still be there to open it for, and this only moves an npc. ~call_follower is in
+// npc/scripts/follower.rs2, beside the keep-up it is the manual half of.
+[if_button,wornitems:call_follower] ~call_follower;
+
