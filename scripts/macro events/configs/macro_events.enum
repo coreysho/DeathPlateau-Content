@@ -17,6 +17,7 @@ val=8,macro_pirate
 val=9,macro_niles
 val=10,macro_doctor
 val=11,macro_sandwich_lady_npc
+val=12,macro_gravedigger
 
 [general_macro_events_free]
 inputtype=int
@@ -33,6 +34,7 @@ val=8,macro_pirate
 val=9,macro_niles
 val=10,macro_doctor
 val=11,macro_sandwich_lady_npc
+val=12,macro_gravedigger
 
 // WHICH EVENTS A WORLD ROLLS, as a list rather than a count. ~macro_event_set_random used to roll
 // 1..enum_getoutputcount over the tables above, which quietly required the ids to run 1..N with no
@@ -54,6 +56,7 @@ val=7,8
 val=8,9
 val=9,10
 val=10,11
+val=11,12
 
 [general_macro_events_free_pick]
 inputtype=int
@@ -68,6 +71,7 @@ val=5,8
 val=6,9
 val=7,10
 val=8,11
+val=9,12
 
 // WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
 // the question is "do you know what that is" rather than "can you tell two kinds of ore apart at

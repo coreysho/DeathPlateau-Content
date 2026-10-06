@@ -12,9 +12,13 @@ type=npc_uid
 
 [macro_ent_counter]
 
+// Where the player was standing when a room event took them away. protect=no because it is written
+// from ~macro_event_general_spawn, which is reached from [timer,general_macro_events] and from the
+// skilling dispatchers - none of which have protected access.
 [macro_event_target_coord]
 type=coord
 scope=perm
+protect=no
 
 [macro_transmit]
 transmit=yes
@@ -24,10 +28,24 @@ scope=perm
 transmit=yes
 scope=perm
 
+// THE FIVE GRAVES, AS THE CLIENT SEES THEM. macro_digger_grave_1..5 drive the multilocs on
+// loc_12721..12725, so the client has to be told them or every grave stays as it was drawn.
+// Transmitting them gives nothing away: whether a grave has a coffin in it is what you are looking
+// at. The ANSWER - which coffin belongs in which grave - is macro_digger_coffin_1..5 on
+// macro_digger_var_4, which is not transmitted, so a client cannot read the solution off the wire.
 [macro_digger_var]
+transmit=yes
+protect=no
 
+// protect=no on all four, the same as %macro_event above: the cemetery is laid out from
+// ~macro_event_general_spawn, which is reached from [timer,general_macro_events] and from every
+// skill's dispatcher, and a script without protected access cannot write a varbit. %macro_event has
+// carried protect=no since before this; these are the same kind of state for the same reason.
 [macro_digger_var_2]
+protect=no
 
 [macro_digger_var_3]
+protect=no
 
 [macro_digger_var_4]
+protect=no

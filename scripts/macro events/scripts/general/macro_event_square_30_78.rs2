@@ -1,0 +1,20 @@
+// MAP SQUARE 30_78 HOLDS TWO RANDOM EVENT ROOMS. Pious Pete's chapel is at the east end of it and
+// Leo's cemetery at the west, and a [mapzone] trigger covers a whole 64x64 square - so one pair of
+// triggers has to serve both, and they cannot simply do what the chapel wants.
+//
+// THE CHAPEL HIDES YOUR TABS, because Candlelight is played entirely through one interface and the
+// sidebar is in the way. THE CEMETERY MUST NOT: the whole of that event is carrying coffins about,
+// and a player with no inventory tab cannot do it. x=1950 is wall between the two.
+
+[mapzone,0_30_78]
+if (coordx(coord) >= ^macro_room_30_78_split) {
+    ~macro_events_hide_tabs;
+}
+@music_playbyregion(coord);
+
+[mapzoneexit,0_30_78]
+// Leaving either room by any route - Leo's send-off, a teleport, a death - lets go of %macro_event,
+// without which no further random event could ever spawn for this player.
+~macro_events_varps_reset;
+~macro_digger_reset;
+~initalltabs;

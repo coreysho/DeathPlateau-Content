@@ -161,8 +161,6 @@ if_openmain(xplamp);
 [opheld1,templetrek_red_token] ~mesbox("Nothing interesting happens.");
 [opheld1,templetrek_blue_token] ~mesbox("Nothing interesting happens.");
 [opheld1,macro_quiz_mystery_box] ~mesbox("You open the box...");
-[opheld1,macro_digger_coffin_object_1] ~mesbox("Nothing interesting happens.");
-[opheld1,macro_digger_coffin_object_2] ~mesbox("Nothing interesting happens.");
-[opheld1,macro_digger_coffin_object_3] ~mesbox("Nothing interesting happens.");
-[opheld1,macro_digger_coffin_object_4] ~mesbox("Nothing interesting happens.");
-[opheld1,macro_digger_coffin_object_5] ~mesbox("Nothing interesting happens.");
+// The five coffins' Check is the Gravedigger event's, in
+// "macro events"/scripts/general/macro_event_gravedigger.rs2 - it opens the window that shows
+// what is inside, which is the only way to tell one coffin from another.

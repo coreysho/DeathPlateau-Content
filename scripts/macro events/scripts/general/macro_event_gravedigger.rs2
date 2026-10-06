@@ -1,0 +1,371 @@
+// THE GRAVEDIGGER, and the first of the random events here that needed a place rather than just a
+// character. The place was already built: map square 30_78 has a walled cemetery with five graves,
+// five headstones, a mausoleum and Leo standing in it, and has had since the maps were imported.
+// So were his coffins, his sixteen grave goods, his five symbols, the zombie outfit, the varbits
+// for all of it, and the two lines in emotes.rs2 that promise the zombie walk and the zombie dance
+// "can be unlocked during the gravedigger random event". Only the script was missing.
+//
+// WHAT IT IS, per runescape.wiki/w/Gravedigger: you are teleported to "an old graveyard that
+// contained five open graves, each containing a coffin", and the job is to "pick up all the
+// coffins, peek inside to determine what bones are in each coffin and place them in the right grave
+// according to the spinning headstone". The coffins are "those of a cook, farmer, lumberjack, miner
+// and potter" - which is exactly the five symbols the cache carries, and the reason the five trades
+// in macro_events_gravedigger.enum are those five.
+//
+// A GRAVE IS A MULTILOC. loc_change rewrites a loc for every player in the zone, so two people
+// digging in one cemetery would be lifting each other's coffins; macro_digger_grave_1..5 are
+// varbits, so each player sees their own five graves and Leo is the only thing they share. That is
+// the same trick the drill demon's four posts use (antimacro.loc, loc_10068).
+//
+// NOTHING IS LOST BY FAILING. There is no failure: Leo will send you back whenever you ask, with or
+// without the reward. The mausoleum banks anything you are carrying, which is what the wiki says it
+// was for - a coffin takes a pack slot and there are five of them.
+
+// ============================================================================ arriving and leaving
+
+// THE TELEPORT GOES THROUGH A QUEUE and not through this proc, which is the whole reason this is
+// two scripts. ~macro_event_general_spawn is reached from [timer,general_macro_events] and from
+// every skilling dispatcher, and p_teleport needs protected access that a timer does not have -
+// [queue,macro_event_fail_teleport] is written the same way for the same reason. Leo deletes
+// himself here and the cemetery's own Leo, who has been standing in it all along, takes over.
+[proc,macro_gravedigger_spawn]
+%npc_macro_event_target = uid;
+// Where to put you back. perm, so a logout in the cemetery still knows the way home.
+%macro_event_target_coord = coord;
+~macro_digger_setup;
+queue(macro_digger_arrive, 0, 0);
+npc_del;
+
+[queue,macro_digger_arrive]
+mes("A gravedigger grabs you by the arm.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_digger_landing);
+
+// Leo asks for it back, or you ask to go. Either way the varbits are cleared so the next cemetery
+// starts from scratch, and %macro_event is let go so random events can happen again.
+[proc,macro_digger_leave]
+~macro_digger_reset;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+[proc,macro_digger_reset]
+def_int $slot = 1;
+while ($slot <= ^macro_digger_trades) {
+    ~macro_digger_grave_set($slot, 0);
+    ~macro_digger_coffin_set($slot, 0);
+    $slot = calc($slot + 1);
+}
+// The coffins only mean anything inside the cemetery, and a player who walked out with one would be
+// carrying an item with no examine and no use.
+def_int $trade = 1;
+while ($trade <= ^macro_digger_trades) {
+    inv_del(inv, enum(int, namedobj, macro_digger_coffin_obj, $trade), 28);
+    $trade = calc($trade + 1);
+}
+inv_clear(macro_digger_coffin_inv);
+
+// ============================================================================ laying out the graves
+
+// FIVE COFFINS, FIVE HEADSTONES, AND NEVER ALREADY DONE. The headstones get a shuffle of the five
+// trades and the graves get another; if the second shuffle happens to match the first the player
+// would have finished the event by standing still, so it is rotated by one, which cannot match in
+// any position.
+[proc,macro_digger_setup]
+def_int $slot = 1;
+while ($slot <= ^macro_digger_trades) {
+    ~macro_digger_coffin_set($slot, $slot);
+    ~macro_digger_grave_set($slot, $slot);
+    $slot = calc($slot + 1);
+}
+~macro_digger_shuffle_coffins;
+~macro_digger_shuffle_graves;
+if (~macro_digger_done = true) {
+    ~macro_digger_rotate_graves;
+}
+
+// Fisher-Yates over the five headstones: walk from the back, swap each with a random one at or
+// before it. Written out twice rather than once over an index because a proc cannot be handed a
+// varbit to work on.
+[proc,macro_digger_shuffle_coffins]
+def_int $i = ^macro_digger_trades;
+def_int $j;
+def_int $t;
+while ($i > 1) {
+    $j = calc(random($i) + 1);
+    $t = ~macro_digger_coffin_get($i);
+    ~macro_digger_coffin_set($i, ~macro_digger_coffin_get($j));
+    ~macro_digger_coffin_set($j, $t);
+    $i = calc($i - 1);
+}
+
+[proc,macro_digger_shuffle_graves]
+def_int $i = ^macro_digger_trades;
+def_int $j;
+def_int $t;
+while ($i > 1) {
+    $j = calc(random($i) + 1);
+    $t = ~macro_digger_grave_get($i);
+    ~macro_digger_grave_set($i, ~macro_digger_grave_get($j));
+    ~macro_digger_grave_set($j, $t);
+    $i = calc($i - 1);
+}
+
+// Shift every coffin one grave along. A solved cemetery rotated is never solved in any grave, which
+// is the point of doing it this way rather than reshuffling until it comes out wrong.
+[proc,macro_digger_rotate_graves]
+def_int $last = ~macro_digger_grave_get(^macro_digger_trades);
+def_int $i = ^macro_digger_trades;
+while ($i > 1) {
+    ~macro_digger_grave_set($i, ~macro_digger_grave_get(calc($i - 1)));
+    $i = calc($i - 1);
+}
+~macro_digger_grave_set(1, $last);
+
+[proc,macro_digger_done]()(boolean)
+def_int $slot = 1;
+while ($slot <= ^macro_digger_trades) {
+    if (~macro_digger_grave_get($slot) ! ~macro_digger_coffin_get($slot)) {
+        return(false);
+    }
+    $slot = calc($slot + 1);
+}
+return(true);
+
+// ============================================================================ the five slots
+
+// WHAT IS IN GRAVE N, 0 for an empty one. This is the varbit the multiloc on loc_1272N reads, so
+// writing it is what makes the hole open or close on the player's screen.
+[proc,macro_digger_grave_get](int $slot)(int)
+switch_int ($slot) {
+    case 1 : return(%macro_digger_grave_1);
+    case 2 : return(%macro_digger_grave_2);
+    case 3 : return(%macro_digger_grave_3);
+    case 4 : return(%macro_digger_grave_4);
+    case 5 : return(%macro_digger_grave_5);
+}
+return(0);
+
+[proc,macro_digger_grave_set](int $slot, int $value)
+switch_int ($slot) {
+    case 1 : %macro_digger_grave_1 = $value;
+    case 2 : %macro_digger_grave_2 = $value;
+    case 3 : %macro_digger_grave_3 = $value;
+    case 4 : %macro_digger_grave_4 = $value;
+    case 5 : %macro_digger_grave_5 = $value;
+}
+
+// WHOSE COFFIN BELONGS IN GRAVE N - the answer, which is what headstone N is carved with. Kept off
+// the transmitted varp on purpose; see antimacro.varbit.
+[proc,macro_digger_coffin_get](int $slot)(int)
+switch_int ($slot) {
+    case 1 : return(%macro_digger_coffin_1);
+    case 2 : return(%macro_digger_coffin_2);
+    case 3 : return(%macro_digger_coffin_3);
+    case 4 : return(%macro_digger_coffin_4);
+    case 5 : return(%macro_digger_coffin_5);
+}
+return(0);
+
+[proc,macro_digger_coffin_set](int $slot, int $value)
+switch_int ($slot) {
+    case 1 : %macro_digger_coffin_1 = $value;
+    case 2 : %macro_digger_coffin_2 = $value;
+    case 3 : %macro_digger_coffin_3 = $value;
+    case 4 : %macro_digger_coffin_4 = $value;
+    case 5 : %macro_digger_coffin_5 = $value;
+}
+
+// The five graves and the five headstones are five loc types apiece, which is how a click says
+// which one it was. The loc the script is given is always the BASE - the engine resolves a multiloc
+// to pick the option and then hands the trigger the loc that is really on the tile - so these match
+// loc_12721..12725 and not macro_digger_grave_filled.
+[proc,macro_digger_grave_slot](loc $loc)(int)
+switch_loc ($loc) {
+    case loc_12721 : return(1);
+    case loc_12722 : return(2);
+    case loc_12723 : return(3);
+    case loc_12724 : return(4);
+    case loc_12725 : return(5);
+}
+return(0);
+
+[proc,macro_digger_stone_slot](loc $loc)(int)
+switch_loc ($loc) {
+    case loc_12716 : return(1);
+    case loc_12717 : return(2);
+    case loc_12718 : return(3);
+    case loc_12719 : return(4);
+    case loc_12720 : return(5);
+}
+return(0);
+
+[proc,macro_digger_obj_trade](obj $obj)(int)
+switch_obj ($obj) {
+    case macro_digger_coffin_object_1 : return(1);
+    case macro_digger_coffin_object_2 : return(2);
+    case macro_digger_coffin_object_3 : return(3);
+    case macro_digger_coffin_object_4 : return(4);
+    case macro_digger_coffin_object_5 : return(5);
+}
+return(0);
+
+// ============================================================================ digging
+
+[oploc1,_macro_digger_grave]
+def_int $slot = ~macro_digger_grave_slot(loc_type);
+if ($slot = 0) {
+    return;
+}
+def_int $trade = ~macro_digger_grave_get($slot);
+if ($trade = 0) {
+    mes("That grave is already empty.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You don't have enough room to lift the coffin out. Leo's mausoleum will hold your things.");
+    return;
+}
+anim(human_pickupfloor, 0);
+sound_synth(coffin_open, 1, 0);
+p_delay(1);
+~macro_digger_grave_set($slot, 0);
+inv_add(inv, enum(int, namedobj, macro_digger_coffin_obj, $trade), 1);
+mes("You lift the coffin out of the grave.");
+
+// A coffin goes back in by being used on the hole. There is no "Fill" option because all five
+// coffins are called "Coffin" and look alike - an option would have to ask which of the ones you
+// are carrying you meant, and clicking the one you mean says it without a menu.
+[oplocu,_macro_digger_grave]
+def_int $trade = ~macro_digger_obj_trade(last_useitem);
+if ($trade = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $slot = ~macro_digger_grave_slot(loc_type);
+if ($slot = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (~macro_digger_grave_get($slot) ! 0) {
+    mes("There's already a coffin in that grave.");
+    return;
+}
+anim(human_pickupfloor, 0);
+sound_synth(coffin_close, 1, 0);
+p_delay(1);
+inv_del(inv, enum(int, namedobj, macro_digger_coffin_obj, $trade), 1);
+~macro_digger_grave_set($slot, $trade);
+mes("You lower the coffin into the grave.");
+
+[oploc1,_macro_digger_gravestone]
+def_int $slot = ~macro_digger_stone_slot(loc_type);
+if ($slot = 0) {
+    return;
+}
+def_int $trade = ~macro_digger_coffin_get($slot);
+if ($trade = 0) {
+    mes("The headstone is blank.");
+    return;
+}
+~objbox(enum(int, namedobj, macro_digger_symbol, $trade), "The headstone is carved with a symbol.", 250, 0, 0);
+
+// THE ONLY WAY TO TELL TWO COFFINS APART. Every grave good is called "Item" and examines as "It
+// seems bleached with age", which is what stops the puzzle being read rather than looked at - so
+// the contents go into a window, as models, and you have to recognise them.
+[opheld1,macro_digger_coffin_object_1] ~macro_digger_check(1);
+[opheld1,macro_digger_coffin_object_2] ~macro_digger_check(2);
+[opheld1,macro_digger_coffin_object_3] ~macro_digger_check(3);
+[opheld1,macro_digger_coffin_object_4] ~macro_digger_check(4);
+[opheld1,macro_digger_coffin_object_5] ~macro_digger_check(5);
+
+[proc,macro_digger_check](int $trade)
+inv_clear(macro_digger_coffin_inv);
+inv_add(macro_digger_coffin_inv, macro_digger_skull, 1);
+inv_add(macro_digger_coffin_inv, macro_digger_bones, 1);
+def_int $i = 0;
+def_namedobj $good;
+while ($i < 8) {
+    $good = enum(int, namedobj, macro_digger_goods, calc($trade * 8 + $i));
+    if ($good ! null) {
+        inv_add(macro_digger_coffin_inv, $good, 1);
+    }
+    $i = calc($i + 1);
+}
+inv_transmit(macro_digger_coffin_inv, macro_digger_coffin:inv);
+if_settext(macro_digger_coffin:subtitle, "You lift the lid. Inside, besides the body:");
+if_openmain(macro_digger_coffin);
+
+// NOTHING IS CLEARED HERE. [if_close] has no protected access and inv_clear wants it; the inv is
+// emptied at the top of ~macro_digger_check instead, which is the only thing that ever fills it,
+// and again when the player leaves the cemetery.
+[if_close,macro_digger_coffin]
+inv_stoptransmit(macro_digger_coffin:inv);
+
+// The mausoleum is a deposit box, which is what the wiki says it was for: five coffins is five
+// slots, and somebody with a full pack cannot start.
+[oploc1,loc_12731] @open_deposit_box;
+
+// ============================================================================ Leo
+
+[opnpc1,macro_gravedigger]
+if (%macro_event ! ^macro_gravedigger) {
+    ~chatnpc("<p,neutral>Quiet today. Nothing for you to do, I'm afraid.");
+    return;
+}
+if (~macro_digger_done = true) {
+    ~chatnpc("<p,happy>That's the lot of them, and every one where they belong. You've saved me a day's work.");
+    ~macro_digger_pay;
+    ~chatnpc("<p,happy>Off you go, then. Mind the holes.");
+    ~macro_digger_leave;
+    return;
+}
+~chatnpc("<p,neutral>They're not all where they should be yet. Read a headstone, then look in the coffins - the one that matches goes in that grave.");
+def_int $choice = ~p_choice2("I'll keep at it.", 1, "I've had enough of this. Send me back.", 2);
+if ($choice = 2) {
+    ~chatnpc("<p,neutral>Suit yourself. I'll finish it myself, as usual.");
+    ~macro_digger_leave;
+}
+
+// TWO THINGS, NEVER THE SAME ONE TWICE. The five pieces of the zombie outfit and the two zombie
+// emotes; an emote you already have is skipped, an outfit piece is not - a second zombie shirt is a
+// spare, the same as every other outfit random hands out.
+[proc,macro_digger_pay]
+def_int $first = ~macro_digger_pay_one(0);
+~macro_digger_pay_one($first);
+
+// $avoid is what the other half of the payment already gave, so the two are never the same. Returns
+// what it handed over, or 0 if there was nothing left to hand over.
+[proc,macro_digger_pay_one](int $avoid)(int)
+def_int $pick;
+def_int $tries = 0;
+while ($tries < 24) {
+    $pick = calc(random(7) + 1);
+    if ($pick ! $avoid) {
+        if ($pick = 6) {
+            if (%emote_zombie_walk = ^false) {
+                %emote_zombie_walk = ^true;
+                ~mesbox("You have unlocked a new emote: Zombie Walk!");
+                return($pick);
+            }
+        } else if ($pick = 7) {
+            if (%emote_zombie_dance = ^false) {
+                %emote_zombie_dance = ^true;
+                ~mesbox("You have unlocked a new emote: Zombie Dance!");
+                return($pick);
+            }
+        } else {
+            ~macro_event_give_obj(enum(int, namedobj, macro_digger_reward_obj, $pick), 1);
+            return($pick);
+        }
+    }
+    $tries = calc($tries + 1);
+}
+// Both emotes already unlocked and the roll kept landing on them: pay from the table every other
+// talking random uses rather than send somebody away with nothing.
+~macro_event_give_reward;
+return(0);

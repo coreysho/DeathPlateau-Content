@@ -22,6 +22,10 @@
 // the chooser family stopped at four. multiobj7 is the whole of the extra work.
 ^macro_sandwich_lady = 11
 
+// THE GRAVEDIGGER, and the first of these that needed a place as well as a person. The cemetery is
+// built and Leo is standing in it; see macro_event_gravedigger.rs2.
+^macro_gravedigger = 12
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
@@ -53,6 +57,22 @@
 ^certer_done = -1
 ^dr_ford_done = -1
 ^sandwich_lady_done = -1
+
+// LEO'S FIVE TRADES, which are the five symbols the cache carries a stone for - stonecook,
+// stonespade, stoneaxe, stonemine, stonevase - and the five coffins runescape.wiki names.
+^macro_digger_cook = 1
+^macro_digger_farmer = 2
+^macro_digger_lumberjack = 3
+^macro_digger_miner = 4
+^macro_digger_potter = 5
+^macro_digger_trades = 5
+
+// The open ground north of the graves, beside Leo and the mausoleum.
+^macro_digger_landing = 0_30_78_9_11
+
+// Map square 30_78 holds Pete's chapel (east) and Leo's cemetery (west). The cemetery ends at
+// x=1934 and the chapel starts at x=1965; this is the wall between them.
+^macro_room_30_78_split = 1950
 
 // How many things are on her tray. Named because the roll at spawn and the slot table have to agree
 // about it, and multiobj7 is built for exactly this many.
