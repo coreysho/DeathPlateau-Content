@@ -638,3 +638,49 @@ category=bosspet
 follower=yes
 param=pet_item_id,skillpet_tangleroot_item
 param=metamorph_next,skillpet_tangleroot
+
+// THE PET SNAKELING'S OTHER TWO, OSRS npcs 2131 and 2132. Zulrah has three forms and so does the
+// pet that drops from it: green (the base, in area_zulrah/configs/zulrah.npc), magma and tanzanite.
+// Named for what the render shows and for the two mutagens this build already calls magma and
+// tanzanite, not for OSRS's config names, which call all three "Snakeling".
+//
+// Both share the base's animations - OSRS gives all three ready 1721 and walk 2405 - so nothing
+// new was converted for them and the client's walk-merge keeps working.
+
+[bosspet_snakeling_magma]
+// OSRS npc 2131
+name=Pet Snakeling
+desc=Red and black, like Zulrah in its magma form.
+model1=npc_bosspet_snakeling_magma_1
+head1=npc_bosspet_snakeling_magma_head1
+size=1
+readyanim=osrs_seq_1721
+walkanim=osrs_seq_2405
+vislevel=hide
+timer=1
+op1=Pick-up
+op3=Talk-to
+op4=Metamorphosis
+category=bosspet
+follower=yes
+param=pet_item_id,bosspet_snakeling_item
+param=metamorph_next,bosspet_snakeling_tanzanite
+
+[bosspet_snakeling_tanzanite]
+// OSRS npc 2132
+name=Pet Snakeling
+desc=Purple and blue, like Zulrah in its tanzanite form.
+model1=npc_bosspet_snakeling_tanzanite_1
+head1=npc_bosspet_snakeling_tanzanite_head1
+size=1
+readyanim=osrs_seq_1721
+walkanim=osrs_seq_2405
+vislevel=hide
+timer=1
+op1=Pick-up
+op3=Talk-to
+op4=Metamorphosis
+category=bosspet
+follower=yes
+param=pet_item_id,bosspet_snakeling_item
+param=metamorph_next,bosspet_snakeling

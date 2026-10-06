@@ -162,6 +162,15 @@
       ],
       "op4": true
     },
+    "bosspet_snakeling": {
+     "forms": 3,
+     "items": 1,
+     "bits": [
+      14,
+      15
+     ],
+     "op4": true
+    },
     "bosspet_tzrek_jad": {
       "forms": 2,
       "items": 2,
@@ -187,7 +196,7 @@
       "op4": false
     }
   },
-  "pet_records": 51,
+  "pet_records": 54,
   "talk": {
     "variants": 3,
     "default_proc": "pettalk_default"

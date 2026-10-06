@@ -144,6 +144,8 @@ switch_obj ($item) {
         return(getbit_range(%pet_form, ^pet_form_golem_lo, ^pet_form_golem_hi));
     case skillpet_tangleroot_item :
         return(getbit_range(%pet_form, ^pet_form_tangleroot_lo, ^pet_form_tangleroot_hi));
+    case bosspet_snakeling_item :
+        return(getbit_range(%pet_form, ^pet_form_snakeling_lo, ^pet_form_snakeling_hi));
     case default : return(0);
 }
 
@@ -161,5 +163,7 @@ switch_obj ($item) {
         %pet_form = setbit_range_toint(%pet_form, $form, ^pet_form_golem_lo, ^pet_form_golem_hi);
     case skillpet_tangleroot_item :
         %pet_form = setbit_range_toint(%pet_form, $form, ^pet_form_tangleroot_lo, ^pet_form_tangleroot_hi);
+    case bosspet_snakeling_item :
+        %pet_form = setbit_range_toint(%pet_form, $form, ^pet_form_snakeling_lo, ^pet_form_snakeling_hi);
     case default : return;
 }

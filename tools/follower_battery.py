@@ -335,10 +335,17 @@ check(not bad, 'nothing in the bureau names a currency - reclaiming is free: %s'
 print('\n-- 7. the metamorphosis rings ------------------------------------------------')
 
 PETRECS = {}
+# The Pet snakeling's base record is the one pet that does not live in boss_pets.npc: it is in
+# area_zulrah/configs/zulrah.npc beside the snake it drops from, which is where the rest of Zulrah's
+# configs are. Leaving it out made its ring look open at the base.
 for src in (read('scripts/npc/configs/boss_pets.npc'), read('scripts/npc/configs/skill_pets.npc'),
-            FORMNPC):
+            read('scripts/areas/area_zulrah/configs/zulrah.npc'), FORMNPC):
     for n, b in blocks(src).items():
-        PETRECS[n] = b
+        # A PET RECORD IS ONE THAT CARRIES THE ITEM, not every record in these files. zulrah.npc is
+        # read for the one pet in it and holds eight other npcs; without this the count below became
+        # "61 pet records" and meant nothing.
+        if 'param=pet_item_id' in b:
+            PETRECS[n] = b
 # The label prints the MEASURED count, because the mutation for this moves the spec's. Tenth time
 # this has come up: print the side the mutation does not touch.
 check(len(PETRECS) == SPEC['pet_records'],
@@ -388,7 +395,8 @@ check(not stray, 'no pet has the right-click without a ring to spend it on: %s'
 # The bit ranges: wide enough for their own ring, and not overlapping.
 CONSTNAME = {'bosspet_kalphite_queen': 'kalphite', 'skillpet_heron': 'heron',
              'skillpet_chinchompa': 'chinchompa', 'skillpet_rift_guardian': 'rift',
-             'skillpet_rock_golem': 'golem', 'skillpet_tangleroot': 'tangleroot'}
+             'skillpet_rock_golem': 'golem', 'skillpet_tangleroot': 'tangleroot',
+             'bosspet_snakeling': 'snakeling'}
 owner = {}
 for base, want in sorted(SPEC['rings'].items()):
     if want['bits'] is None:
