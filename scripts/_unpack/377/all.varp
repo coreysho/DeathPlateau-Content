@@ -287,9 +287,14 @@ type=obj
 [elenaquest]
 scope=perm
 
+// Auto retaliate persists across logout (2026-10-06), the same fix the run toggle had on 2026-09-10
+// and for the same reason: there was no scope line, and a varp with no scope defaults to temp, so
+// every login turned it back on. 0 is on and 1 is off, so a save from before this has no stored
+// value, reads 0, and keeps the setting it has always had.
 [option_nodef]
 protect=no
 transmit=yes
+scope=perm
 
 // Run toggle now persists across logout (Corey, 2026-09-10). Unlike com_mode there was no
 // note here claiming temp was intentional - it simply had no scope line, and a varp with
