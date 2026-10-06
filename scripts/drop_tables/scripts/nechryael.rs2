@@ -35,7 +35,7 @@ if ($dropint < 18) {
 } else if ($dropint < 189) {
     obj_add(npc_coord, limpwurt_seed, 1, ^lootdrop_duration);
 } else if ($dropint < 207) {
-    obj_add(npc_coord, softclay, 25, ^lootdrop_duration);
+    obj_add(npc_coord, cert_softclay, 25, ^lootdrop_duration);
 } else if ($dropint < 220) {
     obj_add(npc_coord, tuna, 1, ^lootdrop_duration);
 } else if ($dropint < 277) {

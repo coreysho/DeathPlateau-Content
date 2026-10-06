@@ -41,15 +41,15 @@ if ($dropint < 3) {
 } else if ($dropint < 54) {
     obj_add(npc_coord, coins, 10000, ^lootdrop_duration);
 } else if ($dropint < 60) {
-    obj_add(npc_coord, flax, 100, ^lootdrop_duration);
+    obj_add(npc_coord, cert_flax, 100, ^lootdrop_duration);
 } else if ($dropint < 66) {
-    obj_add(npc_coord, white_berries, 12, ^lootdrop_duration);
+    obj_add(npc_coord, cert_white_berries, 12, ^lootdrop_duration);
 } else if ($dropint < 70) {
-    obj_add(npc_coord, papaya, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_papaya, 10, ^lootdrop_duration);
 } else if ($dropint < 74) {
-    obj_add(npc_coord, coconut, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_coconut, 10, ^lootdrop_duration);
 } else if ($dropint < 79) {
-    obj_add(npc_coord, big_bones, 20, ^lootdrop_duration);
+    obj_add(npc_coord, cert_big_bones, 20, ^lootdrop_duration);
 } else if ($dropint < 85) {
     obj_add(npc_coord, limpwurt_seed, 1, ^lootdrop_duration);
 } else if ($dropint < 103) {

@@ -26,7 +26,7 @@ if ($dropint < 114) {
 } else if ($dropint < 455) {
     obj_add(npc_coord, adamant_med_helm, 1, ^lootdrop_duration);
 } else if ($dropint < 483) {
-    obj_add(npc_coord, blankrune_high, calc(random(101) + 100), ^lootdrop_duration);
+    obj_add(npc_coord, cert_blankrune_high, calc(random(101) + 100), ^lootdrop_duration);
 } else if ($dropint < 497) {
     obj_add(npc_coord, adamant_battleaxe, 1, ^lootdrop_duration);
 } else if ($dropint < 511) {

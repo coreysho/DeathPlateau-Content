@@ -68,11 +68,11 @@ if ($dropint < 97) {
 } else if ($dropint < 423) {
     obj_add(npc_coord, unidentified_kwuarm, calc(random(4) + 5), ^lootdrop_duration);
 } else if ($dropint < 442) {
-    obj_add(npc_coord, coal, calc(random(76) + 75), ^lootdrop_duration);
+    obj_add(npc_coord, cert_coal, calc(random(76) + 75), ^lootdrop_duration);
 } else if ($dropint < 457) {
     obj_add(npc_coord, runite_bar, calc(random(3) + 3), ^lootdrop_duration);
 } else if ($dropint < 472) {
-    obj_add(npc_coord, adamantite_bar, calc(random(5) + 8), ^lootdrop_duration);
+    obj_add(npc_coord, cert_adamantite_bar, calc(random(5) + 8), ^lootdrop_duration);
 } else if ($dropint < 498) {
     obj_add(npc_coord, coins, calc(random(9991) + 20005), ^lootdrop_duration);
 }

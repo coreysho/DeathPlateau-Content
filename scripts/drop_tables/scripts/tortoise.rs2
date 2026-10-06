@@ -18,7 +18,7 @@ def_int $dropint = random(128);
 if ($dropint < 18) {
     obj_add(npc_coord, steel_arrow, calc(random(12) + 12), ^lootdrop_duration);
 } else if ($dropint < 36) {
-    obj_add(npc_coord, cabbage, calc(random(40) + 20), ^lootdrop_duration);
+    obj_add(npc_coord, cert_cabbage, calc(random(40) + 20), ^lootdrop_duration);
 } else if ($dropint < 54) {
     obj_add(npc_coord, swamp_toad, 1, ^lootdrop_duration);
 } else if ($dropint < 63) {

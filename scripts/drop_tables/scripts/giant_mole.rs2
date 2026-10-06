@@ -48,7 +48,7 @@ if ($dropint < 38) {
 } else if ($dropint < 371) {
     obj_add(npc_coord, deathrune, 50, ^lootdrop_duration);
 } else if ($dropint < 409) {
-    obj_add(npc_coord, yew_logs, 100, ^lootdrop_duration);
+    obj_add(npc_coord, cert_yew_logs, 100, ^lootdrop_duration);
 } else if ($dropint < 424) {
     obj_add(npc_coord, shark, 4, ^lootdrop_duration);
 } else if ($dropint < 435) {
@@ -56,7 +56,7 @@ if ($dropint < 38) {
 } else if ($dropint < 446) {
     obj_add(npc_coord, ranarr_seed, 1, ^lootdrop_duration);
 } else if ($dropint < 453) {
-    obj_add(npc_coord, iron_ore, 100, ^lootdrop_duration);
+    obj_add(npc_coord, cert_iron_ore, 100, ^lootdrop_duration);
 } else if ($dropint < 456) {
     obj_add(npc_coord, bigoysterpearls, 1, ^lootdrop_duration);
 } else if ($dropint < 494) {

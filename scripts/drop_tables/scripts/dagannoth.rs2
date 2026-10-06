@@ -56,7 +56,7 @@ if ($dropint < 29) {
 } else if ($dropint < 100) {
     obj_add(npc_coord, raw_tuna, 1, ^lootdrop_duration);
 } else if ($dropint < 102) {
-    obj_add(npc_coord, seaweed, 10, ^lootdrop_duration);
+    obj_add(npc_coord, cert_seaweed, 10, ^lootdrop_duration);
 } else if ($dropint < 103) {
     obj_add(npc_coord, mithril_spear, 1, ^lootdrop_duration);
 } else if ($dropint < 104) {
