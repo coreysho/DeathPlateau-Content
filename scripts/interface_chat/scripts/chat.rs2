@@ -754,6 +754,79 @@ switch_component (last_com) {
 }
 
 
+// SEVEN. The sandwich lady's tray is seven things and there was no chooser past four, which is the
+// only reason she was not already in. The slots are narrower than multiobj4's, so this one takes the
+// label already broken over two lines where it needs to be - see multiobj7.if.
+[proc,multiobj7](string $title, namedobj $obj1, int $x1, int $y1, int $scale1, string $string1, int $sx1, int $sy1, namedobj $obj2, int $x2, int $y2, int $scale2, string $string2, int $sx2, int $sy2, namedobj $obj3, int $x3, int $y3, int $scale3, string $string3, int $sx3, int $sy3, namedobj $obj4, int $x4, int $y4, int $scale4, string $string4, int $sx4, int $sy4, namedobj $obj5, int $x5, int $y5, int $scale5, string $string5, int $sx5, int $sy5, namedobj $obj6, int $x6, int $y6, int $scale6, string $string6, int $sx6, int $sy6, namedobj $obj7, int $x7, int $y7, int $scale7, string $string7, int $sx7, int $sy7)(namedobj)
+// reset any positions out of place
+if_setposition(multiobj7:com_2, $x1, $y1);
+if_setposition(multiobj7:com_3, $x2, $y2);
+if_setposition(multiobj7:com_4, $x3, $y3);
+if_setposition(multiobj7:com_5, $x4, $y4);
+if_setposition(multiobj7:com_6, $x5, $y5);
+if_setposition(multiobj7:com_7, $x6, $y6);
+if_setposition(multiobj7:com_8, $x7, $y7);
+if_setposition(multiobj7:com_9, $sx1, $sy1);
+if_setposition(multiobj7:com_10, $sx2, $sy2);
+if_setposition(multiobj7:com_11, $sx3, $sy3);
+if_setposition(multiobj7:com_12, $sx4, $sy4);
+if_setposition(multiobj7:com_13, $sx5, $sy5);
+if_setposition(multiobj7:com_14, $sx6, $sy6);
+if_setposition(multiobj7:com_15, $sx7, $sy7);
+
+if_settext(multiobj7:com_16, $title);
+if_setobject(multiobj7:com_2, $obj1, $scale1);
+if_settext(multiobj7:com_9, $string1);
+if_setobject(multiobj7:com_3, $obj2, $scale2);
+if_settext(multiobj7:com_10, $string2);
+if_setobject(multiobj7:com_4, $obj3, $scale3);
+if_settext(multiobj7:com_11, $string3);
+if_setobject(multiobj7:com_5, $obj4, $scale4);
+if_settext(multiobj7:com_12, $string4);
+if_setobject(multiobj7:com_6, $obj5, $scale5);
+if_settext(multiobj7:com_13, $string5);
+if_setobject(multiobj7:com_7, $obj6, $scale6);
+if_settext(multiobj7:com_14, $string6);
+if_setobject(multiobj7:com_8, $obj7, $scale7);
+if_settext(multiobj7:com_15, $string7);
+
+if_openchat(multiobj7);
+
+if_addresumebutton(multiobj7:com_2);
+if_addresumebutton(multiobj7:com_3);
+if_addresumebutton(multiobj7:com_4);
+if_addresumebutton(multiobj7:com_5);
+if_addresumebutton(multiobj7:com_6);
+if_addresumebutton(multiobj7:com_7);
+if_addresumebutton(multiobj7:com_8);
+if_addresumebutton(multiobj7:com_9);
+if_addresumebutton(multiobj7:com_10);
+if_addresumebutton(multiobj7:com_11);
+if_addresumebutton(multiobj7:com_12);
+if_addresumebutton(multiobj7:com_13);
+if_addresumebutton(multiobj7:com_14);
+if_addresumebutton(multiobj7:com_15);
+p_pausebutton;
+if_close;
+
+switch_component (last_com) {
+    case multiobj7:com_2 : return($obj1);
+    case multiobj7:com_9 : return($obj1);
+    case multiobj7:com_3 : return($obj2);
+    case multiobj7:com_10 : return($obj2);
+    case multiobj7:com_4 : return($obj3);
+    case multiobj7:com_11 : return($obj3);
+    case multiobj7:com_5 : return($obj4);
+    case multiobj7:com_12 : return($obj4);
+    case multiobj7:com_6 : return($obj5);
+    case multiobj7:com_13 : return($obj5);
+    case multiobj7:com_7 : return($obj6);
+    case multiobj7:com_14 : return($obj6);
+    case multiobj7:com_8 : return($obj7);
+    case multiobj7:com_15 : return($obj7);
+    case default : return(null);
+}
+
 // Used for make-x interfaces.
 // skillmulti2..5 used to be dead: their switch_component arms were fully written but no resume
 // buttons were ever registered, so p_pausebutton had nothing to wake it. Registering every
