@@ -376,6 +376,39 @@ if [ -n "$DEV" ]; then
         "$DEV_ROOT" "$ENGINE_BRANCH" "$CONTENT_BRANCH"
 fi
 
+# ---------------------------------------------------------------- the browser client's jar
+# engine/public/client.jar is the client the BROWSER runs (engine/src/web.ts hands it to CheerpJ and
+# serves the page at /rs2.cgi). It is not the launcher's copy and nothing updates it by itself: a
+# desktop player's launcher asks the releases API every time it starts, this is a file on a disk. Left
+# alone it quietly serves last month's client to everybody playing in a browser, and the only sign is
+# that something fixed weeks ago is still broken for them.
+#
+# NEVER FATAL. GitHub being unreachable is no reason to abandon a deploy that has already built, and a
+# download that fails leaves the jar already there - older, but working. The PK check is because a
+# GitHub error page arrives with a 200 on it: a jar is a zip, and a zip starts with PK.
+webclient_jar() {
+    local dir=$1 tmp size
+    mkdir -p "$dir/public"
+    tmp=$(mktemp "$dir/public/.client.jar.XXXXXX")
+    if curl -fsSL --max-time 120 -o "$tmp"             https://github.com/coreysho/DeathPlateau-Client/releases/latest/download/client.jar             && [ -s "$tmp" ] && [ "$(head -c 2 "$tmp")" = "PK" ]; then
+        if cmp -s "$tmp" "$dir/public/client.jar"; then
+            rm -f "$tmp"
+            printf '  already the latest release
+'
+        else
+            mv -f "$tmp" "$dir/public/client.jar"
+            chmod 644 "$dir/public/client.jar"
+            size=$(stat -c %s "$dir/public/client.jar")
+            printf '  updated to the latest release (%s bytes)
+' "$size"
+        fi
+    else
+        rm -f "$tmp"
+        printf '  [1;33mcould not fetch it - keeping the jar already there[0m
+'
+    fi
+}
+
 # ---------------------------------------------------------------- 1. save backup
 # Save format v8 is ONE WAY: once the new engine writes a save, the old engine refuses
 # it ("Unsupported save version"). Backing up is not optional and must happen before
@@ -521,6 +554,9 @@ if [ -n "$DEV" ]; then
         printf '  \033[1;33mno %s to copy staff from - nobody can log in until an account is made here:\033[0m\n' "$LIVE_ENGINE/db.sqlite"
         printf '    cd %s && npx tsx tools/server/account.ts set NAME account.staffmodlevel 3\n' "$ENGINE"
     fi
+    say "Browser client"
+    webclient_jar "$ENGINE"
+
     sync_dev_key
     chown_dev
 
@@ -531,6 +567,9 @@ if [ -n "$DEV" ]; then
     exec journalctl -u "$SERVICE" -f
 fi
 npm run build
+
+say "Browser client"
+webclient_jar "$ENGINE"
 
 # systemctl, never a manual npm start - that starts a second unsupervised world that
 # collides on port 43594 and dies with the SSH session.
