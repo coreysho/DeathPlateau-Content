@@ -320,6 +320,10 @@ ambient=25
 op1=Move
 
 [gwd_hole_untied]
+// THE HOLE, and the only one placed. Old School splits this in two - Tie-rope while it is
+// bare, Climb-down for ever after - with a multiloc, and that multiloc draws as a flat black
+// square here however it is wired. See gwd_hole.loc. One op instead, and the rope is still
+// asked for and still spent the first time; the script does both in the one click.
 // OSRS loc 26417
 name=Hole
 model=osrsloc_26417
@@ -328,7 +332,7 @@ length=4
 blockrange=no
 active=yes
 sharelight=yes
-op1=Tie-rope
+op1=Climb-down
 
 [osrsloc_33317]
 // OSRS loc 33317

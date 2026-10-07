@@ -102,26 +102,31 @@ if (coordz(coord) < ^gwd_crack_divide) {
 // (area_abyss/scripts/abyss_outer.rs2 hooks rcu_outer_multi1, never its barriers). The client takes
 // the option text from whichever child the varp is showing, so the two ops read correctly; the
 // branch below has to repeat the test to know which one was clicked.
-[oploc1,gwd_hole]
+[oploc1,gwd_hole_untied]
+// ONE CLICK, BOTH STATES. Old School splits this into Tie-rope and Climb-down with a multiloc, and
+// that multiloc draws as a flat black square in this client no matter how it is wired - a shape
+// fix, a fallback model, a varbit instead of a varp and the spare default slot all left it black,
+// while the same models placed plainly draw a proper rim and shaft. So the hole is the plain loc
+// and this does both jobs: the first climb ties your rope and spends it, every one after it does
+// not. %gwd_rope_tied still remembers, and it is still permanent.
 p_arrivedelay;
 facesquare(loc_coord);
-if (%gwd_rope_tied = 1) {
-    mes("You climb down the rope into the dark.");
-    // agility_climbing_down, not human_climbing_down: that one carries loops=8, which holds
-    // its last frame for ever and leaves the player stuck mid-climb. Same motion, no loop
-    // point - built for Draynor's crate after exactly that was reported from play.
-    anim(agility_climbing_down, 0);
+if (%gwd_rope_tied ! 1) {
+    if (inv_total(inv, rope) < 1) {
+        mes("The hole drops away further than you can see. You would need a rope.");
+        return;
+    }
+    mes("You tie your rope firmly to the rock at the edge of the hole.");
+    anim(human_throwrope, 0);
     p_delay(2);
-    p_telejump(^gwd_entrance_inside);
-    return;
+    inv_del(inv, rope, 1);
+    %gwd_rope_tied = 1;
+    mes("It will stay there now.");
 }
-if (inv_total(inv, rope) < 1) {
-    mes("The hole drops away further than you can see. You would need a rope.");
-    return;
-}
-mes("You tie your rope firmly to the rock at the edge of the hole.");
-anim(human_throwrope, 0);
+mes("You climb down the rope into the dark.");
+// agility_climbing_down, not human_climbing_down: that one carries loops=8, which holds its last
+// frame for ever and leaves the player stuck mid-climb. Same motion, no loop point.
+anim(agility_climbing_down, 0);
 p_delay(2);
-inv_del(inv, rope, 1);
-%gwd_rope_tied = 1;
-mes("It will stay there now.");
+p_telejump(^gwd_entrance_inside);
+

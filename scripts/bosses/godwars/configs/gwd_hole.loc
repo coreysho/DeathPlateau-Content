@@ -23,6 +23,20 @@ op1=Climb-down
 // separately as gwd_hole_tied. This parent is ours, because 26419 carries its state in a varbit
 // this build has no equivalent of.
 
+// NOT PLACED, AND HERE AS A RECORD. This is Old School's arrangement and it is the right
+// one: Tie-rope while the hole is bare, Climb-down for ever after. In this client it draws
+// as a flat black square the size of its 4x4 footprint, which is what was reported from
+// play, and it stayed one through all of:
+//
+//   placing it at shape 10 rather than shape 0, which Old School does and we did not;
+//   giving the parent a model of its own to fall back on;
+//   driving it from a varbit instead of a varp, which is what every working multiloc here uses;
+//   adding the spare default slot the client sizes its list for.
+//
+// The models are not the problem - rendered on their own they are a proper rim and shaft, and
+// placed as the plain child gwd_hole_untied the hole draws correctly. Multilocs in general are
+// not the problem either; millbase renders. So the map places the plain loc and the script
+// does both states in one click, and this waits here for someone who can work out the rest.
 [gwd_hole]
 multivar=gwd_rope_tied
 multiloc=0,gwd_hole_untied
