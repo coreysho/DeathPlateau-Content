@@ -71,7 +71,7 @@ EVENTS = [
     ("Npc's", 'Mysterious old man', 'macro_event_mysterious_old_man', None),
     ("Npc's", 'Pillory', 'macro_event_pillory', 'macro_pillory_guard'),
     ("Npc's", 'Prison pete', 'macro_event_prisonpete', 'prisonpete_pete'),
-    ("Npc's", 'Quiz master', 'macro_event_quiz_master', 'macro_magneson'),
+    ("Npc's", 'Quiz master', 'macro_event_quiz', 'macro_magneson'),
     ("Npc's", 'Rick Turpentine', 'macro_event_rick_turpentine', 'macro_highwayman'),
     ("Npc's", 'Sandwich Lady', 'macro_event_sandwich_lady', 'macro_sandwich_lady_npc'),
     ('Other', 'Strange box', 'macro_event_strange_box', None),

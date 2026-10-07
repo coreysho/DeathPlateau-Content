@@ -123,6 +123,29 @@ basevar=macro_pete_var
 startbit=0
 endbit=2
 
+// Which of the eight the mime is performing, 1 to 8, or 0 for "he has not started".
+[macro_mime_wants]
+basevar=macro_mime_var
+startbit=0
+endbit=3
+
+// How many he has got right in this performance.
+[macro_mime_done]
+basevar=macro_mime_var
+startbit=4
+endbit=6
+
+// Questions asked, and of those how many were right. Three each.
+[macro_quiz_asked]
+basevar=macro_quiz_var
+startbit=0
+endbit=2
+
+[macro_quiz_right]
+basevar=macro_quiz_var
+startbit=3
+endbit=5
+
 [macro_digger_grave_1]
 basevar=macro_digger_var
 startbit=1

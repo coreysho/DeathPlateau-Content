@@ -160,7 +160,8 @@ if_openmain(xplamp);
 [opheld1,templetrek_yellow_token] ~mesbox("Nothing interesting happens.");
 [opheld1,templetrek_red_token] ~mesbox("Nothing interesting happens.");
 [opheld1,templetrek_blue_token] ~mesbox("Nothing interesting happens.");
-[opheld1,macro_quiz_mystery_box] ~mesbox("You open the box...");
+// The Mystery box is the Quiz Master's prize and opens in
+// "macro events"/scripts/general/macro_event_quiz.rs2.
 // The five coffins' Check is the Gravedigger event's, in
 // "macro events"/scripts/general/macro_event_gravedigger.rs2 - it opens the window that shows
 // what is inside, which is the only way to tell one coffin from another.

@@ -1,0 +1,32 @@
+// THE QUIZ MASTER'S FIVE CATEGORIES AND TEN THINGS.
+//
+// The ten objs are nameless and have nothing but a model - macro_quiz_food1, _food2, _weapon1 and
+// so on through armour, tool and jewel. That is the whole design: the question is a category, the
+// answers are pictures, and nothing written anywhere tells you which is which. Two per category
+// means a question can show the right one and two wrong ones with none of them repeated.
+[macro_quiz_category]
+inputtype=int
+outputtype=string
+default=
+val=1,food
+val=2,weapon
+val=3,armour
+val=4,tool
+val=5,jewellery
+
+// Keyed category * 4 + slot, the same trick the gravedigger's grave goods use: a proc cannot pick
+// an enum by name, and five enums would be five copies of the loop that reads them.
+[macro_quiz_item]
+inputtype=int
+outputtype=namedobj
+default=null
+val=4,macro_quiz_food1
+val=5,macro_quiz_food2
+val=8,macro_quiz_weapon1
+val=9,macro_quiz_weapon2
+val=12,macro_quiz_armour1
+val=13,macro_quiz_armour2
+val=16,macro_quiz_tool1
+val=17,macro_quiz_tool2
+val=20,macro_quiz_jewel1
+val=21,macro_quiz_jewel2

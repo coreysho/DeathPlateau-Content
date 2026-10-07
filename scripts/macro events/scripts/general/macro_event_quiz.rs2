@@ -1,0 +1,139 @@
+// THE QUIZ MASTER, and a set that is not a room.
+//
+// I SAID THIS ONE HAD NOTHING. What it has is a game show set, which reads as nothing to anything
+// that measures walkable ground: m30_74 holds two three-by-three lit platforms, a ring of eight
+// invisible walls and two animated light beams above them, and the terrain is blocked everywhere
+// except ONE TILE on each podium. That is deliberate. You do not walk about on a quiz show - you
+// are put on your podium and he is put on his, and the beams come down. rev 474's own terrain for
+// this square is blocked in exactly the same places, so nothing is missing from it.
+//
+// WHAT IT IS: he asks for a category and shows three things, one of which belongs to it. The ten
+// objs in antimacro.obj have no names and no examines, only models - macro_quiz_food1 and _food2,
+// then weapon, armour, tool and jewel - so the question cannot be answered by reading, which is
+// the point of an anti-macro event. Three right and the Mystery box is yours.
+//
+// HE HAD NO OPTION ON HIM AT ALL, like the mime, so neither of them could ever have been clicked.
+
+[proc,macro_quiz_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+%macro_quiz_right = 0;
+%macro_quiz_asked = 0;
+queue(macro_quiz_arrive, 0, 0);
+npc_del;
+
+[queue,macro_quiz_arrive]
+mes("Lights. A lot of lights.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_quiz_landing);
+mes("You are standing on a podium. Somebody is beaming at you from another one.");
+// THE SHOW STARTS ITSELF. The two podiums are four tiles apart with blocked ground between them -
+// that is how the set is built - so the player can never stand next to the Quiz Master and could
+// never click him. You do not walk over and tap the host of a game show; he talks to you.
+~macro_quiz_run;
+
+[proc,macro_quiz_leave]
+%macro_quiz_right = 0;
+%macro_quiz_asked = 0;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+[mapzoneexit,0_30_74]
+~macro_events_varps_reset;
+%macro_quiz_right = 0;
+%macro_quiz_asked = 0;
+
+// ============================================================================ the quiz
+
+// He is across the studio, so he has to be found before he can be made to talk - the same as
+// Sergeant Damien shouting across his yard.
+[proc,macro_quiz_run]
+if (npc_find(coord, macro_magneson, 24, 0) = false) {
+    mes("There is nobody here to ask you anything.");
+    ~macro_quiz_leave;
+    return;
+}
+~chatnpc("<p,happy>Welcome, welcome, WELCOME to the quiz! Three questions. Get them all right and the Mystery box is yours.");
+while (%macro_quiz_asked < ^macro_quiz_questions) {
+    ~macro_quiz_ask;
+    if (%macro_quiz_asked < ^macro_quiz_questions) {
+        ~chatnpc("<p,happy>Next question!");
+    }
+}
+~macro_quiz_result;
+
+// Only reachable if the show somehow stopped - the player cannot get within a tile of him, so this
+// is a way back in rather than the way in.
+[opnpc1,macro_magneson]
+if (%macro_event ! ^macro_quizmaster) {
+    ~chatnpc("<p,happy>No show today, I'm afraid. Come back another time!");
+    return;
+}
+~macro_quiz_run;
+
+// ONE QUESTION: a category, the thing that belongs to it, and two that do not. The right answer is
+// dropped into one of the three places at random, so it is never in the same slot twice running.
+[proc,macro_quiz_ask]
+def_int $cat = calc(random(^macro_quiz_categories) + 1);
+def_int $wrong1 = ~macro_quiz_other_cat($cat, 0);
+def_int $wrong2 = ~macro_quiz_other_cat($cat, $wrong1);
+def_namedobj $answer = ~macro_quiz_pick($cat);
+def_namedobj $a = $answer;
+def_namedobj $b = ~macro_quiz_pick($wrong1);
+def_namedobj $c = ~macro_quiz_pick($wrong2);
+def_int $slot = random(3);
+if ($slot = 1) {
+    $a = $b;
+    $b = $answer;
+} else if ($slot = 2) {
+    $a = $c;
+    $c = $answer;
+}
+%macro_quiz_asked = add(%macro_quiz_asked, 1);
+
+def_namedobj $picked = ~multiobj3("Which of these is <enum(int, string, macro_quiz_category, $cat)>?",
+    $a, 0, 0, 200, "", 0, 0,
+    $b, 0, 0, 200, "", 0, 0,
+    $c, 0, 0, 200, "", 0, 0);
+if ($picked = $answer) {
+    %macro_quiz_right = add(%macro_quiz_right, 1);
+    ~chatnpc("<p,happy>CORRECT! Oh, you're good at this.");
+    return;
+}
+~chatnpc("<p,sad>Oooh. No. I'm sorry, that's not it.");
+
+// One of the five that is neither the answer's nor the one already used.
+[proc,macro_quiz_other_cat](int $not1, int $not2)(int)
+def_int $pick = calc(random(^macro_quiz_categories) + 1);
+def_int $guard = 0;
+while (($pick = $not1 | $pick = $not2) & $guard < 32) {
+    $pick = calc(random(^macro_quiz_categories) + 1);
+    $guard = calc($guard + 1);
+}
+return($pick);
+
+// Either of the two in a category. Keyed category * 4 + slot - see macro_events_quiz.enum.
+[proc,macro_quiz_pick](int $cat)(namedobj)
+return(enum(int, namedobj, macro_quiz_item, calc($cat * 4 + random(2))));
+
+[proc,macro_quiz_result]
+if (%macro_quiz_right >= ^macro_quiz_questions) {
+    ~chatnpc("<p,happy>Three out of three! Give the man his Mystery box!");
+    ~macro_event_give_obj(macro_quiz_mystery_box, 1);
+} else {
+    ~chatnpc("<p,sad><tostring(%macro_quiz_right)> out of three. Not quite, but thanks for playing!");
+}
+~chatnpc("<p,happy>That's all we have time for. Good night!");
+~macro_quiz_leave;
+
+// The box itself, which is the prize and is opened wherever you like. It replaces the line
+// item_ops_generated.rs2 had for it, which said "You open the box..." and did nothing.
+[opheld1,macro_quiz_mystery_box]
+inv_del(inv, macro_quiz_mystery_box, 1);
+~mesbox("You open the box...");
+~macro_event_give_reward;

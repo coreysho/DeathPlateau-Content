@@ -1,0 +1,158 @@
+// THE MIME, and a theatre that has been standing in m31_74 since the maps were imported.
+//
+// I SAID THIS ROOM WAS NOT BUILT. It is, and the way I checked was wrong: eventplaces.ts asks the
+// booted server which locs are in a zone, and GameMap only ever adds a loc to a zone when its type
+// is active. A theatre is made of scenery - walls, a floor, chairs, curtains - and none of that is
+// active, so a complete theatre reads as an empty field. tools/wherelocmap.py reads maps/*.jm2
+// instead, and m31_74 holds 106 theatre walls, 84 chairs, 84 stage-floor tiles, curtains, two
+// spotlights, four exit signs and a dark fade, over three levels.
+//
+// IT IS THE RIGHT THEATRE, to the chair. runescape.wiki/w/Mime_(random_event) says the venue had
+// "a total of 84 chairs in the area" and "three mysterious colored audience members visible if
+// players rotated their camera". The map has exactly 84 chairs and exactly three of them:
+// macro_theatre_saradomin, macro_theatre_guthix and macro_theatre_zamorak, sitting in the dark.
+//
+// THE STAGE IS LEVEL 1 and the seating level 0 - that is how the theatre is built - and the mime's
+// own spawn was on level 0, in among the chairs. He is on his stage now.
+//
+// YOU COPY HIM FROM THE EMOTE TAB, which is how Old School does it and not how 2006 did it. The
+// wiki is specific: "the player had to choose the same emote from a list of 8 emotes shown in a
+// dialogue box". A 377 chatbox is about 110 pixels tall and multi5 - the widest chooser this
+// client has - puts its five rows 16 pixels apart in q8_full; eight rows do not fit, and shrinking
+// the font below q8 is not something any other dialogue here does. So the copy goes through the
+// tab, hooked into [label,emote] beside the two reactions that were already there.
+
+[proc,macro_mime_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+%macro_mime_done = 0;
+%macro_mime_wants = 0;
+queue(macro_mime_arrive, 0, 0);
+npc_del;
+
+[queue,macro_mime_arrive]
+mes("A silent figure takes you by the hand.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_mime_landing);
+mes("You are standing on a stage. Three figures watch from the dark.");
+~macro_mime_perform;
+
+[proc,macro_mime_leave]
+%macro_mime_done = 0;
+%macro_mime_wants = 0;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+[mapzoneexit,0_31_74]
+~macro_events_varps_reset;
+%macro_mime_done = 0;
+%macro_mime_wants = 0;
+
+// ============================================================================ the act
+
+// He picks one of the eight and does it. No words - he is a mime - so the only thing the player
+// gets is the animation, which is the whole event.
+[proc,macro_mime_perform]
+%macro_mime_wants = calc(random(^macro_mime_acts) + 1);
+if (npc_find(coord, macro_mime, 20, 0) = false) {
+    mes("The mime is not on the stage.");
+    return;
+}
+npc_anim(enum(int, seq, macro_mime_act, %macro_mime_wants), 0);
+mes("The mime performs. Copy him.");
+
+// EVERY EMOTE THE PLAYER PLAYS comes through [label,emote] in interface_controls/scripts/emotes.rs2,
+// which already calls out to Throne of Miscellania and to Lunar Diplomacy's Ethereal Mimic for the
+// same reason. This is the third.
+[proc,macro_mime_react](seq $anim)
+if (%macro_event ! ^macro_mime | %macro_mime_wants = 0) {
+    return;
+}
+if ($anim ! enum(int, seq, macro_mime_act, %macro_mime_wants)) {
+    // The wiki does not say what a wrong one cost, so it costs nothing: he shakes his head and
+    // does it again. Nobody is sent home from a miming lesson for miming badly.
+    if (npc_find(coord, macro_mime, 20, 0) = true) {
+        npc_anim(emote_no, 0);
+    }
+    mes("That wasn't it. The mime tries again.");
+    %macro_mime_wants = 0;
+    ~macro_mime_perform;
+    return;
+}
+%macro_mime_done = add(%macro_mime_done, 1);
+%macro_mime_wants = 0;
+if (%macro_mime_done >= ^macro_mime_acts_needed) {
+    mes("The three figures in the dark applaud.");
+    if (npc_find(coord, macro_mime, 20, 0) = true) {
+        npc_anim(emote_bow, 0);
+    }
+    ~macro_mime_pay;
+    ~macro_mime_leave;
+    return;
+}
+mes("The mime nods, and begins another.");
+~macro_mime_perform;
+
+// HE HAS AN OP BUT HE WILL NOT TALK. Watching him again is the only thing a player who looked
+// away can do, and leaving is the only thing a player who has had enough can do - without either,
+// the theatre is a room with no door.
+[opnpc1,macro_mime]
+if (%macro_event ! ^macro_mime) {
+    mes("The mime ignores you.");
+    return;
+}
+mes("The mime will not break character.");
+if (%macro_mime_wants = 0) {
+    ~macro_mime_perform;
+    return;
+}
+def_int $choice = ~p_choice2("Watch him again.", 1, "I've had enough of this.", 2);
+if ($choice = 2) {
+    mes("The mime bows, and the stage goes dark.");
+    ~macro_mime_leave;
+    return;
+}
+if (npc_find(coord, macro_mime, 20, 0) = true) {
+    npc_anim(enum(int, seq, macro_mime_act, %macro_mime_wants), 0);
+}
+
+// FIVE PIECES AND FOUR EMOTES, one at a time and never one you already have. emotes.rs2 has been
+// telling players for a while that Glass Wall, Glass Box, Climb Rope and Lean "can be unlocked
+// during the mime random event"; nothing in this world could unlock them until now.
+[proc,macro_mime_pay]
+def_int $i = 1;
+def_namedobj $piece;
+while ($i <= enum_getoutputcount(macro_mime_reward_obj)) {
+    $piece = enum(int, namedobj, macro_mime_reward_obj, $i);
+    if (inv_total(inv, $piece) = 0 & inv_total(bank, $piece) = 0 & inv_total(worn, $piece) = 0) {
+        ~macro_event_give_obj($piece, 1);
+        return;
+    }
+    $i = calc($i + 1);
+}
+if (%emote_glasswall = ^false) {
+    %emote_glasswall = ^true;
+    ~mesbox("You have unlocked a new emote: Glass Wall!");
+    return;
+}
+if (%emote_glassbox = ^false) {
+    %emote_glassbox = ^true;
+    ~mesbox("You have unlocked a new emote: Glass Box!");
+    return;
+}
+if (%emote_climbrope = ^false) {
+    %emote_climbrope = ^true;
+    ~mesbox("You have unlocked a new emote: Climb Rope!");
+    return;
+}
+if (%emote_lean = ^false) {
+    %emote_lean = ^true;
+    ~mesbox("You have unlocked a new emote: Lean!");
+    return;
+}
+~macro_event_give_reward;

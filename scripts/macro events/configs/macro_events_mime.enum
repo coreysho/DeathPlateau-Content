@@ -1,0 +1,34 @@
+// WHAT THE MIME DOES ON STAGE, and what you get for copying him.
+//
+// EIGHT, because runescape.wiki/w/Mime_(random_event) says "the player had to choose the same emote
+// from a list of 8 emotes shown in a dialogue box". Eight is the number; the list itself is not
+// recorded, so these are the eight every player has from the day they log in for the first time -
+// an emote you have not unlocked would be an event you cannot finish.
+//
+// The four the event GIVES - Glass Wall, Glass Box, Climb Rope and Lean - are deliberately not in
+// here. He cannot ask you to copy something you have not been taught yet.
+[macro_mime_act]
+inputtype=int
+outputtype=seq
+default=null
+val=1,emote_yes
+val=2,emote_no
+val=3,emote_bow
+val=4,emote_angry
+val=5,emote_think
+val=6,emote_wave
+val=7,emote_cheer
+val=8,emote_clap
+
+// THE MIME OUTFIT, five pieces. ^macro_mime_rewards in macro_events.constant is 9: these five and
+// the four emotes after them, which ~macro_mime_pay handles separately because an emote is a varbit
+// and not a thing you can carry.
+[macro_mime_reward_obj]
+inputtype=int
+outputtype=namedobj
+default=null
+val=1,macro_mime_mask
+val=2,macro_mime_top
+val=3,macro_mime_legs
+val=4,macro_mime_gloves
+val=5,macro_mime_boots

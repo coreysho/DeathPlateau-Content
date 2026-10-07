@@ -58,6 +58,24 @@
 // On the sand in front of him.
 ^macro_evil_bob_landing = 0_39_74_25_42
 
+// THE MIME. His theatre is built in map square 31_74 - 106 walls, 84 chairs, 84 stage tiles,
+// curtains, two spotlights and three silent watchers - on three levels, with the seating at the
+// bottom and the stage above it. See macro_event_mime.rs2.
+^macro_mime = 18
+^macro_mime_acts = 8
+^macro_mime_acts_needed = 4
+// Centre stage, level 1, three tiles in front of him.
+^macro_mime_landing = 1_31_74_26_25
+
+// THE QUIZ MASTER. His set is in map square 30_74: two lit three-by-three podiums, a ring of
+// invisible walls and two light beams, with one standable tile on each podium and blocked ground
+// everywhere else - which is what a game show set is. See macro_event_quiz.rs2.
+^macro_quizmaster = 19
+^macro_quiz_categories = 5
+^macro_quiz_questions = 3
+// The contestant's podium. His is the other one, four tiles north.
+^macro_quiz_landing = 1_30_74_32_28
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
