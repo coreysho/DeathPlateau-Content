@@ -83,7 +83,9 @@ val=16,17
 val=17,18
 val=18,19
 val=19,20
-val=20,21
+// 21, the pillory, is NOT in either _pick table: it is a Thieving random and is rolled by
+// [label,macro_randomthieving] instead, beside the watchman. It stays in the npc tables above
+// because ~macro_event_npc still has to be able to answer for it.
 
 [general_macro_events_free_pick]
 inputtype=int
@@ -107,7 +109,6 @@ val=14,17
 val=15,18
 val=16,19
 val=17,20
-val=18,21
 
 // WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
 // the question is "do you know what that is" rather than "can you tell two kinds of ore apart at

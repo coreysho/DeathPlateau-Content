@@ -1,9 +1,15 @@
+// THE PILLORY IS A THIEVING RANDOM, which is the whole reason it is in here and not in the
+// general table. runescape.wiki/w/Pillory's update history: "25 February 2009: Random events
+// became available to all players at any time, not just members using Thieving" - so before that,
+// and this build is 2006, being clapped in a cage was something that happened to pickpockets.
+// 2006scape lists it under Thieving too, as "Jailer".
 [label,macro_randomthieving]
 if (~macro_event_allowed = false) {
     return;
 }
-switch_int (random(calc(~macro_event_general_count + 1))) {
+switch_int (random(calc(~macro_event_general_count + 2))) {
     case 0 : ~macro_event_watchman_spawn;
+    case 1 : ~macro_event_general_spawn(^macro_pillory);
     case default : ~macro_event_general_spawn(~macro_event_set_random);
 }
 
@@ -12,8 +18,9 @@ switch_int (random(calc(~macro_event_general_count + 1))) {
 if (~macro_event_allowed = false) {
     return;
 }
-switch_int (random(calc(~macro_event_general_count + 2))) {
+switch_int (random(calc(~macro_event_general_count + 3))) {
     case 0 : ~macro_event_macro_gas_chest;
     case 1 : ~macro_event_watchman_spawn;
+    case 2 : ~macro_event_general_spawn(^macro_pillory);
     case default : ~macro_event_general_spawn(~macro_event_set_random);
 }

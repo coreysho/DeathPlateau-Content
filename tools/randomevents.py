@@ -45,9 +45,15 @@ EVENTS = [
     ('Fishing', 'Big fish', 'macro_event_big_fish', None),
     ('Fishing', 'River troll', 'macro_event_river_troll', None),
     ('Fishing', 'Whirlpools', 'macro_event_whirlpool', None),
-    # The cells and the puzzle are the work here, not the npc: the event teleports you into a
-    # locked room in Seers' Village, Varrock or Yanille and gives you a puzzle to get out.
-    ('Thieving', 'Jailer', 'macro_event_jailer', 'macro_jailer'),
+    # THE JAILER IS THE PILLORY. 2006scape lists it twice - here under Thieving, with the
+    # description "You are teleported to a cell in Seers' village, Varrock or Yanille where you
+    # need to solve a Puzzle to escape", and again under Npc's as "Pillory" with no description at
+    # all. Those are one event: runescape.wiki/w/Pillory puts the cages in exactly those three
+    # towns, has you escape by picking a symbol lock, and its update history says that until 25
+    # February 2009 being caught was something that only happened to "members using Thieving" -
+    # which is why 2006scape files it under Thieving. The RuneScape wiki's complete list of 43
+    # historical randoms has no Jailer in it at all.
+    ('Thieving', 'Jailer', 'macro_event_pillory', 'macro_pillory_guard'),
     ('Thieving', 'Watchman', 'macro_event_watchman', None),
     ('Monster spawns', 'Evil Chicken', 'macro_event_evil_chicken', 'chickenquest_evil_chicken'),
     ('Monster spawns', 'Swarm', 'macro_event_swarm', None),
