@@ -11,6 +11,10 @@
 
 // ---------------------------------------------------------------- Armadyl: the grapple
 [oploc1,gwd_pillar_grapple]
+// BOTH WAYS. This fired you at ^gwd_grapple_to whichever side you were standing on, so coming back
+// the other way you played the animation and did not move - reported from play. The pillar is at
+// 2871,5270 with the landing just south of it and the firing line to the north, so which side of
+// the pillar you are on decides which side you end up.
 if (stat(ranged) < ^gwd_encampment_level) {
     mes("You need a Ranged level of <tostring(^gwd_encampment_level)> to make that shot.");
     return;
@@ -26,11 +30,17 @@ if (inv_total(worn, mith_grapple) < 1 & inv_total(inv, mith_grapple) < 1) {
     mes("You need a mithril grapple to get across.");
     return;
 }
+p_arrivedelay;
+facesquare(loc_coord);
 mes("You fire the grapple at the pillar across the chasm.");
 anim(human_crossbow, 0);
 p_delay(2);
 mes("The line goes taut, and you swing across.");
-p_telejump(^gwd_grapple_to);
+if (coordz(coord) > coordz(loc_coord)) {
+    p_telejump(^gwd_grapple_to);
+} else {
+    p_telejump(^gwd_grapple_from);
+}
 
 // ---------------------------------------------------------------- Bandos: the gong
 [oploc1,gwd_door_bang]
@@ -129,3 +139,19 @@ mes("You climb down the rope.");
 anim(agility_climbing_down, 0);
 p_delay(2);
 p_telejump($down);
+
+// AND BACK UP AGAIN. Both ropes were one-way: you climbed down and that was that, which left the
+// level 1 cavern and the encampment below it as places you could only leave by teleporting.
+// Which rope this is is decided by the level it hangs on - the upper one bottoms out on level 1,
+// the lower one on level 0.
+[oploc1,osrsloc_26369]
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You climb back up the rope.");
+anim(human_climbing, 0);
+p_delay(2);
+if (coordy(coord) = 1) {
+    p_telejump(^gwd_rope_upper_up);
+} else {
+    p_telejump(^gwd_rope_lower_up);
+}
