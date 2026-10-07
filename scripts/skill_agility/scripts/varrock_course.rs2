@@ -101,9 +101,23 @@ p_delay(0);
 // AND A LEAP IS NOT A WALK - nor can an exactmove change floor, which Al Kharid's zip line proved:
 // p_exactmove moves within the level the player is already on, so the telejump is what lands them
 // and the exactmove is the motion on the way. Varrock's edge drops three floors to the street.
+// ONE TELEPORT, NOT TWO. Player.exactMove already teleports you to the end before it sets the mask,
+// so a p_telejump straight after it is a second one. Four of this course's five leaps - both of the
+// first gaps, the third and the ledge - land on the floor they left, so for them the exactmove is
+// the whole move and the telejump fires on top of a slide already running. Only the edge drops a
+// floor, and an exactmove cannot change floor, so only the edge needs it.
+//
+// The start cycle is 0 for the same reason it is on Al Kharid's cable: the server has you at the
+// landing from the moment exactMove runs, and any delay before the client starts drawing you there
+// is a window the camera follows - forward, back, forward, and only then the animation.
 [proc,varrock_leap](int $xp, coord $end, int $direction)
-~agility_exactmove(human_spot_jump, 0, 2, coord, $end, 15, 50, $direction, false);
-p_telejump($end);
+if (coordy($end) ! coordy(coord)) {
+    anim(human_spot_jump, 0);
+    p_delay(2);
+    p_telejump($end);
+} else {
+    ~agility_exactmove(human_spot_jump, 0, 2, coord, $end, 0, 50, $direction, false);
+}
 ~agility_xp($xp);
 
 // ---------------------------------------------------------------- the lap

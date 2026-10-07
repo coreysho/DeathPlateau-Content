@@ -27,7 +27,13 @@ if (coordy($end) ! coordy(coord)) {
     p_telejump($end);
     return;
 }
-~agility_exactmove($anim, 0, 2, coord, $end, 15, 50, $direction, false);
+// AND IT STARTS AT CYCLE 0. Player.exactMove teleports you to the end BEFORE it sets the mask, so
+// the server has you on the far roof from the moment it runs, while the mask tells the client to
+// draw you at the START until start_cycle. That gap is a window where your real tile and your drawn
+// tile disagree, and the camera follows you through it: forward to the landing, back to the
+// obstacle, forward again. This waited 15 cycles - half a tick at 20ms a cycle. Al Kharid's cable
+// waited 30 and was reported as exactly that; 15 is the same fault, half the size.
+~agility_exactmove($anim, 0, 2, coord, $end, 0, 50, $direction, false);
 ~agility_xp($xp);
 // AND ITS OPPOSITE. The last obstacle of a course drops you back into the street, and playing
 // the climbing-UP animation at it reads as the player hauling themselves up thin air. Reported
