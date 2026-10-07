@@ -222,3 +222,37 @@ switch_seq($walk_seq) {
 if (loc_find($merge_pos, loc_type) = true) {
     return;
 }
+
+// WHICH WAY THE PLAYER IS ACTUALLY GOING.
+//
+// p_exactmove takes a facing, and every one of the five courses courseplan.ts set up passed
+// ^exact_north for all of it - so a player crossing west, or dropping south off a roof, slid along
+// facing north the whole way. Reported as the animations being wrong on Falador, Seers',
+// Pollnivneach, Rellekka and Ardougne alike, which is exactly the five.
+//
+// This is the travel vector instead, to the eight points the engine has constants for.
+[proc,agility_facing](coord $from, coord $to)(int)
+def_int $dx = calc(coordx($to) - coordx($from));
+def_int $dz = calc(coordz($to) - coordz($from));
+if ($dx = 0) {
+    if ($dz < 0) {
+        return(^exact_south);
+    }
+    return(^exact_north);
+}
+if ($dz = 0) {
+    if ($dx < 0) {
+        return(^exact_west);
+    }
+    return(^exact_east);
+}
+if ($dx > 0) {
+    if ($dz > 0) {
+        return(^exact_northeast);
+    }
+    return(^exact_southeast);
+}
+if ($dz > 0) {
+    return(^exact_northwest);
+}
+return(^exact_southwest);

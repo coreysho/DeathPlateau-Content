@@ -26,8 +26,10 @@ mes("You carefully cross the tightrope.");
 [oploc1,osrsloc_14901]
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
+// Hand holds are gripped and shimmied along, facing the wall - the same motion as the ledges below
+// and as the Yanille dungeon and the Agility Arena already use. A balance walk is for a rope.
 mes("You cross the hand holds.");
-~falador_move(^falador_xp_handholds, ^falador_land_handholds, human_walk_logbalance);
+~falador_move(^falador_xp_handholds, ^falador_land_handholds, human_walk_sidestep);
 ~falador_progress(3);
 
 [oploc1,osrsloc_14903]
@@ -69,35 +71,35 @@ mes("You jump across the gap.");
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb along the ledge.");
-~falador_move(^falador_xp_ledge1, ^falador_land_ledge1, human_spot_jump);
+~falador_move(^falador_xp_ledge1, ^falador_land_ledge1, human_walk_sidestep);
 ~falador_progress(9);
 
 [oploc1,osrsloc_14921]
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb along the ledge.");
-~falador_move(^falador_xp_ledge2, ^falador_land_ledge2, human_spot_jump);
+~falador_move(^falador_xp_ledge2, ^falador_land_ledge2, human_walk_sidestep);
 ~falador_progress(10);
 
 [oploc1,osrsloc_14922]
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb along the ledge.");
-~falador_move(^falador_xp_ledge3, ^falador_land_ledge3, human_spot_jump);
+~falador_move(^falador_xp_ledge3, ^falador_land_ledge3, human_walk_sidestep);
 ~falador_progress(11);
 
 [oploc1,osrsloc_14923]
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb along the ledge.");
-~falador_move(^falador_xp_ledge4, ^falador_land_ledge4, human_spot_jump);
+~falador_move(^falador_xp_ledge4, ^falador_land_ledge4, human_walk_sidestep);
 ~falador_progress(12);
 
 [oploc1,osrsloc_14924]
 if (~falador_blocked = true) { return; }
 p_arrivedelay;
 mes("You climb along the ledge.");
-~falador_move(^falador_xp_ledge5, ^falador_land_ledge5, human_spot_jump);
+~falador_move(^falador_xp_ledge5, ^falador_land_ledge5, human_walk_sidestep);
 ~falador_progress(13);
 
 [oploc1,osrsloc_14925]
@@ -117,8 +119,10 @@ return(false);
 // The exactmove is the motion you watch; the telejump is what actually lands you, because
 // p_exactmove moves within the level the player is already on - Al Kharid's zip line proved that
 // and Falador's edge drops three floors.
+// The facing is the way the player is GOING, not north. Every obstacle on this course used to
+// pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,falador_move](int $xp, coord $end, seq $anim)
-~agility_roof_move($xp, $end, $anim, ^exact_north);
+~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
 
 [proc,falador_progress](int $completed)
 if (calc(%falador_course_progress + 1) >= $completed) {

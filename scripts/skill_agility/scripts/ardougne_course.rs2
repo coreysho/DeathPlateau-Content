@@ -66,8 +66,10 @@ if (stat(agility) < ^ardougne_level) {
 }
 return(false);
 
+// The facing is the way the player is GOING, not north. Every obstacle on this course used to
+// pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,ardougne_move](int $xp, coord $end, seq $anim)
-~agility_roof_move($xp, $end, $anim, ^exact_north);
+~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
 
 // Old School stops you failing at 95, so this does too.
 [proc,ardougne_slip]
