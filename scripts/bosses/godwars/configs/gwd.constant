@@ -90,6 +90,11 @@
 ^gwd_rope_upper_down = 1_45_82_35_52
 ^gwd_rope_lower_down = 0_45_82_39_26
 
+// AND BACK UP THEM. The rope at the foot of each rock is climbable, and these are the tiles beside
+// the rock it hangs from - picked off the engine's own collision, not read off the map.
+^gwd_rope_upper_up = 2_45_82_32_52   // 2912,5300, beside the upper rock
+^gwd_rope_lower_up = 1_45_82_42_26   // 2922,5274, beside the lower rock
+
 // ---------------------------------------------------------------- the altars
 // "Can recharge prayer points every 10 minutes, which also gives a +1 Prayer bonus for every piece
 // of equipment affiliated to the correct deity", and "every altar has the option to teleport

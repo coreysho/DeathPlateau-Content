@@ -79,8 +79,10 @@ return(false);
 
 // The exactmove is the motion; the telejump is what lands you, because p_exactmove moves within
 // the level the player is already on and this course climbs from the ground to level 2.
+// The facing is the way the player is GOING, not north. Every obstacle on this course used to
+// pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,pollnivneach_move](int $xp, coord $end, seq $anim)
-~agility_roof_move($xp, $end, $anim, ^exact_north);
+~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
 
 [proc,pollnivneach_progress](int $completed)
 if (calc(%pollnivneach_course_progress + 1) >= $completed) {

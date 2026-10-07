@@ -180,11 +180,16 @@ ambient=15
 op1=Pray
 op2=Teleport
 
+// THE BOTTOM OF SARADOMIN'S TWO ROPES, one under each rock. Old School's own definition carries no
+// options at all, and ours carried none either, so climbing down either rope was a one-way trip -
+// reported from play as no way back up from the level 1 cavern or from the encampment below it.
+// It is the rope you came down; it gets a Climb-up.
 [osrsloc_26369]
 // OSRS loc 26369
 name=Rope
 model=osrsloc_26369
 active=yes
+op1=Climb-up
 
 // the rope you climb down into the dungeon on (lvl 2)
 [gwd_rope_down]

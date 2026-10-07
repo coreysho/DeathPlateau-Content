@@ -64,8 +64,10 @@ if (stat(agility) < ^rellekka_level) {
 }
 return(false);
 
+// The facing is the way the player is GOING, not north. Every obstacle on this course used to
+// pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,rellekka_move](int $xp, coord $end, seq $anim)
-~agility_roof_move($xp, $end, $anim, ^exact_north);
+~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
 
 [proc,rellekka_progress](int $completed)
 if (calc(%rellekka_course_progress + 1) >= $completed) {

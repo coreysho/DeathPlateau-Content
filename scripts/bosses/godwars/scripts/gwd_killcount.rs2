@@ -102,8 +102,9 @@ mes("The door opens, and shuts again behind you.");
 p_telejump($inside);
 
 // Peek, which only Commander Zilyana's door carries in the cache. It costs nothing and tells you
-// what you are walking into.
-[oploc2,gwd_door_saradomin]
+// what you are walking into. It is op3 on the loc, not op2 - written as oploc2 it never fired,
+// and the game said so: "No trigger for [oploc3,gwd_door_saradomin]".
+[oploc3,gwd_door_saradomin]
 ~mesbox("You peer through the gap in the door.|Commander Zilyana and her bodyguard are waiting on the other side.");
 
 // Re-reads the count rather than being handed it, so the number said is the number stored.
