@@ -79,3 +79,14 @@ protect=no
 // How far through the quiz the player is and how much of it they have got right.
 [macro_quiz_var]
 protect=no
+
+// How many of the wrong frogs this player has kissed.
+[macro_frog_var]
+protect=no
+
+// The cage's tumblers. transmit=yes because macro_pillory_open drives the door's multiloc and the
+// client has to be told, and it gives nothing away: whether your own cage is open is what you are
+// looking at.
+[macro_pillory_var]
+transmit=yes
+protect=no

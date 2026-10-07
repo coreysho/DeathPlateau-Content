@@ -1,0 +1,148 @@
+// KISS THE FROG, and the Land of the Frogs - the one random event room in this game that nobody
+// had already built.
+//
+// WHY IT HAD TO BE BUILT. Every other room was in the maps: Leo's cemetery, Damien's yard, Pete's
+// cell, Bob's island, the forester's clearing, the Mime's theatre and the Quiz Master's set were
+// all there and only needed scripts. This place is not, and cannot be imported - the rev 474 cache
+// holds XTEA keys for 732 of its 942 map squares, the random event band is among the ones it does
+// not, and a pass over all 565 regions it CAN read turns up no frog cave at all. Old School
+// deleted the place when the randoms were retired. So tools/genfrogcave.py builds it: a twenty by
+// twenty clearing walled in by the same two trees the Freaky Forester's clearing uses, in a map
+// square that was empty. It is the one room here that is mine rather than Jagex's.
+//
+// WHAT IT IS, per runescape.wiki: "When the player got teleported to the Land of the Frogs, they
+// had to speak to the Frog Herald, who told them how to solve this random event. The player then
+// had to speak to the frog with the crown and kiss them." Talk to any other and "they would tell
+// the player that they are the wrong one". Kiss the right one and "that frog will turn into a Frog
+// prince or a Frog princess, and the player will receive a Frog token", which "may be redeemed at
+// the Varrock clothes shop to get a frog mask, a royal frog costume, or an experience lamp".
+//
+// THE CROWN IS REAL AND IT IS THE WHOLE PUZZLE. All eight frogs are called "Frog" and examine as
+// "A frog"; what tells them apart is what is on their heads. npc_2469i2 is a crown, npc_2471 a
+// drum hat and npc_2472 the herald's star cap - rendered to check, because getting that backwards
+// would make the event unsolvable and nothing in the cache says which is which.
+//
+// THE FAILURE IS NOT AUTHENTIC AND IS MARKED AS SUCH. The wiki says that kissing enough wrong
+// frogs turned the PLAYER into a frog, and that the only way out was then to talk to the prince.
+// This engine has no way to make a player look like anything but a player - there is no
+// transmogrify - so five wrong frogs gets a tired herald and a trip home instead.
+
+[proc,macro_frog_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+%macro_frog_wrong = 0;
+queue(macro_frog_arrive, 0, 0);
+npc_del;
+
+[queue,macro_frog_arrive]
+mes("The ground gives way, and the world turns green.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_frog_landing);
+mes("You are in a clearing full of frogs. One of them is wearing a crown.");
+
+[proc,macro_frog_leave]
+%macro_frog_wrong = 0;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+[mapzoneexit,0_32_75]
+~macro_events_varps_reset;
+%macro_frog_wrong = 0;
+
+// ============================================================================ the frogs
+
+// "They had to speak to the Frog Herald, who told them how to solve this random event."
+[opnpc1,macro_frog_crier]
+if (%macro_event ! ^macro_frog) {
+    ~chatnpc("<p,neutral>Hop along, now.");
+    return;
+}
+~chatnpc("<p,happy>Welcome to the Land of the Frogs! One of us is royalty, you know.");
+~chatnpc("<p,happy>Find the one wearing the crown and give them a kiss. That's all there is to it.");
+if (%macro_frog_wrong > 0) {
+    ~chatnpc("<p,neutral>You've kissed <tostring(%macro_frog_wrong)> of the wrong ones so far. Do look at their heads.");
+}
+
+// Every ordinary frog in the clearing. They are all one npc type and all look alike - a hat and no
+// crown - so this is the branch most clicks land on.
+[opnpc1,macro_frog_noncombat]
+if (%macro_event ! ^macro_frog) {
+    ~chatnpc("<p,neutral>Ribbit.");
+    return;
+}
+~chatnpc("<p,sad>Wrong frog! Do I look like royalty to you?");
+%macro_frog_wrong = add(%macro_frog_wrong, 1);
+if (%macro_frog_wrong >= ^macro_frog_tries) {
+    ~chatnpc("<p,angry>That's quite enough of that.");
+    mes("The Frog Herald has seen enough and sends you on your way.");
+    ~macro_frog_leave;
+}
+
+// THE ONE WITH THE CROWN. Kissing is a choice, because it is not something to do by accident.
+[opnpc1,macro_frog_royal]
+if (%macro_event ! ^macro_frog) {
+    ~chatnpc("<p,neutral>Ribbit.");
+    return;
+}
+~chatnpc("<p,happy>Well hello! Yes, this is a real crown. No, I won't tell you how I got it.");
+def_int $choice = ~p_choice2("Kiss the frog.", 1, "...no thank you.", 2);
+if ($choice = 2) {
+    ~chatnpc("<p,sad>Suit yourself. I'll be here.");
+    return;
+}
+mes("You kiss the frog.");
+anim(emote_blow_kiss, 0);
+p_delay(2);
+spotanim_map(smokepuff, npc_coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+// A frog prince for a woman and a frog princess for a man, which is the way round the story goes.
+if (gender = 0) {
+    npc_changetype_keepall(macro_frog_princess, ^max_32bit_int);
+} else {
+    npc_changetype_keepall(macro_frog_prince, ^max_32bit_int);
+}
+// NO npc_delay HERE. This is [opnpc1] - a player script with an npc attached - and a delay on the
+// npc corrupts p_active_player for the send-home below, which the compiler says plainly and will
+// not build. The change of type is instant anyway.
+~macro_event_give_obj(macro_frog_token, 1);
+mes("The frog is a frog no longer. They press a token into your hand.");
+~macro_frog_leave;
+
+// ============================================================================ the token
+
+// "May be redeemed at the Varrock clothes shop to get a frog mask, a royal frog costume, or an
+// experience lamp." The shop is Thessalia's, and her script jumps here when you walk in holding
+// one - see areas/area_varrock/scripts/thessalia.rs2.
+[label,macro_frog_token_exchange]
+~chatnpc("<p,quiz>Goodness, is that a frog token? I can make you something with that.");
+def_int $choice = ~p_choice3("A frog mask.", 1, "A royal frog costume.", 2, "Something to help me learn.", 3);
+if (inv_total(inv, macro_frog_token) = 0) {
+    return;
+}
+if ($choice = 1) {
+    inv_del(inv, macro_frog_token, 1);
+    ~macro_event_give_obj(macro_frog_mask, 1);
+    ~chatnpc("<p,happy>There you are. Very fetching.");
+    return;
+}
+if ($choice = 2) {
+    inv_del(inv, macro_frog_token, 1);
+    // The costume is whichever of the two suits you, the same way round as the frog you kissed.
+    if (gender = 0) {
+        ~macro_event_give_obj(macro_prince_torso, 1);
+        ~macro_event_give_obj(macro_prince_legs, 1);
+    } else {
+        ~macro_event_give_obj(macro_princess_torso, 1);
+        ~macro_event_give_obj(macro_princess_legs, 1);
+    }
+    ~chatnpc("<p,happy>Fit for royalty. Do try not to get it muddy.");
+    return;
+}
+inv_del(inv, macro_frog_token, 1);
+~macro_event_give_obj(macro_genilamp, 1);
+~chatnpc("<p,happy>A lamp, then. Rub it and think hard about something.");

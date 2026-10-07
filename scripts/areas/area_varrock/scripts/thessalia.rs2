@@ -1,6 +1,12 @@
 // source: https://www.youtube.com/watch?v=VK_A2Vf9VE8
 
 [opnpc1,thessalia]
+// THE FROG TOKEN FIRST. runescape.wiki: a token from Kiss the frog "may be redeemed at the
+// Varrock clothes shop to get a frog mask, a royal frog costume, or an experience lamp", and this
+// is the Varrock clothes shop. The label is in "macro events"/scripts/general/macro_event_frog.rs2.
+if (inv_total(inv, macro_frog_token) > 0) {
+    @macro_frog_token_exchange;
+}
 if (%bunny_ears_unlocked = 0 & %scythe_unlocked = 0) { // player has not unlocked bunny_ears or scythe
     @thessalia_want_to_buy;
 } else if (%bunny_ears_unlocked = 1 & %scythe_unlocked = 1) { // player unlocked both

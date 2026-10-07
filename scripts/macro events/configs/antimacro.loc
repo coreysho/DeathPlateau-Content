@@ -751,3 +751,32 @@ model=loc_12726
 length=2
 hillskew=yes
 forceapproach=south
+
+// THE PILLORY CAGE, built out of the prison's own bars. Three sides of plain bars and a door, all
+// four anchored on one tile - which is what a one-tile cage is. The door is a multiloc over
+// macro_pillory_open because the cage stands in the middle of Varrock where anybody may be
+// walking past, and a loc_change would swing it open for every one of them.
+[macro_pillory_door]
+name=Pillory cage
+desc=A locked cage, in full view of everybody.
+model=prisonbarsdoor
+blockrange=no
+op1=Pick-lock
+multivar=macro_pillory_open
+multiloc=0,macro_pillory_door_shut
+multiloc=1,macro_pillory_door_open
+
+[macro_pillory_door_shut]
+name=Pillory cage
+desc=A locked cage, in full view of everybody.
+model=prisonbarsdoor
+blockrange=no
+op1=Pick-lock
+
+[macro_pillory_door_open]
+name=Pillory cage
+desc=The door is open. Walk out while nobody is looking.
+model=prisonbarsdoor
+blockrange=no
+blockwalk=no
+op1=Leave

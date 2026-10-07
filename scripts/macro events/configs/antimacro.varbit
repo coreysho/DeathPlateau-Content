@@ -146,6 +146,29 @@ basevar=macro_quiz_var
 startbit=3
 endbit=5
 
+// Wrong frogs kissed, 0 to 5.
+[macro_frog_wrong]
+basevar=macro_frog_var
+startbit=0
+endbit=2
+
+// How many tumblers this cage has (three to five) and how many have turned. The door's own state
+// is one bit, which is all the client needs for the multiloc.
+[macro_pillory_locks]
+basevar=macro_pillory_var
+startbit=0
+endbit=2
+
+[macro_pillory_done]
+basevar=macro_pillory_var
+startbit=3
+endbit=5
+
+[macro_pillory_open]
+basevar=macro_pillory_var
+startbit=6
+endbit=6
+
 [macro_digger_grave_1]
 basevar=macro_digger_var
 startbit=1

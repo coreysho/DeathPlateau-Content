@@ -1,0 +1,155 @@
+// THE PILLORY, which is the one random event that does NOT take you anywhere: the cages stood in
+// town, in public, which is the whole indignity of it.
+//
+// runescape.wiki/w/Pillory: "The pillory cages were situated in three RuneScape locations: east of
+// the general store in Varrock, the western part of Seers' Village, and slightly north of the bank
+// in Yanille." This build gets the Varrock one - a barred box on an open tile east of the general
+// store, with a guard beside it. The other two are four more lines in their own map squares
+// whenever they are wanted; the event only needs somewhere to put you.
+//
+// HOW YOU GET OUT: "players had to unlock the cage by clicking on the correct symbols", starting
+// with three locks, and "if a player missed, it reset and an additional symbol was added up to a
+// maximum of five symbols". So each lock shows you a symbol and you pick it out of four; get one
+// wrong and you start again with one more lock to pick, up to five.
+//
+// THE SYMBOLS ARE THE STRANGE BOX'S. Fifteen of them are in antimacro.obj - three colours by five
+// shapes - drawn for the other puzzle random in this tree and no use to anybody else. Nothing new
+// was needed.
+//
+// THE DOOR IS A MULTILOC over macro_pillory_open, the same trick the gravedigger's graves and the
+// drill demon's signposts use: the cage is in the middle of Varrock where anybody may be standing,
+// and a loc_change would swing it open for all of them.
+
+[proc,macro_pillory_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+%macro_pillory_locks = ^macro_pillory_locks_min;
+%macro_pillory_done = 0;
+%macro_pillory_open = 0;
+queue(macro_pillory_arrive, 0, 0);
+npc_del;
+
+[queue,macro_pillory_arrive]
+mes("A heavy hand lands on your shoulder.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_pillory_landing);
+mes("You are in a cage, in the middle of town, and people are looking.");
+
+[proc,macro_pillory_leave]
+%macro_pillory_locks = ^macro_pillory_locks_min;
+%macro_pillory_done = 0;
+%macro_pillory_open = 0;
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+// ============================================================================ the lock
+
+[oploc1,macro_pillory_door]
+if (%macro_event ! ^macro_pillory) {
+    mes("It isn't your cage.");
+    return;
+}
+// THE LOCK SHOWS YOU A SYMBOL and then asks for it back out of four. The one it wants is drawn
+// first and dropped into a random place, so the answer is never in the same slot twice.
+def_int $answer = random(^macro_pillory_symbols);
+def_int $b = ~macro_pillory_other($answer, -1);
+def_int $c = ~macro_pillory_other($answer, $b);
+def_int $d = ~macro_pillory_other2($answer, $b, $c);
+def_int $a = $answer;
+def_int $slot = random(4);
+if ($slot = 1) {
+    $a = $b;
+    $b = $answer;
+} else if ($slot = 2) {
+    $a = $c;
+    $c = $answer;
+} else if ($slot = 3) {
+    $a = $d;
+    $d = $answer;
+}
+def_namedobj $shown = enum(int, namedobj, macro_pillory_symbol, $answer);
+~objbox($shown, "Lock <tostring(add(%macro_pillory_done, 1))> of <tostring(%macro_pillory_locks)>. The tumbler is stamped with this.", 250, 0, 0);
+
+def_namedobj $picked = ~multiobj4("Which one was it?",
+    enum(int, namedobj, macro_pillory_symbol, $a), 0, 0, 250, "", 0, 0,
+    enum(int, namedobj, macro_pillory_symbol, $b), 0, 0, 250, "", 0, 0,
+    enum(int, namedobj, macro_pillory_symbol, $c), 0, 0, 250, "", 0, 0,
+    enum(int, namedobj, macro_pillory_symbol, $d), 0, 0, 250, "", 0, 0);
+if ($picked = null) {
+    return;
+}
+if ($picked ! $shown) {
+    // "If a player missed, it reset and an additional symbol was added up to a maximum of five."
+    %macro_pillory_done = 0;
+    if (%macro_pillory_locks < ^macro_pillory_locks_max) {
+        %macro_pillory_locks = add(%macro_pillory_locks, 1);
+    }
+    sound_synth(lever, 1, 0);
+    mes("The tumblers drop back. Now there are <tostring(%macro_pillory_locks)> of them.");
+    return;
+}
+%macro_pillory_done = add(%macro_pillory_done, 1);
+sound_synth(lever, 1, 0);
+if (%macro_pillory_done < %macro_pillory_locks) {
+    mes("One tumbler turns. <tostring(sub(%macro_pillory_locks, %macro_pillory_done))> to go.");
+    return;
+}
+%macro_pillory_open = 1;
+mes("The last tumbler turns and the door swings open.");
+
+// One of the fifteen that is neither of the two given. The lock showing two of the same symbol
+// would give the answer away, which is why this loops rather than rolling once.
+[proc,macro_pillory_other](int $not1, int $not2)(int)
+def_int $n = ^macro_pillory_symbols;
+def_int $pick = random($n);
+def_int $guard = 0;
+while (($pick = $not1 | $pick = $not2) & $guard < 32) {
+    $pick = random($n);
+    $guard = calc($guard + 1);
+}
+return($pick);
+
+[proc,macro_pillory_other2](int $not1, int $not2, int $not3)(int)
+def_int $n = ^macro_pillory_symbols;
+def_int $pick = random($n);
+def_int $guard = 0;
+while (($pick = $not1 | $pick = $not2 | $pick = $not3) & $guard < 32) {
+    $pick = random($n);
+    $guard = calc($guard + 1);
+}
+return($pick);
+
+// The open half of the multiloc. Walking out is what ends it - the guard is standing right there
+// and has a word with you on the way past.
+[oploc1,macro_pillory_door_open]
+mes("You step out of the cage.");
+
+// ============================================================================ the guard
+
+[opnpc1,macro_pillory_guard]
+if (%macro_event ! ^macro_pillory) {
+    ~chatnpc("<p,neutral>Move along.");
+    return;
+}
+if (%macro_pillory_open = 0) {
+    ~chatnpc("<p,angry>Caught you. You'll stay in there until you can work the lock.");
+    def_int $choice = ~p_choice2("I'm sorry. Let me out.", 1, "I'll pick it myself.", 2);
+    if ($choice = 2) {
+        ~chatnpc("<p,neutral>Go on then. I've all day.");
+        return;
+    }
+    // "The player must apologise to the guard to leave" - the wiki's other way out, and it costs
+    // you the gift.
+    ~chatnpc("<p,neutral>...fine. Out you come. Don't let me see you at it again.");
+    ~macro_pillory_leave;
+    return;
+}
+~chatnpc("<p,happy>Picked it, did you? I'd better not ask where you learned that.");
+~chatnpc("<p,neutral>Here - for your trouble, and because the paperwork isn't worth it.");
+~macro_event_give_reward;
+~macro_pillory_leave;

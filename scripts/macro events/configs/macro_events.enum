@@ -25,6 +25,8 @@ val=16,prisonpete_pete
 val=17,macro_evil_bob_outside
 val=18,macro_mime
 val=19,macro_magneson
+val=20,macro_frog_crier
+val=21,macro_pillory_guard
 
 [general_macro_events_free]
 inputtype=int
@@ -49,6 +51,8 @@ val=16,prisonpete_pete
 val=17,macro_evil_bob_outside
 val=18,macro_mime
 val=19,macro_magneson
+val=20,macro_frog_crier
+val=21,macro_pillory_guard
 
 // WHICH EVENTS A WORLD ROLLS, as a list rather than a count. ~macro_event_set_random used to roll
 // 1..enum_getoutputcount over the tables above, which quietly required the ids to run 1..N with no
@@ -78,6 +82,8 @@ val=15,16
 val=16,17
 val=17,18
 val=18,19
+val=19,20
+val=20,21
 
 [general_macro_events_free_pick]
 inputtype=int
@@ -100,6 +106,8 @@ val=13,16
 val=14,17
 val=15,18
 val=16,19
+val=17,20
+val=18,21
 
 // WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
 // the question is "do you know what that is" rather than "can you tell two kinds of ore apart at

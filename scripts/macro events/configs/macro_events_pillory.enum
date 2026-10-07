@@ -1,0 +1,22 @@
+// THE FIFTEEN SYMBOLS ON THE CAGE'S TUMBLERS - three colours by five shapes. They were drawn for
+// the strange box, the other puzzle random in this tree, and are no use to anything else; a lock
+// stamped with a shape is exactly what they are for.
+[macro_pillory_symbol]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,macro_cube_redtriangle
+val=1,macro_cube_bluetriangle
+val=2,macro_cube_yellowtriangle
+val=3,macro_cube_redsquare
+val=4,macro_cube_bluesquare
+val=5,macro_cube_yellowsquare
+val=6,macro_cube_redcircle
+val=7,macro_cube_bluecircle
+val=8,macro_cube_yellowcircle
+val=9,macro_cube_redstar
+val=10,macro_cube_bluestar
+val=11,macro_cube_yellowstar
+val=12,macro_cube_redhalfmoon
+val=13,macro_cube_bluehalfmoon
+val=14,macro_cube_yellowhalfmoon

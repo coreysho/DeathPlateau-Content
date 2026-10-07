@@ -61,6 +61,8 @@ switch_int ($event) {
     case ^macro_evil_bob : ~macro_evil_bob_spawn;
     case ^macro_mime : ~macro_mime_spawn;
     case ^macro_quizmaster : ~macro_quiz_spawn;
+    case ^macro_frog : ~macro_frog_spawn;
+    case ^macro_pillory : ~macro_pillory_spawn;
 }
 
 // this proc is used for random events teleing to follow the player

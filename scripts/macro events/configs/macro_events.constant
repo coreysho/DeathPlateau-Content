@@ -76,6 +76,25 @@
 // The contestant's podium. His is the other one, four tiles north.
 ^macro_quiz_landing = 1_30_74_32_28
 
+// KISS THE FROG. The Land of the Frogs is map square 32_75, which tools/genfrogcave.py builds -
+// the only random event room in this game that was not already in the maps. See
+// macro_event_frog.rs2.
+^macro_frog = 20
+// Five wrong frogs and the herald gives up on you.
+^macro_frog_tries = 5
+// Just inside the clearing, in front of the Frog Herald.
+^macro_frog_landing = 0_32_75_31_26
+
+// THE PILLORY, the one random event that happens in public. The cage is on an open tile east of
+// the Varrock general store, which is where runescape.wiki says one of the three stood. See
+// macro_event_pillory.rs2.
+^macro_pillory = 21
+^macro_pillory_locks_min = 3
+^macro_pillory_locks_max = 5
+^macro_pillory_symbols = 15
+// Inside the cage. There is nowhere else to be.
+^macro_pillory_landing = 0_50_53_28_21
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0

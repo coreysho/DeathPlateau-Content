@@ -1984,6 +1984,8 @@ vislevel=hide
 op1=Talk-to
 alwaysontop=yes
 head1=npc_2469_head
+wanderrange=6
+maxrange=8
 
 [macro_frog_sulking]
 name=Frog
@@ -1998,6 +2000,8 @@ ambient=20
 vislevel=hide
 op1=Talk-to
 head1=npc_2469_head
+wanderrange=6
+maxrange=8
 
 [macro_frog_noncombat]
 name=Frog
@@ -2012,6 +2016,8 @@ vislevel=hide
 ambient=75
 op1=Talk-to
 head1=npc_2471_head
+wanderrange=6
+maxrange=8
 
 [macro_frog_crier]
 name=Frog
@@ -2735,6 +2741,10 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 alwaysontop=yes
 head1=npc_sir_kay_head
+op1=Talk-to
+// He is on duty at a cage, not out for a walk.
+wanderrange=0
+maxrange=2
 
 [macro_sandwich_lady_npc]
 name=Sandwich lady
