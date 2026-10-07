@@ -1,0 +1,42 @@
+// WHAT THE LEVER SHOWS. oldschool.runescape.wiki/w/Prison_Pete: "Players must pull a lever on the
+// wall, which displays an image of a balloon animal", and then find the one that matches among the
+// eighteen in the cell. The four are told apart by their shape and nothing else - all four npcs are
+// called "Balloon Animal" and examine as "It looks like an animal" - so the lever has to show the
+// shape, not name it. if_setmodel puts the balloon's own model in the panel, which is the same
+// model standing in the room.
+//
+// Laid out like objbox1 - a model, a line and a pause button - with the model slot made big enough
+// to read a balloon animal in.
+
+[com_0]
+type=model
+x=30
+y=16
+width=72
+height=76
+zoom=760
+xan=100
+yan=0
+
+[com_1]
+type=text
+x=120
+y=26
+width=340
+height=17
+center=yes
+font=q8_full
+text=Line1
+
+[com_2]
+type=text
+x=120
+y=74
+buttontype=pause
+width=340
+height=17
+center=yes
+font=q8_full
+text=Click here to continue
+colour=0xFFFF00
+overcolour=0x00C000

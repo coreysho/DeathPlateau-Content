@@ -111,6 +111,18 @@ basevar=macro_drilldemon_var
 startbit=3
 endbit=6
 
+// 0 for "he has not asked yet", otherwise the number of tail feathers, 1 to 4.
+[macro_forester_wants]
+basevar=macro_forester_var
+startbit=0
+endbit=2
+
+// Which of the four balloon animals the lever is showing, 1 to 4, or 0 for "pull it and see".
+[macro_pete_wants]
+basevar=macro_pete_var
+startbit=0
+endbit=2
+
 [macro_digger_grave_1]
 basevar=macro_digger_var
 startbit=1

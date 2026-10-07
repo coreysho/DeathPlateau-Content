@@ -1,0 +1,44 @@
+// WHAT DR JEKYLL WANTS, worst herb to best.
+//
+// runescape.wiki/w/Dr_Jekyll: he "would urgently ask players for a cleaned herb for use in making a
+// potion", and "requested the highest level clean herb that the player had" - so the order of this
+// table is the whole of the asking. It is the order scripts/skill_herblore's own identify.rs2 lists
+// them in, which is the order the Herblore level requirements go in; snapdragon is not in it
+// because this cache has no snapdragon.
+[macro_jekyll_herb]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,guam_leaf
+val=1,marentill
+val=2,tarromin
+val=3,harralander
+val=4,ranarr_weed
+val=5,irit_leaf
+val=6,avantoe
+val=7,kwuarm
+val=8,cadantine
+val=9,lantadyme
+val=10,dwarf_weed
+val=11,torstol
+
+// AND WHAT HE MAKES OUT OF IT. The wiki says only that "he would provide a potion in return" and
+// never which, so this is the potion that herb actually makes in Herblore - he asks for a herb to
+// make a potion with, and hands back the potion. Two doses, which is what he gives somebody with no
+// herb at all, so a player is never worse off for having helped.
+[macro_jekyll_potion]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,2dose1attack
+val=1,2doseantipoison
+val=2,2dose1strength
+val=3,2dosestatrestore
+val=4,2doseprayerrestore
+val=5,2dose2attack
+val=6,2dosefisherspotion
+val=7,2dose2strength
+val=8,2dose2defense
+val=9,2dose1magic
+val=10,2doserangerspotion
+val=11,2dosepotionofzamorak

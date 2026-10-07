@@ -1,0 +1,115 @@
+// THE FREAKY FORESTER, and a clearing that was finished before any of this: map square 40_74 is a
+// ring of trees with one way out, thirteen pheasants wandering in it, the forester standing in the
+// middle and loc_8972 - a Portal, "A portal back to the real world..." - in the east wall.
+//
+// WHAT IT IS, per runescape.wiki/w/Freaky_Forester: the player is taken to "a small clearing in a
+// remote forest", told to hunt "a pheasant with a specific number of tail feathers", and on
+// handing over the right bird "could leave the area via a portal nearby" with a random event gift.
+// The wrong bird and "players would be teleported to a different area and would not receive a
+// reward".
+//
+// TWO BIRDS, NOT FOUR. The cache has four pheasants - one, two, three and four tails - but only two
+// raw pheasants, raw_macro_pheasant_good and raw_macro_pheasant_bad, which examine and look exactly
+// alike. So which bird you killed is decided when it dies, not when you hand it over: the death
+// script reads the killer's own %macro_forester_wants. That is also what makes it work on a clearing
+// full of pheasants that everybody shares - the birds are static npcs, but what drops off one is
+// the killer's business.
+//
+// ONE HIT KILLS. The wiki says combat here "always dealt exactly 50 hit points (one-hit kill) with
+// no experience gained". The hitpoints=1 below gets the one hit; the splat shows the damage you
+// actually did rather than a flat 50, which the engine has no way to force.
+
+[proc,macro_forester_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+%macro_forester_wants = calc(random(^macro_forester_tails) + 1);
+queue(macro_forester_arrive, 0, 0);
+npc_del;
+
+[queue,macro_forester_arrive]
+mes("Something drags you off into the trees.");
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(^macro_forester_landing);
+
+[proc,macro_forester_leave]
+%macro_forester_wants = 0;
+inv_del(inv, raw_macro_pheasant_good, 28);
+inv_del(inv, raw_macro_pheasant_bad, 28);
+%macro_event = ^no_macro_event;
+p_delay(1);
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe(%macro_event_target_coord);
+
+// Leaving the clearing by any route lets go of %macro_event, without which no further random event
+// could ever spawn for this player.
+[mapzoneexit,0_40_74]
+~macro_events_varps_reset;
+%macro_forester_wants = 0;
+
+// The way out, and it always works. The wiki has it as how you leave once he is fed; refusing to
+// open it for somebody who has given up would leave them walled into a clearing with no way home.
+[oploc1,loc_8972]
+if (%macro_event ! ^macro_forester) {
+    mes("The portal fades as you reach for it.");
+    return;
+}
+mes("You step through the portal.");
+~macro_forester_leave;
+
+// ============================================================================ the birds
+
+// Four triggers rather than one on a category, because which bird it was IS the answer and the
+// trigger is the only place that knows it without a second table.
+[ai_queue3,macro_pheasant_onetail] @macro_forester_pheasant_dies(1);
+[ai_queue3,macro_pheasant_twotail] @macro_forester_pheasant_dies(2);
+[ai_queue3,macro_pheasant_threetail] @macro_forester_pheasant_dies(3);
+[ai_queue3,macro_pheasant_fourtail] @macro_forester_pheasant_dies(4);
+
+[label,macro_forester_pheasant_dies](int $tails)
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+// npc_findhero has made the killer the active player, so this is their order and nobody else's.
+if (%macro_forester_wants = $tails) {
+    obj_add(npc_coord, raw_macro_pheasant_good, 1, ^lootdrop_duration);
+    return;
+}
+obj_add(npc_coord, raw_macro_pheasant_bad, 1, ^lootdrop_duration);
+
+// ============================================================================ the forester
+
+[opnpc1,macro_forester_m]
+if (%macro_event ! ^macro_forester) {
+    ~chatnpc("<p,neutral>Lovely day for it. Mind the birds.");
+    return;
+}
+if (inv_total(inv, raw_macro_pheasant_good) > 0) {
+    ~chatnpc("<p,happy>That's the one! Look at the tail on it. Lovely.");
+    inv_del(inv, raw_macro_pheasant_good, 1);
+    ~macro_event_give_reward;
+    ~chatnpc("<p,happy>Off you go - the portal's over there.");
+    return;
+}
+if (inv_total(inv, raw_macro_pheasant_bad) > 0) {
+    ~chatnpc("<p,angry>That's not the one I asked for! Can you not count?");
+    inv_del(inv, raw_macro_pheasant_bad, 28);
+    // The wiki's own failure: a different place, and nothing to show for it.
+    %macro_forester_wants = 0;
+    %macro_event = ^no_macro_event;
+    queue(macro_event_fail_teleport, 2, 0);
+    return;
+}
+~chatnpc("<p,quiz>I'm after a pheasant with <~macro_forester_tailword(%macro_forester_wants)>. Count the tail feathers, that's the trick.");
+
+[proc,macro_forester_tailword](int $tails)(string)
+switch_int ($tails) {
+    case 1 : return("one tail feather");
+    case 2 : return("two tail feathers");
+    case 3 : return("three tail feathers");
+    case 4 : return("four tail feathers");
+}
+return("a tail feather or two");

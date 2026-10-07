@@ -19,6 +19,10 @@ val=10,macro_doctor
 val=11,macro_sandwich_lady_npc
 val=12,macro_gravedigger
 val=13,macro_drilldemon
+val=14,macro_jekyll
+val=15,macro_forester_m
+val=16,prisonpete_pete
+val=17,macro_evil_bob_outside
 
 [general_macro_events_free]
 inputtype=int
@@ -37,6 +41,10 @@ val=10,macro_doctor
 val=11,macro_sandwich_lady_npc
 val=12,macro_gravedigger
 val=13,macro_drilldemon
+val=14,macro_jekyll
+val=15,macro_forester_m
+val=16,prisonpete_pete
+val=17,macro_evil_bob_outside
 
 // WHICH EVENTS A WORLD ROLLS, as a list rather than a count. ~macro_event_set_random used to roll
 // 1..enum_getoutputcount over the tables above, which quietly required the ids to run 1..N with no
@@ -60,6 +68,10 @@ val=9,10
 val=10,11
 val=11,12
 val=12,13
+val=13,14
+val=14,15
+val=15,16
+val=16,17
 
 [general_macro_events_free_pick]
 inputtype=int
@@ -76,6 +88,10 @@ val=7,10
 val=8,11
 val=9,12
 val=10,13
+val=11,14
+val=12,15
+val=13,16
+val=14,17
 
 // WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
 // the question is "do you know what that is" rather than "can you tell two kinds of ore apart at
@@ -125,6 +141,17 @@ default=null
 val=0,macro_niles
 val=1,macro_miles
 val=2,macro_giles
+
+[macro_event_hyde_levels]
+inputtype=int
+outputtype=npc
+default=null
+val=1,macro_hyde_1
+val=2,macro_hyde_2
+val=3,macro_hyde_3
+val=4,macro_hyde_4
+val=5,macro_hyde_5
+val=6,macro_hyde_6
 
 [macro_event_evil_chicken_levels]
 inputtype=int

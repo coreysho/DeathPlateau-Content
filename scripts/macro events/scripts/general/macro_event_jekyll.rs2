@@ -1,0 +1,131 @@
+// DR JEKYLL, who needs no room and no puzzle - only the one thing nothing else in this tree does,
+// which is to stop being himself if you ignore him.
+//
+// WHAT HE DOES, per runescape.wiki/w/Dr_Jekyll: he "would urgently ask players for a cleaned herb
+// for use in making a potion", and "requested the highest level clean herb that the player had".
+// Hand it over and "he would provide a potion in return"; players who refused or had none "still
+// received a strength potion (2) anyway", so there is no way to come out of this worse off.
+//
+// IGNORE HIM AND HE TURNS. "If not spoken to at all, Dr Jekyll would turn into Mr Hyde and attack
+// the player with melee", and Hyde "would drop a potion or an empty vial" when killed. Six Mr Hydes
+// have been sitting in antimacro.npc with the same six vislevels the zombie and the Evil Chicken
+// use - 14, 29, 49, 79, 120, 159 - and no stats behind them; they have the zombie's ladder now,
+// because those vislevels are what that ladder produces.
+//
+// npc_changetype_keepall is how the turn happens, the same command the strange plant uses to go
+// from a seedling to something that bites.
+
+[proc,macro_jekyll_spawn]
+npc_say("Ah - you there! Please, I haven't much time.");
+%npc_macro_event_target = uid;
+npc_setmode(playerfollow);
+
+[ai_timer,macro_jekyll]
+if (~macro_event_lost = true) {
+    npc_queue(5, 0, 0);
+    return;
+}
+if (finduid(%npc_macro_event_target) = false) {
+    return;
+}
+if (%npc_int = 0) {
+    npc_say("I need a herb, quickly, before it's too late!");
+} else if (%npc_int = 1) {
+    npc_say("Please... I can feel it coming on...");
+} else if (%npc_int = 2) {
+    npc_say("No... not... AAARGH!");
+} else if (%npc_int = 3) {
+    @macro_jekyll_turn;
+    return;
+}
+%npc_int = add(%npc_int, 1);
+
+[ai_queue5,macro_jekyll] // lost the player
+~macro_event_disappear;
+
+[ai_queue6,macro_jekyll] // done, now go
+npc_anim(emote_bow, 20);
+npc_delay(2);
+~macro_event_disappear;
+
+// THE TURN. Which Hyde you get is the bracket your combat level falls in, the same lookup every
+// other scaling random here uses; keeping the uid means the fight starts with the npc that was
+// already standing beside you rather than one appearing out of nowhere.
+[label,macro_jekyll_turn]
+npc_say("I can't hold him back any longer!");
+spotanim_map(smokepuff, npc_coord, 124, 0);
+%macro_event = ^no_macro_event;
+npc_changetype_keepall(~macro_event_npc_hyde, ^max_32bit_int);
+npc_delay(1);
+npc_settimer(20);
+if (finduid(%npc_macro_event_target) = true) {
+    // interrupt the player if they are in combat, the same line every hostile random sets
+    %aggressive_npc = npc_uid;
+    npc_setmode(opplayer2);
+}
+
+[proc,macro_event_npc_hyde]()(npc)
+return(enum(int, npc, macro_event_hyde_levels, ~macro_event_combat_level));
+
+[ai_timer,_macro_event_hyde]
+if (~macro_event_lost_hostile = true) {
+    npc_del;
+}
+
+// "If killed, he would drop a potion or an empty vial." The potion is one off the table he was
+// trying to make, which is the only potion list this event has.
+[ai_queue3,_macro_event_hyde]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+if (random(3) = 0) {
+    obj_add(npc_coord, vial_empty, 1, ^lootdrop_duration);
+    return;
+}
+def_int $pick = random(enum_getoutputcount(macro_jekyll_potion));
+obj_add(npc_coord, enum(int, namedobj, macro_jekyll_potion, $pick), 1, ^lootdrop_duration);
+
+// ============================================================================ talking to him
+
+[opnpc1,macro_jekyll]
+if (uid ! %npc_macro_event_target) {
+    if (.finduid(%npc_macro_event_target) = true) {
+        ~chatnpc("<p,sad>Not you - <.displayname>. Please, hurry.");
+        return;
+    }
+    ~chatnpc("<p,sad>I'm beyond help now. Leave me.");
+    return;
+}
+if (%npc_int = ^jekyll_done) {
+    ~chatnpc("<p,happy>Thank you again. I feel much steadier.");
+    return;
+}
+%npc_int = ^jekyll_done;
+%macro_event = ^no_macro_event;
+npc_settimer(0);
+npc_queue(6, 0, 2);
+
+def_int $best = ~macro_jekyll_best_herb;
+if ($best < 0) {
+    ~chatnpc("<p,sad>No herbs at all? Then I am lost... but take this, you'll need it more than I will.");
+    ~macro_event_give_obj(2dose1strength, 1);
+    return;
+}
+def_namedobj $herb = enum(int, namedobj, macro_jekyll_herb, $best);
+~chatnpc("<p,quiz>A <lowercase(oc_name($herb))>! That will do - may I?");
+inv_del(inv, $herb, 1);
+~chatnpc("<p,happy>Bless you. Here, I made two doses - the second is yours.");
+~macro_event_give_obj(enum(int, namedobj, macro_jekyll_potion, $best), 1);
+
+// THE HIGHEST ONE YOU ARE CARRYING, counted down from torstol. -1 for none, which is the branch
+// that still pays - he gives a strength potion to somebody who could not help him.
+[proc,macro_jekyll_best_herb]()(int)
+def_int $i = calc(enum_getoutputcount(macro_jekyll_herb) - 1);
+while ($i >= 0) {
+    if (inv_total(inv, enum(int, namedobj, macro_jekyll_herb, $i)) > 0) {
+        return($i);
+    }
+    $i = calc($i - 1);
+}
+return(-1);

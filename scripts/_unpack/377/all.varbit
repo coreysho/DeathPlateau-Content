@@ -7608,7 +7608,13 @@ basevar=xplamp
 startbit=24
 endbit=26
 
-[varbit_1547]
+// HOW MANY PRISON KEYS THE PLAYER HAS, 0 to 3. The three locs across the west wall of Prison
+// Pete's cell - prisonpete_door_1, _2 and _3 - are multilocs over this, with lists three barriers
+// long, then two, then one: every key takes one Energy Barrier away and three open the wall. That
+// is the cache's own wiring and the reason the bits and the base below are left exactly as they
+// came through the unpack; only the name is new. It shares swansong_temp with two Swan Song
+// varbits on bits 0-4, which this does not touch.
+[macro_pete_keys]
 basevar=swansong_temp
 startbit=5
 endbit=7

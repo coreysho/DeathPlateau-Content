@@ -1,0 +1,13 @@
+// THE FOUR BALLOON ANIMALS, as raw model ids for if_setmodel - the only command that can put a
+// shape on an interface without an obj behind it, and these four have no obj. They are npc_3119 to
+// npc_3122, which are model1 of prisonpete_balloon1 to _4, so the picture on the lever is the model
+// standing in the room. tools/sim/randomevents.ts checks the four ids still name those four models,
+// because a renumbered model.pack would otherwise put a cabbage on the wall.
+[macro_pete_balloon_model]
+inputtype=int
+outputtype=int
+default=0
+val=1,10734
+val=2,10735
+val=3,10736
+val=4,10737

@@ -30,6 +30,34 @@
 // square 49_75; see macro_event_drilldemon.rs2.
 ^macro_drilldemon = 13
 
+// DR JEKYLL, who needs no room at all: he walks up to you, and if you walk away from him he stops
+// being Dr Jekyll. See macro_event_jekyll.rs2.
+^macro_jekyll = 14
+^jekyll_done = -1
+
+// THE FREAKY FORESTER. His clearing, his thirteen pheasants and his portal home are all built and
+// placed in map square 40_74; see macro_event_forester.rs2.
+^macro_forester = 15
+^macro_forester_tails = 4
+// Beside him in the middle of the clearing.
+^macro_forester_landing = 0_40_74_40_40
+
+// PRISON PETE. His cell, his lever, his eighteen balloons and the three barriers that are already
+// wired to the key count are all built in map square 32_69; see macro_event_prisonpete.rs2.
+^macro_prisonpete = 16
+^macro_pete_animals = 4
+^macro_pete_keys_needed = 3
+// Beside Pete, in front of the barriers.
+^macro_prisonpete_landing = 0_32_69_40_13
+
+// EVIL BOB. His island - eight fishing spots, two uncooking pots, a portal and two servants - is
+// built in map square 39_74; see macro_event_evil_bob.rs2.
+^macro_evil_bob = 17
+// %npc_int on the island Bob once he has eaten and gone to sleep, which is when the portal opens.
+^evil_bob_asleep = -1
+// On the sand in front of him.
+^macro_evil_bob_landing = 0_39_74_25_42
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0

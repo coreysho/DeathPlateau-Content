@@ -1448,9 +1448,13 @@ scope=perm
 
 [varp_637]
 
+// Shared with Prison Pete: bits 5-7 are macro_pete_keys, which the three barriers in his cell are
+// multilocs over. protect=no because the cell is set up from ~macro_event_general_spawn, which is
+// reached from [timer,general_macro_events] and has no protected access.
 [swansong_temp]
 transmit=yes
 scope=perm
+protect=no
 
 [varp_639]
 

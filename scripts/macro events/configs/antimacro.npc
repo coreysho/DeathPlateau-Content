@@ -1687,6 +1687,20 @@ op2=Attack
 resizeh=30
 resizev=30
 vislevel=3
+// One hit and it is dinner, which is what the clearing is for - see macro_event_forester.rs2.
+minimap=no
+wanderrange=5
+maxrange=8
+hitpoints=1
+attack=1
+strength=1
+defence=1
+param=damagetype,^stab_style
+param=attack_anim,pheasent_ready
+param=defend_anim,pheasent_ready
+param=death_anim,pheasent_ready
+param=combat_xp_multiplier,0
+respawnrate=25
 
 [macro_pheasant_twotail]
 name=Pheasant
@@ -1700,6 +1714,20 @@ alwaysontop=yes
 resizeh=30
 resizev=30
 vislevel=3
+// One hit and it is dinner, which is what the clearing is for - see macro_event_forester.rs2.
+minimap=no
+wanderrange=5
+maxrange=8
+hitpoints=1
+attack=1
+strength=1
+defence=1
+param=damagetype,^stab_style
+param=attack_anim,pheasent_ready
+param=defend_anim,pheasent_ready
+param=death_anim,pheasent_ready
+param=combat_xp_multiplier,0
+respawnrate=25
 
 [macro_pheasant_threetail]
 name=Pheasant
@@ -1713,6 +1741,20 @@ alwaysontop=yes
 resizeh=30
 resizev=30
 vislevel=3
+// One hit and it is dinner, which is what the clearing is for - see macro_event_forester.rs2.
+minimap=no
+wanderrange=5
+maxrange=8
+hitpoints=1
+attack=1
+strength=1
+defence=1
+param=damagetype,^stab_style
+param=attack_anim,pheasent_ready
+param=defend_anim,pheasent_ready
+param=death_anim,pheasent_ready
+param=combat_xp_multiplier,0
+respawnrate=25
 
 [macro_pheasant_fourtail]
 name=Pheasant
@@ -1728,6 +1770,20 @@ alwaysontop=yes
 resizeh=30
 resizev=30
 vislevel=3
+// One hit and it is dinner, which is what the clearing is for - see macro_event_forester.rs2.
+minimap=no
+wanderrange=5
+maxrange=8
+hitpoints=1
+attack=1
+strength=1
+defence=1
+param=damagetype,^stab_style
+param=attack_anim,pheasent_ready
+param=defend_anim,pheasent_ready
+param=death_anim,pheasent_ready
+param=combat_xp_multiplier,0
+respawnrate=25
 
 //TODO: Evil chicken stats and drops
 // THE EVIL CHICKEN'S SIX RECORDS WERE STUBS - a model, two animations and a level, and nothing to
@@ -2083,6 +2139,7 @@ resizev=70
 walkanim=cat_walk
 readyanim=cat_ready
 head1=npc_2478_head
+timer=20
 
 [macro_evil_bob_island]
 name=Evil Bob
@@ -2350,6 +2407,7 @@ op1=Talk-to
 head1=npc_drunk1_head
 head2=npc_doctor_orbon_head
 head3=idk_man_jaw_goatee_head
+timer=20
 
 //todo: stats -- same as other randoms? 
 [macro_hyde_1]
@@ -2376,6 +2434,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=14
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=20
+attack=9
+strength=9
+defence=9
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_hyde_2]
 name=Mr Hyde
@@ -2401,6 +2473,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=29
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=40
+attack=22
+strength=22
+defence=22
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_hyde_3]
 name=Mr Hyde
@@ -2426,6 +2512,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=49
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=60
+attack=38
+strength=38
+defence=38
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_hyde_4]
 name=Mr Hyde
@@ -2451,6 +2551,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=79
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=85
+attack=65
+strength=65
+defence=65
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_hyde_5]
 name=Mr Hyde
@@ -2476,6 +2590,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=120
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=120
+attack=100
+strength=100
+defence=100
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_hyde_6]
 name=Mr Hyde
@@ -2501,6 +2629,20 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=159
+minimap=no
+wanderrange=3
+maxrange=5
+hitpoints=170
+attack=130
+strength=130
+defence=130
+category=macro_event_hyde
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmedblock
+param=death_anim,human_death
+param=combat_xp_multiplier,25
+timer=20
 
 [macro_doctor]
 name=Dr Ford

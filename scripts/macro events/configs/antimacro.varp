@@ -61,3 +61,13 @@ protect=no
 // needs to draw the yard. protect=no for the same reason as the gravedigger's above.
 [macro_drilldemon_var]
 protect=no
+
+// Which pheasant the Freaky Forester asked this player for. Not transmitted: the birds all look
+// alike on the client and which one is yours is decided when one dies.
+[macro_forester_var]
+protect=no
+
+// Which balloon the lever in Prison Pete's cell is showing. The key count is not here - it is
+// macro_pete_keys on swansong_temp, where the cache put it, because the doors are built on it.
+[macro_pete_var]
+protect=no

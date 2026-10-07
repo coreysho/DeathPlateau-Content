@@ -71230,7 +71230,7 @@ bgsound=fire_crackling_small,3
 [prisonpete_door_1]
 active=yes
 length=2
-multivar=varbit_1547
+multivar=macro_pete_keys
 multiloc=0,prisonpete_energybarrier
 multiloc=1,prisonpete_energybarrier
 multiloc=2,prisonpete_energybarrier
@@ -71238,14 +71238,14 @@ multiloc=2,prisonpete_energybarrier
 [prisonpete_door_2]
 active=yes
 length=2
-multivar=varbit_1547
+multivar=macro_pete_keys
 multiloc=0,prisonpete_energybarrier
 multiloc=1,prisonpete_energybarrier
 
 [prisonpete_door_3]
 active=yes
 length=2
-multivar=varbit_1547
+multivar=macro_pete_keys
 multiloc=0,prisonpete_energybarrier
 
 [draynor_fireplace]
