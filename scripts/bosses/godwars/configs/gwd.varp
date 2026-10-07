@@ -28,14 +28,17 @@ protect=no
 
 // The two ropes into Saradomin's Encampment, tied once and left tied - "2 ropes for first-time
 // entry only". protect=no for the same reason the killcounts carry it.
+//
+// NOT type=boolean. A boolean varp reads -1 on a player who has never set it, not false, so the
+// script's `if ($tied = false)` was never true and the tie-a-rope block was skipped entirely:
+// both rocks let anyone down without carrying a rope, which is what was reported from play.
+// gwd_rope_tied below is a plain int, reads 0, and its rope check has always worked.
 [gwd_rope_upper]
 scope=perm
-type=boolean
 protect=no
 
 [gwd_rope_lower]
 scope=perm
-type=boolean
 protect=no
 
 // world_minute of the last prayer recharged at a God Wars altar - one clock for all four, as the

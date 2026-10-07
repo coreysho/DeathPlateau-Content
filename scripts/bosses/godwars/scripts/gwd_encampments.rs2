@@ -27,27 +27,46 @@ if (inv_total(worn, mith_grapple) < 1 & inv_total(inv, mith_grapple) < 1) {
     return;
 }
 mes("You fire the grapple at the pillar across the chasm.");
-anim(human_pickupfloor, 0);
+anim(human_crossbow, 0);
 p_delay(2);
 mes("The line goes taut, and you swing across.");
 p_telejump(^gwd_grapple_to);
 
 // ---------------------------------------------------------------- Bandos: the gong
 [oploc1,gwd_door_bang]
-if (stat(strength) < ^gwd_encampment_level) {
-    mes("You need a Strength level of <tostring(^gwd_encampment_level)> to swing hard enough.");
+// BOTH WAYS. The gong is on the corridor side, so banging it is how you get IN - but the door is a
+// solid loc and nothing opens it, so a player who went in had no way back to the main chamber. It
+// used to telejump west unconditionally with a note saying you could walk back out; you could not.
+// Which side you are standing on now decides which side you come out, as the ice bridge does.
+//
+// Leaving asks for neither the level nor the hammer. You are walking back through a door you have
+// already been through, and the gong is on the other side of it.
+// >= and not >: the door is a shape-0 wall on the WEST edge of its own tile, so a player walking
+// up from the corridor ends standing ON that tile, not east of it. A > test read them as already
+// inside and bounced them straight back out the moment they struck the gong.
+if (coordx(coord) >= coordx(loc_coord)) {
+    if (stat(strength) < ^gwd_encampment_level) {
+        mes("You need a Strength level of <tostring(^gwd_encampment_level)> to swing hard enough.");
+        return;
+    }
+    if (inv_total(inv, hammer) < 1) {
+        mes("There is a gong set into the door. You would need a hammer to strike it.");
+        return;
+    }
+    p_arrivedelay;
+    facesquare(loc_coord);
+    mes("You strike the gong. The door swings open.");
+    anim(human_hammer_hit, 0);
+    p_delay(2);
+    p_telejump(^gwd_gong_west);
     return;
 }
-if (inv_total(inv, hammer) < 1) {
-    mes("There is a gong set into the door. You would need a hammer to strike it.");
-    return;
-}
-mes("You strike the gong. The door swings open.");
-anim(human_pickupfloor, 0);
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You heave the big door open and step back out.");
+anim(human_push, 0);
 p_delay(2);
-// The gong is on the entrance side, so this only ever carries you west into the stronghold.
-// Walking back out is an ordinary walk - the door is open behind you.
-p_telejump(^gwd_gong_west);
+p_telejump(^gwd_gong_east);
 
 // ---------------------------------------------------------------- Zamorak: the ice bridge
 // Both ends are the same loc, so which way you are going is decided by which side of the bridge
@@ -58,7 +77,7 @@ if (stat(hitpoints) < ^gwd_encampment_level) {
     return;
 }
 mes("You edge out onto the ice.");
-anim(human_pickupfloor, 0);
+anim(human_walk_logbalance, 0);
 p_delay(2);
 // "an ice bridge that drains prayer points to zero" - the cost of the crossing, every time, and
 // the reason you do not bring your prayer to Zamorak.
@@ -86,24 +105,27 @@ if (stat_base(agility) < ^gwd_encampment_level) {
     mes("You need an Agility level of <tostring(^gwd_encampment_level)> to climb down there.");
     return;
 }
-def_boolean $tied = %gwd_rope_lower;
+def_int $tied = %gwd_rope_lower;
 if ($upper = true) {
     $tied = %gwd_rope_upper;
 }
-if ($tied = false) {
+if ($tied ! 1) {
     if (inv_total(inv, rope) < 1) {
         mes("The rock is bare. You would need a rope to tie to it.");
         return;
     }
     inv_del(inv, rope, 1);
     if ($upper = true) {
-        %gwd_rope_upper = true;
+        %gwd_rope_upper = 1;
     } else {
-        %gwd_rope_lower = true;
+        %gwd_rope_lower = 1;
     }
     mes("You tie your rope to the rock. It should hold.");
 }
 mes("You climb down the rope.");
-anim(human_pickupfloor, 0);
+// agility_climbing_down, not human_climbing_down: that one carries loops=8, which holds
+// its last frame for ever and leaves the player stuck mid-climb. Same motion, no loop
+// point - built for Draynor's crate after exactly that was reported from play.
+anim(agility_climbing_down, 0);
 p_delay(2);
 p_telejump($down);
