@@ -1,0 +1,47 @@
+// THE SPINNING HEADSTONE. runescape.wiki/w/Gravedigger says to put the coffins "in the right grave
+// according to the spinning headstone", and the headstone is the only thing in the event that tells
+// two identical coffins apart - so it has to be readable.
+//
+// WHY THIS IS NOT ~objbox. if_setobject does not merely set the obj: it overwrites the component's
+// xan, yan and zoom with that obj's own xan2d/yan2d/zoom2d, scaled by the call's zoom argument
+// (Client.java, IF_SETOBJECT - "zoom = objType.zoom2d * 100 / scale"). The five symbols had no 2d
+// params at all, so every one of them was drawn edge on at ObjType's default distance: the same
+// dark slab five times over. They have proper ones now, and this interface gives them a 72x76 slot
+// to turn in rather than objbox1's 32x32.
+//
+// The turning itself is if_setrotation, which the engine has had all along (ScriptOpcode
+// IF_SETROTATION -> server opcode 18) and which nothing in content had ever called. The client
+// applies it to chat interfaces in updateInterfaceAnimation.
+
+[com_0]
+type=model
+x=30
+y=16
+width=72
+height=76
+zoom=3500
+xan=512
+yan=0
+
+[com_1]
+type=text
+x=120
+y=26
+width=340
+height=17
+center=yes
+font=q8_full
+text=Line1
+
+[com_2]
+type=text
+x=120
+y=74
+buttontype=pause
+width=340
+height=17
+center=yes
+font=q8_full
+text=Click here to continue
+colour=0xFFFF00
+overcolour=0x00C000

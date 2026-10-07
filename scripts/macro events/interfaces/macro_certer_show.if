@@ -1,0 +1,66 @@
+// WHAT THE CERTER IS HOLDING. oldschool.runescape.wiki/w/Certer: the certer "displays an object
+// with three possible answers". One object, three answers - which is the opposite of what this
+// event did at first, where ~multiobj3 drew three objects with their names printed underneath and
+// the certer himself held nothing. "Quick now - what am I holding?" has to be answerable by looking
+// at him, or at something standing in for him.
+//
+// So: multi3's three rows, moved right to make room for the object, which turns in the gap on the
+// left for as long as the question is open. There is no way in this engine to put an arbitrary obj
+// into an npc's hand - that would need a model per item - so the chatbox holds it for him.
+
+[com_0]
+type=model
+x=16
+y=12
+width=72
+height=76
+zoom=1000
+xan=0
+yan=0
+
+[com_1]
+type=text
+x=96
+y=-1
+width=376
+height=17
+center=yes
+font=q8_full
+text=Select an Option
+colour=0x800000
+
+[com_2]
+type=text
+x=96
+y=23
+buttontype=normal
+width=376
+height=17
+center=yes
+font=q8_full
+text=option1
+overcolour=0x00C000
+
+[com_3]
+type=text
+x=96
+y=47
+buttontype=normal
+width=376
+height=17
+center=yes
+font=q8_full
+text=option2
+overcolour=0x00C000
+
+[com_4]
+type=text
+x=96
+y=71
+buttontype=normal
+width=376
+height=17
+center=yes
+font=q8_full
+text=option3
+overcolour=0x00C000

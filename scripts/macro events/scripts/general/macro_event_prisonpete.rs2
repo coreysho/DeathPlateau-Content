@@ -70,8 +70,13 @@ if (%macro_pete_wants = 0) {
 }
 ~macro_pete_show(%macro_pete_wants);
 
+// THE BALLOON TURNS. The four animals are a cat, a dog, a goat and a sheep and the wiki's own
+// advice for telling them apart is to look at "their horns, body width, and tail length" - none of
+// which you can see from one fixed angle. if_setrotation spins the panel; the engine has had the
+// command since the start and nothing had ever used it.
 [proc,macro_pete_show](int $which)
 if_setmodel(macro_pete_lever:com_0, enum(int, int, macro_pete_balloon_model, $which));
+if_setrotation(macro_pete_lever:com_0, 0, ^macro_event_model_spin);
 if_settext(macro_pete_lever:com_1, "The dial stops on a picture of this one.");
 if_openchat(macro_pete_lever);
 if_addresumebutton(macro_pete_lever:com_2);
@@ -94,7 +99,9 @@ if (%macro_pete_wants = 0) {
     mes("You should see what the lever says first.");
     return;
 }
-anim(human_pickpocket, 0);
+// You burst it under your foot, which is what human_stamp is for. It was the pickpocket animation
+// before, which is a reach rather than a stamp.
+anim(human_stamp, 0);
 // balloon_pop is a seq, not a synth - the balloon bursts on screen and pop1 is the noise.
 npc_anim(balloon_pop, 0);
 sound_synth(pop1, 1, 0);
@@ -106,7 +113,12 @@ if ($which = %macro_pete_wants) {
     inv_add(inv, prisonpete_key, 1);
     mes("There's a key inside! One of the barriers flickers out.");
     if (%macro_pete_keys >= ^macro_pete_keys_needed) {
-        mes("The last barrier dies. The way out is open.");
+        // NOT "the way out is open". The three barriers are multilocs on macro_pete_keys, so they
+        // vanish from your screen as you earn keys - but loc collision in this engine is one shared
+        // set of flags for the whole world (GameMap adds it from the base type and never looks at a
+        // varbit), so the tiles stay blocked for everyone and always will. The corridor behind them
+        // is solid map anyway: this square has no hallway to walk down. Pete is the way out.
+        mes("The last barrier dies. Pete is waving you over.");
     }
     return;
 }

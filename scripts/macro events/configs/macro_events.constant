@@ -1,3 +1,9 @@
+// HOW FAST A MODEL IN A CHATBOX TURNS. if_setrotation adds this to the component's yan every
+// client frame and wraps at 2048, so 24 is a revolution in about ninety frames. Used wherever an
+// event asks you to recognise a shape - the gravedigger's headstone, the prison lever's balloon
+// animal and the certer's object - because a model held at one angle is a silhouette.
+^macro_event_model_spin = 24
+
 ^macro_swarm = 1
 ^macro_geni = 2
 ^macro_dwarf = 3
@@ -56,6 +62,8 @@
 // %npc_int on the island Bob once he has eaten and gone to sleep, which is when the portal opens.
 ^evil_bob_asleep = -1
 // On the sand in front of him.
+// Four shores, four statues, four clusters of Fishing spots.
+^macro_bob_areas = 4
 ^macro_evil_bob_landing = 0_39_74_25_42
 
 // THE MIME. His theatre is built in map square 31_74 - 106 walls, 84 chairs, 84 stage tiles,
@@ -83,6 +91,9 @@
 // Five wrong frogs and the herald gives up on you.
 ^macro_frog_tries = 5
 // Just inside the clearing, in front of the Frog Herald.
+// How long the kissed frog stays royal before turning back. The player is teleported out within
+// a couple of ticks of the kiss, so this only has to outlast the goodbye.
+^macro_frog_royal_ticks = 50
 ^macro_frog_landing = 0_32_75_31_26
 
 // THE PILLORY, the one random event that happens in public. The cage is on an open tile east of

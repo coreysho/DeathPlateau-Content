@@ -90,3 +90,8 @@ protect=no
 [macro_pillory_var]
 transmit=yes
 protect=no
+
+// EVIL BOB'S ISLAND. Nothing here is transmitted: which shore the fish are biting on is the whole
+// puzzle, and a varp on the wire is a varp a client can read.
+[macro_bob_var]
+protect=no

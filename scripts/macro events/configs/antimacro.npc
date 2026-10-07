@@ -1524,6 +1524,10 @@ param=attack_sound,thrown
 [macro_mime]
 name=Mime
 desc=A mute performer.
+// He stands centre stage and performs; he does not stroll. wanderrange defaults to 5 in NpcType,
+// which is why he was wandering off into the wings - and off the stage, which is sixteen tiles of
+// upper floor with nothing around it.
+wanderrange=0
 model1=obj_macro_mime_mask_manwear
 model2=obj_macro_mime_top_manwear3
 model3=obj_priest_gown_manwear
@@ -2145,13 +2149,17 @@ vislevel=hide
 resizeh=70
 resizev=70
 walkanim=cat_walk
-readyanim=cat_ready
+readyanim=human_ready
 head1=npc_2478_head
 timer=20
 
 [macro_evil_bob_island]
 name=Evil Bob
 desc=Hey, it's Bob the cat! Or... is it?
+// He is spawned on the tile beside the portal and that is where he belongs - the whole point of
+// him is that he is between you and the way out. Without this he wanders five tiles like any other
+// npc and you have to go looking for the cat you are supposed to be feeding.
+wanderrange=0
 model1=npc_2478
 model2=npc_gertrudescat
 recol1s=15855

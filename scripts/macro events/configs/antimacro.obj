@@ -2016,23 +2016,59 @@ model=obj_macro_digger_pot_empty
 name=Item
 desc=Its a symbol.
 model=obj_macro_digger_stoneaxe
+// Flat plaques, carved face up. if_setobject takes the component's angle and distance from the
+// OBJ, not from the interface (Client.java IF_SETOBJECT), so with no 2d params these were drawn at
+// xan 0 - edge on - at ObjType's default zoom2d of 2000. Five identical dark slabs. xan2d 512 is
+// the quarter turn about X that puts the carving face on, and 3500 over the objbox scale of 250
+// works out at a distance of 1400, which fits the stone in a 72-pixel slot with room to turn.
+2dzoom=3500
+2dxan=512
+2dyan=0
 
 [macro_digger_stonecook]
 name=Item
 desc=Its a symbol.
 model=obj_macro_digger_stonecook
+// Flat plaques, carved face up. Without these three lines if_setobject sets the component to
+// xan 0, yan 0 and a zoom of zoom2d*100/scale = 0, which draws the edge of the stone from inside
+// it - a dark slab, five times over, with nothing to tell them apart. xan2d 512 is a quarter turn
+// about X, which is the only angle the carving is visible from.
+2dzoom=3500
+2dxan=512
+2dyan=0
 
 [macro_digger_stonemine]
 name=Item
 desc=Its a symbol.
 model=obj_macro_digger_stonemine
+// Flat plaques, carved face up. Without these three lines if_setobject sets the component to
+// xan 0, yan 0 and a zoom of zoom2d*100/scale = 0, which draws the edge of the stone from inside
+// it - a dark slab, five times over, with nothing to tell them apart. xan2d 512 is a quarter turn
+// about X, which is the only angle the carving is visible from.
+2dzoom=3500
+2dxan=512
+2dyan=0
 
 [macro_digger_stonespade]
 name=Item
 desc=Its a symbol.
 model=obj_macro_digger_stonespade
+// Flat plaques, carved face up. Without these three lines if_setobject sets the component to
+// xan 0, yan 0 and a zoom of zoom2d*100/scale = 0, which draws the edge of the stone from inside
+// it - a dark slab, five times over, with nothing to tell them apart. xan2d 512 is a quarter turn
+// about X, which is the only angle the carving is visible from.
+2dzoom=3500
+2dxan=512
+2dyan=0
 
 [macro_digger_stonevase]
 name=Item
 desc=Its a symbol.
 model=obj_macro_digger_stonevase
+// Flat plaques, carved face up. Without these three lines if_setobject sets the component to
+// xan 0, yan 0 and a zoom of zoom2d*100/scale = 0, which draws the edge of the stone from inside
+// it - a dark slab, five times over, with nothing to tell them apart. xan2d 512 is a quarter turn
+// about X, which is the only angle the carving is visible from.
+2dzoom=3500
+2dxan=512
+2dyan=0

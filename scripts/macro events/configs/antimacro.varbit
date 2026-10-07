@@ -335,3 +335,28 @@ endbit=30
 basevar=macro_digger_var_4
 startbit=1
 endbit=3
+
+// WHICH OF THE FOUR SHORES has the fish Evil Bob likes, 1-4. Per player, because the island is one
+// shared map square and two people can be standing on it.
+// THREE BITS, NOT TWO: the shores are numbered 1-4 and 4 does not fit in two bits. It was two, and
+// every run that rolled the east shore wrote nothing at all and left the puzzle with no answer.
+[macro_bob_spot]
+basevar=macro_bob_var
+startbit=1
+endbit=3
+
+// How many more correct fish he wants. One to start; every wrong one he eats adds another, which
+// is what oldschool.runescape.wiki/w/Evil_Bob describes: "Each time you feed Bob an incorrect fish,
+// it will take one more fish to get him to fall asleep."
+[macro_bob_needed]
+basevar=macro_bob_var
+startbit=4
+endbit=7
+
+// HE SLEEPS PER PLAYER, not on the npc. %npc_int on the shared island cat meant the first person to
+// finish left a sleeping Bob for everybody who arrived afterwards - the same mistake as the frog
+// princess who stayed a princess.
+[macro_bob_asleep]
+basevar=macro_bob_var
+startbit=8
+endbit=8

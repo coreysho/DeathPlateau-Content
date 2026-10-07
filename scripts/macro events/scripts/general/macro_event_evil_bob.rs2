@@ -13,14 +13,29 @@
 // able to converse with him without the need for a catspeak amulet" - so the amulet in the cache is
 // his, not yours, and it is not handed out here.
 //
-// WHICH FISH IS THE RIGHT ONE IS NOT SOMETHING YOU CAN SEE. The two cooked fish are both called
-// "Fishlike thing" and examine the same, and so do the two raw ones; the cache gives no way to tell
-// them apart and that is deliberate. So the net decides it, one in three, and the only way through
-// is to keep fishing - which is what an anti-macro event is for.
+// WHICH FISH YOU GET IS DECIDED BY WHERE YOU FISH, and that is the whole event. The wiki is plain
+// about it: "If the fish was caught from an incorrect area, Bob will eat it, and then say it is
+// disgusting." There are sixteen Fishing spots on this island in four clusters of four, one on each
+// shore, and a gold statue stands beside each cluster - four areas, which is what "area" means.
+// This used to be a one-in-three roll on the net, which made the servant pointless and the puzzle
+// unsolvable except by grinding, and that was wrong.
+//
+// THE SERVANT POINTS. "Look... over t-t-there! That fishing spot c-c-contains the f-f-f-fish he
+// likes." - and the wiki notes "a cutscene starts, showing where to catch the fish". So she swings
+// the camera to the right shore, every time you ask, and says which way it is in case you blinked.
+//
+// EVERY WRONG FISH COSTS YOU ONE MORE. "Each time you feed Bob an incorrect fish, it will take one
+// more fish to get him to fall asleep." %macro_bob_needed counts down, and a wrong one puts it up.
+//
+// HE SLEEPS PER PLAYER. This was %npc_int on the island cat, who is one shared npc: the first
+// person to finish left him asleep for everyone who arrived after.
 
 [proc,macro_evil_bob_spawn]
 %npc_macro_event_target = uid;
 %macro_event_target_coord = coord;
+%macro_bob_spot = calc(random(^macro_bob_areas) + 1);
+%macro_bob_needed = 1;
+%macro_bob_asleep = 0;
 queue(macro_evil_bob_arrive, 0, 0);
 npc_del;
 
@@ -38,6 +53,10 @@ if (inv_total(inv, evil_bob_net) = 0) {
 }
 
 [proc,macro_evil_bob_leave]
+%macro_bob_spot = 0;
+%macro_bob_needed = 0;
+%macro_bob_asleep = 0;
+cam_reset;
 inv_del(inv, evil_bob_net, 28);
 inv_del(inv, evil_bob_cooked_fish_correct, 28);
 inv_del(inv, evil_bob_cooked_fish_incorrect, 28);
@@ -54,6 +73,21 @@ sound_synth(smokepuff2, 1, 0);
 
 // ============================================================================ the island
 
+// WHICH SHORE A SPOT IS ON. The four clusters sit at local z 28 (north), z 55 (south), x 14 (west)
+// and x 47 (east) of map square 39_74, which is absolute z 4764 and 4791, x 2510 and 2543. Nothing
+// else on the island is a Fishing spot, so two thresholds and a fallthrough name all four.
+[proc,macro_bob_area](coord $c)(int)
+if (coordz($c) < 4770) {
+    return(1);
+}
+if (coordz($c) > 4785) {
+    return(2);
+}
+if (coordx($c) < 2520) {
+    return(3);
+}
+return(4);
+
 [oploc1,loc_8986] // Fishing spot, "Net"
 if (%macro_event ! ^macro_evil_bob) {
     mes("The fish, if they are fish, ignore you.");
@@ -69,12 +103,14 @@ if (inv_freespace(inv) = 0) {
 }
 anim(human_smallnet, 0);
 p_delay(4);
-// One in three. Nothing about the fish says which it is, so this roll is the only thing that does.
-if (random(3) = 0) {
+if (~macro_bob_area(loc_coord) = %macro_bob_spot) {
     inv_add(inv, evil_bob_cooked_fish_correct, 1);
 } else {
     inv_add(inv, evil_bob_cooked_fish_incorrect, 1);
 }
+// "You catch a... what is this?? Is this a fish?? And... it's cooked already??" - and nothing says
+// which one it is, because the two cooked fish are both called "Fishlike thing" and examine alike.
+// Where you caught it is the only thing that knows.
 mes("You net a fishlike thing. It appears to already be cooked.");
 
 // THE POT RUNS BACKWARDS, which is what makes it an Uncooking pot: a cooked thing goes in and a raw
@@ -101,11 +137,9 @@ if (%macro_event ! ^macro_evil_bob) {
     mes("The portal fades as you reach for it.");
     return;
 }
-if (npc_find(coord, macro_evil_bob_island, 24, 0) = true) {
-    if (%npc_int ! ^evil_bob_asleep) {
-        mes("The cat is watching you. You get the feeling he would rather you stayed.");
-        return;
-    }
+if (%macro_bob_asleep = 0) {
+    mes("The cat is watching you. You get the feeling he would rather you stayed.");
+    return;
 }
 mes("You step through the portal.");
 ~macro_evil_bob_leave;
@@ -121,28 +155,37 @@ if (%macro_event ! ^macro_evil_bob) {
     ~chatnpc("<p,neutral>Mrrp.");
     return;
 }
-if (%npc_int = ^evil_bob_asleep) {
+if (%macro_bob_asleep = 1) {
     ~chatnpc("<p,neutral>Zzzz.");
     mes("He is fast asleep. The portal will let you go now.");
     return;
 }
 if (inv_total(inv, evil_bob_uncooked_fish_correct) > 0) {
-    ~chatnpc("<p,happy>Now THAT is a raw fishlike thing. Give it here.");
     inv_del(inv, evil_bob_uncooked_fish_correct, 1);
     npc_anim(cat_paw, 0);
+    %macro_bob_needed = sub(%macro_bob_needed, 1);
+    if (%macro_bob_needed > 0) {
+        ~chatnpc("<p,happy>Mmm. That's the one. More.");
+        return;
+    }
     // NO npc_delay IN HERE. This is [opnpc1] - a player script with an npc attached - and a delay
     // on the npc corrupts p_active_player for the ~chatnpc below it, which the compiler says
     // plainly and will not build. The lying down is queued on Bob instead.
     npc_queue(1, 0, 3);
-    %npc_int = ^evil_bob_asleep;
-    ~chatnpc("<p,happy>...mmm. That's the one. I shall have a nap now.");
+    %macro_bob_asleep = 1;
+    ~chatnpc("<p,happy>Mmm, mmm... that's... mmm... delicious...");
+    ~chatnpc("<p,happy>Now, let me take... a little... catnap...");
     mes("Evil Bob curls up and falls asleep. The portal is yours.");
     ~macro_evil_bob_pay;
     return;
 }
 if (inv_total(inv, evil_bob_uncooked_fish_incorrect) > 0) {
-    ~chatnpc("<p,angry>Pfft. That is the WRONG fishlike thing. Fetch me another.");
     inv_del(inv, evil_bob_uncooked_fish_incorrect, 1);
+    // "What was this? That was absolutely disgusting! Don't you know what kind of fish I like?
+    // Talk to my other servants for some advice." - and it costs you a fish.
+    ~chatnpc("<p,angry>What was this? That was absolutely disgusting!");
+    ~chatnpc("<p,angry>Don't you know what kind of fish I like? Talk to my other servants for some advice.");
+    %macro_bob_needed = add(%macro_bob_needed, 1);
     return;
 }
 if (inv_total(inv, evil_bob_cooked_fish_correct) > 0 | inv_total(inv, evil_bob_cooked_fish_incorrect) > 0) {
@@ -168,7 +211,20 @@ if (inv_total(inv, evil_bob_cooked_fish_correct) > 0 | inv_total(inv, evil_bob_c
     ~chatnpc("<p,neutral>That one's cooked. Pop it in the uncooking pot - the steam goes back in and it comes out raw.");
     return;
 }
-~chatnpc("<p,neutral>Net something out of the water. They come up cooked here; don't ask me why.");
+~macro_evil_bob_point;
+
+// "Look... over t-t-there! That fishing spot c-c-contains the f-f-f-fish he likes." The camera goes
+// with it, which is what the wiki means by a cutscene, and it runs again every time you ask because
+// a hint you can miss by looking away is not a hint.
+[proc,macro_evil_bob_point]
+~chatnpc("<p,shifty>F-f-f-fish... give him the f-f-f-fish he likes and he might f-f-f-fall asleep.");
+~chatnpc("<p,shifty>Look... over t-t-there! That fishing spot c-c-contains the f-f-f-fish he likes.");
+def_coord $spot = enum(int, coord, macro_bob_area_spot, %macro_bob_spot);
+cam_moveto(coord, 1200, 0, 0);
+cam_lookat($spot, 0, 10, 10);
+mes("The servant points at the water by the statue on the <enum(int, string, macro_bob_area_name, %macro_bob_spot)> shore.");
+p_delay(4);
+cam_reset;
 
 // "The island event rewarded Magic or Fishing experience." The rate is the genie's lamp - base
 // level times ten - so a reward from one random event is worth what a reward from another is.

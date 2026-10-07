@@ -84,6 +84,11 @@ if (%macro_frog_wrong >= ^macro_frog_tries) {
 }
 
 // THE ONE WITH THE CROWN. Kissing is a choice, because it is not something to do by accident.
+// THE CLEARING IS SHARED AND THE CHANGE MUST NOT BE. ^max_32bit_int here meant the crowned frog
+// stayed a princess for the rest of the server's life: the next player to be dropped in found the
+// puzzle already solved and no frog to kiss. A duration makes the engine revert the npc for us
+// (Npc.changeType -> setLifeCycle), so the crown is back on a frog long before anybody else
+// arrives. The same mistake is why the pillory door and the prison barriers are multilocs.
 [opnpc1,macro_frog_royal]
 if (%macro_event ! ^macro_frog) {
     ~chatnpc("<p,neutral>Ribbit.");
@@ -102,9 +107,9 @@ spotanim_map(smokepuff, npc_coord, 124, 0);
 sound_synth(smokepuff2, 1, 0);
 // A frog prince for a woman and a frog princess for a man, which is the way round the story goes.
 if (gender = 0) {
-    npc_changetype_keepall(macro_frog_princess, ^max_32bit_int);
+    npc_changetype(macro_frog_princess, ^macro_frog_royal_ticks);
 } else {
-    npc_changetype_keepall(macro_frog_prince, ^max_32bit_int);
+    npc_changetype(macro_frog_prince, ^macro_frog_royal_ticks);
 }
 // NO npc_delay HERE. This is [opnpc1] - a player script with an npc attached - and a delay on the
 // npc corrupts p_active_player for the send-home below, which the compiler says plainly and will

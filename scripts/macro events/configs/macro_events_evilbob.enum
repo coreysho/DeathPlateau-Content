@@ -1,0 +1,25 @@
+
+// THE FOUR SHORES OF EVIL BOB'S ISLAND. Sixteen Fishing spots stand on map square 39_74 in four
+// clusters of four, and one of the island's four statues stands beside each cluster - which is what
+// makes them tellable apart and why the wiki talks about catching the fish "from an incorrect
+// area". These are the middle of each cluster, which is where the camera swings when the servant
+// points.
+[macro_bob_area_spot]
+inputtype=int
+outputtype=coord
+default=null
+val=1,0_39_74_30_28
+val=2,0_39_74_32_55
+val=3,0_39_74_14_40
+val=4,0_39_74_47_41
+
+// What the servant calls each one. The statues have no names in the cache - they are four unnamed
+// gold figures on plinths - so she says where they are rather than who they are.
+[macro_bob_area_name]
+inputtype=int
+outputtype=string
+default=
+val=1,north
+val=2,south
+val=3,west
+val=4,east

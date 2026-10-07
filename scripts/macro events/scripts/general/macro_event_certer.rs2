@@ -11,9 +11,12 @@
 // player who simply walked away from their keyboard, so ignoring a certer does what ignoring every
 // other talking random here does: the ordinary fail teleport. Ask and it can be the other way.
 //
-// THE QUESTION IS AN OBJ AND THREE NAMES, which ~multiobj3 already draws - the same chooser the
-// potter's wheel uses. The decoys come from the same table as the answer, so they are always three
-// things a certer might plausibly be holding and never three things that give the answer away.
+// THE QUESTION IS ONE OBJ AND THREE NAMES. It was three objs and three names to begin with, drawn
+// by ~multiobj3 - which asked "what am I holding?" while holding nothing and showing you the answer
+// written under its own picture. The wiki is specific: the certer "displays an object with three
+// possible answers". macro_certer_show.if is multi3 with the object turning beside the three rows,
+// so it is still on screen while you choose. The decoys come from the same table as the answer, so
+// they are always three things a certer might plausibly be holding.
 
 [proc,macro_certer_spawn]
 npc_say("Noted items! Get yer noted items here!");
@@ -87,13 +90,14 @@ if ($slot = 1) {
 def_namedobj $shown = enum(int, namedobj, macro_certer_items, $answer);
 
 ~chatnpc("<p,neutral>Quick now - what am I holding?");
-def_namedobj $picked = ~multiobj3("What is it?",
-    enum(int, namedobj, macro_certer_items, $a), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $a)), 0, 0,
-    enum(int, namedobj, macro_certer_items, $b), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $b)), 0, 0,
-    enum(int, namedobj, macro_certer_items, $c), 0, 0, 200, oc_name(enum(int, namedobj, macro_certer_items, $c)), 0, 0);
+// $slot is where the answer was dropped, so the right row is $slot + 1.
+def_string $name_a = oc_name(enum(int, namedobj, macro_certer_items, $a));
+def_string $name_b = oc_name(enum(int, namedobj, macro_certer_items, $b));
+def_string $name_c = oc_name(enum(int, namedobj, macro_certer_items, $c));
+def_int $picked = ~macro_certer_ask($shown, $name_a, $name_b, $name_c);
 
 npc_queue(6, 0, 2);
-if ($picked = $shown) {
+if ($picked = calc($slot + 1)) {
     ~chatnpc("<p,happy>Right you are. Here, for your trouble.");
     ~macro_event_give_reward;
     return;
@@ -101,6 +105,25 @@ if ($picked = $shown) {
 // Wrong, and he simply leaves with nothing - which is what the wiki says the modern one does, and
 // the only part of the original punishment that is not destructive.
 ~chatnpc("<p,sad>Not even close. Good day to you.");
+
+// The object, turning, and the three names beside it. Returns 1, 2 or 3.
+[proc,macro_certer_ask](namedobj $obj, string $a, string $b, string $c)(int)
+if_setobject(macro_certer_show:com_0, $obj, 250);
+if_setrotation(macro_certer_show:com_0, 0, ^macro_event_model_spin);
+if_settext(macro_certer_show:com_1, "What is it?");
+if_settext(macro_certer_show:com_2, $a);
+if_settext(macro_certer_show:com_3, $b);
+if_settext(macro_certer_show:com_4, $c);
+if_openchat(macro_certer_show);
+if_addresumebutton(macro_certer_show:com_2);
+if_addresumebutton(macro_certer_show:com_3);
+if_addresumebutton(macro_certer_show:com_4);
+p_pausebutton;
+switch_component (last_com) {
+    case macro_certer_show:com_2 : return(1);
+    case macro_certer_show:com_3 : return(2);
+    case default : return(3);
+}
 
 // An index into macro_certer_items that is neither of the two given. A certer holding the same thing
 // twice would give the answer away, which is why this loops rather than rolling once.

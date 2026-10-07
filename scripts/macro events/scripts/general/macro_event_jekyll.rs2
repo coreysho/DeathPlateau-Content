@@ -55,7 +55,12 @@ npc_delay(2);
 npc_say("I can't hold him back any longer!");
 spotanim_map(smokepuff, npc_coord, 124, 0);
 %macro_event = ^no_macro_event;
-npc_changetype_keepall(~macro_event_npc_hyde, ^max_32bit_int);
+// NOT npc_changetype_keepall. keepall is reset=false in Npc.changeType, which skips the stat
+// re-init entirely, so Hyde inherited Dr Jekyll's levels - and Jekyll, being a talker, has no
+// hitpoints line and so defaults to 1. Six Hyde records with 20 to 170 hitpoints went unused and
+// every Mr Hyde in the game died to one punch. changeType carries damage across rather than
+// healing him, which is what we want: Jekyll is always unhurt when he turns.
+npc_changetype(~macro_event_npc_hyde, ^max_32bit_int);
 npc_delay(1);
 npc_settimer(20);
 if (finduid(%npc_macro_event_target) = true) {

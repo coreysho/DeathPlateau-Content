@@ -272,7 +272,19 @@ if ($trade = 0) {
     mes("The headstone is blank.");
     return;
 }
-~objbox(enum(int, namedobj, macro_digger_symbol, $trade), "The headstone is carved with a symbol.", 250, 0, 0);
+~macro_digger_stone_show(enum(int, namedobj, macro_digger_symbol, $trade));
+
+// THE HEADSTONE TURNS, which is both what the wiki calls it - "the spinning headstone" - and the
+// only way to read a carving in a slab: objbox1's 32x32 slot showed the symbols at an angle and a
+// zoom that made all five of them the same dark rectangle. See macro_digger_stone.if.
+[proc,macro_digger_stone_show](namedobj $symbol)
+if_setobject(macro_digger_stone:com_0, $symbol, 250);
+if_setrotation(macro_digger_stone:com_0, 0, ^macro_event_model_spin);
+if_settext(macro_digger_stone:com_1, "The headstone is carved with this.");
+if_openchat(macro_digger_stone);
+if_addresumebutton(macro_digger_stone:com_2);
+p_pausebutton;
+if_close;
 
 // THE ONLY WAY TO TELL TWO COFFINS APART. Every grave good is called "Item" and examines as "It
 // seems bleached with age", which is what stops the puzzle being read rather than looked at - so
