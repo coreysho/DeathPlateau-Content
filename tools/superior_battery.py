@@ -362,9 +362,14 @@ if m:
 DARK = taskcase('^slayer_darkbeast')
 check('return (false)' in DARK and '%mourning' not in DARK,
       'the dark beast task is still refused outright')
-check(not any(f.endswith('.rs2') for _, _, fs in os.walk(os.path.join(C, 'scripts/quests/quest_mourning2'))
-              for f in fs),
-      '...because Mourning\'s End Part II has no scripts at all, so its requirement cannot be read')
+# WHY, as of 2026-10-08. This used to read "because Mourning's End Part II has no scripts at all",
+# which stopped being true on 2026-09-24 when that quest was made completable - and the check has
+# been failing for everyone since. The task is still refused, for the reason that actually holds:
+# there is no way to WALK to a dark beast. The mourner hideout's ladder is the only handled way
+# down and it opens into a 93-tile room (flooded out of the engine's own collision map); the eleven
+# beasts stand outside it, in a pocket nothing scripts an entrance to.
+check('%mourning2' not in DARK and '%mt' not in DARK,
+      '...and not on a quest requirement either, because finishing Part II still opens no door')
 beasts = npc_spawns('31_72', 'mourning_dark_beast')
 check(len(beasts) == 11, 'the 11 dark beasts that exist are spawned in m31_72: %d' % len(beasts))
 pocket, pocket_locs = flood_pocket(('30_72', '31_72'), beasts[0])

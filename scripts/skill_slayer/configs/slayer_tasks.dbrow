@@ -1173,3 +1173,20 @@ data=task,^slayer_cavekraken
 data=weight,9
 data=min_amount,100
 data=max_amount,120
+
+// custom (2026-10-08) - the two Duradel sells rather than gives: red dragons behind Seeing Red and
+// aviansies behind Watch the Birdie, as OSRS does. Both monsters were in the build and in nobody's
+// table. Eight apiece, which is what his other dragon rows weigh.
+[duradel_reddragons]
+table=slayer_master_task
+data=task,^slayer_reddragon
+data=weight,8
+data=min_amount,30
+data=max_amount,80
+
+[duradel_aviansies]
+table=slayer_master_task
+data=task,^slayer_aviansie
+data=weight,8
+data=min_amount,120
+data=max_amount,180

@@ -1,0 +1,192 @@
+// THE MUTATED ZYGOMITES (2026-10-08).
+//
+// Chaeldar and Duradel both give the task, and it was refused outright: the four npcs were in the
+// cache with their animations and nothing else, so there was nothing to fight and nothing that
+// counted. The configs (all.npc) now carry the stats and the category; this is the rest of it.
+//
+// WHAT THE WIKI SAYS (oldschool.runescape.wiki/w/Mutated_zygomite), and what is built here:
+//
+//   * they sit disguised as Fungi, and picking one wakes it - the mushroom leaps up and attacks;
+//   * 57 Slayer to deal with them at all, asked for at the picking rather than after it has turned,
+//     which is why the Fungi carries the slayer category too;
+//   * a zygomite brought to nothing REGENERATES unless it is sprayed with fungicide: it heals back
+//     and keeps going, exactly as a rockslug does without salt;
+//   * the spray is the slayer master's own stock, ten pumps to a can, refilled with fungicide.
+//
+// The shape of the fight is the rockslug's and the cave kraken's, deliberately: npc_changetype for
+// the disguise (as the kraken's whirlpools), ai_queue3 to catch the death and refuse it (as the
+// rockslug's salt), and the 'Shroom Sprayer unlock to do the spraying for you (as Slug Salter and
+// Reptile Freezer do theirs).
+
+// ---------------------------------------------------------------------------------------------
+// Picking a mushroom that is not a mushroom
+// ---------------------------------------------------------------------------------------------
+
+[opnpc1,slayer_mutated_zygomite_adolescent_cap] ~zygomite_pick(slayer_mutated_zygomite_adolescent);
+[apnpc1,slayer_mutated_zygomite_adolescent_cap] ~zygomite_pick(slayer_mutated_zygomite_adolescent);
+[opnpc1,slayer_mutated_zygomite_adult_capt] ~zygomite_pick(slayer_mutated_zygomite_adult);
+[apnpc1,slayer_mutated_zygomite_adult_capt] ~zygomite_pick(slayer_mutated_zygomite_adult);
+
+[proc,zygomite_pick](npc $into)
+if (npc_range(coord) > 1) {
+    p_aprange(1);
+    return;
+}
+// The level the engine would have asked for at the first attack, asked for here instead: by then
+// the thing is already up and hitting you, which is not what "you cannot handle this" should mean.
+if (stat(slayer) < enum(int, int, slayer_req, ^slayer_mutatedzygomite)) {
+    mes("You need a higher Slayer level to know how to handle this fungus.");
+    return;
+}
+if (~player_in_combat_check = false) {
+    return;
+}
+anim(human_fungicide_pick_zygomite, 0);
+npc_changetype($into, ^zygomite_risen_duration);
+npc_anim(zygomite_leap_out, 0);
+mes("The fungus leaps up - it was never a mushroom at all.");
+// the leap first, then it comes for whoever woke it
+%npc_action_delay = add(map_clock, 3);
+~npc_retaliate(3);
+p_opnpc(2);
+
+// ---------------------------------------------------------------------------------------------
+// Killing one, which takes fungicide
+// ---------------------------------------------------------------------------------------------
+
+[ai_queue3,slayer_mutated_zygomite_adolescent] ~zygomite_dying;
+[ai_queue3,slayer_mutated_zygomite_adult] ~zygomite_dying;
+
+[proc,zygomite_dying]
+// The player first, as ~slayer_autofinish does it: this runs in npc context, and everything below
+// reads their inventory, their unlocks and their chatbox.
+if (finduid(%npc_aggressive_player) = false) {
+    npc_setmode(null);
+    npc_statheal(hitpoints, 1, 0);
+    return;
+}
+// 'Shroom Sprayer (slayer_rewards.rs2) does the spraying for you, as Slug Salter does the salting.
+if (testbit(%slayer_unlocks, ^slayer_unlock_shroom_sprayer) = ^true & ~zygomite_spray_held = true) {
+    ~zygomite_spray_spend;
+    mes("You spray the zygomite before it can pull itself together.");
+    npc_queue(4, 0, 0);
+    return;
+}
+npc_setmode(null);
+npc_statheal(hitpoints, 1, 0);
+mes("The zygomite regenerates! You will need fungicide to finish it off.");
+
+[ai_queue4,slayer_mutated_zygomite_adolescent] ~zygomite_death;
+[ai_queue4,slayer_mutated_zygomite_adult] ~zygomite_death;
+
+[proc,zygomite_death]
+gosub(npc_default_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~zygomite_drop_table;
+
+// The spray by hand, on a zygomite that is nearly down - the same shape as salting a rockslug.
+[opnpcu,slayer_mutated_zygomite_adolescent] ~zygomite_spray_at(last_useitem);
+[opnpcu,slayer_mutated_zygomite_adult] ~zygomite_spray_at(last_useitem);
+
+[proc,zygomite_spray_at](obj $used)
+if (~zygomite_spray_is($used) = false) {
+    return;
+}
+if (~zygomite_spray_held = false) {
+    mes("Your fungicide spray is empty.");
+    return;
+}
+anim(human_fungicide_pick_zygomite, 0);
+sound_synth(zygo_spray, 1, 0);
+if (npc_stat(hitpoints) > 10) {
+    ~zygomite_spray_spend;
+    mes("The zygomite shrugs the fungicide off - it is not weak enough yet.");
+    return;
+}
+~zygomite_spray_spend;
+mes("You spray the zygomite, and it withers away.");
+npc_queue(4, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// The can: ten pumps, and the fungicide that fills it again
+// ---------------------------------------------------------------------------------------------
+
+// Every can from 10 down to 1 counts as held; the 0 one is an empty tin until it is refilled.
+[proc,zygomite_spray_held]()(boolean)
+def_int $i = 10;
+while ($i > 0) {
+    if (inv_total(inv, enum(int, namedobj, slayer_spray_charge_obj, $i)) > 0) {
+        return(true);
+    }
+    $i = calc($i - 1);
+}
+return(false);
+
+[proc,zygomite_spray_is](obj $item)(boolean)
+def_int $i = 0;
+while ($i <= 10) {
+    if ($item = enum(int, namedobj, slayer_spray_charge_obj, $i)) {
+        return(true);
+    }
+    $i = calc($i + 1);
+}
+return(false);
+
+// One pump off the fullest can carried, which is what makes a ten-pump can ten kills.
+[proc,zygomite_spray_spend]
+def_int $i = 10;
+def_namedobj $can;
+while ($i > 0) {
+    $can = enum(int, namedobj, slayer_spray_charge_obj, $i);
+    if (inv_total(inv, $can) > 0) {
+        inv_del(inv, $can, 1);
+        inv_add(inv, enum(int, namedobj, slayer_spray_charge_obj, calc($i - 1)), 1);
+        if (calc($i - 1) = 0) {
+            mes("That was the last of the fungicide.");
+        }
+        return;
+    }
+    $i = calc($i - 1);
+}
+
+// The can is passed in rather than read inside the proc: last_useitem belongs to this trigger and
+// nowhere else, and a proc that reads it can only ever be called from here.
+[opheldu,slayer_fungicide] ~zygomite_spray_refill(last_useitem);
+
+[proc,zygomite_spray_refill](obj $can)
+if (~zygomite_spray_is($can) = false) {
+    return;
+}
+if ($can = enum(int, namedobj, slayer_spray_charge_obj, 10)) {
+    mes("That can is already full.");
+    return;
+}
+inv_del(inv, slayer_fungicide, 1);
+inv_del(inv, $can, 1);
+inv_add(inv, enum(int, namedobj, slayer_spray_charge_obj, 10), 1);
+mes("You refill the spray can with fungicide.");
+
+// ---------------------------------------------------------------------------------------------
+// What it leaves
+// ---------------------------------------------------------------------------------------------
+// The wiki's table, cut to what this build has: the mushrooms it grew out of, herbs, seeds and the
+// coins. Nothing rare - the zygomite's worth is the Slayer experience and the task.
+[proc,zygomite_drop_table]
+def_int $roll = random(128);
+if ($roll < 30) {
+    obj_add(npc_coord, coins, calc(random(300) + 100), ^lootdrop_duration);
+} else if ($roll < 60) {
+    obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
+} else if ($roll < 80) {
+    obj_add(npc_coord, ~roll_general_seed_table(nc_vislevel(npc_type)), ^lootdrop_duration);
+} else if ($roll < 100) {
+    obj_add(npc_coord, mortmyremushroom, calc(random(2) + 1), ^lootdrop_duration);
+} else if ($roll < 116) {
+    obj_add(npc_coord, naturerune, calc(random(4) + 2), ^lootdrop_duration);
+} else if ($roll < 126) {
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+} else {
+    obj_add(npc_coord, slayer_fungicide, 1, ^lootdrop_duration);
+}

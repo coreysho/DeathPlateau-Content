@@ -1,0 +1,21 @@
+// The fungicide spray, by how much is left in it. Eleven cans in the cache - "Fungicide spray 10"
+// down to "Fungicide spray 0" - and nothing had ever used them; this is what turns them into one
+// can with ten pumps (skill_slayer/scripts/npcs/zygomite.rs2).
+//
+// Indexed by the charge so that spending one is a subtraction rather than a switch with eleven
+// cases, and so that "is this a spray can at all" is a loop over the same table.
+[slayer_spray_charge_obj]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,slayer_spray_pump_0
+val=1,slayer_spray_pump_1
+val=2,slayer_spray_pump_2
+val=3,slayer_spray_pump_3
+val=4,slayer_spray_pump_4
+val=5,slayer_spray_pump_5
+val=6,slayer_spray_pump_6
+val=7,slayer_spray_pump_7
+val=8,slayer_spray_pump_8
+val=9,slayer_spray_pump_9
+val=10,slayer_spray_pump_10

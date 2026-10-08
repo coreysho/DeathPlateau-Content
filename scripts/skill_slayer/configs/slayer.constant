@@ -83,6 +83,32 @@
 // the Kraken Cove (areas/area_kraken_cove): cave krakens, and the Kraken itself counts too
 ^slayer_cavekraken = 77
 
+// custom (2026-10-08) - the aviansies of Armadyl's Eyrie (bosses/godwars). OSRS sells the task as
+// an unlock ("Watch the Birdie") rather than giving it out, and so does this build: Duradel's table
+// holds it and validate_slayer_target asks for the bit.
+^slayer_aviansie = 78
+
+// How long a Mogre blown out of the water at Mudskipper Point stays before it sinks back
+// (skill_slayer/scripts/npcs/mogre.rs2). Five minutes: long enough to fight it and long enough to
+// come back for it, short enough that a point full of other people's mogres tidies itself up.
+^mogre_life = 500
+
+// How long a zygomite stays up after its mushroom is picked before it settles back into a Fungi
+// (skill_slayer/scripts/npcs/zygomite.rs2). The cave kraken's whirlpools work the same way.
+^zygomite_risen_duration = 500
+
+// How hard a fever spider's bristles poison a player with no slayer gloves on
+// (skill_slayer/scripts/npcs/fever_spider.rs2). The kalphite worker's severity, which is the
+// weakest poison in the build: the point is the warning, not the damage.
+^fever_spider_poison = 20
+
+// The bit %slayer_unlocks keeps 'Shroom Sprayer in. The five older unlocks own bits 0-4
+// (configs/slayer_rewards.enum says which); a bit is never renumbered, because it is what a save
+// already holds.
+^slayer_unlock_shroom_sprayer = 5
+^slayer_unlock_seeing_red = 6
+^slayer_unlock_watch_the_birdie = 7
+
 // Slayer points (skill_slayer/scripts/slayer_points.rs2) - OSRS prices
 ^slayer_cancel_cost = 30
 ^slayer_block_cost = 100

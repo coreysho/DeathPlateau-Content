@@ -155,7 +155,8 @@ data=task,chaeldar_cavekraken
 // https://oldschool.runescape.wiki/w/Update:Angler%27s_Outfit_%26_Slayer
 [duradel_task_table]
 table=slayer_task_table
-data=total,204
+// 204 + the two unlock-only rows added 2026-10-08 (8 each)
+data=total,220
 data=task,duradel_abyssaldemons
 data=task,duradel_darkbeasts
 data=task,duradel_hellhounds
@@ -187,3 +188,5 @@ data=task,duradel_wallbeasts
 data=task,duradel_mutatedzygomites
 data=task,duradel_cavehorrors
 data=task,duradel_cavekraken
+data=task,duradel_reddragons
+data=task,duradel_aviansies

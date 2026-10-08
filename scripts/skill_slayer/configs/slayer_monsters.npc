@@ -288,6 +288,14 @@ param=slayer_category,^slayer_lizard
 param=damagetype,^crush_style
 category=slayer_lizard
 
+// THE MOGRE (2026-10-08). It was in the build with its models and its name and nothing else: no
+// hitpoints, no attack, no defence - so it fought like whatever the defaults are - and a slayer
+// category of ^slayer_ogre, which made it count towards OGRE tasks and never towards its own.
+// Four masters give mogre tasks and all four were refused outright.
+//
+// The stats are the wiki's (oldschool.runescape.wiki/w/Mogre): level 60, 60 hitpoints, and it hits
+// with a crush attack. The rest of the shape - the rates, the bonuses, the sounds - is the ogre it
+// is a cousin of, because that is where its animations come from.
 [mudskipper_ogre]
 name=Mogre
 desc=An angry Ogre in a funny hat.
@@ -307,7 +315,31 @@ walkanim=ogre_walk
 readyanim=ogre_ready
 op2=Attack
 vislevel=60
-param=slayer_category,^slayer_ogre
+wanderrange=4
+maxrange=6
+respawnrate=50
+hitpoints=60
+attack=60
+strength=60
+defence=60
+param=attackrate,6
+param=attackbonus,30
+param=strengthbonus,28
+param=stabdefence,20
+param=slashdefence,20
+param=crushdefence,20
+param=magicdefence,10
+param=rangedefence,20
+param=damagetype,^crush_style
+param=attack_anim,ogre_attack
+param=defend_anim,ogre_block
+param=death_anim,ogre_death
+param=attack_sound,giant_attack
+param=defend_sound,giant_hit
+param=death_sound,giant_death
+param=death_drop,big_bones
+param=slayer_category,^slayer_mogre
+huntmode=aggressive_melee
 
 [slayer_harpiebugswarm]
 name=Harpie Bug Swarm

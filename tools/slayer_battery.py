@@ -235,14 +235,19 @@ check(REW.count('%slayer_points = sub(') == 4 and PTS.count('%slayer_points = su
 check('setbit(%slayer_unlocks' in REW and 'setbit(%slayer_extends' in REW,
       'the unlock and the extend are the bits they always were')
 bits = rows('slayer_unlock_bit')
-check(sorted(int(v) for v in bits.values()) == [0, 1, 2, 3, 4],
-      'the five unlocks own five distinct bits: %s' % sorted(int(v) for v in bits.values()))
+held = sorted(int(v) for v in bits.values())
+check(held == sorted(set(held)) and held == list(range(len(bits))),
+      'the %d unlocks own %d distinct bits, none reused: %s' % (len(bits), len(bits), held))
 check(bits['0'] == '4', "and Bigger and Badder is still bit 4, which is what superiors.rs2 reads")
 
 # ============================================================================ 9
 print('9. the rewards themselves are OSRS\'s, and every row can answer for itself')
+# The three added 2026-10-08 are the wiki's prices too: 'Shroom Sprayer is what makes the fungicide
+# spray itself, and Seeing Red and Watch the Birdie are what put red dragons and aviansies into a
+# master's table at all.
 WIKI = {'Bigger and Badder': 50, 'Gargoyle Smasher': 120, 'Slug Salter': 10,
-        'Reptile Freezer': 10, 'Ring Bling': 150}
+        'Reptile Freezer': 10, 'Ring Bling': 150,
+        "'Shroom Sprayer": 80, 'Seeing Red': 75, 'Watch the Birdie': 80}
 names, costs = rows('slayer_unlock_name'), rows('slayer_unlock_cost')
 got = {names[k]: int(costs[k]) for k in names}
 check(got == WIKI, 'the five unlock prices are the wiki\'s: %s' % (got if got != WIKI else 'all five'))
@@ -409,16 +414,21 @@ blocked = set()
 for case, body in re.findall(r'case ([^:]+):((?:(?!\n    case |\n\}).)*)', VALIDATE, re.S):
     if body.strip().startswith('return (false)'):
         blocked.update(t.strip() for t in case.split(',') if t.strip().startswith('^'))
-check(len(blocked) >= 3, 'validate_slayer_target refuses %d tasks outright: %s'
+# Two left as of 2026-10-08, and each for a place rather than a monster: nothing spawns a shade
+# (Mort'ton is not built) and the dark beasts are walled into the Part II mines.
+check(len(blocked) >= 1, 'validate_slayer_target refuses %d tasks outright: %s'
       % (len(blocked), ', '.join(sorted(b[1:] for b in blocked))))
 
 impossible = sorted(t[1:] for t in assigned if t not in tagged and t not in blocked)
 check(not impossible, 'every task a master gives has a monster that counts: %s'
       % (', '.join(impossible) or 'all %d' % len(assigned)))
-# The wall beast is the one monster with no map spawn by design - the crevices spawn it
-# (skill_slayer/scripts/npcs/wall_beast.rs2), which is why it is named here rather than skipped.
+# Two monsters have no map spawn BY DESIGN, and both are named here rather than skipped so that a
+# third one appearing is a failure: the wall beast comes out of a crevice
+# (skill_slayer/scripts/npcs/wall_beast.rs2) and the mogre comes out of the water when a fishing
+# explosive goes into it (skill_slayer/scripts/npcs/mogre.rs2).
+summoned = {'^slayer_wallbeast', '^slayer_mogre'}
 unspawned = sorted(t[1:] for t in assigned
-                   if t in tagged and t not in live and t not in blocked and t != '^slayer_wallbeast')
+                   if t in tagged and t not in live and t not in blocked and t not in summoned)
 check(not unspawned, 'and one that is somewhere to be found: %s'
       % (', '.join(unspawned) or 'all of them'))
 # Spawned is not the same as reachable, and the dark beast is the one that proves it: eleven of

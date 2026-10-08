@@ -1,0 +1,41 @@
+// Mogre - https://oldschool.runescape.wiki/w/Mogre
+//
+// The wiki's table, cut to what this build has. Big bones come from param=death_drop like every
+// other ogre's; everything below is one roll out of 128. The mudskipper hat and the flippers are
+// this monster's own - nothing else in the game drops either, and they are what makes a mogre worth
+// blowing out of the water once the task is done (skill_slayer/scripts/npcs/mogre.rs2).
+
+[ai_queue3,mudskipper_ogre] @mudskipper_ogre_drop_table;
+
+[label,mudskipper_ogre_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+
+def_int $dropint = random(128);
+if ($dropint < 24) {
+    obj_add(npc_coord, coins, calc(random(120) + 20), ^lootdrop_duration);
+} else if ($dropint < 44) {
+    obj_add(npc_coord, raw_cod, calc(random(2) + 1), ^lootdrop_duration);
+} else if ($dropint < 60) {
+    obj_add(npc_coord, raw_mackerel, calc(random(2) + 1), ^lootdrop_duration);
+} else if ($dropint < 72) {
+    obj_add(npc_coord, raw_bass, 1, ^lootdrop_duration);
+} else if ($dropint < 86) {
+    obj_add(npc_coord, seaweed, calc(random(3) + 1), ^lootdrop_duration);
+} else if ($dropint < 96) {
+    obj_add(npc_coord, oystershell, 1, ^lootdrop_duration);
+} else if ($dropint < 106) {
+    obj_add(npc_coord, waterrune, calc(random(8) + 5), ^lootdrop_duration);
+} else if ($dropint < 114) {
+    obj_add(npc_coord, fishing_bait, calc(random(10) + 5), ^lootdrop_duration);
+} else if ($dropint < 120) {
+    obj_add(npc_coord, casket, 1, ^lootdrop_duration);
+} else if ($dropint < 124) {
+    obj_add(npc_coord, mudskipper_hat, 1, ^lootdrop_duration);
+} else if ($dropint < 128) {
+    obj_add(npc_coord, mudskipper_flippers, 1, ^lootdrop_duration);
+}

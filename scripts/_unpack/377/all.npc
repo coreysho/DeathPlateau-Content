@@ -29400,6 +29400,11 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Elf warrior (level 108), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+// custom (2026-10-08) - Vannaka and Duradel both give elf tasks and nothing carried the category,
+// so the task was refused outright. These are the Elf warriors of Tirannwm; the task is gated on
+// Regicide, which is the only way into the valley.
+param=slayer_category,^slayer_elf
+
 [regicide_darkelf2]
 name=Elf warrior
 desc=I don't wanna be at the wrong end of that pike.
@@ -29422,6 +29427,8 @@ param=crushdefence,70
 param=magicdefence,60
 param=rangedefence,50
 param=damagetype,^stab_style
+// custom (2026-10-08) - see regicide_darkelf
+param=slayer_category,^slayer_elf
 
 [elf_city_guard]
 name=Elven city guard
@@ -62586,6 +62593,10 @@ param=crushdefence,10
 param=magicdefence,15
 param=rangedefence,15
 param=damagetype,^stab_style
+// custom (2026-10-08) - Chaeldar and Vannaka give fever spider tasks. Braindeath Island is
+// reachable (Rum Deal is implemented, and pays the slayer gloves this monster needs), so the task
+// is gated on that quest rather than refused.
+param=slayer_category,^slayer_feverspider
 
 [deal_brewer_1]
 name=Brewer
@@ -74040,6 +74051,13 @@ turnspeed=900
 op1=Pick
 op3=Hidden
 vislevel=74
+// custom (2026-10-08) - THE ZYGOMITES, built. Chaeldar and Duradel both give the task and it was
+// refused outright: these four were in the cache with their animations and nothing else - no
+// hitpoints, no attack, no category - so nothing could be fought and nothing could be counted.
+// Stats are the wiki's (oldschool.runescape.wiki/w/Mutated_zygomite). The Fungi carries the
+// category as well as the Zygomite, so the 57 Slayer level is asked for when you pick the
+// mushroom rather than after it has turned and started hitting you.
+param=slayer_category,^slayer_mutatedzygomite
 
 [slayer_mutated_zygomite_adult_capt]
 name=Fungi
@@ -74054,6 +74072,8 @@ turnspeed=900
 op1=Pick
 op3=Hidden
 vislevel=86
+// custom (2026-10-08) - see slayer_mutated_zygomite_adolescent_cap
+param=slayer_category,^slayer_mutatedzygomite
 
 [slayer_mutated_zygomite_adolescent]
 name=Zygomite
@@ -74077,6 +74097,30 @@ op3=Hidden
 ambient=10
 contrast=10
 vislevel=74
+// custom (2026-10-08) - the revealed form: what the Fungi turns into when it is picked
+// (skill_slayer/scripts/npcs/zygomite.rs2).
+wanderrange=3
+maxrange=5
+respawnrate=30
+hitpoints=60
+attack=60
+strength=60
+defence=60
+param=attackrate,5
+param=attackbonus,30
+param=strengthbonus,28
+param=stabdefence,20
+param=slashdefence,20
+param=crushdefence,20
+param=magicdefence,20
+param=rangedefence,20
+param=damagetype,^crush_style
+param=attack_anim,zygomite_attack
+param=defend_anim,zygomite_defend
+param=death_anim,zygomite_death
+param=death_drop,null
+param=slayer_category,^slayer_mutatedzygomite
+huntmode=aggressive_melee
 
 [slayer_mutated_zygomite_adult]
 name=Zygomite
@@ -74093,6 +74137,29 @@ op3=Hidden
 ambient=10
 contrast=10
 vislevel=86
+// custom (2026-10-08) - the bigger of the two, and the one Chaeldar and Duradel mean
+wanderrange=3
+maxrange=5
+respawnrate=30
+hitpoints=75
+attack=72
+strength=72
+defence=72
+param=attackrate,5
+param=attackbonus,36
+param=strengthbonus,34
+param=stabdefence,25
+param=slashdefence,25
+param=crushdefence,25
+param=magicdefence,25
+param=rangedefence,25
+param=damagetype,^crush_style
+param=attack_anim,zygomite_attack
+param=defend_anim,zygomite_defend
+param=death_anim,zygomite_death
+param=death_drop,null
+param=slayer_category,^slayer_mutatedzygomite
+huntmode=aggressive_melee
 
 [white_knight_yellow_plumes_f]
 name=White Knight

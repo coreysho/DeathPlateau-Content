@@ -1,0 +1,27 @@
+// THE FEVER SPIDERS OF BRAINDEATH ISLAND (2026-10-08).
+//
+// Chaeldar and Vannaka both give the task, and it was refused outright because nothing carried the
+// category. The eleven spiders have been on the island since Rum Deal went in, with their stats and
+// their drop table; all they were missing was the tag (all.npc) and this.
+//
+// WHY THE GLOVES, per runescape.wiki/w/Fever_spider: "Players must wear slayer gloves when fighting
+// fever spiders, or they will contract a disease" - the spider's bristles poison anyone who goes at
+// it bare-handed. Rum Deal pays the gloves on completion and the Slayer masters sell more, so a
+// player who can reach the island already has the answer; this is what makes it matter.
+//
+// 42 Slayer is asked for by the engine, through the category, like every other monster's level.
+
+[apnpc2,deal_fever_spiders1] ~fever_spider_bristles; @player_combat_start_ap;
+[opnpc2,deal_fever_spiders1] ~fever_spider_bristles; @player_combat_start;
+
+[proc,fever_spider_bristles]
+if (inv_total(worn, deal_slayer_gloves) > 0) {
+    return;
+}
+// Already poisoned: it cannot get worse by touching another one, and a line about it every tick
+// would be the whole fight.
+if (%poison > 0) {
+    return;
+}
+mes("The fever spider's bristles break your skin. You should be wearing slayer gloves.");
+queue(poison_player, 0, ^fever_spider_poison);

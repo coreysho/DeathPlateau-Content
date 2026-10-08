@@ -1,0 +1,43 @@
+// THE MOGRES OF MUDSKIPPER POINT (2026-10-08).
+//
+// Four masters give mogre tasks and the task was refused outright, because there was nowhere to do
+// it: the monster existed with no stats and the wrong slayer category (configs/slayer_monsters.npc
+// says what it was), and nothing in the game put one in front of you.
+//
+// HOW ONE APPEARS, per runescape.wiki/w/Mogre: "Mogres can be fought at Mudskipper Point... a
+// fishing explosive must be used on the fishing spot there to make one appear." So that is the
+// whole mechanic - the explosive goes in the water, the water goes up, and a Mogre comes out of it
+// after you. They are not spawned on the map at all, which is why the slayer battery knows the task
+// as one whose monster has no map spawn.
+//
+// The explosive is the Slayer master's own stock (configs/slayershop.inv), so the thing that makes
+// the monster is sold by the people who set the task.
+//
+// 32 Slayer is NOT asked for here. The engine asks it the moment you attack (slayer_req, through
+// param=slayer_category), which is where every other monster's level is asked for, and OSRS lets
+// anyone set one off - they just cannot fight it.
+
+[opnpcu,0_46_49_saltfish]
+if (last_useitem ! fishing_explosive) {
+    return;
+}
+if (inv_total(inv, fishing_explosive) < 1) {
+    return;
+}
+inv_del(inv, fishing_explosive, 1);
+anim(human_throw, 0);
+mes("You throw the explosive into the water.");
+spotanim_map(watersplash, npc_coord, 0, 0);
+sound_synth(explosion, 1, 0);
+p_delay(2);
+~mogre_surface;
+
+[proc,mogre_surface]
+// It comes up where you are standing, as the Barrows brothers climb out at yours: the fishing spot
+// is in the water, and a size-2 npc cannot stand there.
+spotanim_map(smokepuff_large, coord, 0, 0);
+npc_add(coord, mudskipper_ogre, ^mogre_life);
+%npc_aggressive_player = uid;
+%aggressive_npc = npc_uid;
+~npc_retaliate(0);
+mes("A Mogre bursts out of the water!");

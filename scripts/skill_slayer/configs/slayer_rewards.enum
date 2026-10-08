@@ -117,6 +117,12 @@ val=1,Gargoyle Smasher
 val=2,Slug Salter
 val=3,Reptile Freezer
 val=4,Ring Bling
+// custom (2026-10-08) - the three the monsters arrived for. 'Shroom Sprayer gates the zygomites
+// now that they can be fought, and the other two are what OSRS sells to put a monster INTO the task
+// list: red dragons and aviansies are both in this build and neither was ever assigned.
+val=5,'Shroom Sprayer
+val=6,Seeing Red
+val=7,Watch the Birdie
 
 // The bit each one owns in %slayer_unlocks. NOT the row order: these are the bits the unlocks were
 // first written with (slayer_rewards.rs2 and the monsters that read them), and renumbering them
@@ -130,6 +136,9 @@ val=1,0
 val=2,1
 val=3,2
 val=4,3
+val=5,5
+val=6,6
+val=7,7
 
 [slayer_unlock_cost]
 inputtype=int
@@ -140,6 +149,9 @@ val=1,120
 val=2,10
 val=3,10
 val=4,150
+val=5,80
+val=6,75
+val=7,80
 
 [slayer_unlock_desc]
 inputtype=int
@@ -236,6 +248,7 @@ val=10,10
 val=30,30
 val=50,50
 val=75,75
+val=80,80
 val=100,100
 val=120,120
 val=150,150

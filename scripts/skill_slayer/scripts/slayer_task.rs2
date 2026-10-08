@@ -108,10 +108,29 @@ switch_int($target) {
             return (false);
         }
         return (true);
-    // FIXED 2026-09-10: no npc carries these, so the task could never be finished - zygomites and
-    // shades have no spawns here, and fever spiders live on Braindeath Island (Rum Deal, not in
-    // this build). Everything else a master gives now has tagged, spawned monsters.
-    case ^slayer_mutatedzygomite, ^slayer_shade, ^slayer_feverspider :
+    // BUILT 2026-10-08: the zygomites and the fever spiders are real monsters now, so each asks for
+    // what stands between a player and the place it lives rather than being refused.
+    //
+    // The zygomites are in Zanaris, behind Lost City, and OSRS sells the task as an unlock
+    // ('Shroom Sprayer) because killing one needs the fungicide that unlock pays for the use of -
+    // see skill_slayer/scripts/npcs/zygomite.rs2.
+    case ^slayer_mutatedzygomite :
+        if (%zanaris < ^zanaris_complete) {
+            return (false);
+        }
+        if (testbit(%slayer_unlocks, ^slayer_unlock_shroom_sprayer) = ^false) {
+            return (false);
+        }
+        return (true);
+    // Rum Deal is implemented, and the slayer gloves it pays are what this monster needs.
+    case ^slayer_feverspider :
+        if (%deal_quest < ^deal_complete) {
+            return (false);
+        }
+        return (true);
+    // STILL REFUSED: nothing spawns a shade. The six in the cache belong to Mort'ton, which is not
+    // in this build, and the prayer random event's are not a place you can go and hunt.
+    case ^slayer_shade :
         return (false);
     case ^slayer_killerwatt :
         if(%haunted < ^haunted_complete) {
@@ -128,8 +147,25 @@ switch_int($target) {
             return (false);
         }
         return (true);
-    case ^slayer_elf : // regicide
-        return (false);
+    // BUILT 2026-10-08: the Elf warriors of Tirannwm carry the category now, and Regicide is what
+    // opens the valley they stand in.
+    case ^slayer_elf :
+        if (%regicide_quest < ^regicide_complete) {
+            return (false);
+        }
+        return (true);
+    // BUILT 2026-10-08: red dragons and aviansies are Duradel's two unlock-only rows, the way OSRS
+    // sells them - the monsters were always here, the task never was.
+    case ^slayer_reddragon :
+        if (testbit(%slayer_unlocks, ^slayer_unlock_seeing_red) = ^false) {
+            return (false);
+        }
+        return (true);
+    case ^slayer_aviansie :
+        if (testbit(%slayer_unlocks, ^slayer_unlock_watch_the_birdie) = ^false) {
+            return (false);
+        }
+        return (true);
     // FIXED 2026-09-16: this was a bare refusal, written when Desert Treasure was not implemented.
     // It is now - dt_pyramid.rs2 sets %deserttreasure = ^deserttreasure_complete and hands out the
     // Ancient Magicks - and the 19 dust devils live in that quest's own smoke dungeon, m50_146,
@@ -141,16 +177,19 @@ switch_int($target) {
             return (false);
         }
         return (true);
-    // STILL REFUSED, and for two reasons rather than one. Mourning's End Part II is not
-    // implemented (scripts/quests/quest_mourning2 is a single .loc and nothing else), so the
-    // requirement cannot be expressed; and the 11 dark beasts that ARE spawned sit in a 2084-tile
-    // pocket across m30_72 and m31_72 - the Part I slave mines - whose 22 locs carry no script
-    // handler at all, so there is no way in. Opening this would hand out a task nobody can start.
-    // tools/superior_battery.py group 7 holds both facts, because the Night beast waits on them.
+    // STILL REFUSED, and the reason moved on 2026-10-08. Mourning's End Part II IS implemented now
+    // (it was made completable on 2026-09-24), so that half of the old note is gone - but there is
+    // still no way to WALK to a dark beast. The mourner hideout's ladder is the only handled way
+    // down into Part I's mines and it opens into a 93-tile room; the eleven beasts stand outside it,
+    // in a pocket nothing scripts an entrance to. Flooded out of the engine's own collision map.
+    // Opening this would hand out a task nobody can start - tools/superior_battery.py group 7 keeps
+    // the Night beast waiting on the same fact.
     case ^slayer_darkbeast : // mep2, and no way into the mines
         return (false);
-    case ^slayer_mogre : // skippy miniquest
-        return (false);
+    // BUILT 2026-10-08: a fishing explosive on the Mudskipper Point fishing spot brings one up
+    // (skill_slayer/scripts/npcs/mogre.rs2), which is how OSRS does it. Skippy's miniquest, which
+    // OSRS also asks for, is not in this build - the monster and the task are, and asking for a
+    // quest nobody can start would put this straight back where it was.
 }
 return (true);
 
