@@ -788,6 +788,9 @@ data=items,dragon_spear
 data=items,drill_helm
 data=items,drill_top
 data=items,drill_bottoms
+data=items,laderhosen_hat
+data=items,laderhosen_top
+data=items,laderhosen_legs
 data=items,macro_mime_mask
 data=items,macro_mime_top
 data=items,macro_mime_legs
@@ -1712,13 +1715,16 @@ data=items,rune_spear
 data=items,dragonshield_a
 data=items,dragon_spear
 
-// Random Events: 18 items
+// Random Events: 21 items
 [collection_log_random_events]
 table=collection_log_entry
 data=name,"Random Events"
 data=items,drill_helm
 data=items,drill_top
 data=items,drill_bottoms
+data=items,laderhosen_hat
+data=items,laderhosen_top
+data=items,laderhosen_legs
 data=items,macro_mime_mask
 data=items,macro_mime_top
 data=items,macro_mime_legs

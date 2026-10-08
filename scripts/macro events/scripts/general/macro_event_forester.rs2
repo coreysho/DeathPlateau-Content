@@ -90,7 +90,7 @@ if (%macro_event ! ^macro_forester) {
 if (inv_total(inv, raw_macro_pheasant_good) > 0) {
     ~chatnpc("<p,happy>That's the one! Look at the tail on it. Lovely.");
     inv_del(inv, raw_macro_pheasant_good, 1);
-    ~macro_event_give_reward;
+    ~macro_forester_pay;
     ~chatnpc("<p,happy>Off you go - the portal's over there.");
     return;
 }
@@ -104,6 +104,23 @@ if (inv_total(inv, raw_macro_pheasant_bad) > 0) {
     return;
 }
 ~chatnpc("<p,quiz>I'm after a pheasant with <~macro_forester_tailword(%macro_forester_wants)>. Count the tail feathers, that's the trick.");
+
+// THE LEDERHOSEN, a piece at a time and never one you already have, exactly as the Drill Demon
+// pays its camo - and then the ordinary table, so a fourth right bird is still worth bringing him.
+// The three pieces were imported long ago and nothing in the game has ever handed one out; the
+// forester is who the wiki says hands them out. macro_events_forester.enum.
+[proc,macro_forester_pay]
+def_int $i = 0;
+def_namedobj $piece;
+while ($i < enum_getoutputcount(macro_forester_reward)) {
+    $piece = enum(int, namedobj, macro_forester_reward, $i);
+    if (inv_total(inv, $piece) = 0 & inv_total(bank, $piece) = 0 & inv_total(worn, $piece) = 0) {
+        ~macro_event_give_obj($piece, 1);
+        return;
+    }
+    $i = calc($i + 1);
+}
+~macro_event_give_reward;
 
 [proc,macro_forester_tailword](int $tails)(string)
 switch_int ($tails) {

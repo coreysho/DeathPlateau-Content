@@ -131,8 +131,9 @@ proc(p, 'macro_event_give_obj', [obj('macro_mime_mask'), 1]);
 proc(p, 'macro_event_give_obj', [obj('drill_helm'), 1]);
 proc(p, 'macro_event_give_obj', [obj('macro_digger_boots'), 1]);
 proc(p, 'macro_event_give_obj', [obj('macro_frog_mask'), 1]);
-check(logCount(p, 'macro_mime_mask') === 1 && logCount(p, 'drill_helm') === 1 && logCount(p, 'macro_digger_boots') === 1 && logCount(p, 'macro_frog_mask') === 1,
-    'the mime mask, the camo helmet, the zombie boots and the frog mask are logged where they are handed over');
+proc(p, 'macro_event_give_obj', [obj('laderhosen_hat'), 1]);
+check(logCount(p, 'macro_mime_mask') === 1 && logCount(p, 'drill_helm') === 1 && logCount(p, 'macro_digger_boots') === 1 && logCount(p, 'macro_frog_mask') === 1 && logCount(p, 'laderhosen_hat') === 1,
+    'the mime mask, camo helmet, zombie boots, frog mask and lederhosen hat are logged where they are handed over');
 check(newItem(p, 'Mime mask') === 1, '"New item added" for the mime mask, once');
 // ...and the ordinary things that proc also hands out are not
 const beforeKebab = p.msgs.length;
@@ -187,7 +188,36 @@ check(text(p, 'collection_log:counter0') === '', 'a page with no counter shows n
 const randomRow = SPEC.tabs[3].entries.findIndex((e: any) => e.key === 'random_events');
 button(p, `collection_log:r${randomRow}box`);
 check(text(p, 'collection_log:name') === 'Random Events', `page name "${text(p, 'collection_log:name')}"`);
-check(text(p, 'collection_log:obtained') === 'Obtained: @yel@4/18', `"${text(p, 'collection_log:obtained')}" - the four handed over above`);
+check(text(p, 'collection_log:obtained') === 'Obtained: @yel@5/21', `"${text(p, 'collection_log:obtained')}" - the five handed over above`);
+
+// ---- 6b. The Freaky Forester pays the lederhosen a piece at a time, as the Drill Demon pays its
+// camo: three right birds, three pieces, and the ordinary gift from the fourth on.
+const fp: any = login('foresttest', new Uint8Array(0));
+await waitTicks(2);
+const invSlots = (q: any) => {
+    const i = q.getInventory(InvType.getId('inv'))!;
+    let n = 0;
+    for (let s2 = 0; s2 < i.capacity; s2++) { if (i.get(s2)) n++; }
+    return n;
+};
+const held = (q: any, name: string) => {
+    const i = q.getInventory(InvType.getId('inv'))!;
+    let n = 0;
+    for (let s2 = 0; s2 < i.capacity; s2++) { const o = i.get(s2); if (o && o.id === obj(name)) n += o.count; }
+    return n;
+};
+proc(fp, 'macro_forester_pay');
+check(held(fp, 'laderhosen_hat') === 1, 'the first right bird pays the hat');
+proc(fp, 'macro_forester_pay');
+proc(fp, 'macro_forester_pay');
+check(held(fp, 'laderhosen_top') === 1 && held(fp, 'laderhosen_legs') === 1, 'the second and third pay the top and the shorts');
+const slotsBefore = invSlots(fp);
+proc(fp, 'macro_forester_pay');
+check(held(fp, 'laderhosen_hat') === 1 && held(fp, 'laderhosen_top') === 1 && held(fp, 'laderhosen_legs') === 1,
+    'a fourth right bird pays no second piece');
+check(invSlots(fp) > slotsBefore, '...and pays the ordinary gift instead');
+check(logCount(fp, 'laderhosen_hat') === 1 && logCount(fp, 'laderhosen_top') === 1 && logCount(fp, 'laderhosen_legs') === 1,
+    "all three are in that player's collection log");
 
 // ---- 7. Log out and back in: the save carries the log, the counts and the paid reward.
 const save = p.save();

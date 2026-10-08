@@ -1,0 +1,15 @@
+// THE LEDERHOSEN, which is what the Freaky Forester has always paid:
+// runescape.wiki/w/Freaky_Forester - "the lederhosen outfit", a piece at a time, and the random
+// event gift once you have the set.
+//
+// All three were imported with the rest of the randoms' art and have been sitting in the build
+// with nothing to hand them out: obj ids 6180-6182, models and all, and shelves waiting for them
+// in the Construction costume room (poh_store.enum). The hat first, because it is the one you can
+// see.
+[macro_forester_reward]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,laderhosen_hat
+val=1,laderhosen_top
+val=2,laderhosen_legs
