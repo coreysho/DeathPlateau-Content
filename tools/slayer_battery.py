@@ -6,7 +6,7 @@ draws it in (tools/ifrender.font), so "it fits" is a fact rather than a characte
 
     python3 tools/slayer_battery.py
 """
-import os, re, sys
+import json, os, re, sys
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(C, 'tools'))
@@ -158,17 +158,25 @@ for tbl in ('slayer_unlock_desc', 'slayer_buy_desc'):
     check(all(v == [0, 1] for v in per.values()),
           '%s is exactly two lines per entry, as ^slayer_desc_lines says' % tbl)
 check(const('slayer_desc_lines') == 2, 'and that constant is 2')
-# Cosmetics holds the two helmet recolour unlocks - the tab OSRS keeps them in.
+# Cosmetics holds ONE ROW PER OBTAINABLE HELMET COLOUR - the tab OSRS keeps them in - and
+# tools/slayerhelmspec.json is what decides which colours those are: the ones with a source block,
+# because a colour with no head and no unlock cannot be bought. Read from the spec rather than
+# listed here, so that giving a fourth colour a source is one edit and not three.
+HELM = json.loads(read('tools/slayerhelmspec.json'))
+sourced = [c for c in HELM['colours'] if 'source' in c]
 cos_name, cos_bit, cos_cost = rows('slayer_cosmetic_name'), rows('slayer_cosmetic_bit'), rows('slayer_cosmetic_cost')
-check(list(cos_name.values()) == ['Unholy Helmet', 'Kalphite Khat'],
-      'Cosmetics is the two recolour unlocks: %s' % list(cos_name.values()))
-check(sorted(int(v) for v in cos_bit.values()) == [5, 6],
-      'on bits 5 and 6, which is what slayer_helm_colours.rs2 reads')
-check(all(int(v) == 1000 for v in cos_cost.values()),
-      "at OSRS's 1,000 points each")
+want = sorted((c['source']['unlock'], c['source']['bit'], c['source']['cost']) for c in sourced)
+got = sorted((cos_name[k], int(cos_bit[k]), int(cos_cost[k])) for k in cos_name)
+check(got == want, 'Cosmetics is every colour with a source, at its spec price: %s'
+      % (', '.join('%s %d pts (bit %d)' % (n, c, b) for n, b, c in got) if got == want else got))
 colours = read('scripts/skill_slayer/scripts/slayer_helm_colours.rs2')
-check('~slayer_has_unlock(5)' in colours and '~slayer_has_unlock(6)' in colours,
-      'and the recolour itself still asks for those two bits')
+missing = [c['source']['unlock'] for c in sourced
+           if '~slayer_has_unlock(%d)' % c['source']['bit'] not in colours]
+check(not missing, 'and the recolour itself asks for each of those bits: %s'
+      % (missing or 'all %d' % len(sourced)))
+heads = [c['source']['head'] for c in sourced
+         if '[opheldu,%s]' % c['source']['head'] not in colours]
+check(not heads, 'and every head has the trigger that uses it: %s' % (heads or 'all of them'))
 desc = WIN.split('[proc,slayer_ui_desc]', 1)[1].split('\n[', 1)[0]
 check('slayer_cosmetic_desc' in desc, 'the tab describes its two rows')
 take = WIN.split('[proc,slayer_ui_take]', 1)[1].split('\n[', 1)[0]
@@ -236,9 +244,21 @@ check('setbit(%slayer_unlocks' in REW and 'setbit(%slayer_extends' in REW,
       'the unlock and the extend are the bits they always were')
 bits = rows('slayer_unlock_bit')
 held = sorted(int(v) for v in bits.values())
-check(held == sorted(set(held)) and held == list(range(len(bits))),
-      'the %d unlocks own %d distinct bits, none reused: %s' % (len(bits), len(bits), held))
+# Distinct, NOT contiguous: the Cosmetics tab owns 5 and 6 out of the middle of the range, so an
+# unlock added after them starts at 7. What matters is that no two rewards share a bit, which is the
+# check below, and that nothing is renumbered, which is what a save already holds.
+check(held == sorted(set(held)), 'the %d unlocks own %d distinct bits, none reused: %s'
+      % (len(bits), len(set(held)), held))
 check(bits['0'] == '4', "and Bigger and Badder is still bit 4, which is what superiors.rs2 reads")
+# ONE VARP, TWO TABS. The Cosmetics tab's unlocks are bits in the same %slayer_unlocks, and three
+# unlocks added on 2026-10-08 were written on top of them - buying 'Shroom Sprayer handed over the
+# Unholy Helmet recolour, which is 80 points for a 1,000-point reward. Nothing compared the two
+# tables until this line did.
+cbits = rows('slayer_cosmetic_bit')
+allbits = [int(v) for v in bits.values()] + [int(v) for v in cbits.values()]
+clash = sorted(b for b in set(allbits) if allbits.count(b) > 1)
+check(not clash, 'and no unlock shares a bit with a cosmetic, which is the same varp: %s'
+      % (clash or 'all %d distinct' % len(allbits)))
 
 # ============================================================================ 9
 print('9. the rewards themselves are OSRS\'s, and every row can answer for itself')

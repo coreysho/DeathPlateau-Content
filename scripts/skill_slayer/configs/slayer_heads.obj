@@ -29,3 +29,24 @@ cost=50000
 members=yes
 tradeable=no
 // TODO by hand: category, param= combat bonuses, equip requirement
+
+[kbd_head]
+name=Kbd heads
+desc=I should get them stuffed!
+model=obj_kbd_head
+2dzoom=2256
+2dxan=444
+2dyan=45
+2dxof=1
+2dyof=1
+recol1s=15855
+recol1d=2114
+weight=10000g
+cost=50000
+members=yes
+tradeable=no
+// Separate is OSRS's knife-splitting into ensouled heads, which needs 90 Magic and the Arceuus
+// spellbook - neither is in this build, so the op is left off rather than left dead. The head's one
+// use here is the black slayer helmet (skill_slayer/scripts/slayer_helm_colours.rs2); the
+// Taxidermist stuffing it is OSRS's other use and is not built either.
+// TODO by hand: category, param= combat bonuses, equip requirement

@@ -1,586 +1,594 @@
 {
- "_": [
-  "Every slayer helmet OSRS has, in a plain and an imbued form. tools/genslayerhelm.py turns this",
-  "into their objs, the recolour interaction, and the unlock purchases.",
-  "",
-  "THESE ARE OSRS'S OWN MODELS, NOT RECOLOURS. The first version of this round tinted two colours",
-  "on the plain helmet, which only ever touched the mask and the strap. OSRS's variants are",
-  "separately authored meshes - the red one has different horns, the green one different spines,",
-  "the hooded one is a hood - so each carries its own model set, imported by",
-  "tools/models/importosrs.py from the obj id in osrs_obj and named obj_slayer_helm_<models>.",
-  "The camera is the cache's own too: the plain helmet faces 1791 and every recolour 1773, and",
-  "the hooded and oathplate ones are different again.",
-  "",
-  "geom IS THE ANCHOR. osrs_model is the cache model this colour was imported from, and geom is that",
-  "model's vertex and face counts after conversion, recorded at import time. Without it, a colour",
-  "pointed at the WRONG model set would be self-consistent - the config would say what the spec says",
-  "and every check would agree - because the cache is not on the laptop to ask. Battery group 67",
-  "measures the shipped .ob2 files against these numbers instead. They are all distinct except",
-  "oathplate and radiant, which really are one mesh.",
-  "",
-  "recol IS ONLY FOR THE THREE OSRS ITSELF RECOLOURS. Twisted recolours its own model, and",
-  "Radiant is a ten-pair recolour of the Oathplate model - which is why its models field says",
-  "oathplate. The pairs are RGB15, converted from the cache's HSL16 by the importer's own",
-  "hsl16_to_rgb15; a source that matches no face in the model does NOTHING, silently, so battery",
-  "group 67 checks every source against the model's real face colours.",
-  "",
-  "MEMBERSHIP IS THREE PARAMS, NOT A LIST OF NAMES. slayer_headgear is anything that gives the",
-  "on-task melee bonus (the masks and every helmet), slayer_helmet is the four protections a helmet",
-  "inherits from its parts (helmets only - a bare mask has no earmuffs), and slayer_imbued is the",
-  "ranged and magic boost. Adding a colour needs no edit to any proc.",
-  "",
-  "ONLY TWO CAN BE OBTAINED. red needs an abyssal head and green a Kq head, and those are the two",
-  "monsters that exist here. The other twelve have no source and are deliberately kept anyway, so",
-  "they can be looked at with ::give; tools/obtainable.py lists them by name rather than being",
-  "silenced. black becomes obtainable the moment the King Black Dragon is fightable - a source",
-  "block here and nothing else. The rest are post-2013 bosses.",
-  "",
-  "UNLOCK BITS 5 and 6 in %slayer_unlocks. 0-4 are Gargoyle Smasher, Slug Salter, Reptile",
-  "Freezer, Ring Bling and Bigger and Badder."
- ],
- "base_models": {
-  "plain": "obj_slayer_helm",
-  "plain_imbued": "obj_slayer_helm_i"
- },
- "colours": [
-  {
-   "key": "black",
-   "label": "Black",
-   "osrs_obj": 19639,
-   "osrs_model": 42700,
-   "models": "black",
-   "geom": {
-    "inv": [
-     203,
-     406
+    "_": [
+        "Every slayer helmet OSRS has, in a plain and an imbued form. tools/genslayerhelm.py turns this",
+        "into their objs, the recolour interaction, and the unlock purchases.",
+        "",
+        "THESE ARE OSRS'S OWN MODELS, NOT RECOLOURS. The first version of this round tinted two colours",
+        "on the plain helmet, which only ever touched the mask and the strap. OSRS's variants are",
+        "separately authored meshes - the red one has different horns, the green one different spines,",
+        "the hooded one is a hood - so each carries its own model set, imported by",
+        "tools/models/importosrs.py from the obj id in osrs_obj and named obj_slayer_helm_<models>.",
+        "The camera is the cache's own too: the plain helmet faces 1791 and every recolour 1773, and",
+        "the hooded and oathplate ones are different again.",
+        "",
+        "geom IS THE ANCHOR. osrs_model is the cache model this colour was imported from, and geom is that",
+        "model's vertex and face counts after conversion, recorded at import time. Without it, a colour",
+        "pointed at the WRONG model set would be self-consistent - the config would say what the spec says",
+        "and every check would agree - because the cache is not on the laptop to ask. Battery group 67",
+        "measures the shipped .ob2 files against these numbers instead. They are all distinct except",
+        "oathplate and radiant, which really are one mesh.",
+        "",
+        "recol IS ONLY FOR THE THREE OSRS ITSELF RECOLOURS. Twisted recolours its own model, and",
+        "Radiant is a ten-pair recolour of the Oathplate model - which is why its models field says",
+        "oathplate. The pairs are RGB15, converted from the cache's HSL16 by the importer's own",
+        "hsl16_to_rgb15; a source that matches no face in the model does NOTHING, silently, so battery",
+        "group 67 checks every source against the model's real face colours.",
+        "",
+        "MEMBERSHIP IS THREE PARAMS, NOT A LIST OF NAMES. slayer_headgear is anything that gives the",
+        "on-task melee bonus (the masks and every helmet), slayer_helmet is the four protections a helmet",
+        "inherits from its parts (helmets only - a bare mask has no earmuffs), and slayer_imbued is the",
+        "ranged and magic boost. Adding a colour needs no edit to any proc.",
+        "",
+        "ONLY TWO CAN BE OBTAINED. red needs an abyssal head and green a Kq head, and those are the two",
+        "monsters that exist here. The other twelve have no source and are deliberately kept anyway, so",
+        "they can be looked at with ::give; tools/obtainable.py lists them by name rather than being",
+        "silenced. black becomes obtainable the moment the King Black Dragon is fightable - a source",
+        "block here and nothing else. The rest are post-2013 bosses.",
+        "",
+        "UNLOCK BITS 5 and 6 in %slayer_unlocks. 0-4 are Gargoyle Smasher, Slug Salter, Reptile",
+        "Freezer, Ring Bling and Bigger and Badder."
     ],
-    "manwear": [
-     207,
-     414
-    ],
-    "womanwear": [
-     206,
-     408
-    ],
-    "manhead": [
-     413,
-     776
+    "base_models": {
+        "plain": "obj_slayer_helm",
+        "plain_imbued": "obj_slayer_helm_i"
+    },
+    "colours": [
+        {
+            "key": "black",
+            "label": "Black",
+            "osrs_obj": 19639,
+            "osrs_model": 42700,
+            "models": "black",
+            "geom": {
+                "inv": [
+                    203,
+                    406
+                ],
+                "manwear": [
+                    207,
+                    414
+                ],
+                "womanwear": [
+                    206,
+                    408
+                ],
+                "manhead": [
+                    413,
+                    776
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": [],
+            "source": {
+                "head": "kbd_head",
+                "head_label": "Kbd heads",
+                "unlock": "King Black Bonnet",
+                "bit": 10,
+                "cost": 1000,
+                "_why": "oldschool.runescape.wiki/w/Black_slayer_helmet: a Kbd heads on a slayer helmet, with the King Black Bonnet unlock at 1,000 points. The head is the King Black Dragon's own 1/128 drop. Bit 10 because 0-4 and 7-9 are the task unlocks and 5-6 the other two recolours - every tab of the window writes the one %slayer_unlocks."
+            }
+        },
+        {
+            "key": "green",
+            "label": "Green",
+            "osrs_obj": 19643,
+            "osrs_model": 42705,
+            "models": "green",
+            "geom": {
+                "inv": [
+                    221,
+                    438
+                ],
+                "manwear": [
+                    225,
+                    446
+                ],
+                "womanwear": [
+                    228,
+                    452
+                ],
+                "manhead": [
+                    439,
+                    830
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": [],
+            "source": {
+                "head": "kq_head",
+                "head_label": "Kq head",
+                "unlock": "Kalphite Khat",
+                "bit": 6,
+                "cost": 1000
+            }
+        },
+        {
+            "key": "red",
+            "label": "Red",
+            "osrs_obj": 19647,
+            "osrs_model": 42708,
+            "models": "red",
+            "geom": {
+                "inv": [
+                    203,
+                    402
+                ],
+                "manwear": [
+                    207,
+                    410
+                ],
+                "womanwear": [
+                    208,
+                    412
+                ],
+                "manhead": [
+                    419,
+                    788
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": [],
+            "source": {
+                "head": "abyssal_head",
+                "head_label": "abyssal head",
+                "unlock": "Unholy Helmet",
+                "bit": 5,
+                "cost": 1000
+            }
+        },
+        {
+            "key": "purple",
+            "label": "Purple",
+            "osrs_obj": 21264,
+            "osrs_model": 42704,
+            "models": "purple",
+            "geom": {
+                "inv": [
+                    216,
+                    432
+                ],
+                "manwear": [
+                    220,
+                    440
+                ],
+                "womanwear": [
+                    228,
+                    452
+                ],
+                "manhead": [
+                    427,
+                    804
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "turquoise",
+            "label": "Turquoise",
+            "osrs_obj": 21888,
+            "osrs_model": 42701,
+            "models": "turquoise",
+            "geom": {
+                "inv": [
+                    220,
+                    438
+                ],
+                "manwear": [
+                    224,
+                    446
+                ],
+                "womanwear": [
+                    227,
+                    452
+                ],
+                "manhead": [
+                    439,
+                    826
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "hydra",
+            "label": "Hydra",
+            "osrs_obj": 23073,
+            "osrs_model": 42703,
+            "models": "hydra",
+            "geom": {
+                "inv": [
+                    224,
+                    448
+                ],
+                "manwear": [
+                    228,
+                    456
+                ],
+                "womanwear": [
+                    233,
+                    456
+                ],
+                "manhead": [
+                    435,
+                    820
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "twisted",
+            "label": "Twisted",
+            "osrs_obj": 24370,
+            "osrs_model": 42706,
+            "models": "twisted",
+            "geom": {
+                "inv": [
+                    227,
+                    446
+                ],
+                "manwear": [
+                    225,
+                    446
+                ],
+                "womanwear": [
+                    233,
+                    458
+                ],
+                "manhead": [
+                    437,
+                    824
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": [
+                [
+                    29695,
+                    28535
+                ],
+                [
+                    25599,
+                    26421
+                ],
+                [
+                    22363,
+                    21138
+                ],
+                [
+                    21272,
+                    20080
+                ]
+            ]
+        },
+        {
+            "key": "tztok",
+            "label": "Tztok",
+            "osrs_obj": 25898,
+            "osrs_model": 42724,
+            "models": "tztok",
+            "geom": {
+                "inv": [
+                    232,
+                    464
+                ],
+                "manwear": [
+                    236,
+                    472
+                ],
+                "womanwear": [
+                    236,
+                    470
+                ],
+                "manhead": [
+                    399,
+                    749
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "vampyric",
+            "label": "Vampyric",
+            "osrs_obj": 25904,
+            "osrs_model": 42725,
+            "models": "vampyric",
+            "geom": {
+                "inv": [
+                    202,
+                    400
+                ],
+                "manwear": [
+                    206,
+                    408
+                ],
+                "womanwear": [
+                    210,
+                    408
+                ],
+                "manhead": [
+                    369,
+                    685
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "tzkal",
+            "label": "Tzkal",
+            "osrs_obj": 25910,
+            "osrs_model": 42726,
+            "models": "tzkal",
+            "geom": {
+                "inv": [
+                    235,
+                    464
+                ],
+                "manwear": [
+                    239,
+                    472
+                ],
+                "womanwear": [
+                    238,
+                    470
+                ],
+                "manhead": [
+                    399,
+                    746
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1773,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "araxyte",
+            "label": "Araxyte",
+            "osrs_obj": 29816,
+            "osrs_model": 54309,
+            "models": "araxyte",
+            "geom": {
+                "inv": [
+                    239,
+                    448
+                ],
+                "manwear": [
+                    243,
+                    454
+                ],
+                "womanwear": [
+                    244,
+                    456
+                ],
+                "manhead": [
+                    413,
+                    745
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 30,
+                "yan": 1791,
+                "xof": -4,
+                "yof": -3
+            },
+            "recol": []
+        },
+        {
+            "key": "hooded",
+            "label": "Hooded",
+            "osrs_obj": 33066,
+            "osrs_model": 28461,
+            "models": "hooded",
+            "geom": {
+                "inv": [
+                    134,
+                    266
+                ],
+                "manwear": [
+                    134,
+                    264
+                ],
+                "womanwear": [
+                    134,
+                    264
+                ],
+                "manhead": [
+                    310,
+                    567
+                ]
+            },
+            "camera": {
+                "zoom": 779,
+                "xan": 54,
+                "yan": 1830,
+                "xof": -2,
+                "yof": -6
+            },
+            "recol": []
+        },
+        {
+            "key": "oathplate",
+            "label": "Oathplate",
+            "osrs_obj": 33338,
+            "osrs_model": 60169,
+            "models": "oathplate",
+            "geom": {
+                "inv": [
+                    321,
+                    548
+                ],
+                "manwear": [
+                    325,
+                    554
+                ],
+                "womanwear": [
+                    321,
+                    546
+                ],
+                "manhead": [
+                    487,
+                    830
+                ]
+            },
+            "camera": {
+                "zoom": 921,
+                "xan": 0,
+                "yan": 1885,
+                "xof": 1,
+                "yof": -3
+            },
+            "recol": [
+                [
+                    24075,
+                    0
+                ]
+            ]
+        },
+        {
+            "key": "radiant",
+            "label": "Radiant",
+            "osrs_obj": 33340,
+            "osrs_model": 60169,
+            "models": "oathplate",
+            "geom": {
+                "inv": [
+                    321,
+                    548
+                ],
+                "manwear": [
+                    325,
+                    554
+                ],
+                "womanwear": [
+                    321,
+                    546
+                ],
+                "manhead": [
+                    487,
+                    830
+                ]
+            },
+            "camera": {
+                "zoom": 921,
+                "xan": 0,
+                "yan": 1885,
+                "xof": 1,
+                "yof": -3
+            },
+            "recol": [
+                [
+                    12519,
+                    24447
+                ],
+                [
+                    10438,
+                    22265
+                ],
+                [
+                    8324,
+                    21174
+                ],
+                [
+                    6276,
+                    16879
+                ],
+                [
+                    4195,
+                    14765
+                ],
+                [
+                    6243,
+                    14832
+                ],
+                [
+                    21602,
+                    13055
+                ],
+                [
+                    7333,
+                    16879
+                ],
+                [
+                    9381,
+                    16946
+                ],
+                [
+                    24075,
+                    0
+                ]
+            ]
+        }
     ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "green",
-   "label": "Green",
-   "osrs_obj": 19643,
-   "osrs_model": 42705,
-   "models": "green",
-   "geom": {
-    "inv": [
-     221,
-     438
-    ],
-    "manwear": [
-     225,
-     446
-    ],
-    "womanwear": [
-     228,
-     452
-    ],
-    "manhead": [
-     439,
-     830
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": [],
-   "source": {
-    "head": "kq_head",
-    "head_label": "Kq head",
-    "unlock": "Kalphite Khat",
-    "bit": 6,
-    "cost": 1000
-   }
-  },
-  {
-   "key": "red",
-   "label": "Red",
-   "osrs_obj": 19647,
-   "osrs_model": 42708,
-   "models": "red",
-   "geom": {
-    "inv": [
-     203,
-     402
-    ],
-    "manwear": [
-     207,
-     410
-    ],
-    "womanwear": [
-     208,
-     412
-    ],
-    "manhead": [
-     419,
-     788
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": [],
-   "source": {
-    "head": "abyssal_head",
-    "head_label": "abyssal head",
-    "unlock": "Unholy Helmet",
-    "bit": 5,
-    "cost": 1000
-   }
-  },
-  {
-   "key": "purple",
-   "label": "Purple",
-   "osrs_obj": 21264,
-   "osrs_model": 42704,
-   "models": "purple",
-   "geom": {
-    "inv": [
-     216,
-     432
-    ],
-    "manwear": [
-     220,
-     440
-    ],
-    "womanwear": [
-     228,
-     452
-    ],
-    "manhead": [
-     427,
-     804
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "turquoise",
-   "label": "Turquoise",
-   "osrs_obj": 21888,
-   "osrs_model": 42701,
-   "models": "turquoise",
-   "geom": {
-    "inv": [
-     220,
-     438
-    ],
-    "manwear": [
-     224,
-     446
-    ],
-    "womanwear": [
-     227,
-     452
-    ],
-    "manhead": [
-     439,
-     826
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "hydra",
-   "label": "Hydra",
-   "osrs_obj": 23073,
-   "osrs_model": 42703,
-   "models": "hydra",
-   "geom": {
-    "inv": [
-     224,
-     448
-    ],
-    "manwear": [
-     228,
-     456
-    ],
-    "womanwear": [
-     233,
-     456
-    ],
-    "manhead": [
-     435,
-     820
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "twisted",
-   "label": "Twisted",
-   "osrs_obj": 24370,
-   "osrs_model": 42706,
-   "models": "twisted",
-   "geom": {
-    "inv": [
-     227,
-     446
-    ],
-    "manwear": [
-     225,
-     446
-    ],
-    "womanwear": [
-     233,
-     458
-    ],
-    "manhead": [
-     437,
-     824
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": [
-    [
-     29695,
-     28535
-    ],
-    [
-     25599,
-     26421
-    ],
-    [
-     22363,
-     21138
-    ],
-    [
-     21272,
-     20080
-    ]
-   ]
-  },
-  {
-   "key": "tztok",
-   "label": "Tztok",
-   "osrs_obj": 25898,
-   "osrs_model": 42724,
-   "models": "tztok",
-   "geom": {
-    "inv": [
-     232,
-     464
-    ],
-    "manwear": [
-     236,
-     472
-    ],
-    "womanwear": [
-     236,
-     470
-    ],
-    "manhead": [
-     399,
-     749
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "vampyric",
-   "label": "Vampyric",
-   "osrs_obj": 25904,
-   "osrs_model": 42725,
-   "models": "vampyric",
-   "geom": {
-    "inv": [
-     202,
-     400
-    ],
-    "manwear": [
-     206,
-     408
-    ],
-    "womanwear": [
-     210,
-     408
-    ],
-    "manhead": [
-     369,
-     685
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "tzkal",
-   "label": "Tzkal",
-   "osrs_obj": 25910,
-   "osrs_model": 42726,
-   "models": "tzkal",
-   "geom": {
-    "inv": [
-     235,
-     464
-    ],
-    "manwear": [
-     239,
-     472
-    ],
-    "womanwear": [
-     238,
-     470
-    ],
-    "manhead": [
-     399,
-     746
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1773,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "araxyte",
-   "label": "Araxyte",
-   "osrs_obj": 29816,
-   "osrs_model": 54309,
-   "models": "araxyte",
-   "geom": {
-    "inv": [
-     239,
-     448
-    ],
-    "manwear": [
-     243,
-     454
-    ],
-    "womanwear": [
-     244,
-     456
-    ],
-    "manhead": [
-     413,
-     745
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 30,
-    "yan": 1791,
-    "xof": -4,
-    "yof": -3
-   },
-   "recol": []
-  },
-  {
-   "key": "hooded",
-   "label": "Hooded",
-   "osrs_obj": 33066,
-   "osrs_model": 28461,
-   "models": "hooded",
-   "geom": {
-    "inv": [
-     134,
-     266
-    ],
-    "manwear": [
-     134,
-     264
-    ],
-    "womanwear": [
-     134,
-     264
-    ],
-    "manhead": [
-     310,
-     567
-    ]
-   },
-   "camera": {
-    "zoom": 779,
-    "xan": 54,
-    "yan": 1830,
-    "xof": -2,
-    "yof": -6
-   },
-   "recol": []
-  },
-  {
-   "key": "oathplate",
-   "label": "Oathplate",
-   "osrs_obj": 33338,
-   "osrs_model": 60169,
-   "models": "oathplate",
-   "geom": {
-    "inv": [
-     321,
-     548
-    ],
-    "manwear": [
-     325,
-     554
-    ],
-    "womanwear": [
-     321,
-     546
-    ],
-    "manhead": [
-     487,
-     830
-    ]
-   },
-   "camera": {
-    "zoom": 921,
-    "xan": 0,
-    "yan": 1885,
-    "xof": 1,
-    "yof": -3
-   },
-   "recol": [
-    [
-     24075,
-     0
-    ]
-   ]
-  },
-  {
-   "key": "radiant",
-   "label": "Radiant",
-   "osrs_obj": 33340,
-   "osrs_model": 60169,
-   "models": "oathplate",
-   "geom": {
-    "inv": [
-     321,
-     548
-    ],
-    "manwear": [
-     325,
-     554
-    ],
-    "womanwear": [
-     321,
-     546
-    ],
-    "manhead": [
-     487,
-     830
-    ]
-   },
-   "camera": {
-    "zoom": 921,
-    "xan": 0,
-    "yan": 1885,
-    "xof": 1,
-    "yof": -3
-   },
-   "recol": [
-    [
-     12519,
-     24447
-    ],
-    [
-     10438,
-     22265
-    ],
-    [
-     8324,
-     21174
-    ],
-    [
-     6276,
-     16879
-    ],
-    [
-     4195,
-     14765
-    ],
-    [
-     6243,
-     14832
-    ],
-    [
-     21602,
-     13055
-    ],
-    [
-     7333,
-     16879
-    ],
-    [
-     9381,
-     16946
-    ],
-    [
-     24075,
-     0
-    ]
-   ]
-  }
- ]
 }

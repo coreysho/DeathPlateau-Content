@@ -33,6 +33,18 @@ if (random(1000) = 0) {
     ~broadcast_drop(dragon_pickaxe); // the broadcast is also the collection log's way in
 }
 
+// The heads, 1/128, its own roll for the same reason the pickaxe above has one: in OSRS it is a
+// separate roll rather than a band in the table, and every threshold in the cascade below is a
+// calibrated 128th. Rate from oldschool.runescape.wiki/w/Kbd_heads : King Black Dragon, 1, 1/128.
+//
+// What they are for: the BLACK slayer helmet - the King Black Bonnet unlock at a Slayer master, and
+// the heads used on a helmet (skill_slayer/scripts/slayer_helm_colours.rs2). It was the one helmet
+// colour whose monster this build already had and whose head it did not.
+if (random(128) = 0) {
+    obj_add(npc_coord, kbd_head, 1, ^lootdrop_duration);
+    ~collection_log_add(kbd_head, 1); // not broadcast, so the collection log is told here
+}
+
 def_int $random = random(128);
 
 if ($random < 10) { // osrs

@@ -102,12 +102,16 @@
 // weakest poison in the build: the point is the warning, not the damage.
 ^fever_spider_poison = 20
 
-// The bit %slayer_unlocks keeps 'Shroom Sprayer in. The five older unlocks own bits 0-4
-// (configs/slayer_rewards.enum says which); a bit is never renumbered, because it is what a save
-// already holds.
-^slayer_unlock_shroom_sprayer = 5
-^slayer_unlock_seeing_red = 6
-^slayer_unlock_watch_the_birdie = 7
+// The bits %slayer_unlocks keeps these three in. EVERY TAB OF THE REWARDS WINDOW WRITES THAT ONE
+// VARP: the five older unlocks own bits 0-4 and the two helmet recolours own 5 and 6
+// (configs/slayer_rewards.enum), so these start at 7. They were written as 5-7 for half a day,
+// which made buying 'Shroom Sprayer hand over the Unholy Helmet recolour as well.
+//
+// A bit is never renumbered once players hold it. These three are the exception that proves it:
+// they existed for hours, on no live world, and the collision had to go.
+^slayer_unlock_shroom_sprayer = 7
+^slayer_unlock_seeing_red = 8
+^slayer_unlock_watch_the_birdie = 9
 
 // Slayer points (skill_slayer/scripts/slayer_points.rs2) - OSRS prices
 ^slayer_cancel_cost = 30

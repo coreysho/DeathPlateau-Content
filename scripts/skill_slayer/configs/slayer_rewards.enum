@@ -136,9 +136,14 @@ val=1,0
 val=2,1
 val=3,2
 val=4,3
-val=5,5
-val=6,6
-val=7,7
+// 7, 8, 9 and NOT 5, 6, 7: the Cosmetics tab's two unlocks have owned bits 5 and 6 since the window
+// was written (slayer_cosmetic_bit below), and both tabs write the same %slayer_unlocks. Added on
+// 2026-10-08 as 5-7, which quietly made 'Shroom Sprayer hand over the Unholy Helmet recolour and
+// Seeing Red hand over Kalphite Khat; corrected the same day, before either could be bought on a
+// live world.
+val=5,7
+val=6,8
+val=7,9
 
 [slayer_unlock_cost]
 inputtype=int
@@ -177,6 +182,9 @@ outputtype=string
 default=null
 val=0,Unholy Helmet
 val=1,Kalphite Khat
+// custom (2026-10-08) - the third colour with a source. tools/slayerhelmspec.json is where the
+// helmet end of it lives; this is the row that sells the unlock.
+val=2,King Black Bonnet
 
 [slayer_cosmetic_bit]
 inputtype=int
@@ -184,6 +192,7 @@ outputtype=int
 default=-1
 val=0,5
 val=1,6
+val=2,10
 
 [slayer_cosmetic_cost]
 inputtype=int
@@ -191,6 +200,7 @@ outputtype=int
 default=0
 val=0,1000
 val=1,1000
+val=2,1000
 
 [slayer_cosmetic_desc]
 inputtype=int
@@ -200,6 +210,8 @@ val=0,Use an abyssal head on a slayer helmet to turn it red.
 val=1,Abyssal demons drop the head.
 val=3,Use a Kq head on a slayer helmet to turn it green.
 val=4,The Kalphite Queen drops the head.
+val=6,Use Kbd heads on a slayer helmet to turn it black.
+val=7,The King Black Dragon drops the heads.
 
 // EVERY ROW OF THE BUY TAB IS AN ITEM. Row 3 used to be the imbue - a service with no obj, which
 // ~slayer_ui_name had to special-case - and the imbue is a Scroll of imbuing drop now

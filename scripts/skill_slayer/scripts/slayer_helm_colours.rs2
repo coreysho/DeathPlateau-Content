@@ -6,7 +6,7 @@
 // is consumed. Each colour has its own unlock and its own head, and both are checked - an
 // unlock without a head does nothing, and a head without the unlock says why.
 //
-// ONLY 2 OF THE 14 COLOURS HAVE A SOURCE. The rest exist so they can be looked at with
+// ONLY 3 OF THE 14 COLOURS HAVE A SOURCE. The rest exist so they can be looked at with
 // ::give and get no trigger here at all; the black one becomes real the moment the King
 // Black Dragon does. tools/obtainable.py reports them by name rather than being told to
 // ignore them.
@@ -22,6 +22,31 @@
 // THE IMBUE SURVIVES THE RECOLOUR IN BOTH DIRECTIONS. An imbued helmet recoloured stays
 // imbued, which is what the paired _i variants are for. Nothing here can turn an imbued
 // helmet into a plain one, because the player paid for it.
+
+// ---- black: Kbd heads, unlocked with King Black Bonnet
+[opheldu,kbd_head] @slayer_recolour_black;
+
+[label,slayer_recolour_black]
+if (~slayer_helm_recolour_pair(kbd_head) = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (~slayer_has_unlock(10) = false) {
+    mes("You need the King Black Bonnet unlock from a Slayer master to do that.");
+    return;
+}
+def_namedobj $into = slayer_helm_black;
+if (inv_total(inv, slayer_helm_i) > 0) {
+    $into = slayer_helm_black_i;
+}
+inv_del(inv, kbd_head, 1);
+if (inv_total(inv, slayer_helm_i) > 0) {
+    inv_del(inv, slayer_helm_i, 1);
+} else {
+    inv_del(inv, slayer_helm, 1);
+}
+inv_add(inv, $into, 1);
+~objbox($into, "You fix the kbd heads onto your slayer helmet.", 250, 0, 0);
 
 // ---- green: Kq head, unlocked with Kalphite Khat
 [opheldu,kq_head] @slayer_recolour_green;
@@ -116,38 +141,8 @@ return(false);
 [opheld3,slayer_helm_radiant] @slayer_helm_check;
 [opheld3,slayer_helm_radiant_i] @slayer_helm_check;
 
-// and worn, from the Worn Equipment tab (player/scripts/wearop.rs2)
-[label,wearop1_slayer_helm_black] @slayer_helm_check;
-[label,wearop1_slayer_helm_black_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_green] @slayer_helm_check;
-[label,wearop1_slayer_helm_green_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_red] @slayer_helm_check;
-[label,wearop1_slayer_helm_red_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_purple] @slayer_helm_check;
-[label,wearop1_slayer_helm_purple_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_turquoise] @slayer_helm_check;
-[label,wearop1_slayer_helm_turquoise_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_hydra] @slayer_helm_check;
-[label,wearop1_slayer_helm_hydra_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_twisted] @slayer_helm_check;
-[label,wearop1_slayer_helm_twisted_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_tztok] @slayer_helm_check;
-[label,wearop1_slayer_helm_tztok_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_vampyric] @slayer_helm_check;
-[label,wearop1_slayer_helm_vampyric_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_tzkal] @slayer_helm_check;
-[label,wearop1_slayer_helm_tzkal_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_araxyte] @slayer_helm_check;
-[label,wearop1_slayer_helm_araxyte_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_hooded] @slayer_helm_check;
-[label,wearop1_slayer_helm_hooded_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_oathplate] @slayer_helm_check;
-[label,wearop1_slayer_helm_oathplate_i] @slayer_helm_check;
-[label,wearop1_slayer_helm_radiant] @slayer_helm_check;
-[label,wearop1_slayer_helm_radiant_i] @slayer_helm_check;
-
-[opheld4,slayer_helm_black] @slayer_helm_split_headless(black_mask);
-[opheld4,slayer_helm_black_i] @slayer_helm_split_headless(black_mask_i);
+[opheld4,slayer_helm_black] @slayer_helm_split_coloured(black_mask, kbd_head);
+[opheld4,slayer_helm_black_i] @slayer_helm_split_coloured(black_mask_i, kbd_head);
 [opheld4,slayer_helm_green] @slayer_helm_split_coloured(black_mask, kq_head);
 [opheld4,slayer_helm_green_i] @slayer_helm_split_coloured(black_mask_i, kq_head);
 [opheld4,slayer_helm_red] @slayer_helm_split_coloured(black_mask, abyssal_head);

@@ -82,6 +82,7 @@ data=items,bosspet_kalphite_queen_item
 data=items,kq_head
 data=items,dragon_chainbody
 data=items,bosspet_kbd_item
+data=items,kbd_head
 data=items,bosspet_kraken_item
 data=items,kraken_tentacle_item
 data=items,trident_of_the_seas_full
@@ -928,12 +929,13 @@ data=items,dragon_chainbody
 data=items,dragon_pickaxe
 data=counters,"Kalphite Queen kills",5
 
-// King Black Dragon: 2 items
+// King Black Dragon: 3 items
 [collection_log_kbd]
 table=collection_log_entry
 data=name,"King Black Dragon"
 data=items,bosspet_kbd_item
 data=items,dragon_pickaxe
+data=items,kbd_head
 data=counters,"King Black Dragon kills",10
 
 // Kraken: 4 items
