@@ -296,6 +296,16 @@ if (stat_base(prayer) < $prayer_level | stat_base(magic) < $magic_level) {
 
 // --- added 2026-09-04 with the equipment stat/requirement pass (see claude/equipment-audit.md) ---
 
+// The 3rd Age druidic staff is the only thing here that wants Prayer and Attack together:
+// "requires 65 Prayer and Attack to wear".
+[label,levelrequire_prayer_and_attack](int $prayer_level, int $attack_level, int $slot)
+if (stat_base(prayer) < $prayer_level | stat_base(attack) < $attack_level) {
+    mes("You are not a high enough level to use this item.");
+    mes("You need to have a Prayer level of <tostring($prayer_level)> and an Attack level of <tostring($attack_level)>.");
+    return;
+}
+~equip($slot);
+
 [label,levelrequire_defence_and_strength](int $defence_level, int $strength_level, int $slot)
 if (stat_base(defence) < $defence_level | stat_base(strength) < $strength_level) {
     mes("You are not a high enough level to use this item.");

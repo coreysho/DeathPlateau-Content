@@ -2,3 +2,47 @@
 [opheld2,bandos_chestplate] @levelrequire_defence(65, last_slot);
 [opheld2,bandos_tassets] @levelrequire_defence(65, last_slot);
 [opheld2,bandos_boots] @levelrequire_defence(65, last_slot);
+
+// ============================================================================ 3rd age
+//
+// EVERY ONE OF THESE WENT ON AT LEVEL 1. Twenty-three pieces, the rarest equipment in the game,
+// and not one of them had an [opheld2] - so they fell through to the global wear and asked
+// nothing. Levels are oldschool.runescape.wiki's, from the four set pages and the four loose
+// items; the quotes are in tools/wearreq.py's companion commit message.
+//
+// The axe and the pickaxe also want 61 Woodcutting and 61 Mining respectively, but those are
+// requirements to USE them on a tree or a rock rather than to hold them, and this file is about
+// holding. Wielding one at 65 Attack with 60 Woodcutting is correct.
+
+// Melee armour: 65 Defence. The longsword: 65 Attack.
+[opheld2,third_age_full_helmet] @levelrequire_defence(65, last_slot);
+[opheld2,third_age_platebody] @levelrequire_defence(65, last_slot);
+[opheld2,third_age_platelegs] @levelrequire_defence(65, last_slot);
+[opheld2,third_age_plateskirt] @levelrequire_defence(65, last_slot);
+[opheld2,third_age_kiteshield] @levelrequire_defence(65, last_slot);
+[opheld2,third_age_longsword] @levelrequire_attack(65, last_slot);
+
+// Mage: 65 Magic, and 30 Defence for the three that are armour.
+[opheld2,third_age_mage_hat] @levelrequire_magic_and_defence(65, 30, last_slot);
+[opheld2,third_age_robe_top] @levelrequire_magic_and_defence(65, 30, last_slot);
+[opheld2,third_age_robe] @levelrequire_magic_and_defence(65, 30, last_slot);
+[opheld2,third_age_amulet] @levelrequire_magic(65, last_slot);
+[opheld2,third_age_wand] @levelrequire_magic(65, last_slot);
+
+// Range: 65 Ranged, and 45 Defence for the four that are armour.
+[opheld2,third_age_range_coif] @levelrequire_ranged_and_defence(65, 45, last_slot);
+[opheld2,third_age_range_top] @levelrequire_ranged_and_defence(65, 45, last_slot);
+[opheld2,third_age_range_legs] @levelrequire_ranged_and_defence(65, 45, last_slot);
+[opheld2,third_age_vambraces] @levelrequire_ranged_and_defence(65, 45, last_slot);
+[opheld2,third_age_bow] @levelrequire_ranged(65, last_slot);
+
+// Druidic: 65 Prayer, and the staff wants 65 Attack with it.
+[opheld2,third_age_druidic_robe_top] @levelrequire_prayer(65, last_slot);
+[opheld2,third_age_druidic_robe_bottoms] @levelrequire_prayer(65, last_slot);
+[opheld2,third_age_druidic_cloak] @levelrequire_prayer(65, last_slot);
+[opheld2,third_age_druidic_staff] @levelrequire_prayer_and_attack(65, 65, last_slot);
+
+// The plain cloak is Prayer too; the axe and the pickaxe are dragon-tier tools at 65 Attack.
+[opheld2,third_age_cloak] @levelrequire_prayer(65, last_slot);
+[opheld2,third_age_axe] @levelrequire_attack(65, last_slot);
+[opheld2,third_age_pickaxe] @levelrequire_attack(65, last_slot);

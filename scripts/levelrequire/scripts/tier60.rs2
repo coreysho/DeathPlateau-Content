@@ -62,3 +62,19 @@
 // --- OSRS imports (2026-09-21) ---
 [opheld2,arkan_blade] @levelrequire_attack(60, last_slot);
 [opheld2,twinflame_staff] @levelrequire_magic(60, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,dragon_boots_g] @levelrequire_defence(60, last_slot);
+[opheld2,dragon_chainbody_g] @levelrequire_defence_caps(60, last_slot);
+[opheld2,dragon_defender_t] @levelrequire_defence(60, last_slot);
+[opheld2,dragon_platelegs_g] @levelrequire_defence_caps(60, last_slot);
+[opheld2,dragon_scimitar_or] @levelrequire_mm_quest_attack(60, last_slot);
+[opheld2,dragon_sq_shield_g] @levelrequire_legends_quest_defence(60, last_slot);
+[opheld2,red_dhide_body_g] @levelrequire_ranged_and_defence(60, 40, last_slot);
+[opheld2,red_dhide_body_t] @levelrequire_ranged_and_defence(60, 40, last_slot);
+[opheld2,red_dhide_chaps_g] @levelrequire_ranged_lower(60, last_slot);
+[opheld2,red_dhide_chaps_t] @levelrequire_ranged_lower(60, last_slot);
+[opheld2,tbwt_dragon_spear_kp] @levelrequire_attack_caps(60, last_slot);
+[opheld2,tzhaar_ket_om_t] @levelrequire_strength(60, last_slot);

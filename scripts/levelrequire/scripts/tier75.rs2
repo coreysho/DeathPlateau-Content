@@ -3,3 +3,8 @@
 [opheld2,bandos_godsword] @levelrequire_attack(75, last_slot);
 [opheld2,saradomin_godsword] @levelrequire_attack(75, last_slot);
 [opheld2,zamorak_godsword] @levelrequire_attack(75, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,armadyl_godsword_or] @levelrequire_attack(75, last_slot);

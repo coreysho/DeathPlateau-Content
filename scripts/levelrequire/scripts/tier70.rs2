@@ -199,3 +199,11 @@
 [opheld2,armadyl_helmet] @levelrequire_ranged_and_defence(70, 70, last_slot);
 [opheld2,armadyl_chestplate] @levelrequire_ranged_and_defence(70, 70, last_slot);
 [opheld2,armadyl_chainskirt] @levelrequire_ranged_and_defence(70, 70, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,black_dhide_body_g] @levelrequire_ranged_and_defence(70, 40, last_slot);
+[opheld2,black_dhide_body_t] @levelrequire_ranged_and_defence(70, 40, last_slot);
+[opheld2,black_dhide_chaps_g] @levelrequire_ranged_lower(70, last_slot);
+[opheld2,black_dhide_chaps_t] @levelrequire_ranged_lower(70, last_slot);

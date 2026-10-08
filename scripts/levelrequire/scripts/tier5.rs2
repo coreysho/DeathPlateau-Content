@@ -49,3 +49,15 @@
 
 // --- Warriors' Guild / Barbarian Assault imports (2026-09-09, rev 474 cache) ---
 [opheld2,steel_defender] @levelrequire_attack_and_defence(5, 5, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,steel_full_helm_g] @levelrequire_defence(5, last_slot);
+[opheld2,steel_full_helm_t] @levelrequire_defence(5, last_slot);
+[opheld2,steel_kiteshield_g] @levelrequire_defence(5, last_slot);
+[opheld2,steel_kiteshield_t] @levelrequire_defence(5, last_slot);
+[opheld2,steel_platebody_g] @levelrequire_defence(5, last_slot);
+[opheld2,steel_platebody_t] @levelrequire_defence(5, last_slot);
+[opheld2,steel_platelegs_g] @levelrequire_defence(5, last_slot);
+[opheld2,steel_platelegs_t] @levelrequire_defence(5, last_slot);

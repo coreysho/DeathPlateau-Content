@@ -102,3 +102,19 @@
 [opheld2,xerician_hat] @levelrequire_magic_and_defence(20, 10, last_slot);
 [opheld2,xerician_top] @levelrequire_magic_and_defence(20, 10, last_slot);
 [opheld2,xerician_robe] @levelrequire_magic_and_defence(20, 10, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,mithril_full_helm_g] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_full_helm_t] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_kiteshield_g] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_kiteshield_t] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_platebody_g] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_platebody_t] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_platelegs_g] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_platelegs_t] @levelrequire_defence(20, last_slot);
+[opheld2,studded_body_trim_fur] @levelrequire_ranged_and_defence(20, 20, last_slot);
+[opheld2,studded_body_trim_gold] @levelrequire_ranged_and_defence(20, 20, last_slot);
+[opheld2,studded_chaps_trim_fur] @levelrequire_ranged_lower(20, last_slot);
+[opheld2,studded_chaps_trim_gold] @levelrequire_ranged_lower(20, last_slot);

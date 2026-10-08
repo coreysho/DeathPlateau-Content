@@ -92,3 +92,12 @@
 
 // --- Warriors' Guild / Barbarian Assault imports (2026-09-09, rev 474 cache) ---
 [opheld2,adamant_defender] @levelrequire_attack_and_defence(30, 30, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,adamant_platebody_h1] @levelrequire_defence(30, last_slot);
+[opheld2,adamant_platebody_h2] @levelrequire_defence(30, last_slot);
+[opheld2,adamant_platebody_h3] @levelrequire_defence(30, last_slot);
+[opheld2,adamant_platebody_h4] @levelrequire_defence(30, last_slot);
+[opheld2,adamant_platebody_h5] @levelrequire_defence(30, last_slot);

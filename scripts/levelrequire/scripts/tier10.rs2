@@ -80,3 +80,17 @@
 
 // --- Slayer helmet (2026-09-10, OSRS cache). 10 Defence. --- removed reqs off austin's suggestion
 // [opheld2,slayer_helm] @levelrequire_defence(10, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,black_heraldic_kiteshield1] @levelrequire_defence(10, last_slot);
+[opheld2,black_heraldic_kiteshield2] @levelrequire_defence(10, last_slot);
+[opheld2,black_heraldic_kiteshield3] @levelrequire_defence(10, last_slot);
+[opheld2,black_heraldic_kiteshield4] @levelrequire_defence(10, last_slot);
+[opheld2,black_heraldic_kiteshield5] @levelrequire_defence(10, last_slot);
+[opheld2,black_platebody_h1] @levelrequire_defence(10, last_slot);
+[opheld2,black_platebody_h2] @levelrequire_defence(10, last_slot);
+[opheld2,black_platebody_h3] @levelrequire_defence(10, last_slot);
+[opheld2,black_platebody_h4] @levelrequire_defence(10, last_slot);
+[opheld2,black_platebody_h5] @levelrequire_defence(10, last_slot);

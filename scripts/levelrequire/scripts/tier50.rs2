@@ -66,3 +66,13 @@ if(%deserttreasure < ^deserttreasure_complete) {
 // --- Granite body and helm (2026-09-09, rev 474 cache). 50 Strength / 50 Defence. ---
 [opheld2,granite_body] @levelrequire_defence_and_strength(50, 50, last_slot);
 [opheld2,granite_helm] @levelrequire_defence_and_strength(50, 50, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,dark_infinity_bottoms] @levelrequire_magic_and_defence(50, 25, last_slot);
+[opheld2,dark_infinity_hat] @levelrequire_magic_and_defence(50, 25, last_slot);
+[opheld2,dark_infinity_top] @levelrequire_magic_and_defence(50, 25, last_slot);
+[opheld2,light_infinity_bottoms] @levelrequire_magic_and_defence(50, 25, last_slot);
+[opheld2,light_infinity_hat] @levelrequire_magic_and_defence(50, 25, last_slot);
+[opheld2,light_infinity_top] @levelrequire_magic_and_defence(50, 25, last_slot);

@@ -149,3 +149,45 @@
 // --- Warriors' Guild / Barbarian Assault imports (2026-09-09, rev 474 cache) ---
 [opheld2,rune_defender] @levelrequire_attack_and_defence(40, 40, last_slot);
 [opheld2,fighter_torso] @levelrequire_defence(40, last_slot);
+
+// Repaints and renames of items already in this file, found by tools/wearreq.py:
+// same slot, same bonuses, so the same armour and the same requirement. They went
+// on at level 1 because nobody had typed a line for them.
+[opheld2,ancient_full_helm] @levelrequire_defence(40, last_slot);
+[opheld2,ancient_kiteshield] @levelrequire_defence(40, last_slot);
+[opheld2,ancient_platebody] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,ancient_platelegs] @levelrequire_defence(40, last_slot);
+[opheld2,armadyl_full_helm] @levelrequire_defence(40, last_slot);
+[opheld2,armadyl_kiteshield] @levelrequire_defence(40, last_slot);
+[opheld2,armadyl_platebody] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,armadyl_platelegs] @levelrequire_defence(40, last_slot);
+[opheld2,bandos_full_helm] @levelrequire_defence(40, last_slot);
+[opheld2,bandos_kiteshield] @levelrequire_defence(40, last_slot);
+[opheld2,bandos_platebody] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,bandos_platelegs] @levelrequire_defence(40, last_slot);
+[opheld2,gilded_2h_sword] @levelrequire_attack(40, last_slot);
+[opheld2,gilded_axe] @levelrequire_attack(40, last_slot);
+[opheld2,gilded_chainbody] @levelrequire_defence(40, last_slot);
+[opheld2,gilded_dhide_body] @levelrequire_dragon_slayer_quest_ranged_and_defence(40, 40, last_slot);
+[opheld2,gilded_dhide_chaps] @levelrequire_ranged_lower(40, last_slot);
+[opheld2,gilded_med_helm] @levelrequire_defence(40, last_slot);
+[opheld2,gilded_pickaxe] @levelrequire_attack(40, last_slot);
+[opheld2,gilded_scimitar] @levelrequire_attack(40, last_slot);
+[opheld2,gilded_spear] @levelrequire_attack(40, last_slot);
+[opheld2,gilded_sq_shield] @levelrequire_defence(40, last_slot);
+[opheld2,rune_defender_t] @levelrequire_attack_and_defence(40, 40, last_slot);
+[opheld2,rune_full_helm_goldplate] @levelrequire_defence(40, last_slot);
+[opheld2,rune_kiteshield_goldplate] @levelrequire_defence(40, last_slot);
+[opheld2,rune_platebody_goldplate] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platebody_h1] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platebody_h2] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platebody_h3] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platebody_h4] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platebody_h5] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,rune_platelegs_goldplate] @levelrequire_defence(40, last_slot);
+[opheld2,rune_scimitar_guthix] @levelrequire_attack(40, last_slot);
+[opheld2,rune_scimitar_saradomin] @levelrequire_attack(40, last_slot);
+[opheld2,rune_scimitar_zamorak] @levelrequire_attack(40, last_slot);
+[opheld2,saradomin_kiteshield] @levelrequire_defence(40, last_slot);
+[opheld2,saradomin_platebody] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
+[opheld2,saradomin_platelegs] @levelrequire_defence(40, last_slot);
