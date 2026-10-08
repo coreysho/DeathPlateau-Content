@@ -1,0 +1,27 @@
+// THE UNDERTAKER'S STOCK - ONE ROW, ON PURPOSE (2026-10-08).
+//
+// The reward list is the open question. This one row is here so the shop is not an empty window
+// while it is decided, and because it is defensible on its own: the Scroll of imbuing is already a
+// drop, so selling it for tokens is a second route to something that exists rather than a new power.
+//
+// HOW A PRICE IS SET, which decides what can go on these shelves. A shop charges the item's own
+// cost scaled by param=shop_sell_multiplier (per mille), so the scroll's cost=100 makes it 100
+// tokens - about four tasks at the ditch, or one and a half deep in. There is ONE multiplier for
+// the whole shop, so two items can only be priced relative to each other by their own costs: the
+// muddy key was the other candidate and it carries the cache's default cost of 1, which would have
+// put it on the shelf for a single token. An item whose gp value is not also a sensible token price
+// needs its own obj config - which is what the custom rewards will have.
+//
+// size is 8 rather than 1 so that adding a row is one line and not a resize.
+//
+// allstock=no MATTERS EVEN WITH ONE ROW: with allstock=yes a shop will buy ANY item, and this one
+// pays in Death tokens - a player could turn a bronze dagger into currency.
+//
+// restock=yes, one at a time: the shelf refills, so the shop is a tap and not a race.
+[death_token_shop]
+scope=shared
+size=8
+restock=yes
+stackall=no
+allstock=no
+stock1=slayer_imbue_scroll,1,100

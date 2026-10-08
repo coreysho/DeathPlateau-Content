@@ -1,0 +1,19 @@
+// DEATH TOKENS (2026-10-08) - area_wilderness/scripts/death_token.rs2.
+//
+// ONE IN THIS MANY counted slayer kills pays a token, at the edge of the Wilderness, and the roll
+// gets better with depth - three times as often by level 30. A paying kill gives one to three, so
+// the two numbers together are the whole economy. MEASURED, not guessed (Engine-TS
+// tools/sim/deathtoken.ts rolls four thousand kills on each side of the ditch):
+//
+//     at the ditch   0.17 tokens a kill    a 150-kill task pays about 25
+//     past level 30  0.49 tokens a kill    the same task pays about 73
+//
+// The Undertaker's prices are read against those two lines: his one row, the Scroll of imbuing at
+// 100 tokens, is about four tasks at the ditch and one and a half deep in.
+//
+// Tuned here rather than in the script so that watching the first week of real play is one number
+// and a rebuild.
+^death_token_odds = 12
+
+// A paying kill gives one to this many, so a lucky kill feels like one.
+^death_token_max = 3

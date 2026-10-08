@@ -1,0 +1,28 @@
+// THE ONE-ARMED VETERAN (Corey, 2026-10-08) - he stands at the Edgeville side of the ditch and has
+// nothing to sell. He is the one who tells you what the Undertaker is for.
+//
+// HIS ARM IS ACTUALLY GONE, not implied by his name. A *_manwear2 model is the pair of sleeves,
+// symmetric about the body's middle, so every face lying wholly on one side of it was dropped; the
+// platebody's pauldron on that side went with it, because with the pauldron left on a 377 figure
+// reads as a man standing square on and the missing arm cannot be seen at all. The faces that
+// straddle the middle are kept, so the chest is whole.
+//
+// Tinted one part at a time, like the Undertaker, so the walk and ready animations still have the
+// vertex labels they deform (a merged figure has none and slides about in a T-pose).
+[wilderness_veteran]
+name=One-armed veteran
+desc=He has been to the places you are about to go.
+model1=npc_veteran_helm
+model2=idk_42
+model3=idk_man_jaw_short
+model4=npc_veteran_body
+model5=npc_veteran_arm
+model6=npc_veteran_legs
+model7=npc_veteran_cape
+model8=npc_veteran_boots
+head1=idk_man_jaw_short_head
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+vislevel=hide
+wanderrange=0
+op1=Talk-to

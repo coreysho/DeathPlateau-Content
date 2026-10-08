@@ -253,6 +253,9 @@ if(npc_finduid($uid) = true) {
     %slayer_count = sub(%slayer_count, 1);
     stat_advance(slayer, calc(10 * npc_basestat(hitpoints)));
     ~imbue_scroll_kill_roll; // Scroll of imbuing (imbue_scroll.rs2) - weighted by the same hitpoints
+    // Death tokens: paid only for a kill that counts AND happens in the Wilderness, which is why
+    // the roll lives here rather than in npc_death (area_wilderness/scripts/death_token.rs2).
+    ~death_token_roll;
     if(%slayer_count = 0) ~complete_task;
     ~slayer_superior_roll(npc_type); // Bigger and Badder (superiors.rs2) - keep last, it swaps the active npc
 }
@@ -266,7 +269,11 @@ if(npc_finduid($uid) = true) {
     stat_advance(slayer, calc(10 * (npc_basestat(hitpoints) / 2)));
     // The SPLIT kill halves the xp but not the scroll: a drop cannot be halved, and both players
     // get their own roll, which is what two players sharing a kill would each have got alone.
+    //
+    // Death tokens are the same: each player rolls their own, in their own place, so two people
+    // sharing a kill at the ditch do not between them get what one person deep in would.
     ~imbue_scroll_kill_roll;
+    ~death_token_roll;
     if(%slayer_count = 0) ~complete_task;
     ~slayer_superior_roll(npc_type);
 }

@@ -1,0 +1,44 @@
+// THE UNDERTAKER (Corey, 2026-10-08) - he buys nothing and sells for Death tokens, in Edgeville,
+// one street from the ditch.
+//
+// HIS CLOTHES ARE THIS BUILD'S OWN. The parts are the cache's - a wizard hat, the black elegant
+// shirt and legs, a cane - but each one is written out again as its own model with the colour baked
+// in (tools in the session's buildart.py; the models are npc_undertaker_*). Recolour pairs in a
+// config would have been the lighter touch, except that a config carries six of them and his coat,
+// legs and hat have more distinct colours than that between them.
+//
+// TINTED ONE PART AT A TIME, NOT MERGED INTO ONE FIGURE. A merged mesh loses its vertex labels,
+// and those labels are what the walk and ready animations deform - he would stand in a T-pose and
+// slide. One tinted copy per part keeps every label the original had.
+//
+// The gold band on the hat is the one piece of colour he is allowed: the brightest faces of the
+// trimmed wizard hat are its trim, so they stay gold while everything else goes black.
+[undertaker]
+name=The Undertaker
+desc=He does not look like he is here for the funeral.
+model1=npc_undertaker_hat
+model2=idk_42
+model3=idk_man_jaw_long
+model4=npc_undertaker_coat
+model5=npc_undertaker_coat2
+model6=npc_undertaker_legs
+model7=npc_undertaker_cane
+head1=npc_undertaker_hat_head
+head2=idk_man_jaw_long_head
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+vislevel=hide
+wanderrange=0
+op1=Talk-to
+op4=Trade
+category=shop_keeper
+param=owned_shop,death_token_shop
+param=shop_currency,death_token
+param=shop_title,The Undertaker's Collection
+// 1000 is FULL PRICE, not 100: ~calc_shop_value ends in scale($mult, 1000, $cost), so these are
+// per mille. Grace's config has the scar from learning that the hard way.
+param=shop_sell_multiplier,1000
+param=shop_buy_multiplier,1000
+// A token price must not drift with how many he is holding: a player who saves up for something
+// should find it at the price it was.
+param=shop_delta,0

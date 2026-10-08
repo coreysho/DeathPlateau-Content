@@ -1,0 +1,54 @@
+// THE UNDERTAKER AND THE VETERAN (Corey, 2026-10-08) - the two ends of the Death token.
+//
+// The veteran stands at the ditch and tells you what the tokens are; the Undertaker stands by the
+// Edgeville bank and takes them. Neither of them explains the drop rate, because a player who has
+// just been handed one already knows where it came from.
+
+// ---------------------------------------------------------------------------------------------
+// The Undertaker
+// ---------------------------------------------------------------------------------------------
+
+[opnpc1,undertaker]
+~chatnpc("<p,neutral>Business or burial?");
+switch_int (~p_choice3("What have you got?", 1, "What are death tokens?", 2, "Nothing, sorry.", 3)) {
+    case 1 : ~openshop_activenpc;
+    case 2 : @undertaker_explain;
+    case default : ~chatplayer("<p,neutral>Nothing, sorry.");
+}
+
+[opnpc4,undertaker] ~openshop_activenpc;
+
+[label,undertaker_explain]
+~chatplayer("<p,quiz>What are death tokens?");
+~chatnpc("<p,neutral>What the Wilderness pays out, when somebody is working. Kill what your Slayer master sent you for, do it north of the ditch, and now and then you will find one on the body.");
+~chatplayer("<p,quiz>And you want them because...?");
+~chatnpc("<p,shifty>Because they are no use to anybody else. You cannot sell them, you cannot give them away, and I am the only man in Edgeville who will take them off you.");
+if (inv_total(inv, death_token) > 0) {
+    ~chatnpc("<p,happy>And you have some. Let me show you what they are worth.");
+    ~openshop_activenpc;
+}
+
+// ---------------------------------------------------------------------------------------------
+// The veteran at the ditch
+// ---------------------------------------------------------------------------------------------
+
+[opnpc1,wilderness_veteran]
+~chatnpc("<p,neutral>Going over, are you?");
+switch_int (~p_choice3("What's over there?", 1, "What happened to your arm?", 2, "Just passing.", 3)) {
+    case 1 : @veteran_over_there;
+    case 2 : @veteran_arm;
+    case default : ~chatplayer("<p,neutral>Just passing.");
+}
+
+[label,veteran_over_there]
+~chatplayer("<p,quiz>What's over there?");
+~chatnpc("<p,neutral>Everything your Slayer master has ever asked you to kill, and everyone who would rather you did not.");
+~chatnpc("<p,neutral>Work a task up there and you will start finding death tokens. The Undertaker by the bank takes them - nobody else will.");
+~chatplayer("<p,quiz>Is it worth it?");
+~chatnpc("<p,shifty>The further in you go, the more of them you find. That is not a recommendation.");
+
+[label,veteran_arm]
+~chatplayer("<p,quiz>What happened to your arm?");
+~chatnpc("<p,sad>I went one level further in than I had planned to.");
+~chatplayer("<p,sad>I'm sorry.");
+~chatnpc("<p,neutral>Do not be. I came back, which is more than most. Just mind the ditch - it only looks like a line on the ground.");

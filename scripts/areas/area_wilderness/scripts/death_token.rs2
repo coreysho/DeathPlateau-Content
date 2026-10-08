@@ -1,0 +1,41 @@
+// DEATH TOKENS (Corey, 2026-10-08) - the Wilderness Slayer currency.
+//
+// WHERE THEY COME FROM: a kill that counts towards a Slayer task AND is made inside the Wilderness.
+// Both halves matter. On-task alone would pay a player for standing in Zanaris; in-the-Wilderness
+// alone would pay for killing rats under Edgeville. Together they are a rate of risk: the task says
+// what you are hunting, the Wilderness says what it costs you to hunt it there.
+//
+// The hook is [queue,progress_task] in skill_slayer/scripts/slayer_task.rs2, which is the one place
+// a kill is counted against a task - so a token can only ever be paid for a kill the task itself
+// accepted, and nothing else in the game hands one out.
+//
+// THE RATE is one roll in ^death_token_odds per counted kill, and the roll is WEIGHTED BY HOW DEEP
+// YOU ARE: level 1 of the Wilderness pays at the base rate and the deep wilderness pays roughly
+// three times as often, because that is where the risk is. A Duradel task of 150 kills done at the
+// ditch is about ten tokens; the same task done past level 30 is about thirty.
+//
+// They are untradeable (configs/death_token.obj says why), so this is the only tap in the game and
+// the Undertaker is the only drain.
+
+[proc,death_token_roll]
+def_int $level = ~wilderness_level(coord);
+if ($level <= 0) {
+    return;
+}
+// 1x at the ditch, rising to 3x at level 30 and no further - the deep wilderness is already its own
+// punishment and a rate that kept climbing would make the last ten levels the only ones worth using.
+def_int $depth = $level;
+if ($depth > 30) {
+    $depth = 30;
+}
+def_int $odds = calc(^death_token_odds * 30 / add(30, multiply($depth, 2)));
+if (random($odds) ! 0) {
+    return;
+}
+def_int $count = ~random_range(1, ^death_token_max);
+inv_add(inv, death_token, $count);
+if ($count = 1) {
+    mes("@dre@You find a death token on the body.@bla@");
+} else {
+    mes("@dre@You find <tostring($count)> death tokens on the body.@bla@");
+}

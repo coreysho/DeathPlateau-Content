@@ -1,0 +1,26 @@
+// THE DEATH TOKEN (Corey, 2026-10-08) - the Wilderness Slayer currency, and this server's own.
+//
+// A random drop from a kill made ON A SLAYER TASK, IN THE WILDERNESS (area_wilderness/scripts/
+// death_token.rs2), spent at the Undertaker in Edgeville and nowhere else.
+//
+// UNTRADEABLE, deliberately. An untradeable currency that buys tradeable goods is a gold laundry
+// with extra steps: the shop's prices become the trading post's prices and the token stops meaning
+// anything. Untradeable also means nobody can farm them for somebody else, and the only way to hold
+// one is to have stood in the Wilderness and killed something you were told to kill.
+//
+// THE MODEL is this build's own: a procedural fourteen-sided coin with the cache's skull pressed
+// into its face, merged into one mesh (the technique gentradingpostmodel.py uses). The camera below
+// was tuned against the real inventory render (tools/models/ObjIconRender.java), not guessed.
+[death_token]
+name=Death token
+desc=Struck from the plateau's own black stone. Someone died for this.
+model=obj_death_token
+2dzoom=1150
+2dxan=100
+2dyan=0
+2dxof=0
+2dyof=0
+stackable=yes
+cost=120
+members=no
+tradeable=no
