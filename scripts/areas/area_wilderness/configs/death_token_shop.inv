@@ -6,7 +6,7 @@
 //
 // HOW A PRICE IS SET, which decides what can go on these shelves. A shop charges the item's own
 // cost scaled by param=shop_sell_multiplier (per mille), so the scroll's cost=100 makes it 100
-// tokens - about four tasks at the ditch, or one and a half deep in. There is ONE multiplier for
+// tokens - about four tasks at level 1, or one and a half deep in. There is ONE multiplier for
 // the whole shop, so two items can only be priced relative to each other by their own costs: the
 // muddy key was the other candidate and it carries the cache's default cost of 1, which would have
 // put it on the shelf for a single token. An item whose gp value is not also a sensible token price

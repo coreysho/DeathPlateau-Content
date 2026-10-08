@@ -1,8 +1,13 @@
 // THE UNDERTAKER AND THE VETERAN (Corey, 2026-10-08) - the two ends of the Death token.
 //
-// The veteran stands at the ditch and tells you what the tokens are; the Undertaker stands by the
-// Edgeville bank and takes them. Neither of them explains the drop rate, because a player who has
-// just been handed one already knows where it came from.
+// The veteran stands on the Wilderness line north of Edgeville and tells you what the tokens are;
+// the Undertaker stands by the Edgeville bank and takes them. Neither of them explains the drop
+// rate, because a player who has just been handed one already knows where it came from.
+//
+// NEITHER OF THEM SAYS "DITCH". There is no ditch in this game and there was none in 2006 - it was
+// dug in late 2007, with the trade limits. What marks the boundary here is a row of warning signs
+// (wild_sign_civil1..4 along z 3506-3519, then wild_sign inside), and the line itself is nothing
+// but a change of z. A character who tells you to mind a ditch is describing a different game.
 
 // ---------------------------------------------------------------------------------------------
 // The Undertaker
@@ -20,7 +25,7 @@ switch_int (~p_choice3("What have you got?", 1, "What are death tokens?", 2, "No
 
 [label,undertaker_explain]
 ~chatplayer("<p,quiz>What are death tokens?");
-~chatnpc("<p,neutral>What the Wilderness pays out, when somebody is working. Kill what your Slayer master sent you for, do it north of the ditch, and now and then you will find one on the body.");
+~chatnpc("<p,neutral>What the Wilderness pays out, when somebody is working. Kill what your Slayer master sent you for, do it past the warning signs, and now and then you will find one on the body.");
 ~chatplayer("<p,quiz>And you want them because...?");
 ~chatnpc("<p,shifty>Because they are no use to anybody else. You cannot sell them, you cannot give them away, and I am the only man in Edgeville who will take them off you.");
 if (inv_total(inv, death_token) > 0) {
@@ -29,19 +34,19 @@ if (inv_total(inv, death_token) > 0) {
 }
 
 // ---------------------------------------------------------------------------------------------
-// The veteran at the ditch
+// The veteran on the line
 // ---------------------------------------------------------------------------------------------
 
 [opnpc1,wilderness_veteran]
-~chatnpc("<p,neutral>Going over, are you?");
-switch_int (~p_choice3("What's over there?", 1, "What happened to your arm?", 2, "Just passing.", 3)) {
-    case 1 : @veteran_over_there;
+~chatnpc("<p,neutral>Going up, are you?");
+switch_int (~p_choice3("What's up there?", 1, "What happened to your arm?", 2, "Just passing.", 3)) {
+    case 1 : @veteran_up_there;
     case 2 : @veteran_arm;
     case default : ~chatplayer("<p,neutral>Just passing.");
 }
 
-[label,veteran_over_there]
-~chatplayer("<p,quiz>What's over there?");
+[label,veteran_up_there]
+~chatplayer("<p,quiz>What's up there?");
 ~chatnpc("<p,neutral>Everything your Slayer master has ever asked you to kill, and everyone who would rather you did not.");
 ~chatnpc("<p,neutral>Work a task up there and you will start finding death tokens. The Undertaker by the bank takes them - nobody else will.");
 ~chatplayer("<p,quiz>Is it worth it?");
@@ -51,4 +56,4 @@ switch_int (~p_choice3("What's over there?", 1, "What happened to your arm?", 2,
 ~chatplayer("<p,quiz>What happened to your arm?");
 ~chatnpc("<p,sad>I went one level further in than I had planned to.");
 ~chatplayer("<p,sad>I'm sorry.");
-~chatnpc("<p,neutral>Do not be. I came back, which is more than most. Just mind the ditch - it only looks like a line on the ground.");
+~chatnpc("<p,neutral>Do not be. I came back, which is more than most. Just mind the signs. There is nothing on that line but boards on sticks, and it is still the last safe step you take.");

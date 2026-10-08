@@ -1,5 +1,5 @@
 // THE UNDERTAKER (Corey, 2026-10-08) - he buys nothing and sells for Death tokens, in Edgeville,
-// one street from the ditch.
+// one street from the Wilderness line.
 //
 // HIS CLOTHES ARE THIS BUILD'S OWN. The parts are the cache's - a wizard hat, the black elegant
 // shirt and legs, a cane - but each one is written out again as its own model with the colour baked
@@ -13,18 +13,26 @@
 //
 // The gold band on the hat is the one piece of colour he is allowed: the brightest faces of the
 // trimmed wizard hat are its trim, so they stay gold while everything else goes black.
+// THE CHATHEAD IS ITS OWN SET OF MODELS, and his was a hat and a beard with nothing between them:
+// head1..headN are merged the way model1..modelN are, so a talking human needs the FACE model
+// first, then what he wears on it. He had no head on his BODY either - the hat sat on a collar.
+// all.idk states the pairing: man_head_shorthair's body head is obj_viking_helmet_manwear and its
+// chathead is obj_pickpocket_guide_man, so those two always travel together.
 [undertaker]
 name=The Undertaker
 desc=He does not look like he is here for the funeral.
 model1=npc_undertaker_hat
-model2=idk_42
-model3=idk_man_jaw_long
+model2=obj_viking_helmet_manwear
+model3=npc_undertaker_beard
 model4=npc_undertaker_coat
 model5=npc_undertaker_coat2
 model6=npc_undertaker_legs
 model7=npc_undertaker_cane
-head1=npc_undertaker_hat_head
-head2=idk_man_jaw_long_head
+model8=npc_undertaker_boots
+model9=idk_42
+head1=obj_pickpocket_guide_man
+head2=npc_undertaker_hat_head
+head3=npc_undertaker_beard_head
 readyanim=human_ready
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 vislevel=hide

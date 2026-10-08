@@ -1,4 +1,4 @@
-// THE ONE-ARMED VETERAN (Corey, 2026-10-08) - he stands at the Edgeville side of the ditch and has
+// THE ONE-ARMED VETERAN (Corey, 2026-10-08) - he stands on the Wilderness line north of Edgeville and has
 // nothing to sell. He is the one who tells you what the Undertaker is for.
 //
 // HIS ARM IS ACTUALLY GONE, not implied by his name. A *_manwear2 model is the pair of sleeves,
@@ -9,10 +9,22 @@
 //
 // Tinted one part at a time, like the Undertaker, so the walk and ready animations still have the
 // vertex labels they deform (a merged figure has none and slides about in a T-pose).
+//
+// THE CHATHEAD IS ITS OWN SET OF MODELS, and an npc with no head1 that is a face has no chathead at
+// all - the dialogue box opens on nothing. head1..headN are merged the way model1..modelN are, so a
+// talking human needs the FACE model, then whatever he is wearing on it, then his jaw. all.idk
+// states which chathead goes with which body head: man_head_shorthair pairs the body's
+// obj_viking_helmet_manwear with the chathead obj_pickpocket_guide_man, so those two always travel
+// together.
+//
+// HIS FACE IS THE CACHE'S, UNTOUCHED. model1 was once npc_veteran_helm, a tinted copy of
+// obj_viking_helmet_manwear - taken for a helmet because of the name. It is not a helmet; it is the
+// short-haired man's head, and tinting it hue 0 sat 1 turned a living man grey. He is a veteran,
+// not a corpse.
 [wilderness_veteran]
 name=One-armed veteran
 desc=He has been to the places you are about to go.
-model1=npc_veteran_helm
+model1=obj_viking_helmet_manwear
 model2=idk_42
 model3=idk_man_jaw_short
 model4=npc_veteran_body
@@ -20,7 +32,8 @@ model5=npc_veteran_arm
 model6=npc_veteran_legs
 model7=npc_veteran_cape
 model8=npc_veteran_boots
-head1=idk_man_jaw_short_head
+head1=obj_pickpocket_guide_man
+head2=idk_man_jaw_short_head
 readyanim=human_ready
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 vislevel=hide

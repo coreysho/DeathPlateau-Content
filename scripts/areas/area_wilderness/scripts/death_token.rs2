@@ -12,7 +12,7 @@
 // THE RATE is one roll in ^death_token_odds per counted kill, and the roll is WEIGHTED BY HOW DEEP
 // YOU ARE: level 1 of the Wilderness pays at the base rate and the deep wilderness pays roughly
 // three times as often, because that is where the risk is. A Duradel task of 150 kills done at the
-// ditch is about ten tokens; the same task done past level 30 is about thirty.
+// line is about ten tokens; the same task done past level 30 is about thirty.
 //
 // They are untradeable (configs/death_token.obj says why), so this is the only tap in the game and
 // the Undertaker is the only drain.
@@ -22,7 +22,7 @@ def_int $level = ~wilderness_level(coord);
 if ($level <= 0) {
     return;
 }
-// 1x at the ditch, rising to 3x at level 30 and no further - the deep wilderness is already its own
+// 1x at level 1, rising to 3x at level 30 and no further - the deep wilderness is already its own
 // punishment and a rate that kept climbing would make the last ten levels the only ones worth using.
 def_int $depth = $level;
 if ($depth > 30) {

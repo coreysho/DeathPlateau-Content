@@ -3,13 +3,13 @@
 // ONE IN THIS MANY counted slayer kills pays a token, at the edge of the Wilderness, and the roll
 // gets better with depth - three times as often by level 30. A paying kill gives one to three, so
 // the two numbers together are the whole economy. MEASURED, not guessed (Engine-TS
-// tools/sim/deathtoken.ts rolls four thousand kills on each side of the ditch):
+// tools/sim/deathtoken.ts rolls four thousand kills on each side of the line):
 //
-//     at the ditch   0.17 tokens a kill    a 150-kill task pays about 25
+//     at level 1    0.17 tokens a kill    a 150-kill task pays about 25
 //     past level 30  0.49 tokens a kill    the same task pays about 73
 //
 // The Undertaker's prices are read against those two lines: his one row, the Scroll of imbuing at
-// 100 tokens, is about four tasks at the ditch and one and a half deep in.
+// 100 tokens, is about four tasks at level 1 and one and a half deep in.
 //
 // Tuned here rather than in the script so that watching the first week of real play is one number
 // and a rebuild.
