@@ -99,7 +99,18 @@ healenergy(10000);
 ~venom_clear;
 
 [proc,player_death_lose_items]
-if (staffmodlevel > 1 & map_live = true) { return; }
+// A DEVELOPMENT WORLD DOES NOT TAKE YOUR ITEMS (Corey, 2026-10-07). Dying while testing something
+// cost you the kit you were testing it with, and getting it back is a ::give at a time - which is
+// not what a dev world is for. The live world is untouched: there, death costs what it always has.
+//
+// Said out loud rather than left to look like a bug, because a player who has just died and found
+// nothing on the floor has no way to tell "kept" from "gone".
+if (map_live = false) {
+    mes("Your items came with you - this is a development world.");
+    return;
+}
+// And staff keep theirs on the live world, as they always have.
+if (staffmodlevel > 1) { return; }
 
 def_boolean $skulled = false;
 if (%pk_skull > 0) { $skulled = true; }
@@ -149,7 +160,13 @@ inv_clear(deathkeep);
 
 [proc,pvp_death_lose_items]
 ~pvp_death_message(.uid);
-if (staffmodlevel > 1 & map_live = true) { return; }
+// Nothing changes hands on a development world either - see player_death_lose_items above. The
+// killer still gets their message, and the skull, and the count; what they do not get is the kit.
+if (map_live = false) {
+    mes("Your items came with you - this is a development world.");
+    return;
+}
+if (staffmodlevel > 1) { return; }
 
 def_boolean $skulled = false;
 if (%pk_skull > 0) { $skulled = true; }

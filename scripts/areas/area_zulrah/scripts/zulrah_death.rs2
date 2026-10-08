@@ -62,6 +62,12 @@ if (~zulrah_deathbank_count > 0) {
 // The ordinary death, from player/scripts/death.rs2. A player who dies in the world with things
 // still sitting with the priestess loses them, exactly as Old School says.
 [proc,zulrah_deathbank_lost]
+// The development world keeps what the priestess is holding, for the same reason it keeps what you
+// were carrying - player/scripts/death.rs2. Without this, dying anywhere on a dev world still took
+// the one pile of items that was not on you to lose.
+if (map_live = false) {
+    return;
+}
 if (%zulrah_items_held = ^false) {
     return;
 }
