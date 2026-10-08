@@ -695,6 +695,7 @@ data=entries,collection_log_outfits_gathering
 data=entries,collection_log_graceful
 data=entries,collection_log_mage_arena
 data=entries,collection_log_rare_drop_table
+data=entries,collection_log_random_events
 data=entries,collection_log_slayer
 data=items,bosspet_tzrek_jad_item
 data=items,bosspet_kril_item
@@ -784,6 +785,24 @@ data=items,imbued_zamorak_cape
 data=items,rune_spear
 data=items,dragonshield_a
 data=items,dragon_spear
+data=items,drill_helm
+data=items,drill_top
+data=items,drill_bottoms
+data=items,macro_mime_mask
+data=items,macro_mime_top
+data=items,macro_mime_legs
+data=items,macro_mime_gloves
+data=items,macro_mime_boots
+data=items,macro_digger_mask
+data=items,macro_digger_shirt
+data=items,macro_digger_legs
+data=items,macro_digger_gloves
+data=items,macro_digger_boots
+data=items,macro_frog_mask
+data=items,macro_prince_torso
+data=items,macro_prince_legs
+data=items,macro_princess_torso
+data=items,macro_princess_legs
 data=items,imbued_heart
 data=items,abyssal_head
 data=items,abyssal_whip
@@ -1692,6 +1711,29 @@ data=name,"Rare Drop Table"
 data=items,rune_spear
 data=items,dragonshield_a
 data=items,dragon_spear
+
+// Random Events: 18 items
+[collection_log_random_events]
+table=collection_log_entry
+data=name,"Random Events"
+data=items,drill_helm
+data=items,drill_top
+data=items,drill_bottoms
+data=items,macro_mime_mask
+data=items,macro_mime_top
+data=items,macro_mime_legs
+data=items,macro_mime_gloves
+data=items,macro_mime_boots
+data=items,macro_digger_mask
+data=items,macro_digger_shirt
+data=items,macro_digger_legs
+data=items,macro_digger_gloves
+data=items,macro_digger_boots
+data=items,macro_frog_mask
+data=items,macro_prince_torso
+data=items,macro_prince_legs
+data=items,macro_princess_torso
+data=items,macro_princess_legs
 
 // Slayer: 9 items
 [collection_log_slayer]

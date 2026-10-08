@@ -1076,6 +1076,32 @@
                     ]
                 },
                 {
+                    "key": "random_events",
+                    "name": "Random Events",
+                    "_why": "What the randoms hand out and keep handing out until you have the set: the Drill Demon's camo, the Mime's outfit, the Gravedigger's zombie outfit, and what Thessalia makes from a Frog token. Every one of them comes through ~macro_event_give_obj, which is where they are logged.",
+                    "counters": [],
+                    "items": [
+                        "drill_helm",
+                        "drill_top",
+                        "drill_bottoms",
+                        "macro_mime_mask",
+                        "macro_mime_top",
+                        "macro_mime_legs",
+                        "macro_mime_gloves",
+                        "macro_mime_boots",
+                        "macro_digger_mask",
+                        "macro_digger_shirt",
+                        "macro_digger_legs",
+                        "macro_digger_gloves",
+                        "macro_digger_boots",
+                        "macro_frog_mask",
+                        "macro_prince_torso",
+                        "macro_prince_legs",
+                        "macro_princess_torso",
+                        "macro_princess_legs"
+                    ]
+                },
+                {
                     "key": "slayer",
                     "name": "Slayer",
                     "counters": [],

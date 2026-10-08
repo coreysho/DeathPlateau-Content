@@ -55,7 +55,14 @@ $item, $count = ~macro_event_reward;
 
 // The handing over on its own, because not every event pays from the table above: the sandwich lady
 // gives you the one thing off her tray that you picked right.
+//
+// AND IT IS WHERE THE COLLECTION LOG HEARS ABOUT IT (2026-10-07). Every keepsake a random event
+// pays - the Drill Demon's camo, the Mime's outfit, the Gravedigger's zombie outfit, the frog mask
+// and the royal costume Thessalia makes from a token - is handed over through here, so one line
+// covers the lot and covers whatever the next event pays as well. ~collection_log_add ignores an
+// item the log does not list, which is every other thing this proc hands out.
 [proc,macro_event_give_obj](namedobj $item, int $count)
+~collection_log_add($item, $count);
 if (inv_freespace(inv) = 0 & inv_total(inv, $item) = 0) {
     obj_add(coord, $item, $count, ^lootdrop_duration);
     mes("You have no room for it, so it lands at your feet.");

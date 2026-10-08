@@ -123,6 +123,22 @@ check(logCount(p, 'coins') === 0 && p.msgs.length === before, 'coins are not log
 proc(p, 'barrows_reward_add', [obj('barrows_dharok_head'), 1]);
 check(logCount(p, 'barrows_dharok_head') === 1, 'a Barrows piece paid by the chest is logged');
 
+// ---- 3b. The randoms. Every keepsake a random event pays goes out through
+// ~macro_event_give_obj, so that one proc is the hook - the Drill Demon's camo, the Mime's outfit,
+// the Gravedigger's zombie outfit and what Thessalia makes from a frog token, all of it, and
+// whatever the next event pays as well.
+proc(p, 'macro_event_give_obj', [obj('macro_mime_mask'), 1]);
+proc(p, 'macro_event_give_obj', [obj('drill_helm'), 1]);
+proc(p, 'macro_event_give_obj', [obj('macro_digger_boots'), 1]);
+proc(p, 'macro_event_give_obj', [obj('macro_frog_mask'), 1]);
+check(logCount(p, 'macro_mime_mask') === 1 && logCount(p, 'drill_helm') === 1 && logCount(p, 'macro_digger_boots') === 1 && logCount(p, 'macro_frog_mask') === 1,
+    'the mime mask, the camo helmet, the zombie boots and the frog mask are logged where they are handed over');
+check(newItem(p, 'Mime mask') === 1, '"New item added" for the mime mask, once');
+// ...and the ordinary things that proc also hands out are not
+const beforeKebab = p.msgs.length;
+proc(p, 'macro_event_give_obj', [obj('kebab'), 1]);
+check(logCount(p, 'kebab') === 0 && p.msgs.length === beforeKebab, "the same proc's kebab is not logged and says nothing");
+
 // ---- 4. A casket with leftovers from the one before. One trimmed platebody is still sitting in
 // trail_rewardinv from last time; this casket adds a second and a pair of wizard boots.
 const trail = InvType.getId('trail_rewardinv');
@@ -168,6 +184,10 @@ button(p, 'collection_log:tab3');
 check(text(p, 'collection_log:tab3') === '@whi@Other', 'Other tab is lit');
 check(text(p, 'collection_log:name') === SPEC.tabs[3].entries[0].name, `and opens on its first page (${text(p, 'collection_log:name')})`);
 check(text(p, 'collection_log:counter0') === '', 'a page with no counter shows none');
+const randomRow = SPEC.tabs[3].entries.findIndex((e: any) => e.key === 'random_events');
+button(p, `collection_log:r${randomRow}box`);
+check(text(p, 'collection_log:name') === 'Random Events', `page name "${text(p, 'collection_log:name')}"`);
+check(text(p, 'collection_log:obtained') === 'Obtained: @yel@4/18', `"${text(p, 'collection_log:obtained')}" - the four handed over above`);
 
 // ---- 7. Log out and back in: the save carries the log, the counts and the paid reward.
 const save = p.save();
