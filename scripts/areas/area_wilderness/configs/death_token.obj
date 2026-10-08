@@ -8,15 +8,26 @@
 // anything. Untradeable also means nobody can farm them for somebody else, and the only way to hold
 // one is to have stood in the Wilderness and killed something you were told to kill.
 //
-// THE MODEL is this build's own: a procedural fourteen-sided coin with the cache's skull pressed
-// into its face, merged into one mesh (the technique gentradingpostmodel.py uses). The camera below
-// was tuned against the real inventory render (tools/models/ObjIconRender.java), not guessed.
+// THE MODEL is this build's own: a procedural fourteen-sided coin with the cache's skull struck
+// into its face in shallow relief, merged into one mesh (the technique gentradingpostmodel.py uses).
+//
+// THE MESH LIES FLAT, which is a model decision and not a camera one: the world draws a dropped
+// item with the model exactly as it was built, so a disc standing in the x/y plane lands on its
+// edge like a dropped wheel. It also RESTS ON y=0 rather than straddling it, because the icon
+// camera aims at model.minY / 2 on the assumption that a model stands on the ground - a mesh
+// centred on the origin renders low in the slot, which is what the first one did.
+//
+// So 2dxan is the camera looking DOWN at a coin on the floor, not along at a coin facing you. 445
+// of 2048 is about 78 degrees: near enough overhead to read the skull, shallow enough to keep a
+// sliver of the near rim and with it the sense that the thing has a thickness. Tuned against the
+// real inventory render (tools/models/ObjIconRender.java --mode 0, a pack slot and not a cert's
+// 1.5x) beside coins, bones and a tinderbox for scale.
 [death_token]
 name=Death token
 desc=Struck from the plateau's own black stone. Someone died for this.
 model=obj_death_token
 2dzoom=1150
-2dxan=100
+2dxan=445
 2dyan=0
 2dxof=0
 2dyof=0
