@@ -91,15 +91,18 @@ switch_int($target) {
     // once it is done. These are the ones with tagged, spawned npcs (crawling hands, banshees,
     // bloodvelds, aberrant spectres, gargoyles, nechryael, abyssal demons in the Slayer Tower; the
     // Canifis werewolves; ghouls - which were tagged as ghosts until now).
+    //
+    // FIXED 2026-10-08: the infernal mages and the vampires join them. Both were refused for having
+    // no npc that counted - the Slayer Tower's five mages carried category=slayer_infernalmage,
+    // which is not what npc_death reads, and nothing at all carried the vampire category. Both are
+    // tagged now, and both live in Morytania, so they belong under the same quest as the rest.
     case ^slayer_crawlinghand, ^slayer_banshee, ^slayer_bloodveld, ^slayer_aberrantspecter,
-            ^slayer_gargoyle, ^slayer_nechryael, ^slayer_abyssaldemon, ^slayer_ghoul, ^slayer_werewolf :
+            ^slayer_gargoyle, ^slayer_nechryael, ^slayer_abyssaldemon, ^slayer_ghoul, ^slayer_werewolf,
+            ^slayer_infernalmage, ^slayer_vampire :
         if (%priestperil < ^priestperil_complete) {
             return (false);
         }
         return (true);
-    // no npc carries these categories yet, so the task could never be finished
-    case ^slayer_infernalmage, ^slayer_vampire :
-        return (false);
     case ^slayer_otherworldlybeing :
         if(%zanaris < ^zanaris_complete) {
             return (false);

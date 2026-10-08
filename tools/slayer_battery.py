@@ -330,6 +330,118 @@ check("body = nl.join(src).replace('\\r\\n', '\\n')" in GEN,
       'the writer normalises before it converts, which is what keeps that true')
 check('genmenus' in GEN and 'G.repack' in GEN,
       'and it shares genmenus\' frame and its interface ids rather than copying either')
+# ============================================================================ 11
+print('11. no master can hand out a task that nothing in the game counts')
+# THE CHECK THAT WOULD HAVE CAUGHT THE DUST DEVIL. A kill counts towards a task through ONE route:
+# npc_death reads param=slayer_category off the npc it killed. Nothing in the task tables knows
+# whether such an npc exists and nothing in the npc configs knows whether a master gives the task,
+# so the two drifted apart: finishing Desert Treasure opened the dust devil task while the nineteen
+# dust devils carried no category at all, and the five Slayer Tower mages carried category= - a
+# different field, which counts for nothing. Three masters each gave a task that could not be done.
+#
+# So: every task a master can hand out either has a monster that counts AND is spawned somewhere, or
+# is refused outright in validate_slayer_target. The third state - assignable and impossible - is
+# what this group exists to stop anybody checking in again.
+TASK = read('scripts/skill_slayer/scripts/slayer_task.rs2')
+MASTER_ROWS = read('scripts/skill_slayer/configs/slayer_master_tasks.dbrow')
+TASK_ROWS = read('scripts/skill_slayer/configs/slayer_tasks.dbrow')
+
+row_task = {}
+cur = None
+for line in nocom(TASK_ROWS).splitlines():
+    line = line.strip()
+    if line.startswith('['):
+        cur = line[1:-1]
+    elif line.startswith('data=task,') and cur:
+        row_task[cur] = line.split(',', 1)[1].strip()
+assigned = {}
+cur = None
+for line in nocom(MASTER_ROWS).splitlines():
+    line = line.strip()
+    if line.startswith('['):
+        cur = line[1:-1].split('_task_table')[0]
+    elif line.startswith('data=task,') and cur:
+        t = row_task.get(line.split(',', 1)[1].strip())
+        if t:
+            assigned.setdefault(t, set()).add(cur)
+check(len(assigned) > 50, 'the five tables between them hand out %d different tasks' % len(assigned))
+
+# what carries each category, and whether any of it is actually spawned on a map
+name2id = {}
+for line in read('pack/npc.pack').splitlines():
+    if '=' in line:
+        i, n = line.split('=', 1)
+        name2id[n.strip()] = int(i)
+spawned_ids = set()
+mapdir = os.path.join(C, 'maps')
+spawn_line = re.compile(r'^\s*\d+\s+\d+\s+\d+\s*:\s*(\d+)')
+for f in os.listdir(mapdir):
+    if not f.endswith('.jm2'):
+        continue
+    txt = open(os.path.join(mapdir, f), newline='').read()
+    if '==== NPC ====' not in txt:
+        continue
+    sec = re.split(r'(?m)^====', txt.split('==== NPC ====', 1)[1])[0]
+    for line in sec.splitlines():
+        m = spawn_line.match(line)
+        if m:
+            spawned_ids.add(int(m.group(1)))
+tagged, live = {}, {}
+for root, _dirs, files in os.walk(os.path.join(C, 'scripts')):
+    for f in files:
+        if not f.endswith('.npc'):
+            continue
+        txt = open(os.path.join(root, f), newline='').read().replace('\r\n', '\n')
+        for block in re.split(r'(?m)^\[', txt)[1:]:
+            nm = block.split(']', 1)[0]
+            m = re.search(r'(?m)^param=slayer_category,(\S+)', block.split(']', 1)[1])
+            if m:
+                tagged.setdefault(m.group(1).strip(), []).append(nm)
+                if name2id.get(nm) in spawned_ids:
+                    live.setdefault(m.group(1).strip(), []).append(nm)
+check(len(spawned_ids) > 500 and sum(len(v) for v in tagged.values()) > 200,
+      'read %d spawned npc kinds and %d tagged monsters to hold them against'
+      % (len(spawned_ids), sum(len(v) for v in tagged.values())))
+
+# a task refused for every player: "case ^x[, ^y] : return (false);" with nothing in between
+VALIDATE = nocom(TASK).split('[proc,validate_slayer_target]', 1)[1].split('\n[', 1)[0]
+blocked = set()
+for case, body in re.findall(r'case ([^:]+):((?:(?!\n    case |\n\}).)*)', VALIDATE, re.S):
+    if body.strip().startswith('return (false)'):
+        blocked.update(t.strip() for t in case.split(',') if t.strip().startswith('^'))
+check(len(blocked) >= 3, 'validate_slayer_target refuses %d tasks outright: %s'
+      % (len(blocked), ', '.join(sorted(b[1:] for b in blocked))))
+
+impossible = sorted(t[1:] for t in assigned if t not in tagged and t not in blocked)
+check(not impossible, 'every task a master gives has a monster that counts: %s'
+      % (', '.join(impossible) or 'all %d' % len(assigned)))
+# The wall beast is the one monster with no map spawn by design - the crevices spawn it
+# (skill_slayer/scripts/npcs/wall_beast.rs2), which is why it is named here rather than skipped.
+unspawned = sorted(t[1:] for t in assigned
+                   if t in tagged and t not in live and t not in blocked and t != '^slayer_wallbeast')
+check(not unspawned, 'and one that is somewhere to be found: %s'
+      % (', '.join(unspawned) or 'all of them'))
+# Spawned is not the same as reachable, and the dark beast is the one that proves it: eleven of
+# them stand in the Mourning's End Part II slave mines, whose locs have no handler, so there is
+# no way in. It is named here rather than quietly skipped, so that when the mines open and
+# somebody takes the refusal out, this line is the next thing to go.
+walled_in = {'^slayer_darkbeast'}
+pointless = sorted(t[1:] for t in blocked if t in live and t not in walled_in)
+check(not pointless, 'and nothing is refused that would have worked: %s'
+      % (', '.join(pointless) or 'none'))
+
+# ============================================================================ 12
+print('12. the Rewards right-click, on every master')
+NPCS = read('scripts/_unpack/377/all.npc')
+missing = []
+for i in range(1, 6):
+    block = NPCS.split('[slayer_master_%d]' % i, 1)[1].split('\n[', 1)[0]
+    if 'op3=Rewards' not in block:
+        missing.append('slayer_master_%d' % i)
+check(not missing, 'all five masters carry the option: %s' % (', '.join(missing) or 'Turael to Duradel'))
+check('[opnpc3,_slayer_master] ~slayer_rewards_window;' in nocom(MASTER),
+      'op3 opens the same window the chat line opens, for the category rather than one npc at a time')
+
 print()
 print('ALL PASS' if fails == 0 else '%d FAILED' % fails)
 sys.exit(1 if fails else 0)

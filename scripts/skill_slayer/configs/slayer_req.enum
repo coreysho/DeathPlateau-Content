@@ -3,6 +3,16 @@ inputtype=int
 outputtype=int
 val=^slayer_crawlinghand,5
 val=^slayer_cavebug,7
+// custom (2026-10-08) - five that were missing, all of them OSRS's own numbers. The cave slime's
+// 17 was already being announced at the level-up (levelup_unlocks_slayer.rs2) without anything
+// asking for it, and the desert lizard's 22 and the harpie bug swarm's 33 are tasks this build
+// hands out, so until now they could be killed at any level. The fever spider's and the
+// zygomite's are written down for when their tasks are unblocked.
+val=^slayer_caveslime,17
+val=^slayer_lizard,22
+val=^slayer_harpiebugswarm,33
+val=^slayer_feverspider,42
+val=^slayer_mutatedzygomite,57
 val=^slayer_cavecrawler,10
 val=^slayer_banshee,15
 val=^slayer_rockslug,20

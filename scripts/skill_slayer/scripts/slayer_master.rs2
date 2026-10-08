@@ -21,6 +21,11 @@ switch_int (~p_choice4("I need another assignment.", 1, "Do you have anything fo
     case default : @slayer_master_nothing;
 }
 
+// custom (Corey, 2026-10-08) - REWARDS ON THE RIGHT-CLICK, on every master, so spending points does
+// not mean talking through two menus first. Same window the "I'd like to spend my Slayer points."
+// line opens, and the same one the gem's Rewards option opens; op3 on all five npcs (all.npc).
+[opnpc3,_slayer_master] ~slayer_rewards_window;
+
 [opnpc4,_slayer_master] ~openshop_activenpc;
 
 [label,slayer_master_who]

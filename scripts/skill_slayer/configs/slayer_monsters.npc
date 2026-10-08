@@ -1450,6 +1450,11 @@ param=attack_anim,dustdevil_attack
 param=defend_anim,dustdevil_defend
 param=death_anim,dustdevil_death
 huntmode=cowardly
+// custom (2026-10-08) - THE TASK WAS ASSIGNABLE AND IMPOSSIBLE. Finishing Desert Treasure opens
+// the dust devil task (slayer_task.rs2) and these nineteen are the only dust devils in the game,
+// but nothing carried the category: no kill counted towards it, and the 65 Slayer requirement the
+// enum already held was never asked for either, because that check reads this same param.
+param=slayer_category,^slayer_dustdevil
 
 [smoke_devil]
 name=Smokedevil
@@ -2043,6 +2048,10 @@ param=magicdefence,40
 param=damagetype,^magic_style
 param=defend_anim,null
 category=slayer_infernalmage
+// custom (2026-10-08) - category= is NOT what a slayer kill is counted by: npc_death reads
+// param=slayer_category. Without this the Slayer Tower's mages counted for nothing, and the
+// task three masters give had to be refused outright.
+param=slayer_category,^slayer_infernalmage
 
 [slayer_infernal_mage_2]
 name=Infernal Mage
@@ -2089,6 +2098,8 @@ param=magicdefence,40
 param=damagetype,^magic_style
 param=defend_anim,null
 category=slayer_infernalmage
+// custom (2026-10-08) - see slayer_infernal_mage_1
+param=slayer_category,^slayer_infernalmage
 
 [slayer_infernal_mage_3]
 name=Infernal Mage
@@ -2135,6 +2146,8 @@ param=magicdefence,40
 param=damagetype,^magic_style
 param=defend_anim,null
 category=slayer_infernalmage
+// custom (2026-10-08) - see slayer_infernal_mage_1
+param=slayer_category,^slayer_infernalmage
 
 [slayer_infernal_mage_4]
 name=Infernal Mage
@@ -2181,6 +2194,8 @@ param=magicdefence,40
 param=damagetype,^magic_style
 param=defend_anim,null
 category=slayer_infernalmage
+// custom (2026-10-08) - see slayer_infernal_mage_1
+param=slayer_category,^slayer_infernalmage
 
 [slayer_infernal_mage_5]
 name=Infernal Mage
@@ -2227,3 +2242,5 @@ param=magicdefence,40
 param=damagetype,^magic_style
 param=defend_anim,null
 category=slayer_infernalmage
+// custom (2026-10-08) - see slayer_infernal_mage_1
+param=slayer_category,^slayer_infernalmage
