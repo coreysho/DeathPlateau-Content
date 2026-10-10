@@ -87,6 +87,12 @@
 // an unlock ("Watch the Birdie") rather than giving it out, and so does this build: Duradel's table
 // holds it and validate_slayer_target asks for the bit.
 ^slayer_aviansie = 78
+// custom (2026-10-09) - two monsters imported for the Wilderness that no master assigns yet.
+// slayer_battery group 11 forbids a task a master GIVES that nothing counts for; a category with
+// no task is the other way round and is exactly where these should sit until a Wilderness Slayer
+// master exists.
+^slayer_ankou = 79
+^slayer_lavadragon = 80
 
 // How long a Mogre blown out of the water at Mudskipper Point stays before it sinks back
 // (skill_slayer/scripts/npcs/mogre.rs2). Five minutes: long enough to fight it and long enough to

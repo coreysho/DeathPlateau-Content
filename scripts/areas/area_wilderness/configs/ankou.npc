@@ -1,0 +1,68 @@
+// THE ANKOU (Corey, 2026-10-09) - the Forgotten Cemetery, deep Wilderness.
+//
+// IMPORTED FROM THE REV 474 CACHE (npc 4383), not from a modern one, by
+// tools/models/importnpc474.py. Models 16016 and 16017 copied byte-for-byte, recolours written
+// back through import474.hsl16_to_rgb15.
+//
+// AND THE 474 ONE IS THE MODERN ONE. This was checked rather than assumed, because the brief was
+// "before they changed them to the new style": Old School's current Ankou (npc 6608) carries
+// models 16016 and 16017 and the same four recolour pairs, to the number. The Ankou's art has not
+// changed since 2007. What the wiki's 13 January 2021 "made into spectral creatures" note covers
+// is not the model - the 474 one is already a translucent figure, alpha 169 on the skin and 140 on
+// the skeleton inside it, which is exactly what the current picture shows.
+//
+// ITS ANIMATIONS NEEDED NO CONVERTING EITHER, which is luck worth recording: the 474 record asks
+// for ready 808 and walks 819-822, and in THIS build's seq.pack 808 is human_ready and 819-822 are
+// human_walk_f/b/l/r. The Ankou is on the standard human rig and the ids did not move between the
+// two revisions, so it uses the build's own seqs and costs the anim budget nothing.
+//
+// Unarmed attack and block, because the model carries no weapon - dark_warrior reaches for
+// human_sword_slash and this cannot.
+//
+// STATS ARE THE CACHE'S OWN, from the level 86 Wilderness variant (OSRS npc 6608: attack 75,
+// defence 80, strength 75, hitpoints 70). The 474 cache carries no combat stats at all, so these
+// come from the modern one - the numbers have no art attached and nothing about them is "the new
+// style".
+//
+// param=slayer_category IS SET AND NO MASTER ASSIGNS IT. That is a legal state and the deliberate
+// one: slayer_battery group 11 forbids the opposite (a task a master gives that nothing counts
+// for), not this. The day a Wilderness Slayer master exists, Ankou already count.
+[ankou]
+name=Ankou
+desc=A tall, cloaked figure. You can see its bones through it.
+model1=npc_ankou_1
+model2=npc_ankou_2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op2=Attack
+recol1s=8749
+recol1d=18538
+recol2s=7857
+recol2d=22659
+recol3s=24534
+recol3d=22159
+recol4s=14286
+recol4d=30817
+vislevel=86
+respawnrate=50
+hitpoints=70
+attack=75
+strength=75
+defence=80
+param=stabdefence,20
+param=slashdefence,20
+param=crushdefence,20
+param=magicdefence,20
+param=rangedefence,20
+param=damagetype,^crush_style
+param=attack_anim,human_unarmedpunch
+param=defend_anim,human_unarmed_def
+param=death_anim,human_death
+param=death_drop,bones
+param=slayer_category,^slayer_ankou
+// Aggressive, like Old School's Wilderness ones - a cemetery nobody wanders into by accident.
+huntmode=aggressive_melee
+huntrange=5
+attackrange=1
+wanderrange=5

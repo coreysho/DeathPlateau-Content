@@ -1,0 +1,61 @@
+// THE LAVA DRAGON (Corey, 2026-10-09) - Lava Dragon Isle, Wilderness 36-42.
+//
+// NOT IMPORTED, BUILT - see tools/models/genlavadragon.py in the super-repo for the whole
+// argument and the measurements behind it. The short version: Old School graphically updated the
+// lava dragon on 7 February 2024 and the mesh it has now is a modern high-poly thing with a baked
+// lava texture, which beside this build's green, red, black and blue dragons would look like it
+// walked in from another decade. The version before that - 13 March 2014 to 7 February 2024 - was
+// the 2007 HD dragon wearing a lava retexture, and the honest way to have that here is the way
+// this build already has a black dragon: the SAME two models every other dragon uses, dressed
+// differently.
+//
+// WHICH IS WHY IT HAS MODELS OF ITS OWN AND NOT A RECOLOUR PAIR. Every other dragon in this build
+// is npc_king_dragon + npc_red_dragon told apart by one recol pair, and one pair maps one source
+// colour. A lava dragon is black AND glowing at once, so the two colours are baked into copies of
+// the mesh by a height gradient and a measured rule about which faces are wing bones.
+//
+// STATS ARE THE CACHE'S OWN (OSRS npc 6593: attack 240, defence 220, strength 220, hitpoints 230,
+// level 252), so it sits a step above the black dragon this build already has at 227/190.
+//
+// NO DRAGONFIRE SHIELD CHECK OF ITS OWN: param=fiery is what the build's dragonfire handling reads
+// and every other dragon sets it, so this one does too and behaves like the rest.
+//
+// param=slayer_category IS SET AND NO MASTER ASSIGNS IT - the same deliberate state the Ankou is
+// in. slayer_battery group 11 forbids a task a master gives that nothing counts for, not a
+// category waiting for a master.
+[lava_dragon]
+name=Lava dragon
+desc=A dragon with molten rock for skin.
+model1=npc_lava_dragon_1
+model2=npc_lava_dragon_2
+size=4
+walkanim=dragon_walk
+readyanim=dragon_ready
+op2=Attack
+vislevel=252
+wanderrange=10
+maxrange=12
+respawnrate=60
+hitpoints=230
+attack=240
+strength=220
+defence=220
+param=stabdefence,60
+param=slashdefence,80
+param=crushdefence,80
+param=magicdefence,70
+param=rangedefence,60
+param=damagetype,^slash_style
+param=attack_anim,dragon_attack
+param=defend_anim,dragon_block
+param=death_anim,dragon_death
+param=attack_sound,dragon_attack
+param=defend_sound,dragon_hit
+param=death_sound,dragon_death
+param=death_drop,dragon_bones
+param=slayer_category,^slayer_lavadragon
+param=fiery,yes
+param=draconic,yes
+huntmode=cowardly
+huntrange=4
+attackrange=1
