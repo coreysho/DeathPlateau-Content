@@ -82,6 +82,7 @@ data=items,bosspet_kalphite_queen_item
 data=items,kq_head
 data=items,dragon_chainbody
 data=items,bosspet_kbd_item
+data=items,draconic_visage
 data=items,kbd_head
 data=items,bosspet_kraken_item
 data=items,kraken_tentacle_item
@@ -807,13 +808,14 @@ data=items,macro_prince_torso
 data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
-data=items,imbued_heart
 data=items,abyssal_head
 data=items,abyssal_whip
-data=items,granite_maul
-data=items,granite_legs
 data=items,black_mask
+data=items,draconic_visage
 data=items,dragon_chainbody
+data=items,granite_legs
+data=items,granite_maul
+data=items,imbued_heart
 data=items,kraken_tentacle_item
 data=items,trident_of_the_seas_uncharged
 
@@ -929,11 +931,12 @@ data=items,dragon_chainbody
 data=items,dragon_pickaxe
 data=counters,"Kalphite Queen kills",5
 
-// King Black Dragon: 3 items
+// King Black Dragon: 4 items
 [collection_log_kbd]
 table=collection_log_entry
 data=name,"King Black Dragon"
 data=items,bosspet_kbd_item
+data=items,draconic_visage
 data=items,dragon_pickaxe
 data=items,kbd_head
 data=counters,"King Black Dragon kills",10
@@ -1743,17 +1746,18 @@ data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
 
-// Slayer: 9 items
+// Slayer: 10 items
 [collection_log_slayer]
 table=collection_log_entry
 data=name,"Slayer"
-data=items,imbued_heart
 data=items,abyssal_head
 data=items,abyssal_whip
-data=items,granite_maul
-data=items,granite_legs
 data=items,black_mask
+data=items,draconic_visage
 data=items,dragon_chainbody
+data=items,granite_legs
+data=items,granite_maul
+data=items,imbued_heart
 data=items,kraken_tentacle_item
 data=items,trident_of_the_seas_uncharged
 

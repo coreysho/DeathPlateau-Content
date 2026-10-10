@@ -19,6 +19,7 @@ obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
 // below 1/128 cannot be a band in a table of 128.
 if (random(10000) = 0) {
     obj_add(npc_coord, draconic_visage, 1, ^lootdrop_duration);
+    ~collection_log_add(draconic_visage, 1);
 }
 
 obj_add(npc_coord, wyvern_bones, 1, ^lootdrop_duration);
