@@ -1,14 +1,33 @@
 // Lava dragon - https://oldschool.runescape.wiki/w/Lava_dragon
 //
-// A STUB ON PURPOSE (2026-10-09). The full table is proposed in Claude outputs/lava-dragon-drops.md
-// and waits on three decisions that are the owner's, not mine: whether the lava scale comes in at
-// all (its only Old School use is Herblore content this build does not have), whether the 2,960
-// coin line keeps Old School's 7/128, and whether a lava dragon head replaces the draconic visage
-// slot the way the King Black Dragon's kbd_head does.
+// Old School's table, with three decisions taken by the owner on 2026-10-09 and recorded here so
+// nobody re-opens them from the wiki:
 //
-// What is here is what cannot wait: the guaranteed drops, the hard clue, and the DRACONIC VISAGE,
-// because the visage went in across every monster that drops it in Old School and leaving one out
-// would have made that list quietly wrong.
+//   LAVA SCALE IS OUT. Its only Old School use is grinding into shards for Ancient brews and the
+//   Hydra-era potions, none of which this build has, so here it would be a guaranteed drop with no
+//   use - which teaches a player the monster is not worth looting.
+//
+//   THE 2,960 COIN LINE KEEPS OLD SCHOOL'S 7/128. There that line only appears for accounts that
+//   have not finished Monkey Madness II, which here is every account, so it is the real rate. All
+//   three coin lines together come to about 175 coins a kill, against roughly 92 for this build's
+//   black dragon - which is right for a monster twenty-five levels above it living at Wilderness
+//   36-42.
+//
+//   NO LAVA DRAGON HEAD. It was proposed to fill the slot the draconic visage holds in Old School,
+//   the way the King Black Dragon drops kbd_head - and the visage is in the game now, so the slot
+//   is filled by the real thing.
+//
+// WHAT IS NOT OLD SCHOOL'S, and why:
+//   * Lava dragon bones instead of dragon bones - a new item (skill_prayer/configs/bones.obj), 85
+//     Prayer xp, which is the reason anybody kills these.
+//   * A HARD clue rather than an elite one. Old School gives an elite; this build's top tier is
+//     hard.
+//   * No onyx bolt tips, no dragon javelin tips, no ensouled dragon head: post-2006 with no local
+//     hook, and the javelin tips are gated on Monkey Madness II, which does not exist here.
+//   * Larran's key and Slayer's enchantment are Krystilia's tertiaries and land with her.
+//
+// The bands below are Old School's own, and they add to 128: weapons 25, runes and ammunition 48,
+// coins 23, other 14, herbs 5, gems 5, the rare table 3, and 5 that give nothing.
 
 [ai_queue3,lava_dragon] @lava_dragon_drop_table;
 
@@ -18,18 +37,90 @@ if (npc_findhero = ^false) {
     return;
 }
 
-// Bones, set on the npc config. Old School drops Lava dragon bones; this build has no such item
-// yet, so it drops the dragon bones the config names until it does.
+// Always. Old School's third guaranteed drop is the lava scale, which is out - see above.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
 obj_add(npc_coord, dragonhide_black, 1, ^lootdrop_duration);
 
 // Tertiary. Old School gives an elite clue here; this build's top tier is hard.
 ~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
 
-// The draconic visage, at Old School's own rate for this monster. Its own roll before any cascade,
+// The draconic visage, at Old School's own rate for this monster. Its own roll before the cascade,
 // the way the King Black Dragon's dragon pickaxe is: a rarity this far below 1/128 cannot be a
 // band in a table of 128.
 if (random(10000) = 0) {
     obj_add(npc_coord, draconic_visage, 1, ^lootdrop_duration);
     ~collection_log_add(draconic_visage, 1);
 }
+
+def_int $random = random(128);
+
+// ---- weapons and armour, 25/128 ----
+if ($random < 6) {
+    obj_add(npc_coord, rune_dart, 12, ^lootdrop_duration);
+} else if ($random < 10) {
+    obj_add(npc_coord, rune_knife, 8, ^lootdrop_duration);
+} else if ($random < 13) {
+    obj_add(npc_coord, lava_battlestaff, 1, ^lootdrop_duration);
+} else if ($random < 15) {
+    obj_add(npc_coord, adamant_2h_sword, 1, ^lootdrop_duration);
+} else if ($random < 17) {
+    obj_add(npc_coord, adamant_platebody, 1, ^lootdrop_duration);
+} else if ($random < 19) {
+    obj_add(npc_coord, rune_axe, 1, ^lootdrop_duration);
+} else if ($random < 21) {
+    obj_add(npc_coord, rune_kiteshield, 1, ^lootdrop_duration);
+} else if ($random < 23) {
+    obj_add(npc_coord, rune_longsword, 1, ^lootdrop_duration);
+} else if ($random < 24) {
+    obj_add(npc_coord, rune_med_helm, 1, ^lootdrop_duration);
+} else if ($random < 25) {
+    obj_add(npc_coord, rune_full_helm, 1, ^lootdrop_duration);
+
+// ---- runes and ammunition, 48/128 ----
+} else if ($random < 35) {
+    obj_add(npc_coord, rune_javelin, 20, ^lootdrop_duration);
+} else if ($random < 42) {
+    obj_add(npc_coord, firerune, 75, ^lootdrop_duration);
+} else if ($random < 49) {
+    obj_add(npc_coord, bloodrune, 20, ^lootdrop_duration);
+} else if ($random < 55) {
+    obj_add(npc_coord, runite_bolts, 30, ^lootdrop_duration);
+} else if ($random < 60) {
+    obj_add(npc_coord, deathrune, 20, ^lootdrop_duration);
+} else if ($random < 65) {
+    obj_add(npc_coord, lawrune, 20, ^lootdrop_duration);
+} else if ($random < 69) {
+    obj_add(npc_coord, lavarune, 15, ^lootdrop_duration);
+} else if ($random < 73) {
+    obj_add(npc_coord, lavarune, 30, ^lootdrop_duration);
+
+// ---- coins, 23/128 ----
+} else if ($random < 88) {
+    obj_add(npc_coord, coins, 66, ^lootdrop_duration);
+} else if ($random < 95) {
+    obj_add(npc_coord, coins, 2960, ^lootdrop_duration);
+} else if ($random < 96) {
+    obj_add(npc_coord, coins, 690, ^lootdrop_duration);
+
+// ---- other, 14/128 ----
+} else if ($random < 101) {
+    obj_add(npc_coord, cert_fire_orb, 15, ^lootdrop_duration);
+} else if ($random < 106) {
+    obj_add(npc_coord, adamantite_bar, 2, ^lootdrop_duration);
+} else if ($random < 109) {
+    obj_add(npc_coord, chocolate_cake, 3, ^lootdrop_duration);
+} else if ($random < 110) {
+    obj_add(npc_coord, fire_talisman, 1, ^lootdrop_duration);
+
+// ---- the shared tables ----
+// "5/128 chance of rolling TWICE on the herb drop table" - two rolls, not one of a doubled amount,
+// which is why the wiki prints every herb's rate as 2 x 1/N.
+} else if ($random < 115) {
+    obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
+    obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
+} else if ($random < 120) {
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+} else if ($random < 123) {
+    obj_add(npc_coord, ~ultrarare_getitem, ^lootdrop_duration);
+}
+// 123-127 is nothing, which is Old School's remainder too.

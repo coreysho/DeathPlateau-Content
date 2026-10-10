@@ -81,3 +81,27 @@ weight=1500g
 category=bones
 param=bone_exp,720
 
+// LAVA DRAGON BONES (Corey, 2026-10-09) - the reason anybody kills a lava dragon.
+//
+// Old School gives them 85 Prayer xp against dragon bones' 72, and this build stores bone xp at
+// ten times its face value (bones 45, big bones 150, babydragon 300, dragon 720), so 850.
+//
+// THE MODEL IS DRAGON BONES RECOLOURED, which is the whole of the art: the pile is one colour,
+// 126 faces of HSL16 127, so a single recol pair turns all of it. The destination is picked in
+// RGB15 because that is what a config carries - a charred warm grey, bone that has been somewhere
+// hot.
+[lava_dragon_bones]
+name=Lava dragon bones
+desc=Bones from a dragon that lived in the lava.
+model=enakh_cutscene_bonepile_8
+recol1s=32767
+recol1d=10503
+2dzoom=1830
+2dyan=648
+2dxan=216
+iop1=Bury
+members=yes
+weight=1500g
+category=bones
+param=bone_exp,850
+
