@@ -21,16 +21,24 @@ Only the primary manwear/womanwear model is touched; see WEAR_KEYS.
 
   back   -> 10.  A cape has to be behind you from the front and in front of you from behind, and
                  no fixed bucket does both. Bucket 10 is the one that asks the depth.
-  legs   -> 1.   The default kit's legs are priority 1, and so are the vanilla platelegs.
-  torso  -> 3.   The default kit's torso is priorities 2 and 3.
+  legs   -> 2.   One ABOVE the default kit's legs, which are priority 1.
+  torso  -> 4.   One above the default kit's torso, which is priorities 2 and 3.
+
+MEASURE THE RIGHT THING OR YOU GET THE ARMOUR BACKWARDS. The first version of this put legs at 1
+and torso at 3 - level with the body part, so the two depth-sort against each other - because the
+measure was disagreement with true depth and that is what depth-sorting minimises. It is the wrong
+measure for armour. A player expects armour to COVER the body even where the body is geometrically
+nearer, and a garment level with the body loses wherever a limb pokes through a gap: the Bandos
+tassets went from 145930 pixels of body showing through to 177527, and bare legs appeared under
+the skirt in game. One bucket above takes it to 40738. Depth is the right measure for a cape,
+which genuinely has to sort both ways; it is not the right measure for a garment worn over a limb.
+
+So each model is scored both ways round - its original bytes against the candidate bucket, on how
+much BODY shows through, over four camera pitches across the legal range - and keeps whichever
+wins. 493 retuned, 7 left exactly as they were.
 
 ANYTHING ALREADY USING BUCKET 10 OR 11 IS LEFT ALONE. It is already depth-sorted, which beats any
-fixed bucket, and in the first torso sweep every single regression turned out to be one of those
-being flattened. With them excluded the sweeps come out:
-
-  legs    106 models   74 better at 1, 0 worse, 32 unchanged
-  torso    76 models   71 better at 3, 3 worse, 2 unchanged   (worse by 6, 33 and 69 pixels)
-  back    159 models  measured one at a time; see the cape commit
+fixed bucket.
 
 Pixel counts are from tools/wearrender.py: the worn models merged the way ClientPlayer does and
 painted twice, once in the client's priority order and once z-buffered, over four camera angles on
@@ -55,7 +63,7 @@ writing the old bytes back. Where it carries one priority for the whole model, t
 import argparse, glob, os, sys
 
 # slot -> the bucket that sorts it against the body
-RULES = {'back': 10, 'legs': 1, 'torso': 3}
+RULES = {'back': 10, 'legs': 2, 'torso': 4}
 PER_FACE = 255
 DEPTH_SORTED = (10, 11)
 
