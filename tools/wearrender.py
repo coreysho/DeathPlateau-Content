@@ -268,9 +268,127 @@ def label(img, text):
     return im
 
 
+def scan(content, size=96, angles=(0, 512, 1024, 1536)):
+    """Every worn model on its own, in the client's order against true depth.
+
+    A model whose faces all share one priority is drawn in pure depth order by construction, so it
+    can never disagree with itself - the only models that can are the ones carrying per-face
+    priorities, and a big disagreement there means the split is fighting its own geometry rather
+    than shaping it. The comparison is against the same model flattened to one bucket, which is
+    the best any single model can do alone."""
+    cfgs = obj_configs(content)
+    seen = {}
+    for name, d in cfgs.items():
+        v = d.get('manwear')
+        if not v:
+            continue
+        p = os.path.join(content, 'models', 'obj', v.split(',')[0] + '.ob2')
+        if os.path.exists(p):
+            seen.setdefault(p, name)
+    rows = []
+    for p, name in sorted(seen.items()):
+        try:
+            mdl = obr.Model(p)
+        except Exception:
+            continue
+        pri = face_priorities(p, mdl.fcount, mdl.vcount)
+        if len(set(pri.tolist())) < 2:
+            continue                      # one bucket already: depth order by construction
+        a = b = 0
+        for y in angles:
+            m1 = Merged([(mdl, pri)])
+            m2 = Merged([(mdl, np.full(mdl.fcount, 10, np.int32))])
+            for m, acc in ((m1, 'a'), (m2, 'b')):
+                c = draw(m, size, 150, y, 1500, painter=True)
+                tr = draw(m, size, 150, y, 1500, painter=False)
+                n = int((c != tr).any(axis=2).sum())
+                if acc == 'a':
+                    a += n
+                else:
+                    b += n
+        if a > b:
+            rows.append((a - b, a, b, name, os.path.basename(p), sorted(set(pri.tolist()))))
+    rows.sort(reverse=True)
+    print(f'{"gap":>7} {"shipped":>8} {"flat":>6}  obj / model / priorities')
+    for gap, a, b, name, mdl, ps in rows[:40]:
+        print(f'{gap:>7} {a:>8} {b:>6}  {name:<28} {mdl:<40} {ps}')
+    print()
+    print(f'{len(rows)} worn models disagree with their own depth more than one flat bucket would')
+
+
+def body_parts(content):
+    parts = []
+    for name in BODY:
+        for sub in ('obj', 'idk'):
+            p = os.path.join(content, 'models', sub, name + '.ob2')
+            if os.path.exists(p):
+                mdl = obr.Model(p)
+                parts.append((mdl, face_priorities(p, mdl.fcount, mdl.vcount)))
+                break
+    return parts
+
+
+def scan_situ(content, slot, flat, size=96, angles=(0, 512, 1024, 1536)):
+    """Every model worn in one slot, on a dressed body, as shipped against one flat bucket.
+
+    Alone, any flat bucket scores the same - a single bucket is pure depth order. In situ it is
+    not: the bucket decides how the garment sorts against the BODY underneath, and the only
+    bucket that depth-sorts against a body part is the one that body part is already in. The
+    legs of the default kit are priority 1, which is also what the vanilla platelegs use."""
+    cfgs = obj_configs(content)
+    body = body_parts(content)
+    seen = {}
+    for name, d in cfgs.items():
+        if d.get('wearpos') != slot:
+            continue
+        v = d.get('manwear')
+        if not v:
+            continue
+        p = os.path.join(content, 'models', 'obj', v.split(',')[0] + '.ob2')
+        if os.path.exists(p):
+            seen.setdefault(p, name)
+    rows = []
+    for p, name in sorted(seen.items()):
+        try:
+            mdl = obr.Model(p)
+        except Exception:
+            continue
+        pri = face_priorities(p, mdl.fcount, mdl.vcount)
+        if len(set(pri.tolist())) < 2 and pri[0] == flat:
+            continue                                  # already there
+        # ALREADY DEPTH-SORTED, LEAVE IT. A model using bucket 10 or 11 has its faces interleaved
+        # by real depth, which is a better answer than any fixed bucket; flattening those is what
+        # every regression in the first torso sweep turned out to be.
+        if set(pri.tolist()) & {10, 11}:
+            continue
+        a = b = 0
+        for y in angles:
+            for use, acc in ((pri, 'a'), (np.full(mdl.fcount, flat, np.int32), 'b')):
+                m = Merged(body + [(mdl, use)])
+                c = draw(m, size, 150, y, 1500, painter=True)
+                tr = draw(m, size, 150, y, 1500, painter=False)
+                n = int((c != tr).any(axis=2).sum())
+                if acc == 'a':
+                    a += n
+                else:
+                    b += n
+        rows.append((a - b, a, b, name, os.path.basename(p), sorted(set(pri.tolist()))))
+    rows.sort(reverse=True)
+    better = [r for r in rows if r[0] > 0]
+    worse = [r for r in rows if r[0] < 0]
+    print(f'{"gain":>7} {"shipped":>8} {"flat":>6}  obj / model / priorities')
+    for gap, a, b, name, mdl, ps in rows:
+        if abs(gap) < 200:
+            continue
+        print(f'{gap:>7} {a:>8} {b:>6}  {name:<30} {mdl:<42} {ps}')
+    print()
+    print(f'{len(rows)} models in slot {slot}: {len(better)} better at flat {flat}, '
+          f'{len(worse)} worse, {len(rows)-len(better)-len(worse)} unchanged')
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument('objs', nargs='+', help='obj config names, drawn together')
+    ap.add_argument('objs', nargs='*', help='obj config names, drawn together')
     ap.add_argument('--content', default=os.path.join(HERE, '..'))
     ap.add_argument('--out', default='/tmp/wearrender.png')
     ap.add_argument('--size', type=int, default=260)
@@ -283,7 +401,19 @@ def main():
     ap.add_argument('--body', action='store_true', help='draw the default male kit underneath')
     ap.add_argument('--repri', action='append', default=[], metavar='OBJ=N',
                     help='try an obj at priority N without editing the model, e.g. max_cape=10')
+    ap.add_argument('--scan-situ', metavar='SLOT=PRI',
+                    help='every model in a slot, on a body, shipped against one flat bucket')
+    ap.add_argument('--scan', action='store_true',
+                    help='sweep every worn model for a priority split that fights its own geometry')
     a = ap.parse_args()
+
+    if a.scan:
+        scan(a.content)
+        return
+    if a.scan_situ:
+        slot, flat = a.scan_situ.split('=')
+        scan_situ(a.content, slot, int(flat))
+        return
 
     global CULL
     CULL = a.cull
@@ -295,10 +425,14 @@ def main():
     parts = []
     if a.body:
         for name in BODY:
-            p = os.path.join(a.content, 'models', 'obj', name + '.ob2')
-            if not os.path.exists(p):
-                print(f'  warning: body part {name} missing', file=sys.stderr)
-                continue
+            # idk kit parts live in models/idk, worn-item meshes in models/obj, and the body uses
+            # both. Looking in one place only lost the feet and the head without saying so.
+            for sub in ('obj', 'idk'):
+                p = os.path.join(a.content, 'models', sub, name + '.ob2')
+                if os.path.exists(p):
+                    break
+            else:
+                raise SystemExit(f'body part {name} has no .ob2 in models/obj or models/idk')
             mdl = obr.Model(p)
             parts.append((mdl, face_priorities(p, mdl.fcount, mdl.vcount)))
     for name in a.objs:
