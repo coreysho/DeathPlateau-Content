@@ -214,7 +214,13 @@ if (%dfs_charges <= 0) {
     inv_setslot(worn, ^wearpos_lhand, dragonfire_shield_uncharged, 1);
 }
 ~update_bonuses;
-anim(human_shield_defence, 0);
+// Old School's own animation, converted out of the 474 cache by animconv474.py and kept under
+// the generated name so it can be regenerated. RuneLite's legacy AnimationID calls 6696
+// DRAGONFIRE_SHIELD_SPECIAL; the newer gameval naming calls it after Dragon Slayer II, which
+// reused it, and that is what made it look like the wrong id at first. It is a PLAYER animation:
+// its frames are on skeleton 0, the 227-group rig that human_ready and the dragon dagger's
+// special also animate.
+anim(seq_474_6696, 0);
 sound_synth(dragonbreath, 1, 0);
 def_int $duration = ~npc_projectile(coord, npc_uid, firebreath_travel, 43, 31, 51, 16, -5, 64, 10);
 
