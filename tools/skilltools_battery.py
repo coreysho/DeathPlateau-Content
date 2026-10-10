@@ -31,6 +31,28 @@ def check(what, good, detail=''):
         print(f'  FAIL {what}{(" - " + detail) if detail else ""}')
 
 
+def vertex_labels(b):
+    """The per-vertex transform-group byte of a 377 .ob2, read from the 18-byte trailer forward.
+
+    Inlined rather than imported from the super-repo's tools/models/posepreview.py: a battery that
+    lives in content and reaches outside it only works on one machine.
+    """
+    p = len(b) - 18
+    g2 = lambda o: (b[o] << 8) | b[o + 1]
+    vcount, fcount, tcount = g2(p), g2(p + 2), b[p + 4]
+    f_tex, f_pri, f_alpha, f_flabel, f_vlabel = b[p + 5], b[p + 6], b[p + 7], b[p + 8], b[p + 9]
+    if f_vlabel != 1:
+        return None, vcount
+    o = vcount + fcount                                   # vertex flags, then face types
+    if f_pri == 255:
+        o += fcount
+    if f_flabel == 1:
+        o += fcount
+    if f_tex == 1:
+        o += fcount
+    return list(b[o:o + vcount]), vcount
+
+
 def read(rel):
     return open(os.path.join(C, *rel.split('/')), encoding='utf-8', errors='replace').read()
 
@@ -133,8 +155,56 @@ def main():
     zero = [n for n in picks if real[n].get('mining_rate', ['0'])[0] == '0']
     check('and none of them mines at rate 0', not zero, ', '.join(zero))
 
+    worn_rig(real)
+
     print(f'\n{ok} ok, {bad} FAIL')
     sys.exit(1 if bad else 0)
+
+
+def worn_rig(real):
+    """A worn model must sit on a transform group the player's animations actually drive.
+
+    Not a skilling check, but the same shape of bug and found the same way. Every vertex of a worn
+    model carries a label naming a transform group; the player's animation moves those groups. A
+    label the animation never touches means the item is drawn once in the right place and then
+    stays there while its owner walks out from under it - which is how an imported dragonfire
+    shield and the dragon defenders behaved, hanging in the air.
+
+    SCOPED TO SHIELDS ON PURPOSE. The first version of this generalised to every wearpos and
+    reported two hundred perfectly good items - every weapon on group 27, every robe on 17-25 -
+    because "the groups most models use" is not a rule, it is a histogram. A shield is the case
+    where the rule is real and flat: it is one rigid thing hanging off one bone, and in this
+    build's wardrobe that bone is group 28 for all but a handful of imports. A check that cries
+    wolf is worse than no check, so this one only speaks about shields.
+    """
+    import collections
+    print('\nWORN SHIELDS - on the transform group the rest of the wardrobe uses')
+    paths = {}
+    for root, _dirs, files in os.walk(os.path.join(C, 'models')):
+        for f in files:
+            if f.endswith('.ob2'):
+                paths.setdefault(f[:-4], os.path.join(root, f))
+
+    seen = {}
+    for name, d in real.items():
+        if d.get('category') != ['armour_shield'] or 'manwear' not in d:
+            continue
+        mw = d['manwear'][0].split(',')[0]
+        if mw in paths:
+            lbl, _vc = vertex_labels(open(paths[mw], 'rb').read())
+            seen[name] = set(lbl or [])
+    # The four Falador shields sit on group 22 instead, and they are listed rather than fixed. 22
+    # is a group the rig DOES drive - the hands models use it - so they move with the player, which
+    # is the opposite of the failure this check exists for. Whether a shield belongs on the hand
+    # bone rather than the shield bone is a question about how they look, and nobody has reported
+    # them; moving four working items on a hunch is not what a battery is for.
+    KNOWN = {'falador_shield_1', 'falador_shield_2', 'falador_shield_3', 'falador_shield_4'}
+    counts = collections.Counter(g for s in seen.values() for g in s)
+    group = counts.most_common(1)[0][0] if counts else None
+    print(f'  ({len(seen)} shields; the wardrobe puts {counts[group]} of them on group {group})')
+    offenders = sorted(f'{n} ({sorted(s)})' for n, s in seen.items()
+                       if s and group not in s and n not in KNOWN)
+    check(f'every shield is on group {group}', not offenders, '; '.join(offenders))
 
 
 main()
