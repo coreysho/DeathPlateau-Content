@@ -11653,6 +11653,12 @@ param=stab_sound,baxe_slash
 param=crush_sound,baxe_crush
 param=attackrate,5
 
+// Mining, at the dragon pickaxe's rate - which is what Old School gives it. The 3rd Age
+// mining animation (OSRS seq 7283) is NOT in the 474 cache on the player rig: that id
+// there is skeleton 1650, a 25-group rig, so it belongs to something else and was reused
+// later. It takes the dragon pickaxe's, the way the gilded pickaxe takes the rune one.
+param=mining_rate,2
+param=mining_animation,human_mining_dragon_pickaxe
 [third_age_axe]
 name=3rd Age axe
 desc=A beautifully crafted axe, shaped by ancient smiths.
@@ -11688,6 +11694,9 @@ param=slash_sound,baxe_slash
 param=crush_sound,baxe_crush
 param=attackrate,5
 
+// Woodcutting. It is a clue reward with a woodcutter's animation and nothing told
+// the skill about it, so until now it chopped nothing: see tools/skilltools_battery.py.
+param=woodcutting_struct,woodcutting_third_age_axe
 [bloodhound]
 name=Bloodhound
 desc=Tracking down clues all over the world.

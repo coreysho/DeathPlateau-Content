@@ -165,8 +165,18 @@ return(null);
 [proc,woodcutting_best_axe]()(namedobj)
 def_int $level = stat(woodcutting);
 def_obj $obj1 = inv_getobj(worn, ^wearpos_rhand);
+// THE LADDER IS THE LIST. An axe that is not named here cannot be used however well its config is
+// filled in - the gilded axe had param=woodcutting_struct and a chop animation for months and
+// still chopped nothing, because nothing ever returned it. tools/skilltools_battery.py checks the
+// two halves against each other now.
+if (($obj1 = third_age_axe | inv_total(inv, third_age_axe) > 0) & $level > 60) {
+    return (third_age_axe);
+}
 if (($obj1 = dragon_axe | inv_total(inv, dragon_axe) > 0) & $level > 60) {
     return (dragon_axe);
+}
+if (($obj1 = gilded_axe | inv_total(inv, gilded_axe) > 0) & $level > 40) {
+    return (gilded_axe);
 }
 if (($obj1 = rune_axe | inv_total(inv, rune_axe) > 0) & $level > 40) {
     return (rune_axe);

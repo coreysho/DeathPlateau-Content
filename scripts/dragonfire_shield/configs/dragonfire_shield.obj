@@ -63,7 +63,11 @@ param=crushdefence,22
 param=magicdefence,10
 param=rangedefence,22
 param=strengthbonus,7
-param=defend_anim,human_shield_defence
+// NO defend_anim HERE, on purpose. That param is the WEAPON's, and ~combat_defend_anim only
+// reads shield_defend_anim off the hand slot - falling back to human_shield_defence for
+// anything with category=armour_shield, which is what this gets and what Old School gives it.
+// Several cache shields carry an inert defend_anim line; copying it here only invited the
+// next reader to believe that is how a shield's block is set.
 param=antidragon,yes
 
 [dragonfire_shield]
@@ -94,5 +98,9 @@ param=crushdefence,22
 param=magicdefence,10
 param=rangedefence,22
 param=strengthbonus,7
-param=defend_anim,human_shield_defence
+// NO defend_anim HERE, on purpose. That param is the WEAPON's, and ~combat_defend_anim only
+// reads shield_defend_anim off the hand slot - falling back to human_shield_defence for
+// anything with category=armour_shield, which is what this gets and what Old School gives it.
+// Several cache shields carry an inert defend_anim line; copying it here only invited the
+// next reader to believe that is how a shield's block is set.
 param=antidragon,yes
