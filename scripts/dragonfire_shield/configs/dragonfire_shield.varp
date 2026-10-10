@@ -6,3 +6,8 @@
 // perm, so a shield charged tonight is still charged tomorrow.
 [dfs_charges]
 scope=perm
+
+// map_clock the Activate special may next be used. NOT perm: the cooldown is under two
+// minutes and a logout is longer than that, so carrying it across one would only be a tax.
+[dfs_cooldown]
+scope=temp

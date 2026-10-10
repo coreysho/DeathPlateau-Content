@@ -4,6 +4,14 @@
 // is what takes the shield from 20/25/22/22 to 70/75/72/72.
 ^dfs_max_charges = 50
 
+// The Activate special: "up to 25" damage, "10 tiles, including over obstacles".
+^dfs_special_maxhit = 25
+^dfs_special_range = 10
+
+// "about 1 minute 56 seconds" = 116 seconds, and a tick is 0.6s, so 193 ticks. Written out
+// rather than left as a bare 193 so the next person can see where it came from.
+^dfs_special_cooldown = 193
+
 // Smithing an anti-dragon shield and a visage together: 90 Smithing, 2,000 xp (xp is tenths here).
 ^dfs_smith_level = 90
 ^dfs_smith_xp = 20000

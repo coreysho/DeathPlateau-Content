@@ -70,7 +70,7 @@ return(min(.%dfs_charges, ^dfs_max_charges));
 // THE WORN OPTIONS
 // ---------------------------------------------------------------------------------------------
 
-[label,wearop1_dragonfire_shield]
+[label,wearop2_dragonfire_shield]
 if (%dfs_charges <= 0) {
     mes("Your dragonfire shield is already empty.");
     return;
@@ -81,7 +81,7 @@ inv_setslot(worn, ^wearpos_lhand, dragonfire_shield_uncharged, 1);
 ~update_bonuses;
 
 [opheld3,dragonfire_shield] ~dfs_check;
-[label,wearop2_dragonfire_shield] ~dfs_check;
+[label,wearop3_dragonfire_shield] ~dfs_check;
 
 [proc,dfs_check]
 if (%dfs_charges = 1) {
@@ -149,3 +149,99 @@ inv_del(inv, draconic_visage, 1);
 inv_del(inv, antidragonbreathshield, 1);
 inv_add(inv, dragonfire_shield_uncharged, 1);
 ~objbox(dragonfire_shield_uncharged, "Oziach attaches the visage to your shield.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// THE ACTIVATE SPECIAL
+// ---------------------------------------------------------------------------------------------
+// "Right-clicking Activate on the equipped shield uses one charge to fire a dragonfire blast",
+// up to 25 damage, 10 tiles, about a two-minute cooldown, accuracy off the player's Defence level
+// against the target's Magic defence.
+//
+// HOW IT FINDS WHAT TO SHOOT, which is the only place this departs from Old School. There it fires
+// at whatever you are already fighting, and this build has no "current target" a WORN option can
+// read: %aggressive_npc is set by an npc deciding to attack YOU, so it is null in exactly the case
+// a player reaches for this button. So the shield looks for itself, with npc_huntall and
+// .npc_findnext - the same pair the dragon 2h sword's multi-hit uses to find its extra targets -
+// and takes the nearest attackable npc in range, preferring one that is already fighting you.
+
+[label,wearop1_dragonfire_shield]
+if (%dfs_charges <= 0) {
+    mes("Your dragonfire shield has no charges left.");
+    return;
+}
+if (map_clock < %dfs_cooldown) {
+    mes("Your dragonfire shield needs to cool down before you can use it again.");
+    return;
+}
+def_npc_uid $target = ~dfs_find_target;
+if ($target = null) {
+    mes("There is nothing in range for you to aim at.");
+    return;
+}
+if (npc_finduid($target) = false) {
+    return;
+}
+if (~npc_is_attackable = false) {
+    return;
+}
+~dfs_fire;
+
+[proc,dfs_find_target]()(npc_uid)
+def_npc_uid $best = null;
+def_int $best_dist = 99;
+def_int $dist = 0;
+npc_huntall(coord, ^dfs_special_range, ^vis_lineofsight);
+while (.npc_findnext = true) {
+    if (compare(nc_op(.npc_type, 2), "Attack") = 0) {
+        $dist = max(abs(sub(coordx(.npc_coord), coordx(coord))), abs(sub(coordz(.npc_coord), coordz(coord))));
+        // whatever is already on you wins, whichever is nearer
+        if (.npc_uid = %aggressive_npc) {
+            $dist = 0;
+        }
+        if ($dist < $best_dist) {
+            $best_dist = $dist;
+            $best = .npc_uid;
+        }
+    }
+}
+return($best);
+
+[proc,dfs_fire]
+%dfs_cooldown = add(map_clock, ^dfs_special_cooldown);
+%dfs_charges = sub(%dfs_charges, 1);
+if (%dfs_charges <= 0) {
+    // spent: back to the shield you can trade, as Old School does it
+    inv_setslot(worn, ^wearpos_lhand, dragonfire_shield_uncharged, 1);
+}
+~update_bonuses;
+anim(human_shield_defence, 0);
+sound_synth(dragonbreath, 1, 0);
+def_int $duration = ~npc_projectile(coord, npc_uid, firebreath_travel, 43, 31, 51, 16, -5, 64, 10);
+
+// "It does not work against chromatic dragons, metal dragons, wyverns, frost dragons" - here, the
+// fiery and the draconic, which is the same pair bolt_effects.rs2 refuses its Dragon's Breath to.
+if (npc_param(fiery) = ^true | npc_param(draconic) = ^true) {
+    spotanim_npc(failedspell_impact, 92, $duration);
+    ~npc_retaliate(0);
+    return;
+}
+
+// "Accuracy: based on the player's Defence level, rolled against the target's Magic defence." The
+// roll is built the way npc_defence_roll_specific builds the other side of it - effective stat
+// with no prayer bonus, +9 for a style bonus of 1, and no equipment bonus, because the shield's
+// blast has none.
+def_int $attack_roll = ~combat_stat(add(~combat_effective_stat(stat(defence), 100), 9), 0);
+def_int $defence_roll = ~npc_defence_roll_specific(^magic_style);
+if (randominc($attack_roll) <= randominc($defence_roll)) {
+    spotanim_npc(failedspell_impact, 92, $duration);
+    ~npc_retaliate(0);
+    return;
+}
+
+def_int $damage = randominc(min(^dfs_special_maxhit, npc_param(max_dealt)));
+def_int $damage_capped = min($damage, npc_stat(hitpoints));
+~npc_retaliate(calc($duration / 30 + 1));
+npc_queue(2, $damage, calc($duration / 30 + 1));
+npc_anim(npc_param(defend_anim), $duration);
+npc_heropoints($damage_capped);
+spotanim_npc(firebreath_attack, 92, $duration);
