@@ -22,6 +22,25 @@ body from the front and in front of it from the back - which is what a cape is -
 from either side. Vanilla body models use it (rune platebody keeps 34 faces there); the 2006 capes
 do not, because they are narrow enough that a fixed order never shows.
 
+WHAT THE PIXEL COUNT IS AND IS NOT. It counts disagreement with depth, not badness. Priorities
+exist precisely to override depth where an artist wanted it - a cape's collar belongs over the
+shoulder it is physically behind - so a model can disagree and be right. The count is trustworthy
+for two questions and no others:
+
+  * does a model contradict ITSELF? A garment's back panel painting over its front is wrong in
+    every case, and --scan asks exactly that, one model at a time with nothing else in the scene.
+  * does a surface that must sort by depth sort by depth? A cape has to be behind you from the
+    front and in front of you from behind; there is no artistic intent to protect.
+
+For armour over a body it is weaker evidence: the body is modelled larger than some armour
+encloses, so true depth shows a limb through a skirt that the player would rather not see, and
+the count punishes the fixed priority that hides it. Read those numbers as a direction, confirm
+them with the picture, and A/B against the old bytes before believing a change.
+
+AND SWEEP THE WHOLE CAMERA. Pitch is clamped to 128..383 in Client.orbitCameraPitch, and a
+conclusion drawn at one pitch does not hold across the range - a first pass at xan=150 alone
+rated eighteen garments improvements that the full range says are not.
+
   python3 tools/wearrender.py --out /tmp/cape.png max_cape armadyl_chestplate bandos_tassets
   python3 tools/wearrender.py --out /tmp/cape.png --yan 1024 imbued_zamorak_cape rune_platebody
 """
