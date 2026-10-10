@@ -214,7 +214,7 @@ return(20);
 // whether the target player is guarded against Dragon's Breath: an anti-dragon shield, an antifire
 // potion still working (anti_fire.rs2), or Protect from Magic, which the wiki says blocks it too
 [proc,.bolt_dragonfire_immune]()(boolean)
-if (.inv_total(worn, antidragonbreathshield) > 0 | map_clock < .%dragonresist | .%prayer12 = ^true) {
+if (~.has_antidragon_shield = true | map_clock < .%dragonresist | .%prayer12 = ^true) {
     return(true);
 }
 return(false);

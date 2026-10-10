@@ -1,0 +1,13 @@
+// Old School's own numbers for the dragonfire shield, with the arithmetic where one was needed.
+
+// "up to a maximum of 50", and each charge is +1 to the three melee defences and to ranged, which
+// is what takes the shield from 20/25/22/22 to 70/75/72/72.
+^dfs_max_charges = 50
+
+// Smithing an anti-dragon shield and a visage together: 90 Smithing, 2,000 xp (xp is tenths here).
+^dfs_smith_level = 90
+^dfs_smith_xp = 20000
+
+// Oziach does it for players under the level, for a price. Dragon Slayer is his own requirement
+// and he already checks it to sell rune platebodies.
+^dfs_oziach_fee = 1250000

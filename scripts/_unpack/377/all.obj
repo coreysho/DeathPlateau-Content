@@ -20653,6 +20653,9 @@ param=crushdefence,8
 param=magicdefence,2
 param=rangedefence,8
 param=defend_anim,human_shield_defence
+// What makes it an anti-dragon shield, now that the dragonfire tests ask the item instead of
+// naming it (dragonfire_shield/configs/dragonfire_shield.param).
+param=antidragon,yes
 
 [cert_antidragonbreathshield]
 certlink=antidragonbreathshield

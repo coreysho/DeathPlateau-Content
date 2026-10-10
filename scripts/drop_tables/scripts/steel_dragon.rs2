@@ -11,6 +11,13 @@ if (npc_findhero = ^false) {
 // Bones / ashes, set on the npc config.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
 
+// The draconic visage, at Old School's own rate for this monster. Its own roll before the
+// random(128) cascade, the way the King Black Dragon's dragon pickaxe is: a rarity this far
+// below 1/128 cannot be a band in a table of 128.
+if (random(10000) = 0) {
+    obj_add(npc_coord, draconic_visage, 1, ^lootdrop_duration);
+}
+
 obj_add(npc_coord, steel_bar, 5, ^lootdrop_duration);
 
 ~trail_hardcluedrop(^trail_hard_droprate, npc_coord);

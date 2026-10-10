@@ -89,7 +89,7 @@ def_int $attack_roll = ~npc_magic_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 if (randominc($attack_roll) > randominc($defence_roll)) {
     $damage = randominc(~kbd_fiery_breath_maxhit);
-    if (%prayer12 = ^false & inv_total(worn, antidragonbreathshield) < 1) {
+    if (%prayer12 = ^false & ~has_antidragon_shield = false) {
         mes("You're horribly burnt by the dragon's fiery breath!"); // https://youtu.be/R3ozXHcQkgs?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=78
     }
 }
@@ -114,7 +114,7 @@ def_int $attack_roll = ~npc_magic_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 if (randominc($attack_roll) > randominc($defence_roll)) {
     $damage = randominc(~kbd_fiery_breath_maxhit);
-    if (%prayer12 = ^false & inv_total(worn, antidragonbreathshield) < 1) {
+    if (%prayer12 = ^false & ~has_antidragon_shield = false) {
         mes("You're horribly burnt by the dragon's fiery breath!"); // https://youtu.be/R3ozXHcQkgs?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=78
     }
 
@@ -140,7 +140,7 @@ def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 if (randominc($attack_roll) > randominc($defence_roll)) {
     $damage = randominc(~kbd_special_breath_maxhit);
     def_int $random = random(2); // 50% chance upon successful hit to inflict a unique effect (osrs)
-    if (inv_total(worn, antidragonbreathshield) > 0) { // Not sure what it is exactly, ash says "Well protect player"
+    if (~has_antidragon_shield = true) { // Not sure what it is exactly, ash says "Well protect player"
         $random = random(8); // 1/8 chance (osrs).
         if ($random ! 0) {
             mes("Your shield absorbs most of the dragon's toxic breath!"); // https://youtu.be/KhI0x-fSKac?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=157
@@ -171,7 +171,7 @@ def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 if (randominc($attack_roll) > randominc($defence_roll)) {
     $damage = randominc(~kbd_special_breath_maxhit);
     def_int $random = random(2); // 50% chance upon successful hit to inflict a unique effect (osrs)
-    if (%prayer12 = ^true & inv_total(worn, antidragonbreathshield) > 0) {
+    if (%prayer12 = ^true & ~has_antidragon_shield = true) {
         $random = random(8); // 1/8 chance (osrs). Not sure what it is exactly, ash says "Well protect player"
         if ($random ! 0) {
             mes("Your shield absorbs most of the dragon's shocking breath!"); // https://youtu.be/iXYRtqL-GNw?t=9
@@ -217,7 +217,7 @@ def_int $defence_roll = ~player_defence_roll_specific(^magic_style);
 if (randominc($attack_roll) > randominc($defence_roll)) {
     $damage = randominc(~kbd_special_breath_maxhit);
     def_int $random = random(2); // 50% chance upon successful hit to inflict a unique effect (osrs)
-    if (inv_total(worn, antidragonbreathshield) > 0) { // Not sure what it is exactly, ash says "Well protect player"
+    if (~has_antidragon_shield = true) { // Not sure what it is exactly, ash says "Well protect player"
         $random = random(8); // 1/8 chance (osrs). 
         if ($random ! 0) {
             mes("Your shield absorbs most of the dragon's icy breath!"); // https://youtu.be/91eqk3Lu_Qw?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=70
@@ -264,9 +264,16 @@ if (%prayer12 = ^true) {
     mes("You manage to resist some of the dragon's fiery breath!"); // https://youtu.be/R3ozXHcQkgs?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=78
     $maxhit = 20;
 }
-if (inv_total(worn, antidragonbreathshield) > 0) {
+if (~has_antidragon_shield = true) {
     mes("Your shield absorbs most of the dragon's fiery breath!");
     $maxhit = 15;
+    // A charge, because this is ordinary dragonfire. His toxic, shocking and icy breaths are not,
+    // and Old School charges the shield off "adult dragon dragonfire" and wyvern icy breath only.
+    // ~dfs_absorb writes a varp, and an ai_ trigger does not start with the protected active
+    // player - same p_finduid shape skeletal_wyvern.rs2 documents for its freeze.
+    if (p_finduid(uid) = true) {
+        ~dfs_absorb;
+    }
 }
 if (map_clock < %dragonresist) {
     mes("Your potion protects you from the heat of the dragon's breath!"); // https://youtu.be/7nY0kuIooZk?list=PLn23LiLYLb1bYAFU3Vdk3N9niuHs-b-4-&t=45
@@ -280,7 +287,7 @@ def_int $maxhit = 50;
 if (%prayer12 = ^true) {
     $maxhit = 15;
 }
-if (inv_total(worn, antidragonbreathshield) > 0) {
+if (~has_antidragon_shield = true) {
     $maxhit = 10;
 }
 return($maxhit);

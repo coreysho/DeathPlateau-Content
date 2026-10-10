@@ -366,6 +366,14 @@ while ($i < $size) {
     $i = calc($i + 1);
 }
 $rangebonus = add($rangebonus, ~blowpipe_dart_rangebonus); // the toxic blowpipe's loaded dart (toxic_blowpipe/scripts/blowpipe.rs2)
+// The dragonfire shield's charges, +1 each to melee and ranged defence (dragonfire_shield/scripts).
+// The second worn bonus in this build that is not a static param, and it is here for the same
+// reason the dart is: the item's number depends on state the obj cannot hold.
+def_int $dfs = ~dfs_charge_defence;
+$stabdefence = add($stabdefence, $dfs);
+$slashdefence = add($slashdefence, $dfs);
+$crushdefence = add($crushdefence, $dfs);
+$rangedefence = add($rangedefence, $dfs);
 return($stabattack, $slashattack, $crushattack, $magicattack, $rangeattack, $stabdefence, $slashdefence, $crushdefence, $magicdefence, $rangedefence, $strengthbonus, $prayerbonus, $rangebonus);
 
 [proc,.equip_get_bonuses]()(int, int, int, int, int, int, int, int, int, int, int, int, int)
@@ -411,6 +419,11 @@ while ($i < $size) {
     $i = calc($i + 1);
 }
 $rangebonus = add($rangebonus, ~.blowpipe_dart_rangebonus);
+def_int $dfs = ~.dfs_charge_defence;
+$stabdefence = add($stabdefence, $dfs);
+$slashdefence = add($slashdefence, $dfs);
+$crushdefence = add($crushdefence, $dfs);
+$rangedefence = add($rangedefence, $dfs);
 return($stabattack, $slashattack, $crushattack, $magicattack, $rangeattack, $stabdefence, $slashdefence, $crushdefence, $magicdefence, $rangedefence, $strengthbonus, $prayerbonus, $rangebonus);
 
 

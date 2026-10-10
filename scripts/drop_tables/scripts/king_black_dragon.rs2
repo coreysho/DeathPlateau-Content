@@ -23,6 +23,12 @@ obj_add(npc_coord, dragonhide_black, 1, ^lootdrop_duration);
 ~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
 
 
+// The draconic visage, 1/5,000 - twice as likely off him as off any other dragon here, which is
+// Old School's own number.
+if (random(5000) = 0) {
+    obj_add(npc_coord, draconic_visage, 1, ^lootdrop_duration);
+}
+
 // The dragon pickaxe, 1/1000, its own roll before the random(128) cascade rather than a band in
 // it - 1/1000 is not expressible as a whole number of 128ths, and every threshold in that cascade
 // is a calibrated 128th that inserting a band would shift. In OSRS it is a separate roll on top of

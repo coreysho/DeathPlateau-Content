@@ -146,6 +146,17 @@ if (inv_total(inv, melzarkey) = 0 & inv_total(bank, melzarkey) = 0) {
 // rsc
 ~chatplayer("<p,happy>I have slain the dragon!");
 ~chatnpc("<p,happy>Well done!");
+// He attaches a draconic visage to an anti-dragon shield for players under 90 Smithing
+// (dragonfire_shield/scripts/dragonfire_shield.rs2). The option only appears when you have one,
+// because an option that always answers "bring me a visage" is noise.
+if (inv_total(inv, draconic_visage) > 0) {
+    switch_int (~p_choice3("Could you attach this visage to my shield?", 2, "Can I buy a rune plate mail body now please?", 0, "Thank you.", 1)) {
+        case 2 : @oziach_dragonfire_shield;
+        case 0 : ~chatplayer("<p,happy>Can I buy a rune plate mail body now please?"); ~openshop_activenpc;
+        case default : ~chatplayer("<p,happy>Thank you.");
+    }
+    return;
+}
 def_int $choice = ~p_choice2("Can I buy a rune plate mail body now please?", 0, "Thank you.", 1);
 if ($choice = 1) {
     ~chatplayer("<p,happy>Thank you.");

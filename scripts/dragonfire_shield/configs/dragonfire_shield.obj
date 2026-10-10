@@ -1,0 +1,97 @@
+// THE DRACONIC VISAGE AND THE DRAGONFIRE SHIELD (Corey, 2026-10-09).
+//
+// IMPORTED FROM THE REV 474 CACHE, which is the period source rather than a convenience: both were
+// released on 18 June 2007 in "The Dragonfire Shield" update, and the 474 cache is 27 October 2007,
+// so it holds the originals at Old School's own ids (visage 11286, shield 11283 charged and 11284
+// uncharged). Models copied byte-for-byte by tools/models/import474.py.
+//
+// THE TWO SHIELDS SHARE A MODEL, and that is the cache's own answer, not an oversight: 11283 and
+// 11284 both point at model 26457 and manwear 26423. Old School only darkened the uncharged one on
+// 9 November 2017, ten years later, so in 2007 art they are the same shield.
+//
+// STATS ARE OLD SCHOOL'S. Attack -10 magic, -5 ranged, nothing else; defence 20/25/22 melee, 10
+// magic, 22 ranged; strength +7. The CHARGED one carries the same numbers here and gains its
+// +1 per charge at runtime, because 51 obj records for 51 charge counts is not a design - see
+// ~dfs_charge_defence in the script, which equip.rs2 adds the way it already adds the blowpipe's
+// loaded dart.
+//
+// WHICH IS WHY THERE ARE STILL TWO RECORDS. The charges live on the PLAYER, as the blowpipe's and
+// the trident's do (an obj here carries no per-item state), so the charged shield has to be
+// untradeable or charges would travel with a trade. Uncharged is the tradeable one, exactly as in
+// Old School - "the shield can only be traded when uncharged" - and that is the same reason the
+// blowpipe splits in two.
+//
+// param=antidragon IS THE IMPORTANT LINE. Eleven places in this codebase used to ask
+// `inv_total(worn, antidragonbreathshield) > 0` by name, and a dragonfire shield that did not
+// answer them would be the best shield in the game and set you on fire. They ask
+// ~has_antidragon_shield now, which reads this param off whatever is in the hand slot.
+
+[draconic_visage]
+name=Draconic visage
+desc=This looks pretty rare.
+model=obj_draconic_visage
+2dxof=-5
+2dyof=-5
+2dzoom=1697
+2dxan=567
+2dyan=152
+2dzan=2047
+cost=750000
+members=yes
+weight=1500g
+
+[dragonfire_shield_uncharged]
+name=Dragonfire shield
+desc=A shield made from the visage of a dragon.
+model=obj_dragonfire_shield
+manwear=obj_dragonfire_shield_manwear,0
+womanwear=obj_dragonfire_shield_manwear,6
+2dzoom=2022
+2dxan=540
+2dyan=123
+iop2=Wear
+wearpos=lefthand
+cost=2000000
+members=yes
+weight=12lb
+category=armour_shield
+param=magicattack,-10
+param=rangeattack,-5
+param=stabdefence,20
+param=slashdefence,25
+param=crushdefence,22
+param=magicdefence,10
+param=rangedefence,22
+param=strengthbonus,7
+param=defend_anim,human_shield_defence
+param=antidragon,yes
+
+[dragonfire_shield]
+name=Dragonfire shield
+desc=A shield made from the visage of a dragon.
+model=obj_dragonfire_shield
+manwear=obj_dragonfire_shield_manwear,0
+womanwear=obj_dragonfire_shield_manwear,6
+2dzoom=2022
+2dxan=540
+2dyan=123
+iop2=Wear
+iop3=Check
+wearop1=Empty
+wearop2=Check
+wearpos=lefthand
+cost=2000000
+members=yes
+tradeable=no
+weight=12lb
+category=armour_shield
+param=magicattack,-10
+param=rangeattack,-5
+param=stabdefence,20
+param=slashdefence,25
+param=crushdefence,22
+param=magicdefence,10
+param=rangedefence,22
+param=strengthbonus,7
+param=defend_anim,human_shield_defence
+param=antidragon,yes

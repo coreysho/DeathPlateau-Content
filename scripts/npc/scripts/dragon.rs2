@@ -107,9 +107,14 @@ def_int $defence_roll = ~player_defence_roll_specific(npc_param(damagetype));
 
 // damage player
 def_int $maxhit = 30;
-if (inv_total(worn, antidragonbreathshield) > 0) {
+if (~has_antidragon_shield = true) {
     $maxhit = 5;
     mes("Your shield absorbs most of the dragon fire!"); // late 2004
+    // ~dfs_absorb writes a varp, and an ai_ trigger does not start with the protected active
+    // player - same p_finduid shape skeletal_wyvern.rs2 documents for its freeze.
+    if (p_finduid(uid) = true) {
+        ~dfs_absorb;
+    }
 } else if (%prayer12 = ^true) {
     $maxhit = 10;
 } else if (randominc($attack_roll) > randominc($defence_roll)) {

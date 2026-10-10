@@ -1,0 +1,34 @@
+// Lava dragon - https://oldschool.runescape.wiki/w/Lava_dragon
+//
+// A STUB ON PURPOSE (2026-10-09). The full table is proposed in Claude outputs/lava-dragon-drops.md
+// and waits on three decisions that are the owner's, not mine: whether the lava scale comes in at
+// all (its only Old School use is Herblore content this build does not have), whether the 2,960
+// coin line keeps Old School's 7/128, and whether a lava dragon head replaces the draconic visage
+// slot the way the King Black Dragon's kbd_head does.
+//
+// What is here is what cannot wait: the guaranteed drops, the hard clue, and the DRACONIC VISAGE,
+// because the visage went in across every monster that drops it in Old School and leaving one out
+// would have made that list quietly wrong.
+
+[ai_queue3,lava_dragon] @lava_dragon_drop_table;
+
+[label,lava_dragon_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+
+// Bones, set on the npc config. Old School drops Lava dragon bones; this build has no such item
+// yet, so it drops the dragon bones the config names until it does.
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+obj_add(npc_coord, dragonhide_black, 1, ^lootdrop_duration);
+
+// Tertiary. Old School gives an elite clue here; this build's top tier is hard.
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+
+// The draconic visage, at Old School's own rate for this monster. Its own roll before any cascade,
+// the way the King Black Dragon's dragon pickaxe is: a rarity this far below 1/128 cannot be a
+// band in a table of 128.
+if (random(10000) = 0) {
+    obj_add(npc_coord, draconic_visage, 1, ^lootdrop_duration);
+}

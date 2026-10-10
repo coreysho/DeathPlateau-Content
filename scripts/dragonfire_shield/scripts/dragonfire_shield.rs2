@@ -1,0 +1,151 @@
+// THE DRAGONFIRE SHIELD (Corey, 2026-10-09) - Old School's 18 June 2007 item, in this build.
+//
+// Four pieces: what protects you from dragonfire, how the shield charges, what the charges are
+// worth, and how one gets made.
+
+// ---------------------------------------------------------------------------------------------
+// DRAGONFIRE PROTECTION, asked of the item rather than of its name
+// ---------------------------------------------------------------------------------------------
+// Eleven tests across six files used to name antidragonbreathshield directly. Every one of them
+// was a list of one, and the first thing that needed adding to it - this shield - would otherwise
+// have been the best shield in the game and would still have burned its owner alive. They ask this
+// now, and it reads param=antidragon off whatever is in the hand.
+
+[proc,has_antidragon_shield]()(boolean)
+def_obj $shield = inv_getobj(worn, ^wearpos_lhand);
+if ($shield = null) {
+    return(false);
+}
+return(oc_param($shield, antidragon));
+
+// The second-player form, for bolt_effects.rs2's immunity test - a dot proc cannot call a plain
+// one, which is why this is written out rather than shared.
+[proc,.has_antidragon_shield]()(boolean)
+def_obj $shield = .inv_getobj(worn, ^wearpos_lhand);
+if ($shield = null) {
+    return(false);
+}
+return(oc_param($shield, antidragon));
+
+// ---------------------------------------------------------------------------------------------
+// CHARGES
+// ---------------------------------------------------------------------------------------------
+// "The shield gains one charge for each adult dragon dragonfire attack or wyvern icy breath attack
+// it absorbs while equipped, up to a maximum of 50." Called from the same places that just decided
+// the breath was absorbed, so a charge is only ever paid for a breath the shield actually ate.
+
+[proc,dfs_absorb]
+def_obj $shield = inv_getobj(worn, ^wearpos_lhand);
+if ($shield = dragonfire_shield_uncharged) {
+    // the first breath turns the tradeable shield into the charged one, which is untradeable
+    // because the charges are on the player and would otherwise travel with a trade
+    inv_setslot(worn, ^wearpos_lhand, dragonfire_shield, 1);
+    %dfs_charges = 0;
+    mes("Your shield drinks in the dragonfire.");
+} else if ($shield ! dragonfire_shield) {
+    return;
+}
+if (%dfs_charges >= ^dfs_max_charges) {
+    return;
+}
+%dfs_charges = add(%dfs_charges, 1);
+~update_bonuses;
+
+// "Each charge adds +1 to the melee and ranged defence bonuses, for a +50 maximum." equip.rs2 adds
+// this to stab, slash, crush and ranged defence the way it already adds the blowpipe's dart to the
+// ranged bonus - the one precedent in this build for a worn bonus that is not a static param.
+[proc,dfs_charge_defence]()(int)
+if (inv_getobj(worn, ^wearpos_lhand) ! dragonfire_shield) {
+    return(0);
+}
+return(min(%dfs_charges, ^dfs_max_charges));
+
+[proc,.dfs_charge_defence]()(int)
+if (.inv_getobj(worn, ^wearpos_lhand) ! dragonfire_shield) {
+    return(0);
+}
+return(min(.%dfs_charges, ^dfs_max_charges));
+
+// ---------------------------------------------------------------------------------------------
+// THE WORN OPTIONS
+// ---------------------------------------------------------------------------------------------
+
+[label,wearop1_dragonfire_shield]
+if (%dfs_charges <= 0) {
+    mes("Your dragonfire shield is already empty.");
+    return;
+}
+mes("You release the dragonfire shield's charges harmlessly into the air.");
+%dfs_charges = 0;
+inv_setslot(worn, ^wearpos_lhand, dragonfire_shield_uncharged, 1);
+~update_bonuses;
+
+[opheld3,dragonfire_shield] ~dfs_check;
+[label,wearop2_dragonfire_shield] ~dfs_check;
+
+[proc,dfs_check]
+if (%dfs_charges = 1) {
+    mes("Your dragonfire shield has 1 charge.");
+    return;
+}
+mes("Your dragonfire shield has <tostring(%dfs_charges)> charges.");
+
+// ---------------------------------------------------------------------------------------------
+// MAKING ONE
+// ---------------------------------------------------------------------------------------------
+// "A player with 90 Smithing can combine an anti-dragon shield with a draconic visage at an anvil
+// to make a dragonfire shield. This grants 2,000 Smithing XP." Reached from [oplocu,anvil] in
+// skill_smithing, the way the godsword shards are.
+
+[label,dfs_smith_at_anvil]
+def_obj $other = antidragonbreathshield;
+if (last_useitem = antidragonbreathshield) {
+    $other = draconic_visage;
+}
+if (inv_total(inv, $other) < 1) {
+    ~mesbox("You need a draconic visage and an anti-dragon shield to make a dragonfire shield.");
+    return;
+}
+if (inv_total(inv, hammer) < 1) {
+    ~mesbox("You need a hammer to work the metal with.");
+    return;
+}
+if (stat(smithing) < ^dfs_smith_level) {
+    ~mesbox("You need a Smithing level of at least <tostring(^dfs_smith_level)> to attach the visage to the shield.|Oziach in Edgeville would do it for you, for a price.");
+    return;
+}
+anim(human_smithing, 0);
+sound_synth(anvil, 1, 0);
+inv_del(inv, draconic_visage, 1);
+inv_del(inv, antidragonbreathshield, 1);
+inv_add(inv, dragonfire_shield_uncharged, 1);
+stat_advance(smithing, ^dfs_smith_xp);
+~objbox(dragonfire_shield_uncharged, "You attach the visage to the shield.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// OZIACH, for players under the level
+// ---------------------------------------------------------------------------------------------
+// "Players without the required level can take the visage and an anti-dragon shield to Oziach in
+// Edgeville, who will make the shield for 1,250,000 coins." He is already the Dragon Slayer
+// reward npc, so the quest requirement is one he enforces anyway.
+
+[label,oziach_dragonfire_shield]
+~chatplayer("<p,quiz>Could you attach this visage to my shield?");
+if (inv_total(inv, draconic_visage) < 1 | inv_total(inv, antidragonbreathshield) < 1) {
+    ~chatnpc("<p,neutral>Bring me a draconic visage and an anti-dragon shield and I will see what I can do.");
+    return;
+}
+~chatnpc("<p,neutral>I can do that. It is delicate work, mind - <tostring(^dfs_oziach_fee)> coins.");
+if (~p_choice2("Yes, do it.", 1, "That's robbery.", 2) = 2) {
+    ~chatplayer("<p,angry>That's robbery.");
+    return;
+}
+if (inv_total(inv, coins) < ^dfs_oziach_fee) {
+    ~chatnpc("<p,neutral>You do not have that kind of money.");
+    return;
+}
+inv_del(inv, coins, ^dfs_oziach_fee);
+inv_del(inv, draconic_visage, 1);
+inv_del(inv, antidragonbreathshield, 1);
+inv_add(inv, dragonfire_shield_uncharged, 1);
+~objbox(dragonfire_shield_uncharged, "Oziach attaches the visage to your shield.", 250, 0, 0);

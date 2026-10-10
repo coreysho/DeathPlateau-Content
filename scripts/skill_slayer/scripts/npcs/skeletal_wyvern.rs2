@@ -58,9 +58,14 @@ def_int $duration = ~player_projectile(npc_coord, coord, uid, wyvern_skeleton_tr
 
 // The breath ignores armour, so there is no accuracy roll - only the shield changes the damage.
 def_int $maxhit = 50;
-if (inv_total(worn, antidragonbreathshield) > 0) {
+if (~has_antidragon_shield = true) {
     $maxhit = 10;
     mes("Your shield absorbs most of the wyvern's icy breath!");
+    // A charge, and the same p_finduid dance the freeze below needs: ~dfs_absorb writes a varp,
+    // and an ai_ trigger does not start with the protected active player.
+    if (p_finduid(uid) = true) {
+        ~dfs_absorb;
+    }
 } else {
     mes("You are frozen by the wyvern's icy breath!");
     // The breath freezes the player the way the ancient ice spells do. A varp WRITE needs the

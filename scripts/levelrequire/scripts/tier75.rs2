@@ -8,3 +8,8 @@
 // same slot, same bonuses, so the same armour and the same requirement. They went
 // on at level 1 because nobody had typed a line for them.
 [opheld2,armadyl_godsword_or] @levelrequire_attack(75, last_slot);
+
+// The dragonfire shield: 75 Defence and Dragon Slayer, as Old School has it. Both records, so
+// the tradeable uncharged one is gated too.
+[opheld2,dragonfire_shield] @levelrequire_dragon_slayer_quest_defence(75, last_slot);
+[opheld2,dragonfire_shield_uncharged] @levelrequire_dragon_slayer_quest_defence(75, last_slot);

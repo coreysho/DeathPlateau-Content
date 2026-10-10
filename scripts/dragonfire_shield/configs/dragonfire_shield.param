@@ -1,0 +1,14 @@
+// DRAGONFIRE PROTECTION, AS A PROPERTY OF THE SHIELD rather than as its name.
+//
+// Eleven places across six files used to ask `inv_total(worn, antidragonbreathshield) > 0`: the
+// generic dragon attack, the King Black Dragon's four branches, Elvarg, the skeletal wyvern and
+// the bolt effects' immunity test. Every one of them is a list of one item that nobody would think
+// to extend, and the first thing that needed extending - a dragonfire shield - would have been the
+// best shield in the game and would have set its owner on fire.
+//
+// So the question moved onto the item. ~has_antidragon_shield reads this param off whatever is in
+// the hand slot, and anything that protects against dragonfire says so here: the anti-dragon
+// shield in all.obj, both dragonfire shields, and whatever comes next.
+[antidragon]
+type=boolean
+default=no

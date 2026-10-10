@@ -1,0 +1,8 @@
+// The dragonfire shield's charges live on the PLAYER, not on the item - the same decision the
+// toxic blowpipe and the trident made, and for the same reason: an obj in this build carries no
+// per-item state. It is also why the charged shield is untradeable, because otherwise a charge
+// would travel with a trade.
+//
+// perm, so a shield charged tonight is still charged tomorrow.
+[dfs_charges]
+scope=perm

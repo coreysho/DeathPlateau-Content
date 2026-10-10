@@ -108,7 +108,12 @@ queue*(playerhit_n_retaliate, calc($duration / 30))(npc_uid);
 // proc is used when the player has dragon fire shiled, prot magic, or antifire potion
 [proc,elvarg_max_hit]()(int)
 def_int $maxhit = 70;
-if (inv_total(worn, antidragonbreathshield) > 0) {
+if (~has_antidragon_shield = true) {
+    // ~dfs_absorb writes a varp, and an ai_ trigger does not start with the protected active
+    // player - same p_finduid shape skeletal_wyvern.rs2 documents for its freeze.
+    if (p_finduid(uid) = true) {
+        ~dfs_absorb;
+    }
     // https://youtu.be/zmYEl97Smxs?list=PLn23LiLYLb1aqrojPTi1_Np81LJku2Nd0&t=169
     mes("Your shield absorbs most of the dragon fire!");
     $maxhit = sub($maxhit, 60);
