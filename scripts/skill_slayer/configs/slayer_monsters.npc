@@ -1405,6 +1405,11 @@ resizev=180
 op2=Attack
 vislevel=37
 
+param=attack_anim,cockatrice_attack
+param=attack_sound,cockatrice_attack
+param=death_anim,cockatrice_death
+param=death_sound,cockatrice_death
+param=defend_sound,cockatrice_hit
 [slayer_rockslug]
 name=Rockslug
 desc=The slime of evil.
@@ -1511,6 +1516,8 @@ op2=Attack
 vislevel=93
 
 // unused
+param=attack_anim,dustdevil_attack
+param=death_anim,dustdevil_death
 [slayer_turoth]
 name=Turoth
 desc=He's one leg short!
@@ -1521,6 +1528,11 @@ op2=Attack
 vislevel=86
 param=slayer_category,^slayer_turoth
 
+param=attack_anim,turoth_attack
+param=attack_sound,turoth_attack
+param=death_anim,turoth_death
+param=death_sound,turoth_death
+param=defend_sound,turoth_hit
 [slayer_turoth_dad]
 name=Turoth
 desc=He's one big leg short!
@@ -1659,6 +1671,11 @@ resizev=240
 vislevel=88
 param=slayer_category,^slayer_turoth
 
+param=attack_anim,turoth_attack
+param=attack_sound,turoth_attack
+param=death_anim,turoth_death
+param=death_sound,turoth_death
+param=defend_sound,turoth_hit
 [slayer_turoth_dad3]
 name=Turoth
 desc=He's one big leg short!
@@ -1676,6 +1693,11 @@ resizev=240
 vislevel=88
 param=slayer_category,^slayer_turoth
 
+param=attack_anim,turoth_attack
+param=attack_sound,turoth_attack
+param=death_anim,turoth_death
+param=death_sound,turoth_death
+param=defend_sound,turoth_hit
 [slayer_icefiend_1]
 name=Icefiend
 desc=A small ice demon.

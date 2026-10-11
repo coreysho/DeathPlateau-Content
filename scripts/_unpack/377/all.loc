@@ -29878,6 +29878,7 @@ ambient=50
 op1=Search
 
 [mortton_sink]
+category=watersource
 name=Sink
 desc=Ideal for washing things in.
 model=sink
@@ -43092,6 +43093,7 @@ model=feud_table_bare
 width=2
 
 [feud_fountain]
+category=watersource
 name=Fountain
 desc=An expensive water feature.
 model=fountain
@@ -43189,6 +43191,7 @@ blockrange=no
 active=no
 
 [feud_desert_well]
+category=well
 name=Well
 desc=No this is not a mirage!
 model=desertwell
@@ -48145,6 +48148,7 @@ active=no
 resizey=120
 
 [barrows_waterpump]
+category=watersource
 name=Waterpump
 desc=It might still work...
 model=loc_6827
@@ -53289,6 +53293,7 @@ recol1d=14695
 ambient=50
 
 [farm_sink]
+category=watersource
 name=Sink
 desc=After working with livestock, why not wash your hands?
 model=farm_sink
@@ -53320,6 +53325,7 @@ recol2s=11523
 recol2d=9444
 
 [farm_water_barrel2]
+category=watersource
 name=Water Barrel
 desc=A barrel for collecting rain water.
 model=water_barrel1
@@ -53758,6 +53764,7 @@ op1=Climb-down
 mapscene=7
 
 [elf_village_well]
+category=well
 name=Well
 desc=A local water source.
 model=elf_village_well
@@ -55351,6 +55358,7 @@ length=2
 ambient=20
 
 [rellekka_well]
+category=well
 name=Well
 desc=Best used with a bucket.
 model=well
@@ -57219,6 +57227,7 @@ active=yes
 raiseobject=no
 
 [blast_furnace_sink]
+category=watersource
 name=Sink
 desc=Used for getting water.
 model=dwarf_keldagrim_sink
@@ -62918,6 +62927,7 @@ model=rimmington_poor_range_chimney
 active=yes
 
 [rimmington_sink]
+category=watersource
 name=Sink
 desc=Wash your hands!
 model=rimmington_sink
@@ -64410,6 +64420,7 @@ ambient=20
 contrast=10
 
 [deal_sink]
+category=watersource
 name=Sink
 desc='Please remember te wash yer hook'. Sound advice for the hygienic pirate.
 model=farm_sink
@@ -78773,6 +78784,7 @@ width=2
 blockrange=no
 
 [loc_11661]
+category=watersource
 name=Waterpump
 desc=A handy source of water.
 model=loc_6827
@@ -79891,6 +79903,7 @@ op2=Use-quickly
 blockrange=no
 
 [loc_11759]
+category=watersource
 name=Fountain
 desc=Hope springs eternal.
 model=loc_11759
@@ -80382,6 +80395,7 @@ ambient=20
 active=no
 
 [loc_11793]
+category=well
 name=Well
 desc=Best used with a bucket.
 model=well
@@ -82923,6 +82937,7 @@ sharelight=yes
 hillskew=yes
 
 [fairy_fountain_small]
+category=watersource
 name=Fairy fountain
 desc=A beautiful fairy fountain!
 model=fairy_fountain_small
@@ -88125,6 +88140,7 @@ mapscene=6
 resizey=100
 
 [burgh_well]
+category=well
 name=Well
 desc=It smells stagnant.
 model=burgh_well
@@ -88932,6 +88948,7 @@ recol1d=13605
 blockrange=no
 
 [qip_sheep_shearer_sink]
+category=watersource
 name=Sink
 desc=After working with livestock, why not wash your hands?
 model=farm_sink
@@ -93368,6 +93385,7 @@ blockrange=no
 ambient=10
 
 [loc_14917]
+category=watersource
 name=Sink
 desc=There must be a source of fresh water somewhere nearby.
 model=poh_sink3

@@ -40,19 +40,24 @@ inv_del(inv, hundred_pirate_fishcake, 1);
 // trigger may only be declared once, so the quest branch is hooked in there and calls this.
 // Returns true if it did the talking.
 
-[proc,hundred_pirate_murphy_chat]()(boolean)
+// Same split as Sir Amik's, and for the same reason: this used to run before Murphy's own
+// dialogue and return if it had spoken, so from the moment Pirate Pete's subquest was told until
+// it was finished there was no way to take the Fishing Trawler out at all.
+[proc,hundred_pirate_murphy_available]()(boolean)
 if (%100_pirate_quest_var < ^hundred_pirate_told) {
     return(false);
 }
 if (~hundred_has_subquest(^hundred_bit_pirate) = true) {
     return(false);
 }
+return(true);
+
+[proc,hundred_pirate_murphy_chat]
 if (%100_pirate_quest_var = ^hundred_pirate_told) {
     ~hundred_pirate_murphy_intro;
-    return(true);
+    return;
 }
 ~hundred_pirate_murphy_return;
-return(true);
 
 [proc,hundred_pirate_murphy_intro]
 ~chatplayer("<p,quiz>Do you know anything about the seabed out here?");

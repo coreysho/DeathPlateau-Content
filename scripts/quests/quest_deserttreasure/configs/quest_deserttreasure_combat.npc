@@ -642,6 +642,8 @@ huntrange=5
 // ================================================================================ the Stranger
 // The assassin who ambushes you in the desert once Eblis sets you on the diamonds - level 95.
 // Killing him sets fd_killed_ninja, a varbit the cache reserved and nothing ever set.
+param=attack_sound,skeleton_attack
+param=death_sound,skeleton_death
 [fourdiamonds_assasin]
 name=Stranger
 desc=Very mysterious looking...

@@ -778,6 +778,11 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner2]
 name=Cave goblin miner
 desc=This one is slacking off.
@@ -808,6 +813,11 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner3]
 name=Cave goblin miner
 desc=This one is slacking off.
@@ -840,6 +850,11 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner4]
 name=Cave goblin miner
 desc=This one is slacking off.
@@ -872,6 +887,11 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [jailguard]: Cave goblin guard 26 <- Jail guard 26.
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_guard1]
 name=Cave goblin guard
 desc=He protects the miners.
@@ -939,6 +959,8 @@ param=slashdefence,15
 param=crushdefence,19
 param=damagetype,^crush_style
 
+param=attack_anim,cave_goblin_bone_spear_attack
+param=defend_anim,cave_goblin_bone_spear_block
 [cave_goblin_miner_mining]
 name=Cave goblin miner
 desc=He's working away.
@@ -962,6 +984,11 @@ head1=npc_2069_head
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner2_mining]
 name=Cave goblin miner
 desc=He's working away.
@@ -988,6 +1015,11 @@ strength=12
 defence=7
 param=damagetype,^crush_style
 
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner3_mining]
 name=Cave goblin miner
 desc=He's working away.
@@ -1015,6 +1047,11 @@ head1=npc_2069_head
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [cave_goblin_miner4_mining]
 name=Cave goblin miner
 desc=He's working away.
@@ -1045,6 +1082,11 @@ strength=12
 defence=7
 param=damagetype,^crush_style
 
+param=attack_anim,cave_goblin_attack
+param=attack_sound,cave_goblin_attack
+param=death_anim,cave_goblin_death
+param=death_sound,cave_goblin_death
+param=defend_sound,cave_goblin_hit
 [goblin_unarmed_melee_in_1]
 name=Goblin
 desc=An ugly green creature.

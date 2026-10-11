@@ -105,6 +105,10 @@ param=defend_anim,wallasalki_defend
 param=death_anim,wallasalki_death
 param=retreat,0
 
+param=attack_anim,wallasalki_attack
+param=attack_sound,wallasalki_attack
+param=death_sound,wallasalki_death
+param=defend_sound,wallasalki_hit
 [giant_rockcrab_deeper]
 name=Giant Rock Crab
 desc=No one likes crabs... especially really big ones!
@@ -135,6 +139,13 @@ param=attackrate,4
 param=attackrange,1
 param=attack_anim,horror_crab_attack
 param=defend_anim,horror_crab_defend
+// THE CACHE HAS HAD THESE ALL ALONG. synth.pack carries rock_crab_attack, rock_crab_hit and
+// rock_crab_death (and the small and underwater sets beside them) and not one npc referenced any
+// of them, so a rock crab swung, took hits and died in silence. npc_combat.rs2, player_magic.rs2
+// and npc_death.rs2 all read these params already.
+param=attack_sound,underwater_rock_crab_attack
+param=defend_sound,underwater_rock_crab_hit
+param=death_sound,underwater_rock_crab_death
 // no dedicated death sequence exists in all.seq for this npc (checked) - left at the combat.param
 // default (human_death) rather than guessing a wrong name.
 param=retreat,0

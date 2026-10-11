@@ -1,10 +1,16 @@
 [opnpc1,sir_amik_varze]
-// Recipe for Disaster, Freeing Sir Amik Varze, gets first refusal: he is the only person who can say
-// what was in the glass, and the proc returns whether it did the talking. It lives in
-// quests/quest_100/scripts/hundred_amik.rs2; wired in here because this trigger may only be
-// declared once.
-if (~hundred_amik_chat = true) {
-    return;
+// RECIPE FOR DISASTER ASKS, IT DOES NOT TAKE OVER. Freeing Sir Amik Varze needs one question of
+// him - he is the only person who can say what was in the glass - and this trigger may only be
+// declared once, so the quest branch is hooked in here. It used to run first and return if it had
+// spoken, which left him with no other conversation at all from the moment the quest passed Aris
+// until he was freed: Black Knights' Fortress could not be started, continued or finished, and
+// Recruitment Drive hangs off the end of that. Now he is asked which it is.
+if (~hundred_amik_available = true) {
+    def_int $topic = ~p_choice2("I seek an audience, Sir Amik.", 1, "This is going to sound strange. What do you drink?", 2);
+    if ($topic = 2) {
+        ~hundred_amik_chat;
+        return;
+    }
 }
 switch_int (%spy) {
     case 0 : @black_knights_fortress_sir_amik_prequest;

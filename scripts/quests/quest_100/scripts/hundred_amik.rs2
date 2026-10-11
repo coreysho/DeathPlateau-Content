@@ -44,13 +44,21 @@ inv_del(inv, hundred_fruit_blast, 1);
 // areas/area_falador/scripts/sir_amik_varze.rs2, so the quest branch is hooked in there and jumps
 // here. He is the only person who can say what was in the glass.
 
-[proc,hundred_amik_chat]()(boolean)
+// WHETHER THE QUESTION IS EVEN AVAILABLE, kept apart from asking it. These two used to be the top
+// of the dialogue proc itself, and the host trigger ran that proc FIRST and returned if it had
+// spoken - so from the moment Recipe for Disaster passed Aris until Sir Amik was freed, he had no
+// other conversation. Black Knights' Fortress could not be started, continued or finished, and
+// Recruitment Drive hangs off the end of that, so neither could it. The host asks now.
+[proc,hundred_amik_available]()(boolean)
 if (%hundred_main_quest_var < ^hundred_met_aris) {
     return(false);
 }
 if (~hundred_has_subquest(^hundred_bit_varze) = true) {
     return(false);
 }
+return(true);
+
+[proc,hundred_amik_chat]
 ~chatplayer("<p,quiz>This is going to sound strange. What do you drink?");
 ~chatnpc("<p,angry>I beg your pardon?");
 ~chatplayer("<p,neutral>There is a version of you frozen solid in Lumbridge Castle holding a cocktail, and I need to make another one.");
@@ -60,7 +68,6 @@ if (~hundred_has_subquest(^hundred_bit_varze) = true) {
 ~chatnpc("<p,neutral>Ash. It was a wager, it was a long time ago, and I have drunk them that way ever since because a Varze does not go back on a wager.");
 ~chatnpc("<p,angry>You will not repeat that to the Order.");
 ~chatplayer("<p,happy>Not a word.");
-return(true);
 
 // --- Making it ---
 // Neither fruit_blast nor ashes owned an [opheldu] before this, so both halves are declared here.

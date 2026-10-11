@@ -455,6 +455,9 @@ param=magicdefence,50
 param=damagetype,^slash_style
 param=death_drop,ashes
 
+param=attack_sound,demon_attack
+param=death_sound,demon_death
+param=defend_sound,demon_hit
 [npc_1516]
 name=Demon
 desc=Demonic.
@@ -489,6 +492,12 @@ op2=Attack
 vislevel=100
 head1=npc_2919_head
 
+param=attack_anim,demon_attack
+param=attack_sound,demon_attack
+param=death_anim,demon_death
+param=death_sound,demon_death
+param=defend_anim,demon_block
+param=defend_sound,demon_hit
 [champions_lesserdemon]
 name=Lesser Demon Champion
 desc=Champion of the Lesser Demons!
@@ -499,6 +508,12 @@ readyanim=champions_lesserdemon_ready
 op2=Attack
 vislevel=162
 
+param=attack_anim,demon_attack
+param=attack_sound,demon_attack
+param=death_anim,demon_death
+param=death_sound,demon_death
+param=defend_anim,demon_block
+param=defend_sound,demon_hit
 [poh_demon]
 name=Demon
 desc=A freshly summoned demon.
@@ -511,3 +526,9 @@ op2=Attack
 resizeh=170
 resizev=170
 vislevel=27
+param=attack_anim,demon_attack
+param=attack_sound,demon_attack
+param=death_anim,demon_death
+param=death_sound,demon_death
+param=defend_anim,demon_block
+param=defend_sound,demon_hit

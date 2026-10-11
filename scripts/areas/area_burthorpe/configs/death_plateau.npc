@@ -89,6 +89,7 @@ param=defend_sound,troll_champion_death
 huntrange=1
 param=death_drop,big_bones
 
+param=death_sound,troll_death
 [death_troll_guard1]
 name=Pee Hat
 desc=A nasty looking troll.
@@ -266,6 +267,7 @@ category=troll_thrower
 param=death_drop,big_bones
 param=slayer_category,^slayer_troll
 
+param=attack_sound,troll_attack
 [death_troll_thrower2]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -310,6 +312,7 @@ category=troll_thrower
 param=death_drop,big_bones
 param=slayer_category,^slayer_troll
 
+param=attack_sound,troll_attack
 [death_troll_thrower3]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -354,6 +357,7 @@ category=troll_thrower
 param=death_drop,big_bones
 param=slayer_category,^slayer_troll
 
+param=attack_sound,troll_attack
 [death_troll_thrower4]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -398,6 +402,7 @@ category=troll_thrower
 param=death_drop,big_bones
 param=slayer_category,^slayer_troll
 
+param=attack_sound,troll_attack
 [death_troll_thrower5]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -442,6 +447,7 @@ category=troll_thrower
 param=death_drop,big_bones
 param=slayer_category,^slayer_troll
 
+param=attack_sound,troll_attack
 [death_troll_melee1]
 name=Mountain Troll
 desc=Small for a troll but mean and ugly.

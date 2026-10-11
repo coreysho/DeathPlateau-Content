@@ -153,6 +153,9 @@ param=death_drop,wolf_bones
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [ice_wolf_1]: Ice wolf 132 = Ice wolf 132.
+param=attack_anim,dog_attack
+param=death_anim,dog_death
+param=defend_anim,dog_block
 [trollromance_ice_wolf_2]
 name=Ice wolf
 desc=Not mans' best friend.
@@ -218,6 +221,12 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
 param=death_drop,big_bones
+param=attack_anim,troll_attack
+param=attack_sound,troll_attack
+param=death_anim,troll_death
+param=death_sound,troll_death
+param=defend_anim,troll_block
+param=defend_sound,troll_hit
 [trollromance_icetroll_melee2]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -254,6 +263,12 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
 param=death_drop,big_bones
+param=attack_anim,troll_attack
+param=attack_sound,troll_attack
+param=death_anim,troll_death
+param=death_sound,troll_death
+param=defend_anim,troll_block
+param=defend_sound,troll_hit
 [trollromance_icetroll_melee3]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -325,6 +340,12 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
 param=death_drop,big_bones
+param=attack_anim,troll_attack
+param=attack_sound,troll_attack
+param=death_anim,troll_death
+param=death_sound,troll_death
+param=defend_anim,troll_block
+param=defend_sound,troll_hit
 [trollromance_icetroll_melee5]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -396,6 +417,12 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
 param=death_drop,big_bones
+param=attack_anim,troll_attack
+param=attack_sound,troll_attack
+param=death_anim,troll_death
+param=death_sound,troll_death
+param=defend_anim,troll_block
+param=defend_sound,troll_hit
 [trollromance_icetroll_melee7]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -426,3 +453,9 @@ param=damagetype,^crush_style
 param=slayer_category,^slayer_troll
 param=death_drop,big_bones
 
+param=attack_anim,troll_attack
+param=attack_sound,troll_attack
+param=death_anim,troll_death
+param=death_sound,troll_death
+param=defend_anim,troll_block
+param=defend_sound,troll_hit

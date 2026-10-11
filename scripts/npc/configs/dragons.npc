@@ -548,6 +548,9 @@ op2=Attack
 vislevel=65
 param=draconic,yes
 
+param=attack_anim,bdrag_attack
+param=death_anim,bdrag_death
+param=defend_anim,bdrag_block
 [poh_steel_dragon]
 name=Steel dragon
 desc=Its scales seem to be made of steel.
@@ -570,3 +573,9 @@ resizev=96
 vislevel=246
 param=fiery,yes
 param=draconic,yes
+param=attack_anim,dragon_attack
+param=attack_sound,dragon_attack
+param=death_anim,dragon_death
+param=death_sound,dragon_death
+param=defend_anim,dragon_block
+param=defend_sound,dragon_hit
