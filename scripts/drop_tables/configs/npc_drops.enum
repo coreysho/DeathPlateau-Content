@@ -15,6 +15,7 @@ val=5,120
 [npc_drops_tier_list]
 inputtype=int
 outputtype=component
+default=null
 val=1,npc_drops:list1
 val=2,npc_drops:list2
 val=3,npc_drops:list3
@@ -25,6 +26,7 @@ val=5,npc_drops:list5
 [npc_drops_tier_icons]
 inputtype=int
 outputtype=component
+default=null
 val=1,npc_drops:icons1
 val=2,npc_drops:icons2
 val=3,npc_drops:icons3
@@ -35,6 +37,7 @@ val=5,npc_drops:icons5
 [npc_drops_name]
 inputtype=int
 outputtype=component
+default=null
 val=1000,npc_drops:name1_1
 val=1001,npc_drops:name1_2
 val=1002,npc_drops:name1_3
@@ -272,6 +275,7 @@ val=5119,npc_drops:name5_120
 [npc_drops_qty]
 inputtype=int
 outputtype=component
+default=null
 val=1000,npc_drops:qty1_1
 val=1001,npc_drops:qty1_2
 val=1002,npc_drops:qty1_3
@@ -509,6 +513,7 @@ val=5119,npc_drops:qty5_120
 [npc_drops_rate]
 inputtype=int
 outputtype=component
+default=null
 val=1000,npc_drops:rate1_1
 val=1001,npc_drops:rate1_2
 val=1002,npc_drops:rate1_3
