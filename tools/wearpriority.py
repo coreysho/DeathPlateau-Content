@@ -126,6 +126,34 @@ RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10, 'hair': 10, 'jaw': 10}
 KIT_TYPES = ('torso', 'legs', 'feet', 'hair', 'jaw')
 
 
+def npc_models(content):
+    """Every model any npc is built from.
+
+    A MESH AN NPC WEARS IS NOT OURS TO RETUNE. The player and an npc are different merged models and
+    a bucket that is right in one can be wrong in the other, and several of this build's meshes do
+    both jobs: the Undertaker is made of the man's short-hair head (obj_viking_helmet_manwear, which
+    despite the name is a head), the kit's bare feet (idk_42) and his own boots, which are also a
+    wearable item. Moving those three for the player's sake broke him, reported from the game the
+    same hour.
+
+    The player loses those options - a short-haired or barefoot character keeps the old bucket under
+    a cape - and that is the smaller harm of the two. The real answer is a separate copy of each
+    shared mesh, one for the npc and one for the player, which is a change to the npc's own config
+    and belongs to whoever owns it.
+    """
+    out = set()
+    for path in sorted(glob.glob(os.path.join(content, 'scripts/**/*.npc'), recursive=True)):
+        for line in open(path, encoding='utf-8', errors='replace'):
+            s = line.split('//')[0].strip()
+            if '=' not in s:
+                continue
+            k, v = s.split('=', 1)
+            k = k.strip()
+            if re.match(r'^(model|head)\d*$', k):
+                out.add(v.strip().split(',')[0])
+    return out
+
+
 def kit_models(content):
     """{model path: slot} for every kit option whose body part a cape has to sort against."""
     out, cur, kits = {}, None, {}
@@ -243,9 +271,14 @@ def main():
     for mp, slot in kit_models(a.content).items():
         if slot in slots:
             models.setdefault(mp, (slot, {'the default kit'}))
+    npcs = npc_models(a.content)
+    shared = 0
     counts = {}
     for path, (slot, names) in sorted(models.items()):
         if slot not in slots:
+            continue
+        if os.path.basename(path)[:-4] in npcs:
+            shared += 1
             continue
         what, did = retune(path, RULES[slot], a.apply)
         counts.setdefault(slot, [0, 0, 0])
@@ -256,6 +289,8 @@ def main():
         elif what:
             counts[slot][1] += 1
     print()
+    if shared:
+        print(f'  {shared} models left alone because an npc is made of them too')
     for slot in slots:
         c = counts.get(slot, [0, 0, 0])
         print(f'  {slot:<6} {c[2]:>4} models   {c[0]:>4} retuned   '
