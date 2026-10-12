@@ -49,6 +49,17 @@ STYLE = {'crush': '^crush_style', 'magic': '^magic_style', 'range': '^ranged_sty
 # the stats of whatever that is. The guard below caught it; this is the fix.
 ID_RANGE = (1680, 1800)
 
+# The generator owns the text between these two markers in each record it writes, and replaces it
+# wholesale. Anything outside them - the cache's own art, models, animations and vislevel - is
+# never touched.
+# The portals' hitpoints and defence, the two numbers a solo game is tuned on. See the comment
+# where they are used for the measurement that set them.
+PORTAL_HP = 50
+PORTAL_DEF = 10
+
+BEGIN = '// --- genpeststats.py BEGIN: do not hand-edit, regenerate ---'
+END = '// --- genpeststats.py END ---'
+
 
 def osrs_records(recs, name):
     """Every OSRS record called `name`, in id order, as (atk, def, str, hp, rng, mag).
@@ -103,11 +114,23 @@ def main():
                 lines.append('param=pest_tier,%d' % t)
                 plan[nm] = lines
 
-    # The four portals. OSRS's novice portal: 250 hitpoints, 120 defence, and it cannot fight back
-    # (attack/strength/ranged/magic are all 1). They are the objective, not an enemy.
+    # The four portals.
+    #
+    # NOT OLD SCHOOL'S NUMBERS, and this is the one place in this file that departs from them.
+    # OSRS's novice portal has 250 hitpoints and 120 defence, which is tuned for five to
+    # twenty-five players hitting it at once. Measured against one player (engine
+    # tools/sim/_ttk.ts) a maxed account with an abyssal whip took 203 TICKS to drop one of those -
+    # four of them is 812 ticks of swinging against a 500-tick clock, before any walking between
+    # portals 37 tiles apart and before the pests get a say. It was not hard, it was impossible.
+    #
+    # PORTAL_HP and PORTAL_DEF below are chosen against that measurement, not guessed, and the
+    # measurement is the test: a maxed player should drop one in well under a quarter of the clock
+    # so that four plus travel fits, and an under-levelled one should not.
+    #
+    # It still cannot fight back - attack and strength stay at 1, which IS Old School's.
     for n in (1, 2, 3, 4):
         plan['pest_portal_%d_active' % n] = [
-            'hitpoints=250', 'attack=1', 'strength=1', 'defence=120',
+            'hitpoints=%d' % PORTAL_HP, 'attack=1', 'strength=1', 'defence=%d' % PORTAL_DEF,
             'param=stabdefence,0', 'param=slashdefence,0', 'param=crushdefence,0',
             'param=magicdefence,0', 'param=rangedefence,0',
             'param=death_anim,pest_portal_death',
@@ -125,28 +148,35 @@ def main():
     for n in (1, 2, 3, 4):
         plan['pest_voidknight_control%d' % n] = ['wanderrange=0']
 
-    changed, skipped = [], []
+    changed, same = [], []
     for nm, lines in sorted(plan.items()):
         m = re.search(r'^\[%s\]\n(.*?)(?=^\[|\Z)' % re.escape(nm), txt, re.S | re.M)
         if not m:
             raise SystemExit('%s is not in all.npc' % nm)
         body = m.group(1)
-        # Idempotence: a record that already carries the first line this plan would add is done.
-        # Keyed on the first line rather than on hitpoints= because the Void Knights get only
-        # wanderrange and would otherwise be rewritten on every run.
-        if re.search(r'^%s$' % re.escape(lines[0].split('//')[0].strip()), body, re.M):
-            skipped.append(nm)
-            continue
-        # Appended at the end of the record, after the art and the existing params, the way
-        # area_wilderness/configs/ankou.npc orders them.
-        new = body.rstrip('\n') + '\n' + '\n'.join(lines) + '\n\n'
+        block = BEGIN + '\n' + '\n'.join(lines) + '\n' + END + '\n'
+        # THE BLOCK IS REPLACED, NOT APPENDED TO, which is what makes this re-runnable. The first
+        # version keyed idempotence on "does the record already carry the first line this plan
+        # would add" - which is true until a NUMBER CHANGES, and then it appended a second
+        # hitpoints= line below the first. Lowering the portals' hitpoints and defence is exactly
+        # that case, so the generator now owns the text between its own two markers.
+        old = re.search(r'^%s\n.*?^%s\n' % (re.escape(BEGIN), re.escape(END)), body, re.S | re.M)
+        if old:
+            if old.group(0) == block:
+                same.append(nm)
+                continue
+            new = body[:old.start(0)] + block + body[old.end(0):]
+        else:
+            # First time: appended at the end of the record, after the art and the existing
+            # params, the way area_wilderness/configs/ankou.npc orders them.
+            new = body.rstrip('\n') + '\n' + block + '\n'
         txt = txt[:m.start(1)] + new + txt[m.end(1):]
         changed.append(nm)
 
-    print('%d records to write, %d already had stats' % (len(changed), len(skipped)))
+    print('%d records written, %d already current' % (len(changed), len(same)))
     for nm in changed:
-        hp = [l for l in plan[nm] if l.startswith('hitpoints=')][0]
-        print('   %-26s %s' % (nm, hp))
+        hp = [l for l in plan[nm] if l.startswith('hitpoints=')]
+        print('   %-26s %s' % (nm, hp[0] if hp else '(no combat stats)'))
     if check:
         print('--check: nothing written')
         return

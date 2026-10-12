@@ -46,9 +46,22 @@
 // ---------------------------------------------------------------------------------------------
 // The clock, and the only way to lose
 // ---------------------------------------------------------------------------------------------
-// Five minutes, in ticks. Old School's games run to five minutes too, with the difference that
-// theirs ends in a draw and this one ends in a loss.
-^pest_solo_ticks = 500
+// EIGHT MINUTES, not Old School's five, and the extra three are what make a solo game winnable by
+// the people it is offered to.
+//
+// Measured rather than guessed (engine tools/sim/_ttk.ts, five runs per loadout, medians):
+//
+//   maxed + abyssal whip        52 ticks a portal   208 for four
+//   maxed + rune scimitar       54                  216
+//   level 70s + rune scimitar   84                  336
+//   combat 40 + mithril scim   132                  528
+//
+// Against a 500-tick clock the bottom row is already over before a single step is walked, and the
+// portals are 37 tiles apart. At 800 even the combat-40 player who the lander's own requirement
+// lets aboard has room to finish - which is the point, because offering somebody a game they
+// cannot win is worse than not offering it. Raising the requirement instead was the alternative
+// and it is the wrong trade: it would make this high-level content to save three minutes.
+^pest_solo_ticks = 800
 
 // THE VOID KNIGHT'S HITPOINTS ARE OLD SCHOOL'S - 200, from the OSRS cache (npc 2950). What is NOT
 // Old School is how he loses them.
@@ -59,10 +72,15 @@
 // the more portals are open - one hitpoint per living portal every ^pest_solo_drain_interval ticks.
 //
 // The numbers are chosen so that DOING NOTHING LOSES, and loses before the timer: four portals for
-// the full 500 ticks drains 4 * 500 / 8 = 250 against his 200, so he dies around tick 400. Killing
-// portals is not optional and killing them early is worth more than killing them well.
+// the full 800 ticks drains 4 * 800 / 12 = 266 against his 200, so he dies around tick 600.
+// Killing portals is not optional and killing them early is worth more than killing them well.
+//
+// The interval went 8 -> 12 with the clock's 500 -> 800: at 8 the knight would have died on tick
+// 400 of an 800-tick game, which is the clock doing nothing for its second half. tools/sim/
+// pestsolo.ts asserts the tick the knight actually falls on, so this arithmetic is checked rather
+// than asserted.
 ^pest_solo_knight_hp = 200
-^pest_solo_drain_interval = 8
+^pest_solo_drain_interval = 12
 
 // ---------------------------------------------------------------------------------------------
 // The pests
