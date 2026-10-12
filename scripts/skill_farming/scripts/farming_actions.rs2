@@ -165,6 +165,11 @@ if (~farming_has_magic_secateurs = true) {
 if (~skillcape_worn(farming) = true) { // skill cape perk (skillcapes/scripts/skillcape_perks.rs2): +5%, stacks with the secateurs
     $cts = scale(21, 20, $cts);
 }
+// Amulet of nature, WORN: +3%, and it stacks with both of the above - skill_farming/scripts/
+// amulet_of_nature.rs2. Applied last and smallest of the three; not an Old School effect.
+if (~farming_has_nature_amulet = true) {
+    $cts = divide(multiply($cts, ^farming_nature_amulet_num), ^farming_nature_amulet_div);
+}
 return($cts);
 
 // Allotments are dug up with a spade; everything else is picked by hand. human_farming is the

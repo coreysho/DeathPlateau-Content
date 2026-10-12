@@ -14,14 +14,16 @@
 // So this file is the two things that genuinely did not exist: stringing an emerald amulet with
 // MAGIC string instead of wool, and what Rub does.
 //
-// WHAT IT DOES, and what it deliberately does NOT. In Old School the amulet binds to one Farming
-// patch and tells you when that crop is diseased, dead or grown; rubbing it reports the patch's
-// state from anywhere. That is implemented. It gives NO yield or experience bonus in Old School
-// and gives none here either - the suggestion that raised it asked for 2-5% yield, and the reason
-// that is a separate decision rather than part of this is written up in
-// Claude outputs/suggestions-assessment.md: this build already pays +10% for magic secateurs and
-// +5% for the Farming cape, both of which are at or above Old School's own numbers, and a third
-// stacking multiplier is a balance change rather than an item.
+// WHAT IT DOES. Two things, and only the first is Old School's:
+//   * bound to one Farming patch, it tells you that patch's state - rubbed from anywhere, or
+//     checked from the Worn Equipment tab without taking it off;
+//   * WORN, it adds 3% to chance-to-save on every patch (~farming_has_nature_amulet below).
+//
+// The bonus is an addition, not a port: Old School's amulet of nature has no yield or experience
+// effect whatsoever. It shipped without one and was added on Corey's word the same day. It is a
+// THIRD stacking multiplier in ~farming_cts after the magic secateurs' +10% and the Farming cape's
+// +5%, which is why it is the smallest of the three and why the constant that sets it is commented
+// with the ordering argument rather than just the number.
 //
 // NOTIFICATION IS THE POINT. Nothing in this build tells a player anything about a patch they are
 // not standing on, so a herb run is "walk to all four and look". That is the tedium this removes.
@@ -71,6 +73,30 @@ mes("You put some magic string on your emerald amulet.");
 mes("You bind the amulet to this patch.");
 // Say what it is bound to straight away, so binding is also a reading.
 ~farming_inspect($patch);
+
+// ---------------------------------------------------------------------------------------------
+// Wearing it: the yield bonus
+// ---------------------------------------------------------------------------------------------
+// Added 12 October on Corey's word, after the rest of the amulet shipped without it. Old School
+// gives this amulet no yield bonus at all, so this is a deliberate addition rather than a port -
+// see ^farming_nature_amulet_num in configs/farming_extras.constant for the size and why.
+//
+// WORN, NOT CARRIED, which is the opposite of the magic secateurs (~farming_has_magic_secateurs
+// takes either). Two reasons, and they point the same way:
+//   * it is what was asked for - "wear it for 2-5% yield";
+//   * it gives the bonus a price. The amulet's other job - binding to a patch and reporting it -
+//     works perfectly well from the pack, so if the bonus worked from the pack too there would be
+//     no decision to make. Worn, it costs you the neck slot, which on a herb run is the glory
+//     you were going to teleport home with.
+//
+// EVERY PATCH, NOT JUST THE BOUND ONE. The binding is about notification and has nothing to do
+// with growing; a bonus that only applied to one of your four herb patches would be a worse item
+// and a much more confusing one.
+[proc,farming_has_nature_amulet]()(boolean)
+if (inv_getobj(worn, ^wearpos_front) = nature_amulet) {
+    return(true);
+}
+return(false);
 
 // ---------------------------------------------------------------------------------------------
 // Reading it: Rub, from anywhere
