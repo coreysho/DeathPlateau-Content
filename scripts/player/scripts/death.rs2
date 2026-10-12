@@ -31,6 +31,12 @@ if (~in_castlewars_waitingroom(coord) = true) {
 if (~in_fightcave(coord) = true) {
     @fightcave_death;
 }
+// Pest Control is a safe minigame in Old School and a safe one here: you keep everything, and the
+// Void Knights pull you back to the outpost. The game is forfeit, which is the whole cost.
+// minigames/game_pest/scripts/pest_solo.rs2.
+if (~in_pest_solo(coord) = true) {
+    @pest_solo_death;
+}
 // The Fremennik Trials: Koschei's arena under Thorvald's hut is a safe death too (wiki), and dying to
 // his fourth form is how that fight is meant to end. quest_viking/scripts/viking_thorvald.rs2.
 if (~viking_in_koschei_arena(coord) = true) {

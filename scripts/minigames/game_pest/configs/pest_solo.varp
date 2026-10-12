@@ -1,0 +1,24 @@
+// A solo Pest Control game. The first three are TEMP for the same reason the Fight Cave's are: an
+// instance does not survive a restart, so nothing pointing into one may either. A player who logs
+// out mid-game comes back on the outpost with nothing, which is what Old School does to anyone who
+// leaves a game.
+
+// The instance this player's island was built in - its south-west tile, or null when not playing.
+[pest_solo_instance]
+scope=temp
+type=coord
+
+// Ticks left on the clock, counting down from ^pest_solo_ticks. 0 when not playing.
+[pest_solo_ticks]
+scope=temp
+
+// The Void Knight's remaining hitpoints. Not an npc's hitpoints - see pest_solo.constant for why
+// he is a clock rather than a combatant.
+[pest_solo_knight_hp]
+scope=temp
+
+// Commendation points. PERM, obviously - this is the whole reward for playing, and the four Void
+// Knights' op3=Exchange has been answering "You have earned no commendations" since the dead-op
+// audit because there was nothing to count.
+[pest_commendation]
+scope=perm

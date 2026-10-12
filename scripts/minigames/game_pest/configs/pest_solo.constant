@@ -1,0 +1,98 @@
+// PEST CONTROL, SOLO (2026-10-12). Every number here, and where it came from.
+//
+// WHY SOLO AND NOT THE REAL THING. Old School needs five players in the lander before a game
+// starts. On a server this size the lander never fills, so the faithful version is content nobody
+// ever sees - and it is also the harder build, because five players need a lobby, a queue and a
+// per-player activity score. A solo variant has none of that: one player, one instance, and the
+// pressure comes from the clock instead of from other people being useless.
+//
+// WHAT IS NOT BUILT, so it is not hunted for: the three landers by combat level (one lander here,
+// and the pests' tier comes off your combat level instead), the barricades the ravagers exist to
+// chew, the spinners' portal-repairing, and the per-player activity requirement. Those are
+// multiplayer mechanics or they need the barricade objects, and none of them is load-bearing for
+// one player against a clock.
+
+// ---------------------------------------------------------------------------------------------
+// The island
+// ---------------------------------------------------------------------------------------------
+// m41_40 is the pest island, all 64x64 of it, copied whole into an instance - 8x8 zones, the same
+// loop the Fight Cave uses (minigames/game_fightcave/scripts/fightcave.rs2). It was one of the
+// three fully isolated map squares on the server: nothing but a script could ever put a player on
+// it, which is why nothing ever had.
+^pest_solo_template = 0_41_40_0_0
+^pest_solo_zones = 8
+
+// WHERE EVERYTHING STANDS, measured off the island's own collision rather than placed by eye. The
+// square has 1313 walkable, loc-free tiles in one connected region (bounds x 2-62, z 1-57); of
+// those, 408 have a clear 3x3 around them, which is what a size-3 portal needs.
+//
+// The knight is the 3x3-clear tile nearest the region's centroid - the centroid itself (32,25) is
+// blocked. The four portals are a greedy farthest-point spread over the 3x3-clear tiles at least
+// 12 tiles from him: the closest two portals are 37 tiles apart and the nearest is 18 from the
+// knight, so no two can be fought from one spot and none of them is next to him.
+^pest_solo_knight_coord = 0_41_40_32_22
+^pest_solo_portal_nw = 0_41_40_10_55
+^pest_solo_portal_s = 0_41_40_21_4
+^pest_solo_portal_ne = 0_41_40_54_51
+^pest_solo_portal_se = 0_41_40_58_11
+^pest_solo_portals = 4
+
+// Three tiles from the knight: you land looking at the thing you have to keep alive.
+^pest_solo_landing = 0_41_40_35_19
+
+// And where leaving puts you back - the outpost pier, beside the lander squire.
+^pest_solo_outside = 0_41_41_36_52
+
+// ---------------------------------------------------------------------------------------------
+// The clock, and the only way to lose
+// ---------------------------------------------------------------------------------------------
+// Five minutes, in ticks. Old School's games run to five minutes too, with the difference that
+// theirs ends in a draw and this one ends in a loss.
+^pest_solo_ticks = 500
+
+// THE VOID KNIGHT'S HITPOINTS ARE OLD SCHOOL'S - 200, from the OSRS cache (npc 2950). What is NOT
+// Old School is how he loses them.
+//
+// THE PESTS CANNOT ATTACK HIM, because nothing in this engine lets an npc attack an npc: combat is
+// always against a player uid (skill_combat/scripts/npc/npc_combat.rs2 reads
+// %npc_aggressive_player). So the knight is not an npc in a fight, he is a clock that runs faster
+// the more portals are open - one hitpoint per living portal every ^pest_solo_drain_interval ticks.
+//
+// The numbers are chosen so that DOING NOTHING LOSES, and loses before the timer: four portals for
+// the full 500 ticks drains 4 * 500 / 8 = 250 against his 200, so he dies around tick 400. Killing
+// portals is not optional and killing them early is worth more than killing them well.
+^pest_solo_knight_hp = 200
+^pest_solo_drain_interval = 8
+
+// ---------------------------------------------------------------------------------------------
+// The pests
+// ---------------------------------------------------------------------------------------------
+// Each living portal keeps this many alive at once, respawning as they die. Old School's portals
+// pour out far more than this, for twenty-five players; two per portal is eight at once for one.
+^pest_solo_per_portal = 2
+
+// How long a spawned pest lives if nothing kills it. NOT ZERO - the engine's DurationValid rejects
+// anything below 1, so npc_add(coord, type, 0) compiles and then throws at runtime. Five hours is
+// past any game, so in practice they live until they die or the instance goes with them; the number
+// exists so a leaked instance eventually empties itself.
+^pest_solo_npc_life = 30000
+
+// WHICH TIER YOU FIGHT, off your combat level. Old School splits this across three landers (novice
+// 40+, intermediate 70+, veteran 100+); there is one lander here, so the lander asks your combat
+// level the way the landers would have.
+^pest_solo_combat_req = 40
+^pest_solo_tier_mid = 70
+^pest_solo_tier_high = 100
+
+// ---------------------------------------------------------------------------------------------
+// Commendation points
+// ---------------------------------------------------------------------------------------------
+// Old School pays 3-4 points for a win and nothing for a loss, and the Void Knights' shop prices
+// are in the hundreds, so a piece of void equipment is dozens of games either way. Those prices are
+// kept (pest_rewards.rs2) rather than softened, because the grind is the same grind and inventing
+// a cheaper one would make the gear mean less than it does in the game it came from.
+^pest_solo_points_win = 3
+// One more if the knight finishes above half, which is the only thing in the game that rewards
+// killing portals FAST rather than merely killing them.
+^pest_solo_points_bonus = 1
+^pest_solo_bonus_threshold = 100
