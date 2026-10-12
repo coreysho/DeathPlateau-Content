@@ -48,11 +48,22 @@ switch_int(%grandtree) {
         p_delay(0);
         anim(human_reachforladder, 0);
         p_delay(0);
-        // FIXED 2026-09-08 (landing-coord audit): ^grandtree_jail_coord is 3_38_54_32_40, which
-        // is blocked at level 3 - so is (32,39) beside it. The constant is NOT moved, because
-        // login.rs2 and quest_grandtree.rs2 both derive Charlie's spawn and the jail zone from it
-        // by offset; shifting it would move all three. One tile east is inside the same cell.
-        p_telejump(movecoord(^grandtree_jail_coord, 1, 0, 0));
+        // REVERTED 2026-10-12. A landing-coord audit on 2026-09-08 saw that
+        // ^grandtree_jail_coord (3_38_54_32_40, which is 2464,3496) has all four sides
+        // walled and moved the landing one tile east to escape it. But that is not a bad
+        // tile, it is a CAGE: two railings and a grandtree_prisondoor box it and the one
+        // south of it into single-tile cells, and Charlie is spawned in the south one the
+        // same way. p_telejump does not care about walls.
+        //
+        // One tile east is not "inside the same cell" - it is outside the bars, on the open
+        // platform where the glider pilot stands, and it broke every position test in
+        // charlie.rs2: the cellmate line, the loc_find for the door, and
+        // `if(coord ! ^grandtree_jail_coord) return;`, which gates the whole release. So
+        // King Narnode was never summoned, %grandtree never reached
+        // ^grandtree_released_prison, and the glider - which checks for exactly that stage -
+        // refused to fly. Reported as "after confronting glough you dont get put in the cell
+        // where king frees you to go to the island via glider".
+        p_telejump(^grandtree_jail_coord);
         ~grandtree_spawn_charlie;
         p_delay(2); // 3t delay before talking when initially sent, but if you retalk it's 4t
         if(npc_find(coord, grandtree_charlie, 2, 0) = true) {

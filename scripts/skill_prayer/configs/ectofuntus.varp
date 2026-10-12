@@ -1,0 +1,15 @@
+// THE GRINDER'S CONTENTS AND THE DISCIPLES' TILL.
+//
+// ahoy_grinder_status is the cache's own varbit (_unpack/377/all.varbit, on ahoy_varbits_1 bits
+// 15-16) and it already had two bits for exactly this, so it is reused rather than replaced:
+// 0 empty, 1 loaded, 2 ground. What two bits cannot say is WHICH bone, so that is here as a typed
+// obj varp - the same shape quest_dreammentor uses for dm_lastfood.
+[ecto_grinder_bone]
+scope=perm
+type=obj
+
+// Ecto-tokens are earned by worshipping and handed over by a Ghost Disciple, so they sit here
+// between the two. Old School caps the unclaimed pile at 1000 and refuses to let you worship past
+// it - "There isn't room to put any more in." - which is ^ecto_token_cap.
+[ecto_tokens_pending]
+scope=perm

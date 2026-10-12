@@ -1,0 +1,14 @@
+// The Ectofuntus's own numbers. skill_prayer/scripts/ectofuntus.rs2 is the facility itself.
+^ecto_tokens_per_worship = 5
+^ecto_token_cap = 1000
+
+^ecto_grinder_empty = 0
+^ecto_grinder_loaded = 1
+^ecto_grinder_ground = 2
+
+// The trapdoor by the Ectofuntus and the tile in the cavern it drops onto. The cavern's levels run
+// the other way up from a building's: level 3 is the rim you arrive on and level 0 is the floor with
+// the slime on it, so down the pit and down a level are the same direction.
+^ecto_trapdoor = 0_57_54_5_63            // 3653,3519
+^ecto_cavern_arrive = 3_57_154_21_32     // 3669,9888, beside the ladder back up
+^ecto_foot = 0_57_54_10_61               // 3658,3517, the foot of the Ectofuntus

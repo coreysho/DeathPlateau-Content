@@ -203,3 +203,74 @@ data=loot,diamond,1,1,1
 data=loot,gold_ore,1,1,1
 data=pocket,hero's pocket
 data=pet_base,99175
+
+// H.A.M. MEMBERS, reported as "h.a.m members - not coded to be pickpocketed". They were missing all
+// three things a target needs: op3=Pickpocket on the npc, an [opnpc3] trigger, and a row here.
+//
+// Level 15 and 22.2 experience are oldschool.runescape.wiki/w/H.A.M._Member's. success_chance sits
+// on the ladder the rows above already describe - 1 -> 180, 10 -> 150, 25 -> 100, 32 -> 74,
+// 40 -> 50 - so level 15 interpolates to 133. The four npcs are the two civilians and the two who
+// walk about the hideout - the two who sit and lie there are scenery, and the cache withholds the
+// Pickpocket op from them. The H.A.M. guards are fought, not robbed.
+//
+// THE RARITIES ARE THE WIKI'S, RESCALED. The wiki's table is out of 102 and
+// ~pick_pocket_check_for_reward (skill_thieving/scripts/thieving.rs2) rolls one shared 128-slot
+// table, decrementing the denominator by each entry in turn - so every numerator here is the wiki's
+// multiplied by 128/102 and rounded, which keeps both the relative and the absolute rates. They sum
+// come to 126, leaving 2/128 for nothing at all, which is the wiki's own 1/50 "Nothing". Rounding
+// 36 entries up overshot 128 by four slots, and those four are taken off the coins entry - the most
+// common one by a long way - so that every uncommon item keeps its scaled figure exactly.
+//
+// Four entries are dropped rather than converted: the easy clue scroll and Rocky are later
+// additions, the three grimy herbs are quoted out of 561 and round to nothing at this resolution,
+// and the "coin pouch" is a 2017 wrapper - a 2006 pocket pays coins, so coins is what it pays.
+// Several items are named for the Dig Site in this cache, which is simply where the models came
+// from: digsitebuttons is "Buttons", digsitearmour1 is "Damaged armour", digsitesword is "Rusty
+// sword", leather_armour is "Leather body" and cow_hide is "Cowhide".
+[pickpocket_ham_member]
+table=pickpocket
+data=npc,favour_male_ham_civilian
+data=npc,favour_female_ham_civilian
+data=level,15
+data=experience,222
+data=stun_ticks,8
+data=stun_damage,2
+data=success_chance,133,240
+data=loot,coins,1,20,17
+data=loot,digsitebuttons,1,1,5
+data=loot,digsitearmour1,1,1,5
+data=loot,digsitesword,1,1,5
+data=loot,bronze_arrow,1,13,4
+data=loot,bronze_axe,1,1,4
+data=loot,bronze_dagger,1,1,4
+data=loot,bronze_pickaxe,1,1,4
+data=loot,iron_axe,1,1,4
+data=loot,iron_dagger,1,1,4
+data=loot,iron_pickaxe,1,1,4
+data=loot,leather_armour,1,1,4
+data=loot,feather,1,7,4
+data=loot,logs,1,1,4
+data=loot,thread,1,10,4
+data=loot,cow_hide,1,1,4
+data=loot,steel_arrow,1,13,3
+data=loot,steel_axe,1,1,3
+data=loot,steel_dagger,1,1,3
+data=loot,steel_pickaxe,1,1,3
+data=loot,knife,1,1,3
+data=loot,needle,1,1,3
+data=loot,raw_anchovies,1,1,3
+data=loot,raw_chicken,1,1,3
+data=loot,tinderbox,1,1,3
+data=loot,uncut_opal,1,1,3
+data=loot,uncut_jade,1,1,3
+data=loot,coal,1,1,3
+data=loot,iron_ore,1,1,3
+data=loot,ham_shirt,1,1,1
+data=loot,ham_robe,1,1,1
+data=loot,ham_gloves,1,1,1
+data=loot,ham_boots,1,1,1
+data=loot,ham_cloak,1,1,1
+data=loot,ham_badge,1,1,1
+data=loot,ham_hood,1,1,1
+data=pocket,H.A.M. member's pocket
+data=pet_base,257211

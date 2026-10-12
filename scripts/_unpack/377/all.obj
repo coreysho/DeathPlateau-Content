@@ -37114,6 +37114,7 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,50
 
 [mm_medium_ninja_monkey_bones]
 name=Monkey bones
@@ -37127,6 +37128,7 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,50
 
 [mm_normal_gorilla_monkey_bones]
 name=Monkey bones
@@ -37139,6 +37141,7 @@ model=obj_big_bones
 iop1=Bury
 weight=800g
 category=bones
+param=bone_exp,50
 
 [mm_bearded_gorilla_monkey_bones]
 name=Monkey bones
@@ -37151,6 +37154,7 @@ model=obj_big_bones
 iop1=Bury
 weight=800g
 category=bones
+param=bone_exp,50
 
 [mm_normal_monkey_bones]
 name=Monkey bones
@@ -37163,6 +37167,7 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,50
 
 [cert_mm_normal_monkey_bones]
 certlink=mm_normal_monkey_bones
@@ -37180,6 +37185,7 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,50
 
 [mm_large_zombie_monkey_bones]
 name=Monkey bones
@@ -37192,7 +37198,12 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,50
 
+// A BONE WITH NO BURY VALUE PAYS NOTHING. These fourteen carry category=bones and an
+// iop1 of Bury and no bone_exp at all, so burying them has always paid zero - and the
+// Ectofuntus, which pays four times the bury value, would have paid zero for them too.
+// The figures are the OSRS wiki's own, in tenths as skill_prayer/configs/bones.obj is.
 [mm_skeleton_bones]
 name=Bones
 desc=They seem to shake slightly... It might be a good idea to bury them.
@@ -37206,6 +37217,7 @@ model=obj_sheepbonesa
 iop1=Bury
 weight=500g
 category=bones
+param=bone_exp,45
 
 [tbwt_cleaning_cloth]
 name=Cleaning cloth
@@ -57680,6 +57692,7 @@ iop1=Bury
 members=yes
 weight=800g
 category=bones
+param=bone_exp,225
 
 [cert_zogre_bones]
 certlink=zogre_bones
@@ -57968,6 +57981,7 @@ iop1=Bury
 members=yes
 weight=800g
 category=bones
+param=bone_exp,840
 
 [cert_zogre_ancestral_bones_fayg]
 certlink=zogre_ancestral_bones_fayg
@@ -57988,6 +58002,7 @@ iop1=Bury
 members=yes
 weight=800g
 category=bones
+param=bone_exp,960
 
 [cert_zogre_ancestral_bones_raurg]
 certlink=zogre_ancestral_bones_raurg
@@ -58008,6 +58023,7 @@ iop1=Bury
 members=yes
 weight=800g
 category=bones
+param=bone_exp,1400
 
 [cert_zogre_ancestral_bones_ourg]
 certlink=zogre_ancestral_bones_ourg
@@ -85153,6 +85169,7 @@ iop1=Bury
 members=yes
 weight=1500g
 category=bones
+param=bone_exp,1250
 
 [cert_dagannoth_king_bones]
 certlink=dagannoth_king_bones
@@ -86381,6 +86398,7 @@ iop1=Bury
 members=yes
 weight=500g
 category=bones
+param=bone_exp,720
 
 [cert_granite_legs]
 certlink=granite_legs

@@ -780,15 +780,32 @@ switch_coord (loc_coord) {
     case default : @unhandled_stairs(loc_coord);
 }
 
+// THE ECTOFUNTUS SLIME CAVERN (m57_154) is a four-level spiral pit and these are its three
+// flights. Both halves of a flight stand on the SAME tile one level apart, and each flight is a 3x3
+// block the cavern only lets you reach from one side - so the landing tile is on the far side from
+// the approach, which is what sends you round the rim to find the next one. Level 3 is the rim you
+// arrive on from the trapdoor and level 0 is the floor with the Pool of Slime, so in this cavern
+// down the pit and down a level are the same direction.
+//
+// The order is 3689 (lvl 3) -> 3672 (lvl 2) -> 3684 (lvl 1) -> the slime, which is the wiki's "walk
+// to the opposite side of the cavern and climb down the stairs, then repeat for the next two sets".
+// Every landing below was taken from the cavern's own walkability rather than guessed: the other
+// side of each flight is solid rock. The Ectofuntus itself is skill_prayer/scripts/ectofuntus.rs2.
 [oploc1,ahoy_cavern_stairs]
-// arrive delay?
+p_arrivedelay;
 switch_coord (loc_coord) {
+    case 0_57_154_36_31 : p_telejump(1_57_154_39_31); // 3684,9887 lvl 0 -> lvl 1, east side
+    case 1_57_154_24_31 : p_telejump(2_57_154_23_31); // 3672,9887 lvl 1 -> lvl 2, west side
+    case 2_57_154_41_31 : p_telejump(3_57_154_44_31); // 3689,9887 lvl 2 -> lvl 3, east side
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,ahoy_cavern_stairs_top]
-// arrive delay?
+p_arrivedelay;
 switch_coord (loc_coord) {
+    case 3_57_154_41_31 : p_telejump(2_57_154_40_31); // 3689,9887 lvl 3 -> lvl 2, west side
+    case 2_57_154_24_31 : p_telejump(1_57_154_27_31); // 3672,9887 lvl 2 -> lvl 1, east side
+    case 1_57_154_36_31 : p_telejump(0_57_154_35_31); // 3684,9887 lvl 1 -> lvl 0, by the slime
     case default : @unhandled_stairs(loc_coord);
 }
 

@@ -1,0 +1,74 @@
+// WHICH BONEMEAL A BONE GRINDS INTO, and the way back for the experience.
+//
+// Not a guess: every one of the cache's 24 pot_bonemeal_* objs is named after the bone it is made
+// from (pot_bonemeal_dagannoth, pot_bonemeal_ancestral_ourg, pot_bonemeal_small_ninja_monkey), so
+// the pairing is read off the names. Every bonemeal obj in the cache has a bone here. The only bone
+// in the game without a bonemeal is lava_dragon_bones, which is 2019 content.
+//
+// Both plain bones and the tutorial's newbiebones grind into plain pot_bonemeal, so the reverse
+// enum maps that one back to `bones`. The two have the same bone_exp, so the experience is the same
+// either way.
+// outputtype is namedobj and not obj because this one is read straight into inv_add, whose
+// signature is (inv, namedobj, int). bonemeal_to_bone below stays obj, because that one is read
+// into oc_param and into the ecto_grinder_bone varp.
+[bone_to_bonemeal]
+inputtype=obj
+outputtype=namedobj
+default=null
+val=bones,pot_bonemeal
+val=newbiebones,pot_bonemeal
+val=bones_burnt,pot_bonemeal_burnt
+val=mm_skeleton_bones,pot_bonemeal_skeleton
+val=wolf_bones,pot_bonemeal_wolf
+val=bat_bones,pot_bonemeal_bat
+val=big_bones,pot_bonemeal_big
+val=babydragon_bones,pot_bonemeal_babydragon
+val=dragon_bones,pot_bonemeal_dragon
+val=wyvern_bones,pot_bonemeal_wyvern
+val=dagannoth_king_bones,pot_bonemeal_dagannoth
+val=zogre_bones,pot_bonemeal_zogre
+val=zogre_ancestral_bones_fayg,pot_bonemeal_ancestral_fayg
+val=zogre_ancestral_bones_raurg,pot_bonemeal_ancestral_raurg
+val=zogre_ancestral_bones_ourg,pot_bonemeal_ancestral_ourg
+val=tbwt_jogre_bones,pot_bonemeal_jogre
+val=tbwt_burnt_jogre_bones,pot_bonemeal_burnt_jogre
+val=tbwt_beast_bones,pot_bonemeal_beast
+val=mm_small_ninja_monkey_bones,pot_bonemeal_small_ninja_monkey
+val=mm_medium_ninja_monkey_bones,pot_bonemeal_medium_ninja_monkey
+val=mm_normal_monkey_bones,pot_bonemeal_normal_monkey
+val=mm_normal_gorilla_monkey_bones,pot_bonemeal_normal_gorilla_monkey
+val=mm_bearded_gorilla_monkey_bones,pot_bonemeal_bearded_gorilla_monkey
+val=mm_small_zombie_monkey_bones,pot_bonemeal_small_zombie_monkey
+val=mm_large_zombie_monkey_bones,pot_bonemeal_large_zombie_monkey
+
+// Worshipping pays four times the bury value, and the bury value lives on the BONE
+// (skill_prayer/configs/bones.param), so the Ectofuntus reads the bone back out of the bonemeal.
+// This enum is also what tells the Ectofuntus that a held item IS bonemeal at all.
+[bonemeal_to_bone]
+inputtype=obj
+outputtype=obj
+default=null
+val=pot_bonemeal,bones
+val=pot_bonemeal_burnt,bones_burnt
+val=pot_bonemeal_skeleton,mm_skeleton_bones
+val=pot_bonemeal_wolf,wolf_bones
+val=pot_bonemeal_bat,bat_bones
+val=pot_bonemeal_big,big_bones
+val=pot_bonemeal_babydragon,babydragon_bones
+val=pot_bonemeal_dragon,dragon_bones
+val=pot_bonemeal_wyvern,wyvern_bones
+val=pot_bonemeal_dagannoth,dagannoth_king_bones
+val=pot_bonemeal_zogre,zogre_bones
+val=pot_bonemeal_ancestral_fayg,zogre_ancestral_bones_fayg
+val=pot_bonemeal_ancestral_raurg,zogre_ancestral_bones_raurg
+val=pot_bonemeal_ancestral_ourg,zogre_ancestral_bones_ourg
+val=pot_bonemeal_jogre,tbwt_jogre_bones
+val=pot_bonemeal_burnt_jogre,tbwt_burnt_jogre_bones
+val=pot_bonemeal_beast,tbwt_beast_bones
+val=pot_bonemeal_small_ninja_monkey,mm_small_ninja_monkey_bones
+val=pot_bonemeal_medium_ninja_monkey,mm_medium_ninja_monkey_bones
+val=pot_bonemeal_normal_monkey,mm_normal_monkey_bones
+val=pot_bonemeal_normal_gorilla_monkey,mm_normal_gorilla_monkey_bones
+val=pot_bonemeal_bearded_gorilla_monkey,mm_bearded_gorilla_monkey_bones
+val=pot_bonemeal_small_zombie_monkey,mm_small_zombie_monkey_bones
+val=pot_bonemeal_large_zombie_monkey,mm_large_zombie_monkey_bones

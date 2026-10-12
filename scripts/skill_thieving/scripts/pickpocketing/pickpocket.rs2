@@ -191,3 +191,9 @@ if (%action_delay > map_clock) {
 // https://oldschool.runescape.wiki/w/Update:Halloween_2016, when check was added for preventing attacking when an npc is being pickpocketed
 
 ~pick_pocket($data);
+
+// H.A.M. members (level 15). Both already carry op3=Pickpocket in the cache, so the
+// option has always been on the menu and has always done nothing at all. The table is
+// pickpocket_ham_member in configs/pickpocking/pickpocket.dbrow.
+[opnpc3,favour_male_ham_civilian] @attempt_pick_pocket(npc_type);
+[opnpc3,favour_female_ham_civilian] @attempt_pick_pocket(npc_type);

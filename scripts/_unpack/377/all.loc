@@ -38100,6 +38100,7 @@ hillskew=yes
 active=no
 
 [green_gloop]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop
@@ -38110,6 +38111,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop2]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop
@@ -38120,6 +38122,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop3]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop3
@@ -38132,6 +38135,7 @@ length=2
 width=2
 
 [green_gloop_flat]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_flat
@@ -38142,6 +38146,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_two]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_two
@@ -38152,6 +38157,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_three]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_three
@@ -38162,6 +38168,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_four]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_four
@@ -38172,6 +38179,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_five]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_five
@@ -38182,6 +38190,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_six]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloop_six
@@ -38192,6 +38201,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_q]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloopq
@@ -38202,6 +38212,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_w]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloopw
@@ -38212,6 +38223,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_e]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloope
@@ -38222,6 +38234,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_r]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloopr
@@ -38232,6 +38245,7 @@ contrast=50
 blockwalk=no
 
 [green_gloop_t]
+category=slimepool
 name=Pool of Slime
 desc=A subterranean pool of ectoplasm.
 model=green_gloopt
@@ -82541,40 +82555,6 @@ hillskew=yes
 [fairy_mushroom_gate]
 model=fairy_mushroom_gate
 hillskew=yes
-
-[fairy_mushroom_gate_door_l]
-name=Magic door
-desc=A magic door.
-model=fairy_mushroom_gate_door_l
-hillskew=yes
-op1=Open
-active=yes
-
-[fairy_mushroom_gate_door_l_open]
-name=Magic door
-desc=A magic door.
-model=fairy_mushroom_gate_door_l
-hillskew=yes
-active=yes
-op1=Close
-
-[fairy_mushroom_gate_door_r]
-name=Magic door
-desc=A magic door.
-model=fairy_mushroom_gate_door_l
-hillskew=yes
-op1=Open
-active=yes
-mirror=yes
-
-[fairy_mushroom_gate_door_r_open]
-name=Magic door
-desc=A magic door.
-model=fairy_mushroom_gate_door_l
-hillskew=yes
-active=yes
-op1=Close
-mirror=yes
 
 [fairy_dugupsoil_1]
 model=dugupsoil1_upass

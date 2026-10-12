@@ -1,0 +1,290 @@
+// THE ECTOFUNTUS. Every piece of it was already in the cache and not one line referenced any of it.
+//
+// What was there: the Ectofuntus itself (ahoy_ectofunctus, op1=Worship) at 3658,3518; the trapdoor
+// beside it (ahoy_trapdoor and ahoy_trapdoor_open, Open then Climb-down); the whole slime cavern as
+// a four-level spiral pit in m57_154, with 107 locs named "Pool of Slime" at the bottom, three
+// flights of ahoy_cavern_stairs between the levels and ahoy_ladder_from_cellar back to the surface;
+// the bone grinder on the floor above as three locs (ahoy_grinder_loader, ahoy_grinder_handle with
+// Wind and Status, ahoy_grinder_chute with Empty); three Ghost Disciples; 24 pot_bonemeal_* objs
+// each named after the bone it comes from; bucket_ectoplasm, ectotoken, ectophial and
+// ectophial_empty; and even ahoy_grinder_status, a two-bit varbit for the grinder's state. The only
+// thing missing was script.
+//
+// So four reports turn out to be one gap - "ecto offerign, cant get ecto tokens", "buckets of
+// slime, cant go underneath to get slime", "grinder for bonemeal, not coded" and "ectophial, not
+// coded".
+//
+// The cycle, from oldschool.runescape.wiki/w/Ectofuntus: grind a bone into a pot of bonemeal, fill
+// a bucket at the Pool of Slime, use both on the Ectofuntus for four times the bone's bury
+// experience, and collect 5 ecto-tokens per worship from a Ghost Disciple. The disciples hold at
+// most 1000 unclaimed.
+//
+// Its numbers live in skill_prayer/configs/ectofuntus.constant.
+
+// =========================================================================== the way down
+[oploc1,ahoy_trapdoor]
+mes("The trapdoor opens...");
+sound_synth(door_open, 1, 0);
+loc_change(ahoy_trapdoor_open, 500);
+
+[oploc1,ahoy_trapdoor_open]
+mes("You climb down through the trapdoor...");
+anim(human_pickupfloor, 0);
+p_delay(0);
+p_telejump(^ecto_cavern_arrive);
+
+[oploc2,ahoy_trapdoor_open]
+mes("You close the trapdoor.");
+sound_synth(door_close, 1, 0);
+loc_change(ahoy_trapdoor, 500);
+
+[oploc1,ahoy_ladder_from_cellar]
+p_arrivedelay;
+~climb_ladder(^ecto_trapdoor, true);
+
+// =========================================================================== the Pool of Slime
+// The pool is 107 locs all called "Pool of Slime" across nine models, so this is a category trigger
+// on all nine (category=slimepool, added to them in _unpack/377/all.loc) rather than nine named
+// handlers.
+//
+// Filling runs the same weak-queue auto-fill the water sources got on the owner's request
+// (general_use/scripts/water_sources.rs2) - one bucket every two ticks, stopped the moment the
+// player walks away or clicks anything else. Here it is not a divergence from the era at all: the
+// wiki's own description of the pool is that a bucket used on it "will automatically fill all the
+// buckets in your inventory over the next few seconds".
+[oplocu,_slimepool]
+switch_obj (last_useitem) {
+    case bucket_empty : @fill_slime_start;
+    // The phial is refilled at the Ectofuntus, not down here. Say so rather than nothing.
+    case ectophial_empty : ~mesbox("The ectophial has to be refilled at the Ectofuntus itself.");
+    case default : ~displaymessage(^dm_default);
+}
+
+[label,fill_slime_start]
+if (inv_total(inv, bucket_empty) > 1) {
+    weakqueue(fill_slime_run, 2, 0);
+}
+@fill_one_slime;
+
+[queue,fill_slime_run]
+if (inv_total(inv, bucket_empty) < 1) {
+    return;
+}
+if (inv_total(inv, bucket_empty) > 1) {
+    weakqueue(fill_slime_run, 2, 0);
+}
+@fill_one_slime;
+
+[label,fill_one_slime]
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, bucket_ectoplasm, 1);
+anim(human_pickuptable, 0);
+sound_synth(tap_fill, 1, 0);
+mes("You fill the bucket with slime.");
+p_delay(0);
+
+// =========================================================================== the bone grinder
+// Three locs, one machine, and ahoy_grinder_status is the cache's own varbit for its state. Old
+// School's grinder takes one bone at a time: use the bone on the loader, wind the handle, empty the
+// bin into a pot. The pot is the point - "Bonemeal" IS a pot of it, which is why the wiki's
+// inventory for a trip is nine buckets, nine pots and nine bones.
+[oplocu,ahoy_grinder_loader]
+if (oc_category(last_useitem) ! bones) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (enum(obj, namedobj, bone_to_bonemeal, last_useitem) = null) {
+    ~mesbox("The grinder cannot do anything with those.");
+    return;
+}
+if (%ahoy_grinder_status ! ^ecto_grinder_empty) {
+    ~mesbox("There is something in the grinder already. | Wind the handle, then empty the bin.");
+    return;
+}
+p_arrivedelay;
+inv_del(inv, last_useitem, 1);
+%ecto_grinder_bone = last_useitem;
+%ahoy_grinder_status = ^ecto_grinder_loaded;
+anim(human_pickuptable, 0);
+mes("You put the bones in the grinder.");
+
+[oploc1,ahoy_grinder_handle]
+p_arrivedelay;
+if (%ahoy_grinder_status = ^ecto_grinder_empty) {
+    ~mesbox("There is nothing in the grinder to grind.");
+    return;
+}
+if (%ahoy_grinder_status = ^ecto_grinder_ground) {
+    ~mesbox("The bones are already ground. Empty the bin.");
+    return;
+}
+anim(human_pickuptable, 0);
+sound_synth(bones_down, 1, 0);
+mes("You turn the grinder's handle.");
+p_delay(2);
+%ahoy_grinder_status = ^ecto_grinder_ground;
+mes("The bones are ground into a fine powder.");
+
+[oploc2,ahoy_grinder_handle] @grinder_status;
+
+[label,grinder_status]
+def_string $what = "";
+if (%ecto_grinder_bone ! null) {
+    $what = lowercase(oc_name(%ecto_grinder_bone));
+}
+switch_int (%ahoy_grinder_status) {
+    case ^ecto_grinder_loaded : ~mesbox("There are <$what> in the grinder, waiting to be ground.");
+    case ^ecto_grinder_ground : ~mesbox("The bin holds the ground remains of <$what>. | You need an empty pot to collect it in.");
+    case default : ~mesbox("The grinder is empty.");
+}
+
+[oploc1,ahoy_grinder_chute]
+p_arrivedelay;
+if (%ahoy_grinder_status ! ^ecto_grinder_ground) {
+    @grinder_status;
+}
+if (inv_total(inv, pot_empty) = 0) {
+    ~mesbox("You need an empty pot to collect the bonemeal in.");
+    return;
+}
+def_namedobj $meal = enum(obj, namedobj, bone_to_bonemeal, %ecto_grinder_bone);
+if ($meal = null) {
+    ~mesbox("The grinder is empty.");
+    return;
+}
+inv_del(inv, pot_empty, 1);
+inv_add(inv, $meal, 1);
+%ahoy_grinder_status = ^ecto_grinder_empty;
+%ecto_grinder_bone = null;
+anim(human_pickuptable, 0);
+mes("You empty the bin into your pot.");
+
+// =========================================================================== worshipping
+[oploc1,ahoy_ectofunctus]
+p_arrivedelay;
+def_obj $meal = ~ecto_held_bonemeal;
+if ($meal = null) {
+    ~mesbox("You need a pot of bonemeal and a bucket of slime to worship the Ectofuntus. | Bones are ground upstairs; the slime is in the cavern below.");
+    return;
+}
+if (inv_total(inv, bucket_ectoplasm) = 0) {
+    ~mesbox("You need a bucket of slime as well as the bonemeal.");
+    return;
+}
+if (%ecto_tokens_pending >= ^ecto_token_cap) {
+    ~mesbox("There isn't room to put any more in. | Collect your ecto-tokens from a Ghost Disciple first.");
+    return;
+}
+def_obj $bone = enum(obj, obj, bonemeal_to_bone, $meal);
+inv_del(inv, $meal, 1);
+inv_del(inv, bucket_ectoplasm, 1);
+inv_add(inv, pot_empty, 1);
+inv_add(inv, bucket_empty, 1);
+anim(human_pickupfloor, 0);
+sound_synth(tap_fill, 1, 0);
+p_delay(2);
+mes("You offer the bonemeal and the slime to the Ectofuntus.");
+// Four times the bury value, which lives on the BONE - hence the read back from the bonemeal.
+~prayer_xp(multiply(oc_param($bone, bone_exp), 4));
+%ecto_tokens_pending = add(%ecto_tokens_pending, ^ecto_tokens_per_worship);
+if (%ecto_tokens_pending > ^ecto_token_cap) {
+    %ecto_tokens_pending = ^ecto_token_cap;
+}
+
+// The first pot of bonemeal in the inventory, whatever kind it is. bonemeal_to_bone only answers
+// for the 24 the cache actually has, so anything it does not answer for is not bonemeal.
+[proc,ecto_held_bonemeal]()(obj)
+def_int $slot = 0;
+while ($slot < inv_size(inv)) {
+    def_obj $held = inv_getobj(inv, $slot);
+    if ($held ! null) {
+        if (enum(obj, obj, bonemeal_to_bone, $held) ! null) {
+            return($held);
+        }
+    }
+    $slot = add($slot, 1);
+}
+return(null);
+
+// =========================================================================== the Ghost Disciples
+// They hold the tokens until you ask. This is a proc and not an [opnpc1,ahoy_disciple], because
+// Ghosts Ahoy already owns that trigger - the same disciple hands over the Book of Haricanto - so
+// quest_ahoy.rs2 offers this as a question at the top of its own handler. The ghostspeak check is
+// its ~ahoy_can_hear, which now takes Morytania's enchanted amulet too.
+[proc,ecto_collect_tokens]
+if (%ecto_tokens_pending = 0) {
+    ~chatnpc("<p,neutral>Worship at the Ectofuntus, traveller, and I shall see you rewarded.");
+    ~chatplayer("<p,quiz>Rewarded with what?");
+    ~chatnpc("<p,neutral>Ecto-tokens. They buy a great many things in this town.");
+    return;
+}
+def_int $owed = %ecto_tokens_pending;
+~chatplayer("<p,happy>I have worshipped at the Ectofuntus.");
+~chatnpc("<p,happy>So you have. Here are <tostring($owed)> ecto-tokens for your trouble.");
+if (inv_freespace(inv) = 0) {
+    if (inv_total(inv, ectotoken) = 0) {
+        ~chatnpc("<p,sad>You have no room for them. I shall hold on to them a while longer.");
+        return;
+    }
+}
+%ecto_tokens_pending = 0;
+inv_add(inv, ectotoken, $owed);
+
+
+// =========================================================================== the ectophial
+// Ghosts Ahoy's reward, and the reason the quest hands you one. Its iop1 is "Empty": you pour it
+// out, it takes you to the Ectofuntus, and you refill it there - which is why ectophial_empty sits
+// in the cache beside it.
+[opheld1,ectophial]
+mes("You empty the ectophial onto the ground.");
+inv_del(inv, ectophial, 1);
+inv_add(inv, ectophial_empty, 1);
+anim(human_pickupfloor, 0);
+sound_synth(teleport_all, 1, 0);
+p_delay(2);
+p_telejump(^ecto_foot);
+
+[oplocu,ahoy_ectofunctus]
+if (last_useitem ! ectophial_empty) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+inv_del(inv, ectophial_empty, 1);
+inv_add(inv, ectophial, 1);
+anim(human_pickuptable, 0);
+sound_synth(tap_fill, 1, 0);
+mes("You refill the ectophial from the Ectofuntus.");
+
+// =========================================================================== emptying a pot
+// Every pot_bonemeal carries iop2=Empty in the cache and nothing handled it, so a pot of the wrong
+// bonemeal could not be turned back into a pot.
+[opheld2,pot_bonemeal] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_ancestral_fayg] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_ancestral_ourg] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_ancestral_raurg] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_babydragon] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_bat] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_bearded_gorilla_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_beast] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_big] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_burnt] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_burnt_jogre] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_dagannoth] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_dragon] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_jogre] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_large_zombie_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_medium_ninja_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_normal_gorilla_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_normal_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_skeleton] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_small_ninja_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_small_zombie_monkey] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_wolf] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_wyvern] @ecto_empty_bonemeal;
+[opheld2,pot_bonemeal_zogre] @ecto_empty_bonemeal;
+
+[label,ecto_empty_bonemeal]
+inv_delslot(inv, last_slot);
+inv_setslot(inv, last_slot, pot_empty, 1);
+mes("You empty the pot of bonemeal.");

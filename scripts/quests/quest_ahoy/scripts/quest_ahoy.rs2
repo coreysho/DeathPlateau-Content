@@ -321,6 +321,17 @@ if (last_useitem ! ahoy_book_of_haricanto) {
     return;
 }
 if_close;
+// ONCE, AND NO EXPERIENCE. Reported as "ghost ahoy quest - when using manual on the book it gives
+// 2k prayer xp ea time", and the manual and the book are both keepable, so this was an unlimited
+// Prayer tap: the stat_advance sat OUTSIDE the stage guard below and fired on every use. It has
+// been removed rather than moved inside the guard, because translating the book is not an
+// experience reward in the first place - Ghosts Ahoy pays 2,500 Prayer at the end
+// (oldschool.runescape.wiki/w/Ghosts_Ahoy#Rewards) and nothing along the way. The 25000 in
+// [label,ahoy_finish] is that reward; stat_advance takes tenths.
+if (%ahoy_given_book = ^ahoy_on) {
+    ~mesbox("You have already worked through the Book of Haricanto. | It is an inventory - of what Necrovarus took with him when he died, and of what each piece of it does. The robes are on the list.");
+    return;
+}
 mes("You work through the Book of Haricanto a line at a time with the manual open beside it.");
 p_delay(5);
 %ahoy_given_book = ^ahoy_on;
@@ -328,7 +339,6 @@ if (%ahoy_questvar = ^ahoy_manual) {
     %ahoy_questvar = ^ahoy_translated;
     ~send_quest_progress(questlist:ahoy, %ahoy_questvar, ^ahoy_complete);
 }
-stat_advance(prayer, 2000);
 ~mesbox("The book is not a spell. It is an inventory - of what Necrovarus took with him when he died, and of what it does, and the robes are on the list.");
 
 [opheld1,ahoy_book_of_haricanto]
@@ -414,6 +424,17 @@ mes("Nothing else in it.");
 if (~ahoy_can_hear = false) {
     ~mesbox("He is praying, or complaining, and you cannot tell which.");
     return;
+}
+// A Ghost Disciple also holds the ecto-tokens you have earned at the Ectofuntus
+// (skill_prayer/scripts/ectofuntus.rs2). ASKED rather than run first, because this same npc is the
+// one who hands over the Book of Haricanto and taking him over would hide it - which is exactly the
+// mistake Sir Amik's Recipe for Disaster branch made.
+if (%ecto_tokens_pending > 0) {
+    def_int $ask = ~p_choice2("I'd like my ecto-tokens, please.", 1, "I had some other business.", 2);
+    if ($ask = 1) {
+        ~ecto_collect_tokens;
+        return;
+    }
 }
 if (%ahoy_questvar < ^ahoy_manual) {
     ~chatnpc("<p,neutral>Necrovarus keeps us safe. That is what he says. I have written it down a great many times.");
@@ -610,6 +631,10 @@ return(null);
 
 [proc,ahoy_can_hear]()(boolean)
 if (inv_total(worn, amulet_of_ghostspeak) > 0) {
+    return(true);
+}
+// Morytania's enchanted amulet does the same job and was not accepted anywhere.
+if (inv_total(worn, amulet_of_ghostspeak_enchanted) > 0) {
     return(true);
 }
 return(false);

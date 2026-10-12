@@ -1,0 +1,58 @@
+// THE MAGIC DOORS IN THE MUSHROOM GATE, which are the only way into the eastern half of Zanaris -
+// Jukat's dragon sword stall, Irksol, and the rest of the marketplace. Reported as "zanaris - cant
+// enter area to buy dragon long and dds", and that is exactly what it was: a walkability flood from
+// the shed arrival reaches 3090 tiles, Jukat's half is 1069 more, and the two sets never meet. The
+// only openable locs on the whole frontier are these, and they had op1=Open, no category and not a
+// line of script - so the gate was painted shut.
+//
+// Both halves of both doors were already in the cache, closed and open. All that was missing was
+// the category and next_loc_stage that hand them to doors/scripts/doubledoors.rs2. Left and right
+// are the cache's own _l and _r, and they are the right way round: the framework looks for a left
+// door's partner at ~door_close(angle) and a right door's at the negation of it, which for the
+// south gate (angle 3) is one west and for the east gate (angle 2) is one south - and in both gates
+// the _r half is exactly there. mirror=yes travels with the right half, as it does on loc_1506.
+//
+// Moved out of _unpack/377/all.loc rather than edited in place, because redeclaring a config is a
+// duplicate-config error and these need four added lines each.
+
+[fairy_mushroom_gate_door_l]
+name=Magic door
+desc=A magic door.
+model=fairy_mushroom_gate_door_l
+hillskew=yes
+op1=Open
+active=yes
+category=door_left_closed
+param=next_loc_stage,fairy_mushroom_gate_door_l_open
+
+[fairy_mushroom_gate_door_l_open]
+name=Magic door
+desc=A magic door.
+model=fairy_mushroom_gate_door_l
+hillskew=yes
+active=yes
+op1=Close
+category=door_left_opened
+param=next_loc_stage,fairy_mushroom_gate_door_l
+
+[fairy_mushroom_gate_door_r]
+name=Magic door
+desc=A magic door.
+model=fairy_mushroom_gate_door_l
+hillskew=yes
+op1=Open
+active=yes
+mirror=yes
+category=door_right_closed
+param=next_loc_stage,fairy_mushroom_gate_door_r_open
+
+[fairy_mushroom_gate_door_r_open]
+name=Magic door
+desc=A magic door.
+model=fairy_mushroom_gate_door_l
+hillskew=yes
+active=yes
+op1=Close
+mirror=yes
+category=door_right_opened
+param=next_loc_stage,fairy_mushroom_gate_door_r
