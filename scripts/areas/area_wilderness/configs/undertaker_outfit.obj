@@ -136,6 +136,22 @@ param=pvp_token_bounty,50
 // RIGHTHAND, like the cane it is repainted from, so wearing it costs you your weapon. That is not
 // an oversight to fix later - it is the whole joke, and it is the strongest proof the set sells no
 // power: the full outfit is worn by somebody who has chosen to carry nothing that fights.
+//
+// IT SWINGS LIKE A STICK, AND THAT FIXES A CRASH (12 October 2026, off a live backtrace:
+// "sound_synth An input number was null(-1)", player_melee.rs2:91). ~combat_swing_anim_and_synth
+// sends a weapon with NO category to the unarmed swing - which is what the cache's own Black cane
+// does, and why it never crashed - but this one has a category, so it went on to read the crush
+// anim and the crush sound off an item carrying neither. crushattack_anim DEFAULTS, to
+// human_unarmedkick; crush_sound DEFAULTS TO NULL, and sound_synth(null) throws. So the missing
+// sound was the crash and the missing anim was only why it looked like a kick.
+//
+// The staff's animations rather than the cache cane's, because the cache cane has none: the plain
+// staff is "a slightly magical stick" held in one hand, which is the nearest thing in the 2006 cache
+// to a walking cane, and it pummels rather than kicks.
+//
+// NO attackrate and NO bonuses, deliberately. attackrate defaults to 4, the same as a bare fist, so
+// the cane is exactly as good a weapon as the hand it replaces - a nicer animation and nothing else.
+// Giving it the cache cane's +16 crush and +13 strength would have been the shop selling power.
 [undertaker_cane]
 name=Undertaker's cane
 desc=For leaning on while other people do the digging.
@@ -153,5 +169,8 @@ cost=200
 iop2=Wear
 tradeable=no
 category=clothing_weapon
+param=crushattack_anim,human_staff_pummel
+param=crush_sound,staff_hit
+param=defend_anim,human_staff_block
 param=destroy_death,^true
 param=pvp_token_bounty,50
