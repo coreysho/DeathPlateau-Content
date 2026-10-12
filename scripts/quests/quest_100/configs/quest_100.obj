@@ -1,0 +1,20 @@
+
+// THE DISH IS NOT A PLAIN CAKE. oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_the
+// _Lumbridge_Guide: "You need a cake of guidance to protect the Lumbridge Guide. Wizard Traiborn
+// in the Wizards' Tower can teach you how to make one." This content had the player bake an
+// ordinary cake and hand it over, which is the right ingredients and the wrong object.
+//
+// The model is the real one, lifted out of the 474 cache: obj 7542 "Cake of guidance", model
+// 13514, and 474 models are already in 377 format so the bytes are copied rather than converted
+// (claude/cache-import-474.md). It is a cake baked in the shape of a question mark, which is the
+// joke and the reason a recoloured ordinary cake would not have done. The 2d params are 474's own.
+[hundred_cake_of_guidance]
+name=Cake of guidance
+desc=A cake baked in the shape of a question mark. It feels faintly helpful.
+model=obj_hundred_cake_of_guidance
+2dzoom=860
+2dxan=194
+2dyan=2047
+2dyof=-9
+cost=50
+members=yes

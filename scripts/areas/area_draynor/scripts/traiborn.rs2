@@ -1,4 +1,14 @@
 [opnpc1,traiborn]
+// Recipe for Disaster, Freeing the Lumbridge Guide: Traiborn is the one who makes a cake of
+// guidance. Offered as a question rather than run first - taking an npc over is what left Sir
+// Amik with no other conversation and Black Knights' Fortress unstartable.
+if (~hundred_guide_traiborn_available = true) {
+    def_int $topic = ~p_choice2("I had some other business.", 1, "Can you enchant a cake?", 2);
+    if ($topic = 2) {
+        ~hundred_guide_traiborn_chat;
+        return;
+    }
+}
 if (%demonstart = ^demon_got_traiborn_key & inv_total(inv, silverlight_key_1) < 1 & inv_total(bank, silverlight_key_1) < 1){
     @demon_slayer_traiborn_lost_key;
 } else if (%demonstart < ^demon_find_bones | %demonstart >= ^demon_got_traiborn_key) {

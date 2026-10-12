@@ -19,7 +19,13 @@ if (last_useitem = uncooked_cake) {
     mes("Handing a frozen man a bowl of batter would not be a kindness.");
     return;
 }
-if (last_useitem ! cake) {
+// A PLAIN CAKE IS NOT THE DISH. It is the ingredient for it: Wizard Traiborn turns one into a
+// cake of guidance, which is what the wiki says protects the Guide.
+if (last_useitem = cake) {
+    ~chatplayer("<p,neutral>It is only a cake. He needs something with more direction in it.");
+    return;
+}
+if (last_useitem ! hundred_cake_of_guidance) {
     ~displaymessage(^dm_default);
     return;
 }
@@ -27,9 +33,9 @@ if (~hundred_has_subquest(^hundred_bit_guide) = true) {
     ~chatplayer("<p,neutral>He has had quite enough cake.");
     return;
 }
-mes("You set the cake down on the plate in front of him, next to the slice that is already gone.");
+mes("You set the cake of guidance down on the plate in front of him, next to the slice that is already gone.");
 p_delay(3);
-inv_del(inv, cake, 1);
+inv_del(inv, hundred_cake_of_guidance, 1);
 %100guide_prog = ^hundred_guide_done;
 %100guidevisible = 1;
 ~mesbox("The fork moves. He takes a mouthful, turns a page, and only then notices that the room has changed and that there is somebody standing over him.");
@@ -156,3 +162,39 @@ switch_int (%100guide_prog) {
         $x = append($x, "@dbl@west of Varrock@dbl@ - 32 Cooking and a chef's hat to get in.");
 }
 return($x);
+
+// --- Wizard Traiborn: the enchantment ---
+// "Wizard Traiborn in the Wizards' Tower can teach you how to make one." Old School puts three
+// quizzes between you and an enchanted egg, milk and flour; this content gathers the three
+// ingredients from Gee, Donie and the Cook instead and has always done, so the enchantment is the
+// one step it was missing rather than three it never had. Traiborn's own [opnpc1] is in
+// areas/area_draynor/scripts/traiborn.rs2 and this is offered as a question there - ASKED, not
+// taken over, which is the mistake Sir Amik's branch made.
+
+[proc,hundred_guide_traiborn_available]()(boolean)
+if (%100guide_prog < ^hundred_guide_told) {
+    return(false);
+}
+if (~hundred_has_subquest(^hundred_bit_guide) = true) {
+    return(false);
+}
+return(true);
+
+[proc,hundred_guide_traiborn_chat]
+if (inv_total(inv, cake) = 0) {
+    ~chatplayer("<p,quiz>Can you enchant a cake?");
+    ~chatnpc("<p,quiz>A cake! Yes. Bring me one and I shall make it a cake of guidance.");
+    ~chatnpc("<p,neutral>Bake it first, mind. I am a wizard, not a baker.");
+    return;
+}
+~chatplayer("<p,quiz>Can you enchant this cake?");
+~chatnpc("<p,happy>A cake of guidance! I have not been asked for one of those in... in...");
+~chatnpc("<p,confused>...I have forgotten. Which rather proves the need for them.");
+p_delay(1);
+anim(human_castheal, 0);
+sound_synth(enchant_ruby_ring, 1, 0);
+p_delay(2);
+inv_del(inv, cake, 1);
+inv_add(inv, hundred_cake_of_guidance, 1);
+~mesbox("The cake rearranges itself into the shape of a question mark.");
+~chatnpc("<p,happy>There. Now it knows where it is going, even if he does not.");
