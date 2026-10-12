@@ -1,0 +1,128 @@
+// THE GRAVEDIGGER KIT (Corey, 12 October 2026) - the Undertaker's 800-token reward, and the
+// slayer helmet it makes.
+//
+// AN ORNAMENT KIT AND NOT A SLAYER HELMET COLOUR, which was a real fork and is worth the paragraph.
+// The fourteen colours are tools/slayerhelmspec.json, and that pipeline imports OSRS'S OWN AUTHORED
+// MESHES per colour - the red one has different horns, the green one different spines - anchoring
+// each to a geom block of vertex and face counts recorded at import, which battery group 67
+// measures the shipped .ob2 against. A Gravedigger is this server's own, so there is no cache obj to
+// import and nothing to anchor; and the Cosmetics tab those colours live in is bought with Slayer
+// points, which would have put one cosmetic across two currencies. A kit fits on every count: the
+// pipeline is designed for exactly this, it comes with Revert, and it stays in the token economy.
+//
+// THE REPAINT IS LOOKED AT, NOT GUESSED (tools/models/gengravedigger.py). The plain helmet has
+// thirteen face colours, and every face whose hue AND saturation are zero turned out to be the crown
+// and the spikes - rendered with that set picked out in red before a colour was changed. The crown
+// goes bone, the mask and jaw go to the Death token's own black stone. It is the coin, worn.
+//
+// STATUS AND NOT POWER, which a kit enforces by construction: the result carries the base helmet's
+// stats, copied, and nothing else. Same defence, same slayer params, same equip gate. The only
+// difference between wearing this and wearing a slayer helmet is that people can see which one.
+
+[gravedigger_kit]
+name=Gravedigger kit
+desc=Use it on a slayer helmet. The Undertaker says it suits you.
+model=obj_gravedigger_kit
+2dzoom=1616
+2dxan=564
+2dyan=1943
+2dxof=-10
+2dyof=20
+weight=500g
+// cost IS the token price: one shop, one multiplier, ~calc_shop_value ends in scale($mult, 1000,
+// $cost) and the Undertaker runs at 1000 per mille.
+cost=800
+members=yes
+tradeable=no
+// The trigger is [opheldu,_ornament_kit] - on the CATEGORY, so this line is the whole wiring. No
+// edit to ornament_kit.rs2 is needed to apply one; only Revert is listed per result.
+category=ornament_kit
+
+// ---------------------------------------------------------------------------------------------
+// The result, plain and imbued
+// ---------------------------------------------------------------------------------------------
+// BOTH, because a player who paid for an imbue must not lose it to a cosmetic. The imbued helmet is
+// its own mesh in OSRS rather than the plain one renamed - its eye is grey, not red - so the kit
+// repaints both sets and the imbue pairing is carried through: imbue_into on the plain Gravedigger,
+// imbue_from on the imbued one. poh_battery group 66 walks the whole obj table and fails if either
+// direction is missing, which is what keeps that true.
+//
+// iop5=Revert, not iop4: a slayer helmet already spends iop4 on Disassemble, which splits it back
+// into its mask. Revert takes the kit off; Disassemble takes the helmet apart. Both are wanted and
+// they are different things. [opheld5,...] in ornament_kit.rs2 is the matching half - every Revert
+// trigger in that file sits on the slot its item's iop actually declares, and this is no exception.
+
+[slayer_helm_gravedigger]
+name=Gravedigger slayer helmet
+desc=A slayer helmet, in the Undertaker's colours.
+model=obj_slayer_helm_gravedigger
+manwear=obj_slayer_helm_gravedigger_manwear,0
+womanwear=obj_slayer_helm_gravedigger_womanwear,0
+manhead=obj_slayer_helm_gravedigger_manhead
+womanhead=obj_slayer_helm_gravedigger_womanhead
+wearpos=hat
+wearpos2=head
+wearpos3=jaw
+2dzoom=779
+2dxan=30
+2dyan=1791
+2dxof=-4
+2dyof=-5
+weight=2267g
+cost=40000
+members=yes
+tradeable=no
+iop2=Wear
+iop3=Check
+iop4=Disassemble
+iop5=Revert
+wearop1=Check
+category=armour_helmet
+param=stabdefence,30
+param=slashdefence,32
+param=crushdefence,27
+param=magicdefence,10
+param=rangedefence,30
+param=slayer_headgear,yes
+param=slayer_helmet,yes
+param=ornament_from,slayer_helm
+param=imbue_into,slayer_helm_gravedigger_i
+
+[slayer_helm_gravedigger_i]
+name=Gravedigger slayer helmet (i)
+desc=A slayer helmet, in the Undertaker's colours. You really don't want to wear it inside-out.
+model=obj_slayer_helm_gravedigger_i
+manwear=obj_slayer_helm_gravedigger_i_manwear,0
+womanwear=obj_slayer_helm_gravedigger_i_womanwear,0
+manhead=obj_slayer_helm_gravedigger_i_manhead
+womanhead=obj_slayer_helm_gravedigger_i_womanhead
+wearpos=hat
+wearpos2=head
+wearpos3=jaw
+2dzoom=779
+2dxan=30
+2dyan=1773
+2dxof=-4
+2dyof=-3
+weight=2267g
+cost=40000
+members=yes
+tradeable=no
+iop2=Wear
+iop3=Check
+iop4=Disassemble
+iop5=Revert
+wearop1=Check
+category=armour_helmet
+param=magicattack,3
+param=rangeattack,3
+param=stabdefence,30
+param=slashdefence,32
+param=crushdefence,27
+param=magicdefence,10
+param=rangedefence,30
+param=slayer_headgear,yes
+param=slayer_helmet,yes
+param=slayer_imbued,yes
+param=ornament_from,slayer_helm_i
+param=imbue_from,slayer_helm_gravedigger

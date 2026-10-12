@@ -4236,7 +4236,9 @@ check(_slots66 == {'4'} and _iop66 == _WANTUNCH,
 _helms66 = sorted(n for n in _from if n.startswith('slayer_helm'))
 _hasop = [n for n in _helms66
           if any(v == ['Uncharge'] for v in _ALLOBJ.get(n, {}).values())]
-check(len(_helms66) == 15 and not _hasop and '[opheld4,slayer_helm_i]' in _HL,
+# 16 since 12 October: the Gravedigger, the Undertaker's ornament kit result, which is a helmet
+# like any other and carries the imbue pairing like any other
+check(len(_helms66) == 16 and not _hasop and '[opheld4,slayer_helm_i]' in _HL,
       'and no imbued helmet has one - all %d get the scroll back out through Disassemble, which is '
       'what the cache says and what OSRS does: %s' % (len(_helms66), _hasop or 'none of them'))
 # ONE TRIGGER ON THE SCROLL, not twenty on the items - but an imbueable item may already have an

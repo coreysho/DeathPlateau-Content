@@ -75,6 +75,12 @@ mes("The <lowercase(oc_name($kit))> doesn't fit on that.");
 // twenty-odd oc_category call sites across combat to look through ornament_from, which is a
 // great deal more surface for the same end. tools/sim/ornamentkits.ts walks every pairing, so
 // an item left off this list fails there rather than in a player's hands.
+// opheld5 AND NOT opheld4 for the two Gravedigger helmets: a slayer helmet already spends iop4 on
+// Disassemble, which splits it back into its mask, and that is a different thing from taking the kit
+// off. Every Revert trigger in this file sits on the slot its item's own iop declares; these two
+// declare iop5. (areas/area_wilderness/configs/gravedigger_kit.obj)
+[opheld5,slayer_helm_gravedigger] ~ornament_kit_revert(last_item);
+[opheld5,slayer_helm_gravedigger_i] ~ornament_kit_revert(last_item);
 [opheld4,amulet_of_fury_or] ~ornament_kit_revert(last_item);
 [opheld4,armadyl_godsword_or] ~ornament_kit_revert(last_item);
 [opheld4,bandos_godsword_or] ~ornament_kit_revert(last_item);

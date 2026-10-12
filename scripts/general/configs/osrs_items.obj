@@ -40,6 +40,11 @@ param=rangedefence,30
 param=slayer_headgear,yes
 param=slayer_helmet,yes
 param=imbue_into,slayer_helm_i
+// The Undertaker's Gravedigger kit (areas/area_wilderness/configs/gravedigger_kit.obj). The pairing
+// lives on the BASE item, which is the ornament pipeline's rule: "what does this item become" always
+// has one answer, "what does this kit make" does not.
+param=ornament_kit,gravedigger_kit
+param=ornament_into,slayer_helm_gravedigger
 
 [dragon_pickaxe]
 name=Dragon pickaxe
@@ -257,3 +262,7 @@ param=slayer_headgear,yes
 param=slayer_helmet,yes
 param=slayer_imbued,yes
 param=imbue_from,slayer_helm
+// The kit fits the imbued helmet too, into the imbued Gravedigger: a player who paid for an imbue
+// must not have to give it up for a cosmetic.
+param=ornament_kit,gravedigger_kit
+param=ornament_into,slayer_helm_gravedigger_i
