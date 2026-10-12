@@ -1,0 +1,63 @@
+// THE ECTOPHIAL'S POUR, which the 377 cache does not have and never did.
+//
+// There are two seq slots named for it - ahoy_ecto_teleport and ectophial_pour_slime_cover - and
+// both are hollow: their frames are anim_688, 978, 1263, 1544, 1837, 2136, 2434, 722, a set shared
+// with emote_run_on_spot, emote_starjump_5, emote_pushups_5, emote_situps_5, abyssal_bludgeon_run
+// and toxic_blowpipe_special_updated. It is a run-on-the-spot cycle standing in for six later
+// additions and those two, so playing either of them makes the player jog, which is what the owner
+// saw twice - "still the wrong animation for ectophial".
+//
+// Old School's own is no help: its ectophial animation is a 2015 addition in which "the player
+// pour[s] out the liquid and get[s] whisked away by a mysterious undead character"
+// (oldschool.runescape.wiki/w/Ectophial, Changes), a whole cutscene with an npc in it.
+//
+// So this is rd_pour_vial, which IS a pour and the only one in the cache held in a phial:
+// 38 frames, replaceheldright=vial_empty, reachforward=yes. The one thing changed is the held item -
+// the ectophial has a manwear model of its own (obj_ectophial_manwear), so the player pours the
+// actual phial instead of a generic glass vial. Everything else is rd_pour_vial's own, frame for
+// frame. The precedent for reading a pour off its replaceheldright is in
+// skill_farming/scripts/farming_useitem.rs2, which picks farming_pour_water for compost "(its own
+// replaceheldright is bucket_empty)".
+[ahoy_ectophial_pour]
+replaceheldright=ectophial
+replaceheldleft=hide
+priority=6
+reachforward=yes
+frame1=anim_17564
+frame2=anim_17574
+frame3=anim_17575
+frame4=anim_17576
+frame5=anim_17577
+frame6=anim_17578
+frame7=anim_17579
+frame8=anim_17580
+frame9=anim_17581
+frame10=anim_17565
+frame11=anim_17566
+frame12=anim_17567
+frame13=anim_17568
+frame14=anim_17569
+frame15=anim_17570
+frame16=anim_17571
+frame17=anim_17570
+frame18=anim_17571
+frame19=anim_17570
+frame20=anim_17571
+frame21=anim_17572
+frame22=anim_17573
+frame23=anim_17572
+frame24=anim_17571
+frame25=anim_17570
+frame26=anim_17569
+frame27=anim_17568
+frame28=anim_17567
+frame29=anim_17566
+frame30=anim_17565
+frame31=anim_17581
+frame32=anim_17580
+frame33=anim_17579
+frame34=anim_17578
+frame35=anim_17577
+frame36=anim_17576
+frame37=anim_17575
+frame38=anim_17574

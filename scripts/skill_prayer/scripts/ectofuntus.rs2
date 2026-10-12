@@ -242,14 +242,15 @@ inv_add(inv, ectotoken, $owed);
 // answer; Old School stopped asking for it too. The [oplocu] below still works, because an
 // ectophial_empty already in somebody's bank has to have a way back.
 //
-// AND IT HAS ITS OWN ANIMATION. The cache carries ahoy_ecto_teleport - eight frames, named for this
-// and referenced by nothing - and fill_ectoplasm, a synth for the same job. It was playing
-// human_pickupfloor and a generic teleport whoosh, which is the "ectophial has wrong animation" half
-// of the report.
+// AND IT POURS. The animation is ahoy_ectophial_pour in configs/ectofuntus.seq - rd_pour_vial's
+// frames with the ectophial in hand - because the two seqs the cache names for this job are hollow;
+// the long version is the note on that config. The sound is `liquid`, which is the one Old School
+// uses for emptying it (oldschool.runescape.wiki/w/Ectophial lists the emptying sound as `liquid`
+// and the refilling sound as `fill_ectoplasm`, and both are in this cache under those names).
 [opheld1,ectophial]
 mes("You pour the ectophial onto the ground.");
-anim(ahoy_ecto_teleport, 0);
-sound_synth(fill_ectoplasm, 1, 0);
+anim(ahoy_ectophial_pour, 0);
+sound_synth(liquid, 1, 0);
 p_delay(2);
 p_telejump(^ecto_foot);
 mes("The ectophial refills itself from the Ectofuntus.");
