@@ -93,7 +93,9 @@ writing the old bytes back. Where it carries one priority for the whole model, t
 import argparse, glob, os, re, sys
 
 # slot -> the bucket that sorts it against the body
-RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10}
+# 'hair' and 'jaw' are not wearpos names - no obj is worn in them - so they only ever reach this
+# through the kit list below.
+RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10, 'hair': 10, 'jaw': 10}
 
 # The default kit's own feet, which are not worn items and so appear in no .obj: man and woman,
 # basic and elf boots (all.idk's man_feet_* and woman_feet_*). They move with the boots because a
@@ -109,9 +111,19 @@ RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10}
 # other 23 behind. A player whose character uses one of those still sees his own back through his
 # cape, which is exactly what was reported after the pass that looked clean on the default kit.
 #
-# HAIR AND JAW STAY AT 6 ON PURPOSE: the head is above the cape's collar and never sorts against
-# it, and 6 is where both the 377 cache and the OSRS imports put it.
-KIT_TYPES = ('torso', 'legs', 'feet')
+# HAIR AND JAW COME TOO, AND THE REASON I LEFT THEM OUT WAS WRONG. "The head is above the cape's
+# collar and never sorts against it" is true of a cropped head and false of long hair, which falls
+# down the back and over the cape - and the hair is the head model, so a fixed bucket 6 puts the
+# whole head over everything in 10 whatever the depth. Long hair against a Max cape, four pitches
+# by three angles each way:
+#
+#     hair 6,  jaw 6    front 426   back 381      (shipped)
+#     hair 10, jaw 6    front 192   back 325
+#     hair 10, jaw 10   front 173   back  90
+#
+# Cropped hair is 18 either way, which is why the default body this is measured against never
+# showed it and a character with long hair did.
+KIT_TYPES = ('torso', 'legs', 'feet', 'hair', 'jaw')
 
 
 def kit_models(content):
