@@ -1,0 +1,8 @@
+// Which curtain the behemoth now out of it came from, so its drop is that curtain's colour.
+//
+// hundred_dave is the cache's own varp and its bits 0-27 are all spoken for
+// (_unpack/377/all.varbit); 28-31 are free, and two of them hold a colour.
+[hundred_dave_behemoth_colour]
+basevar=hundred_dave
+startbit=28
+endbit=29

@@ -322,13 +322,39 @@
 //   hundred_dave_original_cat_colour                 five bits - what your cat was before
 //   kittenpet_hell / growncat_hell / overgrowncat_hell and their three objs
 //
-// Between them those last two lines say exactly what the mechanic is: your cat turns into a hell-cat
-// down there, the game remembers what colour it used to be so it can turn it back, it hunts the
-// hell-rats, and a counter runs up to something. Nothing else in the cache reads or writes any of it.
+// Between them those last two lines say exactly what the mechanic is, and on 2026-10-12 the owner
+// said what it was: "it should be like osrs where you hunt the rats for the spices, with the option
+// to hunt behemoths for a full spice drop". That is right, and the first pass had it backwards.
 //
-// THE ONE MISSING PIECE is what the counter runs up TO. In the original it is a Hell-Rat Behemoth and
-// the behemoth is what carries the spice; the cache has no such npc. It is added in configs/quest_100.npc
-// rather than inventing a different source of spice - see the note in that file.
+// WHAT THE ORIGINAL DOES (oldschool.runescape.wiki/w/Recipe_for_Disaster/Freeing_Evil_Dave and
+// /w/Hellcat and /w/Hell-Rat_Behemoth):
+//
+//   * THE RAT IS THE SPICE. Every hell-rat the cat catches hands over a shaker - one of the four
+//     colours, holding anywhere from one to four doses. That is the whole supply line for the
+//     sub-quest, and it is why there are four dose-variants of each colour in the cache rather
+//     than just the full ones.
+//   * SEVEN CATCHES CORRUPT THE CAT. "After your cat catches seven rats, it will become corrupt."
+//     A kitten instead has a chance on any catch. This is what hundred_dave_hellrats_caught is
+//     for, and the clincher is its width: three bits, which holds 0..7 and not one more.
+//   * IT STAYS CORRUPT. A hell-cat "can be turned back into a normal cat of the same colour it
+//     was before the conversion at any time by feeding it a bucket of milk" - which is what the
+//     five bits of hundred_dave_original_cat_colour are for. The colour is not remembered so it
+//     can be handed back at the top of the stairs; it is remembered so the milk can undo it.
+//   * THE BEHEMOTHS ARE OPTIONAL AND THEY COME AFTER. Four of them, one guarding each colour,
+//     behind the curtains, and the quest reward is "the ability to have your cat fight Hell-Rat
+//     Behemoths". Each always gives a full four-dose shaker of its own colour.
+//
+// WHAT THE FIRST PASS DID INSTEAD, and this is the bug the owner reported as "rats dont drop spice"
+// and "hell cat varients cant be achived": catching a rat gave nothing at all, the counter ran to
+// four rather than seven, the fourth catch forced a Hell-Rat Behemoth out whether you wanted one or
+// not, and killing it was the only way to get any spice in the game. The hell form was applied by
+// walking down the trapdoor and taken away by walking back up, so no hell-cat could ever be kept.
+//
+// THE ONE DELIBERATE DEVIATION LEFT, besides Dave tasting the stew (below): in the original your
+// CAT fights the behemoth, in an instance, and you throw it fish to keep it alive. Here you fight
+// it yourself and the cat only has to be with you to draw it out. The npc in configs/quest_100.npc
+// is built as a player's fight - level 85, 40 hitpoints - rather than the 15-hitpoint thing a cat
+// can beat, because an instanced pet battle is a much larger machine than this sub-quest needs.
 //
 // TWO THINGS THIS PASS FIXED THAT ARE NOT THIS QUEST'S FAULT:
 //   * op5=Chase-vermin was missing from all eighteen pet cats, so [opnpc5,_petcat] in
@@ -358,8 +384,23 @@
 // Three doses spread over the four colours, so a colour can want anything from 0 to 3 - which is
 // exactly the range its two bits hold.
 ^hundred_dave_doses = 3
-// How many hell-rats the cat catches before one of them turns out to have been eating the others.
-^hundred_dave_rats_per_behemoth = 4
+
+// "After your cat catches seven rats, it will become corrupt." Seven is also the width of
+// hundred_dave_hellrats_caught, which is three bits.
+^hundred_dave_catches_to_hellcat = 7
+// A kitten turns "on any hell-rat catch" by chance rather than on a count, and the wiki does not
+// publish the odds. One in seven makes a kitten take as many catches on average as a cat takes
+// for certain, which is the only figure here that is a choice rather than a quotation.
+^hundred_dave_kitten_chance = 7
+
+// The four curtains in the cellar, one behemoth behind each, read out of m48_154's LOC section.
+// Three are 100_dave_crypt_curtainsl and the fourth is 100_dave_crypt_curtainsr, and those two locs
+// are placed nowhere else in the game - so the four placements are exactly the four the original
+// has, one per colour.
+^hundred_dave_curtain_red = 0_48_154_1_30      // 3073,9886
+^hundred_dave_curtain_orange = 0_48_154_1_32   // 3073,9888
+^hundred_dave_curtain_yellow = 0_48_154_2_38   // 3074,9894
+^hundred_dave_curtain_brown = 0_48_154_2_41    // 3074,9897
 
 // Landing tiles, read out of the .jm2 LOC sections. The cellar is the house's map square plus 100
 // regions of z, so the two trapdoor ends are one tile apart in local coordinates.

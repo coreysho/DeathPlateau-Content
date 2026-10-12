@@ -94,7 +94,6 @@ mes("You climb down through the trapdoor...");
 anim(human_pickupfloor, 0);
 p_delay(0);
 p_telejump(^hundred_dave_cellar);
-~hundred_dave_hellify;
 
 [oploc2,100_dave_celler_trapdoor]
 mes("You close the trapdoor.");
@@ -108,13 +107,14 @@ mes("You climb the steps back into daylight...");
 anim(human_pickupfloor, 0);
 p_delay(0);
 p_telejump(^hundred_dave_house);
-~hundred_dave_unhellify;
 
 // --- Cats ---
-// A cat that goes down there becomes a hell-cat and comes back up as whatever it was. The stage can
-// change while it is down there - a hell-kitten grows into a hellcat on the ordinary petcat_growth
-// timer - so only the COLOUR is stored, and the stage is read back off whichever hell form it is
-// wearing when it leaves.
+// A cat corrupts after seven hell-rats and STAYS corrupt until it is fed a bucket of milk, so
+// ~hundred_dave_hellify is called from the seventh catch and ~hundred_dave_unhellify from the milk -
+// not from the two ends of the trapdoor, which is what the first pass did and which made a hell-cat
+// impossible to keep. Only the COLOUR is stored, because the stage can change while it is corrupt -
+// a hell-kitten grows into a hellcat on the ordinary petcat_growth timer - so the stage is read back
+// off whichever hell form it is wearing at the time.
 
 [proc,hundred_dave_hellify]
 if (npc_finduid(%follower_uid) = false) {
@@ -139,7 +139,7 @@ npc_changetype_keepall($hell, ^max_32bit_int);
 %follower_uid = npc_uid;
 %follower_obj = nc_param(npc_type, pet_item_id);
 npc_say("Mrrreeeoooww!");
-~mesbox("Your cat has gone red. It does not seem bothered by this and neither, apparently, does anything else down here.");
+~mesbox("Your cat has gone red, and shows no sign of going back. | A bucket of milk would probably settle it.");
 
 [proc,hundred_dave_unhellify]
 def_int $colour = %hundred_dave_original_cat_colour;
@@ -186,7 +186,7 @@ npc_changetype_keepall($normal, ^max_32bit_int);
 %follower_uid = npc_uid;
 %follower_obj = nc_param(npc_type, pet_item_id);
 npc_say("Meow?");
-mes("Your cat is your cat again.");
+mes("Your cat laps up the milk, and the red goes out of it.");
 
 // 1..6, matching the six colours the pet cats come in. 0 means this is not an ordinary pet cat -
 // a hell-cat that never went back up, or something that is not a cat at all.
@@ -202,21 +202,114 @@ switch_npc ($type) {
 return(0);
 
 // --- Hunting ---
-// Called from [opnpc5,_petcat] in quests/quest_fluffs/scripts/pet.rs2 once a Hell-Rat has actually
-// been caught. The cat is the active npc on the way in and the behemoth is on the way out, so
-// nothing may follow the npc_add.
+// THE RAT IS THE SPICE. Called from [opnpc5,_petcat] in quests/quest_fluffs/scripts/pet.rs2 once a
+// Hell-Rat has actually been caught, with the cat as the active npc. Every catch hands over a
+// shaker - a random one of the four colours, holding one to four doses - and that is the whole
+// supply line, which is why the cache has four dose-variants of each colour and not just the full
+// ones. See the long note in configs/quest_100.constant.
 
 [proc,hundred_dave_hellrat_caught]
 if (%hundred_dave_main < ^hundred_dave_asked) {
     return;
 }
+def_namedobj $spice = ~hundred_dave_spice_shaker(random(4), calc(random(4) + 1));
+def_string $what = lowercase(oc_name($spice));
+if (inv_freespace(inv) = 0) {
+    obj_add(coord, $spice, 1, ^lootdrop_duration);
+    mes("Your cat drops a <$what> at your feet - you have no room to carry it.");
+} else {
+    inv_add(inv, $spice, 1);
+    mes("The rat was carrying a <$what>. Your cat does not want it.");
+}
+~hundred_dave_corrupt_cat;
+
+// One of the sixteen shakers. $colour is ^hundred_spice_*, $doses is 1..4.
+[proc,hundred_dave_spice_shaker](int $colour, int $doses)(namedobj)
+switch_int (calc($colour * 4 + $doses)) {
+    case 1 : return(hundred_dave_spice_red_1);
+    case 2 : return(hundred_dave_spice_red_2);
+    case 3 : return(hundred_dave_spice_red_3);
+    case 4 : return(hundred_dave_spice_red_4);
+    case 5 : return(hundred_dave_spice_orange_1);
+    case 6 : return(hundred_dave_spice_orange_2);
+    case 7 : return(hundred_dave_spice_orange_3);
+    case 8 : return(hundred_dave_spice_orange_4);
+    case 9 : return(hundred_dave_spice_yellow_1);
+    case 10 : return(hundred_dave_spice_yellow_2);
+    case 11 : return(hundred_dave_spice_yellow_3);
+    case 12 : return(hundred_dave_spice_yellow_4);
+    case 13 : return(hundred_dave_spice_brown_1);
+    case 14 : return(hundred_dave_spice_brown_2);
+    case 15 : return(hundred_dave_spice_brown_3);
+    case 16 : return(hundred_dave_spice_brown_4);
+}
+return(hundred_dave_spice_red_1);
+
+// SEVEN CATCHES CORRUPT THE CAT, and a kitten has a chance on any of them. Called after a rat is
+// caught and after a behemoth dies, because the original counts both. A cat that is already a hell
+// form stops counting - it has nowhere further to go, and the counter is three bits wide.
+[proc,hundred_dave_corrupt_cat]
+if (npc_finduid(%follower_uid) = false) {
+    return;
+}
+switch_npc (npc_type) {
+    case kittenpet_hell, growncat_hell, overgrowncat_hell : return;
+}
 def_int $caught = calc(%hundred_dave_hellrats_caught + 1);
-if ($caught < ^hundred_dave_rats_per_behemoth) {
+def_boolean $turn = false;
+if ($caught >= ^hundred_dave_catches_to_hellcat) {
+    $turn = true;
+} else if (oc_category(nc_param(npc_type, pet_item_id)) = kitten) {
+    if (random(^hundred_dave_kitten_chance) = 0) {
+        $turn = true;
+    }
+}
+if ($turn = false) {
     %hundred_dave_hellrats_caught = $caught;
     return;
 }
 %hundred_dave_hellrats_caught = 0;
-mes("Something much bigger moves at the edge of the torchlight. It has been eating the others.");
+~hundred_dave_hellify;
+
+// --- The behemoths ---
+// Four curtains, one behemoth behind each, one colour each, and none of it compulsory. The original
+// gates them on the sub-quest being finished and hands the ability over as a reward, so this does
+// too. You need a cat with you to draw one out, which is the original's rule - it is the cat the
+// thing comes out for - even though here you do the fighting.
+
+[oploc1,100_dave_crypt_curtainsl] @hundred_dave_curtain;
+[oploc1,100_dave_crypt_curtainsr] @hundred_dave_curtain;
+
+[label,hundred_dave_curtain]
+def_int $colour = -1;
+switch_coord (loc_coord) {
+    case ^hundred_dave_curtain_red : $colour = ^hundred_spice_red;
+    case ^hundred_dave_curtain_orange : $colour = ^hundred_spice_orange;
+    case ^hundred_dave_curtain_yellow : $colour = ^hundred_spice_yellow;
+    case ^hundred_dave_curtain_brown : $colour = ^hundred_spice_brown;
+    case default :
+        mes("There is nothing behind it but damp stone.");
+        return;
+}
+if (~hundred_has_subquest(^hundred_bit_dave) = false) {
+    mes("Something heavy shifts behind the curtain. It is a good deal bigger than a rat, and you have no reason to disturb it yet.");
+    return;
+}
+if (npc_find(coord, hundred_dave_hellrat_behemoth, 14, 0) = true) {
+    mes("One of them is already out. Deal with that one first.");
+    return;
+}
+if (npc_finduid(%follower_uid) = false) {
+    mes("Something shifts behind the curtain, and goes still again. It is not coming out for you.");
+    return;
+}
+if (oc_category(nc_param(npc_type, pet_item_id)) = null) {
+    mes("Regrettably, that pet isn't sufficiently interested in killing rats.");
+    return;
+}
+p_arrivedelay;
+%hundred_dave_behemoth_colour = $colour;
+mes("You pull the curtain back. The thing that has been eating the hell-rats comes out of it.");
 sound_synth(rat_death, 1, 0);
 npc_add(coord, hundred_dave_hellrat_behemoth, 500);
 npc_setmode(opplayer2);
@@ -226,14 +319,40 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
-def_namedobj $spice;
-switch_int (random(4)) {
-    case ^hundred_spice_red : $spice = hundred_dave_spice_red_4;
-    case ^hundred_spice_orange : $spice = hundred_dave_spice_orange_4;
-    case ^hundred_spice_yellow : $spice = hundred_dave_spice_yellow_4;
-    case ^hundred_spice_brown : $spice = hundred_dave_spice_brown_4;
+queue(hundred_dave_behemoth_reward, 0, 0);
+
+// Always a full four-dose shaker, and always the colour of the curtain it came out from. "Every
+// behemoth always drops one 4-dose spice, which is given to you automatically on defeat. If your
+// inventory is full, it drops on the floor beneath you."
+//
+// Seven of these corrupt a cat as well, which is the only route an overgrown cat has -
+// [opnpc5,_petcat] will not let one chase vermin.
+//
+// QUEUED ONTO THE HERO rather than done in the trigger. A proc that writes a player varp has its
+// p_active_player requirement credited to the CALL SITE, and inside an ai_queue nothing has been
+// found yet, so calling ~hundred_dave_corrupt_cat there is an uninitialized pointer however the
+// npc_findhero above it went. The long version is the note in areas/area_barrows/scripts/barrows.rs2.
+[queue,hundred_dave_behemoth_reward]
+def_namedobj $spice = ~hundred_dave_spice_shaker(%hundred_dave_behemoth_colour, 4);
+if (inv_freespace(inv) = 0) {
+    obj_add(coord, $spice, 1, ^lootdrop_duration);
+    mes("There is no room in your pack, so the shaker lands at your feet.");
+} else {
+    inv_add(inv, $spice, 1);
 }
-obj_add(npc_coord, $spice, 1, ^lootdrop_duration);
+~hundred_dave_corrupt_cat;
+
+// --- Milk ---
+// "A hellcat can be turned back into a normal cat of the same colour it was before the conversion
+// at any time by feeding it a bucket of milk." Called from the bucket_milk case of [opnpcu,_petcat]
+// in quest_fluffs/scripts/pet.rs2, ahead of the ordinary feed, with the cat as the active npc.
+[proc,hundred_dave_milk_revert]()(boolean)
+switch_npc (npc_type) {
+    case kittenpet_hell, growncat_hell, overgrowncat_hell :
+        ~hundred_dave_unhellify;
+        return(true);
+}
+return(false);
 
 // --- The living Dave ---
 

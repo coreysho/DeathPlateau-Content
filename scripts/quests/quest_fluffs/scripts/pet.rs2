@@ -100,6 +100,17 @@ switch_obj(last_useitem) {
         p_delay(2);
         ~chatplayer("<p,happy>That kitten loves to play with that ball of wool.|I think it is its favourite."); //guessed linebreak
     case bucket_milk : //https://youtu.be/1vY_uGOq6qM&t=97s
+        // Recipe for Disaster, Freeing Evil Dave: milk is how a hell-cat is turned back into the
+        // cat it was (oldschool.runescape.wiki/w/Hellcat), so that is checked ahead of the feed -
+        // a hell-cat given milk should change back rather than just be fed. The bucket is still
+        // spent and still comes back empty.
+        if (~hundred_dave_milk_revert = true) {
+            inv_del(inv, last_useitem, 1);
+            inv_add(inv, bucket_empty, 1);
+            anim(human_pickupfloor, 0);
+            p_delay(0);
+            return;
+        }
         %cat_growth = setbit_range_toint(%cat_growth, 0, 0, 4);
         inv_del(inv, last_useitem, 1);
         inv_add(inv, bucket_empty, 1);

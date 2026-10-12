@@ -19,8 +19,11 @@ model1=npc_3382
 size=2
 resizeh=190
 resizev=190
-readyanim=mouse_ready
-walkanim=mouse_walk
+// rat_ready and rat_walk, not the mouse set it had: seq.pack carries a full rat set (rat_walk,
+// rat_attack, rat_block, rat_ready, rat_death) and this thing is a rat at 190%, so a mouse's idle
+// and walk on it were the "hell behemtohs need animation tweaked" report.
+readyanim=rat_ready
+walkanim=rat_walk
 op2=Attack
 vislevel=85
 hitpoints=40
