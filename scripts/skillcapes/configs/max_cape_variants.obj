@@ -1,4 +1,4 @@
-// THE NINE MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
+// THE TEN MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
 //   python3 tools/genmaxvariants.py
 // The numbers come from tools/maxcapevariantspec.json, which took them out of the OSRS
 // item table rather than off the wiki. Every bonus below is its SOURCE cape's, which is
@@ -14,7 +14,7 @@
 // scripts reads the cape slot and asks maxvariant_source what it came from, so the
 // variant is an Ava's accumulator for bows, thrown weapons, the blowpipe and the magnet.
 //
-// The seven variants with no models of their own are the plain Max cape's model with five
+// The eight variants with no models of their own are the plain Max cape's model with five
 // recolours, and the max hood's with six, exactly as OSRS has them.
 
 [fire_max_cape]
@@ -145,7 +145,6 @@ param=stabdefence,1
 param=slashdefence,1
 param=crushdefence,2
 param=magicdefence,10
-param=gwd_prot_saradomin,1
 
 [saradomin_max_hood]
 name=Saradomin max hood
@@ -176,7 +175,6 @@ iop2=Wear
 members=yes
 tradeable=no
 weight=453g
-param=gwd_prot_saradomin,1
 
 [guthix_max_cape]
 name=Guthix max cape
@@ -273,7 +271,6 @@ param=stabdefence,1
 param=slashdefence,1
 param=crushdefence,2
 param=magicdefence,10
-param=gwd_prot_zamorak,1
 
 [zamorak_max_hood]
 name=Zamorak max hood
@@ -304,7 +301,6 @@ iop2=Wear
 members=yes
 tradeable=no
 weight=453g
-param=gwd_prot_zamorak,1
 
 [imbued_saradomin_max_cape]
 name=Imbued Saradomin max cape
@@ -338,7 +334,6 @@ param=stabdefence,3
 param=slashdefence,3
 param=crushdefence,3
 param=magicdefence,15
-param=gwd_prot_saradomin,1
 
 [imbued_saradomin_max_hood]
 name=Imbued Saradomin max hood
@@ -369,7 +364,6 @@ iop2=Wear
 members=yes
 tradeable=no
 weight=453g
-param=gwd_prot_saradomin,1
 
 [imbued_guthix_max_cape]
 name=Imbued Guthix max cape
@@ -466,7 +460,6 @@ param=stabdefence,3
 param=slashdefence,3
 param=crushdefence,3
 param=magicdefence,15
-param=gwd_prot_zamorak,1
 
 [imbued_zamorak_max_hood]
 name=Imbued Zamorak max hood
@@ -497,7 +490,70 @@ iop2=Wear
 members=yes
 tradeable=no
 weight=453g
-param=gwd_prot_zamorak,1
+
+[undertaker_max_cape]
+name=Undertaker max cape
+desc=The cape worn by only the most experienced players. He approves.
+model=obj_max_cape
+manwear=obj_max_cape_manwear,0
+womanwear=obj_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+recol1s=12354
+recol1d=5285
+recol2s=14467
+recol2d=7366
+recol3s=7201
+recol3d=3171
+recol4s=21602
+recol4d=9480
+recol5s=13411
+recol5d=6342
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=stabdefence,9
+param=slashdefence,9
+param=crushdefence,9
+param=magicdefence,9
+param=rangedefence,9
+param=prayerbonus,4
+
+[undertaker_max_hood]
+name=Undertaker max hood
+desc=The hood worn by only the most experienced players. He approves.
+model=obj_max_hood
+manwear=obj_max_hood_manwear,0
+womanwear=obj_max_hood_womanwear,0
+manhead=obj_max_hood_manhead
+womanhead=obj_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
+recol1s=21602
+recol1d=9480
+recol2s=7201
+recol2d=3171
+recol3s=14467
+recol3d=7366
+recol4s=18596
+recol4d=8456
+recol5s=9216
+recol5d=4228
+recol6s=23649
+recol6d=9513
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
 
 [accumulator_max_cape]
 name=Accumulator max cape
@@ -521,8 +577,6 @@ recol4d=11624
 recol5s=13411
 recol5d=26425
 iop2=Wear
-iop3=Toggle-attract
-wearop1=Toggle-attract
 cost=99000
 members=yes
 tradeable=no

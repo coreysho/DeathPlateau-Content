@@ -469,7 +469,10 @@ ALLOBJ = {}
 for _rel in ('scripts/_unpack/377/all.obj',
              'scripts/minigames/game_fightcave/configs/fightcave.obj',
              'scripts/areas/area_mage_arena/configs/mage_arena_2.obj',
-             'scripts/quests/quest_animmag/configs/animmag.obj'):
+             'scripts/quests/quest_animmag/configs/animmag.obj',
+             # the Undertaker's cape, this build's own source cape and the first one that is not
+             # an Old School item
+             'scripts/areas/area_wilderness/configs/undertaker_outfit.obj'):
     ALLOBJ.update(blocks(read(_rel)))
 def _params(f):
     out = {}
@@ -478,6 +481,14 @@ def _params(f):
         if n.lstrip('-').isdigit():
             out[k] = int(n)
     return out
+# A CUSTOM VARIANT IS MEASURED AGAINST THE PLAIN MAX CAPE, not against its source cape. The nine
+# Old School variants inherit their source cape's bonuses because that is what Old School did - a
+# Saradomin max cape is a Saradomin cape's stats in a Max cape's shape. The Undertaker's source is a
+# 400-token COSMETIC with no bonuses at all, so that rule would force the choice between giving a
+# shop cosmetic a max cape's defence (selling power) and giving the variant nothing (a capstone
+# strictly worse than the cape it upgrades). Neither is right. It is a Max cape in a different
+# colour, so it is the Max cape's own numbers, and this says so rather than letting it drift.
+_PLAIN = _params(blocks(read('scripts/skillcapes/configs/max_cape.obj'))['max_cape'])
 _bad = []
 for v in VSPEC['variants']:
     src = ALLOBJ.get(v['source_cape'])
@@ -485,7 +496,7 @@ for v in VSPEC['variants']:
     if src is None or var is None:
         _bad.append('%s: cannot find both records' % v['key'])
         continue
-    want = _params(src)
+    want = _PLAIN if v.get('_custom') else _params(src)
     got = _params(var)
     if got != want:
         _bad.append('%s: variant %s, source %s' % (v['key'], got, want))

@@ -87,12 +87,18 @@ def main():
             sh = ob2render.rgb15_to_hsl16(sv) if sv >= 100 else sv
             if int((m.colour == sh).sum()) == 0:
                 missed.append(sh)
-        want = sorted(INERT) if (local.endswith('_max_hood') and pairs) else []
-        if sorted(missed) != want:
-            fails.append('%s: the recolour sources that match no face on %s are %s, and the spec '
-                         'says they should be %s - a source that matches nothing does nothing, so '
+        # A SUBSET, not an exact match. The rule this check exists for is "no source may match
+        # nothing", and the two in inert_in_osrs_too are the standing exceptions Old School itself
+        # ships on its god hoods. Demanding equality made those two COMPULSORY: the first hood
+        # written for this build that simply does not use them - the Undertaker's - failed for
+        # matching all six of its sources, which is the opposite of the fault being hunted.
+        allowed = set(INERT) if local.endswith('_max_hood') else set()
+        extra = sorted(set(missed) - allowed)
+        if extra:
+            fails.append('%s: the recolour sources that match no face on %s are %s, and only %s '
+                         'are allowed to miss - a source that matches nothing does nothing, so '
                          'the piece renders as a plain Max cape'
-                         % (local, model, sorted(missed) or 'none', want or 'none'))
+                         % (local, model, extra, sorted(allowed) or 'none'))
         if pairs:
             m.recolour(pairs)
         # THE RECORD'S OWN INVENTORY CAMERA, not the renderer's default. A cape seen from the
