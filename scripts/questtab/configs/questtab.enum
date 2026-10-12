@@ -6,6 +6,7 @@
 [questtab_collection_name]
 inputtype=int
 outputtype=component
+default=null
 val=0,questtab_collection:row0_name
 val=1,questtab_collection:row1_name
 val=2,questtab_collection:row2_name
@@ -14,6 +15,7 @@ val=3,questtab_collection:row3_name
 [questtab_collection_count]
 inputtype=int
 outputtype=component
+default=null
 val=0,questtab_collection:row0_count
 val=1,questtab_collection:row1_count
 val=2,questtab_collection:row2_count
@@ -22,6 +24,7 @@ val=3,questtab_collection:row3_count
 [questtab_collection_fill]
 inputtype=int
 outputtype=component
+default=null
 val=0,questtab_collection:row0_fill
 val=1,questtab_collection:row1_fill
 val=2,questtab_collection:row2_fill
