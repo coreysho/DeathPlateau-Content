@@ -1,0 +1,16 @@
+// The map_clock tick Low or High Level Alchemy may next be cast on.
+//
+// WHY A VARP AND NOT p_delay. Both alchemy labels used to end in p_delay, which is the engine's
+// "this player is busy": while it holds, the server DISCARDS the player's walk clicks
+// (MoveClickHandler rejects every one and unsets the map flag) and will not accept another spell.
+// That is what made alching on the move impossible - not that the cast stopped you walking, but
+// that every click you made for the next few ticks went nowhere, so a run across Varrock became a
+// run that kept forgetting where it was going.
+//
+// A tick stamp enforces the same cast rate without telling the engine the player is busy, so the
+// feet keep working and a premature click is simply ignored. One stamp covers both spells: it is
+// the one spell delay in Old School, and casting Low after High does not dodge it.
+//
+// Temp, as map_clock is: it restarts with the world, so a stored tick would not survive one.
+[alchemy_cooldown]
+type=int

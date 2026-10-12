@@ -1,7 +1,14 @@
 [opheldt,magic:highlvl_alchemy]@magic_spell_high_alch(^highlvl_alchemy, last_item);
 [opheldt,magic:lowlvl_alchemy]@magic_spell_low_alch(^lowlvl_alchemy, last_item);
 
+// ALCHING ON THE MOVE. The cast rate is a tick stamp rather than p_delay, so the player keeps
+// walking through it - see skill_magic/configs/alchemy.varp for why those are not the same thing.
+// The check comes before everything else, the tab included, so a click made too early does
+// nothing at all rather than closing an interface and flicking the sidebar.
 [label,magic_spell_high_alch](int $spell, obj $item)
+if (map_clock < %alchemy_cooldown) {
+    return;
+}
 if_settabactive(^tab_magic);
 if_close;
 // look for spell in db
@@ -34,10 +41,17 @@ if (afk_event = ^true) {
 // https://www.neoseeker.com/forums/2410/t960058-useless-rs-facts/2.htm
 // > When you high alch while your cannon is spinning, it stops spinning until you finish alching
 // Also this video: https://www.youtube.com/watch?v=P_o3Cxg73Tg&t=91s
-p_delay(3);
+//
+// Four ticks of cast rate, held as a stamp instead of p_delay(3): p_delay(3) blocked until
+// map_clock + 4, and this permits the next cast on exactly that tick, so the rate is unchanged
+// and only the walking is.
+%alchemy_cooldown = calc(map_clock + 4);
 
 
 [label,magic_spell_low_alch](int $spell, obj $item)
+if (map_clock < %alchemy_cooldown) {
+    return;
+}
 if_settabactive(^tab_magic); // osrs always sets tab back
 if_close;
 // look for spell in db
@@ -65,8 +79,9 @@ inv_add(inv, coins, $profit);
 if (afk_event = ^true) {
     ~macro_event_general_spawn(~macro_event_set_random);
 }
-// delay by 3 ticks
-p_delay(1);
+// delay by 3 ticks - as a stamp, not p_delay, so the player keeps walking. p_delay(1) blocked
+// until map_clock + 2, which is the tick this permits the next cast on.
+%alchemy_cooldown = calc(map_clock + 2);
 
 // Alching a rune has to leave one to alch after the spell has been paid for, so this asks the cast
 // what it will take - ~spell_rune_spend, which knows the staff, the rune pouch and the combination
