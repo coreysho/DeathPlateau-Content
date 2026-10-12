@@ -123,6 +123,36 @@ BODY = ['obj_priest_gown_manwear',          # man_torso_basic
         'idk_42',                           # man_feet_basic
         'obj_feud_desert_disguise_manwear'] # man_head
 
+# WHAT THE WORN ITEM REPLACES, which this got wrong until 2026-10-12 and quietly spoiled every
+# measurement made with it. The client builds each of the twelve appearance slots from EITHER a kit
+# part OR a worn item's model, never both (ClientPlayer, field1674: a value under 512 is a kit
+# part, 512 and over is an obj). A player in a platebody has no kit torso at all. Drawing the kit
+# underneath anyway puts a second opaque surface inside the armour, a few units in from it, and
+# every question about what covers what is then asked of a figure that cannot exist - which is how
+# a rule that buries an amulet under a chestplate could score as harmless here and be reported from
+# the game the same week.
+#
+# A torso item hides the arms only if it carries a second model for them; that is the difference
+# between a platebody and a chainbody, and the config says which through manwear2.
+KIT_TORSO, KIT_ARMS, KIT_HANDS, KIT_LEGS, KIT_FEET, KIT_HEAD = range(6)
+REPLACES = {'torso': [KIT_TORSO], 'legs': [KIT_LEGS], 'feet': [KIT_FEET],
+            'hands': [KIT_HANDS], 'hat': [KIT_HEAD], 'head': [KIT_HEAD]}
+
+
+def kit_hidden_by(cfgs, names, woman=False):
+    """The BODY indices the worn items replace."""
+    hidden = set()
+    for name in names:
+        d = cfgs.get(name)
+        if not d:
+            continue
+        slot = d.get('wearpos')
+        for i in REPLACES.get(slot, ()):
+            hidden.add(i)
+        if slot == 'torso' and d.get('womanwear2' if woman else 'manwear2'):
+            hidden.add(KIT_ARMS)
+    return hidden
+
 
 # ---------------------------------------------------------------- priorities
 def face_priorities(path, fcount, vcount):
@@ -443,7 +473,10 @@ def main():
     cfgs = obj_configs(a.content)
     parts = []
     if a.body:
-        for name in BODY:
+        hidden = kit_hidden_by(cfgs, a.objs, a.woman)
+        for slot_index, name in enumerate(BODY):
+            if slot_index in hidden:
+                continue
             # idk kit parts live in models/idk, worn-item meshes in models/obj, and the body uses
             # both. Looking in one place only lost the feet and the head without saying so.
             for sub in ('obj', 'idk'):
