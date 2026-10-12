@@ -28,8 +28,15 @@ def_int $depth = $level;
 if ($depth > 30) {
     $depth = 30;
 }
-def_int $odds = calc(^death_token_odds * 30 / add(30, multiply($depth, 2)));
-if (random($odds) ! 0) {
+// A CHANCE IN ^death_token_units rather than one-in-N. Same curve, written the other way up:
+// one-in-odds at the edge, three times that by level 30. It is in ten-thousandths because a
+// percentage bonus cannot survive integer division on a number between 4 and 11 - see the note on
+// ^death_token_units.
+def_int $chance = calc(^death_token_units / ^death_token_odds * add(30, multiply($depth, 2)) / 30);
+if (~undertaker_set_worn = true) {
+    $chance = calc($chance * add(100, ^death_token_set_bonus) / 100);
+}
+if (random(^death_token_units) >= $chance) {
     return;
 }
 def_int $count = ~random_range(1, ^death_token_max);
@@ -39,3 +46,22 @@ if ($count = 1) {
 } else {
     mes("@dre@You find <tostring($count)> death tokens on the body.@bla@");
 }
+
+// THE FOUR PIECES YOU CAN FIGHT IN. The cane is not one of them and never should be: it takes the
+// weapon hand, so requiring it would mean no kills, and no kills is no tokens to be paid a bonus
+// on. Read off the worn slots directly rather than from a count, because a player wearing two hats
+// is not a thing and a player wearing the coat twice is not either.
+[proc,undertaker_set_worn]()(boolean)
+if (inv_getobj(worn, ^wearpos_hat) ! undertaker_hat) {
+    return(false);
+}
+if (inv_getobj(worn, ^wearpos_torso) ! undertaker_coat) {
+    return(false);
+}
+if (inv_getobj(worn, ^wearpos_legs) ! undertaker_trousers) {
+    return(false);
+}
+if (inv_getobj(worn, ^wearpos_feet) ! undertaker_boots) {
+    return(false);
+}
+return(true);

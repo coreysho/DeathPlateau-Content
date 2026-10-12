@@ -15,5 +15,27 @@
 // and a rebuild.
 ^death_token_odds = 12
 
+// THE ROLL IS A CHANCE IN TEN THOUSAND, not one-in-N, and ^death_token_odds above is what sets it:
+// ^death_token_units / ^death_token_odds. The old roll was random($odds) with $odds an integer from
+// 4 to 11, and that is too coarse to carry a percentage. The four-piece set bonus below is ten per
+// cent; applied to an odds of 4 by integer division it became 3, which is a THIRTY-THREE per cent
+// bonus - the arithmetic cannot express what the design asked for. In ten-thousandths it can, and
+// the measured rates above are unchanged because the chance is the same number written the other
+// way up.
+^death_token_units = 10000
+
+// WEARING THE UNDERTAKER'S OUTFIT PAYS, in the only currency it can: more tokens, per cent.
+//
+// FOUR PIECES, NOT FIVE - hat, coat, trousers and boots, and deliberately NOT the cane. The cane
+// takes your weapon hand and carries no combat params at all, not even attackrate, so a bonus that
+// required it would be a bonus you could only hold while unable to kill anything - and a token
+// cannot be earned without a kill. The cane stays the pure flex: no benefit, full bounty, worn by
+// somebody saying they do not need a weapon.
+//
+// It is still a real decision, because the four pieces are not armour either. Wearing them is
+// choosing to earn faster with no defence bonuses, in the one place in the game where that is
+// dangerous, while carrying 800 tokens of other people's bounty on your back.
+^death_token_set_bonus = 10
+
 // A paying kill gives one to this many, so a lucky kill feels like one.
 ^death_token_max = 3
