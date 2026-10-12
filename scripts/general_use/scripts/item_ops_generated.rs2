@@ -90,7 +90,11 @@
 [opheld1,roguesden_kit] mes("Which tool do you need?");
 [opheld1,roguesden_gem] ~mesbox("The jewel flares, and the maze fades around you.");
 [opheld1,rd_nitorus_oxide] mes("You open the vial. You can't help laughing.");
-[opheld1,nature_amulet] mes("I am bound to your herb patch in Falador. Your patch is growing nicely, free from disease.");
+// The Amulet of nature's Rub has moved to skill_farming/scripts/amulet_of_nature.rs2, where it
+// reads the patch the amulet is actually bound to. The stub here said "bound to your herb patch
+// in Falador... growing nicely, free from disease" to every player at every time, which was the
+// right thing for an audit that only had to stop the click being dead and is the wrong thing now
+// that there is a real binding to report.
 // The four Lletya teleport crystals moved to quests/quest_mourning/scripts/quest_mourning.rs2.
 // The stubs here printed "...and Lletya appears around you" without moving anybody, and a
 // trigger can only be declared once.

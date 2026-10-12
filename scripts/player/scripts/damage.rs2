@@ -24,6 +24,7 @@ if (stat(hitpoints) = 0){
 
 ~redemption_check;
 ~ring_of_life_check;
+~neck_emergency_check; // phoenix necklace / necklace of faith
 
 [queue,damage_player](int $amount)
 ~damage_self($amount);

@@ -1,0 +1,67 @@
+// THE AMULET OF CHEMISTRY - what Lvl-2 Enchant does to a strung jade amulet.
+//
+// Five charges. Each time you finish a potion there is a 1-in-20 shot that it comes out a FOUR dose
+// instead of a three, and only a hit spends a charge; when the last one goes the amulet crumbles.
+//
+// THE FOUR-DOSE LOOKUP IS FREE AND THAT IS WHY THIS WORKS. Decanting already needs to know every
+// potion's dose family, so every potion in the game carries param=decant_potion_enum pointing at an
+// enum of dose -> obj (skill_herblore/scripts/decanting/decant_potion.rs2). Asking that enum for
+// index 4 is the whole upgrade: no table here, no per-potion list to keep in step with the potions,
+// and a potion that has no 4-dose form simply returns null and is handed over unchanged.
+//
+// WHERE IT HOOKS. ~brew_potion (skill_herblore/scripts/herblore.rs2) is the single place a finished
+// potion is created - every one of the thirty-odd [opheldu,...] triggers in brew_potion.rs2 funnels
+// into it - so the amulet only has to be consulted once.
+//
+// A MISS IS SILENT. The amulet says nothing on the 19 casts out of 20 that do nothing, because a
+// line of chat per potion through a 200-potion brewing session is worse than no amulet at all. It
+// speaks when it upgrades, and when it dies.
+
+// Returns what the player should actually get: $mixture, or its 4-dose form if the amulet fired.
+[proc,chemistry_upgrade](namedobj $mixture)(namedobj)
+if (inv_getobj(worn, ^wearpos_front) ! amulet_of_chemistry) {
+    return($mixture);
+}
+if (%herblore_chemistry_charges <= 0) {
+    // Shouldn't be reachable - the amulet is destroyed on the charge that takes it to zero - but a
+    // player who had one before this varp existed would read 0 here, and 0 must not mean infinite.
+    return($mixture);
+}
+if (random(^chemistry_proc_rate) ! 0) {
+    return($mixture);
+}
+def_enum $doses = oc_param($mixture, decant_potion_enum);
+if ($doses = null) {
+    // Not a potion with a dose family: an unfinished potion, a poison, a dye. Nothing to upgrade,
+    // and no charge spent.
+    return($mixture);
+}
+def_namedobj $four = enum(int, namedobj, $doses, 4);
+if ($four = null | $four = $mixture) {
+    return($mixture);
+}
+%herblore_chemistry_charges = sub(%herblore_chemistry_charges, 1);
+if (%herblore_chemistry_charges <= 0) {
+    inv_delslot(worn, ^wearpos_front);
+    ~update_all(amulet_of_chemistry);
+    ~on_unequip(amulet_of_chemistry);
+    mes("Your amulet of chemistry helps you create a 4-dose potion. It then crumbles to dust.");
+} else {
+    mes("Your amulet of chemistry helps you create a 4-dose potion.");
+}
+return($four);
+
+// Charging it: the enchant makes one with five uses. [opheld5,...] would be Destroy; this is the
+// Wear path, because an amulet that was enchanted and banked for a month must still have its five.
+//
+// SET ON EQUIP, NOT ON ENCHANT, and deliberately: the enchant happens in
+// skill_magic/scripts/spells/enchant.rs2, which is generic over every row in magic_spells.dbrow and
+// has no business knowing about one amulet. Equipping is the first moment the amulet matters, it is
+// idempotent for an amulet that already has charges, and it is where the count is read.
+[proc,chemistry_on_equip]
+if (%herblore_chemistry_charges <= 0) {
+    %herblore_chemistry_charges = ^chemistry_charges;
+}
+
+[label,wearop1_amulet_of_chemistry]
+mes("Your amulet of chemistry has <~pluralise(%herblore_chemistry_charges, "charge")> left.");

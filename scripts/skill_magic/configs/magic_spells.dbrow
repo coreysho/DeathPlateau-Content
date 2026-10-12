@@ -20,8 +20,31 @@ data=runesrequired,airrune,3,cosmicrune,1,null,null
 data=experience,370
 data=convertobj,emerald_ring,ring_of_dueling_8,human_cast_enchantring,enchant_ring,enchant_emerald_ring
 data=convertobj,strung_emerald_amulet,amulet_of_defence,human_enchantamuletlvl2,enchant_amulet_lvl2,enchant_emerald_amulet
-data=additional_reqmessage,This spell can only be cast on emerald rings and amulets.
+// The Binding necklace. The ITEM was already here and already working - magic_emerald_necklace is
+// in the cache named "Binding necklace", it drops from the three abyssal creatures
+// (drop_tables/configs/npc_drops.dbrow), and runecraft_combo_runes.rs2 checks the front slot for it
+// when you make combination runes. The one thing missing was any way to MAKE one, which is this
+// line. It takes the emerald amulet's anim, spotanim and sound, the way the sapphire NECKLACE row
+// above takes the sapphire amulet's.
+//
+// NO CHARGES, deliberately. Old School's binding necklace carries 16 uses; this one is the
+// permanent item it has always been here, because the combo-rune check reads the worn slot and
+// nothing in the build has ever decremented it. Giving it charges now would silently nerf an item
+// players already own and already use.
+data=convertobj,emerald_necklace,magic_emerald_necklace,human_enchantamuletlvl2,enchant_amulet_lvl2,enchant_emerald_amulet
+// The Amulet of nature (11 July 2005, the Farming update). Lvl-2 Enchant on an emerald amulet
+// strung with MAGIC string rather than wool - see skill_crafting/scripts/jewellery/stringing.rs2.
+// Both halves were already in the cache with models and no config; skill_farming/scripts/
+// amulet_of_nature.rs2 is what it does.
+data=convertobj,magic_strung_emerald_amulet,nature_amulet,human_enchantamuletlvl2,enchant_amulet_lvl2,enchant_emerald_amulet
+// Jade. Old School casts jade jewellery in SILVER and enchants it at Lvl-2; this build has one
+// gem-jewellery window and jade is its seventh gem (skill_crafting/configs/jewellery).
+data=convertobj,jade_ring,ring_of_returning_5,human_cast_enchantring,enchant_ring,enchant_emerald_ring
+data=convertobj,jade_necklace,necklace_of_passage_5,human_enchantamuletlvl2,enchant_amulet_lvl2,enchant_emerald_amulet
+data=convertobj,strung_jade_amulet,amulet_of_chemistry,human_enchantamuletlvl2,enchant_amulet_lvl2,enchant_emerald_amulet
+data=additional_reqmessage,This spell can only be cast on emerald and jade jewellery.
 data=specificobj_reqmessage,unstrung_emerald_amulet,You need to string the emerald amulet before enchanting it.
+data=specificobj_reqmessage,unstrung_jade_amulet,You need to string the jade amulet before enchanting it.
 
 [magic_spell_enchant_level3]
 table=magic_spell_table
@@ -32,8 +55,17 @@ data=runesrequired,firerune,5,cosmicrune,1,null,null
 data=experience,590
 data=convertobj,ruby_ring,ring_of_forging,human_cast_enchantring,enchant_ring,enchant_ruby_ring
 data=convertobj,strung_ruby_amulet,amulet_of_strength,human_enchantamuletlvl3,enchant_amulet_lvl3,enchant_ruby_amulet
-data=additional_reqmessage,This spell can only be cast on ruby rings and amulets.
+// The Digsite pendant, imported from OSRS. Old School's goes to the Dig Site, Fossil Island and
+// Lithkren; only the Dig Site exists in this build (quests/quest_itexam), so it is a one-
+// destination pendant and the dialogue says so rather than offering two dead rows.
+data=convertobj,ruby_necklace,digsite_pendant_5,human_enchantamuletlvl3,enchant_amulet_lvl3,enchant_ruby_amulet
+// Red topaz, the eighth gem. Old School casts it in silver and enchants it at Lvl-3.
+data=convertobj,topaz_ring,efaritays_aid,human_cast_enchantring,enchant_ring,enchant_ruby_ring
+data=convertobj,topaz_necklace,necklace_of_faith,human_enchantamuletlvl3,enchant_amulet_lvl3,enchant_ruby_amulet
+data=convertobj,strung_topaz_amulet,burning_amulet_5,human_enchantamuletlvl3,enchant_amulet_lvl3,enchant_ruby_amulet
+data=additional_reqmessage,This spell can only be cast on ruby and topaz jewellery.
 data=specificobj_reqmessage,unstrung_ruby_amulet,You need to string the ruby amulet before enchanting it.
+data=specificobj_reqmessage,unstrung_topaz_amulet,You need to string the topaz amulet before enchanting it.
 
 [magic_spell_enchant_level4]
 table=magic_spell_table
@@ -44,7 +76,11 @@ data=runesrequired,earthrune,10,cosmicrune,1,null,null
 data=experience,670
 data=convertobj,diamond_ring,ring_of_life,human_cast_enchantring,enchant_ring,enchant_diamond_ring
 data=convertobj,strung_diamond_amulet,amulet_of_power,human_enchantamuletlvl1,enchant_amulet2_lvl4,enchant_diamond_amulet
-data=additional_reqmessage,This spell can only be cast on diamond rings and amulets.
+// The Phoenix necklace, imported from OSRS. One use: it heals 30% of your maximum hitpoints when
+// they drop below 20% and is destroyed doing it. general/scripts/enchanted_jewellry/
+// phoenix_necklace.rs2 hangs it off the same damage hook the ring of life uses.
+data=convertobj,diamond_necklace,phoenix_necklace,human_enchantamuletlvl1,enchant_amulet2_lvl4,enchant_diamond_amulet
+data=additional_reqmessage,"This spell can only be cast on diamond rings, necklaces and amulets."
 data=specificobj_reqmessage,unstrung_diamond_amulet,You need to string the diamond amulet before enchanting it.
 
 [magic_spell_enchant_level5]
@@ -56,7 +92,11 @@ data=runesrequired,earthrune,15,waterrune,15,cosmicrune,1
 data=experience,780
 data=convertobj,dragonstone_ring,ring_of_wealth,human_cast_enchantring,enchant_ring,enchant_dragon_ring
 data=convertobj,strung_dragonstone_amulet,amulet_of_glory,human_enchantamuletlvl2,enchant_amulet2_lvl5,enchant_dragon_amulet
-data=additional_reqmessage,This spell can only be cast on dragonstone rings and amulets.
+// The Skills necklace, imported from OSRS. Four teleports to the six skill guilds - the answer Old
+// School gives the dragonstone necklace, and the one that puts a Farming Guild teleport in the
+// game. general/scripts/enchanted_jewellry/skills_necklace.rs2.
+data=convertobj,dragonstone_necklace,skills_necklace_4,human_enchantamuletlvl2,enchant_amulet2_lvl5,enchant_dragon_amulet
+data=additional_reqmessage,"This spell can only be cast on dragonstone rings, necklaces and amulets."
 data=specificobj_reqmessage,unstrung_dragonstone_amulet,You need to string the dragonstone amulet before enchanting it.
 
 // Lvl-6 Enchant. Level, runes and xp are the wiki's, and the wiki's xp for Lvl-1..Lvl-5 is this

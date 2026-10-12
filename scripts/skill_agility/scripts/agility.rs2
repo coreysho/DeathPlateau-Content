@@ -173,6 +173,7 @@ if (stat(hitpoints) = 0){
     return;
 }
 ~ring_of_life_check;
+~neck_emergency_check; // phoenix necklace / necklace of faith
 
 // Forces the player to walk to a certain coord. Basically p_teleport but doesnt telejump from a distance.
 // doesnt respect clipping

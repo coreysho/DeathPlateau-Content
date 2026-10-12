@@ -76320,9 +76320,13 @@ weight=14g
 certlink=magic_string
 certtemplate=template_for_cert
 
+// Bound to one Farming patch and rubbed to read it - skill_farming/scripts/amulet_of_nature.rs2.
+// iop1=Rub and iop2=Wear are the cache's own. wearop1 is added: Old School lets you check the
+// patch from the Worn Equipment tab rather than making you unequip the amulet first.
 [nature_amulet]
 name=Amulet of nature
 desc=An Amulet of Nature.
+wearop1=Check
 recol1s=32767
 recol1d=672
 recol2s=13537

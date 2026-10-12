@@ -1,0 +1,62 @@
+// CHARGED TELEPORT JEWELLERY, the shared half (2026-10-12).
+//
+// Five items arrived at once - the skills necklace, the digsite pendant, the ring of returning, the
+// necklace of passage and the burning amulet - and every one of them is the same four steps in the
+// same order: check where you are, teleport, spend a charge off the item wherever it happens to be,
+// say how many are left. necklace_of_minigames.rs2 and amulet_of_glory.rs2 each wrote those four
+// steps out by hand, which was fine for two and would have been five more copies of the same bug
+// surface for seven.
+//
+// WHAT EACH ITEM STILL OWNS. The destinations and the menu, because those are the only part that
+// differs, and the wilderness ceiling, because it is not the same number for all of them: Old
+// School stops dragonstone jewellery at 30 and the games necklace at 20, and the burning amulet
+// deliberately has no ceiling at all - its three destinations are all deep Wilderness and taking
+// you there is the entire point.
+//
+// THE CHARGE COMES OFF WHERE THE ITEM IS. A rubbed item is in the pack and gets inv_setslot; a worn
+// one is on the neck or the finger and gets ~worn_replace, because taking it out of worn and putting
+// it back would unequip it for a tick and drop the wearop the player just clicked. That split is why
+// $worn is a parameter rather than something this proc could work out for itself.
+
+// $wildy_max: the deepest Wilderness level the teleport still works at, or -1 for no ceiling.
+// Returns false and says why if the teleport cannot happen, in which case NO charge is spent.
+[proc,charged_jewellery_allowed](int $wildy_max)(boolean)
+if ($wildy_max >= 0 & ~wilderness_level(coord) > $wildy_max) {
+    // Old School's own wording for a blocked teleport, and the second line names the level the way
+    // the games necklace's does.
+    mes("A mysterious force blocks your teleport.");
+    mes("You can't use this teleport after level <tostring($wildy_max)> wilderness.");
+    return(false);
+}
+if (~pre_tele_checks(coord) = false) {
+    return(false);
+}
+return(true);
+
+// Spend one charge and say what is left. $item is what was clicked, $slot where it was, $worn says
+// which inventory that slot belongs to. The last charge leaves nothing behind: next_obj_stage is
+// null on the (1) of every family here, which is what "crumbles to dust" means.
+[proc,charged_jewellery_spend](obj $item, int $slot, boolean $worn, string $name)
+def_namedobj $next = oc_param($item, next_obj_stage);
+if ($worn = true) {
+    ~worn_replace($slot, $item, $next);
+} else if ($next = null) {
+    inv_delslot(inv, $slot);
+} else {
+    inv_setslot(inv, $slot, $next, 1);
+}
+if ($next = null) {
+    mes("Your <$name> crumbles to dust.");
+    return;
+}
+mes("Your <$name> has <~pluralise(oc_param($next, charges), "use")> left.");
+
+// The whole of a one-destination item's click: check, go, spend. The multi-destination ones ask
+// first and then call this with the coord the player picked.
+[proc,charged_jewellery_go](obj $item, int $slot, boolean $worn, coord $dest, int $wildy_max, string $name)(boolean)
+if (~charged_jewellery_allowed($wildy_max) = false) {
+    return(false);
+}
+~player_teleport_normal($dest);
+~charged_jewellery_spend($item, $slot, $worn, $name);
+return(true);

@@ -1,0 +1,60 @@
+// THE SKILLS NECKLACE - what Lvl-5 Enchant does to a dragonstone necklace.
+//
+// FOUR DESTINATIONS, NOT OLD SCHOOL'S SIX, and the two that are missing are missing for the same
+// reason: the Farming Guild and the Woodcutting Guild are both in Great Kourend, which does not
+// exist in this build - no map squares, no npcs, nothing. Offering a row that teleports nowhere is
+// worse than not offering it, so the menu is the four guilds this game actually has:
+//
+//   Fishing Guild    Hemenster, m40_52            skill_fishing/scripts/fishing_guild.rs2
+//   Mining Guild     under Falador, m47_152       ladders+stairs/scripts/ladders.rs2 (loc_1755)
+//   Crafting Guild   south of Rimmington, m45_51  skill_crafting/scripts/crafting_guild
+//   Cooking Guild    Varrock, m49_53              skill_cooking/scripts/cooking_guild.rs2
+//
+// That is worth recording because it also corrects something Claude outputs/suggestions-assessment.md
+// claimed: that this necklace "puts a Farming Guild teleport in the game". It cannot. If the point
+// is to shorten a herb run, the thing to build is an item that goes to the PATCHES, which is a
+// different item and a separate decision.
+//
+// Four destinations plus "Nowhere" is exactly ~p_choice5, which is the widest menu there is.
+//
+// WHERE THE COORDINATES COME FROM. The Fishing and Crafting Guild ones are not converted from Old
+// School's world grid - they are the exact tiles the Fishing and Crafting SKILLCAPES already
+// teleport to (skillcapes/scripts/skillcape_perks.rs2:84 and :82), and tools/sim/wearop.ts asserts
+// a player arrives at them. A coordinate this build already tests beats one I worked out.
+// The Mining and Cooking Guild ones have no such precedent - nothing in the build teleports to
+// either - so those two are converted from Old School and then checked for real in
+// tools/sim/jewellery.ts, which walks every destination in this folder.
+//
+// All four go through map_findsquare, as every other teleport in this folder does, so a tile that
+// is blocked in this build's maps lands the player beside it rather than nowhere.
+
+[opheld4,_skills_necklace]
+mes("You rub the necklace...");
+def_obj $item = last_item;
+def_int $slot = last_slot;
+p_delay(1);
+def_int $choice = ~p_choice5_header("Fishing Guild.", 1, "Mining Guild.", 2, "Crafting Guild.", 3, "Cooking Guild.", 4, "Nowhere.", 5, "Where would you like to teleport to?");
+if ($choice = 5) {
+    mes("You remain where you were.");
+    return;
+}
+@skills_necklace_teleport($item, $slot, $choice, false);
+
+// WORN: the four guilds are the Worn Equipment tab's own options (wearop1-4 in
+// general/configs/jewellery_necklaces.obj), no rub and no menu, the same shape the glory uses.
+[label,wearop1__skills_necklace] @skills_necklace_teleport(last_item, last_slot, 1, true);
+[label,wearop2__skills_necklace] @skills_necklace_teleport(last_item, last_slot, 2, true);
+[label,wearop3__skills_necklace] @skills_necklace_teleport(last_item, last_slot, 3, true);
+[label,wearop4__skills_necklace] @skills_necklace_teleport(last_item, last_slot, 4, true);
+
+[label,skills_necklace_teleport](obj $item, int $slot, int $choice, boolean $worn)
+def_coord $dest;
+switch_int ($choice) {
+    case 1 : $dest = map_findsquare(0_40_53_50_3, 0, 2, ^map_findsquare_lineofwalk); // Fishing Guild
+    case 2 : $dest = map_findsquare(0_47_152_38_28, 0, 2, ^map_findsquare_lineofwalk); // Mining Guild
+    case 3 : $dest = map_findsquare(0_45_51_53_20, 0, 2, ^map_findsquare_lineofwalk); // Crafting Guild
+    case 4 : $dest = map_findsquare(0_49_53_7_51, 0, 2, ^map_findsquare_lineofwalk); // Cooking Guild
+}
+// 30, like every other piece of dragonstone jewellery - the glory and the ring of wealth both stop
+// there (amulet_of_glory.rs2), and Old School stops this one there too.
+~charged_jewellery_go($item, $slot, $worn, $dest, 30, "Skills Necklace");

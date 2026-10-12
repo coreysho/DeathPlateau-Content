@@ -1,0 +1,64 @@
+// The six invisible slot markers the gem-jewellery window needs for jade and red topaz.
+//
+// WHY THESE EXIST. crafting_jewelry's three product strips are inventories, and clicking slot N
+// does not tell [label,craft_gold] which gem you picked - it reads the OBJ sitting in that slot
+// and asks it for its crafting_jewelry_struct (jewellery.rs2:204-213). The cache ships
+// invis_ring1..6, invis_necklace1..6 and invis_amulet1..6 for sapphire through onyx; jade and
+// topaz are slots 0 and 7, so they need two more of each.
+//
+// They are never seen. The model is the same placeholder the cache's own six use, and the strip
+// draws the real item over the top with if_setobject.
+//
+// SLOT 0 AND SLOT 7, not 7 and 8, because that is where the room is: the strips are seven slots
+// wide with slot 0 unused, and widening them to eight adds one on the right. Jade is the cheapest
+// gem of the eight so the leftmost slot is where it belongs anyway; red topaz sits between emerald
+// and ruby by value and ends up on the far right, which is the one thing about this that is
+// geometry rather than design.
+
+[invis_ring7]
+name=Jade ring
+desc=A valuable ring.
+model=minigame_start_icon_0
+2dxan=68
+param=crafting_jewelry_struct,jade_ring
+
+[invis_necklace7]
+name=Jade necklace
+desc=I wonder if this is valuable.
+model=minigame_start_icon_0
+2dyan=4
+2dxan=20
+wearpos=righthand
+param=crafting_jewelry_struct,jade_necklace
+
+[invis_amulet7]
+name=Jade amulet
+desc=It needs a string so I can wear it.
+model=minigame_start_icon_0
+2dyan=4
+2dxan=20
+param=crafting_jewelry_struct,unstrung_jade_amulet
+
+[invis_ring8]
+name=Topaz ring
+desc=A valuable ring.
+model=minigame_start_icon_0
+2dxan=68
+param=crafting_jewelry_struct,topaz_ring
+
+[invis_necklace8]
+name=Topaz necklace
+desc=I wonder if this is valuable.
+model=minigame_start_icon_0
+2dyan=4
+2dxan=20
+wearpos=righthand
+param=crafting_jewelry_struct,topaz_necklace
+
+[invis_amulet8]
+name=Topaz amulet
+desc=It needs a string so I can wear it.
+model=minigame_start_icon_0
+2dyan=4
+2dxan=20
+param=crafting_jewelry_struct,unstrung_topaz_amulet

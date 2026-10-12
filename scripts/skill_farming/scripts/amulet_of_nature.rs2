@@ -1,0 +1,97 @@
+// THE AMULET OF NATURE (11 July 2005, the Farming update) - in period, and the whole chain for it
+// was already sitting in the cache with nothing wired to it.
+//
+// WHAT WAS ALREADY HERE:
+//   magic_string                   craftable since this build had Crafting - spin magic roots at
+//                                  19 Crafting (skill_crafting/scripts/spinning/spinning.rs2)
+//   magic_strung_emerald_amulet    _unpack/377/all.obj:76345, "Emerald amulet", examine text
+//                                  "strung with the root of a Magic Tree", model and wear models
+//   nature_amulet                  _unpack/377/all.obj:76323, iop1=Rub, iop2=Wear, model
+//   the enchant                    Lvl-2 Enchant, one convertobj line (skill_magic/configs/
+//                                  magic_spells.dbrow)
+//   the patch state it reports     ~farming_inspect, which already prints every line this needs
+//
+// So this file is the two things that genuinely did not exist: stringing an emerald amulet with
+// MAGIC string instead of wool, and what Rub does.
+//
+// WHAT IT DOES, and what it deliberately does NOT. In Old School the amulet binds to one Farming
+// patch and tells you when that crop is diseased, dead or grown; rubbing it reports the patch's
+// state from anywhere. That is implemented. It gives NO yield or experience bonus in Old School
+// and gives none here either - the suggestion that raised it asked for 2-5% yield, and the reason
+// that is a separate decision rather than part of this is written up in
+// Claude outputs/suggestions-assessment.md: this build already pays +10% for magic secateurs and
+// +5% for the Farming cape, both of which are at or above Old School's own numbers, and a third
+// stacking multiplier is a balance change rather than an item.
+//
+// NOTIFICATION IS THE POINT. Nothing in this build tells a player anything about a patch they are
+// not standing on, so a herb run is "walk to all four and look". That is the tedium this removes.
+
+// ---------------------------------------------------------------------------------------------
+// Making one: magic string on an unstrung emerald amulet
+// ---------------------------------------------------------------------------------------------
+// Both halves of the use, because [opheldu,X] is looked up on each half and the engine swaps
+// last_item/last_useitem so the half carrying the trigger is always last_item - the same reasoning
+// minigames/game_trail/scripts/ornament_kit.rs2 writes out at length.
+//
+// NOT ROUTED THROUGH crafting_jewelry_struct. That struct has one `strung` field and the emerald
+// amulet already spends it on strung_emerald_amulet (the plain amulet of defence line). A second
+// field would have to be read by [label,string_amulet] for every amulet in the game to serve this
+// one, so this is its own four lines instead.
+
+[opheldu,magic_string]
+if (last_useitem = unstrung_emerald_amulet) {
+    @nature_amulet_string(last_useslot);
+}
+~displaymessage(^dm_default);
+
+// The other half of the use - wool-or-string dropped ON the amulet - cannot live here:
+// stringing.rs2 already declares [opheldu,unstrung_emerald_amulet] for the ball of wool, and a
+// duplicate trigger is a hard build error. That trigger now tests for magic_string and jumps to
+// the label below, which is why this file declares only the magic_string half.
+
+// No Crafting level of its own, as Old School has none: the 19 Crafting needed to spin magic roots
+// into magic string (skill_crafting/scripts/spinning/spinning.rs2) is the only gate there is, and
+// nobody holds magic string without having passed it.
+[label,nature_amulet_string](int $slot)
+inv_del(inv, magic_string, 1);
+inv_delslot(inv, $slot);
+inv_add(inv, magic_strung_emerald_amulet, 1);
+// Four Crafting xp, the same flat amount [label,string_amulet] pays for every other amulet.
+stat_advance(crafting, 40);
+mes("You put some magic string on your emerald amulet.");
+
+// ---------------------------------------------------------------------------------------------
+// Binding it: use the amulet on a patch
+// ---------------------------------------------------------------------------------------------
+// Dispatched from ~farming_useitem (farming_useitem.rs2), which is where every item-on-patch in
+// the skill arrives. One amulet, one patch - binding it again just moves it.
+
+[proc,nature_amulet_bind](int $patch)
+%farming_nature_patch = calc($patch + 1);
+mes("You bind the amulet to this patch.");
+// Say what it is bound to straight away, so binding is also a reading.
+~farming_inspect($patch);
+
+// ---------------------------------------------------------------------------------------------
+// Reading it: Rub, from anywhere
+// ---------------------------------------------------------------------------------------------
+
+[opheld1,nature_amulet]
+if (%farming_nature_patch = 0) {
+    mes("You rub the amulet...");
+    ~mesbox("The amulet is not bound to anything yet. Use it on a Farming patch|to bind it.");
+    return;
+}
+mes("You rub the amulet...");
+~farming_update(calc(%farming_nature_patch - 1));
+~farming_inspect(calc(%farming_nature_patch - 1));
+
+// Worn, the amulet answers the same question from the Worn Equipment tab rather than making you
+// take it off. wearop1=Check is added to the obj in _unpack/377/all.obj.
+[label,wearop1_nature_amulet]
+if (%farming_nature_patch = 0) {
+    ~mesbox("The amulet is not bound to anything yet. Use it on a Farming patch|to bind it.");
+    return;
+}
+~farming_update(calc(%farming_nature_patch - 1));
+~farming_inspect(calc(%farming_nature_patch - 1));

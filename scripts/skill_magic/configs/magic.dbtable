@@ -16,7 +16,12 @@ column=loc_type,loc
 column=convertobj,obj,namedobj,seq,spotanim,synth,LIST
 column=tele_coord,coord
 column=additional_reqmessage,string
-column=specificobj_reqmessage,obj,string
+// LIST added 2026-10-12. ~magic_spell_specificobj_reqmessage (skill_magic/scripts/magic.rs2) has
+// always walked this column with db_getfieldcount and returned on the first obj that matches, so it
+// was written for several rows from the start - the column just never said so, and no spell had
+// needed a second one until Lvl-2 and Lvl-3 Enchant each picked up a second unstrung amulet (the
+// jade and topaz ones). One row per spell still reads exactly as before.
+column=specificobj_reqmessage,obj,string,LIST
 column=stat_change,stat,int,int,LIST
 column=freeze_time,int
 column=anim,seq

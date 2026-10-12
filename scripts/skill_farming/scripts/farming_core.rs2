@@ -263,7 +263,25 @@ if ($stage >= $stages & $condition = ^farming_healthy) {
 ~farming_set_state($patch, ~farming_encode($seed, $stage, $condition, $watered));
 
 // Empty patches slowly go back to weeds: state 3 is bare soil, 2/1/0 are one, two and three weeds.
+//
+// AUTOWEED (2026-10-12) is the first test, and it is the whole feature. Past
+// ^farming_autoweed_level the patch is brought to bare soil and the clock is reset, so weeds never
+// accumulate AND any that were already there when the player crossed the level are gone the next
+// time ~farming_update touches the patch. Nothing else in the skill has to know: every other proc
+// reads the state through ~farming_get_state, and raking is the only thing that writes it.
+//
+// Rake experience is not lost in any way that matters - it is 4xp a swing, and a player at 65
+// Farming is earning that in a fraction of a second from anything else. Raking a patch that is
+// already bare soil was always a no-op (~farming_rake stops at ^farming_state_weeded), so the rake
+// does not break; it simply has nothing to do.
 [proc,farming_regrow_weeds](int $patch, int $now, int $last)
+if (stat_base(farming) >= ^farming_autoweed_level) {
+    if (~farming_get_state($patch) ! ^farming_state_weeded) {
+        ~farming_set_state($patch, ^farming_state_weeded);
+    }
+    ~farming_set_time($patch, $now);
+    return;
+}
 def_int $state = ~farming_get_state($patch);
 if ($state > ^farming_state_weeded) {
     // Left over from a crop that was cleared without going through farming_clear_patch.

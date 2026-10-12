@@ -1,0 +1,330 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[skills_necklace_4]
+name=Skills necklace(4)
+desc=This will help me travel.
+model=obj_skills_necklace_4
+manwear=obj_skills_necklace_4_manwear,0
+womanwear=obj_skills_necklace_4_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=13331
+weight=10g
+cost=20200
+members=yes
+iop2=Wear
+iop4=Rub
+// Four teleports to the skill guilds this build HAS - see general/scripts/enchanted_jewellry/
+// skills_necklace.rs2 for why there are four and not Old School's six.
+// No combat bonuses: Old School's skills necklace has none either.
+category=skills_necklace
+param=next_obj_stage,skills_necklace_3
+param=charges,4
+wearop1=Fishing Guild
+wearop2=Mining Guild
+wearop3=Crafting Guild
+wearop4=Cooking Guild
+
+[skills_necklace_3]
+name=Skills necklace(3)
+desc=This will help me travel.
+model=obj_skills_necklace_3
+manwear=obj_skills_necklace_3_manwear,0
+womanwear=obj_skills_necklace_3_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=13331
+weight=10g
+cost=20200
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Four teleports to the skill guilds this build HAS - see general/scripts/enchanted_jewellry/
+// skills_necklace.rs2 for why there are four and not Old School's six.
+// No combat bonuses: Old School's skills necklace has none either.
+category=skills_necklace
+param=next_obj_stage,skills_necklace_2
+param=charges,3
+wearop1=Fishing Guild
+wearop2=Mining Guild
+wearop3=Crafting Guild
+wearop4=Cooking Guild
+
+[skills_necklace_2]
+name=Skills necklace(2)
+desc=This will help me travel.
+model=obj_skills_necklace_2
+manwear=obj_skills_necklace_2_manwear,0
+womanwear=obj_skills_necklace_2_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=13331
+weight=10g
+cost=20200
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Four teleports to the skill guilds this build HAS - see general/scripts/enchanted_jewellry/
+// skills_necklace.rs2 for why there are four and not Old School's six.
+// No combat bonuses: Old School's skills necklace has none either.
+category=skills_necklace
+param=next_obj_stage,skills_necklace_1
+param=charges,2
+wearop1=Fishing Guild
+wearop2=Mining Guild
+wearop3=Crafting Guild
+wearop4=Cooking Guild
+
+[skills_necklace_1]
+name=Skills necklace(1)
+desc=This will help me travel.
+model=obj_skills_necklace_1
+manwear=obj_skills_necklace_1_manwear,0
+womanwear=obj_skills_necklace_1_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=13331
+weight=10g
+cost=20200
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Four teleports to the skill guilds this build HAS - see general/scripts/enchanted_jewellry/
+// skills_necklace.rs2 for why there are four and not Old School's six.
+// No combat bonuses: Old School's skills necklace has none either.
+category=skills_necklace
+param=next_obj_stage,null
+param=charges,1
+wearop1=Fishing Guild
+wearop2=Mining Guild
+wearop3=Crafting Guild
+wearop4=Cooking Guild
+
+[digsite_pendant_5]
+name=Digsite pendant (5)
+desc=An enchanted necklace.
+model=obj_digsite_pendant_5
+manwear=obj_digsite_pendant_5_manwear,0
+womanwear=obj_digsite_pendant_5_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=30817
+weight=10g
+cost=2400
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// One destination, because the Dig Site is the only one of Old School's three that exists here.
+// It therefore needs no menu, and the worn option names the place outright.
+category=digsite_pendant
+param=next_obj_stage,digsite_pendant_4
+param=charges,5
+wearop1=Digsite
+
+[digsite_pendant_4]
+name=Digsite pendant (4)
+desc=An enchanted necklace.
+model=obj_digsite_pendant_4
+manwear=obj_digsite_pendant_4_manwear,0
+womanwear=obj_digsite_pendant_4_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=30817
+weight=10g
+cost=2400
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// One destination, because the Dig Site is the only one of Old School's three that exists here.
+// It therefore needs no menu, and the worn option names the place outright.
+category=digsite_pendant
+param=next_obj_stage,digsite_pendant_3
+param=charges,4
+wearop1=Digsite
+
+[digsite_pendant_3]
+name=Digsite pendant (3)
+desc=An enchanted necklace.
+model=obj_digsite_pendant_3
+manwear=obj_digsite_pendant_3_manwear,0
+womanwear=obj_digsite_pendant_3_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=30817
+weight=10g
+cost=2400
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// One destination, because the Dig Site is the only one of Old School's three that exists here.
+// It therefore needs no menu, and the worn option names the place outright.
+category=digsite_pendant
+param=next_obj_stage,digsite_pendant_2
+param=charges,3
+wearop1=Digsite
+
+[digsite_pendant_2]
+name=Digsite pendant (2)
+desc=An enchanted necklace.
+model=obj_digsite_pendant_2
+manwear=obj_digsite_pendant_2_manwear,0
+womanwear=obj_digsite_pendant_2_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=30817
+weight=10g
+cost=2400
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// One destination, because the Dig Site is the only one of Old School's three that exists here.
+// It therefore needs no menu, and the worn option names the place outright.
+category=digsite_pendant
+param=next_obj_stage,digsite_pendant_1
+param=charges,2
+wearop1=Digsite
+
+[digsite_pendant_1]
+name=Digsite pendant (1)
+desc=An enchanted necklace.
+model=obj_digsite_pendant_1
+manwear=obj_digsite_pendant_1_manwear,0
+womanwear=obj_digsite_pendant_1_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=30817
+weight=10g
+cost=2400
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// One destination, because the Dig Site is the only one of Old School's three that exists here.
+// It therefore needs no menu, and the worn option names the place outright.
+category=digsite_pendant
+param=next_obj_stage,null
+param=charges,1
+wearop1=Digsite
+
+[phoenix_necklace]
+name=Phoenix necklace
+desc=In case of emergency, wear necklace.
+model=obj_phoenix_necklace
+manwear=obj_phoenix_necklace_manwear,0
+womanwear=obj_phoenix_necklace_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=10570
+recol1d=28539
+weight=10g
+cost=4050
+members=yes
+iop2=Wear
+// No category and no params: one item, one use, and general/scripts/enchanted_jewellry/
+// phoenix_necklace.rs2 triggers on the obj directly. Old School gives it no combat bonuses.
+
+[amulet_of_eternal_glory]
+name=Amulet of eternal glory
+desc=A dragonstone amulet with an unlimited supply of magic charges.
+model=obj_amulet_of_eternal_glory
+manwear=obj_amulet_of_eternal_glory_manwear,0
+womanwear=obj_amulet_of_eternal_glory_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32767
+recol1d=13331
+recol2s=13537
+recol2d=32767
+recol3s=8321
+recol3d=32767
+recol4s=32736
+recol4d=2114
+weight=10g
+cost=17625
+members=yes
+iop2=Wear
+iop4=Rub
+// A glory whose charge counter is gone. Stats are [amulet_of_glory_4]'s, copied rather than
+// invented - Old School's eternal glory is stat-identical to a charged glory and differs only in
+// never running down. It deliberately does NOT carry category_557: that category is the four
+// charged amulets, whose worn options decrement, and this one must not.
+category=amulet_of_eternal_glory
+param=stabattack,10
+param=slashattack,10
+param=crushattack,10
+param=magicattack,10
+param=rangeattack,10
+param=stabdefence,10
+param=slashdefence,10
+param=crushdefence,10
+param=magicdefence,10
+param=rangedefence,10
+param=strengthbonus,8
+param=prayerbonus,3
+wearop1=Edgeville
+wearop2=Karamja
+wearop3=Draynor Village
+wearop4=Al Kharid
