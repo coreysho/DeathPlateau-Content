@@ -89,11 +89,13 @@ p_delay(0);
 // bin into a pot. The pot is the point - "Bonemeal" IS a pot of it, which is why the wiki's
 // inventory for a trip is nine buckets, nine pots and nine bones.
 [oplocu,ahoy_grinder_loader]
-if (oc_category(last_useitem) ! bones) {
+// last_useitem is read into $bone FIRST because p_arrivedelay corrupts the pointer.
+def_obj $bone = last_useitem;
+if (oc_category($bone) ! bones) {
     ~displaymessage(^dm_default);
     return;
 }
-if (enum(obj, namedobj, bone_to_bonemeal, last_useitem) = null) {
+if (enum(obj, namedobj, bone_to_bonemeal, $bone) = null) {
     ~mesbox("The grinder cannot do anything with those.");
     return;
 }
@@ -102,8 +104,8 @@ if (%ahoy_grinder_status ! ^ecto_grinder_empty) {
     return;
 }
 p_arrivedelay;
-inv_del(inv, last_useitem, 1);
-%ecto_grinder_bone = last_useitem;
+inv_del(inv, $bone, 1);
+%ecto_grinder_bone = $bone;
 %ahoy_grinder_status = ^ecto_grinder_loaded;
 anim(human_pickuptable, 0);
 mes("You put the bones in the grinder.");
