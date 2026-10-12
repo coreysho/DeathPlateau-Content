@@ -1,7 +1,7 @@
 [oplocu,desert_cactus_full]
 def_obj $item = last_useitem;
 
-if ($item ! knife & oc_param($item, slashattack_anim) = human_unarmedpunch) {
+if (~can_slash_with($item) = false) {
     ~displaymessage(^dm_default);
     return;
 } else {
@@ -11,7 +11,7 @@ if ($item ! knife & oc_param($item, slashattack_anim) = human_unarmedpunch) {
 [oplocu,desert_cactus_empty]
 def_obj $item = last_useitem;
 
-if ($item = knife | oc_param($item, slashattack_anim) ! human_unarmedpunch) {
+if (~can_slash_with($item) = true) {
     mes("This cactus is totally dry and has no fluid.");
     return;
 }

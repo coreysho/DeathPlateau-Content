@@ -1,3 +1,5 @@
+// ~slash_checker looks at the weapon hand AND the backpack (general/scripts/slash_checker.rs2),
+// so the one-click Slash no longer needs the blade equipped.
 [oploc1,bigweb_slashable]
 def_obj $item = ~slash_checker;
 
@@ -9,7 +11,7 @@ if ($item = null) {
 
 [oplocu,bigweb_slashable]
 def_obj $item = last_useitem;
-if (oc_param($item, slashattack_anim) = human_unarmedpunch & $item ! knife) {
+if (~can_slash_with($item) = false) {
     mes("Only a sharp blade can cut through this sticky web.");
     return;
 }

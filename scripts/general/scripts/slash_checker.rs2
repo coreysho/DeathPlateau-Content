@@ -2,13 +2,50 @@
 // Following OSRS, always return any equipped weapon with a slash animation first.
 if (inv_getobj(worn, ^wearpos_rhand) ! null) {
     def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
-    if (oc_param($weapon, slashattack_anim) ! human_unarmedpunch) {
+    if (~can_slash_with($weapon) = true) {
         return ($weapon);
     }
 }
 
 // Post June 14th 2023: https://oldschool.runescape.wiki/w/Update:Ruinous_Powers_Beta_v2
 // Prior to this, weapon was required to be equipped to slash (noted webs, assumed any instance fo this.)
+//
+// THE BACKPACK, which is what that update changed and what this loop is. Before it, the one-click
+// Slash on a web looked at the weapon hand and nothing else, so a player carrying a knife or a
+// spare scimitar was told "only a sharp blade can cut through this sticky web" while holding one -
+// and the only way through was to equip the blade, slash, and equip the shield again. Scanning the
+// pack costs 28 oc_param reads on a click that is already doing an animation and a loc change.
+//
+// First match wins, by slot order. Nothing downstream cares which blade it is: the 1-in-2 cut
+// chance in general_use/scripts/web.rs2 is the same for a bronze dagger and a godsword, and the
+// only thing the returned obj decides is which slash animation plays.
+def_obj $item;
+def_int $slot = 0;
+while ($slot < inv_size(inv)) {
+    $item = inv_getobj(inv, $slot);
+    if ($item ! null) {
+        if (~can_slash_with($item) = true) {
+            return ($item);
+        }
+    }
+    $slot = calc($slot + 1);
+}
 
 // Nothing functional found, return null.
 return (null);
+
+// ONE RULE for "can this item cut", shared by the worn check and the pack scan above and by the
+// use-item-on-web and use-item-on-cactus paths, each of which carried its own copy of it before.
+//
+// THE KNIFE IS NAMED because it cannot be recognised from its params: a knife has no slash attack,
+// so its slashattack_anim is human_unarmedpunch - the very value that marks an item as unable to
+// slash - and it cuts webs and cacti regardless. Its animation is handled the same way, at the
+// point of use, because human_knife_slash is not reachable through oc_param either.
+[proc,can_slash_with](obj $item)(boolean)
+if ($item = knife) {
+    return (true);
+}
+if (oc_param($item, slashattack_anim) ! human_unarmedpunch) {
+    return (true);
+}
+return (false);
