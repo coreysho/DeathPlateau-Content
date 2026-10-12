@@ -12,6 +12,17 @@
 // put it on the shelf for a single token. An item whose gp value is not also a sensible token price
 // needs its own obj config - which is what the custom rewards will have.
 //
+// THE SHELF SELLS STATUS, NOT POWER (Corey, 12 October 2026): nothing that changes a combat number,
+// nothing that can be pointed at another player. The five outfit pieces carry no bonuses at all -
+// not zeroes, nothing - and the cane takes your weapon hand, which is the strongest proof of it.
+//
+// The Scroll of imbuing is the one NAMED exception to that rule, kept at Corey's word. It passes a
+// narrow test the rest of the catalogue does not: it is ALREADY A DROP (on-task kills, and far more
+// often superiors), so this shelf is a second route to a thing that exists rather than a new source;
+// it is untradeable and so is everything it makes, so no shop price becomes a market price; and it
+// is slayer content bought with a slayer currency. Anything failing any one of those three is still
+// out - which is why imbuing at the counter is not here, though it is the same effect.
+//
 // size is 8 rather than 1 so that adding a row is one line and not a resize.
 //
 // allstock=no MATTERS EVEN WITH ONE ROW: with allstock=yes a shop will buy ANY item, and this one
@@ -25,3 +36,8 @@ restock=yes
 stackall=no
 allstock=no
 stock1=slayer_imbue_scroll,1,100
+stock2=undertaker_hat,1,100
+stock3=undertaker_coat,1,100
+stock4=undertaker_trousers,1,100
+stock5=undertaker_boots,1,100
+stock6=undertaker_cane,1,100

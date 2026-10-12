@@ -1,0 +1,157 @@
+// THE UNDERTAKER'S OUTFIT (Corey, 2026-12 October 2026) - five pieces, bought with Death tokens,
+// worth nothing to anybody but the person wearing them.
+//
+// THE SHOP SELLS STATUS, NOT POWER. Corey's rule, 12 October: nothing that changes a combat number,
+// nothing that can be used against another player. So every piece below carries NO param= bonuses
+// at all - not zeroes, nothing - and `category` names them as clothing rather than armour. A piece
+// that one day wants a stat has to be argued for, not typed in.
+//
+// THE MESHES ARE THE NPC'S OWN, repainted by tools/models/gendeathtoken.py: the same black the
+// Undertaker wears, with the same gold band on the hat. Three meshes per piece, because a worn item
+// needs all three - the item's own mesh for the pack slot and the floor, a *_manwear and a
+// *_womanwear - and the generator tints each one at the SAME light scale, or the same hat would be
+// two different blacks depending on who put it on.
+//
+// THE CAMERAS ARE THE SOURCE ITEMS' OWN, unchanged. A repaint is the same mesh, so it cannot need a
+// different camera from the thing it repaints; copying them is not laziness, it is the only answer
+// that can be right. (The source items' recol1s/recol1d lines are NOT copied: those map a source
+// colour that the repaint no longer contains, so they would be a no-op pretending to be a decision.)
+//
+// ---------------------------------------------------------------------------------------------
+// WHY EVERY PIECE CARRIES destroy_death AND pvp_token_bounty
+// ---------------------------------------------------------------------------------------------
+// Corey asked what you get for killing someone wearing this in the Wilderness. The answer, before
+// this file existed, was NOTHING: BOTH_DROPSLOT in the engine sends tradeables to the killer and
+// untradeables back to the victim, so the hat landed at the dead player's feet flagged to them and
+// they walked back for it. A cosmetic that cannot be lost is a taunt with no stake behind it, and
+// with no Wilderness Slayer master this shop is the whole of the wilderness identity.
+//
+// So: die in the Wilderness wearing a piece and it is DESTROYED, and whoever killed you is paid a
+// quarter of its price in Death tokens (player/scripts/death.rs2).
+//
+// DESTROYED RATHER THAN DROPPED, and this is the part that matters. Corey: "if we allow them to
+// pick it up again, that could bring in boosting... someone has the item, gets killed by their
+// friend for 50 tokens, then picks it up and they kill them again, over and over." It does not even
+// need a friend; an alt does it alone. Dropping the piece back makes the cycle free, and a free
+// cycle that pays 50 tokens is a token printer with a kill animation. Destroying it makes one cycle
+// cost 200 and pay 50 - the pair burns 150 tokens a turn.
+//
+//   THE INVARIANT: pvp_token_bounty MUST BE STRICTLY LESS THAN cost.
+//   Tokens are untradeable, so paying a killer is the ONLY route from one account to another. At a
+//   quarter that route loses three tokens for every one it moves. At or above the price it prints.
+//   tools/slayer_battery.py fails on bounty >= cost, so this cannot be typed wrong quietly.
+//
+// destroy_death DOES NOT DESTROY ANYTHING - the name is aspirational. It is read in three places and
+// all three mean "not eligible to be one of the items you keep". It is here so a piece can never be
+// one of the three an unskulled player keeps and PROTECT ITEM CAN NEVER SAVE ONE: without it the
+// stake is conditional, and conditional is where the next exploit lives. It also makes the Items
+// Kept on Death screen tell the truth. The actual destroying is death.rs2's job.
+//
+// cost IS THE TOKEN PRICE. One shop, one multiplier (~calc_shop_value ends in scale($mult, 1000,
+// $cost)), so an item's gp cost IS what it costs in tokens at the Undertaker's 1000 per mille. The
+// same pattern Grace's graceful pieces use.
+
+[undertaker_hat]
+name=Undertaker's hat
+desc=Tall, black, and a band of gold for the one who is paying.
+model=obj_undertaker_hat
+manwear=npc_undertaker_hat,0
+womanwear=obj_undertaker_hat_womanwear,0
+manhead=npc_undertaker_hat_head
+womanhead=obj_undertaker_hat_womanhead
+wearpos=hat
+2dzoom=800
+2dxan=152
+2dyan=156
+2dxof=5
+2dyof=-10
+weight=453g
+cost=200
+iop2=Wear
+tradeable=no
+category=clothing_hat
+param=destroy_death,^true
+param=pvp_token_bounty,50
+
+[undertaker_coat]
+name=Undertaker's coat
+desc=Cut for standing still in, at the edge of a crowd.
+model=obj_undertaker_coat
+manwear=npc_undertaker_coat,0
+manwear2=npc_undertaker_coat2
+womanwear=obj_undertaker_coat_womanwear,0
+womanwear2=obj_undertaker_coat_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1373
+2dxan=452
+2dxof=-1
+2dyof=7
+weight=1000g
+cost=200
+iop2=Wear
+tradeable=no
+category=clothing_torso
+param=destroy_death,^true
+param=pvp_token_bounty,50
+
+[undertaker_trousers]
+name=Undertaker's trousers
+desc=Pressed. He has standards, whatever else he has.
+model=obj_undertaker_legs
+manwear=npc_undertaker_legs,0
+womanwear=obj_undertaker_legs_womanwear,0
+wearpos=legs
+2dzoom=1827
+2dxan=444
+2dyof=-1
+weight=1000g
+cost=200
+iop2=Wear
+tradeable=no
+category=clothing_legs
+param=destroy_death,^true
+param=pvp_token_bounty,50
+
+[undertaker_boots]
+name=Undertaker's boots
+desc=Quiet ones. It is a quiet profession.
+model=obj_undertaker_boots
+manwear=npc_undertaker_boots,0
+womanwear=obj_undertaker_boots_womanwear,0
+wearpos=feet
+2dxof=1
+2dyof=-6
+2dzoom=770
+2dyan=160
+2dxan=152
+weight=12oz
+cost=200
+iop2=Wear
+tradeable=no
+category=clothing_feet
+param=destroy_death,^true
+param=pvp_token_bounty,50
+
+// RIGHTHAND, like the cane it is repainted from, so wearing it costs you your weapon. That is not
+// an oversight to fix later - it is the whole joke, and it is the strongest proof the set sells no
+// power: the full outfit is worn by somebody who has chosen to carry nothing that fights.
+[undertaker_cane]
+name=Undertaker's cane
+desc=For leaning on while other people do the digging.
+model=obj_undertaker_cane
+manwear=npc_undertaker_cane,0
+womanwear=obj_undertaker_cane_womanwear,2
+wearpos=righthand
+2dzoom=868
+2dxan=54
+2dyan=174
+2dzan=408
+2dyof=-10
+weight=1814g
+cost=200
+iop2=Wear
+tradeable=no
+category=clothing_weapon
+param=destroy_death,^true
+param=pvp_token_bounty,50
