@@ -90,7 +90,7 @@ writing the old bytes back. Where it carries one priority for the whole model, t
   python3 tools/wearpriority.py                # report
   python3 tools/wearpriority.py --apply
 """
-import argparse, glob, os, sys
+import argparse, glob, os, re, sys
 
 # slot -> the bucket that sorts it against the body
 RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10}
@@ -98,7 +98,52 @@ RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10}
 # The default kit's own feet, which are not worn items and so appear in no .obj: man and woman,
 # basic and elf boots (all.idk's man_feet_* and woman_feet_*). They move with the boots because a
 # barefoot player stands under the same cape.
-KIT_FEET = ('idk_42', 'idk_43', 'idk_79', 'idk_80')
+# THE DEFAULT KIT'S OWN TORSO, LEGS AND FEET, which are not worn items and appear in no .obj, so
+# worn_models() never sees them. They need the same answer for the same reason: a player wearing
+# only a cape has no armour in those slots, so what the cape sorts against is the bare body - and a
+# bare body in a fixed bucket is painted over the cape exactly as a boot was.
+#
+# SOME OF THEM CAME ALONG BY ACCIDENT AND THE REST DID NOT, which is the bug this fixes. The kit's
+# meshes are shared with real items - "man torso" is the priest gown's model, "man legs" the
+# mime's - so the slots above moved whichever kit options happen to be an item too and left the
+# other 23 behind. A player whose character uses one of those still sees his own back through his
+# cape, which is exactly what was reported after the pass that looked clean on the default kit.
+#
+# HAIR AND JAW STAY AT 6 ON PURPOSE: the head is above the cape's collar and never sorts against
+# it, and 6 is where both the 377 cache and the OSRS imports put it.
+KIT_TYPES = ('torso', 'legs', 'feet')
+
+
+def kit_models(content):
+    """{model path: slot} for every kit option whose body part a cape has to sort against."""
+    out, cur, kits = {}, None, {}
+    idk = os.path.join(content, 'scripts', '_unpack', '377', 'all.idk')
+    if not os.path.exists(idk):
+        return out
+    for line in open(idk, encoding='utf-8', errors='replace'):
+        s = line.split('//')[0].strip()
+        m = re.match(r'^\[([a-z0-9_]+)\]$', s)
+        if m:
+            cur = m.group(1)
+            kits[cur] = {}
+        elif cur and '=' in s:
+            k, v = s.split('=', 1)
+            kits[cur].setdefault(k.strip(), v.strip())
+    for name, d in kits.items():
+        kind = d.get('type', '')
+        slot = next((k for k in KIT_TYPES if kind.endswith(k)), None)
+        if not slot:
+            continue
+        for key in ('model1', 'model2', 'model3', 'model4'):
+            model = d.get(key)
+            if not model:
+                continue
+            for sub in ('idk', 'obj'):
+                mp = os.path.join(content, 'models', sub, model + '.ob2')
+                if os.path.exists(mp):
+                    out[mp] = slot
+                    break
+    return out
 PER_FACE = 255
 DEPTH_SORTED = (10, 11)
 
@@ -183,13 +228,9 @@ def main():
 
     slots = a.slot or sorted(RULES)
     models = worn_models(a.content)
-    if 'feet' in slots:
-        for name in KIT_FEET:
-            for sub in ('idk', 'obj'):
-                mp = os.path.join(a.content, 'models', sub, name + '.ob2')
-                if os.path.exists(mp):
-                    models[mp] = ('feet', {name})
-                    break
+    for mp, slot in kit_models(a.content).items():
+        if slot in slots:
+            models.setdefault(mp, (slot, {'the default kit'}))
     counts = {}
     for path, (slot, names) in sorted(models.items()):
         if slot not in slots:
