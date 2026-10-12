@@ -698,6 +698,7 @@ data=entries,collection_log_graceful
 data=entries,collection_log_mage_arena
 data=entries,collection_log_rare_drop_table
 data=entries,collection_log_random_events
+data=entries,collection_log_death_tokens
 data=entries,collection_log_slayer
 data=items,bosspet_tzrek_jad_item
 data=items,bosspet_kril_item
@@ -808,6 +809,13 @@ data=items,macro_prince_torso
 data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
+data=items,undertaker_hat
+data=items,undertaker_coat
+data=items,undertaker_trousers
+data=items,undertaker_boots
+data=items,undertaker_cane
+data=items,undertaker_cape
+data=items,gravedigger_kit
 data=items,abyssal_head
 data=items,abyssal_whip
 data=items,black_mask
@@ -1745,6 +1753,18 @@ data=items,macro_prince_torso
 data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
+
+// The Undertaker: 7 items
+[collection_log_death_tokens]
+table=collection_log_entry
+data=name,"The Undertaker"
+data=items,undertaker_hat
+data=items,undertaker_coat
+data=items,undertaker_trousers
+data=items,undertaker_boots
+data=items,undertaker_cane
+data=items,undertaker_cape
+data=items,gravedigger_kit
 
 // Slayer: 10 items
 [collection_log_slayer]
