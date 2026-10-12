@@ -174,3 +174,30 @@ param=crush_sound,staff_hit
 param=defend_anim,human_staff_block
 param=destroy_death,^true
 param=pvp_token_bounty,50
+
+// THE CAPE (12 October 2026) - 400 tokens, and NOT one of the four that pay the set bonus.
+//
+// The bonus is the hat, coat, trousers and boots: the pieces you can fight in. A cape is pure look,
+// which is also why it is the heaviest tint of the set - a cape is a big flat area and anything
+// lighter than this reads as grey rather than black.
+//
+// It carries the same stake as the rest: destroy_death so it can never be one of the three an
+// unskulled player keeps, and a bounty of a quarter its price for whoever kills you wearing it.
+[undertaker_cape]
+name=Undertaker's cape
+desc=Long enough to be dramatic, black enough to be practical.
+model=obj_undertaker_cape
+manwear=obj_undertaker_cape_manwear,0
+womanwear=obj_undertaker_cape_womanwear,0
+wearpos=back
+2dzoom=1340
+2dxan=512
+2dyan=0
+2dyof=5
+weight=453g
+cost=400
+iop2=Wear
+tradeable=no
+category=clothing_cape
+param=destroy_death,^true
+param=pvp_token_bounty,100
