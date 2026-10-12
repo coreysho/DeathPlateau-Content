@@ -1,0 +1,34 @@
+// Destination id -> the tile you arrive on. See configs/farm_teleport.constant for where these
+// numbers come from and what re-checks them; the comment on each line is the site, the absolute
+// (x,z) the literal encodes, and the farming patch indices that arrival serves.
+
+[farm_teleport_coords]
+inputtype=int
+outputtype=coord
+val=^farm_tele_fally_allotment,0_47_51_46_45          // Falador allotment  (3054,3309)  patches 0,1,12,16
+val=^farm_tele_catherby_allotment,0_43_54_59_7        // Catherby allotment  (2811,3463)  patches 2,3,13,17
+val=^farm_tele_ardougne_allotment,0_41_52_44_46       // Ardougne allotment  (2668,3374)  patches 4,5,14,18
+val=^farm_tele_phasmatys_allotment,0_56_55_17_7       // Port Phasmatys allotment  (3601,3527)  patches 6,7,15,19
+val=^farm_tele_lumbridge_hops,0_50_51_26_48           // Lumbridge hops  (3226,3312)  patch 10
+val=^farm_tele_yanille_hops,0_40_48_14_35             // Yanille hops  (2574,3107)  patch 8
+val=^farm_tele_entrana_hops,0_43_52_57_11             // Entrana hops  (2809,3339)  patch 9
+val=^farm_tele_seers_hops,0_41_55_40_9                // Seers' Village hops  (2664,3529)  patch 11
+val=^farm_tele_lumbridge_tree,0_49_50_55_29           // Lumbridge tree  (3191,3229)  patch 27
+val=^farm_tele_fally_tree,0_46_52_58_43               // Falador tree  (3002,3371)  patch 25
+val=^farm_tele_taverley_tree,0_45_53_54_44            // Taverley tree  (2934,3436)  patch 24
+val=^farm_tele_varrock_tree,0_50_54_27_1              // Varrock tree  (3227,3457)  patch 26
+val=^farm_tele_gnome_village_fruit,0_38_49_56_42      // Tree Gnome Village fruit tree  (2488,3178)  patch 29
+val=^farm_tele_gnome_stronghold_fruit,0_38_53_42_52   // Tree Gnome Stronghold fruit tree  (2474,3444)  patch 28
+val=^farm_tele_brimhaven_fruit,0_43_50_11_11          // Brimhaven fruit tree  (2763,3211)  patch 30
+val=^farm_tele_catherby_fruit,0_44_53_43_40           // Catherby fruit tree  (2859,3432)  patch 31
+val=^farm_tele_rimmington_bush,0_45_50_59_20          // Rimmington bush  (2939,3220)  patch 21
+val=^farm_tele_ardougne_bush,0_40_50_56_24            // Ardougne bush  (2616,3224)  patch 23
+val=^farm_tele_varrock_bush,0_49_52_44_29             // Varrock bush  (3180,3357)  patch 20
+val=^farm_tele_etceteria_bush,0_40_60_30_22           // Etceteria bush  (2590,3862)  patch 22
+val=^farm_tele_portsarim_spirit,0_47_50_50_56         // Port Sarim spirit tree  (3058,3256)  patch 32
+val=^farm_tele_brimhaven_spirit,0_43_50_48_2          // Brimhaven spirit tree  (2800,3202)  patch 34
+val=^farm_tele_etceteria_spirit,0_40_60_51_16         // Etceteria spirit tree  (2611,3856)  patch 33
+val=^farm_tele_alkharid_cactus,0_51_50_50_1           // Al Kharid cactus  (3314,3201)  patch 36
+val=^farm_tele_taibwo_calquat,0_43_48_42_27           // Tai Bwo Wannai calquat  (2794,3099)  patch 35
+val=^farm_tele_mortmyre_mushroom,0_53_54_58_15        // Mort Myre mushroom  (3450,3471)  patch 37
+val=^farm_tele_draynor_belladonna,0_48_52_13_26       // Draynor Manor belladonna  (3085,3354)  patch 38

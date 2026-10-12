@@ -1,0 +1,61 @@
+// THE FARM TELEPORT'S DESTINATIONS (12 October, Corey: "do the farming ring, add it to the
+// explorers ring 4"). Suggestion #9 on the list was "a farming ring that tele's to all patches";
+// rather than mint another ring, the effect goes on an item that already exists and already
+// advertises a Teleport it has never had - Explorer's ring 4 (general/configs/diary_rewards.obj).
+//
+// ONE DESTINATION PER SITE, NOT PER PATCH. There are 39 growable patches but only 27 places to
+// stand: the four big farms each hold two allotments, a flower patch and a herb patch within a
+// few tiles of each other, so one arrival serves all four. 43 menu entries would have been
+// unusable; 27 fit a two- or three-click menu.
+//
+// THE COORDS ARE MEASURED, NOT CHOSEN. Every one is the tile that minimises the longest walk to
+// its site's patches, out of the tiles the engine's own collision map says a player can stand on
+// and that are joined to at least 200 other tiles (so never a one-tile island behind a fence).
+// engine/tools/sim/farmtele.ts is what measured them and what re-checks them: it asserts each
+// arrival is standable, is reachable, and is within ^farm_tele_max_walk of every patch at its
+// site. If a map import moves a patch, that sim fails rather than the teleport quietly landing
+// someone in a hedge.
+
+^farm_tele_fally_allotment = 1
+^farm_tele_catherby_allotment = 2
+^farm_tele_ardougne_allotment = 3
+^farm_tele_phasmatys_allotment = 4
+^farm_tele_lumbridge_hops = 5
+^farm_tele_yanille_hops = 6
+^farm_tele_entrana_hops = 7
+^farm_tele_seers_hops = 8
+^farm_tele_lumbridge_tree = 9
+^farm_tele_fally_tree = 10
+^farm_tele_taverley_tree = 11
+^farm_tele_varrock_tree = 12
+^farm_tele_gnome_village_fruit = 13
+^farm_tele_gnome_stronghold_fruit = 14
+^farm_tele_brimhaven_fruit = 15
+^farm_tele_catherby_fruit = 16
+^farm_tele_rimmington_bush = 17
+^farm_tele_ardougne_bush = 18
+^farm_tele_varrock_bush = 19
+^farm_tele_etceteria_bush = 20
+^farm_tele_portsarim_spirit = 21
+^farm_tele_brimhaven_spirit = 22
+^farm_tele_etceteria_spirit = 23
+^farm_tele_alkharid_cactus = 24
+^farm_tele_taibwo_calquat = 25
+^farm_tele_mortmyre_mushroom = 26
+^farm_tele_draynor_belladonna = 27
+
+^farm_tele_count = 27
+
+// 0 is "Nowhere." in every leaf menu, so it is a destination id that must never resolve to a coord.
+^farm_tele_nowhere = 0
+
+// THE WILDERNESS CEILING. 30, which is what this build stops dragonstone jewellery at
+// (~charged_jewellery_allowed's caller in amulet_of_glory.rs2) and the natural number for a
+// convenience teleport: deep Wilderness keeps its one way out.
+^farm_tele_wildy_max = 30
+
+// What farmtele.ts holds the arrivals to. 4 is the worst case the measurement actually found - the
+// four big farms, whose patches are spread over a dozen tiles - and every other site comes in at
+// 1 to 3. Raising this number is how a sloppier arrival gets in, so it is here rather than in the
+// sim, where it would look like a detail of the test instead of a promise about the item.
+^farm_tele_max_walk = 4
