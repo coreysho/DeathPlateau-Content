@@ -90,7 +90,7 @@ if (db_getfieldcount($effect_data, consume_table:healenergy) > 0) {
 if ($sound = null) {
     sound_synth(liquid, 1, 0);
 } else {
-    sound_synth($sound, 0, 0);
+    sound_synth($sound, 1, 0);
 }
 
 // THE SECOND LINE IS DELAYED, THE PLAYER IS NOT. message_delay is a two-tick gap between the two

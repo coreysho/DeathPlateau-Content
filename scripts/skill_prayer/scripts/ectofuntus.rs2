@@ -79,7 +79,7 @@ if (inv_total(inv, bucket_empty) > 1) {
 inv_del(inv, bucket_empty, 1);
 inv_add(inv, bucket_ectoplasm, 1);
 anim(human_pickuptable, 0);
-sound_synth(tap_fill, 1, 0);
+sound_synth(fill_ectoplasm, 1, 0);
 mes("You fill the bucket with slime.");
 p_delay(0);
 
@@ -183,7 +183,7 @@ inv_del(inv, bucket_ectoplasm, 1);
 inv_add(inv, pot_empty, 1);
 inv_add(inv, bucket_empty, 1);
 anim(human_pickupfloor, 0);
-sound_synth(tap_fill, 1, 0);
+sound_synth(fill_ectoplasm, 1, 0);
 p_delay(2);
 mes("You offer the bonemeal and the slime to the Ectofuntus.");
 // Four times the bury value, which lives on the BONE - hence the read back from the bonemeal.
@@ -234,17 +234,25 @@ inv_add(inv, ectotoken, $owed);
 
 
 // =========================================================================== the ectophial
-// Ghosts Ahoy's reward, and the reason the quest hands you one. Its iop1 is "Empty": you pour it
-// out, it takes you to the Ectofuntus, and you refill it there - which is why ectophial_empty sits
-// in the cache beside it.
+// Ghosts Ahoy's reward, and the reason the quest hands you one. Its iop1 is "Empty": you pour it out
+// and it takes you to the Ectofuntus.
+//
+// IT REFILLS ITSELF, asked for on 2026-10-12 ("add ectophial auto refill"). It lands you at the foot
+// of the Ectofuntus every time, so the manual refill was a click that could only ever have one
+// answer; Old School stopped asking for it too. The [oplocu] below still works, because an
+// ectophial_empty already in somebody's bank has to have a way back.
+//
+// AND IT HAS ITS OWN ANIMATION. The cache carries ahoy_ecto_teleport - eight frames, named for this
+// and referenced by nothing - and fill_ectoplasm, a synth for the same job. It was playing
+// human_pickupfloor and a generic teleport whoosh, which is the "ectophial has wrong animation" half
+// of the report.
 [opheld1,ectophial]
-mes("You empty the ectophial onto the ground.");
-inv_del(inv, ectophial, 1);
-inv_add(inv, ectophial_empty, 1);
-anim(human_pickupfloor, 0);
-sound_synth(teleport_all, 1, 0);
+mes("You pour the ectophial onto the ground.");
+anim(ahoy_ecto_teleport, 0);
+sound_synth(fill_ectoplasm, 1, 0);
 p_delay(2);
 p_telejump(^ecto_foot);
+mes("The ectophial refills itself from the Ectofuntus.");
 
 [oplocu,ahoy_ectofunctus]
 if (last_useitem ! ectophial_empty) {
@@ -255,7 +263,7 @@ p_arrivedelay;
 inv_del(inv, ectophial_empty, 1);
 inv_add(inv, ectophial, 1);
 anim(human_pickuptable, 0);
-sound_synth(tap_fill, 1, 0);
+sound_synth(fill_ectoplasm, 1, 0);
 mes("You refill the ectophial from the Ectofuntus.");
 
 // =========================================================================== emptying a pot

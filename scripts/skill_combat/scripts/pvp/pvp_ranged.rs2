@@ -63,8 +63,8 @@ if ($damage > 0 & $poison_severity > 0 & random(4) = 0) { // 1/4 chance to poiso
 
 def_int $delay = ~pvp_ranged_use_weapon($rhand, $ammo);
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
-.sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
+.sound_synth(%com_attacksound, 1, 0);
 
 .queue*(pvp_retaliate, calc($delay / 30))(uid);
 ~.pvp_damage_max(calc($delay / 30), $damage, $hit_max);
@@ -72,8 +72,8 @@ sound_synth(%com_attacksound, 0, 0);
 .anim(.%com_defendanim, $delay);
 // the bolt effect as the bolt lands, with the flinch
 ~bolt_effect_land_pvp($bolt_effect, $damage, $delay);
-// .sound_synth(.%com_defendsound, 0, 20);
-// sound_synth(.%com_defendsound, 0, 20);
+// .sound_synth(.%com_defendsound, 1, 20);
+// sound_synth(.%com_defendsound, 1, 20);
 
 
 [proc,pvp_ranged_use_weapon](obj $rhand, obj $ammo)(int)

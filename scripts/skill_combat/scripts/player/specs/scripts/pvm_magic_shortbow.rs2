@@ -56,5 +56,5 @@ if ($damage > 0 & $poison_severity > 0 & random(4) = 0) { // 1/4 chance to poiso
 npc_queue(2, $damage, add(divide($delay, 30), 1));
 // No npc anim in osrs?
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, $delay); // delay 1 client tick for the hit queue
+    sound_synth(npc_param(defend_sound), 1, $delay); // delay 1 client tick for the hit queue
 }

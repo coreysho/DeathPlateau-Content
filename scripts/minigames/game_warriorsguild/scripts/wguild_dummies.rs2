@@ -67,7 +67,7 @@ if ($type ! ^stab_style & $type ! ^slash_style & $type ! ^crush_style) {
 }
 facesquare(loc_coord);
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
 def_coord $spot = loc_coord;
 // put the dummy back down straight away so nobody else scores off it
 def_int $i = 0;

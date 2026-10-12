@@ -356,7 +356,7 @@ if (%damagestyle = ^style_magic_defensive) {
 }
 // play spell cast sound
 if (db_getfieldcount($spell_data, magic_spell_table:sound_cast) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 0, 0);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 1, 0);
 }
 // roll 0-maxhit
 def_int $damage = randominc(min($maxhit, npc_param(max_dealt)));
@@ -419,7 +419,7 @@ if ($maxhit ! null) {
     }
     // npc sound
     if (npc_param(defend_sound) ! null) {
-        sound_synth(npc_param(defend_sound), 0, $duration); // delay 1 client tick for the hit queue
+        sound_synth(npc_param(defend_sound), 1, $duration); // delay 1 client tick for the hit queue
     }
     def_int $damage_capped = min($damage, npc_stat(hitpoints));
     ~give_combat_experience($damagestyle, $damage_capped, %npc_combat_xp_multiplier);
@@ -455,7 +455,7 @@ if ($maxhit ! null) {
 }
 // spell visual
 if (db_getfieldcount($spell_data, magic_spell_table:sound_hit) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_hit, 0), 0, $duration);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_hit, 0), 1, $duration);
 }
 spotanim_npc(db_getfield($spell_data, magic_spell_table:spotanim_target, 0), $duration);
 
@@ -469,7 +469,7 @@ stat_heal(hitpoints, $amount, 0);
 [proc,pvm_spell_fail](dbrow $spell_data, int $duration)
 // splash
 if (db_getfieldcount($spell_data, magic_spell_table:sound_cast) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 0, 0);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 1, 0);
 }
 sound_synth(spellfail, 1, $duration);
 spotanim_npc(failedspell_impact, 92, $duration);

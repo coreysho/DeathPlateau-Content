@@ -38,7 +38,7 @@ if (random(5) = 0) {
 if (npc_canreach = true & random(2) = 0) {
     anim(%com_defendanim, 0);
     npc_anim(npc_param(attack_anim), 0);
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
     ~npc_meleeattack;
     return;
 }
@@ -47,7 +47,7 @@ if (npc_canreach = true & random(2) = 0) {
 [proc,marble_gargoyle_stone]
 def_coord $target = coord;
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(attack_sound), 0, 0);
+sound_synth(npc_param(attack_sound), 1, 0);
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 // 30 cycles before it leaves, 60 in the air: lands 3 ticks after the throw
 projanim_map(npc_coord, $target, troll_rock_travel, 60, 0, 30, 60, 16, 64);
@@ -82,7 +82,7 @@ if (~npc_check_notcombat_self = false) {
 }
 anim(%com_defendanim, 0);
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(attack_sound), 0, 0);
+sound_synth(npc_param(attack_sound), 1, 0);
 ~npc_meleeattack;
 // the summon comes last: npc_add makes each new spawn the active npc
 if (%superior_summon_clock = 0 | add(%superior_summon_clock, 50) <= map_clock) {
@@ -116,7 +116,7 @@ if ($style = ^melee_style & distance(coord, npc_coord) > 1) {
     return; // still closing in
 }
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(attack_sound), 0, 0);
+sound_synth(npc_param(attack_sound), 1, 0);
 %npc_action_delay = add(map_clock, 3);
 def_int $damage = 0;
 if (~check_protect_prayer($style) = false) {
@@ -151,7 +151,7 @@ if (distance(coord, npc_coord) <= 1 & random(8) = 0) {
 }
 anim(%com_defendanim, 0);
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(attack_sound), 0, 0);
+sound_synth(npc_param(attack_sound), 1, 0);
 ~npc_meleeattack;
 
 [label,greater_abyssal_flurry]

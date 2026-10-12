@@ -270,8 +270,8 @@ if (%damagestyle = ^style_magic_defensive) {
 // so a hold that landed on a player aborted here, before the freeze. Guarded as player_magic.rs2 does.
 if (db_getfieldcount($spell_data, magic_spell_table:sound_hit) > 0) {
     def_synth $sound = db_getfield($spell_data, magic_spell_table:sound_hit, 0);
-    sound_synth($sound, 0, 0);
-    .sound_synth($sound, 0, 0);
+    sound_synth($sound, 1, 0);
+    .sound_synth($sound, 1, 0);
 }
 
 if ($maxhit = null) {

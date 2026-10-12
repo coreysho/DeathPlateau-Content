@@ -14,7 +14,7 @@ if ($ammo = null) {
 
 anim(%com_attackanim, 0);
 spotanim_pl(oc_param($ammo, proj_launch), 96, 0);
-sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
 def_int $duration = ~bolt_projectile_npc($ammo);
 ~ranged_dropammo_npc($ammo, divide($duration, 30));
 
@@ -40,5 +40,5 @@ if ($bolt_effect ! ^bolt_none | $hit = true) {
 npc_queue(2, $damage, add(divide($duration, 30), 1));
 npc_anim(npc_param(defend_anim), $duration);
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, $duration);
+    sound_synth(npc_param(defend_sound), 1, $duration);
 }

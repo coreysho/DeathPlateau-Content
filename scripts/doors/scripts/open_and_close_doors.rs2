@@ -48,7 +48,7 @@ def_locshape $shape = loc_shape;
 def_coord $loc_coord = loc_coord;
 $x, $z = ~door_open($angle, loc_shape);
 def_coord $dest = $loc_coord;
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 if ($entering = true) {
     if (coord ! $loc_coord) {
         p_teleport($loc_coord);
@@ -70,7 +70,7 @@ def_locshape $shape = loc_shape;
 def_coord $loc_coord = loc_coord;
 $x, $z = ~door_open($angle, loc_shape);
 def_coord $dest = $loc_coord;
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 if ($entering = true) {
     if (coord ! $loc_coord) {
         p_teleport($loc_coord);
@@ -91,7 +91,7 @@ def_locshape $shape = loc_shape;
 def_coord $loc_coord = loc_coord;
 $x, $z = ~door_open($angle, loc_shape);
 def_coord $dest = $loc_coord;
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 if ($entering = true) {
     if (coord ! $loc_coord) {
         p_teleport($loc_coord);

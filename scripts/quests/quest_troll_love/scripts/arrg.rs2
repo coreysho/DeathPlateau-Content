@@ -93,7 +93,7 @@ if (random(3) = 0) {
 }
 anim(%com_defendanim, 0);
 npc_anim(npc_param(attack_anim), 0);
-sound_synth(npc_param(attack_sound), 0, 0);
+sound_synth(npc_param(attack_sound), 1, 0);
 ~npc_meleeattack;
 
 [proc,trollromance_arrg_throw]
@@ -101,7 +101,7 @@ def_int $attack_roll = ~npc_ranged_attack_roll;
 def_int $defence_roll = ~player_defence_roll_specific(^ranged_style);
 def_int $maxhit = ~npc_ranged_maxhit;
 npc_anim(troll_rock_throw, 0);
-sound_synth(troll_with_rock_attack, 0, 0);
+sound_synth(troll_with_rock_attack, 1, 0);
 spotanim_npc(troll_rock_launch, 96, 0);
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 // the Thrower Trolls' own rock and flight (death_troll_thrower.rs2)
