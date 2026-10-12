@@ -1,0 +1,81 @@
+// RECOLOURING GRACEFUL, and taking it back off.
+//
+// Nine colours, one per rooftop course, bought from Grace in the Rogues' Den for Marks of Grace -
+// which until now were a currency with nowhere to spend it. The courses have handed them out since
+// the nine rooftops were built and nothing in the world would take one; Grace's own dialogue has
+// been promising "I will have something worth your while before long" the whole time.
+//
+// THE ITEMS AND THE LOOKUP ARE GENERATED - tools/gengracefulcolours.py writes
+// configs/graceful_colours.obj and configs/graceful_colours.enum. This file is only the two
+// clicks, and it names no colour and no piece: adding a tenth colour is a line in the generator's
+// table and nothing here has to know.
+//
+// ONE TRIGGER FOR NINE KITS, ON THE KIT CATEGORY. [opheldu,X] is looked up on both halves of a use
+// and the engine swaps last_item/last_useitem so last_item is always the half that carried the
+// trigger (network/game/client/handler/OpHeldUHandler.ts), so one trigger catches the click
+// whichever way round the player does it. Same reasoning minigames/game_trail/scripts/
+// ornament_kit.rs2 writes out.
+
+[opheldu,_graceful_kit]
+~graceful_recolour(last_item, last_useitem, last_useslot);
+
+// $kit is the kit, $piece the graceful piece and $pieceslot where it is in the pack.
+[proc,graceful_recolour](obj $kit, obj $piece, int $pieceslot)
+def_int $colour = oc_param($kit, graceful_colour);
+def_int $slot = oc_param($piece, graceful_slot);
+if ($slot = null) {
+    // Used on something that is not a plain graceful piece. Say which, because a bank full of nine
+    // colours invites using a kit on an already-coloured piece.
+    if (oc_param($piece, graceful_from) ! null) {
+        mes("That is already recoloured. Revert it first.");
+        return;
+    }
+    mes("The kit only works on graceful clothing.");
+    return;
+}
+// colour * 10 + slot, the key configs/graceful_colours.enum is written on.
+def_namedobj $into = enum(int, namedobj, graceful_colour_result, calc(multiply($colour, 10) + $slot));
+if ($into = null) {
+    // Cannot happen while the generator writes a row per colour per piece, and is a silently
+    // swallowed kit if it ever can.
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, $kit, 1);
+inv_setslot(inv, $pieceslot, $into, 1);
+~objbox($into, "You work the dye into the cloth.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// Revert
+// ---------------------------------------------------------------------------------------------
+// Hands back BOTH the plain piece and the kit, so a colour can be moved from piece to piece for
+// nothing and a change of mind costs nothing - the same promise ornament_kit.rs2 makes, and the
+// reason neither needs a confirmation box on the way in.
+//
+// TWO ITEMS ARRIVE WHERE ONE LEFT, so a full pack needs a free slot. Checked before anything is
+// deleted: the alternative is a kit on the floor, and this is the one place a player would not be
+// looking for it.
+
+// Jumped to from the 54 generated triggers in graceful_revert.rs2 - see that file for why there
+// are 54 of them and not one on a category.
+[label,graceful_revert]
+def_obj $item = last_item;
+def_int $slot = last_slot;
+def_namedobj $plain = oc_param($item, graceful_from);
+def_int $colour = oc_param($item, graceful_colour);
+if ($plain = null | $colour = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_namedobj $kit = enum(int, namedobj, graceful_colour_kit, $colour);
+if ($kit = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need a free inventory space to take the dye back out.");
+    return;
+}
+inv_setslot(inv, $slot, $plain, 1);
+inv_add(inv, $kit, 1);
+~objbox($kit, "You draw the dye back out of the cloth.", 250, 0, 0);

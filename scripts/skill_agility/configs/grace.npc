@@ -29,9 +29,11 @@ walkanim=human_walk_f
 vislevel=hide
 wanderrange=0
 op1=Talk-to
-// NO op3=Trade WHILE THE SHOP IS EMPTY - an option that opens a window with nothing in it is
-// worse than no option. The shop itself is still wired below; restoring the stock in grace.inv
-// and this one line is all it takes.
+op3=Trade
+// op3=Trade, restored 12 October: the shop has stock again. It is the nine graceful recolour kits
+// rather than the graceful set itself, because the set comes from agility xp here
+// (skilling_outfits/scripts/outfit_xp.rs2) - so what Grace sells is what to do with the set once
+// you have it, and marks finally have somewhere to go.
 category=shop_keeper
 param=owned_shop,grace_shop
 param=shop_currency,mark_of_grace

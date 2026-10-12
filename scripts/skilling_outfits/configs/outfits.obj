@@ -406,6 +406,9 @@ category=armour_helmet
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 7, where OSRS pays 3. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,1
 
 [graceful_cape]
 name=Graceful cape
@@ -434,6 +437,9 @@ category=armour_cape
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 8, where OSRS pays 3. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,6
 
 [graceful_top]
 name=Graceful top
@@ -463,6 +469,9 @@ category=armour_body
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 10, where OSRS pays 4. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,2
 
 [graceful_legs]
 name=Graceful legs
@@ -491,6 +500,9 @@ category=armour_legs
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 10, where OSRS pays 4. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,3
 
 [graceful_gloves]
 name=Graceful gloves
@@ -519,6 +531,9 @@ category=armour_hands
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 7, where OSRS pays 3. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,5
 
 [graceful_boots]
 name=Graceful boots
@@ -546,6 +561,9 @@ category=armour_feet
 // outfit_effects.rs2 - there is no script.
 // energy_restore is 8, where OSRS pays 3. See tools/gracefulspec.json: the set totals
 // 50% against OSRS's 30%, by Corey's choice, and the whole 50 is per piece.
+// Which of the six this is, for the recolour kits - skilling_outfits/scripts/
+// graceful_colours.rs2. Only the plain pieces carry it.
+param=graceful_slot,4
 
 [pyromancer_hood]
 name=Pyromancer hood

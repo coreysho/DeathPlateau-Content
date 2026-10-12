@@ -1,0 +1,29 @@
+// The three params the graceful recolours are applied and reverted through.
+//
+// THE PAIRING IS NOT ON THE KIT, for the reason ornament_kit.param gives for the same choice: a kit
+// is not one-to-one. One Varrock kit colours any of the six pieces, so "what does this kit make"
+// has no single answer while "which colour is this kit" and "which piece is this" both do - and the
+// two of them together are a lookup (skilling_outfits/configs/graceful_colours.enum).
+//
+// WHY NOT THE ORNAMENT KIT FRAMEWORK. It was the plan, and nine colours is what changed it: that
+// framework carries the pairing as ornament_kit / ornament_kit2 / ornament_kit3 on the base item -
+// THREE SLOTS, added one at a time for the infinity robes and the rune scimitar's three gods. Nine
+// colours needs nine, which means nine more param pairs and a nine-branch chain in a file sixteen
+// other kits already depend on. A two-param lookup is less code and touches nothing else.
+
+// On a kit: which colour it makes, 1-9 in rooftop course order.
+// On a coloured piece: which colour it is, so Revert knows which kit to hand back.
+[graceful_colour]
+type=int
+default=null
+
+// On a PLAIN graceful piece: which of the six it is, 1-6. Only the plain ones carry it - it is what
+// the kit looks up, and a coloured piece is reverted through graceful_from instead.
+[graceful_slot]
+type=int
+default=null
+
+// On a coloured piece: the plain piece it was made from.
+[graceful_from]
+type=namedobj
+default=null
