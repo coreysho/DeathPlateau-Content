@@ -23,6 +23,11 @@ Only the primary manwear/womanwear model is touched; see WEAR_KEYS.
                  no fixed bucket does both. Bucket 10 is the one that asks the depth.
   legs   -> 2.   One ABOVE the default kit's legs, which are priority 1.
   torso  -> 4.   One above the default kit's torso, which is priorities 2 and 3.
+  feet   -> 10.  A boot under a long cape is the same case as the cape: in front of it from the
+                 front, behind it from the back, and no fixed bucket does both. It joins the hands,
+                 the arms and both weapons, which are already there. THE DEFAULT KIT'S FEET MOVE
+                 WITH THEM, which is the one place this tool touches something that is not a worn
+                 item. See THE BOOTS AND THE CAPE below.
 
 MEASURE THE RIGHT THING OR YOU GET THE ARMOUR BACKWARDS. The first version of this put legs at 1
 and torso at 3 - level with the body part, so the two depth-sort against each other - because the
@@ -36,6 +41,31 @@ which genuinely has to sort both ways; it is not the right measure for a garment
 So each model is scored both ways round - its original bytes against the candidate bucket, on how
 much BODY shows through, over four camera pitches across the legal range - and keeps whichever
 wins. 493 retuned, 7 left exactly as they were.
+
+THE BOOTS AND THE CAPE. Bucket 10 is not drawn in one go: Model.method382 flushes it in three
+places and the first is at priority 0, BEFORE bucket 0's own faces, for every face further away
+than the average depth of buckets 1 and 2. Look down at a player from behind - the ordinary camera
+- and a long cape's hem is further than that average, so it is flushed in that first group, and
+then the feet, which were alone in bucket 0, were painted straight over it. Boots through the back
+of a Max cape, reported from the game.
+
+Nothing in 2006 could show it: those capes stop at the knee. The Max cape is a 2015 item and hangs
+to the ankle.
+
+Putting the feet in the depth-sorted bucket makes the boot and the cape sort against each other by
+depth, which is the only answer that holds from both sides. Measured on the full outfit - Max cape,
+Armadyl chestplate, rune platelegs, Bandos boots - over four pitches by eight angles:
+
+    boots at 0 (shipped)   6141 all round, 2632 from behind
+    boots at 1 or 2        8811 all round,   32 from behind   - fixes the back, costs the front
+    boots at 3            50704 all round
+    boots at 10            1851 all round,  233 from behind
+
+and on the same outfit with no cape at all it is 218 either way, so nothing was traded for it.
+
+THOSE NUMBERS ARE FROM AFTER tools/wearrender.py WAS FIXED. Before that it drew the kit body
+underneath the armour, which the client never does, and the same experiment said bucket 1 - which
+fixed the back, wrecked the front, and shipped.
 
 ANYTHING ALREADY USING BUCKET 10 OR 11 IS LEFT ALONE. It is already depth-sorted, which beats any
 fixed bucket.
@@ -63,7 +93,12 @@ writing the old bytes back. Where it carries one priority for the whole model, t
 import argparse, glob, os, sys
 
 # slot -> the bucket that sorts it against the body
-RULES = {'back': 10, 'legs': 2, 'torso': 4}
+RULES = {'back': 10, 'legs': 2, 'torso': 4, 'feet': 10}
+
+# The default kit's own feet, which are not worn items and so appear in no .obj: man and woman,
+# basic and elf boots (all.idk's man_feet_* and woman_feet_*). They move with the boots because a
+# barefoot player stands under the same cape.
+KIT_FEET = ('idk_42', 'idk_43', 'idk_79', 'idk_80')
 PER_FACE = 255
 DEPTH_SORTED = (10, 11)
 
@@ -148,6 +183,13 @@ def main():
 
     slots = a.slot or sorted(RULES)
     models = worn_models(a.content)
+    if 'feet' in slots:
+        for name in KIT_FEET:
+            for sub in ('idk', 'obj'):
+                mp = os.path.join(a.content, 'models', sub, name + '.ob2')
+                if os.path.exists(mp):
+                    models[mp] = ('feet', {name})
+                    break
     counts = {}
     for path, (slot, names) in sorted(models.items()):
         if slot not in slots:
