@@ -1,31 +1,83 @@
 // Agility skill guide, shown on the original RS2 skill guide interface
 // (see content/scripts/interfaces/skill_guide.rs2 for the generic driver).
-// Obstacles are not objs; the icons are stand-ins.
+//
+// TWO PAGES, because the guide was answering only half the question. Every row it had was a
+// one-off obstacle, so the twelve training courses this build has - the nine rooftop courses
+// included, which are the whole of Agility training from 20 to 99 - appeared either as a single
+// unexplained line ("Gnome Stronghold Course") or not at all. A player opening the Agility guide
+// to find out where to train found a list of shortcuts.
+//
+// Two panels means the buttons are btn2 and btn3; btn1 only appears once there are 7 or more
+// categories. See the btn-index note at the top of interfaces/skill_guide.rs2.
+//
+// EVERY LEVEL HERE IS THE ONE THE GAME ENFORCES, read off the course's own ^<course>_level
+// constant or its stat(agility) check, not off the wiki. Where the two disagree the game wins: a
+// guide that promises what the code refuses is worse than no guide.
+//
+// Obstacles and courses are not objs, so the icons are stand-ins. The rooftop courses show a mark
+// of grace, which is what they actually drop and what tells them apart from the three that do not.
 [proc,open_agility_guide]
+%skillguide_page = 1;
+~agility_guide_render;
+
+[proc,agility_guide_render]
 ~skillguide_begin(^guide_agility, "Agility");
 ~skillguide_members;
+~skillguide_panels(2);
+~skillguide_button(2, "Courses");
+~skillguide_button(3, "Shortcuts");
+switch_int (%skillguide_page) {
+    case 3 : ~agility_guide_shortcuts;
+    case default : ~agility_guide_courses;
+}
+~skillguide_show;
+
+// The twelve courses, in level order.
+//
+// Draynor at 1 is not a mistake and not a shortfall: Old School removed that course's level 10
+// requirement in May 2024 (https://oldschool.runescape.wiki/w/Draynor_Village_Rooftop_Course),
+// and this build follows it, so the Gnome course and Draynor share the bottom of the list.
+//
+// The Agility Arena keeps the two rows it had on the old list. Its traps are the only part of it
+// that gates on a level - 20 for the first pair, 40 for the later pair
+// (minigames/game_agilityarena/scripts/agilityarena_zones.rs2) - so it is two rows rather than one.
+[proc,agility_guide_courses]
 def_int $lvl = stat(agility);
 ~skillguide_row(1, $lvl, 1, logs, "Gnome Stronghold Course");
-~skillguide_row(2, $lvl, 5, leather_boots, "Crumbling wall (Falador)");
-~skillguide_row(3, $lvl, 5, leather_boots, "Climbing rocks");
-~skillguide_row(4, $lvl, 10, rope, "Karamja vine swing");
-~skillguide_row(5, $lvl, 15, rope, "Monkeybars (Brimhaven)");
-~skillguide_row(6, $lvl, 20, logs, "Log balance");
-~skillguide_row(7, $lvl, 20, agilityarena_ticket, "Agility Arena - first traps");
-~skillguide_row(8, $lvl, 21, leather_boots, "Underwall tunnel");
-~skillguide_row(9, $lvl, 25, leather_boots, "Grand Tree vine");
-~skillguide_row(10, $lvl, 26, leather_boots, "Underwall tunnel");
-~skillguide_row(11, $lvl, 29, leather_boots, "Broken fence");
-~skillguide_row(12, $lvl, 32, leather_boots, "Zombie Queen obstacle");
-~skillguide_row(13, $lvl, 35, logs, "Barbarian Outpost Course");
-~skillguide_row(14, $lvl, 40, agilityarena_ticket, "Agility Arena - later traps");
-~skillguide_row(15, $lvl, 40, leather_boots, "Yanille dungeon ledge");
-~skillguide_row(16, $lvl, 42, leather_boots, "Crevice");
-~skillguide_row(17, $lvl, 49, leather_boots, "Yanille dungeon pipe");
-~skillguide_row(18, $lvl, 49, skull, "Wilderness obstacle pipe");
-~skillguide_row(19, $lvl, 50, leather_boots, "Legends' jungle obstacle");
-~skillguide_row(20, $lvl, 52, skull, "Wilderness Agility Course");
-~skillguide_row(21, $lvl, 56, leather_boots, "Isafdar dense forest");
-~skillguide_row(22, $lvl, 57, rope, "Monkeybars (Isafdar)");
-~skillguide_row(23, $lvl, 67, leather_boots, "Yanille rubble climb");
-~skillguide_show;
+~skillguide_row(2, $lvl, 1, mark_of_grace, "Draynor Village Rooftop Course");
+~skillguide_row(3, $lvl, 20, mark_of_grace, "Al Kharid Rooftop Course");
+~skillguide_row(4, $lvl, 20, agilityarena_ticket, "Agility Arena - first traps");
+~skillguide_row(5, $lvl, 30, mark_of_grace, "Varrock Rooftop Course");
+~skillguide_row(6, $lvl, 35, logs, "Barbarian Outpost Course");
+~skillguide_row(7, $lvl, 40, agilityarena_ticket, "Agility Arena - later traps");
+~skillguide_row(8, $lvl, 40, mark_of_grace, "Canifis Rooftop Course");
+~skillguide_row(9, $lvl, 50, mark_of_grace, "Falador Rooftop Course");
+~skillguide_row(10, $lvl, 52, skull, "Wilderness Agility Course");
+~skillguide_row(11, $lvl, 60, mark_of_grace, "Seers' Village Rooftop Course");
+~skillguide_row(12, $lvl, 70, mark_of_grace, "Pollnivneach Rooftop Course");
+~skillguide_row(13, $lvl, 80, mark_of_grace, "Rellekka Rooftop Course");
+~skillguide_row(14, $lvl, 90, mark_of_grace, "Ardougne Rooftop Course");
+
+// The one-off obstacles, as the guide always listed them. "Broken fence" now says where it is:
+// it is the fence at the south end of the Lumbridge graveyard, behind the church, and 29 is the
+// level the 2006 game asked for it (skill_agility/scripts/shortcuts.rs2, loc_9299).
+[proc,agility_guide_shortcuts]
+def_int $lvl = stat(agility);
+~skillguide_row(1, $lvl, 5, leather_boots, "Crumbling wall (Falador)");
+~skillguide_row(2, $lvl, 5, leather_boots, "Climbing rocks");
+~skillguide_row(3, $lvl, 10, rope, "Karamja vine swing");
+~skillguide_row(4, $lvl, 15, rope, "Monkeybars (Brimhaven)");
+~skillguide_row(5, $lvl, 20, logs, "Log balance");
+~skillguide_row(6, $lvl, 21, leather_boots, "Underwall tunnel");
+~skillguide_row(7, $lvl, 25, leather_boots, "Grand Tree vine");
+~skillguide_row(8, $lvl, 26, leather_boots, "Underwall tunnel");
+~skillguide_row(9, $lvl, 29, leather_boots, "Fence (Lumbridge graveyard)");
+~skillguide_row(10, $lvl, 32, leather_boots, "Zombie Queen obstacle");
+~skillguide_row(11, $lvl, 40, leather_boots, "Yanille dungeon ledge");
+~skillguide_row(12, $lvl, 42, leather_boots, "Crevice");
+~skillguide_row(13, $lvl, 49, leather_boots, "Yanille dungeon pipe");
+~skillguide_row(14, $lvl, 49, skull, "Wilderness obstacle pipe");
+~skillguide_row(15, $lvl, 50, leather_boots, "Legends' jungle obstacle");
+~skillguide_row(16, $lvl, 56, leather_boots, "Isafdar dense forest");
+~skillguide_row(17, $lvl, 57, rope, "Monkeybars (Isafdar)");
+~skillguide_row(18, $lvl, 67, leather_boots, "Yanille rubble climb");

@@ -312,6 +312,7 @@ inv_clear(skillguide);
 [proc,skillguide_selectpage](int $page)
 %skillguide_page = $page;
 switch_int (%skillguide_skill) {
+    case ^guide_agility : ~agility_guide_render;
     case ^guide_cooking : ~cooking_guide_render;
     case ^guide_smithing : ~smithing_guide_render;
     case ^guide_fletching : ~fletching_guide_render;
