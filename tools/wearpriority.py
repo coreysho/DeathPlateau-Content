@@ -93,7 +93,7 @@ writing the old bytes back. Where it carries one priority for the whole model, t
 import argparse, glob, os, sys
 
 # slot -> the bucket that sorts it against the body
-RULES = {'back': 10, 'legs': 2, 'torso': 4, 'feet': 10}
+RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10}
 
 # The default kit's own feet, which are not worn items and so appear in no .obj: man and woman,
 # basic and elf boots (all.idk's man_feet_* and woman_feet_*). They move with the boots because a
