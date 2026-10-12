@@ -5422,23 +5422,33 @@ weight=18oz
 certlink=newcomer_map
 certtemplate=template_for_cert
 
+// THE AMULET'S OWN MODEL (2026-10-12), out of a modern OSRS cache by
+// tools/models/importosrs.py (obj 552, 3 models, 226 verts, re-encoded to the 317-family format
+// and round-trip verified). 2006 had no ghostspeak model: it wore obj_amulet_of_ghostspeak, which
+// is the GENERIC strung amulet that the star, snake and strength amulets all share, recoloured
+// brown - so the thing that lets you talk to the dead looked exactly like a strength amulet. The
+// three new models are its own, and the two old ones are left alone because those other amulets
+// still use them.
+//
+// The recolours are gone with the old model: this mesh is already the right colour, and 7399 and
+// 15855 were source colours in a mesh nothing here points at any more. The 2d zoom and angles are
+// the OSRS cache's for this model, not the old model's - keeping 620/68/424 would have framed a
+// mesh that no longer exists.
+//
+// The worn models are on transform group 8, which is where 92 of this build's 95 front-slot worn
+// models sit, so the amulet moves with its wearer. Checked rather than assumed - an import landing
+// on a group the player rig does not drive is what left the dragonfire shield hanging in the air.
 [amulet_of_ghostspeak]
 name=Ghostspeak amulet
 desc=It lets me talk to ghosts.
-recol1s=7399
-recol1d=31041
-recol2s=15855
-recol2d=31041
 cost=35
-model=obj_amulet_of_ghostspeak
-2dxof=1
-2dyof=16
-2dzoom=620
-2dyan=68
-2dxan=424
+model=obj_ghostspeak_amulet
+2dzoom=480
+2dxan=207
+2dyan=97
 iop2=Wear
-manwear=obj_amulet_of_ghostspeak_manwear,0
-womanwear=obj_amulet_of_ghostspeak_womanwear,0
+manwear=obj_ghostspeak_amulet_manwear,0
+womanwear=obj_ghostspeak_amulet_womanwear,0
 wearpos=front
 weight=10g
 tradeable=no
@@ -50513,21 +50523,27 @@ model=obj_digsitebook
 2dxan=244
 weight=18oz
 
+// The Old Crone's enchanted copy follows the plain amulet onto the new model, or Animal Magnetism
+// would hand out an amulet that looked nothing like the one it was made from.
+//
+// STILL FLAT GREEN, which is what it has always been: the old config mapped both of the old
+// mesh's colours to 1000 (rgb15 green), so the glow was never shaded. The new mesh has three
+// colours instead of two and all three go the same way, so it looks the same as it did.
 [amulet_of_ghostspeak_enchanted]
 name=Ghostspeak amulet
 desc=The amulet of ghostspeak glows green from the crone's enchantment.
-recol1s=7399
+recol1s=25264
 recol1d=1000
-recol2s=15855
+recol2s=13537
 recol2d=1000
+recol3s=32593
+recol3d=1000
 cost=35
 members=yes
-model=obj_amulet_of_ghostspeak
-2dxof=1
-2dyof=16
-2dzoom=620
-2dyan=68
-2dxan=424
+model=obj_ghostspeak_amulet
+2dzoom=480
+2dxan=207
+2dyan=97
 iop2=Wear
 manwear=obj_amulet_of_ghostspeak_manwear,0
 womanwear=obj_amulet_of_ghostspeak_womanwear,0
