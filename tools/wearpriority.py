@@ -23,11 +23,6 @@ Only the primary manwear/womanwear model is touched; see WEAR_KEYS.
                  no fixed bucket does both. Bucket 10 is the one that asks the depth.
   legs   -> 2.   One ABOVE the default kit's legs, which are priority 1.
   torso  -> 4.   One above the default kit's torso, which is priorities 2 and 3.
-  feet   -> 10.  A boot under a long cape is the same case as the cape: in front of it from the
-                 front, behind it from the back, and no fixed bucket does both. It joins the hands,
-                 the arms and both weapons, which are already there. THE DEFAULT KIT'S FEET MOVE
-                 WITH THEM, which is the one place this tool touches something that is not a worn
-                 item. See THE BOOTS AND THE CAPE below.
 
 MEASURE THE RIGHT THING OR YOU GET THE ARMOUR BACKWARDS. The first version of this put legs at 1
 and torso at 3 - level with the body part, so the two depth-sort against each other - because the
@@ -41,31 +36,6 @@ which genuinely has to sort both ways; it is not the right measure for a garment
 So each model is scored both ways round - its original bytes against the candidate bucket, on how
 much BODY shows through, over four camera pitches across the legal range - and keeps whichever
 wins. 493 retuned, 7 left exactly as they were.
-
-THE BOOTS AND THE CAPE. Bucket 10 is not drawn in one go: Model.method382 flushes it in three
-places and the first is at priority 0, BEFORE bucket 0's own faces, for every face further away
-than the average depth of buckets 1 and 2. Look down at a player from behind - the ordinary camera
-- and a long cape's hem is further than that average, so it is flushed in that first group, and
-then the feet, which were alone in bucket 0, were painted straight over it. Boots through the back
-of a Max cape, reported from the game.
-
-Nothing in 2006 could show it: those capes stop at the knee. The Max cape is a 2015 item and hangs
-to the ankle.
-
-Putting the feet in the depth-sorted bucket makes the boot and the cape sort against each other by
-depth, which is the only answer that holds from both sides. Measured on the full outfit - Max cape,
-Armadyl chestplate, rune platelegs, Bandos boots - over four pitches by eight angles:
-
-    boots at 0 (shipped)   6141 all round, 2632 from behind
-    boots at 1 or 2        8811 all round,   32 from behind   - fixes the back, costs the front
-    boots at 3            50704 all round
-    boots at 10            1851 all round,  233 from behind
-
-and on the same outfit with no cape at all it is 218 either way, so nothing was traded for it.
-
-THOSE NUMBERS ARE FROM AFTER tools/wearrender.py WAS FIXED. Before that it drew the kit body
-underneath the armour, which the client never does, and the same experiment said bucket 1 - which
-fixed the back, wrecked the front, and shipped.
 
 ANYTHING ALREADY USING BUCKET 10 OR 11 IS LEFT ALONE. It is already depth-sorted, which beats any
 fixed bucket.
@@ -90,100 +60,10 @@ writing the old bytes back. Where it carries one priority for the whole model, t
   python3 tools/wearpriority.py                # report
   python3 tools/wearpriority.py --apply
 """
-import argparse, glob, os, re, sys
+import argparse, glob, os, sys
 
 # slot -> the bucket that sorts it against the body
-# 'hair' and 'jaw' are not wearpos names - no obj is worn in them - so they only ever reach this
-# through the kit list below.
-RULES = {'back': 10, 'legs': 10, 'torso': 10, 'feet': 10, 'hair': 10, 'jaw': 10}
-
-# The default kit's own feet, which are not worn items and so appear in no .obj: man and woman,
-# basic and elf boots (all.idk's man_feet_* and woman_feet_*). They move with the boots because a
-# barefoot player stands under the same cape.
-# THE DEFAULT KIT'S OWN TORSO, LEGS AND FEET, which are not worn items and appear in no .obj, so
-# worn_models() never sees them. They need the same answer for the same reason: a player wearing
-# only a cape has no armour in those slots, so what the cape sorts against is the bare body - and a
-# bare body in a fixed bucket is painted over the cape exactly as a boot was.
-#
-# SOME OF THEM CAME ALONG BY ACCIDENT AND THE REST DID NOT, which is the bug this fixes. The kit's
-# meshes are shared with real items - "man torso" is the priest gown's model, "man legs" the
-# mime's - so the slots above moved whichever kit options happen to be an item too and left the
-# other 23 behind. A player whose character uses one of those still sees his own back through his
-# cape, which is exactly what was reported after the pass that looked clean on the default kit.
-#
-# HAIR AND JAW COME TOO, AND THE REASON I LEFT THEM OUT WAS WRONG. "The head is above the cape's
-# collar and never sorts against it" is true of a cropped head and false of long hair, which falls
-# down the back and over the cape - and the hair is the head model, so a fixed bucket 6 puts the
-# whole head over everything in 10 whatever the depth. Long hair against a Max cape, four pitches
-# by three angles each way:
-#
-#     hair 6,  jaw 6    front 426   back 381      (shipped)
-#     hair 10, jaw 6    front 192   back 325
-#     hair 10, jaw 10   front 173   back  90
-#
-# Cropped hair is 18 either way, which is why the default body this is measured against never
-# showed it and a character with long hair did.
-KIT_TYPES = ('torso', 'legs', 'feet', 'hair', 'jaw')
-
-
-def npc_models(content):
-    """Every model any npc is built from.
-
-    A MESH AN NPC WEARS IS NOT OURS TO RETUNE. The player and an npc are different merged models and
-    a bucket that is right in one can be wrong in the other, and several of this build's meshes do
-    both jobs: the Undertaker is made of the man's short-hair head (obj_viking_helmet_manwear, which
-    despite the name is a head), the kit's bare feet (idk_42) and his own boots, which are also a
-    wearable item. Moving those three for the player's sake broke him, reported from the game the
-    same hour.
-
-    The player loses those options - a short-haired or barefoot character keeps the old bucket under
-    a cape - and that is the smaller harm of the two. The real answer is a separate copy of each
-    shared mesh, one for the npc and one for the player, which is a change to the npc's own config
-    and belongs to whoever owns it.
-    """
-    out = set()
-    for path in sorted(glob.glob(os.path.join(content, 'scripts/**/*.npc'), recursive=True)):
-        for line in open(path, encoding='utf-8', errors='replace'):
-            s = line.split('//')[0].strip()
-            if '=' not in s:
-                continue
-            k, v = s.split('=', 1)
-            k = k.strip()
-            if re.match(r'^(model|head)\d*$', k):
-                out.add(v.strip().split(',')[0])
-    return out
-
-
-def kit_models(content):
-    """{model path: slot} for every kit option whose body part a cape has to sort against."""
-    out, cur, kits = {}, None, {}
-    idk = os.path.join(content, 'scripts', '_unpack', '377', 'all.idk')
-    if not os.path.exists(idk):
-        return out
-    for line in open(idk, encoding='utf-8', errors='replace'):
-        s = line.split('//')[0].strip()
-        m = re.match(r'^\[([a-z0-9_]+)\]$', s)
-        if m:
-            cur = m.group(1)
-            kits[cur] = {}
-        elif cur and '=' in s:
-            k, v = s.split('=', 1)
-            kits[cur].setdefault(k.strip(), v.strip())
-    for name, d in kits.items():
-        kind = d.get('type', '')
-        slot = next((k for k in KIT_TYPES if kind.endswith(k)), None)
-        if not slot:
-            continue
-        for key in ('model1', 'model2', 'model3', 'model4'):
-            model = d.get(key)
-            if not model:
-                continue
-            for sub in ('idk', 'obj'):
-                mp = os.path.join(content, 'models', sub, model + '.ob2')
-                if os.path.exists(mp):
-                    out[mp] = slot
-                    break
-    return out
+RULES = {'back': 10, 'legs': 2, 'torso': 4}
 PER_FACE = 255
 DEPTH_SORTED = (10, 11)
 
@@ -268,17 +148,9 @@ def main():
 
     slots = a.slot or sorted(RULES)
     models = worn_models(a.content)
-    for mp, slot in kit_models(a.content).items():
-        if slot in slots:
-            models.setdefault(mp, (slot, {'the default kit'}))
-    npcs = npc_models(a.content)
-    shared = 0
     counts = {}
     for path, (slot, names) in sorted(models.items()):
         if slot not in slots:
-            continue
-        if os.path.basename(path)[:-4] in npcs:
-            shared += 1
             continue
         what, did = retune(path, RULES[slot], a.apply)
         counts.setdefault(slot, [0, 0, 0])
@@ -289,8 +161,6 @@ def main():
         elif what:
             counts[slot][1] += 1
     print()
-    if shared:
-        print(f'  {shared} models left alone because an npc is made of them too')
     for slot in slots:
         c = counts.get(slot, [0, 0, 0])
         print(f'  {slot:<6} {c[2]:>4} models   {c[0]:>4} retuned   '
