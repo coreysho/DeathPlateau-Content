@@ -157,6 +157,26 @@ def_int $multiplier = 1;
 if (~rogue_doubles = true) {
     $multiplier = 2;
 }
+// ONE OF THESE, OR ALL OF THESE, AND THE WEIGHT SAYS WHICH. This column carries two different
+// kinds of table and until 2026-10-12 it treated both as the second kind:
+//
+//   * A WEIGHTED TABLE, weights adding up to 128 or less, where the pocket pays ONE of the rows -
+//     the rogue's, the gnome's, the hero's and the H.A.M. member's. The arithmetic below is the
+//     classic single-choice walk: roll against what is left, take the top slice, and the chance of
+//     row i works out to exactly w(i)/128 whatever order the rows are in, because the chance of
+//     still being in the loop at row i is D(i-1)/128.
+//   * GUARANTEED DROPS, every weight 128, where the pocket pays ALL of the rows - the watchman's
+//     60 coins AND his loaf of bread, the paladin's coins AND his chaos runes, and every trapped
+//     chest and wall safe in the game.
+//
+// Without the return the first kind over-pays, and badly: the H.A.M. member's 36 rows came to 2.7
+// items a pocket, the gnome's six to 1.7 - which is what "am i supposed to be receiving 3 items per
+// pickpocket at ham members?" was. With a bare return the second kind under-pays instead, because
+// the first 128-weight row it reaches always hits and nothing after it is ever read.
+//
+// So a weight at or above what is left of the denominator is a guaranteed drop: it is handed over,
+// the denominator is left alone, and the loop goes on. Anything less is one row of a weighted table
+// and ends the walk. Both kinds keep the behaviour they had, to the item.
 while ($count >= 0) {
     def_namedobj $reward;
     def_int $reward_quantity_min;
@@ -164,12 +184,18 @@ while ($count >= 0) {
     def_int $reward_rarity_numerator;
     $reward, $reward_quantity_min, $reward_quantity_max, $reward_rarity_numerator = db_getfield($data, pickpocket:loot, $count);
 
-    def_int $roll = random($reward_rarity_denominator);
-    $reward_rarity_denominator = sub($reward_rarity_denominator, $reward_rarity_numerator);
-    if ($roll >= $reward_rarity_denominator) {
-        def_int $quantity_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
-        // Pickpocketing can reward more than 1.
-        inv_add(inv, $reward, calc($quantity_roll * $multiplier));
+    if ($reward_rarity_numerator >= $reward_rarity_denominator) {
+        // Pickpocketing can reward more than one KIND of thing, when every row is guaranteed.
+        def_int $always_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
+        inv_add(inv, $reward, calc($always_roll * $multiplier));
+    } else {
+        def_int $roll = random($reward_rarity_denominator);
+        $reward_rarity_denominator = sub($reward_rarity_denominator, $reward_rarity_numerator);
+        if ($roll >= $reward_rarity_denominator) {
+            def_int $quantity_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
+            inv_add(inv, $reward, calc($quantity_roll * $multiplier));
+            return;
+        }
     }
 
     $count = calc($count - 1);
