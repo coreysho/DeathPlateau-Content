@@ -94,6 +94,12 @@
 // stat_advance takes tenths.
 ^mm_reward_xp = 350000
 
+// --- Where the amulet is actually made (fixed 13 October 2026) ---
+// Zooknock enchants the bar; the POURING happens at a wall of fire in the crypt under the Temple of
+// Marimbo, which is real step 30 and was missing. mm_enchanted_gold_bar had no source, the crypt's
+// mm_iban_firewall_* were scenery, and the amulet appeared finished in Zooknock's hands.
+^mm_temple_crypt_flames = 0_43_143_57_41    // 2809,9193, the near edge of the southern wall of fire
+
 // --- Stage two: what the varbits told us ---
 // The four mm_zooknock_has_* bits name the four things Zooknock consumes, and that is enough to
 // separate the two chains the cache supports:
@@ -139,7 +145,12 @@
 // server has no patrol behaviour for her, so the gate is DISTANCE instead: the child will not talk
 // about the talisman while the aunt is within ^mm_aunt_earshot tiles of him. Same shape, same
 // result, and it uses the placement the cache already ships rather than inventing a route.
-^mm_aunt_earshot = 8
+// FOUR, not eight. Measured over 2,000 ticks, the aunt was more than eight tiles from the child on
+// 122 of them - 6.1% - and never got further than twelve, so the child was talkable about one tick
+// in sixteen with nothing on screen to say when. A playthrough needed seventeen clicks on one run
+// and more than twenty-five on the next. At four tiles the window is most of the time, which is
+// what the real quest's patrol gives you.
+^mm_aunt_earshot = 4
 ^mm_bananas_wanted = 5
 
 // --- The greegrees ---

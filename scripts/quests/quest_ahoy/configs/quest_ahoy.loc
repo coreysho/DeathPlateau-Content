@@ -39,3 +39,28 @@ active=yes
 op1=Close
 category=door_opened
 param=next_loc_stage,ahoy_harbour_door
+
+// ---------------------------------------------------------------------------------------------
+// THE SHIP'S LADDERS, moved out of _unpack/377/all.loc on 13 October 2026 to drop one line each.
+//
+// forceapproach=south/north says: there is exactly one side of this ladder you may stand on to
+// click it, and it rotates with the placement's angle. On the wreck's aft ladder (3615,3545, angle
+// 1) that one side is 3614,3545, which is solid hull - so the ladder answered "I can't reach
+// that!" from everywhere and the quarterdeck had one working stair instead of two.
+//
+// The approach side is no longer load-bearing: scripts/quest_ahoy.rs2 reads the arrival tile out
+// of configs/ahoy_ladders.enum instead of mirroring the player through the loc, so any side the
+// player can actually stand on is a fine side to climb from.
+
+[ahoy_ghostship_ladder]
+name=Ship's ladder
+desc=I can climb up here.
+model=ship_ladder
+op1=Climb-up
+mapscene=7
+
+[ahoy_ghostship_laddertop]
+name=Ship's ladder
+desc=I can go below decks with this ladder.
+model=ship_laddertop
+op1=Climb-down

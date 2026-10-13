@@ -79,11 +79,12 @@ if (%mm_main < ^mm_started) {
 if (%mm_main = ^mm_complete) {
     @mm_daero_reward;
 }
-if (%mm_main > ^mm_daero_briefed) {
-    ~chatnpc("<p,neutral>You know the way down now. Go on.");
-    return;
-}
-if (%mm_main = ^mm_daero_briefed) {
+// HE TAKES YOU DOWN EVERY TIME YOU ASK. He used to say "you know the way down now" the moment he
+// had taken you once, and there is no way down: ^mm_hangar_arrive is reached by this conversation
+// and by Waydar flying in from Crash Island, and Crash Island is only reachable from the hangar. So
+// one trip down and out through the bunker pad left Ape Atoll unreachable for the rest of the
+// quest, which sends you back to it three more times.
+if (%mm_main >= ^mm_daero_briefed) {
     @mm_daero_offer_trip;
 }
 // The three topics are the cache's own mm_daero_option_bit_one/two/three. Read as the three things
@@ -125,7 +126,12 @@ if ($choice = 1) {
 @mm_daero_topics;
 
 [label,mm_daero_offer_trip]
-~chatnpc("<p,neutral>There is a hangar under this tree that the stronghold does not have. Do you want to see it?");
+if (%mm_main > ^mm_daero_briefed) {
+    // He has done this before, and says so rather than pretending the hangar is still a secret.
+    ~chatnpc("<p,neutral>Back again. Blindfold, same as last time - I am not having you learn the way.");
+} else {
+    ~chatnpc("<p,neutral>There is a hangar under this tree that the stronghold does not have. Do you want to see it?");
+}
 def_int $go = ~p_choice2("Yes. Take me down.", 1, "Not just yet.", 2);
 if ($go = 2) {
     ~chatplayer("<p,neutral>Not just yet.");
@@ -191,7 +197,11 @@ if ($go = 2) {
 // One label for both the glider and the boat: the two were byte-identical, and a trigger or label
 // that exists twice in different words is the kind of thing that drifts apart later.
 [label,mm_travel](coord $dest, string $arrival)
-if (~pre_tele_checks(coord) = false) {
+// ~pre_travel_checks, NOT ~pre_tele_checks: the glider and the boat are vehicles, and the one thing
+// ~pre_tele_checks adds on top is the check that refuses to move Awowogei's monkey - which would
+// mean the quest sending you to Ardougne for a monkey it then will not let you bring back. See the
+// comment on both procs in skill_magic/scripts/spells/teleport.rs2.
+if (~pre_travel_checks(coord) = false) {
     return;
 }
 if_close;
@@ -343,6 +353,12 @@ if (%mm_main = ^mm_met_garkor) {
 @mm_zooknock_check;
 
 [label,mm_zooknock_check]
+// Already carrying the enchanted bar: he has done his half, and asking him for another gold bar
+// would read as the quest having lost track of itself.
+if (inv_total(inv, mm_enchanted_gold_bar) > 0) {
+    ~chatnpc("<p,neutral>You have the bar. I cannot pour it and neither can you, down here. The crypt under the temple of Marimbo, and keep hold of the mould.");
+    return;
+}
 if (inv_total(inv, gold_bar) < 1) {
     ~chatnpc("<p,neutral>No gold bar. Bring me one and we can begin.");
     return;
@@ -357,17 +373,59 @@ if (inv_total(inv, mm_monkey_dentures) < 1) {
 }
 ~chatplayer("<p,happy>I have all three.");
 ~chatnpc("<p,neutral>Then stand back and do not speak while I am counting.");
+// HE DOES NOT FINISH IT. The real quest has Zooknock hand back an enchanted bar and your mould, and
+// the pouring happens at a wall of fire in the crypt under the Temple of Marimbo - which is why
+// mm_enchanted_gold_bar exists in the cache and why two walls of flame are placed down there. This
+// used to forge the whole amulet here and the bar had no source at all.
+//
 // Everything is spent and granted in one block before the first pausing call, so a player who
-// dismisses the message cannot lose a gold bar without gaining an amulet.
+// dismisses the message cannot lose a gold bar without gaining the enchanted one. The mould is NOT
+// consumed: it is handed back, and it has to be in the pack at the flames.
 inv_del(inv, gold_bar, 1);
-inv_del(inv, mm_monkey_amulet_mould, 1);
 inv_del(inv, mm_monkey_dentures, 1);
-inv_add(inv, mm_amulet_of_monkey_speak_without_string, 1);
+inv_add(inv, mm_enchanted_gold_bar, 1);
 %mm_zooknock_has_gold_bar = 1;
-%mm_zooknock_has_amulet_mould = 1;
 %mm_zooknock_has_dentures = 1;
-~mesbox("Zooknock melts the bar into the mould, drops the dentures in while it is still liquid, and hands you back something that is chattering quietly to itself. It has no string.");
-~chatnpc("<p,neutral>String it with wool and wear it. And do not take it off while you are above ground.");
+~objbox(mm_enchanted_gold_bar, "Zooknock holds the dentures against the bar until the gold takes them, and the bar starts chattering to itself.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>That is the spirit in the metal. It is not an amulet yet, and I cannot make it one - there is no fire down here hot enough to pour gold.");
+~chatplayer("<p,quiz>Where is there?");
+~chatnpc("<p,neutral>Under the temple of Marimbo there is a crypt, and in the crypt there is a wall of fire that has been burning since before the monkeys could count. Hold the bar into that, with the mould in your hand.");
+~chatnpc("<p,worried>Keep the mould. Without it you will pour a spirit onto a stone floor.");
+
+// ===================================================================================================
+// The wall of flames, in the crypt under the Temple of Marimbo
+// ===================================================================================================
+// Real step 30. mm_iban_firewall_straight and _diagonal are placed in two clusters down there
+// (around 2809-2813,9189 and again at 9208-9211) and both are active=yes, so they take an item;
+// neither had a handler. The way in - mm_temple_trapdoor and mm_climbing_rope_bottom_temple - was
+// already built in mm_ladders.rs2, which is what made this the cheapest missing step in the quest.
+// The last banana off a tree leaves mm_bananatreeempty, which must answer for itself: the shared
+// [oploc1,_banana_tree] handler changes the loc to its next_loc_stage, and an empty tree has none.
+// Giving it the category instead of its own trigger turned the sixth click into a script error.
+[oploc1,mm_bananatreeempty]
+mes("There are no bananas left on the tree.");
+
+[oplocu,mm_iban_firewall_straight] @mm_firewall_pour;
+[oplocu,mm_iban_firewall_diagonal] @mm_firewall_pour;
+
+[label,mm_firewall_pour]
+if (last_useitem ! mm_enchanted_gold_bar) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_total(inv, mm_monkey_amulet_mould) = 0) {
+    ~mesbox("The bar goes soft almost at once and you have nothing to pour it into. Zooknock did say to keep the mould.");
+    return;
+}
+p_arrivedelay;
+if_close;
+mes("You hold the bar into the wall of fire.");
+sound_synth(lava_bowl_pour, 1, 0);
+p_delay(4);
+inv_del(inv, mm_enchanted_gold_bar, 1);
+inv_add(inv, mm_amulet_of_monkey_speak_without_string, 1);
+%mm_zooknock_has_amulet_mould = 1;
+~objbox(mm_amulet_of_monkey_speak_without_string, "The gold runs into the mould and sets almost before you have taken it out of the flames. It is chattering quietly to itself. It has no string.", 250, 0, divide(^objbox_height, 2));
 
 // Stringing is the ordinary amulet pattern. [opheldu,X] fires for both click orders - OpHeldUHandler
 // tries the target item's trigger first and then the used item's, swapping the pointers - so inside

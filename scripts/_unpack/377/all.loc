@@ -36032,21 +36032,6 @@ op1=Climb-up
 mapscene=7
 forceapproach=south
 
-[ahoy_ghostship_ladder]
-name=Ship's ladder
-desc=I can climb up here.
-model=ship_ladder
-op1=Climb-up
-forceapproach=south
-mapscene=7
-
-[ahoy_ghostship_laddertop]
-name=Ship's ladder
-desc=I can go below decks with this ladder.
-model=ship_laddertop
-op1=Climb-down
-forceapproach=north
-
 [ahoy_trapdoor]
 name=Trapdoor
 desc=I wonder what's under it.

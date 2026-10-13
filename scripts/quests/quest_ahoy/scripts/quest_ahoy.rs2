@@ -74,6 +74,17 @@ inv_add(inv, ahoy_petition, 1);
 ~chatnpc("<p,neutral>Here. It has been folded in my pocket for a hundred and sixty years.");
 
 [label,ahoy_start]
+// THE TWO REQUIREMENTS, which were not checked at all - a level 3 with a ghostspeak amulet could
+// start and finish the whole quest. Both come off the wiki's own requirements box: Priest in Peril,
+// and The Restless Ghost completed rather than merely begun.
+if (%priestperil < ^priestperil_complete) {
+    ~mesbox("You need to have completed Priest in Peril to start this quest.");
+    return;
+}
+if (%prieststart < ^priest_complete) {
+    ~mesbox("You need to have completed The Restless Ghost to start this quest.");
+    return;
+}
 ~chatnpc("<p,sad>You can hear me. Nobody who can hear me ever stays long.");
 switch_int (~p_choice2("What's wrong with this town?", 1, "I'm passing through.", 2)) {
     case 2 :
@@ -146,14 +157,14 @@ inv_del(inv, ahoy_robes_of_necrovarus, 1);
 
 [label,ahoy_finish]
 %ahoy_questvar = ^ahoy_complete;
-stat_advance(prayer, 25000);
+stat_advance(prayer, 24000);   // 2,400, per the wiki
 session_log(^log_adventure, "Quest complete: Ghosts Ahoy");
 if (inv_freespace(inv) > 0) {
     inv_add(inv, ectophial, 1);
 } else {
     obj_add(coord, ectophial, 1, ^lootdrop_duration);
 }
-~send_quest_complete(questlist:ahoy, ectophial, 200, ^ahoy_questpoints, "You have completed\\nGhosts Ahoy!", "2 Quest Points|2,500 Prayer XP|The Ectophial|The ghosts of Port Phasmatys can leave");
+~send_quest_complete(questlist:ahoy, ectophial, 200, ^ahoy_questpoints, "You have completed\\nGhosts Ahoy!", "2 Quest Points|2,400 Prayer XP|The Ectophial|The ghosts of Port Phasmatys can leave");
 
 // =========================================================================== the petition
 // Three signatures and three favours, one per ghost. ahoy_signaturecounter is five bits, which is
@@ -325,7 +336,7 @@ if_close;
 // 2k prayer xp ea time", and the manual and the book are both keepable, so this was an unlimited
 // Prayer tap: the stat_advance sat OUTSIDE the stage guard below and fired on every use. It has
 // been removed rather than moved inside the guard, because translating the book is not an
-// experience reward in the first place - Ghosts Ahoy pays 2,500 Prayer at the end
+// experience reward in the first place - Ghosts Ahoy pays 2,400 Prayer at the end
 // (oldschool.runescape.wiki/w/Ghosts_Ahoy#Rewards) and nothing along the way. The 25000 in
 // [label,ahoy_finish] is that reward; stat_advance takes tenths.
 if (%ahoy_given_book = ^ahoy_on) {
@@ -378,13 +389,25 @@ mes("The three scraps make one map, and the cross on it is out past the harbour.
 [oploc1,ahoy_ghostship_laddertop] @ahoy_ship_climb(-1);
 
 [label,ahoy_ship_climb](int $dy)
+// THE LANDING COMES OUT OF A TABLE, not out of the player's approach side. It used to be mirrored
+// through the loc - step on from the south, step off to the north - which is a tidy rule and wrong
+// twice on this wreck: the aft ladder's only permitted approach tile is solid hull, so going up was
+// impossible, and coming down mirrored you onto that same solid tile and left you standing inside
+// the ship. configs/ahoy_ladders.enum has all twelve placements with an arrival tile each.
 p_arrivedelay;
+def_coord $to = enum(coord, coord, ahoy_ladder_landing, loc_coord);
+if ($to = null) {
+    // A placement nobody has measured. Say so rather than guessing and dropping the player into
+    // scenery; tools/sim/quest_ahoy_run.ts asserts the table covers every ladder on both ships.
+    ~mesbox("This ladder does not seem to go anywhere.");
+    return;
+}
 if ($dy > 0) {
     mes("You climb up.");
 } else {
     mes("You climb down.");
 }
-p_teleport(movecoord(loc_coord, sub(coordx(loc_coord), coordx(coord)), $dy, sub(coordz(loc_coord), coordz(coord))));
+p_teleport($to);
 
 [oploc1,ahoy_gangplank_shipwreck_on]
 p_arrivedelay;

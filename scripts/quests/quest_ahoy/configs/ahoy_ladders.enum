@@ -1,0 +1,25 @@
+// WHERE A SHIP'S LADDER PUTS YOU. Keyed on the ladder's own coord, which includes its floor, so one
+// table covers both directions: the up ladder at 3609,3543 is on L0 and the down ladder on the same
+// two numbers is on L1, and they are different rows here.
+//
+// Every arrival tile below was checked walkable on the destination floor (tools/sim/questprobe.ts
+// and a sweep of the decks). That is the whole point of the table - the handler used to mirror the
+// player through the loc, and on the wreck's aft ladder that mirror lands you inside the hull.
+[ahoy_ladder_landing]
+inputtype=coord
+outputtype=coord
+default=null
+// --- the wreck, west of Port Phasmatys: hold (L0), deck (L1), quarterdeck (L2)
+val=0_56_55_25_23,1_56_55_24_23   // 3609,3543 up   -> 3608,3543
+val=0_56_55_29_23,1_56_55_30_23   // 3613,3543 up   -> 3614,3543, beside the deck door
+val=1_56_55_31_21,2_56_55_32_21   // 3615,3541 up   -> 3616,3541
+val=1_56_55_31_25,2_56_55_32_25   // 3615,3545 up   -> 3616,3545
+val=1_56_55_25_23,0_56_55_26_23   // 3609,3543 down -> 3610,3543
+val=1_56_55_29_23,0_56_55_28_23   // 3613,3543 down -> 3612,3543
+val=2_56_55_31_21,1_56_55_30_21   // 3615,3541 down -> 3614,3541
+val=2_56_55_31_25,1_56_55_32_25   // 3615,3545 down -> 3616,3545, NOT 3614,3545 which is hull
+// --- the ghost ship at the Port Phasmatys pier
+val=0_57_54_48_55,1_57_54_48_56   // 3696,3511 up   -> 3696,3512
+val=0_57_54_48_60,1_57_54_48_59   // 3696,3516 up   -> 3696,3515
+val=1_57_54_48_55,0_57_54_48_54   // 3696,3511 down -> 3696,3510
+val=1_57_54_48_60,0_57_54_48_61   // 3696,3516 down -> 3696,3517

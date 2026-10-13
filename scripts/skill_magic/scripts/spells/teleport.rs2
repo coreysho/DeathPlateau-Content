@@ -140,12 +140,26 @@ if(inv_total(inv, plaguesample) > 0) { // Biohazard plague sample
 }
 ~trollromance_leave_with_sled; // Troll Romance sled
 
+// MAGIC, AND THINGS THAT ARE NOT MAGIC. Split in two on 13 October 2026, because the single proc
+// made Monkey Madness uncompletable and did it silently.
+//
+// Awowogei sends you to the Ardougne zoo for one of his own and tells you - correctly - that you
+// must carry him home because he will not survive a teleport. ~mm_carrying_monkey_teleport_check
+// enforces that. But @mm_travel, the one label behind BOTH Waydar's glider and Lumdo's boat, also
+// called this proc, and those two are the only route back to Ape Atoll. So you picked "Let's go.",
+// the dialogue ran to the end, and you stayed in the hangar. Found by playing the quest through:
+// it stopped at stage 12 of 20 with nothing on screen to say why.
+//
+// A glider and a rowboat are vehicles. The monkey rides in them; he just cannot be teleported.
+// Everything else in here - a duel, Castle Wars, the trawler, a random event, Ana in her barrel -
+// applies to any way of leaving, so it lives in ~pre_travel_checks and both callers get it.
 [proc,pre_tele_checks](coord $coord)(boolean)
-// Monkey Madness: Awowogei's monkey does not survive a teleport, and the walk back to the Grand Tree
-// is the point of that leg of the quest. Same shape as the Ana-in-a-barrel check below it.
 if (~mm_carrying_monkey_teleport_check = false) {
     return(false);
 }
+return(~pre_travel_checks($coord));
+
+[proc,pre_travel_checks](coord $coord)(boolean)
 if(inv_total(inv, thanainabarrel) > 0) {
     ~chatnpc_specific("Ana (in a Barrel)", anabarrel, "<p,idle>@dbl@-- You can't teleport while holding the barrel, it's just @dbl@too difficult to concentrate. --");
     return(false);
