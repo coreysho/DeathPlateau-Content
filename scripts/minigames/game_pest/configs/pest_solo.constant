@@ -84,8 +84,17 @@
 // keep alive rather than standing in the room with it.
 ^pest_solo_landing = 0_41_40_35_19
 
-// And where leaving puts you back - the outpost pier, beside the lander squire.
-^pest_solo_outside = 0_41_41_36_52
+// WHERE LEAVING PUTS YOU BACK (corrected 13 October, Corey: "upon completing or dying in your pc
+// game, you should be brought back out to 0,41,41,33,24; near the squire to go back in").
+//
+// THE OLD ONE WAS NOT A TILE A PLAYER CAN STAND ON. (2660,2676) reads blocked on the engine's own
+// collision map - reach 0 - so every finish and every death teleported the player into scenery and
+// left them there. It was never measured, only described in the comment as "the outpost pier", and
+// the island's pier is not where the lander squire is.
+//
+// (2657,2648) is one tile from the squire's own spawn, on the open ground by the lander, and joins
+// 300+ walkable tiles. Finishing a game now puts you next to the man who sends you down again.
+^pest_solo_outside = 0_41_41_33_24
 
 // ---------------------------------------------------------------------------------------------
 // The clock, and the only way to lose
