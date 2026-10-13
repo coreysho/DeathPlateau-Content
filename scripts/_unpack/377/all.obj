@@ -7213,6 +7213,12 @@ model=obj_digsitebuttons
 members=yes
 weight=1g
 tradeable=no
+// POLISH (2026-10-13). The buttons predate Animal Magnetism by a year and a half - they are
+// Digsite loot, which is where the debugname comes from - and the quest gave them a second life
+// as the thing you polish into polished buttons. Old School puts the option on the item itself
+// with no tool and no npc, so this is all the config the action needs; the effect is in
+// quests/quest_animmag/scripts/animmag_notes.rs2.
+iop1=Polish
 
 [digsitestaff]
 name=Broken staff

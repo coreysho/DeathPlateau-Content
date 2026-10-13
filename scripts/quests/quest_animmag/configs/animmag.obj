@@ -171,8 +171,11 @@ members=yes
 tradeable=no
 weight=8oz
 
-// Polished buttons are a H.A.M. member's pickpocket loot as well as a quest item, so unlike the
-// rest of this file they trade.
+// Polished buttons are made rather than found: "Polish" on a pair of plain buttons, Crafting 3,
+// in scripts/animmag_notes.rs2. The comment here used to say they were a H.A.M. member's
+// pickpocket loot, which they are not in Old School and never were here - what H.A.M. drop and
+// what you pickpocket off them is digsitebuttons, the unpolished pair. They stay tradeable, unlike
+// the rest of this file, because the plain buttons that make them have four other sources.
 [polished_buttons]
 name=Polished buttons
 desc=Buttons, polished.

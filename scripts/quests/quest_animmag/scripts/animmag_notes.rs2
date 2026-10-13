@@ -1,4 +1,5 @@
-// Animal Magnetism: translating Ava's research notes, and stitching the container.
+// Animal Magnetism: translating Ava's research notes, polishing the buttons, and stitching the
+// container out of both.
 //
 // THE TRANSLATION. In OSRS this is an interface of its own - the wiki calls it "a simple mini-game"
 // and records neither its layout nor its rules, and the 377 cache has no interface for it at all
@@ -48,6 +49,33 @@ switch_int ($mark) {
     case 3 : return("the mark with five points");
     case default : return("the mark that turns in on itself");
 }
+
+// =========================================================================== the buttons
+//
+// POLISHED BUTTONS HAD NO SOURCE. The container below has always wanted them and nothing in the
+// build gave them out, so the quest could not be finished - this is the missing step, and it is
+// the step Old School has: "Polish" on the buttons themselves, no tool, no npc, Crafting 3 for
+// 5 experience.
+//
+// The buttons are already everywhere they should be. Old School lists pickpocketing a H.A.M.
+// member, killing a H.A.M. Guard, digging the Dig Site's level 1 and 3 soils, opening an ogre
+// coffin and searching the trawler net, and this build already has all of them -
+// skill_thieving pickpocket.dbrow, drop_tables h_a_m_guard.rs2, quest_itexam area_digsite.rs2 and
+// shared_droptables.rs2 between them. Only the polish was missing.
+//
+// NOT GATED ON THE QUEST, deliberately. Polishing is a Crafting action on an item with four other
+// sources, and Old School lets anyone do it whether or not they have met Ava - which also means a
+// player who polishes a pair years early still has them when they need them.
+
+[opheld1,digsitebuttons]
+if (stat_base(crafting) < ^animmag_polish_level) {
+    mes("You rub the buttons on your clothes but they aren't improved by the process.");
+    return;
+}
+inv_del(inv, digsitebuttons, 1);
+inv_add(inv, polished_buttons, 1);
+stat_advance(crafting, ^animmag_polish_xp);
+mes("You rub the buttons on your clothes and they become more shiny.");
 
 // =========================================================================== the container
 //
