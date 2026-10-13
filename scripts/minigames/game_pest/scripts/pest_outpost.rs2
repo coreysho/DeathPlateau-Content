@@ -104,7 +104,9 @@ if (%pest_commendation <= 0) {
     ~chatnpc("<p,neutral>You have earned no commendations. Come back when you have fought for us.");
     return;
 }
-@pest_exchange;
+// The window, in pest_rewards.rs2. It was five chat lines and a "show me the helmets" submenu
+// until 13 October; see the note at the top of that file.
+~void_rewards_window;
 
 // --- The squires ---
 // pest_squire_1 to _4 and the blacksmith all declared op1=Talk-to with nothing behind it. None of
