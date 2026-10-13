@@ -88,7 +88,17 @@ if ($weapon ! null) {
 
 //mes("attackstyle: <tostring(%attackstyle)>, damagestyle: <tostring(%damagestyle)>, damage: <tostring($damage)>, damagetype: <tostring(%damagetype)>");
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
+// GUARDED, because not everything you can hold has a sound. ~combat_swing_anim_and_synth sends a
+// weapon with NO category to the unarmed swing, but one WITH a category goes on to read the sound
+// for the damage type - and crush_sound defaults to NULL while crushattack_anim defaults to a kick.
+// So any held item that was given a category and never given a sound threw
+// "sound_synth An input number was null(-1)" the moment somebody swung it. Reported live on
+// 12 October against the Undertaker's cane, which has its own sound now; a sweep of the obj table
+// (Engine-TS tools/sim/deathtoken.ts) found ten more already in the game - beer, a banana and the
+// eight Monkey Madness greegrees - none of which wants a sound of its own, because none of them is
+// a weapon. castlewars_maindoor.rs2 has guarded the same call this way for as long as it has
+// existed; this is that guard, in the path everything else goes through.
+if (%com_attacksound ! null) sound_synth(%com_attacksound, 1, 0);
 ~npc_retaliate(0);
 ~npc_queue_hit($damage, $hit_max, 0);
 // AN NPC WITH NO BLOCK ANIMATION NOW PLAYS NONE, instead of a human one. defend_anim defaults to
@@ -104,7 +114,7 @@ if (npc_param(defend_anim) ! null) {
     npc_anim(npc_param(defend_anim), 20);
 }
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, 20); // delay npc this tick
+    sound_synth(npc_param(defend_sound), 1, 20); // delay npc this tick
 }
 // set the skill clock depending on the weapon attack rate
 if ($weapon = null) {

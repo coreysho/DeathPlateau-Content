@@ -18,7 +18,7 @@ if(random(50) < 3) { // 18 times in 300 testing on OSRS
 anim(%com_defendanim, 0);
 npc_anim(npc_param(attack_anim), 0);
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 ~npc_meleeattack;
 
@@ -30,7 +30,7 @@ while($spawn_coord = coord) {
 }
 npc_anim(demons_bringdead, 0);
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 npc_add($spawn_coord, slayer_nechryael_spawn, 100); // 1 min
 spotanim_map(demon_spawn_portal, npc_coord, 92, 0);
@@ -48,7 +48,7 @@ if (%npc_action_delay > map_clock) return;
 anim(%com_defendanim, 0);
 npc_anim(npc_param(attack_anim), 0);
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 if_close;
 def_int $damage = 0;

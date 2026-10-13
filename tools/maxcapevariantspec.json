@@ -860,6 +860,44 @@
    "god_param": 41
   },
   {
+   "key": "undertaker",
+   "_custom": "NOT an Old School variant - this server's own, bought from the Undertaker for Death tokens. The osrs_* fields the other nine carry are provenance, and there is none to record.",
+   "source_cape": "undertaker_cape",
+   "cape": {
+    "osrs_name": "Undertaker max cape",
+    "recol": [[668, 20], [675, 26], [784, 12], [815, 35], [673, 24]],
+    "zoom2d": 2232,
+    "xan2d": 687,
+    "yan2d": 27,
+    "yof2d": -5,
+    "desc": "The cape worn by only the most experienced players. He approves.",
+    "weight": 453,
+    "cost": 99000,
+    "wearpos": 1,
+    "wearpos2": null,
+    "womanhead": null,
+    "iops": {"1": "Wear"},
+    "members": true
+   },
+   "hood": {
+    "osrs_name": "Undertaker max hood",
+    "recol": [[815, 35], [784, 12], [675, 26], [685, 33], [914, 16], [945, 37]],
+    "zoom2d": 720,
+    "xan2d": 21,
+    "yan2d": 18,
+    "desc": "The hood worn by only the most experienced players. He approves.",
+    "weight": 453,
+    "cost": null,
+    "wearpos": 0,
+    "wearpos2": 8,
+    "iops": {"1": "Wear"},
+    "members": true
+   },
+   "bonuses": {"stabdefence": 9, "slashdefence": 9, "crushdefence": 9, "magicdefence": 9, "rangedefence": 9, "prayerbonus": 4},
+   "osrs_params_not_bonuses": {},
+   "god_param": null
+  },
+  {
    "key": "accumulator",
    "source_cape": "avas_accumulator",
    "cape": {

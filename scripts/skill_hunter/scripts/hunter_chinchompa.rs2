@@ -93,7 +93,7 @@ def_int $pct = ~chinchompa_fuse_pct(npc_range(coord));
 def_boolean $hit = ~player_npc_hit_roll_boosted(^ranged_style, multiply($mask_num, $pct), multiply($mask_div, 100));
 def_int $maxhit = scale($mask_num, $mask_div, %com_maxhit);
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
 // thrown as a dart is, and it lands a tick later than it arrives, as every ranged hit here does
 def_int $flight = ~npc_projectile(coord, npc_uid, oc_param($rhand, proj_travel), 40, 36, 32, 15, 0, 11, 5);
 def_int $ticks = calc(($flight + 30) / 30);
@@ -101,7 +101,7 @@ def_npc_uid $primary = npc_uid;
 def_coord $centre = npc_coord;
 ~chinchompa_hit_npc($hit, $maxhit, $ticks, $flight);
 spotanim_npc(firewave_impact, 92, $flight);
-sound_synth(chinchompa_explode, 0, $flight);
+sound_synth(chinchompa_explode, 1, $flight);
 if (map_multiway(coord) = true) {
     ~chinchompa_splash_npcs($primary, $centre, $hit, $maxhit, $ticks, $flight);
 }
@@ -145,7 +145,7 @@ if ($hit = true) {
 npc_queue(2, $damage, $ticks);
 npc_anim(npc_param(defend_anim), $flight);
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, $flight);
+    sound_synth(npc_param(defend_sound), 1, $flight);
 }
 
 // The rest of the 3x3, in two passes as ~pvm_spell_aoe does it (the damage ops act on the primary npc
@@ -240,15 +240,15 @@ p_opplayer(2);
 def_int $pct = ~chinchompa_fuse_pct(distance(coord, .coord));
 def_boolean $hit = ~pvp_chinchompa_roll($pct);
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
-.sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
+.sound_synth(%com_attacksound, 1, 0);
 def_int $flight = ~player_projectile(coord, .coord, .uid, oc_param($rhand, proj_travel), 40, 36, 32, 15, 0, 11, 5);
 def_player_uid $primary = .uid;
 def_coord $centre = .coord;
 ~pvp_chinchompa_hit($hit, $flight);
 .spotanim_pl(firewave_impact, 92, $flight);
-.sound_synth(chinchompa_explode, 0, $flight);
-sound_synth(chinchompa_explode, 0, $flight);
+.sound_synth(chinchompa_explode, 1, $flight);
+sound_synth(chinchompa_explode, 1, $flight);
 if (map_multiway(coord) = true) {
     ~pvp_chinchompa_splash($primary, $centre, $hit, $flight);
 }

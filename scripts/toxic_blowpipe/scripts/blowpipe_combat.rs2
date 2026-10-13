@@ -163,9 +163,9 @@ anim(%com_attackanim, 0);
 def_spotanim $projectile = oc_param(%blowpipe_dart_type, proj_travel);
 if ($spec = true) {
     $projectile = blowpipe_special_travel;
-    sound_synth(snake_hit, 0, 0);
+    sound_synth(snake_hit, 1, 0);
 } else {
-    sound_synth(%com_attacksound, 0, 0);
+    sound_synth(%com_attacksound, 1, 0);
 }
 // a dart's flight, and the extra tick every ranged hit here lands after (player_ranged.rs2)
 def_int $delay = add(~npc_projectile(coord, npc_uid, $projectile, 40, 36, 32, 15, 0, 11, 5), 30);
@@ -173,7 +173,7 @@ def_int $delay = add(~npc_projectile(coord, npc_uid, $projectile, 40, 36, 32, 15
 ~npc_queue_hit($damage, $hit_max, calc($delay / 30));
 npc_anim(npc_param(defend_anim), sub($delay, 30));
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, sub($delay, 30));
+    sound_synth(npc_param(defend_sound), 1, sub($delay, 30));
 }
 if ($spec = true) {
     stat_heal(hitpoints, divide($roll, 2), 0);
@@ -265,11 +265,11 @@ anim(%com_attackanim, 0);
 def_spotanim $projectile = oc_param(%blowpipe_dart_type, proj_travel);
 if ($spec = true) {
     $projectile = blowpipe_special_travel;
-    sound_synth(snake_hit, 0, 0);
-    .sound_synth(snake_hit, 0, 0);
+    sound_synth(snake_hit, 1, 0);
+    .sound_synth(snake_hit, 1, 0);
 } else {
-    sound_synth(%com_attacksound, 0, 0);
-    .sound_synth(%com_attacksound, 0, 0);
+    sound_synth(%com_attacksound, 1, 0);
+    .sound_synth(%com_attacksound, 1, 0);
 }
 def_int $delay = ~player_projectile(coord, .coord, .uid, $projectile, 40, 36, 32, 15, 0, 11, 5);
 .queue*(pvp_retaliate, calc($delay / 30))(uid);

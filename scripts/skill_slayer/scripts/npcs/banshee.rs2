@@ -42,7 +42,7 @@ anim(ears_bleed, 0);
 npc_anim(npc_param(attack_anim), 0);
 ~player_projectile(npc_coord, coord, uid, banshee_scream, 23, 23, 0, 0, 0, 16, 2); // TODO: recheck this
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 if_close;
 ~npc_set_attack_vars;

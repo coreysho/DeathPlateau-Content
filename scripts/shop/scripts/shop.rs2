@@ -149,6 +149,18 @@ while($i < $amount) {
     $i = calc($i + 1);
 }
 wealth_event(^wealth_shop_buy, oc_debugname($obj), $i, $total_cost);
+// THE UNDERTAKER'S SHELF IS A COLLECTION LOG SOURCE. An item is logged where it is DROPPED OR
+// HANDED OUT - a drop table, a casket, a chest, a shop that pays in tickets - and picking one up
+// does not log it, so a generic shop purchase logs nothing. His stock is the one case in this build
+// where buying IS the only way an item exists: the outfit, the cape and the Gravedigger kit have no
+// other source at all. The Agility Arena and Castle Wars ticket traders do the same thing from
+// their own exchange scripts; the Undertaker uses the ordinary shop, so the line lives here.
+//
+// Named rather than inferred from shop_currency: Grace and the TzHaar traders also take something
+// other than coins, and neither of their stocks belongs in the log.
+if (%shop = death_token_shop & $i > 0) {
+    ~collection_log_add($obj, 1);
+}
 
 // Sell an item to the shop
 [label,sell_item](obj $obj, int $amount)

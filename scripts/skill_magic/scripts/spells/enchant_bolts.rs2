@@ -69,5 +69,5 @@ inv_add(inv, $to, $count);
 ~give_spell_xp($spell_data);
 anim($anim, 0);
 spotanim_pl($spotanim, 92, 0);
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 mes("The magic of the runes coaxes out the true nature of the gem tips.");

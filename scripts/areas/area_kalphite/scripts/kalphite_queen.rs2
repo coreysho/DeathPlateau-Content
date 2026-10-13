@@ -65,7 +65,7 @@ npc_delay(0);
 anim(%com_defendanim, 0);
 npc_anim(osrs_seq_6240, 0);
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 ~npc_meleeattack;
 
@@ -203,7 +203,7 @@ if (random(2) = 0) {
     npc_anim(osrs_seq_6235, 0);
 }
 if (npc_param(attack_sound) ! null) {
-    sound_synth(npc_param(attack_sound), 0, 0);
+    sound_synth(npc_param(attack_sound), 1, 0);
 }
 ~npc_meleeattack;
 

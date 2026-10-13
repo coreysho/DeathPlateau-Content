@@ -249,7 +249,7 @@ inv_del(inv, $tab, 1);
 mes("You break the tablet.");
 inv_del(inv, bones, $total);
 inv_add(inv, $product, $total);
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 ~poh_tab_breakanim;
 p_delay(2);
 
@@ -281,7 +281,7 @@ inv_del(inv, $tab, 1);
 mes("You break the tablet.");
 inv_setslot(inv, $slot, $final, 1);
 ~poh_tab_breakanim;
-sound_synth($sound, 0, 0);
+sound_synth($sound, 1, 0);
 mes("You successfully enchant the <lowercase(oc_name($target))>.");
 p_delay(1);
 

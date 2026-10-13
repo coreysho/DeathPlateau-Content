@@ -219,7 +219,7 @@ while ($dx <= 1) {
             // i dont think you can grow pears or stems with this?
             if(loc_find($coord, log_druidicspirit) = true & ($changed = ^false | random(2) = 0)) { // TODO: is this randomization correct (just arbitrary atm)?
                 if(%druidspirit = ^druidspirit_blessed) %druidspirit = ^druidspirit_casted_spell;
-                sound_synth(loc_param(open_sound), 0, 0);
+                sound_synth(loc_param(open_sound), 1, 0);
                 loc_change(loc_param(next_loc_stage), 25);
                 $changed = ^true;
             }
@@ -262,7 +262,7 @@ while ($dx <= 1) {
             // i dont think you can grow pears or stems with this?
             if((loc_find($coord, log_druidicspirit) = true | loc_find($coord, peartree_druidicspirit) = true | loc_find($coord, branch_druidicspirit) = true) & ($changed = ^false | random(2) = 0)) { // TODO: is this randomization correct (just arbitrary atm)?
                 if(%druidspirit = ^druidspirit_blessed_sickle) %druidspirit = ^druidspirit_casted_sickle_bloom;
-                sound_synth(loc_param(open_sound), 0, 0);
+                sound_synth(loc_param(open_sound), 1, 0);
                 loc_change(loc_param(next_loc_stage), 25);
                 $changed = ^true;
             }

@@ -104,7 +104,7 @@ inv_del(inv, coins, multiply($n, 10));
 if (inv_getobj(inv, $slot) = trident_of_the_seas_uncharged) {
     inv_setslot(inv, $slot, trident_of_the_seas, 1);
 }
-sound_synth(waterwave_cast_and_fire, 0, 0);
+sound_synth(waterwave_cast_and_fire, 1, 0);
 mes("You add <tostring($n)> charge<~trident_plural($n)> to the trident. It now has <tostring(%trident_charges)>.");
 
 [proc,trident_plural](int $n)(string)
@@ -271,7 +271,7 @@ spotanim_pl(trident_casting, 92, 0);
 // [label,trident_attack] for why there is only one sound and why the target does not get this one.
 def_boolean $connected = ~pvp_hit_roll(^magic_style);
 ~trident_cast_sound($connected);
-.sound_synth(waterwave_cast_and_fire, 0, 0);
+.sound_synth(waterwave_cast_and_fire, 1, 0);
 def_int $duration = ~player_projectile(coord, .coord, .uid, trident_travel, 43, 31, 51, 16, -5, 64, 10);
 ~trident_spend_one;
 if ($connected = true) {
@@ -298,7 +298,7 @@ if (~trident_spend_charge = false) {
 // splash by ear. See the note above [label,trident_attack] for why it cannot wait for the impact.
 [proc,trident_cast_sound](boolean $connected)
 if ($connected = true) {
-    sound_synth(waterwave_cast_and_fire, 0, 0);
+    sound_synth(waterwave_cast_and_fire, 1, 0);
     return;
 }
 sound_synth(spellfail, 1, 0);

@@ -157,6 +157,10 @@ while ($i < $size) {
     $i = calc($i + 1);
 }
 
+// The Undertaker's outfit goes before anything is dropped, and nobody is paid for it: a green
+// dragon took the hat, and a dragon has no use for Death tokens.
+def_int $ruined = calc(~undertaker_outfit_destroy(inv) + ~undertaker_outfit_destroy(worn));
+
 inv_dropall(inv, coord, ^lootdrop_duration);
 inv_dropall(worn, coord, ^lootdrop_duration);
 inv_dropall(looting_bag_store, coord, ^lootdrop_duration); // looting bag contents are always lost - storage_items.rs2
@@ -190,6 +194,12 @@ if($protecting_item = true) {
 }
 ~blowpipe_death_spill_pvp; // toxic_blowpipe/scripts/blowpipe.rs2
 ~rune_pouch_death_spill_pvp; // storage_items/scripts/rune_pouch.rs2
+
+// The outfit, destroyed, and the killer paid for exactly what was destroyed. AFTER the items-kept
+// block above and BEFORE the drop loops below: after, so a piece can never be confused with one of
+// the three an unskulled player keeps (param=destroy_death on every piece already bars it from that
+// calculation, and from Protect Item); before, so it is gone by the time anything drops.
+~undertaker_outfit_pay(.uid, calc(~undertaker_outfit_destroy(inv) + ~undertaker_outfit_destroy(worn)));
 
 def_int $i = 0;
 def_int $size = inv_size(inv);
@@ -279,3 +289,70 @@ if($is_worn = true) {
 [proc,player_end_poison]
 %poison = 0;
 ~set_poison_timer;
+
+
+// ---------------------------------------------------------------------------------------------
+// THE UNDERTAKER'S OUTFIT IS LOST WHERE IT IS WORN (Corey, 12 October 2026)
+// ---------------------------------------------------------------------------------------------
+// Destroy every piece carrying param=pvp_token_bounty and report what it was worth; the caller pays
+// a killer, if there was one. Only in the Wilderness: dying to a goblin in Lumbridge must not cost
+// a player a thousand tokens of black suit.
+//
+// WHY THIS EXISTS. Before it, killing somebody wearing the outfit paid nothing at all. The engine
+// decides that, in BOTH_DROPSLOT: a tradeable item drops assigned to the killer, an untradeable one
+// drops assigned back to the VICTIM - so the hat landed at the dead player's feet flagged to them
+// and they walked back for it. With no Wilderness Slayer master, the Undertaker's shelf is the whole
+// of the wilderness identity, and a cosmetic that cannot be lost is a taunt with no stake behind it.
+//
+// DESTROYED RATHER THAN DROPPED, which is the part that stops it being an exploit rather than a
+// feature. If the piece came back, the cycle would be free: be killed by a friend for the bounty,
+// pick the piece up, again - and it does not even need a friend, an alt does it alone. Destroying it
+// makes one cycle cost the shop price and pay a quarter of it, so the pair burns three tokens for
+// every one they move. The invariant that keeps that true - bounty strictly below cost - is written
+// on the param itself, and tools/sim/deathtoken.ts fails if any item breaks it.
+//
+// THE AMOUNT PAID IS WHAT WAS ACTUALLY DESTROYED, which is why this returns a total rather than the
+// caller totting up what the player was wearing. Any gap between working out the payment and
+// deleting the thing is a gap where a piece survives and the bounty is paid anyway - the free cycle
+// again, by another road.
+//
+// TESTED ON ~wilderness_level RATHER THAN ON findhero. The duel arena is already safe - player_death
+// branches to @player_death_duel long before either caller - but the next PvP zone somebody adds
+// will not come with a warning, and "is this the Wilderness" is the question actually being asked.
+[proc,undertaker_outfit_destroy](inv $inv)(int)
+def_int $owed = 0;
+if (~wilderness_level(coord) <= 0) {
+    return($owed);
+}
+def_int $i = 0;
+def_int $size = inv_size($inv);
+def_obj $obj;
+def_int $bounty;
+while ($i < $size) {
+    if (inv_getnum($inv, $i) > 0) {
+        $obj = inv_getobj($inv, $i);
+        $bounty = oc_param($obj, pvp_token_bounty);
+        if ($bounty > 0) {
+            mes("Your <lowercase(oc_name($obj))> is ruined beyond saving.");
+            inv_delslot($inv, $i);
+            $owed = calc($owed + $bounty);
+        }
+    }
+    $i = calc($i + 1);
+}
+return($owed);
+
+// .obj_add rather than .inv_add: obj_add owns the obj to whichever player the dot selects, so the
+// tokens land in the victim's loot pile flagged to the killer, beside everything else they won. An
+// inv_add would want protected access on the killer, which a death script does not hold - and it
+// would also have to cope with a full inventory. The uid-and-finduid shape is ~pvp_death_message's,
+// two procs up the same call.
+[proc,undertaker_outfit_pay](player_uid $killer, int $owed)
+if ($owed <= 0) {
+    return;
+}
+if (.finduid($killer) = false) {
+    return;
+}
+.mes("The Undertaker will take the deceased's effects off your hands.");
+.obj_add(coord, death_token, $owed, ^lootdrop_duration);

@@ -117,7 +117,7 @@ return($duration);
 [proc,npc_spell_success](dbrow $spell_data, int $maxhit, int $duration)
 if_close;
 if (db_getfieldcount($spell_data, magic_spell_table:sound_cast) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 0, 0);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 1, 0);
 }
 def_int $damage = randominc($maxhit);
 if ($maxhit ! null) {
@@ -131,7 +131,7 @@ if ($maxhit ! null) {
 }
 spotanim_pl(db_getfield($spell_data, magic_spell_table:spotanim_target, 0), $duration);
 if (db_getfieldcount($spell_data, magic_spell_table:sound_hit) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_hit, 0), 0, $duration);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_hit, 0), 1, $duration);
 }
 queue*(playerhit_n_retaliate, calc($duration / 30))(npc_uid);
 
@@ -164,7 +164,7 @@ if ($freeze_time > 0) {
 [proc,npc_spell_fail](dbrow $spell_data, int $duration)
 if_close;
 if (db_getfieldcount($spell_data, magic_spell_table:sound_cast) > 0) {
-    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 0, 0);
+    sound_synth(db_getfield($spell_data, magic_spell_table:sound_cast, 0), 1, 0);
 }
 sound_synth(spellfail, 1, $duration);
 spotanim_pl(failedspell_impact, 92, $duration);

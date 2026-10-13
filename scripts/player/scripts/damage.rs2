@@ -48,5 +48,5 @@ if (gender() = 0) {
             case default : $sound = female_hit;
         }
     }
-sound_synth($sound, 0, 20);
+sound_synth($sound, 1, 20);
 

@@ -9,7 +9,7 @@ if (coord = $new_loc_coord & loc_shape = wall_diagonal) {
     p_teleport(movecoord(coord, ~door_open_move_player_out_of_way(loc_angle)));
     p_delay(1);
 };
-sound_synth(loc_param(open_sound), 0, 0);
+sound_synth(loc_param(open_sound), 1, 0);
 loc_del($duration);
 loc_add($new_loc_coord, $new_loc, modulo(add(loc_angle, 1), 4), loc_shape, $duration);
 
@@ -20,7 +20,7 @@ if (coord = $new_loc_coord & loc_shape = wall_diagonal) {
     p_teleport(movecoord(coord, ~door_close_move_player_out_of_way(loc_angle)));
     p_delay(1);
 }
-sound_synth(loc_param(close_sound), 0, 0);
+sound_synth(loc_param(close_sound), 1, 0);
 loc_del($duration);
 loc_add($new_loc_coord, $new_loc, modulo(add(loc_angle, 3), 4), loc_shape, $duration);
 
@@ -31,7 +31,7 @@ if (coord = $new_loc_coord & loc_shape = wall_diagonal) {
     p_teleport(movecoord(coord, ~door_open_move_player_out_of_way(loc_angle)));
     p_delay(1);
 };
-sound_synth(loc_param(open_sound), 0, 0);
+sound_synth(loc_param(open_sound), 1, 0);
 loc_del($duration);
 loc_add($new_loc_coord, $new_loc, modulo(add(loc_angle, 3), 4), loc_shape, $duration);
 
@@ -42,6 +42,6 @@ if (coord = $new_loc_coord & loc_shape = wall_diagonal) {
     p_teleport(movecoord(coord, ~door_close_move_player_out_of_way(loc_angle)));
     p_delay(1);
 }
-sound_synth(loc_param(close_sound), 0, 0);
+sound_synth(loc_param(close_sound), 1, 0);
 loc_del($duration);
 loc_add($new_loc_coord, $new_loc, modulo(add(loc_angle, 1), 4), loc_shape, $duration);

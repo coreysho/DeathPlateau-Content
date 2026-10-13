@@ -577,14 +577,24 @@ model=draynor_crypt_drapes
 ambient=50
 active=no
 
+// A BEHEMOTH BEHIND EACH. These four placements - three left, one right, and nowhere else in the
+// game - are the four curtains the original hides a Hell-Rat Behemoth behind, one per spice colour.
+// They were scenery with active=no, so there was nothing to pull back. quest_100/scripts/
+// hundred_dave.rs2 handles the op and maps each coord to its colour.
 [100_dave_crypt_curtainsr]
 model=draynor_crypt_curtainsr
-active=no
+name=Curtain
+desc=Something behind it is breathing.
+active=yes
+op1=Look-behind
 
 [100_dave_crypt_curtainsl]
 model=draynor_crypt_curtainsr
+name=Curtain
+desc=Something behind it is breathing.
 mirror=yes
-active=no
+active=yes
+op1=Look-behind
 
 [100_dave_wallchart]
 model=100_dave_wallchart

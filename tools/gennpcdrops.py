@@ -1557,13 +1557,19 @@ def build_enum():
          '// tier -> how many rows its list holds; the tiers are smallest first',
          '[npc_drops_tier_size]', 'inputtype=int', 'outputtype=int']
     L += ['val=%d,%d' % (t, n) for t, n in enumerate(TIERS, 1)]
-    L += ['', '// tier -> its list layer', '[npc_drops_tier_list]', 'inputtype=int', 'outputtype=component']
+    # default=null on every component enum here: an enum with no default returns 0 on a miss and
+    # NOT null (rs2check rule 17), and component 0 is a real component. These keys are generated
+    # from the same TIERS table that bounds the loops reading them, so they cannot miss - but that
+    # is a property of today's generator rather than a guarantee, and the default costs one line.
+    L += ['', '// tier -> its list layer', '[npc_drops_tier_list]', 'inputtype=int', 'outputtype=component',
+          'default=null']
     L += ['val=%d,%s:list%d' % (t, IFNAME, t) for t in range(1, len(TIERS) + 1)]
-    L += ['', '// tier -> its icon column', '[npc_drops_tier_icons]', 'inputtype=int', 'outputtype=component']
+    L += ['', '// tier -> its icon column', '[npc_drops_tier_icons]', 'inputtype=int', 'outputtype=component',
+          'default=null']
     L += ['val=%d,%s:icons%d' % (t, IFNAME, t) for t in range(1, len(TIERS) + 1)]
     for col, what in (('name', 'item name'), ('qty', 'amount'), ('rate', 'rarity')):
         L += ['', '// tier * 1000 + row (from 0) -> that row\'s %s text' % what,
-              '[npc_drops_%s]' % col, 'inputtype=int', 'outputtype=component']
+              '[npc_drops_%s]' % col, 'inputtype=int', 'outputtype=component', 'default=null']
         for t, n in enumerate(TIERS, 1):
             L += ['val=%d,%s:%s%d_%d' % (t * 1000 + r - 1, IFNAME, col, t, r) for r in range(1, n + 1)]
     return '\n'.join(L) + '\n'

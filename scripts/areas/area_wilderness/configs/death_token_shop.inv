@@ -12,16 +12,47 @@
 // put it on the shelf for a single token. An item whose gp value is not also a sensible token price
 // needs its own obj config - which is what the custom rewards will have.
 //
+// THE SHELF SELLS STATUS, NOT POWER (Corey, 12 October 2026): nothing that changes a combat number,
+// nothing that can be pointed at another player. The five outfit pieces carry no bonuses at all -
+// not zeroes, nothing - and the cane takes your weapon hand, which is the strongest proof of it.
+//
+// The Scroll of imbuing is the one NAMED exception to that rule, kept at Corey's word. It passes a
+// narrow test the rest of the catalogue does not: it is ALREADY A DROP (on-task kills, and far more
+// often superiors), so this shelf is a second route to a thing that exists rather than a new source;
+// it is untradeable and so is everything it makes, so no shop price becomes a market price; and it
+// is slayer content bought with a slayer currency. Anything failing any one of those three is still
+// out - which is why imbuing at the counter is not here, though it is the same effect.
+//
 // size is 8 rather than 1 so that adding a row is one line and not a resize.
 //
 // allstock=no MATTERS EVEN WITH ONE ROW: with allstock=yes a shop will buy ANY item, and this one
 // pays in Death tokens - a player could turn a bronze dagger into currency.
+//
+// EVERY ROW IS EFFECTIVELY INFINITE, and it had to be fixed to become that (Corey, 12 October).
+// The shelf held ONE of each with scope=shared, so the whole server shared a single hat and the
+// next player to want one waited a minute for the restock. A shop whose stock is the limit is a
+// race; the limit here is meant to be how many tokens you have earned, which is the only limit the
+// design ever wanted.
+//
+// 1000 at a restock rate of 1 is the engine's way of saying unlimited - it tops a row back up by
+// one every tick (World.ts), so a row cannot be emptied faster than it refills.
+//
+// stackall=yes IS PART OF THAT FIX, not a tidy-up. These are unstackable items, and a shop holding
+// a thousand of an unstackable item needs ALWAYS_STACK or it wants a thousand slots in a shelf that
+// has eight. slayershop has carried stackall=yes with fifty slayer gems for the same reason.
 //
 // restock=yes, one at a time: the shelf refills, so the shop is a tap and not a race.
 [death_token_shop]
 scope=shared
 size=8
 restock=yes
-stackall=no
+stackall=yes
 allstock=no
-stock1=slayer_imbue_scroll,1,100
+stock1=slayer_imbue_scroll,1000,1
+stock2=undertaker_hat,1000,1
+stock3=undertaker_coat,1000,1
+stock4=undertaker_trousers,1000,1
+stock5=undertaker_boots,1000,1
+stock6=undertaker_cane,1000,1
+stock7=gravedigger_kit,1000,1
+stock8=undertaker_cape,1000,1

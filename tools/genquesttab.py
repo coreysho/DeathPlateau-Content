@@ -455,8 +455,13 @@ def build_enum(tabs):
          '//',
          '// The Collection Log page\'s rows by collection log tab number, so ~questtab_collection_draw can',
          '// walk the tabs rather than name each row: the engine cannot pick a component by number.']
+    # default=null, because a miss returns component 0 and not null - see rs2check rule 17. The
+    # keys here are 0..^collection_log_tabs-1 and cannot miss TODAY, but the loop that reads them is
+    # bounded by a constant in another file: add a fifth collection log tab, bump that constant and
+    # forget to regenerate this, and the fifth row writes its name into component 0.
     for what in ('name', 'count', 'fill'):
-        L += ['', '[questtab_collection_%s]' % what, 'inputtype=int', 'outputtype=component']
+        L += ['', '[questtab_collection_%s]' % what, 'inputtype=int', 'outputtype=component',
+              'default=null']
         for k in range(len(tabs)):
             L.append('val=%d,questtab_collection:row%d_%s' % (k, k, what))
     return '\n'.join(L) + '\n'

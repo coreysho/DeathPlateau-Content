@@ -137,7 +137,7 @@ inv_del(inv, zulrahs_scales, $n);
 if (inv_getobj(inv, $slot) = trident_of_the_swamp_uncharged) {
     inv_setslot(inv, $slot, trident_of_the_swamp, 1);
 }
-sound_synth(waterwave_cast_and_fire, 0, 0);
+sound_synth(waterwave_cast_and_fire, 1, 0);
 mes("You add <tostring($n)> charge<~trident_plural($n)> to the trident. It now has <tostring(%swamp_trident_charges)>.");
 
 // The runes come back and the scales stay spent, which is the seas' trident's own bargain with its

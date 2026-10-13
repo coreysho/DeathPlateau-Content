@@ -37,7 +37,7 @@ return(true, $damage, $damage_capped);
 npc_queue(2, $damage, $delay);
 npc_anim(npc_param(defend_anim), 20);
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, 20); // delay npc this tick
+    sound_synth(npc_param(defend_sound), 1, 20); // delay npc this tick
 }
 
 // ------------------------------------------------------------------ Dragon scimitar

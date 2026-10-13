@@ -282,7 +282,7 @@ if ($amount <= 0) {
     return;
 }
 mes("You take a bite of the rock cake. Ouch! That hurt.");
-sound_synth(human_hit2, 0, 0);
+sound_synth(human_hit2, 1, 0);
 ~damage_self($amount);
 
 // Taken out of the gen_eat_heal0 consume group: it is red hot and glowing, and eating it destroyed

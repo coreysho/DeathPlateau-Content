@@ -1,6 +1,22 @@
 #!/usr/bin/env python3
 """Put each worn model in the priority bucket that sorts it correctly against the player.
 
+DO NOT RUN THIS. WHAT SHIPS IS DELIBERATELY NOT WHAT IT PRODUCES (2026-10-12).
+
+Every worn model was put back to the bytes it was imported with, on the owner's instruction,
+after four passes from this tool and four more on top of them were each reported still
+clipping from the game. The rule below and the numbers in this file are the record of what was
+tried; they are not what the models carry.
+
+If you pick this up again, start with what the attempts actually established, in git log:
+  * the 377 cache and the OSRS imports agree on the bucket for every slot except the back
+  * 131 of the player kit's meshes are also what human npcs are built from, so no slot can be
+    retuned for the player alone without giving the npc its own copy of the mesh
+  * tools/wearrender.py scored a body that cannot exist until 87c7f5911, and its pixel count
+    is biased toward the depth-sorted bucket, so it can never be the only reason for a change
+  * nothing should ship from this again until it has been photographed with the CLIENT'S own
+    renderer rather than a reimplementation of it
+
 THE PROBLEM. The client has no z-buffer. Faces are painted in an order set by priority: twelve
 buckets, 0 to 9 drawn back to front in a fixed order, so a face at 5 goes over a face at 3
 wherever they overlap on screen whatever their real depth (Model.method382). Buckets 10 and 11 are

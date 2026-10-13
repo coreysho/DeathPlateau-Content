@@ -105,7 +105,7 @@ p_opnpc(2);
 
 //mes("attackstyle: <tostring(%attackstyle)>, damagestyle: <tostring(%damagestyle)>, damage: <tostring($damage)>, damagetype: <tostring(%damagetype)>");
 anim(%com_attackanim, 0);
-sound_synth(%com_attacksound, 0, 0);
+sound_synth(%com_attacksound, 1, 0);
 def_int $delay = add(~player_ranged_use_weapon($rhand, $ammo), 30); // osrs it seems to be delayed an extra tick
 ~npc_retaliate(calc($delay / 30));
 ~npc_queue_hit($damage, $hit_max, calc($delay / 30));
@@ -122,7 +122,7 @@ if (npc_param(defend_anim) ! null) {
     npc_anim(npc_param(defend_anim), sub($delay, 30)); // delay npc this tick
 }
 if (npc_param(defend_sound) ! null) {
-    sound_synth(npc_param(defend_sound), 0, sub($delay, 30)); // delay 1 client tick for the hit queue
+    sound_synth(npc_param(defend_sound), 1, sub($delay, 30)); // delay 1 client tick for the hit queue
 }
 // the bolt effect's graphic as the bolt lands, with the flinch
 ~bolt_effect_land($bolt_effect, $damage, sub($delay, 30));

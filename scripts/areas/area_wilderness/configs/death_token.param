@@ -1,0 +1,20 @@
+// THE PRICE OF BEING SEEN IN IT (Corey, 12 October 2026).
+//
+// On a token-bought cosmetic: how many Death tokens whoever kills you in the Wilderness is paid for
+// it. 0 - the default, and every other item in the game - means the piece behaves normally.
+//
+// THE INVARIANT, and it is the whole design rather than a tuning choice:
+//
+//     pvp_token_bounty MUST BE STRICTLY LESS THAN the item's own cost.
+//
+// Death tokens are untradeable, so paying a killer is the ONLY route a token can take from one
+// account to another. The piece is DESTROYED when it pays out (player/scripts/death.rs2), so a
+// boosting pair - or one person with an alt - spends the shop price to collect the bounty: at a
+// quarter, three tokens burn for every one that moves. Set it at or above the price and the same
+// pair prints tokens for free, with a kill animation.
+//
+// tools/slayer_battery.py fails if any obj carries a bounty >= its cost, so this cannot be typed
+// wrong quietly.
+[pvp_token_bounty]
+type=int
+default=0
