@@ -190,10 +190,16 @@ model=obj_undertaker_cape
 manwear=obj_undertaker_cape_manwear,0
 womanwear=obj_undertaker_cape_womanwear,0
 wearpos=back
-2dzoom=1340
-2dxan=512
-2dyan=0
-2dyof=5
+// THE CACHE CAPE'S OWN CAMERA, which is the rule this file states at the top and which I then
+// broke for this one piece: "a repaint is the same mesh, so it cannot need a different camera from
+// the thing it repaints". The five garments copied theirs; this one got an invented zoom 1340 /
+// xan 512 / yan 0 and rendered as a flat diagonal lozenge, nothing like the other capes in the
+// game. These five numbers are [black_cape]'s, which is the SAME obj_red_cape mesh seen properly.
+2dxof=3
+2dyof=6
+2dzoom=2140
+2dyan=948
+2dxan=400
 weight=453g
 cost=400
 iop2=Wear
