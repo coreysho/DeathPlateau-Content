@@ -50569,6 +50569,12 @@ womanwear=obj_ectophial_manwear,0
 2dyan=24
 2dxan=156
 weight=35g
+// UNTRADEABLE (2026-10-13), which it is in Old School - the infobox says no and covers both the
+// full and the empty version. It mattered here as soon as Velorina started replacing a lost one
+// for free: a free replacement for a TRADEABLE item is a faucet, because giving yours away makes
+// you eligible for another, and no amount of checking the bank can see a phial you handed to
+// somebody else. Untradeable is both the faithful value and what makes the replacement safe.
+tradeable=no
 
 [ectophial_empty]
 name=Ectophial
@@ -50581,6 +50587,9 @@ model=obj_ectophial_empty
 2dxan=156
 weight=35g
 category=potion
+// Untradeable for the same reason as the full one, and because it refills into the full one at the
+// Ectofuntus - a tradeable empty would be a tradeable ectophial one click later.
+tradeable=no
 
 [ahoy_toy_boat]
 name=Model ship
