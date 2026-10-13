@@ -1,0 +1,37 @@
+// Animations converted from the OSRS cache by tools/models/animconvosrs.py.
+// They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
+// only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+
+[royal_seed_pod_tele]
+// OSRS seq 7471
+loops=15
+frame1=anim_osrs_6291_2
+delay1=3
+frame2=anim_osrs_6291_1
+delay2=3
+frame3=anim_osrs_6291_7
+delay3=3
+frame4=anim_osrs_6291_4
+delay4=3
+frame5=anim_osrs_6291_8
+delay5=3
+frame6=anim_osrs_6291_3
+delay6=3
+frame7=anim_osrs_6291_5
+delay7=3
+frame8=anim_osrs_6291_6
+delay8=3
+frame9=anim_osrs_6291_9
+delay9=3
+frame10=anim_osrs_6291_10
+delay10=3
+frame11=anim_osrs_6291_11
+delay11=3
+frame12=anim_osrs_6291_12
+delay12=3
+frame13=anim_osrs_6291_13
+delay13=3
+frame14=anim_osrs_6291_14
+delay14=3
+frame15=anim_osrs_6291_15
+delay15=3

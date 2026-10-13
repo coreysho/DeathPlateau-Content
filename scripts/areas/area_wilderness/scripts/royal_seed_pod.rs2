@@ -31,4 +31,16 @@ mes("You open the seed pod.");
 // map_findsquare rather than the bare coord, the way gnome_glider.rs2 lands its passengers: the
 // trapdoor tile is King Narnode's own and somebody may be standing on it, and a teleport that drops
 // a player onto an occupied square is how you end up inside the furniture.
-~player_teleport_normal(map_findsquare(^narnode_trapdoor_coord, 0, 1, ^map_findsquare_lineofwalk));
+~royal_seed_pod_teleport(map_findsquare(^narnode_trapdoor_coord, 0, 1, ^map_findsquare_lineofwalk));
+
+// ~player_teleport_normal's shape with the pod's own graphic in place of teleport_casting. Copied
+// rather than called because the ONLY difference is the spotanim, and a proc that took one as an
+// argument would be a change to every teleport in the game to serve this one item.
+[proc,royal_seed_pod_teleport](coord $coord)
+if_close;
+p_stopaction;
+sound_synth(teleport_all, 1, 0);
+anim(human_castteleport, 0);
+spotanim_pl(royal_seed_pod_tele, 92, 0);
+p_delay(2);
+~p_telejump_safe($coord);
