@@ -172,12 +172,17 @@ def main():
 
 [whip_colour_result]
 inputtype=int
-outputtype=namedobj''']
+outputtype=namedobj
+// WITHOUT A DEFAULT A MISS RETURNS OBJ 0, which is a real item - so whip_colours.rs2's
+// `if ($into = null)` guard, which it has, could never fire and a bad key would hand over whatever
+// obj 0 happens to be. rs2check rule 17 is the one that catches this.
+default=null''']
     enum += enum_result
     enum.append('')
     enum.append('[whip_colour_kit]')
     enum.append('inputtype=int')
     enum.append('outputtype=namedobj')
+    enum.append('default=null')
     enum += enum_kit
     enum.append('')
 

@@ -7,6 +7,10 @@
 [whip_colour_result]
 inputtype=int
 outputtype=namedobj
+// WITHOUT A DEFAULT A MISS RETURNS OBJ 0, which is a real item - so whip_colours.rs2's
+// `if ($into = null)` guard, which it has, could never fire and a bad key would hand over whatever
+// obj 0 happens to be. rs2check rule 17 is the one that catches this.
+default=null
 val=1,abyssal_whip_volcanic
 val=2,abyssal_whip_frozen
 val=3,abyssal_whip_venom
@@ -20,6 +24,7 @@ val=9,abyssal_whip_gravedigger
 [whip_colour_kit]
 inputtype=int
 outputtype=namedobj
+default=null
 val=1,whip_kit_volcanic
 val=2,whip_kit_frozen
 val=3,whip_kit_venom
