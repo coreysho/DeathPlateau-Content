@@ -15,12 +15,22 @@ allstock=no
 // One of each kit, always in stock. restock=yes brings them back, and the price is each kit's own
 // cost= (50 marks) against shop_sell_multiplier 1000 per mille on the npc - so a kit costs 50 and
 // shop_delta=0 stops that drifting with how many she holds.
-stock1=graceful_kit_draynor,1,0
-stock2=graceful_kit_alkharid,1,0
-stock3=graceful_kit_varrock,1,0
-stock4=graceful_kit_canifis,1,0
-stock5=graceful_kit_falador,1,0
-stock6=graceful_kit_seers,1,0
-stock7=graceful_kit_pollnivneach,1,0
-stock8=graceful_kit_rellekka,1,0
-stock9=graceful_kit_ardougne,1,0
+//
+// THE RESTOCK RATE WAS 0 AND IT MEANT "NEVER", fixed 12 October. "restock=yes" is not enough on its
+// own: World.processCleanup tops a slot up with `item.count < stockcount && tick % stockrate == 0`,
+// and a rate of 0 makes that modulo NaN, which is never 0. Rate 1 refills on the next tick, which
+// is what a fixed-price reward wants.
+//
+// The rate was only half of it. The other half was in the engine: a non-stackable item could not be
+// restocked into its own count-0 slot at all, so even a correct rate would not have brought a kit
+// back. Both were found by the vote shop's sim and both are fixed; the graceful sim bought one kit
+// and passed, which is why neither was caught when this shop shipped.
+stock1=graceful_kit_draynor,1,1
+stock2=graceful_kit_alkharid,1,1
+stock3=graceful_kit_varrock,1,1
+stock4=graceful_kit_canifis,1,1
+stock5=graceful_kit_falador,1,1
+stock6=graceful_kit_seers,1,1
+stock7=graceful_kit_pollnivneach,1,1
+stock8=graceful_kit_rellekka,1,1
+stock9=graceful_kit_ardougne,1,1

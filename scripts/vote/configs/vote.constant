@@ -1,0 +1,40 @@
+// THE VOTE MODEL (12 October). Corey: "should receive vote tickets that are tradeable. you should
+// be able to redeem them from your inventory if you plan to use them instead of selling them."
+//
+// So there are two things, and they are deliberately not the same thing:
+//
+//   VOTE TICKET   a stackable, tradeable obj. What voting hands out. It is an item, so it can be
+//                 banked, traded, dropped and lost - and sold to another player, which is the
+//                 point: a player who does not want anything in the vote shop can turn a vote into
+//                 gp, and a player who does want something can buy more tickets than they voted
+//                 for. The ticket is the liquid half.
+//
+//   VOTE POINT    a varp. What a redeemed ticket becomes, one for one. No slot, no trade, no drop,
+//                 no death loss, no way back to a ticket. The bound half.
+//
+// WHY BOTH, rather than just making the ticket the shop's currency (which the shop system already
+// supports - Grace takes Marks of Grace that way, and the TzHaar take Tokkul)? Because then every
+// vote reward would be priced in a tradeable item, and the reward shop would be a gp shop with
+// extra steps. The one-way redeem is what makes the choice real: tickets or rewards, not both.
+//
+// REDEEMING IS IRREVERSIBLE, so ~vote_redeem asks before it does a whole stack.
+
+// One ticket, one point. Any other ratio would just be a unit change - the prices are in the same
+// currency either way - so 1:1 is the ratio that needs no explaining to a player.
+^vote_points_per_ticket = 1
+
+// The stack size past which Redeem asks "one or all?" rather than silently eating the lot. One
+// ticket cannot be a mistake; forty can.
+^vote_redeem_ask_above = 1
+
+// WHAT THE SHOP CHARGES. The price lives here and is written into the obj's cost= field
+// (general/configs/diary_rewards.obj), because that is where the shop system reads a price from -
+// ~adjusted_item_cost_buying is oc_cost($obj) scaled by the shopkeeper's per-mille multiplier.
+// Grace's recolour kits are priced the same way.
+//
+// 50 POINTS FOR EXPLORER'S RING 4, and the arithmetic behind it: one ticket is one point, and a
+// voter on a 12-hour cooldown is realistically bringing in a couple of tickets a day, so 50 is
+// somewhere around three or four weeks of voting. That is meant to feel like the reward for a habit
+// rather than a purchase - the ring is a full-diary item everywhere else, and the diary does not
+// exist here to gate it. Change this one number to move the price; nothing else refers to 50.
+^vote_price_explorers_ring = 50

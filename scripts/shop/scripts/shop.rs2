@@ -27,6 +27,7 @@ if ($choice = 2) {
 // in anything else is opened by its own shopkeeper below, where the param says what.
 [proc,openshop](inv $shop, int $shop_buy, int $shop_sell, int $shop_haggle, string $title)
 %shop_currency = coins;
+%shop_wallet = ^shop_wallet_inv;
 %shop = $shop;
 %shop_buy = $shop_buy;
 %shop_sell = $shop_sell;
@@ -40,6 +41,10 @@ if_openmain_side(shop_template, shop_template_side);
 // null rather than coins would make every existing shopkeeper's till empty, so the param's own
 // default is coins and this reads it straight.
 %shop_currency = npc_param(shop_currency);
+// Where the money comes from, which is not the same question as which money - see
+// shop/scripts/shop_wallet.rs2. The param defaults to the inventory, so every shopkeeper that
+// predates the vote shop keeps paying out of inv without being edited.
+%shop_wallet = npc_param(shop_wallet);
 %shop = npc_param(owned_shop);
 %shop_buy = npc_param(shop_buy_multiplier);
 %shop_sell = npc_param(shop_sell_multiplier);
@@ -55,6 +60,20 @@ inv_stoptransmit(shop_template:inv);
 
 [proc,can_sell_obj](obj $item)(boolean)
 def_boolean $item_is_tradable = oc_tradeable(oc_uncert($item));
+// A SHOP PAID IN VOTE POINTS BUYS NOTHING. There is no ~shop_wallet_gain, deliberately: anything
+// this could pay out for would be a way to mint points. The stock list at the vote shop is
+// untradeable anyway, so this is the rule for whatever gets added to it later.
+if (%shop_wallet = ^shop_wallet_vote_points) {
+    mes("This shop only takes vote points. It isn't buying.");
+    return (false);
+}
+// Tradeable between players, but no shop anywhere will put a price on it (shop/configs/
+// shopitem.param). Checked before the allstock rule below, because it is the allstock shops that
+// would otherwise buy it.
+if (oc_param(oc_uncert($item), shop_will_not_buy) = true) {
+    mes("You can't sell this item to a shop.");
+    return (false);
+}
 if ($item = %shop_currency) {
     mes("You can't sell this item to a shop.");
     return (false);
@@ -86,12 +105,12 @@ mes("<$item_name>: shop will buy for <tostring($item_value)>gp.");
 def_obj $item = inv_getobj(%shop, last_slot);
 def_string $item_name = oc_name($item);
 def_int $item_value = ~adjusted_item_cost_buying($item, inv_total(%shop, $item));
-mes("<$item_name>: currently costs <tostring($item_value)> <lowercase(oc_name(%shop_currency))>.");
+mes("<$item_name>: currently costs <tostring($item_value)> <~shop_wallet_name>.");
 
 // Buy an item from the shop
 [label,buy_item](obj $obj, int $amount)
 def_int $i = 0;
-def_int $current_gp = inv_total(inv, %shop_currency);
+def_int $current_gp = ~shop_wallet_total;
 def_int $shop_stock = calc(inv_total(%shop, $obj));
 def_int $space_overflow = inv_itemspace2(inv, $obj, $amount, inv_size(inv));
 def_int $total_cost = 0;
@@ -103,7 +122,7 @@ while($i < $amount) {
         if ($i > 0) {
             wealth_event(^wealth_shop_buy, oc_debugname($obj), $i, $total_cost);
         }
-        mes("You don't have enough <lowercase(oc_name(%shop_currency))>.");
+        mes("You don't have enough <~shop_wallet_name>.");
         return;
     }
     if($current_stock <= 0) {
@@ -113,9 +132,11 @@ while($i < $amount) {
         mes("The shop has run out of stock.");
         return;
     }
-    // do calc($total_cost + $added_amt) ! $current_gp for the case where the exact gp required for the purchase
-    // is used. Not sure if this should be the case in 2004
-    if($space_overflow >= calc($amount - $i) & calc($total_cost + $added_amt) ! $current_gp) {
+    // The exemption for spending exactly what you are holding: the currency stack empties and frees
+    // the slot it was in, so a full inventory is not full after all. ~shop_wallet_exact_change is
+    // where that lives now, because it is only true of a currency that OCCUPIES a slot - a varp
+    // balance frees nothing. (Whether 2004 did this at all is still unverified.)
+    if($space_overflow >= calc($amount - $i) & ~shop_wallet_exact_change(calc($total_cost + $added_amt), $current_gp) = false) {
         if ($i > 0) {
             wealth_event(^wealth_shop_buy, oc_debugname($obj), $i, $total_cost);
         }
@@ -123,7 +144,7 @@ while($i < $amount) {
         return;
     }
     $total_cost = calc($total_cost + $added_amt);
-    inv_del(inv, %shop_currency, $added_amt);
+    ~shop_wallet_spend($added_amt);
     inv_moveitem_uncert(%shop, inv, $obj, 1);
     $i = calc($i + 1);
 }

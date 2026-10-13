@@ -770,7 +770,12 @@ wearpos=ring
 2dxof=-1
 2dyof=-1
 weight=6g
-cost=0
+// THE VOTE SHOP'S PRICE, not a gp value. ~adjusted_item_cost_buying reads oc_cost and scales it by
+// the shopkeeper's per-mille multiplier, so a price has to live in cost= - which is how Grace's
+// recolour kits are priced in marks too. The ring is untradeable, so this number is never a gp
+// value to anybody: the only places it surfaces are the Vote clerk's shop and death-value ordering.
+// Change it in vote/configs/vote.constant, not here.
+cost=^vote_price_explorers_ring
 members=yes
 tradeable=no
 iop1=Wear

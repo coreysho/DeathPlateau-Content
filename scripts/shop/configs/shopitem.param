@@ -1,0 +1,15 @@
+// Params read off the OBJ being traded, not off the shopkeeper - which is why they are not in
+// shopkeeper.param.
+
+// TRADEABLE BETWEEN PLAYERS, BUT NO SHOP WILL BUY IT. ~can_sell_obj already refuses an untradeable
+// item everywhere, and that covers almost everything; what it did not cover is an item that is
+// deliberately tradeable AND must not have a gp price, because five of this build's shops are
+// allstock=yes and will buy literally anything.
+//
+// The vote ticket is the first of those. It has to be tradeable - selling your tickets instead of
+// redeeming them is half the model - but a general store buying them would turn voting into a gp
+// faucet at whatever cost= happened to say. A param rather than a hardcoded name in ~can_sell_obj
+// (which is how the Al-Kharid silk rule is written) so the next such item needs no code.
+[shop_will_not_buy]
+type=boolean
+default=no

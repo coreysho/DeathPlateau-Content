@@ -1,0 +1,53 @@
+// WHERE A SHOP TAKES PAYMENT FROM (12 October), the four questions shop.rs2 used to answer with
+// inv_total/inv_del/oc_name against %shop_currency directly.
+//
+// Every shop in the build before this one was paid out of the player's inventory - coins for 38 of
+// them, Tokkul for the three TzHaar traders, Marks of Grace for Grace - so "the currency" and
+// "where the currency is" were the same question and %shop_currency answered both. The vote shop is
+// the first where they come apart: a vote point is a varp, not an obj, because a vote TICKET is
+// tradeable and the entire reason to redeem one is that what you get back cannot be traded, dropped
+// or lost. See vote/scripts/vote_ticket.rs2 for the model.
+//
+// WHY THIS COUPLES THE SHOP SYSTEM TO ONE FEATURE. There is no way in this dialect to hold a varp in
+// a variable and read it back, so a generic "the balance lives in varp N" is not expressible: the
+// branch has to name %vote_points. One `if` in four procs is the whole cost, and it is visible here
+// rather than smeared through shop.rs2.
+//
+// A POINTS SHOP NEVER PAYS OUT. ~can_sell_obj refuses everything at one, so there is no
+// ~shop_wallet_gain and no path that can add points - a shop that could buy items for vote points
+// would be a point faucet. Selling is the inventory wallet's business only.
+
+// What to call it in a message. "gp" is not usable here: the inventory wallet says "coins",
+// "tokkul" or "marks of grace" depending on the shop, and the points wallet has no obj to name.
+[proc,shop_wallet_name]()(string)
+if (%shop_wallet = ^shop_wallet_vote_points) {
+    return("vote points");
+}
+return(lowercase(oc_name(%shop_currency)));
+
+[proc,shop_wallet_total]()(int)
+if (%shop_wallet = ^shop_wallet_vote_points) {
+    return(%vote_points);
+}
+return(inv_total(inv, %shop_currency));
+
+[proc,shop_wallet_spend](int $amount)
+if (%shop_wallet = ^shop_wallet_vote_points) {
+    %vote_points = calc(%vote_points - $amount);
+    return;
+}
+inv_del(inv, %shop_currency, $amount);
+
+// THE EXACT-CHANGE EXEMPTION, and the reason it is a proc rather than a condition written inline.
+// ~buy_item lets a purchase through with no free inventory slot when the cost comes to exactly what
+// you are holding, because the coin stack is about to empty and free the slot it was in. Nothing
+// empties when the wallet is a varp, so that exemption has to be false there - and a points balance
+// that happens to equal the price would otherwise trip it and buy an item with nowhere to put it.
+[proc,shop_wallet_exact_change](int $cost, int $held)(boolean)
+if (%shop_wallet = ^shop_wallet_vote_points) {
+    return(false);
+}
+if ($cost = $held) {
+    return(true);
+}
+return(false);

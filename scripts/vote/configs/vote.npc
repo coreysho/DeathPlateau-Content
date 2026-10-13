@@ -1,0 +1,56 @@
+// THE VOTE CLERK, at the Edgeville bank (3093,3496) - the quiet north-west corner by the chairs and
+// the round table, clear of the four bank booths on the east wall, clear of both doorways, and clear
+// of the undertaker and the four bankers already spawned in that square. The tile is standable and
+// joined to the rest of the world; engine/tools/sim/voteshop.ts checks that rather than trusting it.
+//
+// wanderrange=0, which is the lesson the Pest Control portals taught: a shopkeeper that strolls off
+// its tile is a shopkeeper nobody can find twice.
+//
+// THE LOOK IS THE LUMBRIDGE SHOP ASSISTANT'S, in different livery. A new npc model would be art and
+// this is a clerk standing in a bank - so the model pieces are generalassistant1's verbatim (a
+// known-good set that renders) and only the gown and apron recolours change, to the blues of the
+// vote ticket. Two numbers, and they are the only thing separating him from a general store clerk.
+
+[vote_clerk]
+name=Vote clerk
+desc=He keeps the ledger of who has voted.
+model1=idk_man_hair_cropped
+model2=obj_macro_mime_legs_manwear
+model3=idk_man_jaw_none
+model4=obj_white_apron_manwear
+model5=obj_doctor_gown_manwear2
+model6=obj_cert_drill_top_manwear3
+model7=idk_42
+head1=idk_man_hair_cropped_head
+recol1s=2340
+recol1d=8354
+recol2s=14724
+recol2d=13539
+recol3s=6273
+recol3d=4226
+// The livery. 5396 is a deep blue and 19164 a pale blue-grey, matching the ticket's recolour.
+recol4s=14801
+recol4d=5396
+recol5s=32735
+recol5d=19164
+vislevel=hide
+wanderrange=0
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+readyanim=human_ready
+op1=Talk-to
+op3=Trade
+category=shop_keeper
+param=owned_shop,vote_shop
+// PAID IN VOTE POINTS, not in an item out of the inventory - see shop/scripts/shop_wallet.rs2.
+// shop_currency is left at its default of coins and never read, because the points branch answers
+// first in all four wallet procs; setting it to something else would only be misleading.
+param=shop_wallet,^shop_wallet_vote_points
+// 1000 IS FULL PRICE, per mille - the mistake Grace's shop made with 100 (which charged a tenth and
+// sold a graceful kit for 6 marks). delta 0 because a point price is a fixed price: it must not
+// drift with how much stock he happens to be holding.
+param=shop_sell_multiplier,1000
+param=shop_delta,0
+// He buys nothing at all - ~can_sell_obj refuses every item at a points shop, since anything he
+// paid out for would be a way to mint points. This is what he would pay if that ever changed.
+param=shop_buy_multiplier,1000
+param=shop_title,Vote Rewards

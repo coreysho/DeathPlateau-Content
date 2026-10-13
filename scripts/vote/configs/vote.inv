@@ -1,0 +1,27 @@
+// The vote shop. One item at launch, which is the whole of what was asked for: Explorer's ring 4
+// carries the farm teleport (skill_farming/scripts/farm_teleport.rs2) and had no source at all,
+// because the achievement diary that should hand it out is not implemented.
+//
+// allstock=no matters even with one line of stock: with allstock=yes the shop would BUY any
+// tradeable item, and at a shop paid in vote points that would be a point faucet. ~can_sell_obj
+// refuses everything at a points shop as well, so this is the second of two locks.
+[vote_shop]
+scope=shared
+size=1
+restock=yes
+stackall=no
+allstock=no
+// One ring, always in stock. The price is the obj's own cost= (^vote_price_explorers_ring, 50)
+// against shop_sell_multiplier 1000 per mille on the clerk.
+//
+// THE THIRD NUMBER IS THE RESTOCK RATE IN TICKS, AND IT MUST NOT BE 0. World.processCleanup tops a
+// slot up with `item.count < stockcount && tick % stockrate == 0`, and a rate of 0 makes that
+// modulo NaN, which is never 0 - the slot would sit at count 0 for the lifetime of the world and
+// the first buyer would take the only ring there will ever be. 1 refills on the next tick, which
+// for a fixed-price untradeable reward is exactly right: nothing here wants throttling, and 220 of
+// this build's shop lines already use 1.
+//
+// That was only half of why this shop went permanently empty, and the other half was in the engine
+// - restocking a NON-STACKABLE item could not write its own count-0 slot. See the comment on that
+// branch in engine/src/engine/World.ts.
+stock1=explorers_ring_4,1,1

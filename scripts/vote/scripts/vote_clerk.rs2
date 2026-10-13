@@ -1,0 +1,25 @@
+// THE VOTE CLERK at the Edgeville bank. op3=Trade is the shop system's own
+// ([opnpc3,_shop_keeper] -> ~openshop_activenpc), so all this file owns is Talk-to.
+//
+// TALK-TO IS WHERE YOU READ YOUR BALANCE, and it is the only place you can. A vote point is a varp,
+// so unlike Marks of Grace or Tokkul there is no stack in the inventory to look at - and a player
+// with no tickets left has nothing to click to find out what they have. The clerk always will.
+
+[opnpc1,vote_clerk]
+~chatnpc("<p,happy>Welcome. I keep the ledger of who has voted.");
+// Anything credited while the pack was full - see ~vote_grant_tickets. Before the balance, because
+// the tickets a player is about to redeem are the reason they came.
+~vote_collect_pending;
+if (%vote_points = 0) {
+    ~chatnpc("<p,neutral>You have no vote points. Redeem a vote ticket and come back.");
+} else {
+    ~chatnpc("<p,neutral>You have <~pluralise(%vote_points, "vote point")> to spend.");
+}
+def_int $choice = ~p_choice2("Let's see the rewards, then.", 1, "Maybe later.", 2);
+if ($choice = 2) {
+    ~chatplayer("<p,neutral>Maybe later.");
+    ~chatnpc("<p,neutral>The ledger will keep.");
+    return;
+}
+~chatplayer("<p,happy>Let's see the rewards, then.");
+~openshop_activenpc;

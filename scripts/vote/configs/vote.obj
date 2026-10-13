@@ -1,0 +1,41 @@
+// THE VOTE TICKET. What voting hands out, and what you either sell or redeem - see
+// configs/vote.constant for the model and why it is an item rather than a number.
+//
+// THE MODEL IS THE 377 TICKET, RECOLOURED. obj_paramayaticket is already shared by three tickets in
+// this cache (the Paramaya ticket, the archery ticket and the Agility Arena ticket), all of them
+// sage green and parchment, so a fourth one in the same colours would be unreadable in an
+// inventory. The three face colours were read off models/obj/obj_paramayaticket.ob2 with
+// tools/models/ob2palette.py - recol1s/2s/3s are its own three, not guesses - and they go to blue,
+// near-white and deep blue. Nothing is imported and no art is touched: this is data.
+//
+// STACKABLE AND TRADEABLE, both on purpose. Stackable because a voter accumulates these and they
+// must not eat the inventory; tradeable because selling them instead of redeeming them is half the
+// model.
+//
+// cost=0 AND param=shop_will_not_buy. Five of this build's shops are allstock=yes and will buy any
+// tradeable item at whatever cost= says, which would make voting a gp faucet at a fixed rate and
+// take the price away from the players. The param refuses the sale outright (shop/scripts/shop.rs2,
+// ~can_sell_obj); cost=0 is belt-and-braces so that if the param is ever lost the faucet is worth
+// nothing rather than something.
+
+[vote_ticket]
+name=Vote ticket
+desc=Redeem it for a vote point, or sell it to somebody who will.
+model=obj_paramayaticket
+// From ob2palette.py on obj_paramayaticket.ob2: three faces each of hsl16 16714, 7403 and 3532.
+recol1s=19150
+recol1d=10780
+recol2s=31638
+recol2d=29663
+recol3s=25133
+recol3d=6484
+2dxof=6
+2dyof=-2
+2dzoom=830
+2dyan=132
+2dxan=320
+stackable=yes
+weight=0g
+cost=0
+iop1=Redeem
+param=shop_will_not_buy,yes
