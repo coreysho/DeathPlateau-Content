@@ -73,6 +73,17 @@ if ($new = true) {
     ~collection_log_rewards;
 }
 
+// Has this account ever obtained $obj? The log is keyed by item and kept forever, so this is the
+// cheapest permanent "have you done it" the build has - which is what the Fight Cave's refight
+// shortcut asks of it (minigames/game_fightcave/scripts/fightcave.rs2). It answers for what was
+// OBTAINED, not what is still owned: an item traded, dropped, lost on death or exchanged away
+// still reads true, which is the same thing the log itself shows.
+[proc,collection_log_has](namedobj $obj)(boolean)
+if (inv_total(collection_log, $obj) > 0) {
+    return(true);
+}
+return(false);
+
 // A CASKET. trail_rewardinv can still hold a previous casket's loot that would not fit in a full
 // inventory, and this casket rolled in on top of it - so ~trail_prepare_rewardinv snapshots what
 // was left over before the roll, and only what the roll added is logged here.

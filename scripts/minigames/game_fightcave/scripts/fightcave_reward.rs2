@@ -15,6 +15,14 @@ if ($waves <= 0) {
 return(multiply($waves, add($waves, 1)));
 
 [proc,fightcave_pay](int $waves)
+// THE REFIGHT SHORTCUT PAYS FOR NO WAVES (suggestion #21). Entering at wave 63 leaves
+// %fightcave_wave at 63, so every exit - leaving, dying, killing Jad - would otherwise hand over
+// the 62 waves' Tokkul that the run never fought: 3,906 for walking back out, 4,032 for the kill.
+// The guard is here rather than at the three call sites because there are three of them and this
+// is the one thing they all do.
+if (%fightcave_jad_only = ^true) {
+    return;
+}
 def_int $tokkul = ~fightcave_tokkul_for($waves);
 if ($tokkul <= 0) {
     return;
@@ -34,7 +42,13 @@ mes("You are awarded <tostring(^fightcave_tokkul_jad)> Tokkul, and TzHaar-Mej-Ja
 // to be deleted, so this does the framework's own three checks and then hands it over the same way
 // the cape is handed over.
 ~fightcave_pet_roll;
-~broadcast_news("Fire cape!", "defeated TzTok-Jad and claimed a @dre@Fire cape@bla@.");
+// THE BROADCAST IS FOR THE RUN, NOT THE KILL. A full cave is three quarters of an hour; the
+// refight shortcut is a couple of minutes, and announcing every one of those to the whole world
+// would turn the news into a Jad ticker. So a shortcut kill pays the cape and rolls the pet -
+// which is the whole point of the shortcut - and keeps quiet about it.
+if (%fightcave_jad_only = ^false) {
+    ~broadcast_news("Fire cape!", "defeated TzTok-Jad and claimed a @dre@Fire cape@bla@.");
+}
 
 // Pack first, bank second. Nothing here may fall on the floor: the instance is deleted moments
 // later and anything lying in it goes with it.

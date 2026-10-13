@@ -17,4 +17,15 @@ type=int
 [fightcave_cycle_at]
 type=int
 
+// Set when the run was entered through the refight shortcut (suggestion #21) rather than at wave
+// 1. The run is worth only Jad: ~fightcave_pay refuses the wave Tokkul and ~fightcave_reward holds
+// back the broadcast, so the shortcut pays the cape, the pet roll and Jad's own 4,000 and nothing
+// for the 62 waves it skipped.
+//
+// IT HAS TO BE STORED rather than worked out at the end, because by the time anything reads it
+// %fightcave_wave is 63 whichever way the player came in - and a full run that fought its way to
+// Jad must still be paid for the 62 waves it fought.
+[fightcave_jad_only]
+type=int
+
 // Jad's "healers called" flag is an NPC var, not one of these - see fightcave.varn.

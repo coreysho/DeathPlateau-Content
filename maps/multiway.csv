@@ -5357,3 +5357,81 @@
 3_45_83_40_56
 3_45_83_48_56
 3_45_83_56_56
+
+// tzhaar fight cave - the whole arena, every zone of m37_79
+// "The Fight Caves is a multi-combat area" - which is not a detail there: Jad's four Yt-HurKot
+// healers are npc_setmode(opplayer2), so they walk up and melee, and in a SINGLE-way area a
+// healer touching the player is what stops the player attacking anything else. That is the bug
+// GameMap.isMulti's own comment describes from Zulrah: "the player was refused a re-attack
+// ... for eight ticks after anything whose uid was not Zulrah's current one touched them". In
+// the cave it means the healers cannot be killed and Jad is healed 40 a round by monsters that
+// are, in effect, invulnerable - so the fight the content describes was not the fight being had.
+//
+// AN INSTANCE ASKS ON BEHALF OF ITS TEMPLATE, so marking the template square here is what makes
+// every player's copy of the cave multi-way; a line addressed to an instance's own coordinates
+// could never match. All 64 zones, because ^fightcave_template is the whole 64x64 square and
+// nothing but the cave is in it.
+0_37_79_0_0
+0_37_79_8_0
+0_37_79_16_0
+0_37_79_24_0
+0_37_79_32_0
+0_37_79_40_0
+0_37_79_48_0
+0_37_79_56_0
+0_37_79_0_8
+0_37_79_8_8
+0_37_79_16_8
+0_37_79_24_8
+0_37_79_32_8
+0_37_79_40_8
+0_37_79_48_8
+0_37_79_56_8
+0_37_79_0_16
+0_37_79_8_16
+0_37_79_16_16
+0_37_79_24_16
+0_37_79_32_16
+0_37_79_40_16
+0_37_79_48_16
+0_37_79_56_16
+0_37_79_0_24
+0_37_79_8_24
+0_37_79_16_24
+0_37_79_24_24
+0_37_79_32_24
+0_37_79_40_24
+0_37_79_48_24
+0_37_79_56_24
+0_37_79_0_32
+0_37_79_8_32
+0_37_79_16_32
+0_37_79_24_32
+0_37_79_32_32
+0_37_79_40_32
+0_37_79_48_32
+0_37_79_56_32
+0_37_79_0_40
+0_37_79_8_40
+0_37_79_16_40
+0_37_79_24_40
+0_37_79_32_40
+0_37_79_40_40
+0_37_79_48_40
+0_37_79_56_40
+0_37_79_0_48
+0_37_79_8_48
+0_37_79_16_48
+0_37_79_24_48
+0_37_79_32_48
+0_37_79_40_48
+0_37_79_48_48
+0_37_79_56_48
+0_37_79_0_56
+0_37_79_8_56
+0_37_79_16_56
+0_37_79_24_56
+0_37_79_32_56
+0_37_79_40_56
+0_37_79_48_56
+0_37_79_56_56

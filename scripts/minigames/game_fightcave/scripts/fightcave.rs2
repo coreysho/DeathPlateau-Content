@@ -27,17 +27,54 @@ if (inv_freespace(inv) < 1) {
     mes("You need at least one free inventory space to enter the cave.");
     return;
 }
+// THE REFIGHT SHORTCUT (13 October, suggestion #21). Offered only to someone who has already
+// walked the 62 waves - see ~fightcave_jad_unlocked - and asked here rather than put behind a
+// second loc because there is only one cave entrance and it should stay the only way in.
+def_int $wave = 1;
+if (~fightcave_jad_unlocked = true) {
+    def_int $pick = ~p_choice3_header(
+        "Start from wave 1.", 1,
+        "Fight TzTok-Jad only.", ^fightcave_jad_wave,
+        "Cancel.", 0,
+        "How would you like to enter?");
+    if ($pick = 0) {
+        return;
+    }
+    $wave = $pick;
+}
 mes("You enter the TzHaar Fight Cave...");
 p_delay(1);
 if (~fightcave_build = false) {
     mes("The cave is full. Try again shortly.");
     return;
 }
-%fightcave_wave = 1;
+%fightcave_wave = $wave;
+// WHAT THE REST OF THE RUN READS, and the reason it is a varp rather than derived from the wave
+// number: by the time ~fightcave_end runs, %fightcave_wave is 63 either way, and a full run that
+// reached Jad honestly must still be paid for the 62 waves it fought. Temp, like the other three
+// and for the same reason - it describes a run, and a run does not survive a restart.
+%fightcave_jad_only = ^false;
+if ($wave >= ^fightcave_jad_wave) {
+    %fightcave_jad_only = ^true;
+}
 %fightcave_cycle_at = 0;
 p_teleport(~fightcave_at(^fightcave_entry));
-~fightcave_spawn_wave(1);
-mes("@red@Wave 1@bla@");
+~fightcave_spawn_wave($wave);
+mes("@red@Wave <tostring($wave)>@bla@");
+
+// WHO MAY SKIP: anyone whose collection log holds a Fire cape, which is exactly anyone who has
+// killed TzTok-Jad. The cape is logged by ~fightcave_reward and the cave is the only place it
+// comes from, so the log is already a permanent record of a completed run and no new varp is
+// needed - which also means every account that cleared the cave before today is credited for it,
+// where a counter starting now would have asked them to do it again.
+//
+// The four fightcave varps cannot answer this: all of them are temp, deliberately, because they
+// point into an instance that does not survive a restart (see fightcave.varp).
+//
+// Exchanging the cape away at TzHaar-Mej-Jal does not take the unlock back. The log records what
+// was obtained, not what is still owned, which is what makes it the right thing to ask.
+[proc,fightcave_jad_unlocked]()(boolean)
+return(~collection_log_has(tzhaar_cape_fire));
 
 [label,fightcave_leave]
 if (p_finduid(uid) = false) {
