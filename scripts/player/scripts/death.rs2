@@ -135,12 +135,18 @@ if($protecting_item = true) {
 ~blowpipe_death_spill; // toxic_blowpipe/scripts/blowpipe.rs2
 ~rune_pouch_death_spill; // storage_items/scripts/rune_pouch.rs2 - the runes go with the pouch
 
+// A GOD CAPE IS RECLAIMED WHEREVER YOU DIE, not only when a player kills you. Both loops told you
+// "Saradomin reclaims the cape as it touches the ground" and then left the cape on the ground - and
+// because it is untradeable it dropped owned by YOU and never reveals, so you walked back and picked
+// up the thing you had just been told was gone. The inv_delslot the pvp loop has was missing here.
+// Engine-TS tools/sim/deathuntradeable.ts holds it.
 def_int $i = 0;
 def_int $size = inv_size(inv);
 while ($i < $size) {
     if (inv_getnum(inv, $i) > 0) {
         if (oc_category(inv_getobj(inv, $i)) = armour_godcape) {
             mes(oc_param(inv_getobj(inv, $i), lose_cape_message));
+            inv_delslot(inv, $i);
         }
     }
     $i = calc($i + 1);
@@ -152,6 +158,7 @@ while ($i < $size) {
     if (inv_getnum(worn, $i) > 0) {
         if (oc_category(inv_getobj(worn, $i)) = armour_godcape) {
             mes(oc_param(inv_getobj(worn, $i), lose_cape_message));
+            inv_delslot(worn, $i);
         }
     }
     $i = calc($i + 1);
