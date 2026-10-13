@@ -42,22 +42,39 @@
 // destination, so the coord can be the literal the trigger passes in and there is no id space,
 // no table, and no default to get wrong.
 //
-// THE COORDS ARE MEASURED, the same way the farm teleport's were: each is a tile the engine's own
-// collision map says a player can stand on, joined to at least 200 other walkable tiles, and
-// within a few tiles of the landmark that names it. engine/tools/sim/diaryrewards.ts is what
-// measured them and what re-checks them, so a map import that moves a landmark fails the sim
-// rather than landing someone in a wall.
+// SIX OF THESE ARE COREY'S OWN (13 October), and they replace six that were picked by measurement
+// alone. The measurement answered "can a player stand here, and is it near the landmark" and got
+// both right every time - and still landed in the wrong place twice, because near a landmark is
+// not the same as where a player wants to be put down. The gem mine arrival was underground by
+// the Karamja rocks when the mining site the teleport is for is on the surface outside Shilo; the
+// Slayer master's was out on the landing rather than in the room with Duradel. The named coords
+// win over the measured ones.
+//
+// EVERY ONE IS STILL CHECKED, which is the part the measurement keeps: engine/tools/sim/
+// diaryrewards.ts asserts each is a tile the collision map says a player can stand on, that the
+// landing matches the figure below, and that the walkable area it joins is the size recorded there
+// - so a map import that walls one off fails the sim rather than landing somebody in a hedge.
+//
+// TWO ARE SMALL ON PURPOSE and the sim records their real size rather than holding them to the
+// 200-tile floor the rest meet:
+//
+//   the Slayer master   37 tiles, which is Duradel's room. The point is to be put down beside him.
+//   the Ectofuntus      3 tiles, a strip in the slime cavern with gloop on both sides and the
+//                       cavern stairs on the tile next to it. Collision cannot follow a stair, so
+//                       the flood fill stops at 3 and the player is not trapped - they are stood
+//                       exactly where the buckets get filled, which is the chore the teleport is
+//                       for. Note this is the SLIME PIT and not the Ectofuntus itself.
 
-^diary_coord_ardougne_monastery = 0_40_50_42_6    // (2602,3206)  outside Brother Omad's monastery
+^diary_coord_ardougne_monastery = 0_40_50_46_22   // (2606,3222)  the monastery, by its own monk
 ^diary_coord_ardougne_farm = 0_41_52_44_46        // (2668,3374)  the farm teleport's own arrival
 ^diary_coord_nardah = 0_53_45_35_34               // (3427,2914)
 ^diary_coord_kalphite_cave = 0_50_48_27_34        // (3227,3106)  the old man's hole in the sand
-^diary_coord_rellekka = 0_41_57_21_61             // (2645,3709)
+^diary_coord_rellekka = 0_41_57_34_10             // (2658,3658)  inside the town, by the longhall
 ^diary_coord_seers_village = 0_42_54_38_32        // (2726,3488)
-^diary_coord_ectofuntus = 0_57_54_53_45           // (3701,3501)
-^diary_coord_burgh_de_rott = 0_54_50_40_32        // (3496,3232)
-^diary_coord_shilo_gem_mine = 0_43_145_4_16       // (2756,9296)  underground, by the gem rocks
-^diary_coord_slayer_master = 1_44_46_50_35        // (2866,2979) level 1  Duradel's loft in Shilo
+^diary_coord_ectofuntus = 0_57_154_35_32          // (3683,9888)  the slime cavern, at the gloop
+^diary_coord_burgh_de_rott = 0_54_50_29_39        // (3485,3239)  among the villagers
+^diary_coord_shilo_gem_mine = 0_44_46_10_54       // (2826,2998)  the surface gem rocks by Shilo
+^diary_coord_slayer_master = 1_44_46_53_36        // (2869,2980) level 1  in the room with Duradel
 ^diary_coord_fountain_of_rune = 0_52_60_42_54     // (3370,3894)  deep Wilderness, deliberately
 
 // THE WILDERNESS CEILING, 30, which is what the farm teleport uses (^farm_tele_wildy_max) and what
