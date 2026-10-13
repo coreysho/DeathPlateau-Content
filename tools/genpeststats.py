@@ -107,6 +107,12 @@ def main():
                 for which in ('stab', 'slash', 'crush', 'magic', 'range'):
                     lines.append('param=%sdefence,%d' % (which, bonus))
                 lines.append('param=damagetype,%s' % STYLE[style])
+                # EVERY FAMILY HAS ITS OWN BLOCK ANIMATION in the cache - shifter_defend,
+                # ravager_defend and the rest - and none of them was being used. defend_anim is a
+                # param whose DEFAULT is human_unarmed_def, so saying nothing did not mean "no
+                # block", it meant a man's unarmed block played on a spider, a bat and a walking
+                # bomb. Same shape of fault as death_drop defaulting to bones.
+                lines.append('param=defend_anim,%s_defend' % prefix.replace('pest_', ''))
                 lines.append('huntmode=%s' % ('aggressive_ranged' if rng > 1 else 'aggressive_melee'))
                 lines.append('huntrange=%d' % (8 if rng > 1 else 5))
                 lines.append('attackrange=%d' % rng)
@@ -145,6 +151,12 @@ def main():
             # Nor does a portal, and for the same reason the pests do not - see the note on their
             # own line. A portal dropping bones is what was reported from play.
             'param=death_drop,null',
+            # AND A PORTAL DOES NOT FLINCH. Reported from play: "portals shouldn't have a defense
+            # animation, should stay static." The pests above get their family's own block
+            # animation; a portal has none in the cache and should have none - it is a hole in the
+            # air with hitpoints. Without this it inherited the param's default and played a man's
+            # unarmed block, on a portal, every time it was hit.
+            'param=defend_anim,null',
             # A PORTAL MUST NOT MOVE. Without this it wanders - the default wanderrange is not zero
             # - and a size-3 objective drifting off the tile the island scan picked for it was
             # exactly what tools/sim/pestsolo.ts caught (one portal reporting 11,54 for 10,55).

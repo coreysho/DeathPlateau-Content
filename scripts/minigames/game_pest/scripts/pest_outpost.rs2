@@ -64,6 +64,21 @@ switch_int (~p_choice3("Take me down.", 1, "How does the scoring work?", 2, "Not
         ~chatnpc("<p,neutral>The lander will wait.");
 }
 
+// QUICK-START (13 October, Corey: "can we add a right click to the squire to join a game
+// quicker?"). op3 and not op2: [opnpc2,_] is this build's global attack trigger, so an op2 on an
+// npc means Attack and would make the squire attackable. op3 is where the Void Knights' Exchange
+// and the slayer masters' Rewards already live.
+//
+// IT GATES NOTHING ITSELF, deliberately. ~pest_solo_start does its own checking - the combat
+// requirement, an instance already in progress, every lander being out - so the fast route cannot
+// skip a check the slow one makes. All this saves is the four lines of dialogue, which is what
+// was asked for.
+[opnpc3,pest_squire_lander]
+if (p_finduid(uid) = false) {
+    return;
+}
+~pest_solo_start;
+
 // --- The Void Knights ---
 // op3=Exchange is live: there is a commendation-point system now (scripts/pest_rewards.rs2). The
 // comment that used to sit here said it needed one and there was none.
