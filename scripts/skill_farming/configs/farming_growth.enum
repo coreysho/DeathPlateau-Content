@@ -1,0 +1,52 @@
+// HOW MUCH FASTER THAN OLD SCHOOL EACH PATCH FAMILY GROWS (13 October, suggestion #22, "reducing
+// farming patch times").
+//
+// THE DATA IN THE CACHE IS LEFT AUTHENTIC. Every seed's farming_stages and farming_cycle in
+// scripts/_unpack/377/all.obj are Old School's own numbers, and they stay that way - the reduction
+// is applied when the growth clock is read (~farming_growth_minutes, scripts/farming_core.rs2)
+// rather than written into 57 obj records. Three reasons: a re-import of the cache cannot silently
+// undo it, the decision is one table in one place instead of 57 numbers to keep consistent, and
+// the authentic figure is still there to compare against.
+//
+// THE RULE: halve every family whose longest crop takes more than three hours. That is a cut-off
+// with a reason rather than a taste - three hours is the point past which a patch stops being
+// something you come back to in the same session and becomes something you come back to tomorrow,
+// which is the complaint. Below it, nothing changes: a flower is 20 minutes, an allotment 40 to 80,
+// hops 40 to 80, a herb 80, and a farm run is still planned around that 80-minute heartbeat.
+//
+// WHY PER FAMILY AND NOT PER CROP. Within a family the crops are a tier ladder - oak, willow,
+// maple, yew, magic - and halving by total time rather than by family would reorder it: a maple at
+// 5.3 hours would halve while a willow at 4 hours would not, and the lower-level tree would finish
+// last. One divisor per family cannot do that.
+//
+// What it comes to, authentic -> here:
+//
+//   tree          oak 2.7h, willow 4h, maple 5.3h, yew 6.7h, magic 8h
+//                 ->  1.3h, 2h, 2.7h, 3.3h, 4h
+//   fruit tree    16h   ->  8h
+//   cactus        9.3h  ->  4.7h
+//   calquat       21.3h ->  10.7h
+//   mushroom      4h    ->  2h
+//   belladonna    5.3h  ->  2.7h
+//   spirit tree   64h   ->  32h
+//
+// PRODUCE REGROWTH IS NOT TOUCHED. ~farming_regrow_minutes reads the raw cycle, so a grown fruit
+// tree still puts a fruit back every 40 minutes and a bush a berry every 20. The wait being
+// complained about is the wait for the plant, not the rate it pays once it is there - and halving
+// both would double a fruit tree's output per day rather than just shortening the wait for it.
+//
+// A FAMILY NOT LISTED GROWS AT OLD SCHOOL'S RATE, which is what default=1 is for: a family added
+// later is authentic until somebody decides otherwise, rather than inheriting a number by accident.
+// Nothing may be 0 here - it is a divisor - and ~farming_growth_minutes floors it at 1 so a typo
+// cannot divide by zero.
+[farming_family_growth_divisor]
+inputtype=int
+outputtype=int
+default=1
+val=^farming_family_tree,2
+val=^farming_family_fruit_tree,2
+val=^farming_family_cactus,2
+val=^farming_family_calquat,2
+val=^farming_family_mushroom,2
+val=^farming_family_belladonna,2
+val=^farming_family_spirit_tree,2

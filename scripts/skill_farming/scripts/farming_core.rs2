@@ -171,7 +171,23 @@ return($base);
 
 // ============================================================================ growth
 
+// MINUTES PER GROWTH CYCLE, which is the obj's authentic farming_cycle divided by two things: the
+// per-family reduction (configs/farming_growth.enum, which says which families and why) and
+// ^farming_speed_divisor, the global testing knob.
+//
+// THE CACHE DATA IS NEVER EDITED, so this proc is the only place the reduction exists and the only
+// place that can disagree with the enum. Every read of the growth clock goes through here;
+// ~farming_regrow_minutes below deliberately does not, because produce regrowth keeps Old School's
+// rate.
+[proc,farming_growth_minutes](namedobj $seed)(int)
+def_int $family = max(1, enum(int, int, farming_family_growth_divisor, oc_param($seed, farming_family)));
+def_int $cycle = divide(oc_param($seed, farming_cycle), $family);
+return(max(1, divide($cycle, ^farming_speed_divisor)));
+
 // How often a fully grown bush/fruit tree/cactus/calquat puts another berry, fruit or spine back.
+// THE RAW CYCLE, not ~farming_growth_minutes: shortening the wait for a plant is what suggestion
+// #22 asked for, and speeding up what a grown plant pays would be a yield change wearing it as a
+// disguise.
 [proc,farming_regrow_minutes](namedobj $seed)(int)
 def_int $cycle = oc_param($seed, farming_cycle);
 if (oc_param($seed, farming_family) = ^farming_family_bush) {
@@ -228,7 +244,7 @@ if ($stage >= $stages & $condition = ^farming_healthy) {
     return;
 }
 
-def_int $cycle = max(1, divide(oc_param($seed, farming_cycle), ^farming_speed_divisor));
+def_int $cycle = ~farming_growth_minutes($seed);
 def_int $elapsed = divide(sub($now, $last), $cycle);
 if ($elapsed < 1) {
     return;
