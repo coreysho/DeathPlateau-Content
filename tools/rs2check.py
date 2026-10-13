@@ -647,6 +647,79 @@ def check_models():
             report("ERROR", "pack/model.pack", n, 16, "%s is registered but no .ob2 exists" % nm)
 
 
+def check_pack_canonical():
+    """Rule 25: every pack/*.pack is already in the exact form the build would write it.
+
+    THIS IS THE RULE THAT KEEPS DEPLOYS FROM ABORTING. A pack file is not hand-maintained data that
+    the build happens to read - it is build OUTPUT that is also hand-edited, and
+    tools/pack/PackFileBase.save() rewrites every one of them on every build:
+
+        Array.from(this.pack.entries()).sort((a, b) => a[0] - b[0])
+             .map(([id, name]) => `${id}=${name}`).join('\n') + '\n'
+
+    Newline-joined with one at the end, sorted ascending by id, nothing else. So anything in the
+    committed file the packer would not have written - a blank line, a CRLF, a missing final
+    newline, an id out of order - is deleted the first time anyone builds, which leaves the checkout
+    DIRTY. On the live box that is fatal rather than untidy: deploy.sh pulls with a merge, and git
+    refuses to merge over a modified file.
+
+        error: Your local changes to the following files would be overwritten by merge:
+                pack/obj.pack
+                pack/seq.pack
+        Aborting
+
+    That is a real deploy, 13 October 2026, and the cause was one blank line in each file. Nobody
+    had touched them on the server; the previous deploy's own build had. obj.pack was fixed in
+    passing when somebody's build output got committed, which is exactly how this hides - the file
+    heals itself in the working tree and the fix only lands if that file happened to be staged.
+
+    Pack files are touched by nearly every content commit, because a transmitted pack is not
+    auto-registered and a new obj or seq means hand-adding `<max id + 1>=<name>`. Every one of those
+    edits is a chance to leave the file in a form the build will rewrite, which is why this is a
+    rule and not a one-off fix.
+
+    Duplicate ids are deliberately NOT checked here - rule 16 owns those for model.pack, and a
+    duplicate is data loss rather than a formatting difference.
+    """
+    import glob
+    for path in sorted(glob.glob(os.path.join(CONTENT, "pack", "*.pack"))):
+        rel = "pack/" + os.path.basename(path)
+        raw = read(path)
+        if b"\r" in raw:
+            n = raw[:raw.index(b"\r")].count(b"\n") + 1
+            report("ERROR", rel, n, 25,
+                   "CRLF - the build writes LF only, so it rewrites the whole file")
+            continue
+        body = raw.decode("utf-8", "replace")
+        if body and not body.endswith("\n"):
+            report("ERROR", rel, body.count("\n") + 1, 25,
+                   "no trailing newline - the build adds one")
+        lines = body.split("\n")
+        if body.endswith("\n"):
+            lines = lines[:-1]
+        prev = None
+        for n, line in enumerate(lines, 1):
+            if not line.strip():
+                report("ERROR", rel, n, 25,
+                       "a blank line - the build strips it, which dirties the checkout and "
+                       "aborts the next deploy")
+                continue
+            if "=" not in line:
+                report("ERROR", rel, n, 25,
+                       "not an id=name line - the build would not write it")
+                continue
+            i = line.split("=", 1)[0]
+            if not i.isdigit():
+                report("ERROR", rel, n, 25,
+                       "id %r is not a number - the build sorts numerically" % i)
+                continue
+            if prev is not None and int(i) < prev:
+                report("ERROR", rel, n, 25,
+                       "id %s comes after %d - the build sorts ascending and would reorder the file"
+                       % (i, prev))
+            prev = int(i)
+
+
 def check_enum_defaults():
     """Rule 17: an enum whose outputtype has a REAL id 0 must declare default=.
 
@@ -1189,6 +1262,11 @@ FIXTURE_PACKS = {
     "inv.pack": "0=inv\n",
     "varp.pack": "0=probe_packonly_varp\n",
 }
+# rule 25: a pack file in a form the build would rewrite. The blank line is on line 2,
+# which is where the rule must report it - a blank at the END of a file is the common
+# shape of this mistake and would be indistinguishable from the trailing newline.
+FIXTURE_PACK_CANON = "0=probe_canon_a\n\n1=probe_canon_b\n"
+
 FIXTURE_MODEL = "models/loc/probe_orphan.ob2"
 
 # Every rule id this file can report, AND THE EXACT LINE it must report it on. The line matters as
@@ -1215,6 +1293,11 @@ ALL_RULES = {
     14:   ("probe.rs2", 16),
     15:   ("probe.rs2", 19),
     16:   ("model.pack", 2),
+    # 25 is the newest, and it is the only rule here that exists to protect a DEPLOY
+    # rather than the build: a pack file that is not already what the packer writes is
+    # rewritten by the next build, which dirties the checkout and makes the deploy after
+    # it abort on "local changes would be overwritten by merge".
+    25:   ("probe_canon.pack", 2),
     17:   ("probe.enum", 2),
     # 20 is the newest: a type=text with no font=. PackShared writes -1 as the byte 255 and
     # Component.decode indexes an array of four with it, so the CLIENT dies on load - "loaderror
@@ -1267,11 +1350,17 @@ def selftest():
         for name, body in FIXTURE_BYTES.items():
             with open(os.path.join(sdir, name), "wb") as f:
                 f.write(body)
-        with open(os.path.join(root, "pack", "model.pack"), "w") as f:
-            f.write(FIXTURE_PACK)
+        # BINARY, NOT TEXT MODE. A pack file in the repo is LF-only, and mode "w" on Windows
+        # turns every newline in these fixtures into a CRLF pair - which made rule 25 report CRLF
+        # on line 1 of all eight of them instead of the blank line it was pointed at. A fixture
+        # that does not have the bytes the real file has cannot test a rule about bytes.
+        with open(os.path.join(root, "pack", "model.pack"), "wb") as f:
+            f.write(FIXTURE_PACK.encode())
         for name, body in FIXTURE_PACKS.items():
-            with open(os.path.join(root, "pack", name), "w") as f:
-                f.write(body)
+            with open(os.path.join(root, "pack", name), "wb") as f:
+                f.write(body.encode())
+        with open(os.path.join(root, "pack", "probe_canon.pack"), "wb") as f:
+            f.write(FIXTURE_PACK_CANON.encode())
         open(os.path.join(root, FIXTURE_MODEL), "wb").close()
 
         SCRIPTS, CONTENT, PACK = sdir, root, os.path.join(root, "pack")
@@ -1291,6 +1380,7 @@ def selftest():
             check_config(p, T)
         check_duplicates(T)
         check_models()
+        check_pack_canonical()
         check_enum_defaults()
         check_weapon_sounds()
         check_spell_rows()
@@ -1494,6 +1584,7 @@ def main(argv):
     if not targets:
         check_duplicates(T)
         check_models()
+        check_pack_canonical()
         check_enum_defaults()
         check_weapon_sounds()
         check_spell_rows()
