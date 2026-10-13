@@ -1,7 +1,13 @@
-// THE VOTE CLERK, at the Edgeville bank (3093,3496) - the quiet north-west corner by the chairs and
-// the round table, clear of the four bank booths on the east wall, clear of both doorways, and clear
-// of the undertaker and the four bankers already spawned in that square. The tile is standable and
+// THE VOTE CLERK, at the Edgeville bank - 0_48_54_19_36, which is (3091,3492), against the inside
+// of the bank's west wall. Corey's placement, 13 October; he started two tiles north-east of here,
+// out in the middle of the floor. Standing at the wall facing east puts him behind a counter rather
+// than in the walkway, and keeps him clear of the four booths on the east wall, both doorways, and
+// the undertaker and four bankers already spawned in that map square. The tile is standable and
 // joined to the rest of the world; engine/tools/sim/voteshop.ts checks that rather than trusting it.
+//
+// FACING EAST, into the room. A map's NPC line carries only a coord and a type, so every npc in the
+// game spawns facing south - see npc/configs/npc_spawn.param for where the fourth direction comes
+// from. It shows on him precisely because he never moves.
 //
 // wanderrange=0, which is the lesson the Pest Control portals taught: a shopkeeper that strolls off
 // its tile is a shopkeeper nobody can find twice.
@@ -35,6 +41,7 @@ recol5s=32735
 recol5d=19164
 vislevel=hide
 wanderrange=0
+param=spawn_face,^exact_east
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 op1=Talk-to
