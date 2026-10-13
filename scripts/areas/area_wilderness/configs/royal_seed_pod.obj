@@ -1,0 +1,28 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[royal_seed_pod]
+name=Royal seed pod
+desc=King Narnode's personal seed pod, for travelling to the Grand Tree.
+model=obj_royal_seed_pod
+2dzoom=724
+2dxan=104
+2dyan=1770
+2dxof=-3
+2dyof=-4
+weight=5g
+// cost IS THE TOKEN PRICE, not the cache's 20. One shop, one multiplier - ~calc_shop_value ends in
+// scale($mult, 1000, $cost) and the Undertaker runs at 1000 per mille - so an item's gp cost is what
+// it costs in tokens. 150 is between the Scroll of imbuing and the cape: about three tasks' worth at
+// the edge of the Wilderness, for a teleport with no charges and no expiry.
+cost=150
+members=yes
+tradeable=no
+iop1=Commune
+// NO iop5=Destroy, though the cache carries one. In this build op5 is the generic Drop
+// ([opheld5,_] in player/scripts/drop.rs2), so declaring Destroy here would put that word in the
+// menu and then drop the item anyway. The pod is untradeable with no charges, so there is nothing
+// Destroy would protect anybody from that Drop does not already handle.
+// No category and no params: it is a teleport, it wears nothing and fights nothing.

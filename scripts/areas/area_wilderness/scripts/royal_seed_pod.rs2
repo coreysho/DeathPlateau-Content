@@ -1,0 +1,34 @@
+// THE ROYAL SEED POD (Corey, 13 October 2026) - Commune with it and it puts you at the foot of the
+// Grand Tree. Bought from the Undertaker for Death tokens; nothing else in this build gives one.
+//
+// IT LIVES UNDER area_wilderness BECAUSE ITS SOURCE DOES, not because it is wilderness content. It
+// is King Narnode's, it goes to the Grand Tree, and the only reason it is in this build at all is
+// that the Undertaker sells it - so it sits with the rest of his stock rather than two folders away
+// from the shop row that is its whole supply.
+//
+// A TELEPORT ON A SHELF I SAID SHOULD NOT SELL ONE, and the cap is why it is fine. The rule written
+// into death-token-shop-decided.md is that the shop must not sell an escape from the Wilderness,
+// because the token exists for having stood somewhere dangerous. This stops at level 30, which is
+// where ordinary teleports already stop - below 30 a player can leave with runes, jewellery or a
+// tab. So it buys convenience, not capability: there is no depth at which this gets you out and a
+// glory would not have.
+//
+// THIRTY AND NOT TWENTY, which is Old School's own number for this item ("it cannot be used above
+// level 30 Wilderness"), and the same cap the amulet of glory carries here - the wording below is
+// that script's, so the two refusals read alike.
+
+[opheld1,royal_seed_pod]
+if (~wilderness_level(coord) > 30) {
+    // osrs
+    mes("A mysterious force blocks your teleport.");
+    mes("You can't use this teleport after level 30 wilderness.");
+    return;
+}
+if (~pre_tele_checks(coord) = false) {
+    return;
+}
+mes("You open the seed pod.");
+// map_findsquare rather than the bare coord, the way gnome_glider.rs2 lands its passengers: the
+// trapdoor tile is King Narnode's own and somebody may be standing on it, and a teleport that drops
+// a player onto an occupied square is how you end up inside the furniture.
+~player_teleport_normal(map_findsquare(^narnode_trapdoor_coord, 0, 1, ^map_findsquare_lineofwalk));
