@@ -5435,3 +5435,80 @@
 0_37_79_40_56
 0_37_79_48_56
 0_37_79_56_56
+
+// pest control island - the whole square, every zone of m41_40
+// Reported from play: "the island needs to be multi". It does - Old School's Pest Control island
+// is multi-combat from shore to shore, which is the whole shape of the minigame: pests swarm you
+// from several portals at once and a single-way island would let one shifter lock out every other
+// pest on the map. It is also what stops the player being refused a re-attack for eight ticks
+// every time something else touches them, which is the Zamorak-healer fault GameMap.isMulti's own
+// comment describes and the one the Fight Cave had.
+//
+// AN INSTANCE ASKS ON BEHALF OF ITS TEMPLATE, so the template square is what gets marked and every
+// player's copy of the island inherits it; a line addressed to an instance's own coordinates could
+// never match. All 64 zones, because ^pest_solo_template is the whole 64x64 square and nothing but
+// the island is in it.
+0_41_40_0_0
+0_41_40_8_0
+0_41_40_16_0
+0_41_40_24_0
+0_41_40_32_0
+0_41_40_40_0
+0_41_40_48_0
+0_41_40_56_0
+0_41_40_0_8
+0_41_40_8_8
+0_41_40_16_8
+0_41_40_24_8
+0_41_40_32_8
+0_41_40_40_8
+0_41_40_48_8
+0_41_40_56_8
+0_41_40_0_16
+0_41_40_8_16
+0_41_40_16_16
+0_41_40_24_16
+0_41_40_32_16
+0_41_40_40_16
+0_41_40_48_16
+0_41_40_56_16
+0_41_40_0_24
+0_41_40_8_24
+0_41_40_16_24
+0_41_40_24_24
+0_41_40_32_24
+0_41_40_40_24
+0_41_40_48_24
+0_41_40_56_24
+0_41_40_0_32
+0_41_40_8_32
+0_41_40_16_32
+0_41_40_24_32
+0_41_40_32_32
+0_41_40_40_32
+0_41_40_48_32
+0_41_40_56_32
+0_41_40_0_40
+0_41_40_8_40
+0_41_40_16_40
+0_41_40_24_40
+0_41_40_32_40
+0_41_40_40_40
+0_41_40_48_40
+0_41_40_56_40
+0_41_40_0_48
+0_41_40_8_48
+0_41_40_16_48
+0_41_40_24_48
+0_41_40_32_48
+0_41_40_40_48
+0_41_40_48_48
+0_41_40_56_48
+0_41_40_0_56
+0_41_40_8_56
+0_41_40_16_56
+0_41_40_24_56
+0_41_40_32_56
+0_41_40_40_56
+0_41_40_48_56
+0_41_40_56_56

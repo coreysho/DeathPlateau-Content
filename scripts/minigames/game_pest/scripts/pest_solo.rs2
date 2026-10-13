@@ -90,6 +90,23 @@ npc_add(~pest_solo_at(^pest_solo_knight_coord), pest_voidknight_control1, ^pest_
 npc_add(~pest_solo_at(enum(int, coord, pest_solo_portal_coord, $index)),
         enum(int, npc, pest_solo_portal_npc, $index), ^pest_solo_npc_life);
 
+// A PORTAL DOES NOT FIGHT BACK (13 October, reported from play: "they also attack back?"). They
+// did, and nothing in the portal's own record asked them to - [ai_queue1,_] does. That global is
+// the retaliate hook every npc in the game inherits, and it does not care that a portal has no
+// huntmode, no attack animation and an attack of 1: being hit queues it, it sets the portal on the
+// player, and the player collects a stream of 0s from a hole in the air.
+//
+// Trigger lookup is type, then category, then the global wildcard, and it runs ONE script - so an
+// empty [ai_queue1] per portal is how an npc opts out of retaliating. Four of them, one per portal,
+// because the portals carry no shared category to hang a single one off.
+//
+// Old School's portals do not attack either, which is the point: a portal is an objective with
+// hitpoints, not a monster. What attacks you on that island comes OUT of them.
+[ai_queue1,pest_portal_1_active]
+[ai_queue1,pest_portal_2_active]
+[ai_queue1,pest_portal_3_active]
+[ai_queue1,pest_portal_4_active]
+
 // ---------------------------------------------------------------------------------------------
 // The tick
 // ---------------------------------------------------------------------------------------------

@@ -112,6 +112,13 @@ def main():
                 lines.append('attackrange=%d' % rng)
                 lines.append('wanderrange=4')
                 lines.append('param=pest_tier,%d' % t)
+                # A PEST DROPS NOTHING, which has to be said rather than left unsaid: death_drop is
+                # a param with a DEFAULT of bones (skill_combat/configs/npc_combat.param), and
+                # npc_default_death hands that default to obj_add. Saying nothing therefore does not
+                # mean "no drop", it means "bones" - which is how a minigame whose monsters pay
+                # commendation points came to carpet the island in bones. Old School's pests drop
+                # nothing at all.
+                lines.append('param=death_drop,null')
                 plan[nm] = lines
 
     # The four portals.
@@ -135,6 +142,9 @@ def main():
             'param=magicdefence,0', 'param=rangedefence,0',
             'param=death_anim,pest_portal_death',
             'param=pest_portal,1',
+            # Nor does a portal, and for the same reason the pests do not - see the note on their
+            # own line. A portal dropping bones is what was reported from play.
+            'param=death_drop,null',
             # A PORTAL MUST NOT MOVE. Without this it wanders - the default wanderrange is not zero
             # - and a size-3 objective drifting off the tile the island scan picked for it was
             # exactly what tools/sim/pestsolo.ts caught (one portal reporting 11,54 for 10,55).

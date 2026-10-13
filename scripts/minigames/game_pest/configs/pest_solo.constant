@@ -22,22 +22,58 @@
 ^pest_solo_template = 0_41_40_0_0
 ^pest_solo_zones = 8
 
-// WHERE EVERYTHING STANDS, measured off the island's own collision rather than placed by eye. The
-// square has 1313 walkable, loc-free tiles in one connected region (bounds x 2-62, z 1-57); of
-// those, 408 have a clear 3x3 around them, which is what a size-3 portal needs.
+// WHERE EVERYTHING STANDS (corrected 13 October, reported from play: "portals are all in the wrong
+// locations ... void knight in wrong location"). They were, and the reason is worth keeping.
 //
-// The knight is the 3x3-clear tile nearest the region's centroid - the centroid itself (32,25) is
-// blocked. The four portals are a greedy farthest-point spread over the 3x3-clear tiles at least
-// 12 tiles from him: the closest two portals are 37 tiles apart and the nearest is 18 from the
-// knight, so no two can be fought from one spot and none of them is next to him.
-^pest_solo_knight_coord = 0_41_40_32_22
-^pest_solo_portal_nw = 0_41_40_10_55
-^pest_solo_portal_s = 0_41_40_21_4
-^pest_solo_portal_ne = 0_41_40_54_51
-^pest_solo_portal_se = 0_41_40_58_11
+// THE FIRST VERSION MEASURED THE ISLAND AND IGNORED IT. It asked the collision map which tiles have
+// a clear 3x3, then spread four portals over them by greedy farthest-point and put the knight at
+// the centroid. Every one of those answers was true - clear, reachable, well separated - and all
+// five were in the wrong place, because "a tile that fits" is not "the tile this island was drawn
+// around". It is the same mistake as the diary teleports: a measurement that answers a question
+// nobody asked.
+//
+// THE ISLAND ITSELF SAYS WHERE THEY GO. m41_40's ground is painted in four small patches of their
+// own underlay, one per portal, each about nine tiles across and nowhere near any other:
+//
+//   underlay 121  abyssal_ground_dark  76 tiles  local x 2-11  z 26-37  centre (6,31)   WEST
+//   underlay 142  fairy_grass          41 tiles  local x 18-26 z 6-14   centre (22,10)  SOUTH-WEST
+//   underlay 61   desert2              41 tiles  local x 42-50 z 7-15   centre (46,11)  SOUTH-EAST
+//   underlay 59   greenice             41 tiles  local x 53-61 z 25-33  centre (57,29)  EAST
+//
+// Those are the portal sites, drawn by whoever made the island, and each centre has the clear 3x3 a
+// size-3 portal needs. Nothing had to be invented.
+//
+// WHICH PORTAL ON WHICH PATCH is half-settled by the cache and half not. pest_portal_1_active's
+// own animation is pest_portal_on_anim_EAST and pest_portal_2_active's is _WEST, so those two place
+// themselves. Portals 3 and 4 share the unsuffixed pest_portal_on_anim and the cache says nothing,
+// so they take the two southern patches west-to-east in id order - 3 south-west, 4 south-east.
+// THAT PAIR IS THE ONE GUESS HERE: if their colours look swapped in game, swap these two lines and
+// nothing else.
+//
+// NO TRAILING COMMENTS ON THESE FOUR LINES. A constant is textual substitution, and these are
+// substituted into enum VALUES (configs/pest_solo.enum) rather than into script - so a trailing
+// "// ..." is carried into the value and the packer rejects the row. The coordinate each one
+// encodes is in the table above.
+//
+// east  (2681,2589)   pest_portal_1_active, the east animation
+^pest_solo_portal_e = 0_41_40_57_29
+// west  (2630,2591)   pest_portal_2_active, the west animation
+^pest_solo_portal_w = 0_41_40_6_31
+// south-west  (2646,2570)   pest_portal_3_active
+^pest_solo_portal_sw = 0_41_40_22_10
+// south-east  (2670,2571)   pest_portal_4_active
+^pest_solo_portal_se = 0_41_40_46_11
 ^pest_solo_portals = 4
 
-// Three tiles from the knight: you land looking at the thing you have to keep alive.
+// THE VOID KNIGHT IS OLD SCHOOL'S OWN COORDINATE, (2656,2592), off the wiki's LocLine row for
+// Void Knight (Pest Control) through tools/models/osrsnpcspawns.py - the same scraper the God Wars
+// spawns came from. It lands him in the middle of his own building, which the collision map
+// confirms: the 11x11 around it is walls on every side with a doorway east and west. The measured
+// guess had him ten tiles south of it, standing outside his own base.
+^pest_solo_knight_coord = 0_41_40_32_32
+
+// Outside the knight's building and south of it, so you arrive looking at the thing you have to
+// keep alive rather than standing in the room with it.
 ^pest_solo_landing = 0_41_40_35_19
 
 // And where leaving puts you back - the outpost pier, beside the lander squire.

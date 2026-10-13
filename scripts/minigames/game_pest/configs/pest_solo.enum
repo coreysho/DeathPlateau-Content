@@ -4,9 +4,11 @@
 [pest_solo_portal_coord]
 inputtype=int
 outputtype=coord
-val=0,^pest_solo_portal_nw
-val=1,^pest_solo_portal_s
-val=2,^pest_solo_portal_ne
+// Index N is pest_portal_<N+1>_active below, so these are in that order and not in compass order:
+// portal 1 carries the east animation and portal 2 the west.
+val=0,^pest_solo_portal_e
+val=1,^pest_solo_portal_w
+val=2,^pest_solo_portal_sw
 val=3,^pest_solo_portal_se
 
 [pest_solo_portal_npc]
