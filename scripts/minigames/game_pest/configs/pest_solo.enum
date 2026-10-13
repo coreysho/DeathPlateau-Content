@@ -4,12 +4,27 @@
 [pest_solo_portal_coord]
 inputtype=int
 outputtype=coord
-// Index N is pest_portal_<N+1>_active below, so these are in that order and not in compass order:
-// portal 1 carries the east animation and portal 2 the west.
-val=0,^pest_solo_portal_e
-val=1,^pest_solo_portal_w
-val=2,^pest_solo_portal_sw
-val=3,^pest_solo_portal_se
+// Index N is pest_portal_<N+1>_active below, so these are in npc order and not compass order.
+//
+// WHICH PORTAL BELONGS ON WHICH FRAME, rewritten 13 October after "all portals need swapped". The
+// first version paired them off the portals' ANIMATION names - portal 1 carries
+// pest_portal_on_anim_east and portal 2 the west one - and that was wrong for all four, so those
+// names describe which way the model faces and not where on the island it stands.
+//
+// The frames' own palettes are the better signal, and they are measurable:
+//
+//   portal 1 -> range  (WEST).   Portal 1 is the only portal with NO recolour lines, and range is
+//                                the only frame whose recolour SOURCE palette differs from the
+//                                other three. Both are the odd one out of their set.
+//   portal 2 -> melee  (EAST).   They share the exact recolour destination 19033.
+//   portal 3 -> magic  (SOUTH-EAST). They share the exact destination 30651.
+//   portal 4 -> master (SOUTH-WEST). By elimination, and the only one of the four with no direct
+//                                evidence of its own - so if one pair still looks wrong in game,
+//                                this is the one to doubt first.
+val=0,^pest_solo_portal_w
+val=1,^pest_solo_portal_e
+val=2,^pest_solo_portal_se
+val=3,^pest_solo_portal_sw
 
 [pest_solo_portal_npc]
 inputtype=int
