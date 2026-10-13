@@ -15,9 +15,10 @@
 
 [opnpc1,undertaker]
 ~chatnpc("<p,neutral>Business or burial?");
-switch_int (~p_choice3("What have you got?", 1, "What are death tokens?", 2, "Nothing, sorry.", 3)) {
+switch_int (~p_choice4("What have you got?", 1, "What are death tokens?", 2, "What does your outfit do?", 3, "Nothing, sorry.", 4)) {
     case 1 : ~openshop_activenpc;
     case 2 : @undertaker_explain;
+    case 3 : @undertaker_outfit;
     case default : ~chatplayer("<p,neutral>Nothing, sorry.");
 }
 
@@ -32,6 +33,56 @@ if (inv_total(inv, death_token) > 0) {
     ~chatnpc("<p,happy>And you have some. Let me show you what they are worth.");
     ~openshop_activenpc;
 }
+
+// ---------------------------------------------------------------------------------------------
+// What the outfit does, asked for on 13 October 2026
+// ---------------------------------------------------------------------------------------------
+// He sells seven things that are his own and the shop window says nothing about any of them, so a
+// player buying a hat for two hundred tokens could not find out what it is for, that it cannot be
+// protected, or that wearing it past the signs is the whole point of it.
+//
+// THE NUMBERS ARE READ OUT OF THE CONFIG, not written here. oc_cost is the token price - one shop,
+// one multiplier at 1000 per mille, so an item's cost IS its price - and pvp_token_bounty is what a
+// killer is paid for it. Both come off the hat, which carries the same pair as the coat, trousers,
+// boots and cane; the cape is dearer and pays more, and he says so without naming its figures
+// because one example is enough to explain a rule. Written this way so retuning the stake in
+// configs/undertaker_outfit.obj cannot leave him lying about it.
+[label,undertaker_outfit]
+~chatplayer("<p,quiz>What does your outfit do?");
+~chatnpc("<p,neutral>Nothing whatsoever.");
+~chatplayer("<p,confused>Nothing?");
+~chatnpc("<p,neutral>Not one thread of it will turn a blade or help you land one. The cane is a cane - hold it and you are holding a cane instead of a weapon. It is not armour. It is a uniform.");
+switch_int (~p_choice3("Then why would anyone wear it?", 1, "What happens if I die in it?", 2, "I see.", 3)) {
+    case 1 : @undertaker_outfit_why;
+    case 2 : @undertaker_outfit_death;
+    case default : ~chatplayer("<p,neutral>I see.");
+}
+
+[label,undertaker_outfit_why]
+~chatplayer("<p,quiz>Then why would anyone wear it?");
+~chatnpc("<p,shifty>Because nobody can buy it. You earned every token on it past the signs, and it cannot be sold, lent or handed to a friend - so a man in my coat has been somewhere, and everyone who sees him knows it.");
+~chatnpc("<p,neutral>That is what you are paying for. Nothing else.");
+@undertaker_outfit_death;
+
+[label,undertaker_outfit_death]
+// Read here rather than in [label,undertaker_outfit]: @ is a jump and a label has its own locals,
+// so anything declared up there is out of scope by the time it is spoken down here.
+def_int $price = oc_cost(undertaker_hat);
+def_int $bounty = oc_param(undertaker_hat, pvp_token_bounty);
+~chatplayer("<p,quiz>What happens if I die in it?");
+// TWO BOXES, NOT ONE. As a single line this ran to five and the chatbox holds four, so it spilled
+// onto a second page and put "The Undertaker" in the middle of the sentence - "...and no prayer
+// The Undertaker protects it." The sim checks the phrase is contiguous, which is what catches that.
+~chatnpc("<p,neutral>Past the warning signs? It is gone. Every piece of mine you have on you or in your pack, ruined where you fell.");
+~chatnpc("<p,neutral>And you cannot keep it back. It is never one of the three things you hold on to, and no prayer protects it.");
+~chatplayer("<p,shock>And I just paid for it.");
+~chatnpc("<p,happy>You did. <tostring($price)> tokens for the hat, and the same for the coat, the trousers, the boots and the cane. The cape costs more.");
+~chatnpc("<p,shifty>And whoever put you down comes to me with what is left of it. I pay them <tostring($bounty)> for the hat. A quarter, near enough, of what you gave me.");
+~chatplayer("<p,quiz>So they profit and I lose.");
+~chatnpc("<p,neutral>They profit a little. You lose four times as much. That is not an accident - it is why the tokens do not pile up, and why a man wearing my coat in the Wilderness means something.");
+~chatnpc("<p,neutral>Die to something that is not a man up there and it is still ruined. A dragon has no use for my tokens, so nobody is paid at all.");
+~chatplayer("<p,quiz>And south of the signs?");
+~chatnpc("<p,neutral>Then it is only clothing, and clothing does not burn. Drop dead in Lumbridge and you can pick it back up.");
 
 // ---------------------------------------------------------------------------------------------
 // The veteran on the line
