@@ -22712,6 +22712,8 @@ frame12=anim_1521
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// Low Alchemy (the same file)
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_1585
 frame2=anim_1878
 frame3=anim_2176
@@ -22724,10 +22726,38 @@ frame9=anim_1915
 frame10=anim_1930
 frame11=anim_2231
 
+// WALK-MERGED SO YOU CAN RUN AND CAST AT THE SAME TIME (Corey, 13 October 2026): "we fixed alching
+// while walking but its still pausing the character's run animation to do the alch animation, are we
+// able to make it do both simultaneously?"
+//
+// HOW THE CLIENT DECIDES. ClientPlayer.method573 collects two frames - the primary (played)
+// animation and the CURRENT MOVEMENT animation - and hands both to Model.method368 along with this
+// walkmerge list. The movement frame is only collected while the player is actually moving
+// (`field1181 != field1135`, the stand animation differing from the movement one), so none of this
+// touches a cast made standing still. Then:
+//
+//     if (arg3 == null || arg0 == -1) { this.applyTransform(arg2); return; }
+//
+// With no walkmerge list the movement frame is DISCARDED and the cast plays alone - which is the
+// run animation stopping dead. With one, the two frames are blended and the labels name the
+// transform groups the movement animation keeps: the lower body runs, the arms cast.
+//
+// WHY THESE SEVEN AND NOT THE OTHER TWENTY-SEVEN. Not one of the 34 human_cast* animations in this
+// cache carries a walkmerge, so what the owner saw is authentic 2006 rather than a gap in alchemy -
+// and this is therefore a deliberate divergence, chosen at the scope the owner picked: the spells
+// you cast while travelling, and not the combat book. Worth knowing that magic is the odd one out
+// here by the CACHE'S OWN convention - all 88 melee and ranged human animations walk-merge already,
+// with the same label list to the label, which is where this one is copied from.
+//
+// human_castheal and human_casting are deliberately NOT in the set: neither is a player's spell
+// animation. human_castheal belongs to a monk and to Wizard Traiborn, and human_casting is shared
+// by six quest and npc scripts plus the Charge spell, which roots you anyway.
 [human_casthighlvlalchemy]
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// High Alchemy (skill_magic/scripts/spells/alchemy.rs2)
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_1585
 frame2=anim_1878
 frame3=anim_2176
@@ -22932,6 +22962,8 @@ frame27=anim_1023
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// Bones to Bananas, and Lunar Magic Imbue
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_1940
 frame2=anim_2242
 frame3=anim_524
@@ -22949,6 +22981,8 @@ frame12=anim_2335
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// Telekinetic Grab (spells/telegrab.rs2)
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_471
 frame2=anim_770
 frame3=anim_1056
@@ -22983,6 +23017,8 @@ frame12=anim_532
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// Superheat Item (spells/superheat.rs2)
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_1085
 frame2=anim_1369
 frame3=anim_1660
@@ -23010,6 +23046,8 @@ frame22=anim_1369
 replaceheldleft=hide
 replaceheldright=hide
 priority=6
+// the charge orb spells
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_1942
 frame2=anim_2244
 frame3=anim_525
@@ -26892,6 +26930,8 @@ frame14=anim_3681
 [human_cast_enchantring]
 replaceheldleft=hide
 replaceheldright=hide
+// the enchant spells (magic_spells.dbrow) and POH tablets
+walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_2481
 frame2=anim_2484
 frame3=anim_2486
