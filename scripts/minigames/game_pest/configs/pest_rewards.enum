@@ -1,0 +1,106 @@
+// What the Void Knights' reward window sells. The window itself is generated
+// (tools/genvoidui.py); this is the data it reads, and the only place a price or a multiplier is
+// written down.
+
+// ============================================================================ the Experience tab
+//
+// Old School's seven: the six combat skills and Prayer. Nothing else is offered there and nothing
+// else is offered here.
+
+[pest_xp_name]
+inputtype=int
+outputtype=string
+default=null
+val=0,Attack
+val=1,Strength
+val=2,Defence
+val=3,Hitpoints
+val=4,Ranged
+val=5,Magic
+val=6,Prayer
+
+// The stat each row advances. A stat-typed enum rather than a switch over seven cases, because
+// stat_advance takes one at runtime (player/configs/stat.enum does the same thing for the stats
+// tab) - so the row index is the only thing the window has to carry.
+[pest_xp_stat]
+inputtype=int
+outputtype=stat
+default=null
+val=0,attack
+val=1,strength
+val=2,defence
+val=3,hitpoints
+val=4,ranged
+val=5,magic
+val=6,prayer
+
+// N in floor(level * level / 600) * N. Old School's numbers: 35 for the four melee stats, 32 for
+// the two ranged/magic ones, 18 for Prayer - which is why a Prayer point is worth about half an
+// Attack one and the window has to show the figure rather than leave it to be discovered.
+[pest_xp_rate]
+inputtype=int
+outputtype=int
+default=0
+val=0,35
+val=1,35
+val=2,35
+val=3,35
+val=4,32
+val=5,32
+val=6,18
+
+// ============================================================================ the Equipment tab
+//
+// WHAT IS NOT HERE, so it is not hunted for. Old School also sells the void seal, the two elite
+// upgrades and three resource packs, and every one of them is missing the same thing: the OBJ.
+// pack/obj.pack holds these seven and no void_seal, no elite_void_top, no herb_pack. A tab of
+// things that cannot be handed over would be worse than no tab. The elite upgrades are gated on
+// the Hard Western Provinces Diary besides, which this build has no diary system for.
+//
+// The prices are Old School's and are deliberately not softened for a solo lobby - the note at the
+// top of scripts/pest_rewards.rs2 says why at length.
+
+[pest_gear_obj]
+inputtype=int
+outputtype=namedobj
+default=null
+val=0,void_knight_top
+val=1,void_knight_robe
+val=2,void_knight_gloves
+val=3,void_mage_helm
+val=4,void_ranger_helm
+val=5,void_melee_helm
+val=6,void_knight_mace
+
+[pest_gear_cost]
+inputtype=int
+outputtype=int
+default=0
+val=0,250
+val=1,250
+val=2,150
+val=3,200
+val=4,200
+val=5,200
+val=6,250
+
+// Two lines per row, keyed index * 2 + line, blank lines left out and answered by default=. The
+// window asks for line 0 and line 1 of whatever is selected without caring how many it has.
+[pest_gear_desc]
+inputtype=int
+outputtype=string
+default=
+val=0,Part of the Void Knight set: top, robe, gloves and one helm.
+val=1,Needs 42 in every combat stat and 22 Prayer to wear.
+val=2,Part of the Void Knight set: top, robe, gloves and one helm.
+val=3,Needs 42 in every combat stat and 22 Prayer to wear.
+val=4,Part of the Void Knight set: top, robe, gloves and one helm.
+val=5,Needs 42 in every combat stat and 22 Prayer to wear.
+val=6,The Magic helm. One helm completes the set; which one decides
+val=7,which style the set bonus applies to.
+val=8,The Ranged helm. One helm completes the set; which one decides
+val=9,which style the set bonus applies to.
+val=10,The melee helm. One helm completes the set; which one decides
+val=11,which style the set bonus applies to.
+val=12,A mace that is not part of the set. Carries a Prayer bonus and
+val=13,doubles as a decent crush weapon.
