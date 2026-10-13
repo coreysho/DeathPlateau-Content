@@ -25,7 +25,9 @@ if ($item = knife) {
 }
 sound_synth(hacksword_slash, 1, 15);
 
-if (random(2) = 1) {
+// A 1-in-2 roll for everybody except the owner of a Wilderness sword, which always cuts
+// (general/scripts/diary_rewards/diary_passives.rs2).
+if (random(2) = 1 | ~wilderness_sword_carried = true) {
     mes("You slash the web apart.");
     p_delay(1); // osrs
     // Temp note: dur does not need updated

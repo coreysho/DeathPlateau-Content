@@ -154,6 +154,10 @@ if (random($chance) = ^true) {
     ~mining_xp(db_getfield($data, mining_table:rock_exp, 0));
     ~skillpet_roll(skillpet_rock_golem_item, mining, db_getfield($data, mining_table:pet_base, 0));
     mes("You manage to mine some <db_getfield($data, mining_table:ore_name, 0)>.");
+    // Varrock armour 4's 10% second ore, which pays its own xp (general/scripts/diary_rewards/
+    // diary_passives.rs2). AFTER the message above, so the first ore is announced before the
+    // extra one that followed it.
+    ~varrock_armour_extra($output, db_getfield($data, mining_table:rock_exp, 0));
     return;
 }
 p_oploc(3);
@@ -193,6 +197,8 @@ if (random($chance) = ^true) {
     ~mining_xp(db_getfield($data, mining_table:rock_exp, 0));
     ~skillpet_roll(skillpet_rock_golem_item, mining, db_getfield($data, mining_table:pet_base, 0));
     mes("You manage to mine some <db_getfield($data, mining_table:ore_name, 0)>.");
+    // Varrock armour 4, as in get_ore_normal above.
+    ~varrock_armour_extra(db_getfield($data, mining_table:rock_output, 0), db_getfield($data, mining_table:rock_exp, 0));
     return;
 }
 p_oploc(3);

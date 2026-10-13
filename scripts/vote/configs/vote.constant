@@ -38,3 +38,39 @@
 // rather than a purchase - the ring is a full-diary item everywhere else, and the diary does not
 // exist here to gate it. Change this one number to move the price; nothing else refers to 50.
 ^vote_price_explorers_ring = 50
+
+// ============================================================================ the elite diary set
+// (13 October, Corey: "for the diary items, those will all go in the vote shop - only the ones
+// that are actually useful ... that is the only way to receive them", then "do only the level 4
+// items, not their lower tiers".)
+//
+// NINE ITEMS, and the clerk is the only place any of them exists - the achievement diary that
+// hands them out in Old School is not implemented here. Which nine and what each one does is in
+// general/configs/diary_rewards.constant; these are only the prices.
+//
+// HOW THEY ARE PRICED. Explorer's ring 4 set the scale at 50 points, which is somewhere around
+// three or four weeks of voting, and these sit in a 40-100 band around it by how much the item
+// changes a day's play rather than by its stats:
+//
+//   100  Varrock armour 4        a permanent 10% on every ore and every ore's xp
+//    90  Ardougne cloak 4        the best stab cape in the game, +6 prayer, and two teleports
+//    80  Falador shield 4        adamant kiteshield defence, +5 prayer, two Prayer restores a day
+//    80  Morytania legs 4        rune-platelegs defence and the Ectofuntus run halved
+//    60  Karamja gloves 4        the gem mine and a Slayer master, both otherwise a long trip
+//    60  Wilderness sword 4      a teleport into deep Wilderness, and webs that always cut
+//    50  Desert amulet 4         two teleports, no stats worth wearing it for
+//    40  Fremennik sea boots 4   one teleport, and boots nobody is choosing over climbing boots
+//    40  Kandarin headgear 4     one teleport, and a helm nobody is choosing over a rune full helm
+//
+// The whole set is 600 points, which is a long way past any one item - the point of a reward shop
+// is that you choose. Each price is one number, used nowhere else; the obj's cost= in
+// general/configs/diary_rewards.obj points here.
+^vote_price_ardougne_cloak = 90
+^vote_price_desert_amulet = 50
+^vote_price_falador_shield = 80
+^vote_price_fremennik_sea_boots = 40
+^vote_price_kandarin_headgear = 40
+^vote_price_karamja_gloves = 60
+^vote_price_morytania_legs = 80
+^vote_price_varrock_armour = 100
+^vote_price_wilderness_sword = 60

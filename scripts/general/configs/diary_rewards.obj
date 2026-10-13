@@ -1,6 +1,19 @@
 // THE ACHIEVEMENT DIARY REWARDS (2026-09-21), all twelve sets, four tiers each, imported from OSRS
-// by tools/models/importosrs.py and given their cache stats. The items only: their effects -
-// teleports, daily recharges, gathering bonuses - are a later round, one set at a time.
+// by tools/models/importosrs.py and given their cache stats.
+//
+// THE ELITE TIER IS LIVE as of 13 October: nine of the twelve tier-4 items carry their effects
+// (general/scripts/diary_rewards/, and general/configs/diary_rewards.constant for which nine and
+// why) and are sold by the Vote clerk, which is the only source any of them has - the achievement
+// diary itself is not implemented. Their cost= is therefore a VOTE POINT PRICE and not a gp value:
+// ~adjusted_item_cost_buying reads oc_cost and scales it by the shopkeeper's per-mille multiplier,
+// so a shop price has to live in cost=. The numbers live in vote/configs/vote.constant; change
+// them there, not here. Every one of these items is tradeable=no, so the figure is never a gp
+// value to anybody.
+//
+// TIERS 1 TO 3 ARE STILL CONFIG ONLY - no source, no effects, and deliberately not for sale: a
+// shop offering four tiers of the same cape would be offering three strictly worse capes. Their
+// Teleport options do nothing when clicked, which no player can discover, because no player can
+// hold one.
 // Imported from a modern OSRS cache by tools/models/importosrs.py.
 // Models are RE-ENCODED from OSRS model format into the 317-family format
 // (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
@@ -99,13 +112,16 @@ wearpos=back
 2dxof=4
 2dyof=4
 weight=453g
-cost=0
+cost=^vote_price_ardougne_cloak
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Monastery Teleport
 iop4=Farm Teleport
-// Stats from the OSRS cache (obj 13124). Its diary effects are not implemented yet.
+wearop1=Monastery Teleport
+wearop2=Farm Teleport
+// Stats from the OSRS cache (obj 13124). Unlimited teleports to the Ardougne monastery and the
+// Ardougne farm. See general/scripts/diary_rewards/.
 category=armour_cape
 param=stabattack,6
 param=magicattack,6
@@ -178,13 +194,16 @@ wearpos=front
 2dxan=500
 2dyof=7
 weight=10g
-cost=0
+cost=^vote_price_desert_amulet
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Nardah
 iop4=Kalphite cave
-// Stats from the OSRS cache (obj 13136). Its diary effects are not implemented yet.
+wearop1=Nardah
+wearop2=Kalphite cave
+// Stats from the OSRS cache (obj 13136). Unlimited teleports to Nardah and the Kalphite cave. See
+// general/scripts/diary_rewards/.
 
 [falador_shield_1]
 name=Falador shield 1
@@ -293,13 +312,16 @@ wearpos=lefthand
 2dxof=-4
 2dyof=-4
 weight=5443g
-cost=0
+cost=^vote_price_falador_shield
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Recharge-prayer
 iop4=Check
-// Stats from the OSRS cache (obj 13120). Its diary effects are not implemented yet.
+wearop1=Recharge-prayer
+wearop2=Check
+// Stats from the OSRS cache (obj 13120). Two full Prayer recharges a day; Check says how many are
+// left. See general/scripts/diary_rewards/.
 category=armour_shield
 param=magicattack,-8
 param=rangeattack,-2
@@ -398,12 +420,14 @@ wearpos=feet
 2dxof=2
 2dyof=-6
 weight=400g
-cost=0
+cost=^vote_price_fremennik_sea_boots
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Teleport
-// Stats from the OSRS cache (obj 13132). Its diary effects are not implemented yet.
+wearop1=Teleport
+// Stats from the OSRS cache (obj 13132). Unlimited teleports to Rellekka. See
+// general/scripts/diary_rewards/.
 param=magicattack,1
 param=rangeattack,1
 param=stabdefence,10
@@ -510,12 +534,14 @@ wearpos3=jaw
 2dxan=54
 2dyof=-5
 weight=10g
-cost=0
+cost=^vote_price_kandarin_headgear
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Teleport
-// Stats from the OSRS cache (obj 13140). Its diary effects are not implemented yet.
+wearop1=Teleport
+// Stats from the OSRS cache (obj 13140). Unlimited teleports to Seers' Village. See
+// general/scripts/diary_rewards/.
 category=armour_helmet
 param=magicattack,-3
 param=rangeattack,-1
@@ -676,13 +702,16 @@ recol5d=5286
 recol6s=6371
 recol6d=5286
 weight=226g
-cost=0
+cost=^vote_price_karamja_gloves
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Gem Mine
 iop4=Slayer Master
-// Stats from the OSRS cache (obj 13103). Its diary effects are not implemented yet.
+wearop1=Gem Mine
+wearop2=Slayer Master
+// Stats from the OSRS cache (obj 13103). Unlimited teleports to the Shilo gem mine and to Duradel.
+// See general/scripts/diary_rewards/.
 category=armour_hands
 param=stabattack,1
 param=slashattack,1
@@ -710,8 +739,8 @@ weight=6g
 cost=0
 members=yes
 tradeable=no
-iop1=Wear
-iop2=Check
+iop1=Check
+iop2=Wear
 iop3=Energy
 iop4=Alchemy
 // Stats from the OSRS cache (obj 13125). Its diary effects are not implemented yet.
@@ -731,8 +760,8 @@ weight=6g
 cost=0
 members=yes
 tradeable=no
-iop1=Wear
-iop2=Check
+iop1=Check
+iop2=Wear
 iop3=Teleport
 iop4=Functions
 // Stats from the OSRS cache (obj 13126). Its diary effects are not implemented yet.
@@ -752,8 +781,8 @@ weight=6g
 cost=0
 members=yes
 tradeable=no
-iop1=Wear
-iop2=Check
+iop1=Check
+iop2=Wear
 iop3=Teleport
 iop4=Functions
 // Stats from the OSRS cache (obj 13127). Its diary effects are not implemented yet.
@@ -778,8 +807,8 @@ weight=6g
 cost=^vote_price_explorers_ring
 members=yes
 tradeable=no
-iop1=Wear
-iop2=Check
+iop1=Check
+iop2=Wear
 // iop3 WAS "Teleport", which in Old School is the cabbage patch outside Draynor. It is the farm
 // teleport here instead (skill_farming/scripts/farm_teleport.rs2) and relabelled to say so, and
 // wearop1 is the same menu from the Worn Equipment tab so the ring need not come off to use it.
@@ -903,13 +932,16 @@ recol2d=6342
 recol3s=14798
 recol3d=8456
 weight=9071g
-cost=0
+cost=^vote_price_morytania_legs
 members=yes
 tradeable=no
 iop2=Wear
 iop3=Ecto Teleport
 iop4=Burgh Teleport
-// Stats from the OSRS cache (obj 13115). Its diary effects are not implemented yet.
+wearop1=Ecto Teleport
+wearop2=Burgh Teleport
+// Stats from the OSRS cache (obj 13115). Unlimited teleports to the Ectofuntus and Burgh de Rott.
+// See general/scripts/diary_rewards/.
 category=armour_legs
 param=magicattack,-21
 param=rangeattack,-7
@@ -1019,11 +1051,12 @@ wearpos2=arms
 2dxan=512
 2dyof=1
 weight=1000g
-cost=0
+cost=^vote_price_varrock_armour
 members=yes
 tradeable=no
 iop2=Wear
-// Stats from the OSRS cache (obj 13107). Its diary effects are not implemented yet.
+// Stats from the OSRS cache (obj 13107). A 10% chance of a second ore, with its own experience,
+// while worn. See general/scripts/diary_rewards/.
 category=armour_body
 param=magicattack,-30
 param=rangeattack,-10
@@ -1252,12 +1285,14 @@ wearpos=righthand
 2dzan=0
 2dyof=7
 weight=1814g
-cost=0
+cost=^vote_price_wilderness_sword
 members=yes
 tradeable=no
 iop2=Wield
 iop3=Teleport
-// Stats from the OSRS cache (obj 13111). Its diary effects are not implemented yet.
+wearop1=Teleport
+// Stats from the OSRS cache (obj 13111). Unlimited teleports to the Fountain of Rune; webs always
+// cut. See general/scripts/diary_rewards/.
 category=weapon_stab
 param=slashattack_anim,human_sword_slash
 param=stabattack_anim,human_sword_stab

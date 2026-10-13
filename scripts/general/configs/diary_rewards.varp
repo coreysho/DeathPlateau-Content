@@ -1,0 +1,18 @@
+// Falador shield 4's daily recharges. Two varps rather than one because a count on its own cannot
+// say WHEN it was counted: the pair is "how many have been used" plus "on which day", and any read
+// that finds a different day today treats the count as zero and writes today's index back
+// (~falador_shield_roll_day, general/scripts/diary_rewards/falador_shield.rs2).
+//
+// scope=perm on both: a daily that resets on logout is not a daily.
+
+// Which day the count below belongs to - world_minute / ^diary_minutes_per_day, so a day index
+// counted from 1 January 2025 UTC. A fresh account holds 0, which is 1 January 2025 and therefore
+// never today, so the first click resets rather than needing its own "never used" flag.
+[falador_shield_day]
+type=int
+scope=perm
+
+// Recharges spent on that day, 0 to ^falador_shield_uses_per_day.
+[falador_shield_used]
+type=int
+scope=perm

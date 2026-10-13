@@ -1,0 +1,85 @@
+// THE ELITE DIARY REWARDS' EFFECTS (13 October, Corey: "do #10, #21, #15 ... for the diary items,
+// those will all go in the vote shop - only the ones that are actually useful ... wire those up
+// with their effects and add them to the vote shop; that is the only way to receive them", then
+// "do only the level 4 items, not their lower tiers").
+//
+// WHY ONLY TIER 4. The twelve reward sets were imported whole (general/configs/diary_rewards.obj,
+// four tiers each) but the achievement diary that hands them out does not exist in this build and
+// is not what suggestion #15 asked for - the shop is. A shop selling four tiers of the same cape
+// would be selling three strictly worse capes, so only the elite tier is for sale and the lower
+// tiers stay what they have always been: unobtainable config.
+//
+// WHICH NINE. Of the twelve sets, nine are sold and wired:
+//
+//   Ardougne cloak 4        Monastery and Ardougne farm teleports
+//   Desert amulet 4         Nardah and Kalphite cave teleports
+//   Falador shield 4        two full Prayer recharges a day (scripts/falador_shield.rs2)
+//   Fremennik sea boots 4   Rellekka teleport
+//   Kandarin headgear 4     Seers' Village teleport
+//   Karamja gloves 4        Shilo gem mine and Slayer master teleports
+//   Morytania legs 4        Ectofuntus and Burgh de Rott teleports
+//   Varrock armour 4        10% chance of a second ore (scripts/diary_passives.rs2)
+//   Wilderness sword 4      Fountain of Rune teleport, and webs always cut
+//
+// THE THREE LEFT OUT, and why none of them is an oversight:
+//
+//   Western banner 4        Corey's call ("not the banner etc."). Its teleport is Gnome Stronghold,
+//                           which the spirit tree and the gnome glider already reach.
+//   Rada's blessing 4       both its teleports are Great Kourend, which this build has no map for.
+//   Explorer's ring 4       already sold, already wired - it carries the farm teleport
+//                           (skill_farming/scripts/farm_teleport.rs2) and was the shop's first row.
+//
+// WHAT IS NOT WIRED, said plainly rather than left to be discovered: the secondary passives that
+// Old School attaches to an elite diary rather than to the item - Varrock armour's double smelt at
+// the Edgeville furnace, the Kandarin flax-for-bowstring trade, Falador shield 1-3's Giant Mole
+// pointer, the prospector-jacket experience bonus. Each of those lives in a skill or an NPC this
+// file does not own, and the item's headline effect is what makes it worth buying.
+
+// ============================================================================ the teleports
+//
+// COMPILE-TIME COORDS, not an enum. farm_teleport.rs2 needs an int -> coord enum because its
+// destination is whatever the player picked out of a menu; here every option has exactly one
+// destination, so the coord can be the literal the trigger passes in and there is no id space,
+// no table, and no default to get wrong.
+//
+// THE COORDS ARE MEASURED, the same way the farm teleport's were: each is a tile the engine's own
+// collision map says a player can stand on, joined to at least 200 other walkable tiles, and
+// within a few tiles of the landmark that names it. engine/tools/sim/diaryrewards.ts is what
+// measured them and what re-checks them, so a map import that moves a landmark fails the sim
+// rather than landing someone in a wall.
+
+^diary_coord_ardougne_monastery = 0_40_50_42_6    // (2602,3206)  outside Brother Omad's monastery
+^diary_coord_ardougne_farm = 0_41_52_44_46        // (2668,3374)  the farm teleport's own arrival
+^diary_coord_nardah = 0_53_45_35_34               // (3427,2914)
+^diary_coord_kalphite_cave = 0_50_48_27_34        // (3227,3106)  the old man's hole in the sand
+^diary_coord_rellekka = 0_41_57_21_61             // (2645,3709)
+^diary_coord_seers_village = 0_42_54_38_32        // (2726,3488)
+^diary_coord_ectofuntus = 0_57_54_53_45           // (3701,3501)
+^diary_coord_burgh_de_rott = 0_54_50_40_32        // (3496,3232)
+^diary_coord_shilo_gem_mine = 0_43_145_4_16       // (2756,9296)  underground, by the gem rocks
+^diary_coord_slayer_master = 1_44_46_50_35        // (2866,2979) level 1  Duradel's loft in Shilo
+^diary_coord_fountain_of_rune = 0_52_60_42_54     // (3370,3894)  deep Wilderness, deliberately
+
+// THE WILDERNESS CEILING, 30, which is what the farm teleport uses (^farm_tele_wildy_max) and what
+// dragonstone jewellery uses. It is a ceiling on where you may teleport FROM, not to - which is why
+// the Wilderness sword can still drop you at the Fountain of Rune at level 36. A free escape from
+// deep Wilderness is the one thing a convenience teleport must not be.
+^diary_tele_wildy_max = 30
+
+// ============================================================================ Falador shield 4
+//
+// TWO FULL RECHARGES A DAY, which is Old School's number for the elite shield (tiers 1-3 get one).
+^falador_shield_uses_per_day = 2
+
+// The day boundary. world_minute counts real-world minutes from 1 January 2025 00:00 UTC
+// (engine/src/engine/script/ScriptOpcode.ts), so dividing by 1440 gives a day index whose
+// boundaries are UTC midnight - the same reset Old School's dailies use. Minutes rather than game
+// ticks is what makes the reset survive a world restart and pass while the player is logged out,
+// which is also why farming's growth clock reads the same counter.
+^diary_minutes_per_day = 1440
+
+// ============================================================================ Varrock armour 4
+//
+// 10 PER CENT, Old School's rate, rolled per ore mined. The second ore pays its own experience, so
+// the armour is a 10% boost to both ore and Mining xp at the rocks it covers.
+^varrock_armour_ore_chance = 10

@@ -1,0 +1,61 @@
+// FALADOR SHIELD 4 - two full Prayer recharges a day, and a Check that says how many are left.
+//
+// THE ONLY DAILY IN THIS ROUND, and the reason it is one is that a Prayer restore is not a
+// convenience the way a teleport is: unlimited full Prayer would make a prayer potion pointless
+// and a long trip free. Old School gives the elite shield two a day and the lower tiers one; two
+// is what ^falador_shield_uses_per_day holds.
+//
+// HOW "A DAY" IS MEASURED. world_minute is real-world minutes since 1 January 2025 UTC, so
+// world_minute / 1440 is a day index that rolls over at UTC midnight - the same moment Old School
+// resets its own dailies. Two consequences worth stating: the reset happens while the player is
+// logged out (nothing has to run at midnight; the next read notices the day changed), and it
+// survives a world restart, because the counter is the wall clock and not an uptime.
+//
+// WHAT IS STORED is a count plus the day it belongs to (general/configs/diary_rewards.varp). A
+// count alone cannot be trusted - it would say "two used" forever - so every read goes through
+// ~falador_shield_roll_day first, which zeroes the count when the stored day is not today. A fresh
+// account holds day 0, which is 1 January 2025 and so never today, which is why there is no
+// separate "never used" flag.
+
+[opheld3,falador_shield_4] @falador_shield_recharge;
+[opheld4,falador_shield_4] @falador_shield_check;
+[label,wearop1_falador_shield_4] @falador_shield_recharge;
+[label,wearop2_falador_shield_4] @falador_shield_check;
+
+// Bring the count up to date. Safe to call as often as you like, and nothing may read the count
+// without calling it.
+[proc,falador_shield_roll_day]
+def_int $today = divide(world_minute, ^diary_minutes_per_day);
+if (%falador_shield_day ! $today) {
+    %falador_shield_day = $today;
+    %falador_shield_used = 0;
+}
+
+// Recharges still available today. max() guards the one case the arithmetic cannot: lowering
+// ^falador_shield_uses_per_day while an account is carrying a bigger count from yesterday's rules.
+[proc,falador_shield_left]()(int)
+~falador_shield_roll_day;
+return(max(0, sub(^falador_shield_uses_per_day, %falador_shield_used)));
+
+[label,falador_shield_recharge]
+def_int $left = ~falador_shield_left;
+if ($left < 1) {
+    mes("Your shield has no charges left today.");
+    mes("Its charges return at midnight, UTC.");
+    return;
+}
+// A CLICK AT FULL PRAYER COSTS NOTHING, which is Old School's behaviour and the only sensible one:
+// the charge is the restore, and there is nothing to restore.
+if (stat(prayer) >= stat_base(prayer)) {
+    mes("You have no need to recharge your Prayer points.");
+    return;
+}
+%falador_shield_used = calc(%falador_shield_used + 1);
+// 0 flat and 100 per cent of the base level, which stat_heal clamps to the base - so this is a
+// full restore however empty the player was, and never an overheal.
+stat_heal(prayer, 0, 100);
+mes("You feel a holy presence restore your Prayer points.");
+mes("Your shield has <~pluralise(sub($left, 1), "charge")> left today.");
+
+[label,falador_shield_check]
+mes("Your shield has <~pluralise(~falador_shield_left, "charge")> left today.");

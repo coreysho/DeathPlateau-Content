@@ -1,0 +1,56 @@
+// THE TWO ELITE DIARY REWARDS THAT ARE NOT TELEPORTS.
+//
+// Both are called from the skill that owns the action rather than hooked from here, because
+// neither has an option to click: Varrock armour 4 from skill_mining/scripts/mining.rs2, beside
+// the Mining cape's own extra-ore perk, and the Wilderness sword from general_use/scripts/web.rs2.
+
+// ============================================================================ Varrock armour 4
+//
+// A 10% CHANCE OF A SECOND ORE, with its own experience - Old School's rate and Old School's rule
+// that both ores pay. Without this the armour would be a body slot weaker than a rune platebody
+// with nothing to show for it; with it, it is a 10% Mining boost you wear, which is what makes it
+// the most expensive row in the vote shop.
+//
+// WHICH ROCKS. Every rock that goes through get_ore_normal or get_ore_fast - so clay up to runite,
+// and granite and sandstone. Not the rune essence mine (which pays runes, not ore) and not gem
+// rocks: Old School excludes those too. The gem roll is untouched, so a click that found a gem
+// still finds one gem - Old School doubles that roll as well, and that is the one part of the
+// armour's mining effect left out, because the gem table lives inside the skill and rolling it
+// twice from out here would mean reaching into it.
+//
+// WORN, not carried. This one is an armour effect, unlike the teleports, and a platebody in the
+// backpack is not armour.
+[proc,varrock_armour_extra](namedobj $ore, int $xp)
+if (inv_getobj(worn, ^wearpos_torso) ! varrock_armour_4) {
+    return;
+}
+if (random(100) >= ^varrock_armour_ore_chance) {
+    return;
+}
+// On Miscellania, while the island is making up its mind, Miner Magnus takes the ore - the same
+// call the first ore goes through, so the armour cannot launder an ore past him.
+if (~misc_handin($ore) = false) {
+    if (inv_freespace(inv) < 1) {
+        return;
+    }
+    inv_add(inv, $ore, 1);
+}
+~mining_xp($xp);
+mes("Your Varrock armour allows you to mine an extra ore.");
+
+// ============================================================================ Wilderness sword 4
+//
+// WEBS ALWAYS CUT. A web is a 1-in-2 roll for everyone else (general_use/scripts/web.rs2), which
+// on the Wilderness's own webs is a coin flip in a place where standing still is expensive. Old
+// School gives this to all four tiers of the sword; only tier 4 exists to be owned here.
+//
+// WORN OR CARRIED, which is how Old School words it and how the teleport works too, so the sword
+// need not be the weapon in hand to do it.
+[proc,wilderness_sword_carried]()(boolean)
+if (inv_getobj(worn, ^wearpos_rhand) = wilderness_sword_4) {
+    return(true);
+}
+if (inv_total(inv, wilderness_sword_4) > 0) {
+    return(true);
+}
+return(false);

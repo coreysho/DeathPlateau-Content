@@ -1,0 +1,71 @@
+// THE ELITE DIARY TELEPORTS - thirteen destinations across eight items. See
+// general/configs/diary_rewards.constant for which items are wired, which are not, and where the
+// coords come from.
+//
+// HELD AND WORN, both, for every one of them. Old School's diary rewards teleport "when worn or in
+// the inventory" and so do these: a cloak you teleport with is a cloak you are wearing, and taking
+// it off to click it is what the wearop system exists to avoid (the glory, the digsite pendant and
+// Explorer's ring 4 all do this). The wearop label name has to match the obj exactly -
+// [label,wearop1_<obj>] - and the engine refuses an op the obj does not advertise, so every
+// wearop<n> line below has a wearop<n>= on its item in general/configs/diary_rewards.obj.
+//
+// NO CHARGES AND NO LEVEL REQUIREMENT, for the reason the farm teleport gives at more length: the
+// thing standing in front of these items is 650 vote points, and charging for the teleport on top
+// of that would be charging twice. The one limit they keep is the Wilderness ceiling.
+//
+// THE OPTION LABELS ARE OLD SCHOOL'S OWN, imported with the items and left alone, which is why
+// they read "Ecto Teleport" and "Slayer Master" rather than anything prettier - an option that
+// says what the item says everywhere else is worth more than a tidier wording.
+
+// ============================================================================ going there
+//
+// One proc for all thirteen. It is the farm teleport's ending with the menu taken off: the shared
+// pre-teleport checks and the Wilderness ceiling (general/scripts/enchanted_jewellry/
+// charged_jewellery.rs2), then the jump. Reusing that rather than re-deriving it is what keeps a
+// blocked teleport worded the same here as on an amulet of glory.
+[proc,diary_teleport](coord $dest)
+if (~charged_jewellery_allowed(^diary_tele_wildy_max) = false) {
+    return;
+}
+~player_teleport_normal($dest);
+
+// ============================================================================ Ardougne cloak 4
+[opheld3,ardougne_cloak_4] ~diary_teleport(^diary_coord_ardougne_monastery);
+[opheld4,ardougne_cloak_4] ~diary_teleport(^diary_coord_ardougne_farm);
+[label,wearop1_ardougne_cloak_4] ~diary_teleport(^diary_coord_ardougne_monastery);
+[label,wearop2_ardougne_cloak_4] ~diary_teleport(^diary_coord_ardougne_farm);
+
+// ============================================================================ Desert amulet 4
+[opheld3,desert_amulet_4] ~diary_teleport(^diary_coord_nardah);
+[opheld4,desert_amulet_4] ~diary_teleport(^diary_coord_kalphite_cave);
+[label,wearop1_desert_amulet_4] ~diary_teleport(^diary_coord_nardah);
+[label,wearop2_desert_amulet_4] ~diary_teleport(^diary_coord_kalphite_cave);
+
+// ========================================================================= Fremennik sea boots 4
+[opheld3,fremennik_sea_boots_4] ~diary_teleport(^diary_coord_rellekka);
+[label,wearop1_fremennik_sea_boots_4] ~diary_teleport(^diary_coord_rellekka);
+
+// ============================================================================ Kandarin headgear 4
+[opheld3,kandarin_headgear_4] ~diary_teleport(^diary_coord_seers_village);
+[label,wearop1_kandarin_headgear_4] ~diary_teleport(^diary_coord_seers_village);
+
+// ============================================================================ Karamja gloves 4
+// The gem mine arrival is underground, next to the gem rocks themselves, and Duradel is upstairs
+// in Shilo - which is why that one coord carries a level of 1.
+[opheld3,karamja_gloves_4] ~diary_teleport(^diary_coord_shilo_gem_mine);
+[opheld4,karamja_gloves_4] ~diary_teleport(^diary_coord_slayer_master);
+[label,wearop1_karamja_gloves_4] ~diary_teleport(^diary_coord_shilo_gem_mine);
+[label,wearop2_karamja_gloves_4] ~diary_teleport(^diary_coord_slayer_master);
+
+// ============================================================================ Morytania legs 4
+[opheld3,morytania_legs_4] ~diary_teleport(^diary_coord_ectofuntus);
+[opheld4,morytania_legs_4] ~diary_teleport(^diary_coord_burgh_de_rott);
+[label,wearop1_morytania_legs_4] ~diary_teleport(^diary_coord_ectofuntus);
+[label,wearop2_morytania_legs_4] ~diary_teleport(^diary_coord_burgh_de_rott);
+
+// ============================================================================ Wilderness sword 4
+// Into level 36 Wilderness, deliberately. ~charged_jewellery_allowed looks at where you ARE, so
+// this is a one-way door: it will take you to the fountain from anywhere safe and will not take
+// you back out of anywhere past level 30.
+[opheld3,wilderness_sword_4] ~diary_teleport(^diary_coord_fountain_of_rune);
+[label,wearop1_wilderness_sword_4] ~diary_teleport(^diary_coord_fountain_of_rune);
