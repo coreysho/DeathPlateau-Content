@@ -9,6 +9,10 @@
 [graceful_colour_result]
 inputtype=int
 outputtype=namedobj
+// WITHOUT A DEFAULT A MISS RETURNS OBJ 0, which is a real item - so graceful_colours.rs2's
+// `if ($into = null)` guard, which it has, could never fire and a bad key would hand over whatever
+// obj 0 happens to be. rs2check rule 17 is the one that catches this.
+default=null
 val=11,graceful_hood_draynor
 val=12,graceful_top_draynor
 val=13,graceful_legs_draynor
@@ -68,6 +72,7 @@ val=96,graceful_cape_ardougne
 [graceful_colour_kit]
 inputtype=int
 outputtype=namedobj
+default=null
 val=1,graceful_kit_draynor
 val=2,graceful_kit_alkharid
 val=3,graceful_kit_varrock
