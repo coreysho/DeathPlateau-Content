@@ -196,6 +196,12 @@ if (oc_category($obj) = mm_greegree) {
     ~mm_greegree_removed;
 }
 
+// Ghosts Ahoy: the bedsheet over your head is a disguise, and taking it off ends it. Same place,
+// same reason - see quests/quest_ahoy/scripts/quest_ahoy.rs2.
+if ($obj = ahoy_bedsheet | $obj = ahoy_bedsheetgreen) {
+    ~ahoy_disguise_removed;
+}
+
 // Easter 2006's ring, the same way: taking it off stops you being an egg.
 // See misc/scripts/easter_ring.rs2.
 if ($obj = easter06_ring_of_egg) {

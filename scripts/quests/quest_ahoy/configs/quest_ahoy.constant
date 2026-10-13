@@ -1,68 +1,115 @@
 // Ghosts Ahoy.
 //
-// One varp, ahoy_varbits_1, transmit=yes and no scope=perm.
+// REBUILT 13 October 2026 to the quest that was actually released, after an audit compared what was
+// here with oldschool.runescape.wiki/w/Ghosts_Ahoy. What was here was a coherent, well-written and
+// almost entirely INVENTED quest standing on top of the real one's parts: Velorina handed out the
+// petition, it wanted three signatures, and those came from three favours the real quest does not
+// have. Meanwhile the 377 cache shipped the real quest nearly complete and nothing used it.
 //
-// ---------------------------------------------------------------------------- the barrier
-// ahoy_town_barrier is "Energy Barrier: a ghostly barrier" and it carries op1=Pass. It is placed
-// twice at 3652,3485 and it had no handler at all, which is the whole reason Port Phasmatys has
-// been unreachable - not a missing loc, just an unwritten one. Making History needs the same gate.
+// What was sitting there, placed on the map, with no script attached:
 //
+//   ahoy_ghost_protestor   3658,3504 - GRAVINGAS, the activist in the square by the north gate, who
+//                          is the one who hands out the petition
+//   ahoy_ghost_villager    TWELVE placements around the town - the ghosts who sign it, and the
+//                          petition wants ten names
+//   ahoy_bone_key          the key Necrovarus DROPS when he is shown the full petition
+//   ahoy_bedsheetgreen     the bedsheet after it has been dyed - "an ectoplasm-covered bedsheet",
+//                          iop2=Wear, wearpos=hat, because wearing it is the disguise
+//   ahoy_ghost_disguise_green   the npc you look like while you are wearing it
+//   ahoy_templedoor_unlocked    a varbit for the upstairs door the bone key opens
+//   ahoy_subquest_bow      four bits for Robin's game of Rune-Draw
+//   ahoy_killed_lobster    a bit for the giant lobster in the chest
+//   ahoy_windspeed         a bit for whether the wind is low enough to read the mast
+//   oak_longbow_signed     the Signed oak bow Ak-Haranu is actually paid with
+//   ahoy_mast              3619,3543 on the quarterdeck, which is the mast you search
+//
+// The varbit NAMES are the design document. There is a bit for the lobster and four for a card game;
+// a quest that did not have a lobster or a card game in it would not have them.
+//
+// NOTE FOR ANYONE MID-QUEST. The stage numbers below mean different things than they did yesterday -
+// old 3 was "gathering signatures", new 3 is "Velorina has named the old crone". The quest is one day
+// old (the Ectofuntus work of 12 October), so this was judged cheaper than carrying a migration.
+
 // ---------------------------------------------------------------------------- the stage pin
 // ahoy_questvar is bits 28-31, so 0-15, and [ahoy_akharanu_multi] declares 4, 5, 6, 7 and 8:
 //
 //   multinpc=4,5,6,7,8 -> ahoy_akharanu
 //
-// Ak-Haranu is the living trader on the dock and he exists across exactly those five values. He
-// has to be there from the moment the petition is full until the map business is finished, so the
-// middle of the quest is pinned to that window and completion has to be above it.
+// Ak-Haranu is the living trader on the dock and he exists across exactly those five values, which
+// is the strongest single clue the cache gives about the shape of the middle of this quest. He has
+// to be there from before you need the manual until after you have read the book, so the ladder is
+// built around that window: the crone's news opens it at 4 and the translated book closes it at 8.
 ^ahoy_not_started = 0
-^ahoy_velorina = 1        // Velorina has explained what Necrovarus is doing
-^ahoy_refused = 2         // and he has refused, in person
-^ahoy_petition = 3        // gathering signatures
-^ahoy_petition_full = 4   // <- AK-HARANU APPEARS
-^ahoy_manual = 5          // the translation manual, for a magic longbow
-^ahoy_translated = 6      // the Book of Haricanto read
-^ahoy_map = 7             // the three scraps together
-^ahoy_robes = 8           // Necrovarus's robes off the ghost ship  <- LAST VALUE HE EXISTS AT
-^ahoy_complete = 10
+^ahoy_velorina = 1          // Velorina has explained what Necrovarus is doing
+^ahoy_refused = 2           // and he has refused, in person
+^ahoy_crone_named = 3       // Velorina has told you where to find the old crone
+^ahoy_crone_told = 4        // the crone, given her tea, has named the Book of Haricanto  <- AK-HARANU
+^ahoy_map = 5               // three scraps off the wreck make one map
+^ahoy_book = 6              // the book is dug up on Dragontooth Island
+^ahoy_manual = 7            // Ak-Haranu has traded the manual for the signed oak bow
+^ahoy_translated = 8        // the book is read                        <- LAST VALUE AK-HARANU EXISTS AT
+^ahoy_petition_full = 9     // ten names on Gravingas's petition
+^ahoy_robes = 10            // the robes are out of the coffin
+^ahoy_ritual = 11           // the crone has told you what they are for
+^ahoy_released = 12         // Necrovarus has let the town go
+^ahoy_complete = 15
 
-^ahoy_signatures_wanted = 3
+^ahoy_signatures_wanted = 10
 ^ahoy_barrier_toll = 2      // ecto-tokens, for anyone without the amulet
 
-^ahoy_sub_none = 0
-^ahoy_sub_asked = 1
-^ahoy_sub_done = 2
+// ---------------------------------------------------------------------------- subquest states
+// ahoy_subquest_nettletea, 2 bits
+^ahoy_tea_none = 0
+^ahoy_tea_asked = 1         // the crone has said what she wants
+^ahoy_tea_done = 2          // and has had it
+
+// ahoy_subquest_toyboat, 2 bits
+^ahoy_boat_none = 0
+^ahoy_boat_asked = 1        // the old man has asked for his son's ship
+^ahoy_boat_mended = 2       // needle, silk and thread
+^ahoy_boat_flagged = 3      // and the flag dyed to match the mast
+
+// ahoy_subquest_bow, 4 bits. Ak-Haranu wants a signed oak bow; Robin will not sign one until he owes
+// you money, and he owes you money by losing at Rune-Draw four times.
+^ahoy_bow_none = 0
+^ahoy_bow_asked = 1         // Ak-Haranu has named his price
+^ahoy_bow_playing = 2       // Robin is playing; add his losses to this
+^ahoy_bow_wins_wanted = 4   // four losses and he is out of money
+// ^ahoy_bow_playing plus ^ahoy_bow_wins_wanted plus one: he has lost four and owes 100 coins.
+// The comment is on its own line because the constant parser splits these on the first equals sign.
+^ahoy_bow_owed = 7
+^ahoy_bow_signed = 8        // the bow is signed and in your hands
 
 ^ahoy_off = 0
 ^ahoy_on = 1
 
 // ---------------------------------------------------------------------------- places
-// Port Phasmatys is m57_54 (mapsquare origin 3648,3456).
-^ahoy_barrier = 0_57_54_4_29           // 3652,3485  two of them, the town gate
+// Port Phasmatys is m57_54 (mapsquare origin 3648,3456); the wreck is on m56_55.
+^ahoy_barrier = 0_57_54_4_29           // 3652,3485  the south gate; there is another at 3659,3508
 ^ahoy_velorina_coord = 0_57_54_30_54   // 3678,3510
-^ahoy_necrovarus = 0_57_54_12_60       // 3660,3516  the temple
+^ahoy_necrovarus = 0_57_54_12_60       // 3660,3516  at the Ectofuntus, outside the walls
+^ahoy_gravingas = 0_57_54_10_48        // 3658,3504  the square inside the north gate
 ^ahoy_akharanu = 0_57_54_41_39         // 3689,3495  the dock
-^ahoy_robin = 0_57_54_24_35            // 3672,3491
-^ahoy_oldman = 1_56_55_33_24           // 3617,3544
-^ahoy_ghostship = 0_56_55_25_23        // 3609,3543
+^ahoy_robin = 0_57_54_24_35            // 3672,3491  the inn
+^ahoy_oldman = 1_56_55_33_24           // 3617,3544  the wreck's deck
 
-// The wreck west of the port is a three-deck hulk with nine chests on it and, before this, not one
-// line of script anywhere - no ladder, no gangplank, no chest, no captain. Robin's model ship is in
-// the one chest on the top deck, which is the only one of the nine placed without an angle.
-^ahoy_boat_chest = 2_56_55_34_21
+// --- the wreck, and the three map scraps
+^ahoy_ghostship = 0_56_55_25_23        // 3609,3543  the shore end of the first ladder
+^ahoy_mast_coord = 2_56_55_35_23       // 3619,3543  the quarterdeck mast you search for the colours
+^ahoy_boat_chest = 2_56_55_34_21       // 3618,3541  the captain's chest: the bone-handled key opens it
+^ahoy_boat_in_chest = 0_56_55_35_24    // 3619,3544  in the hold: the old man's son's model ship
+^ahoy_lobster_chest = 0_56_55_37_23    // 3621,3543  in the hold: the giant lobster comes out of this
+^ahoy_rock_chest = 0_56_55_18_23       // 3602,3543  past the gangplank, across the rocks
 ^ahoy_skull_captain_coord = 1_56_55_38_23
-^ahoy_coffin_coord = 1_57_54_11_57
 
-// ---------------------------------------------------------------------------- Dragontooth Island
-// The completed map is a readable that was already in the cache, and it does not describe the wreck
-// at all - it says Dragontooth Island, a red cross on the north-western peninsula, and then a column
-// of figures. m59_55 is that island, it holds ahoy_x_start (the cross, a decoration with no ops) at
-// 3791,3556, and it is carpeted in two hundred dug-up-soil locs from everyone who has ever guessed.
-// Pacing the figures off the cross - 6 south, 8 east, 2 north, 4 east, 22 south - lands on 3803,3530,
-// which is sand, on a beach, on an island that is otherwise rock. The map is the spec.
+// --- the temple's upper floor
+^ahoy_templedoor = 1_57_54_8_58        // 3656,3514  locked until the bone key
+^ahoy_coffin_coord = 1_57_54_11_57     // 3659,3513
+
+// --- Dragontooth Island
 ^ahoy_x = 0_59_55_15_36          // 3791,3556  the cross
 ^ahoy_dig = 0_59_55_27_10        // 3803,3530  where the figures actually point
-^ahoy_port_dock = 0_57_54_55_31  // 3703,3487  ghost captain, Port Phasmatys pier
+^ahoy_port_dock = 0_57_54_55_31  // 3703,3487  the ghost captain, Port Phasmatys pier
 ^ahoy_island_dock = 0_59_55_16_40 // 3792,3560 the same captain, Dragontooth Island
 ^ahoy_island_sw = 0_59_55_0_0
 ^ahoy_island_ne = 0_59_55_63_63

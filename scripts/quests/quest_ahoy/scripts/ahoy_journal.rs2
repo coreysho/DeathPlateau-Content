@@ -1,3 +1,8 @@
+// Ghosts Ahoy's quest journal. Rewritten 13 October 2026 with the quest itself - the old stages
+// described a petition Velorina handed out and three favours that are not in this quest.
+//
+// One case per value of ahoy_questvar. @str@ is what has already happened, @dbl@ is what to do next
+// and @dre@ picks out the names and places you need, which is the house style for these.
 [if_button,questlist:ahoy]
 def_string $text;
 
@@ -7,76 +12,90 @@ switch_int (%ahoy_questvar) {
         $text = append($text, "@dbl@@dre@energy barrier|");
         $text = append($text, "@dbl@Nobody in it is alive. I will need an @dre@amulet of ghostspeak|");
         $text = append($text, "@dbl@to hear a word anyone says|");
-        $text = append($text, "@dbl@Speak to @dre@Velorina");
+        $text = append($text, "@dbl@Speak to @dre@Velorina@dbl@, in the house inside the east gate");
 
     case ^ahoy_velorina :
         $text = "@str@Two hundred years ago everyone in this town died, and|";
         $text = append($text, "@str@Necrovarus has not let one of them go on since.|");
         $text = append($text, "@str@Velorina has a husband somewhere in the crowd she has not|");
         $text = append($text, "@str@been able to say goodbye to.|");
-        $text = append($text, "@dbl@Ask @dre@Necrovarus@dbl@ in the @dre@temple@dbl@. She says he will say no");
+        $text = append($text, "@dbl@Ask @dre@Necrovarus@dbl@ at the @dre@Ectofuntus@dbl@, north of the wall");
 
     case ^ahoy_refused :
         $text = "@str@He said no. He has been saying no for two centuries and it|";
         $text = append($text, "@str@has not stopped being the answer.|");
         $text = append($text, "@dbl@Go back to @dre@Velorina");
 
-    case ^ahoy_petition :
-        $text = "@str@There is a petition. There has always been a petition.|";
-        $text = append($text, "@str@Nobody has ever got three names on it, because every ghost|");
-        $text = append($text, "@str@in this town wants something first.|");
-        $text = append($text, "@dbl@@dre@Robin@dbl@ wants his son's @dre@model ship@dbl@ mended|");
-        $text = append($text, "@dbl@The @dre@old man@dbl@ wants @dre@nettle tea|");
-        $text = append($text, "@dbl@The @dre@old woman@dbl@ wants a @dre@bedsheet");
+    case ^ahoy_crone_named :
+        $text = "@str@There is a woman living east of the @str@slayer tower@str@ who|";
+        $text = append($text, "@str@knew Necrovarus while he was still breathing.|");
+        $text = append($text, "@dbl@She drinks @dre@nettle tea@dbl@, and she is particular:|");
+        $text = append($text, "@dbl@a @dre@china cup@dbl@, with @dre@milk@dbl@ in it|");
+        $text = append($text, "@dbl@Pick @dre@nettles@dbl@ with gloves on and boil them in a|");
+        $text = append($text, "@dbl@@dre@bowl of water@dbl@ over a fire");
 
-    case ^ahoy_petition_full :
-        $text = "@str@Three signatures.|";
-        $text = append($text, "@dbl@Take the @dre@petition@dbl@ to @dre@Necrovarus");
+    case ^ahoy_crone_told :
+        $text = "@str@Necrovarus did not do this with a spell. He did it with the|";
+        $text = append($text, "@str@@str@Book of Haricanto@str@, and he buried the book on|");
+        $text = append($text, "@str@@str@Dragontooth Island@str@ under a cross.|");
+        $text = append($text, "@dbl@The map was torn in @dre@three@dbl@ and went down with a ship|");
+        $text = append($text, "@dbl@on the rocks @dre@west of the town|");
+        $text = append($text, "@dbl@Mend the @dre@old man's model ship@dbl@ for the captain's key");
+
+    case ^ahoy_map :
+        $text = "@str@The three scraps make one map, and the cross on it is out|";
+        $text = append($text, "@str@past the harbour.|");
+        $text = append($text, "@dbl@The @dre@ghost captain@dbl@ on the pier sails to @dre@Dragontooth|");
+        $text = append($text, "@dbl@Take a @dre@spade");
+
+    case ^ahoy_book :
+        $text = "@str@The Book of Haricanto was two feet down on Dragontooth|";
+        $text = append($text, "@str@Island, in an oilskin, where he said it was safe.|");
+        $text = append($text, "@dbl@It is in a language nobody speaks. @dre@Ak-Haranu@dbl@ on the|");
+        $text = append($text, "@dbl@dock owns the manual and wants a @dre@bow signed by Robin|");
+        $text = append($text, "@dbl@Robin is in the @dre@inn@dbl@, and he signs bows for people he|");
+        $text = append($text, "@dbl@owes money to");
 
     case ^ahoy_manual :
-        $text = "@str@The petition meant nothing to him, but he was angry enough|";
-        $text = append($text, "@str@to name the thing that does: the @str@Book of Haricanto@str@, in a|");
-        $text = append($text, "@str@language that died with the man who wrote it.|");
-        $text = append($text, "@dbl@The @dre@disciple@dbl@ upstairs in the temple has the book|");
-        $text = append($text, "@dbl@@dre@Ak-Haranu@dbl@ on the dock has the manual, and wants a|");
-        $text = append($text, "@dbl@@dre@magic longbow@dbl@ for it");
+        $text = "@str@Ak-Haranu took the signed bow and gave me the translation|";
+        $text = append($text, "@str@manual.|");
+        $text = append($text, "@dbl@Use the @dre@manual@dbl@ on the @dre@Book of Haricanto");
 
     case ^ahoy_translated :
         $text = "@str@The book is not a spell. It is a list of what Necrovarus|";
-        $text = append($text, "@str@carried into death and what each piece of it holds - and his|");
-        $text = append($text, "@str@robes are third on it, underlined.|");
-        $text = append($text, "@str@The robes are not on him, and have not been for two|");
-        $text = append($text, "@str@centuries. Finding them takes a map that was torn in three.|");
-        $text = append($text, "@dbl@The @dre@pirate captain@dbl@ on the wreck, @dre@Necrovarus' coffin@dbl@|");
-        $text = append($text, "@dbl@upstairs in the temple, and the @dre@ghost captain@dbl@ at the|");
-        $text = append($text, "@dbl@harbour");
+        $text = append($text, "@str@took with him when he died, and his @str@robes@str@ are on it.|");
+        $text = append($text, "@dbl@@dre@Gravingas@dbl@ is shouting in the square by the north gate|");
+        $text = append($text, "@dbl@and has a @dre@petition@dbl@ nobody will sign|");
+        $text = append($text, "@dbl@Ask the @dre@ghost innkeeper@dbl@ for work to get a @dre@bedsheet|");
+        $text = append($text, "@dbl@Dye it with a @dre@bucket of ectoplasm@dbl@ and @dre@wear it");
 
-    case ^ahoy_map :
-        $text = "@str@Three scraps, one map: @str@Dragontooth Island@str@, a red cross on|";
-        $text = append($text, "@str@the north-western peninsula, and under the cross a column|");
-        $text = append($text, "@str@of figures. The island has been dug over by two hundred|");
-        $text = append($text, "@str@years of people who stopped reading at the cross.|");
-        $text = append($text, "@dbl@The @dre@ghost captain@dbl@ on the @dre@pier@dbl@ sails there|");
-        $text = append($text, "@dbl@Walk the figures off the cross, then @dre@dig");
+    case ^ahoy_petition_full :
+        $text = "@str@Ten ghosts signed the petition, which took a bedsheet over|";
+        $text = append($text, "@str@my head and a straight face.|");
+        $text = append($text, "@dbl@Show it to @dre@Necrovarus@dbl@ at the @dre@Ectofuntus");
 
     case ^ahoy_robes :
-        $text = "@str@His robes have been folded in a chest on a sunken ship for|";
-        $text = append($text, "@str@two hundred years, and he has told this town every day that|");
-        $text = append($text, "@str@he was wearing them.|");
-        $text = append($text, "@dbl@Show him");
+        $text = "@str@He dropped a @str@key of yellowed bone@str@ and did not notice.|";
+        $text = append($text, "@dbl@It opens the @dre@door on the temple's upper floor|");
+        $text = append($text, "@dbl@His @dre@coffin@dbl@ is through it, and it has never had a body|");
+        $text = append($text, "@dbl@in it");
 
-    case ^ahoy_complete :
-        $text = "@str@Necrovarus held a whole town of dead people in place for two|";
-        $text = append($text, "@str@centuries by wearing something he had left on a wreck.|");
-        $text = append($text, "@str@When I put it in front of him he did not say no. He did not|");
-        $text = append($text, "@str@say anything at all.|");
-        $text = append($text, "@str@Velorina found her husband.||");
-        $text = append($text, "@red@QUEST COMPLETE!");
+    case ^ahoy_ritual :
+        $text = "@str@The old crone laughed for a long time when she saw the|";
+        $text = append($text, "@str@robes. He is finished and does not know it yet.|");
+        $text = append($text, "@dbl@Take them to @dre@Necrovarus@dbl@ and let him see you holding|");
+        $text = append($text, "@dbl@them");
+
+    case ^ahoy_released :
+        $text = "@str@The barrier over the town is thinning, and a great many|";
+        $text = append($text, "@str@people have started talking at once.|");
+        $text = append($text, "@dbl@Go and tell @dre@Velorina");
 
     case default :
-        $text = "@dbl@@dre@Port Phasmatys@dbl@ is east of @dre@Canifis@dbl@, behind an|";
-        $text = append($text, "@dbl@@dre@energy barrier|");
-        $text = append($text, "@dbl@Speak to @dre@Velorina");
+        $text = "@str@Necrovarus held a town of dead people for two hundred years|";
+        $text = append($text, "@str@with a book he had buried on an island, and I dug it up.|");
+        $text = append($text, "@str@Velorina has gone to find her husband.|");
+        $text = append($text, "@dbl@@dre@QUEST COMPLETE");
 }
 
 ~quest_journal("Ghosts Ahoy", $text);
