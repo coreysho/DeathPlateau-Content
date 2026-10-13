@@ -32,16 +32,24 @@
 // around". It is the same mistake as the diary teleports: a measurement that answers a question
 // nobody asked.
 //
-// THE ISLAND ITSELF SAYS WHERE THEY GO. m41_40's ground is painted in four small patches of their
-// own underlay, one per portal, each about nine tiles across and nowhere near any other:
+// THE ISLAND ITSELF SAYS WHERE THEY GO, and it says it twice. The ground is painted in four small
+// patches of their own underlay, one per portal - and standing on each patch is a FRAME of vine
+// locs, a 3x3 ring with an arm out of two opposite sides, named for the site it belongs to:
 //
-//   underlay 121  abyssal_ground_dark  76 tiles  local x 2-11  z 26-37  centre (6,31)   WEST
-//   underlay 142  fairy_grass          41 tiles  local x 18-26 z 6-14   centre (22,10)  SOUTH-WEST
-//   underlay 61   desert2              41 tiles  local x 42-50 z 7-15   centre (46,11)  SOUTH-EAST
-//   underlay 59   greenice             41 tiles  local x 53-61 z 25-33  centre (57,29)  EAST
+//   patch underlay 121  abyssal_ground_dark   frame pest_vine_*_range    ring x 4-6  z 31-33  WEST
+//   patch underlay 142  fairy_grass           frame pest_vine_*_master   ring x21-23 z  9-11  SOUTH-WEST
+//   patch underlay 61   desert2               frame pest_vine_*_magic    ring x45-47 z 10-12  SOUTH-EAST
+//   patch underlay 59   greenice              frame pest_vine_*_melee    ring x56-58 z 28-30  EAST
 //
-// Those are the portal sites, drawn by whoever made the island, and each centre has the clear 3x3 a
-// size-3 portal needs. Nothing had to be invented.
+// The frame is the better of the two, and the one these coordinates come from: a patch is nine
+// tiles across and only says roughly where, while the ring is exactly the 3x3 a size-3 portal
+// fills. Nothing had to be invented for either.
+//
+// AND THE COORDINATE IS THE RING'S SOUTH-WEST TILE, not its centre (corrected 13 October, reported
+// from play: "they aren't sitting directly in their frame"). npc_add places an npc by its
+// south-west corner and a portal is 3x3, so it occupies coord..coord+2 - putting a portal on the
+// ring's CENTRE draws it one tile north and one tile east of the ring it is supposed to fill.
+// That is the whole of that fault, and it was uniform across all four.
 //
 // WHICH PORTAL ON WHICH PATCH is half-settled by the cache and half not. pest_portal_1_active's
 // own animation is pest_portal_on_anim_EAST and pest_portal_2_active's is _WEST, so those two place
@@ -55,14 +63,14 @@
 // "// ..." is carried into the value and the packer rejects the row. The coordinate each one
 // encodes is in the table above.
 //
-// east  (2681,2589)   pest_portal_1_active, the east animation
-^pest_solo_portal_e = 0_41_40_57_29
-// west  (2630,2591)   pest_portal_2_active, the west animation
-^pest_solo_portal_w = 0_41_40_6_31
-// south-west  (2646,2570)   pest_portal_3_active
-^pest_solo_portal_sw = 0_41_40_22_10
-// south-east  (2670,2571)   pest_portal_4_active
-^pest_solo_portal_se = 0_41_40_46_11
+// east, the melee frame.  ring x56-58 z28-30, so the south-west tile is 56,28 = (2680,2588)
+^pest_solo_portal_e = 0_41_40_56_28
+// west, the range frame.  ring x4-6 z31-33, so 4,31 = (2628,2591)
+^pest_solo_portal_w = 0_41_40_4_31
+// south-west, the master frame.  ring x21-23 z9-11, so 21,9 = (2645,2569)
+^pest_solo_portal_sw = 0_41_40_21_9
+// south-east, the magic frame.  ring x45-47 z10-12, so 45,10 = (2669,2570)
+^pest_solo_portal_se = 0_41_40_45_10
 ^pest_solo_portals = 4
 
 // THE VOID KNIGHT IS OLD SCHOOL'S OWN COORDINATE, (2656,2592), off the wiki's LocLine row for
