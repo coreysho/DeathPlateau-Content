@@ -166,6 +166,16 @@ switch_int($target) {
             return (false);
         }
         return (true);
+    // BUILT 2026-10-13: the lava dragons are Duradel's third unlock-only row, behind Playing with
+    // Fire. Corey's call that this one is gated and the ankou are not, and it is the right split:
+    // ankou stand at level 29 Wilderness and die in a few hits, while a lava dragon is 230
+    // hitpoints of level 252 dragon on an island at level 37 - a task worth choosing rather than
+    // one worth being handed. The ankou need no case here at all; nothing refuses them.
+    case ^slayer_lavadragon :
+        if (testbit(%slayer_unlocks, ^slayer_unlock_playing_with_fire) = ^false) {
+            return (false);
+        }
+        return (true);
     // FIXED 2026-09-16: this was a bare refusal, written when Desert Treasure was not implemented.
     // It is now - dt_pyramid.rs2 sets %deserttreasure = ^deserttreasure_complete and hands out the
     // Ancient Magicks - and the 19 dust devils live in that quest's own smoke dungeon, m50_146,

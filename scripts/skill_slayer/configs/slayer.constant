@@ -118,6 +118,10 @@
 ^slayer_unlock_shroom_sprayer = 7
 ^slayer_unlock_seeing_red = 8
 ^slayer_unlock_watch_the_birdie = 9
+// 11, not 10: bit 10 belongs to the King Black Bonnet on the Cosmetics tab (slayer_rewards.enum's
+// slayer_cosmetic_bit), and both tabs write this one varp. Added 2026-10-13 for the lava dragons,
+// Duradel's third unlock-only row.
+^slayer_unlock_playing_with_fire = 11
 
 // Slayer points (skill_slayer/scripts/slayer_points.rs2) - OSRS prices
 ^slayer_cancel_cost = 30

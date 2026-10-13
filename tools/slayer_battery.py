@@ -268,9 +268,17 @@ print('9. the rewards themselves are OSRS\'s, and every row can answer for itsel
 WIKI = {'Bigger and Badder': 50, 'Gargoyle Smasher': 120, 'Slug Salter': 10,
         'Reptile Freezer': 10, 'Ring Bling': 150,
         "'Shroom Sprayer": 80, 'Seeing Red': 75, 'Watch the Birdie': 80}
+# THE ONE PRICE WITH NOTHING TO CHECK IT AGAINST. Playing with Fire (2026-10-13) puts lava dragons
+# into Duradel's table, and OSRS has no such unlock - Krystilia gives lava dragons as a Wilderness
+# task and this build has no Wilderness master. So it is kept in its own dict rather than smuggled
+# into WIKI, because a number this repo chose and a number the wiki states are not the same kind of
+# claim and a table called WIKI should not blur them.
+OURS = {'Playing with Fire': 100}
+UNLOCKS = {**WIKI, **OURS}
 names, costs = rows('slayer_unlock_name'), rows('slayer_unlock_cost')
 got = {names[k]: int(costs[k]) for k in names}
-check(got == WIKI, 'the five unlock prices are the wiki\'s: %s' % (got if got != WIKI else 'all five'))
+check(got == UNLOCKS, 'the %d unlock prices are the wiki\'s, bar the one that is ours: %s'
+      % (len(UNLOCKS), got if got != UNLOCKS else 'all %d' % len(UNLOCKS)))
 # The rune pouch is 750 points from a slayer master in OSRS, the same as the herb sack, so it
 # belongs in this list rather than as an exception to it.
 BUY = {'slayer_ring_8': 75, 'herb_sack': 750, 'looting_bag': 10, 'rune_pouch': 750}
@@ -301,8 +309,8 @@ check(const('slayer_cancel_cost') == 30 and const('slayer_block_cost') == 100,
       'cancelling is 30 points and blocking 100, as they were before the window')
 check(const('slayer_task_rows') == 6, 'the Tasks tab is cancel, block and four block slots')
 for tbl in ('slayer_unlock_name', 'slayer_unlock_cost', 'slayer_unlock_bit'):
-    check(sorted(int(k) for k in rows(tbl)) == list(range(len(WIKI))),
-          '%s is keyed 0..%d with no gap' % (tbl, len(WIKI) - 1))
+    check(sorted(int(k) for k in rows(tbl)) == list(range(len(UNLOCKS))),
+          '%s is keyed 0..%d with no gap' % (tbl, len(UNLOCKS) - 1))
 
 # Every price the window can show has to be spelled by a table: the engine has no digit grouping,
 # so tostring would draw "1000 points" where OSRS draws "1,000 points".
@@ -471,6 +479,39 @@ for i in range(1, 6):
 check(not missing, 'all five masters carry the option: %s' % (', '.join(missing) or 'Turael to Duradel'))
 check('[opnpc3,_slayer_master] ~slayer_rewards_window;' in nocom(MASTER),
       'op3 opens the same window the chat line opens, for the category rather than one npc at a time')
+
+print('13. each master\'s weight total is the sum of his rows')
+# WHAT GOES WRONG WITHOUT THIS. generate_slayer_task rolls random(total) and then walks the rows
+# subtracting each weight until the roll is covered. The total is written by hand in
+# slayer_master_tasks.dbrow, so a row added without bumping it makes the LAST rows in the table
+# unreachable - the roll can never land past the stated total - and a total set too high sends the
+# walk off the end into the recursive failsafe. Neither shows up as an error; the task simply never
+# comes up. Three rows were added to Duradel in a week, which is how often this can go wrong.
+row_weight = {}
+cur = None
+for line in nocom(TASK_ROWS).splitlines():
+    line = line.strip()
+    if line.startswith('['):
+        cur = line[1:-1]
+    elif line.startswith('data=weight,') and cur:
+        row_weight[cur] = int(line.split(',', 1)[1])
+wrong = []
+masters = 0
+cur, stated, summed = None, None, 0
+for line in nocom(MASTER_ROWS).splitlines() + ['[end]']:
+    line = line.strip()
+    if line.startswith('['):
+        if cur and stated is not None:
+            masters += 1
+            if stated != summed:
+                wrong.append('%s says %d, rows sum to %d' % (cur, stated, summed))
+        cur, stated, summed = line[1:-1], None, 0
+    elif line.startswith('data=total,'):
+        stated = int(line.split(',', 1)[1])
+    elif line.startswith('data=task,') and cur:
+        summed += row_weight.get(line.split(',', 1)[1].strip(), 0)
+check(masters == 5, 'all five masters have a stated total: %d' % masters)
+check(not wrong, 'and each one is the sum of its own rows: %s' % (', '.join(wrong) or 'all five'))
 
 print()
 print('ALL PASS' if fails == 0 else '%d FAILED' % fails)

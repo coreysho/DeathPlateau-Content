@@ -1190,3 +1190,32 @@ data=task,^slayer_aviansie
 data=weight,8
 data=min_amount,120
 data=max_amount,180
+
+// custom (2026-10-13) - the two Wilderness monsters nobody assigned. Both were imported with a
+// slayer_category and left out of every master's table, which is a category with no task: the
+// monsters count towards nothing because nothing hands them out.
+//
+// ANKOU IS A PLAIN ROW. Weight 5 and 50-80 kills are Old School's own numbers for Duradel's ankou
+// row. 21 of them stand in the Wilderness graveyard at a 50-tick respawn, so 80 is a task the
+// spawns can actually supply.
+[duradel_ankou]
+table=slayer_master_task
+data=task,^slayer_ankou
+data=weight,5
+data=min_amount,50
+data=max_amount,80
+
+// LAVA DRAGONS ARE UNLOCK-ONLY, behind Playing with Fire - the same way Duradel sells red dragons
+// and aviansies, and for the same reason: there is no Wilderness master in this build to give them
+// the way Krystilia does. Weight 8, which is what his other two unlock rows and his dragon rows
+// weigh.
+//
+// 20-40 RATHER THAN OSRS'S 35-60, and the spawns are why: eight lava dragons exist, on one island,
+// at a 60-tick respawn. Sixty kills would be most of an hour of standing in level 37 Wilderness
+// waiting for respawns, which is not difficulty, it is queueing.
+[duradel_lavadragons]
+table=slayer_master_task
+data=task,^slayer_lavadragon
+data=weight,8
+data=min_amount,20
+data=max_amount,40

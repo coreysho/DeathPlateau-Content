@@ -62,3 +62,8 @@ val=^slayer_nechryael,85
 val=^slayer_abyssaldemon,85
 val=^slayer_darkbeast,90
 val=^slayer_cavekraken,80
+// custom (2026-10-13) - Old School's own combat requirement for ankou. Duradel will not speak to
+// anybody under combat 100, so nothing can currently be refused by this; it is here so the number
+// is right if a lower master is ever given the row. Lava dragons have no requirement in OSRS
+// either, so they get no line.
+val=^slayer_ankou,40

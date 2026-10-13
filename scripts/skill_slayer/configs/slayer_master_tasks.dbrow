@@ -155,8 +155,10 @@ data=task,chaeldar_cavekraken
 // https://oldschool.runescape.wiki/w/Update:Angler%27s_Outfit_%26_Slayer
 [duradel_task_table]
 table=slayer_task_table
-// 204 + the two unlock-only rows added 2026-10-08 (8 each)
-data=total,220
+// 204 + the two unlock-only rows added 2026-10-08 (8 each) + ankou (5) and the lava dragons (8)
+// added 2026-10-13. This number is the weight the roll divides, so it has to be the sum of every
+// row's weight below - slayer_battery group 13 is what holds it to that.
+data=total,233
 data=task,duradel_abyssaldemons
 data=task,duradel_darkbeasts
 data=task,duradel_hellhounds
@@ -190,3 +192,5 @@ data=task,duradel_cavehorrors
 data=task,duradel_cavekraken
 data=task,duradel_reddragons
 data=task,duradel_aviansies
+data=task,duradel_ankou
+data=task,duradel_lavadragons
