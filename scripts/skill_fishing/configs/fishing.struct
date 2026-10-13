@@ -82,10 +82,25 @@ param=success_low,16
 param=success_high,96
 param=fishing_pet_base,0
 
+// A ROLL AND A MESSAGE WERE MISSING FROM BOTH, and that is because the Fishing Trawler awards its
+// catch directly rather than rolling for it - so until the Wilderness spot there was nothing to
+// roll with. The xp is Old School's and unchanged.
+//
+// THE RATES ARE THE SHARK'S, NOT BETTER. success_low 3 / success_high 40 is exactly what
+// fishing_struct_shark carries, so a Wilderness manta is caught no faster than a shark is - the
+// spot pays more per catch because the fish are worth more, not because the rolls are kinder. The
+// assessment document's argument for #10 was that a risky spot which simply out-earns the Trawler
+// replaces it rather than adding to it; this is what keeps it a sidegrade.
 [fishing_struct_mantaray]
 param=productexp,690
+param=productmessage,You catch a manta ray.
+param=success_low,3
+param=success_high,40
 param=fishing_pet_base,0
 
 [fishing_struct_seaturtle]
 param=productexp,570
+param=productmessage,You catch a sea turtle.
+param=success_low,3
+param=success_high,40
 param=fishing_pet_base,0

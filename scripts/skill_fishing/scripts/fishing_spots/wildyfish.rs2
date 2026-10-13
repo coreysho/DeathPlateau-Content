@@ -1,0 +1,96 @@
+// THE WILDERNESS FISHING SPOT - sea turtle and manta ray, in the pond among the west dragons.
+//
+// Suggestion #10. Until now both fish came from the Fishing Trawler and nowhere else, which the
+// skill guide said out loud and the level-up messages at 79 and 81 repeated. This is the other way
+// to them, and the assessment document's recommendation for it was explicit: build it as a
+// SIDEGRADE, not an upgrade. Nobody trawls if the risky spot simply pays more, and a Fishing
+// Trawler nobody plays is not an improvement to the skill.
+//
+// SO WHAT IS DIFFERENT IS THE RISK, NOT THE RATE. The catch rolls are the shark's own numbers
+// (configs/fishing.struct) and the xp is Old School's unchanged, so a manta here is caught no
+// faster than a shark is anywhere. What the Wilderness adds is that you are standing at level 13
+// with three green dragons for company and a full pack of fish worth losing - and what it takes
+// away is the Trawler's safety, its noting, and its banked catch.
+//
+// ONE SPOT, TWO FISH, ONE OP. Harpoon for both, because a sea turtle and a manta ray are not caught
+// in a lobster pot and this build has no other tool for either. Which you get is the Fishing level
+// you have, as rarefish.rs2 does for tuna and swordfish from one harpoon click.
+
+[opnpc3,_wildyfish]
+@attempt_fish_wildy;
+
+// The hidden continuation op, as every other spot in this directory: op5 is not in the right-click
+// menu, so only p_opnpc(5) reaches it and walking away simply drops the re-queued click.
+[opnpc5,_wildyfish]
+@fish_wildy;
+
+[opnpcu,_wildyfish]
+switch_obj(last_useitem) {
+    case harpoon, barbtail_harpoon : @attempt_fish_wildy;
+    case big_net : ~mesbox("The fish here are far too big for a net.");
+    case lobster_pot : ~mesbox("The fish here aren't suitable for catching with a lobster pot.");
+    case default : @fishing_wrong_spot_message(last_useitem);
+}
+
+[label,attempt_fish_wildy]
+if (stat(fishing) < ^wildyfish_turtle_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^wildyfish_turtle_level)> Fishing to harpoon anything this big.");
+    return;
+}
+if (~check_fish_equipment(harpoon) = false) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more fish.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 5);
+    p_opnpc(3);
+    return;
+} else if (%action_delay = calc(map_clock + 4)) {
+    mes("You start harpooning fish.");
+    anim(human_harpoon, 0);
+    sound_synth(fishing_cast, 1, 0);
+    p_opnpc(5);
+} else if (%action_delay = map_clock) {
+    anim(human_harpoon, 0);
+    ~wildyfish_roll;
+}
+if (afk_event = ^true) {
+    @macro_event_fishing(harpoon);
+}
+
+[label,fish_wildy]
+if (stat(fishing) < ^wildyfish_turtle_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^wildyfish_turtle_level)> Fishing to harpoon anything this big.");
+    return;
+}
+if (~check_fish_equipment(harpoon) = false) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more fish.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 5);
+} else if (%action_delay = map_clock) {
+    anim(human_harpoon, 0);
+    ~wildyfish_roll;
+}
+p_opnpc(5);
+
+// Manta ray once you can catch one, sea turtle until then - the same shape rarefish.rs2 uses to get
+// a swordfish out of a tuna click at 50. ~fish_roll takes the better fish as its second argument and
+// rolls it first, so a player at 81 still catches turtles when the manta roll misses.
+[proc,wildyfish_roll]
+if (stat(fishing) >= ^wildyfish_manta_level) {
+    ~fish_roll(raw_seaturtle, raw_mantaray, harpoon, null);
+} else {
+    ~fish_roll(raw_seaturtle, null, harpoon, null);
+}

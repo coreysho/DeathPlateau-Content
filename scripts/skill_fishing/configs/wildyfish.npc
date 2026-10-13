@@ -1,0 +1,31 @@
+// THE WILDERNESS FISHING SPOT (13 October). Suggestion #10 was "raw manta and sea turtle wildy near
+// west drags", and until now both fish came from the Fishing Trawler and nowhere else - the skill
+// guide said so out loud and the Fishing level-up messages at 79 and 81 told the player as much.
+//
+// WHERE. 0_46_56_41_48, which is (2977,3616) - the pond in the middle of the three Wilderness green
+// dragons at (2973,3620), (2977,3611) and (2982,3618), three tiles from each. There is no real
+// coastline anywhere near them: the nearest shoreline a player can fish from is 79 tiles away at
+// (2912,3538), which is level 3 Wilderness and not "near west drags" by any reading. The pond's
+// tiles carry a water overlay (flo 5) and are walkable rather than blocked, so the spot npc simply
+// stands in it and the player fishes from alongside - which is how it looks in game anyway.
+//
+// LEVEL 13 WILDERNESS, from (3616 - 3520) / 8 + 1. Deep enough to be a real decision and shallow
+// enough to walk out of, which is the point: this is a sidegrade to the Trawler, not a replacement.
+// See skill_fishing/scripts/fishing_spots/wildyfish.rs2 for the rest of that argument.
+//
+// moverestrict=nomove and wanderrange=0, as every other spot in this build: a fishing spot that
+// drifts is a fishing spot nobody can click twice.
+
+[wildyfish]
+name=Fishing spot
+desc=I can see something big swimming in the water.
+model1=compofishspot_8
+vislevel=hide
+readyanim=fishingspot_ready
+walkanim=fishingspot_walk
+minimap=no
+op3=Harpoon
+op5=hidden
+wanderrange=0
+moverestrict=nomove
+category=wildyfish
