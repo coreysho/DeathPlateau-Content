@@ -12,6 +12,10 @@ val=3,^pest_solo_portal_se
 [pest_solo_portal_npc]
 inputtype=int
 outputtype=npc
+// Every tier 1..5 is present and ~pest_solo_tier only ever returns 1, 3 or 5, so a miss
+// cannot happen today. Without a default one would hand npc_add npc 0 - a real npc - and
+// spawn something silently wrong rather than failing; with it, it fails. rs2check rule 17.
+default=null
 val=0,pest_portal_1_active
 val=1,pest_portal_2_active
 val=2,pest_portal_3_active
@@ -31,6 +35,7 @@ val=3,pest_portal_4_active
 [pest_solo_tier_melee_a]
 inputtype=int
 outputtype=npc
+default=null
 val=1,pest_shifter_1a
 val=2,pest_shifter_2a
 val=3,pest_shifter_3a
@@ -40,6 +45,7 @@ val=5,pest_shifter_5a
 [pest_solo_tier_melee_b]
 inputtype=int
 outputtype=npc
+default=null
 val=1,pest_shifter_1b
 val=2,pest_shifter_2b
 val=3,pest_shifter_3b
@@ -49,6 +55,7 @@ val=5,pest_shifter_5b
 [pest_solo_tier_mage]
 inputtype=int
 outputtype=npc
+default=null
 val=1,pest_torcher_1a
 val=2,pest_torcher_2a
 val=3,pest_torcher_3a
@@ -58,6 +65,7 @@ val=5,pest_torcher_5a
 [pest_solo_tier_ranger]
 inputtype=int
 outputtype=npc
+default=null
 val=1,pest_defiler_1a
 val=2,pest_defiler_2a
 val=3,pest_defiler_3a
@@ -67,6 +75,7 @@ val=5,pest_defiler_5a
 [pest_solo_tier_splatter]
 inputtype=int
 outputtype=npc
+default=null
 val=1,pest_splatter_1
 val=2,pest_splatter_2
 val=3,pest_splatter_3
