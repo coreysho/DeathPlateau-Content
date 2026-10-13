@@ -5248,3 +5248,40 @@ name=Obelisk
 desc=I wonder what this does...
 model=wilderness_portal_stone_glowing
 op1=Activate
+// ---------------------------------------------------------------------------------------------
+// THE FOUNTAIN OF RUNE (2026-10-12).
+//
+// There was no way to recharge an amulet of glory anywhere in this build: the four charge states
+// and the uncharged amulet all existed (general/scripts/enchanted_jewellry/amulet_of_glory.rs2
+// handles all five), and the fifth was a dead end - a worn-out glory stayed worn out forever. The
+// fountain is where Old School fixes that, and it is also the only source of the Amulet of eternal
+// glory, which is the other half of why it is here.
+//
+// THE MODEL IS THE CACHE'S OWN FOUNTAIN, recoloured - exactly how [fountain_of_heroes] and
+// [goldfountain] are built from it a few lines apart in _unpack/377/all.loc. Nothing is imported
+// and nothing is modelled: the two recolour pairs take the stone a cold blue and the water a rune
+// cyan, which is the one thing that has to say "this is not a garden feature".
+//
+// mapscene=8 is the fountain minimap icon, the same one the other two carry, so it shows up on the
+// minimap for a player who finds it once.
+//
+// PLACED AT 0_52_60_43_55 - world 3371, 3895, Wilderness level 48 - which is where Old School puts
+// it, give or take a tile. That tile was not chosen by eye: it is the flattest completely clear 2x2
+// in the whole map square (all four tiles at height 30, no f1 land flag on any of them, no existing
+// loc on any of them, and 10 of the 12 surrounding tiles walkable so it can be reached from almost
+// any side). The map line itself is in maps/m52_60.jm2.
+[fountain_of_rune]
+name=Fountain of Rune
+desc=The water glows with a light of its own.
+model=fountain
+recol1s=7399
+recol1d=9024
+recol2s=15855
+recol2d=37918
+width=2
+length=2
+active=yes
+mapscene=8
+blockrange=no
+bgsound=area474_2150,7
+op1=Recharge

@@ -1,0 +1,32 @@
+// THE NECKLACE OF PASSAGE - what Lvl-2 Enchant does to a jade necklace. Five teleports, three
+// destinations, and this is the one imported teleport item where all of Old School's destinations
+// exist in this build:
+//
+//   Wizards' Tower   m48_49   the tower south of Draynor
+//   The Outpost      m37_52   Kandarin, north of the Baxtorian road
+//   Eagles' Eyrie    m36_54   Eagles' Peak (quests/quest_eaglespeak)
+
+[opheld4,_necklace_of_passage]
+mes("You rub the necklace...");
+def_obj $item = last_item;
+def_int $slot = last_slot;
+p_delay(1);
+def_int $choice = ~p_choice4_header("Wizards' Tower.", 1, "The Outpost.", 2, "Eagles' Eyrie.", 3, "Nowhere.", 4, "Where would you like to teleport to?");
+if ($choice = 4) {
+    mes("You remain where you were.");
+    return;
+}
+@necklace_of_passage_teleport($item, $slot, $choice, false);
+
+[label,wearop1__necklace_of_passage] @necklace_of_passage_teleport(last_item, last_slot, 1, true);
+[label,wearop2__necklace_of_passage] @necklace_of_passage_teleport(last_item, last_slot, 2, true);
+[label,wearop3__necklace_of_passage] @necklace_of_passage_teleport(last_item, last_slot, 3, true);
+
+[label,necklace_of_passage_teleport](obj $item, int $slot, int $choice, boolean $worn)
+def_coord $dest;
+switch_int ($choice) {
+    case 1 : $dest = map_findsquare(0_48_49_41_27, 0, 2, ^map_findsquare_lineofwalk); // Wizards' Tower
+    case 2 : $dest = map_findsquare(0_37_52_63_18, 0, 2, ^map_findsquare_lineofwalk); // The Outpost
+    case 3 : $dest = map_findsquare(0_36_54_24_39, 0, 2, ^map_findsquare_lineofwalk); // Eagles' Eyrie
+}
+~charged_jewellery_go($item, $slot, $worn, $dest, 30, "Necklace of Passage");

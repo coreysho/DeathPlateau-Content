@@ -24,6 +24,11 @@ def_int $emerald_total = inv_total(inv, emerald);
 def_int $sapphire_total = inv_total(inv, sapphire);
 def_int $dragonstone_total = inv_total(inv, dragonstone);
 def_int $onyx_total = inv_total(inv, onyx);
+// Jade and red topaz, the seventh and eighth gems (2026-10-12). They take slots 0 and 7 of each
+// strip - see skill_crafting/configs/jewellery/jade_topaz_slots.obj for why those two and not 7
+// and 8. The gem is red_topaz in the cache and plain "topaz" in every item name.
+def_int $jade_total = inv_total(inv, jade);
+def_int $topaz_total = inv_total(inv, red_topaz);
 // https://i.imgur.com/BwS99Hp.png
 // from https://web.archive.org/web/20051025132703/http://www.runeweb.net/index.php?page=rs2-crafting
 // check if player has the corresponding moulds
@@ -73,6 +78,20 @@ if (inv_total(inv, ring_mould) > 0) {
     } else {
         inv_delslot(crafting_make_rings, 6);
         if_setobject(crafting_jewelry:rings6, black_ring, 110);
+    }
+    if ($jade_total > 0) {
+        inv_setslot(crafting_make_rings, 0, invis_ring7, 1);
+        if_setobject(crafting_jewelry:rings0, jade_ring, 110);
+    } else {
+        inv_delslot(crafting_make_rings, 0);
+        if_setobject(crafting_jewelry:rings0, black_ring, 110);
+    }
+    if ($topaz_total > 0) {
+        inv_setslot(crafting_make_rings, 7, invis_ring8, 1);
+        if_setobject(crafting_jewelry:rings7, topaz_ring, 110);
+    } else {
+        inv_delslot(crafting_make_rings, 7);
+        if_setobject(crafting_jewelry:rings7, black_ring, 110);
     }
     
     inv_transmit(crafting_make_rings, crafting_jewelry:rings_inv);
@@ -129,6 +148,20 @@ if (inv_total(inv, necklace_mould) > 0) {
         inv_delslot(crafting_make_necklaces, 6);
         if_setobject(crafting_jewelry:necklaces6, black_necklace, 100);
     }
+    if ($jade_total > 0) {
+        inv_setslot(crafting_make_necklaces, 0, invis_necklace7, 1);
+        if_setobject(crafting_jewelry:necklaces0, jade_necklace, 100);
+    } else {
+        inv_delslot(crafting_make_necklaces, 0);
+        if_setobject(crafting_jewelry:necklaces0, black_necklace, 100);
+    }
+    if ($topaz_total > 0) {
+        inv_setslot(crafting_make_necklaces, 7, invis_necklace8, 1);
+        if_setobject(crafting_jewelry:necklaces7, topaz_necklace, 100);
+    } else {
+        inv_delslot(crafting_make_necklaces, 7);
+        if_setobject(crafting_jewelry:necklaces7, black_necklace, 100);
+    }
     
     inv_transmit(crafting_make_necklaces, crafting_jewelry:necklaces_inv);
 } else {
@@ -184,6 +217,20 @@ if (inv_total(inv, amulet_mould) > 0) {
     } else {
         inv_delslot(crafting_make_amulets, 6);
         if_setobject(crafting_jewelry:amulets6, black_amulet, 75);
+    }
+    if ($jade_total > 0) {
+        inv_setslot(crafting_make_amulets, 0, invis_amulet7, 1);
+        if_setobject(crafting_jewelry:amulets0, unstrung_jade_amulet, 75);
+    } else {
+        inv_delslot(crafting_make_amulets, 0);
+        if_setobject(crafting_jewelry:amulets0, black_amulet, 75);
+    }
+    if ($topaz_total > 0) {
+        inv_setslot(crafting_make_amulets, 7, invis_amulet8, 1);
+        if_setobject(crafting_jewelry:amulets7, unstrung_topaz_amulet, 75);
+    } else {
+        inv_delslot(crafting_make_amulets, 7);
+        if_setobject(crafting_jewelry:amulets7, black_amulet, 75);
     }
 
     inv_transmit(crafting_make_amulets, crafting_jewelry:amulets_inv);

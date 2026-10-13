@@ -1,0 +1,24 @@
+// THE DIGSITE PENDANT - what Lvl-3 Enchant does to a ruby necklace.
+//
+// ONE DESTINATION. Old School's pendant offers three - the Dig Site, Fossil Island and Lithkren -
+// and two of them are post-2016 content on land this build does not have. The Dig Site is here
+// (quests/quest_itexam, the archaeological expert and his exam), so that is the whole menu, and a
+// one-row menu is no menu: rubbing it goes straight there, and the worn option names the place.
+//
+// It keeps all five of Old School's charges. The pendant is a long walk saved, not a power item,
+// and cutting the charges to match the cut destinations would just make it worse than the ruby
+// necklace it came from was worth.
+
+[opheld4,_digsite_pendant]
+mes("You rub the pendant...");
+def_obj $item = last_item;
+def_int $slot = last_slot;
+p_delay(1);
+@digsite_pendant_teleport($item, $slot, false);
+
+[label,wearop1__digsite_pendant] @digsite_pendant_teleport(last_item, last_slot, true);
+
+[label,digsite_pendant_teleport](obj $item, int $slot, boolean $worn)
+// The Dig Site proper, by the expert's tent on m52_52.
+def_coord $dest = map_findsquare(0_52_52_18_50, 0, 2, ^map_findsquare_lineofwalk);
+~charged_jewellery_go($item, $slot, $worn, $dest, 30, "Digsite Pendant");

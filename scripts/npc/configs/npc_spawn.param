@@ -1,0 +1,18 @@
+// WHICH WAY AN NPC STANDS BEFORE ANYTHING HAS HAPPENED TO IT.
+//
+// A map's NPC section carries a coord and a type and nothing else - GameMap.loadNpcs constructs the
+// npc with no orientation - so every npc in the game spawns facing south, and there was no way to
+// say otherwise. It only shows on an npc that never moves: a wanderrange=0 shopkeeper stands in
+// whatever direction it spawned in until a player talks to it.
+//
+// The value is one of engine.constant's ^exact_north / ^exact_east / ^exact_south / ^exact_west,
+// the same four the exactmove and direction procs use. -1, the default, leaves the npc alone - so
+// this changes nothing for the 16,383 npcs that do not set it.
+//
+// Read by [ai_spawn,_] (npc/scripts/ai_spawn.rs2), which is the one trigger every npc runs on
+// spawn. Deliberately NOT a type-specific [ai_spawn,vote_clerk]: ScriptProvider.getByTrigger
+// resolves type before the wildcard and only ever runs ONE script, so an npc with its own ai_spawn
+// silently stops getting %npc_start_coord and its combat xp multiplier.
+[spawn_face]
+type=int
+default=-1

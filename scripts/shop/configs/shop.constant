@@ -1,0 +1,10 @@
+// WHAT A SHOP TAKES PAYMENT IN - not WHICH currency (that is param=shop_currency and %shop_currency,
+// an obj) but WHERE the currency is kept. Until the vote shop every shop in the build was paid out
+// of the player's inventory, so the answer was always "an obj in inv" and never had to be asked.
+//
+// A vote point is not an item. It cannot be: a vote TICKET is tradeable, and the whole point of
+// redeeming one is that what you get back is bound to you - no slot, no drop, no death loss, no
+// resale. So the balance is a varp, and shop.rs2 reaches it through ~shop_wallet_* instead of
+// inv_total/inv_del.
+^shop_wallet_inv = 0
+^shop_wallet_vote_points = 1

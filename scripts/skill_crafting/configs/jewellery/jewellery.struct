@@ -173,3 +173,60 @@ param=levelrequired,23
 param=productexp,525
 param=name,Tiara
 
+
+// ---------------------------------------------------------------------------------------------
+// JADE AND RED TOPAZ, the seventh and eighth gems (2026-10-12).
+//
+// Both gems existed here only as gems and crossbow bolt tips. Old School makes rings, necklaces,
+// bracelets and amulets from them; this build has no bracelet mould and no bracelet item in the
+// 377 cache, so the bracelets are left out and these are rings, necklaces and amulets.
+//
+// A GOLD BAR, NOT SILVER, AND THAT IS A DECISION. Old School casts jade and topaz jewellery in
+// silver, at the furnace's silver panel. Here the two panels are split by which bar you used on
+// the furnace (skill_smithing: a gold bar opens crafting_jewelry, a silver bar opens
+// silver_casting), and the silver panel is the cache's own seven fixed product slots with no gem
+// logic in it at all. A gem-jewellery row that opens on a gold bar and then spends a silver one
+// is incoherent, and generalising ~crafting_gold to take a bar type would complicate the
+// perfect-gold-bar path - which is tested behaviour - for nothing a player would notice. The gem
+// is the scarce input either way.
+//
+// Levels and xp are Old School's, xp stored x10 the way every row above does it.
+// https://oldschool.runescape.wiki/w/Jade  https://oldschool.runescape.wiki/w/Red_topaz
+
+[jade_ring]
+param=product,jade_ring
+param=gem,jade
+param=levelrequired,13
+param=productexp,320
+
+[jade_necklace]
+param=product,jade_necklace
+param=gem,jade
+param=levelrequired,25
+param=productexp,540
+
+[unstrung_jade_amulet]
+param=product,unstrung_jade_amulet
+param=strung,strung_jade_amulet
+param=gem,jade
+param=levelrequired,34
+param=productexp,700
+
+[topaz_ring]
+param=product,topaz_ring
+param=gem,red_topaz
+param=levelrequired,16
+param=productexp,350
+
+[topaz_necklace]
+param=product,topaz_necklace
+param=gem,red_topaz
+param=levelrequired,32
+param=productexp,700
+
+[unstrung_topaz_amulet]
+param=product,unstrung_topaz_amulet
+param=strung,strung_topaz_amulet
+param=gem,red_topaz
+param=levelrequired,45
+param=productexp,800

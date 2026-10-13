@@ -10,6 +10,10 @@ stat_advance(herblore, $experience);
 [proc,brew_potion](struct $struct, namedobj $ingredient, namedobj $solvent, string $message, namedobj $mixture, int $experience)
 inv_del(inv, $ingredient, 1);
 inv_del(inv, $solvent, 1);
+// The amulet of chemistry gets a look at the result first: a 1-in-20 chance of the 4-dose form of
+// the same potion, five times, then it crumbles. It hands $mixture straight back when there is no
+// amulet, no charges left, or no 4-dose form - see skill_herblore/scripts/amulet_of_chemistry.rs2.
+$mixture = ~chemistry_upgrade($mixture);
 // There is always a guaranteed slot available.
 inv_add(inv, $mixture, 1);
 // https://youtu.be/S6P-hUzgqPw?t=1

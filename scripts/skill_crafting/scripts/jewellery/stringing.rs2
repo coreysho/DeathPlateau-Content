@@ -2,6 +2,13 @@
 switch_obj (last_useitem)
 {
     case unstrung_gold_amulet, unstrung_sapphire_amulet, unstrung_emerald_amulet, unstrung_ruby_amulet, unstrung_diamond_amulet, nostringstar : @string_amulet(last_useslot);
+    // Jade and red topaz (2026-10-12). Members, like the dragonstone and onyx amulets below.
+    case unstrung_jade_amulet, unstrung_topaz_amulet :
+        if (map_members = ^false) {
+            mes(^mes_members_feature);
+            return;
+        }
+        @string_amulet(last_useslot);
     case nostringsnake, unstrung_dragonstone_amulet, unstrung_onyx_amulet :
         if (map_members = ^false) {
             mes(^mes_members_feature);
@@ -17,6 +24,11 @@ if (last_useitem = ball_of_wool) @string_amulet(last_slot);
 
 [opheldu,unstrung_emerald_amulet]
 if (last_useitem = ball_of_wool) @string_amulet(last_slot);
+// MAGIC string makes the Amulet of nature instead of the amulet of defence (2026-10-12). This
+// trigger has to be the one that tests for it: [opheldu,unstrung_emerald_amulet] can only be
+// declared once in the build, and it is declared here.
+// skill_farming/scripts/amulet_of_nature.rs2 owns the other half of the use and the label.
+if (last_useitem = magic_string) @nature_amulet_string(last_slot);
 ~displaymessage(^dm_default);
 
 [opheldu,unstrung_ruby_amulet]
@@ -28,6 +40,26 @@ if (last_useitem = ball_of_wool) @string_amulet(last_slot);
 ~displaymessage(^dm_default);
 
 [opheldu,unstrung_dragonstone_amulet]
+if (last_useitem = ball_of_wool) {
+    if (map_members = ^false) {
+        mes(^mes_members_feature);
+        return;
+    }
+    @string_amulet(last_slot);
+}
+~displaymessage(^dm_default);
+
+[opheldu,unstrung_jade_amulet]
+if (last_useitem = ball_of_wool) {
+    if (map_members = ^false) {
+        mes(^mes_members_feature);
+        return;
+    }
+    @string_amulet(last_slot);
+}
+~displaymessage(^dm_default);
+
+[opheldu,unstrung_topaz_amulet]
 if (last_useitem = ball_of_wool) {
     if (map_members = ^false) {
         mes(^mes_members_feature);

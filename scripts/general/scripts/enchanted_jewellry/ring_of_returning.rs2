@@ -1,0 +1,17 @@
+// THE RING OF RETURNING - what Lvl-2 Enchant does to a jade ring. Five teleports to Mort'ton.
+//
+// Mort'ton is built (quests/quest_mortton, the journal, the npcs and the town on m54_51), which is
+// the only reason this ring is worth having: it is a long walk through the swamp otherwise.
+
+[opheld4,_ring_of_returning]
+mes("You rub the ring...");
+def_obj $item = last_item;
+def_int $slot = last_slot;
+p_delay(1);
+@ring_of_returning_teleport($item, $slot, false);
+
+[label,wearop1__ring_of_returning] @ring_of_returning_teleport(last_item, last_slot, true);
+
+[label,ring_of_returning_teleport](obj $item, int $slot, boolean $worn)
+def_coord $dest = map_findsquare(0_54_51_31_19, 0, 2, ^map_findsquare_lineofwalk);
+~charged_jewellery_go($item, $slot, $worn, $dest, 30, "Ring of Returning");

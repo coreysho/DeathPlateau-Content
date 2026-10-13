@@ -1,0 +1,724 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[jade_ring]
+name=Jade ring
+desc=A valuable ring.
+model=obj_jade_ring
+wearpos=ring
+2dzoom=845
+2dxan=332
+2dyan=844
+2dzan=2024
+2dxof=-5
+2dyof=1
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+iop2=Wear
+// Plain gem jewellery: no bonuses, nothing to wear it for until it is enchanted, exactly as the
+// sapphire-to-onyx rings above it in jewellery.struct.
+param=crafting_jewelry_struct,jade_ring
+
+[jade_necklace]
+name=Jade necklace
+desc=I wonder if this is valuable.
+model=obj_jade_necklace
+manwear=obj_jade_necklace_manwear,0
+womanwear=obj_jade_necklace_womanwear,0
+wearpos=front
+2dzoom=400
+2dxan=280
+2dyan=1990
+2dxof=-1
+2dyof=100
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+iop2=Wear
+param=crafting_jewelry_struct,jade_necklace
+
+[unstrung_jade_amulet]
+name=Jade amulet (u)
+desc=It needs a string so I can wear it.
+model=obj_unstrung_jade_amulet
+2dzoom=370
+2dxan=304
+2dyan=100
+2dxof=8
+2dyof=106
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=4g
+cost=1050
+members=yes
+// Strung with a ball of wool like every other unstrung amulet (stringing.rs2).
+param=crafting_jewelry_struct,unstrung_jade_amulet
+
+[strung_jade_amulet]
+name=Jade amulet
+desc=I wonder if I can get this enchanted.
+model=obj_strung_jade_amulet
+manwear=obj_strung_jade_amulet_manwear,0
+womanwear=obj_strung_jade_amulet_womanwear,0
+wearpos=front
+2dzoom=748
+2dxan=496
+2dyan=1920
+2dxof=-5
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=16137
+recol3s=13537
+recol3d=32767
+recol4s=8321
+recol4d=32767
+weight=7g
+cost=1050
+members=yes
+iop2=Wear
+// Wearable and worthless until Lvl-2/Lvl-3 Enchant turns it into something.
+
+[topaz_ring]
+name=Topaz ring
+desc=A valuable ring.
+model=obj_topaz_ring
+wearpos=ring
+2dzoom=845
+2dxan=332
+2dyan=844
+2dzan=2024
+2dxof=-5
+2dyof=1
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=6g
+cost=1425
+members=yes
+iop2=Wear
+// Plain gem jewellery: no bonuses, nothing to wear it for until it is enchanted, exactly as the
+// sapphire-to-onyx rings above it in jewellery.struct.
+param=crafting_jewelry_struct,topaz_ring
+
+[topaz_necklace]
+name=Topaz necklace
+desc=I wonder if this is valuable.
+model=obj_topaz_necklace
+manwear=obj_topaz_necklace_manwear,0
+womanwear=obj_topaz_necklace_womanwear,0
+wearpos=front
+2dzoom=400
+2dxan=280
+2dyan=1990
+2dxof=-1
+2dyof=100
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=30767
+weight=10g
+cost=1425
+members=yes
+iop2=Wear
+param=crafting_jewelry_struct,topaz_necklace
+
+[unstrung_topaz_amulet]
+name=Topaz amulet (u)
+desc=It needs a string so I can wear it.
+model=obj_unstrung_topaz_amulet
+2dzoom=370
+2dxan=304
+2dyan=100
+2dxof=8
+2dyof=106
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=4g
+cost=1275
+members=yes
+// Strung with a ball of wool like every other unstrung amulet (stringing.rs2).
+param=crafting_jewelry_struct,unstrung_topaz_amulet
+
+[strung_topaz_amulet]
+name=Topaz amulet
+desc=I wonder if I can get this enchanted.
+model=obj_strung_topaz_amulet
+manwear=obj_strung_topaz_amulet_manwear,0
+womanwear=obj_strung_topaz_amulet_womanwear,0
+wearpos=front
+2dzoom=748
+2dxan=496
+2dyan=1920
+2dxof=-5
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+recol3s=13537
+recol3d=32767
+recol4s=8321
+recol4d=32767
+weight=7g
+cost=1250
+members=yes
+iop2=Wear
+// Wearable and worthless until Lvl-2/Lvl-3 Enchant turns it into something.
+
+[ring_of_returning_5]
+name=Ring of returning(5)
+desc=This ring returns you to your spawn point.
+model=obj_ring_of_returning_5
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+iop2=Wear
+iop4=Rub
+// Five teleports to Mort'ton. Rubbed from the pack or used from the ring slot's own worn option.
+category=ring_of_returning
+param=next_obj_stage,ring_of_returning_4
+param=charges,5
+wearop1=Mort'ton
+
+[ring_of_returning_4]
+name=Ring of returning(4)
+desc=This ring returns you to your spawn point.
+model=obj_ring_of_returning_4
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports to Mort'ton. Rubbed from the pack or used from the ring slot's own worn option.
+category=ring_of_returning
+param=next_obj_stage,ring_of_returning_3
+param=charges,4
+wearop1=Mort'ton
+
+[ring_of_returning_3]
+name=Ring of returning(3)
+desc=This ring returns you to your spawn point.
+model=obj_ring_of_returning_3
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports to Mort'ton. Rubbed from the pack or used from the ring slot's own worn option.
+category=ring_of_returning
+param=next_obj_stage,ring_of_returning_2
+param=charges,3
+wearop1=Mort'ton
+
+[ring_of_returning_2]
+name=Ring of returning(2)
+desc=This ring returns you to your spawn point.
+model=obj_ring_of_returning_2
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports to Mort'ton. Rubbed from the pack or used from the ring slot's own worn option.
+category=ring_of_returning
+param=next_obj_stage,ring_of_returning_1
+param=charges,2
+wearop1=Mort'ton
+
+[ring_of_returning_1]
+name=Ring of returning(1)
+desc=This ring returns you to your spawn point.
+model=obj_ring_of_returning_1
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=6g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports to Mort'ton. Rubbed from the pack or used from the ring slot's own worn option.
+category=ring_of_returning
+param=next_obj_stage,null
+param=charges,1
+wearop1=Mort'ton
+
+[necklace_of_passage_5]
+name=Necklace of passage(5)
+desc=This necklace can really take you places.
+model=obj_necklace_of_passage_5
+manwear=obj_necklace_of_passage_5_manwear,0
+womanwear=obj_necklace_of_passage_5_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+iop2=Wear
+iop4=Rub
+// Five teleports, three destinations, all three of which exist in this build: the Wizards' Tower,
+// the Outpost in Kandarin and the Eagles' Peak eyrie (quests/quest_eaglespeak).
+category=necklace_of_passage
+param=next_obj_stage,necklace_of_passage_4
+param=charges,5
+wearop1=Wizards' Tower
+wearop2=The Outpost
+wearop3=Eagles' Eyrie
+
+[necklace_of_passage_4]
+name=Necklace of passage(4)
+desc=This necklace can really take you places.
+model=obj_necklace_of_passage_4
+manwear=obj_necklace_of_passage_4_manwear,0
+womanwear=obj_necklace_of_passage_4_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, three destinations, all three of which exist in this build: the Wizards' Tower,
+// the Outpost in Kandarin and the Eagles' Peak eyrie (quests/quest_eaglespeak).
+category=necklace_of_passage
+param=next_obj_stage,necklace_of_passage_3
+param=charges,4
+wearop1=Wizards' Tower
+wearop2=The Outpost
+wearop3=Eagles' Eyrie
+
+[necklace_of_passage_3]
+name=Necklace of passage(3)
+desc=This necklace can really take you places.
+model=obj_necklace_of_passage_3
+manwear=obj_necklace_of_passage_3_manwear,0
+womanwear=obj_necklace_of_passage_3_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, three destinations, all three of which exist in this build: the Wizards' Tower,
+// the Outpost in Kandarin and the Eagles' Peak eyrie (quests/quest_eaglespeak).
+category=necklace_of_passage
+param=next_obj_stage,necklace_of_passage_2
+param=charges,3
+wearop1=Wizards' Tower
+wearop2=The Outpost
+wearop3=Eagles' Eyrie
+
+[necklace_of_passage_2]
+name=Necklace of passage(2)
+desc=This necklace can really take you places.
+model=obj_necklace_of_passage_2
+manwear=obj_necklace_of_passage_2_manwear,0
+womanwear=obj_necklace_of_passage_2_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, three destinations, all three of which exist in this build: the Wizards' Tower,
+// the Outpost in Kandarin and the Eagles' Peak eyrie (quests/quest_eaglespeak).
+category=necklace_of_passage
+param=next_obj_stage,necklace_of_passage_1
+param=charges,2
+wearop1=Wizards' Tower
+wearop2=The Outpost
+wearop3=Eagles' Eyrie
+
+[necklace_of_passage_1]
+name=Necklace of passage(1)
+desc=This necklace can really take you places.
+model=obj_necklace_of_passage_1
+manwear=obj_necklace_of_passage_1_manwear,0
+womanwear=obj_necklace_of_passage_1_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=16137
+weight=10g
+cost=1275
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, three destinations, all three of which exist in this build: the Wizards' Tower,
+// the Outpost in Kandarin and the Eagles' Peak eyrie (quests/quest_eaglespeak).
+category=necklace_of_passage
+param=next_obj_stage,null
+param=charges,1
+wearop1=Wizards' Tower
+wearop2=The Outpost
+wearop3=Eagles' Eyrie
+
+[amulet_of_chemistry]
+name=Amulet of chemistry
+desc=Useful when making potions - has the chance of giving an extra dose.
+model=obj_amulet_of_chemistry
+manwear=obj_amulet_of_chemistry_manwear,0
+womanwear=obj_amulet_of_chemistry_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=16137
+weight=7g
+cost=1050
+members=yes
+iop2=Wear
+iop3=Options
+iop4=Break
+// Five charges, each a 1-in-20 shot at an extra dose when you finish a potion. No combat bonuses in
+// Old School and none here. skill_herblore/scripts/amulet_of_chemistry.rs2.
+category=amulet_of_chemistry
+param=charges,5
+wearop1=Check
+
+[efaritays_aid]
+name=Efaritay's aid
+desc=Aids the user against vampyres.
+model=obj_efaritays_aid
+wearpos=ring
+2dzoom=830
+2dxan=322
+2dyan=135
+2dzan=2024
+2dxof=4
+2dyof=-12
+recol1s=32576
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=6g
+cost=1425
+members=yes
+iop2=Wear
+iop3=Check
+iop4=Break
+// NOTHING IS WIRED TO THIS AND THAT IS DELIBERATE. Old School's Efaritay's aid does one thing: it
+// lets a vampyre be finished without a stake. This build's vampyres are cache npcs with no stake
+// mechanic to be exempt from (burgh_juvinate_vampyre_*, burgh_turned_vampyre_* in
+// _unpack/377/all.npc, unscripted), so there is no behaviour to attach and inventing a vampyre
+// combat rule to justify one ring is the wrong way round.
+//
+// It is therefore the topaz ring's enchant result and a wearable ring with Old School's own
+// bonuses, and the day vampyres get built it is already here waiting. Same treatment the 48
+// achievement diary items get in general/configs/diary_rewards.obj.
+param=stabdefence,1
+param=slashdefence,1
+param=crushdefence,1
+param=magicdefence,1
+param=rangedefence,1
+
+[necklace_of_faith]
+name=Necklace of faith
+desc=Can grant me prayer in an emergency.
+model=obj_necklace_of_faith
+manwear=obj_necklace_of_faith_manwear,0
+womanwear=obj_necklace_of_faith_womanwear,0
+wearpos=front
+2dzoom=465
+2dxan=290
+2dyan=166
+2dxof=7
+2dyof=66
+recol1s=32576
+recol1d=26425
+recol2s=10570
+recol2d=30767
+weight=10g
+cost=1425
+members=yes
+iop2=Wear
+// The phoenix necklace's twin, and it shares its hook: below 20% hitpoints it restores a quarter of
+// your Prayer LEVEL in prayer points and crumbles. No charges, no bonuses - one use, as Old School
+// has it. general/scripts/enchanted_jewellry/phoenix_necklace.rs2 holds both.
+
+[burning_amulet_5]
+name=Burning amulet(5)
+desc=Useful teleports around the wilderness.
+model=obj_burning_amulet_5
+manwear=obj_burning_amulet_5_manwear,0
+womanwear=obj_burning_amulet_5_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=7g
+cost=1250
+members=yes
+iop2=Wear
+iop4=Rub
+// Five teleports, and every destination is in the Wilderness: the Lava Maze, the Chaos Temple and
+// the Bandit Camp. The wilderness-level gate that stops the glory and the games necklace working
+// past 30 and 20 deliberately does NOT apply - this amulet's whole purpose is to put you up there,
+// and Old School lets it (it asks for confirmation instead, which is what burning_amulet.rs2 does).
+category=burning_amulet
+param=next_obj_stage,burning_amulet_4
+param=charges,5
+wearop1=Lava Maze
+wearop2=Chaos Temple
+wearop3=Bandit Camp
+
+[burning_amulet_4]
+name=Burning amulet(4)
+desc=Useful teleports around the wilderness.
+model=obj_burning_amulet_4
+manwear=obj_burning_amulet_4_manwear,0
+womanwear=obj_burning_amulet_4_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=7g
+cost=1250
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, and every destination is in the Wilderness: the Lava Maze, the Chaos Temple and
+// the Bandit Camp. The wilderness-level gate that stops the glory and the games necklace working
+// past 30 and 20 deliberately does NOT apply - this amulet's whole purpose is to put you up there,
+// and Old School lets it (it asks for confirmation instead, which is what burning_amulet.rs2 does).
+category=burning_amulet
+param=next_obj_stage,burning_amulet_3
+param=charges,4
+wearop1=Lava Maze
+wearop2=Chaos Temple
+wearop3=Bandit Camp
+
+[burning_amulet_3]
+name=Burning amulet(3)
+desc=Useful teleports around the wilderness.
+model=obj_burning_amulet_3
+manwear=obj_burning_amulet_3_manwear,0
+womanwear=obj_burning_amulet_3_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=7g
+cost=1250
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, and every destination is in the Wilderness: the Lava Maze, the Chaos Temple and
+// the Bandit Camp. The wilderness-level gate that stops the glory and the games necklace working
+// past 30 and 20 deliberately does NOT apply - this amulet's whole purpose is to put you up there,
+// and Old School lets it (it asks for confirmation instead, which is what burning_amulet.rs2 does).
+category=burning_amulet
+param=next_obj_stage,burning_amulet_2
+param=charges,3
+wearop1=Lava Maze
+wearop2=Chaos Temple
+wearop3=Bandit Camp
+
+[burning_amulet_2]
+name=Burning amulet(2)
+desc=Useful teleports around the wilderness.
+model=obj_burning_amulet_2
+manwear=obj_burning_amulet_2_manwear,0
+womanwear=obj_burning_amulet_2_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=7g
+cost=1250
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, and every destination is in the Wilderness: the Lava Maze, the Chaos Temple and
+// the Bandit Camp. The wilderness-level gate that stops the glory and the games necklace working
+// past 30 and 20 deliberately does NOT apply - this amulet's whole purpose is to put you up there,
+// and Old School lets it (it asks for confirmation instead, which is what burning_amulet.rs2 does).
+category=burning_amulet
+param=next_obj_stage,burning_amulet_1
+param=charges,2
+wearop1=Lava Maze
+wearop2=Chaos Temple
+wearop3=Bandit Camp
+
+[burning_amulet_1]
+name=Burning amulet(1)
+desc=Useful teleports around the wilderness.
+model=obj_burning_amulet_1
+manwear=obj_burning_amulet_1_manwear,0
+womanwear=obj_burning_amulet_1_womanwear,0
+wearpos=front
+2dzoom=620
+2dxan=424
+2dyan=68
+2dxof=1
+2dyof=16
+recol1s=32736
+recol1d=26425
+recol2s=32767
+recol2d=30767
+weight=7g
+cost=1250
+members=yes
+tradeable=no
+iop2=Wear
+iop4=Rub
+// Five teleports, and every destination is in the Wilderness: the Lava Maze, the Chaos Temple and
+// the Bandit Camp. The wilderness-level gate that stops the glory and the games necklace working
+// past 30 and 20 deliberately does NOT apply - this amulet's whole purpose is to put you up there,
+// and Old School lets it (it asks for confirmation instead, which is what burning_amulet.rs2 does).
+category=burning_amulet
+param=next_obj_stage,null
+param=charges,1
+wearop1=Lava Maze
+wearop2=Chaos Temple
+wearop3=Bandit Camp

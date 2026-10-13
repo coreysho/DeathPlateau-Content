@@ -1,0 +1,22 @@
+// THE AMULET OF ETERNAL GLORY - a glory whose charge counter is gone. Four teleports, forever.
+//
+// It is entirely ~glory_teleport_to, which amulet_of_glory.rs2 factored out as a proc for the
+// mounted glory in a quest hall - a glory with nothing to charge, which is exactly what this is.
+// So the whole of this file is "the glory's teleport, and do not spend anything".
+//
+// NOT category_557. That category is the four CHARGED amulets and its wearop handlers decrement
+// (amulet_of_glory.rs2's ~amulet_of_glory_worn calls ~worn_replace with next_obj_stage). This one
+// carries its own category so that it cannot pick those up by accident - the one bug that would
+// matter here is an eternal amulet that quietly turns into a glory(3).
+//
+// Where it comes from: area_wilderness/scripts/fountain_of_rune.rs2, 1 in 250 per recharge.
+
+[opheld4,_amulet_of_eternal_glory]
+// No charge message, because there is no charge. The glory's own line here would be "Your amulet
+// has three charges left."
+~glory_teleport("The amulet's light does not dim.");
+
+[label,wearop1__amulet_of_eternal_glory] ~glory_teleport_to(1, "The amulet's light does not dim.");
+[label,wearop2__amulet_of_eternal_glory] ~glory_teleport_to(2, "The amulet's light does not dim.");
+[label,wearop3__amulet_of_eternal_glory] ~glory_teleport_to(3, "The amulet's light does not dim.");
+[label,wearop4__amulet_of_eternal_glory] ~glory_teleport_to(4, "The amulet's light does not dim.");

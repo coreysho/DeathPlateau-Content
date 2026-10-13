@@ -1,12 +1,40 @@
-// Grace's shop, EMPTY ON PURPOSE (2026-10-04). It held the six Graceful pieces at Old School's
-// mark prices; the owner is implementing Graceful another way, so the stock is gone and the
-// plumbing is not. Putting it back is six stock lines here and op3 in grace.npc.
+// Grace's shop. It held the six Graceful pieces at Old School's mark prices and was emptied on
+// 2026-10-04 because the owner was implementing Graceful another way - which turned out to be the
+// skilling-outfit roll on agility xp. So the set is not for sale and never will be; what she sells
+// is the nine recolour KITS, one per rooftop course (skilling_outfits/configs/graceful_colours.obj).
 //
 // allstock=no matters even with no stock: with allstock=yes an empty shop will buy ANY item, so
 // a player could turn a bronze dagger into Marks of Grace.
 [grace_shop]
 scope=shared
-size=6
+// NINE, one per rooftop course - the shop was sized 6 for the six graceful pieces it used to hold.
+size=9
 restock=yes
-stackall=no
+// stackall=yes is what lets a row hold a thousand of an unstackable kit in one slot, as the Death
+// token shelf does. Not a tidy-up: without ALWAYS_STACK a thousand kits want a thousand slots.
+stackall=yes
 allstock=no
+// One of each kit, always in stock. restock=yes brings them back, and the price is each kit's own
+// cost= (50 marks) against shop_sell_multiplier 1000 per mille on the npc - so a kit costs 50 and
+// shop_delta=0 stops that drifting with how many she holds.
+//
+// THESE ROWS WERE "ONE, RESTOCK RATE 0", WHICH MEANT ONE PER WORLD, FOREVER. Fixed 13 October,
+// after the vote shop's sim found the same fault on its own shelf. Two separate things were wrong:
+// "restock=yes" is not enough on its own, because World.processCleanup tops a row up with
+// `item.count < stockcount && tick % stockrate == 0` and a rate of 0 makes that modulo NaN, which
+// is never 0; and in the engine, restocking a NON-STACKABLE item could not write its own slot back.
+// So the first player to buy each colour took the only one of it the world would ever have. The
+// graceful sim bought one kit and passed, which is why neither was caught when this shop shipped.
+//
+// 1000 AT RATE 1 is the idiom the Death token shelf settled on for the same question
+// (areas/area_wilderness/configs/death_token_shop.inv): a reward shop's limit should be how many
+// marks you have earned, never how fast the shelf refills.
+stock1=graceful_kit_draynor,1000,1
+stock2=graceful_kit_alkharid,1000,1
+stock3=graceful_kit_varrock,1000,1
+stock4=graceful_kit_canifis,1000,1
+stock5=graceful_kit_falador,1000,1
+stock6=graceful_kit_seers,1000,1
+stock7=graceful_kit_pollnivneach,1000,1
+stock8=graceful_kit_rellekka,1000,1
+stock9=graceful_kit_ardougne,1000,1

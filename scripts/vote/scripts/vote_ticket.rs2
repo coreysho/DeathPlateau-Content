@@ -1,0 +1,120 @@
+// REDEEMING A VOTE TICKET - the one-way door in the middle of the vote model (configs/vote.constant).
+//
+// A ticket is an item: tradeable, bankable, droppable, losable. A point is a varp: yours, and no
+// longer anybody else's. Redeeming turns the first into the second and there is no way back, which
+// is the whole reason the two exist separately - it is a decision, not a formality. So Redeem asks
+// before it eats a stack.
+
+[opheld1,vote_ticket]
+def_int $held = inv_total(inv, vote_ticket);
+// Cannot happen from a real click - you clicked the thing - but a label that trusts a count it did
+// not check is how a redeem for 0 points ends up spending a ticket.
+if ($held < 1) {
+    return;
+}
+if ($held <= ^vote_redeem_ask_above) {
+    @vote_redeem($held);
+}
+// "Redeem all" names the number, because the number is the point of the question.
+def_int $pick = ~p_choice4_header(
+    "Redeem one ticket.", 1,
+    "Redeem all <tostring($held)> tickets.", 2,
+    "Redeem X.", 3,
+    "Cancel.", 4,
+    "Redeeming is permanent - points can't be turned back into tickets.");
+if ($pick = 1) {
+    @vote_redeem(1);
+} else if ($pick = 2) {
+    // RE-READ THE STACK rather than trusting $held from before the menu. The menu suspends the
+    // script, and a player can bank, drop or trade in the meantime - inv_del would then quietly
+    // take fewer tickets than the points being paid out.
+    @vote_redeem(inv_total(inv, vote_ticket));
+} else if ($pick = 3) {
+    @vote_redeem_x;
+}
+mes("You decide to keep your tickets.");
+
+// REDEEM X: the chatbox amount prompt, as the bank and the trading post use it. p_dialogprompt
+// replaces "Enter amount:" with a real question, because "amount" of what is the thing worth
+// saying when the answer cannot be undone.
+//
+// A SECOND SUSPEND, so the stack is read for a second time. p_countdialog waits for the player to
+// type, which is longer than a menu click and more than long enough to bank the tickets the number
+// was about - so the typed figure is a REQUEST, clamped to what is actually in the pack, and never
+// the amount that gets deleted.
+[label,vote_redeem_x]
+p_dialogprompt("How many tickets would you like to redeem?");
+p_countdialog;
+if (last_int < 1) {
+    mes("You decide to keep your tickets.");
+    return;
+}
+def_int $want = last_int;
+def_int $have = inv_total(inv, vote_ticket);
+if ($have < 1) {
+    mes("You don't have any vote tickets.");
+    return;
+}
+if ($want > $have) {
+    $want = $have;
+}
+@vote_redeem($want);
+
+// $amount tickets -> $amount * ^vote_points_per_ticket points. The caller has already established
+// the player is holding them.
+[label,vote_redeem](int $amount)
+if ($amount < 1) {
+    return;
+}
+inv_del(inv, vote_ticket, $amount);
+%vote_points = calc(%vote_points + multiply($amount, ^vote_points_per_ticket));
+if ($amount = 1) {
+    mes("You redeem a vote ticket.");
+} else {
+    mes("You redeem <tostring($amount)> vote tickets.");
+}
+mes("You now have <~pluralise(%vote_points, "vote point")>.");
+
+// ---------------------------------------------------------------------------------------------
+// Being given tickets: the seam for vote redeeming, which is not built
+// ---------------------------------------------------------------------------------------------
+// THIS IS THE ONLY DOOR. Whatever claims a vote later - a callback from the voting site, a staff
+// command, a daily - should call this and nothing else, so there is one place that knows what
+// "being given a ticket" means.
+//
+// IT CANNOT FAIL, which is the whole reason it exists rather than the claim path calling inv_add.
+// A vote is credited by something outside the game, which has no idea whether the player is
+// standing in a bank with 28 free slots or mid-fight with none. An inv_add that comes back short
+// would be a vote that paid nothing, and "I voted and got nothing" is the one bug a vote shop must
+// not have. So whatever will not fit is credited to %vote_tickets_pending and the Vote clerk hands
+// it over later (vote/scripts/vote_clerk.rs2).
+[proc,vote_grant_tickets](int $amount)
+if ($amount < 1) {
+    return;
+}
+def_int $room = inv_freespace(inv);
+// Stackable, so one free slot takes any number - and no free slot still takes them if some are
+// already in the pack.
+if (inv_total(inv, vote_ticket) > 0 | $room > 0) {
+    inv_add(inv, vote_ticket, $amount);
+    mes("You receive <~pluralise($amount, "vote ticket")>.");
+    return;
+}
+%vote_tickets_pending = calc(%vote_tickets_pending + $amount);
+mes("You have no room for <~pluralise($amount, "vote ticket")>.");
+mes("The Vote clerk at the Edgeville bank is holding them for you.");
+
+// Hand over whatever is being held, as much as there is room for. Called from the clerk's Talk-to,
+// so a player who came to spend points collects without having to know this happened.
+[proc,vote_collect_pending]
+if (%vote_tickets_pending < 1) {
+    return;
+}
+if (inv_total(inv, vote_ticket) = 0 & inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>I'm holding <~pluralise(%vote_tickets_pending, "vote ticket")> for you, but you've no room for them.");
+    return;
+}
+def_int $owed = %vote_tickets_pending;
+%vote_tickets_pending = 0;
+inv_add(inv, vote_ticket, $owed);
+~chatnpc("<p,happy>I've been holding <~pluralise($owed, "vote ticket")> for you. Here you are.");

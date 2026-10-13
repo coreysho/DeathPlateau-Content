@@ -316,16 +316,25 @@ def collection(tabs):
 
 
 # The Player Statistics rows: (key, label). The values are filled by ~questtab_pstats_draw.
+#
+# Vote points sit next to Slayer points because they are the same kind of thing - a bound currency
+# with no stack in the inventory to look at - and a vote point has nowhere else it can be read. A
+# player holding tickets can click one; a player who has spent them all has only this page.
 PSTATS = [('mode', 'Game mode'), ('rate', 'XP rate'), ('drops', 'Drop rates'), ('playtime', 'Time played'),
           ('age', 'Account age'),
           ('locked', 'XP locked'), ('deaths', 'Deaths'), ('pvp', 'Players killed'), ('npcs', 'Monsters killed'),
           ('clues', 'Clues opened'), ('bosses', 'Boss kills'), ('slayer', 'Slayer tasks'),
-          ('slpoints', 'Slayer points'), ('bank', 'Bank value')]
-# fourteen rows at 15px fill the box from its top edge to its bottom one (thirteen were at 16px until
-# the game mode's drop-rate boost got a row of its own under the XP rate). They start 2px higher than
-# the thirteen did, so the first and last rows each sit 3px inside the box's rim rather than the last
-# row's shadow touching it.
-PS_Y, PS_PITCH = 47, 15
+          ('slpoints', 'Slayer points'), ('votepoints', 'Vote points'), ('bank', 'Bank value')]
+# FIFTEEN ROWS NOW, AND THE PITCH HAD TO COME DOWN TO FIT THEM. The box is 211px inside
+# (BODY_TOP..BODY_BOTTOM), and a row is its pitch plus the height of its last text box - so fourteen
+# rows at pitch 15 with 15px texts ended exactly on the box's bottom edge, with nothing spare. 15 at
+# pitch 15 would need 225px. At pitch 14 with 14px texts, fifteen rows end on that same edge: the
+# page is framed identically and each row gives up one pixel of the gap under its glyphs, which the
+# rule between rows was already sitting in.
+#
+# (Thirteen rows were at 16px until the game mode's drop-rate boost got a row of its own under the
+# XP rate; fourteen at 15px followed.)
+PS_Y, PS_PITCH, PS_ROW_H = 47, 14, 14
 PS_VALUE_X, PS_VALUE_W = 96, 84
 
 
@@ -336,8 +345,8 @@ def pstats():
     p.box('list_box', BOX_X, BODY_TOP, BOX_W, BODY_BOTTOM - BODY_TOP)
     for k, (key, label) in enumerate(PSTATS):
         y = PS_Y + k * PS_PITCH
-        p.text(key + '_label', 10, y, 86, label, ORANGE)
-        p.text(key, PS_VALUE_X, y, PS_VALUE_W, '', WHITE)
+        p.text(key + '_label', 10, y, 86, label, ORANGE, h=PS_ROW_H)
+        p.text(key, PS_VALUE_X, y, PS_VALUE_W, '', WHITE, h=PS_ROW_H)
         if k < len(PSTATS) - 1:
             p.add(key + '_rule', type='rect', x=9, y=y + PS_PITCH - 1, width=BOX_W - 10, height=1, fill='yes',
                   colour=RULE)

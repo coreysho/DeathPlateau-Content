@@ -770,15 +770,26 @@ wearpos=ring
 2dxof=-1
 2dyof=-1
 weight=6g
-cost=0
+// THE VOTE SHOP'S PRICE, not a gp value. ~adjusted_item_cost_buying reads oc_cost and scales it by
+// the shopkeeper's per-mille multiplier, so a price has to live in cost= - which is how Grace's
+// recolour kits are priced in marks too. The ring is untradeable, so this number is never a gp
+// value to anybody: the only places it surfaces are the Vote clerk's shop and death-value ordering.
+// Change it in vote/configs/vote.constant, not here.
+cost=^vote_price_explorers_ring
 members=yes
 tradeable=no
 iop1=Wear
 iop2=Check
-iop3=Teleport
+// iop3 WAS "Teleport", which in Old School is the cabbage patch outside Draynor. It is the farm
+// teleport here instead (skill_farming/scripts/farm_teleport.rs2) and relabelled to say so, and
+// wearop1 is the same menu from the Worn Equipment tab so the ring need not come off to use it.
+// The ring's other options - Check, and iop4's run-energy and alchemy Functions - are still
+// unimplemented, as are the other eleven diary reward sets.
+iop3=Farm Teleport
 iop4=Functions
-// Stats from the OSRS cache (obj 13128). Its diary effects are not implemented yet.
+// Stats from the OSRS cache (obj 13128).
 param=prayerbonus,1
+wearop1=Farm Teleport
 
 [morytania_legs_1]
 name=Morytania legs 1

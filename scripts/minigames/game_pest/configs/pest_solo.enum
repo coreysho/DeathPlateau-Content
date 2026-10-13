@@ -1,0 +1,74 @@
+// The four portals, by index, so the spawn loop can be a loop rather than four copies of itself.
+// rs2 cannot index a constant by a runtime value, which is why these exist at all.
+
+[pest_solo_portal_coord]
+inputtype=int
+outputtype=coord
+val=0,^pest_solo_portal_nw
+val=1,^pest_solo_portal_s
+val=2,^pest_solo_portal_ne
+val=3,^pest_solo_portal_se
+
+[pest_solo_portal_npc]
+inputtype=int
+outputtype=npc
+val=0,pest_portal_1_active
+val=1,pest_portal_2_active
+val=2,pest_portal_3_active
+val=3,pest_portal_4_active
+
+// WHAT COMES OUT OF A PORTAL, by tier. Four of the seven families, and the three that are missing
+// are missing for a reason rather than for room:
+//   * ravagers exist to chew barricades, and there are no barricades in the solo game;
+//   * spinners exist to repair portals, which is a mechanic for stopping a team, not one player;
+//   * brawlers exist to block a corridor with a 2x2 body, which matters when four other people are
+//     trying to get past them.
+// Shifters melee, torchers burn at range, defilers shoot at range, splatters walk up and explode -
+// those four are a fight on their own, and the other three would be decoration.
+//
+// The a/b pairs are the cache's own split and the spawn picks between them, so a wave of shifters
+// is not five copies of one record.
+[pest_solo_tier_melee_a]
+inputtype=int
+outputtype=npc
+val=1,pest_shifter_1a
+val=2,pest_shifter_2a
+val=3,pest_shifter_3a
+val=4,pest_shifter_4a
+val=5,pest_shifter_5a
+
+[pest_solo_tier_melee_b]
+inputtype=int
+outputtype=npc
+val=1,pest_shifter_1b
+val=2,pest_shifter_2b
+val=3,pest_shifter_3b
+val=4,pest_shifter_4b
+val=5,pest_shifter_5b
+
+[pest_solo_tier_mage]
+inputtype=int
+outputtype=npc
+val=1,pest_torcher_1a
+val=2,pest_torcher_2a
+val=3,pest_torcher_3a
+val=4,pest_torcher_4a
+val=5,pest_torcher_5a
+
+[pest_solo_tier_ranger]
+inputtype=int
+outputtype=npc
+val=1,pest_defiler_1a
+val=2,pest_defiler_2a
+val=3,pest_defiler_3a
+val=4,pest_defiler_4a
+val=5,pest_defiler_5a
+
+[pest_solo_tier_splatter]
+inputtype=int
+outputtype=npc
+val=1,pest_splatter_1
+val=2,pest_splatter_2
+val=3,pest_splatter_3
+val=4,pest_splatter_4
+val=5,pest_splatter_5

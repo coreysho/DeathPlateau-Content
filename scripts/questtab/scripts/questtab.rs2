@@ -155,6 +155,11 @@ while ($i < ^boss_kills_count) {
 ~questtab_value(questtab_pstats:bosses, ~tp_gp($kills));
 ~questtab_value(questtab_pstats:slayer, ~tp_gp(%slayer_tasks_done));
 ~questtab_value(questtab_pstats:slpoints, ~tp_gp(%slayer_points));
+// Vote points, beside Slayer points because they are the same kind of thing. This is the ONLY place
+// a vote point can be read: it is a varp, so unlike Marks of Grace or Tokkul there is no stack in
+// the inventory to look at, and a player who has spent every ticket has nothing left to click. The
+// Vote clerk says it too, but you have to walk to Edgeville to hear it.
+~questtab_value(questtab_pstats:votepoints, ~tp_gp(%vote_points));
 ~questtab_value(questtab_pstats:bank, "@yel@<~questtab_short(~questtab_bank_value)>");
 
 [proc,questtab_value](component $com, string $text)

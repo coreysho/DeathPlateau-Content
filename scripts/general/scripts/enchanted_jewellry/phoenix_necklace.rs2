@@ -1,0 +1,52 @@
+// THE PHOENIX NECKLACE and THE NECKLACE OF FAITH - the diamond necklace's and the topaz necklace's
+// enchants, in one file because they are one mechanism: both fire when your hitpoints drop below a
+// fifth, both are destroyed doing it, and both hang off the hook the ring of life already uses
+// (player/scripts/damage.rs2 calls ~redemption_check then ~ring_of_life_check after every hit).
+//
+//   Phoenix necklace     heals 30% of your MAXIMUM HITPOINTS
+//   Necklace of faith    restores 25% of your PRAYER LEVEL in prayer points
+//
+// ORDER MATTERS AND THE ORDER IS: redemption, ring of life, then these. The two in damage.rs2 are
+// the ones that can take you out of danger entirely - redemption by healing off your prayer, the
+// ring by teleporting you away - so a necklace that only tops you up should not be spent first and
+// leave you standing in the same fight. ~neck_emergency_check is called last for that reason.
+//
+// ONE NECKLACE, ONE SLOT, so only one of the two can ever be worn and there is no interaction to
+// think about. Both are checked anyway rather than one being assumed, because the slot is read
+// once and compared twice, which is cheaper than being clever.
+//
+// WHY NOT A CATEGORY. Each is a single obj with no charge chain, so there is nothing for a category
+// to group; the worn slot is compared to the obj directly.
+
+[proc,neck_emergency_check]
+if (p_finduid(uid) = false) {
+    return;
+}
+if (stat(hitpoints) <= 0) {
+    // Already dead. Neither necklace fires on a hit that kills you outright, which is Old School's
+    // rule for both: "if you go from above 20% straight to zero it has no effect."
+    return;
+}
+// Below a fifth of your maximum. stat_base is the unboosted level, so a Saradomin brew does not
+// move the threshold.
+if (stat(hitpoints) > scale(20, 100, stat_base(hitpoints))) {
+    return;
+}
+def_obj $neck = inv_getobj(worn, ^wearpos_front);
+if ($neck = phoenix_necklace) {
+    // 30% of maximum hitpoints. stat_heal, not stat_add: it will not take you above your base.
+    def_int $heal = scale(30, 100, stat_base(hitpoints));
+    stat_heal(hitpoints, $heal, 0);
+    inv_delslot(worn, ^wearpos_front);
+    mes("Your phoenix necklace heals you, and crumbles to dust.");
+    return;
+}
+if ($neck = necklace_of_faith) {
+    // A quarter of your Prayer LEVEL, not of your remaining points - so it is worth the same
+    // whether you are empty or half full.
+    def_int $restore = scale(25, 100, stat_base(prayer));
+    stat_heal(prayer, $restore, 0);
+    inv_delslot(worn, ^wearpos_front);
+    mes("Your necklace of faith restores your prayer, and crumbles to dust.");
+    return;
+}

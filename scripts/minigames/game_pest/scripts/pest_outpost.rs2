@@ -42,16 +42,31 @@ p_telejump($dest);
 ~mesbox($arrival);
 
 // --- The lander ---
-// The minigame is not built. Said in world rather than as an error, and flagged in the constant file.
+// It sails now. The squire used to say the Void Knights had not called a landing in a long while,
+// which was true of the build rather than of the fiction - the minigame did not exist. See
+// scripts/pest_solo.rs2 and configs/pest_solo.constant for the game and for which of Old School's
+// mechanics are deliberately not in it.
 
 [opnpc1,pest_squire_lander]
 ~chatplayer("<p,quiz>What's the lander for?");
-~chatnpc("<p,sad>Nothing, at the moment. The Void Knights have not called a landing in a long while.");
-~chatnpc("<p,neutral>Stay on the outpost. There is a store, an armoury and a bank, and none of them will try to eat you.");
+~chatnpc("<p,neutral>Taking you down to the island, one at a time. The Void Knight|holds the middle and the portals pour pests at him.");
+~chatnpc("<p,neutral>Kill all four portals before he falls. If he falls, you have|wasted everybody's afternoon.");
+switch_int (~p_choice3("Take me down.", 1, "How does the scoring work?", 2, "Not right now.", 3)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Take me down.");
+        ~pest_solo_start;
+    case 2 :
+        ~chatplayer("<p,quiz>How does the scoring work?");
+        ~chatnpc("<p,neutral>Four portals down and you are commended. Leave one standing|and you are not. The Void Knights trade for commendations|- ask one of them.");
+        ~chatnpc("<p,neutral>Bring the knight out in better shape and they notice.");
+    case 3 :
+        ~chatplayer("<p,neutral>Not right now.");
+        ~chatnpc("<p,neutral>The lander will wait.");
+}
 
 // --- The Void Knights ---
-// op3=Exchange was one of the four dead options the dead-op audit could not fix: it needs a
-// commendation-point system, and there is none. Answered in world instead of doing nothing.
+// op3=Exchange is live: there is a commendation-point system now (scripts/pest_rewards.rs2). The
+// comment that used to sit here said it needed one and there was none.
 
 [opnpc1,pest_voidknight_1] @pest_voidknight_talk;
 [opnpc1,pest_voidknight_2] @pest_voidknight_talk;
@@ -62,7 +77,7 @@ p_telejump($dest);
 ~chatplayer("<p,quiz>Who are you?");
 ~chatnpc("<p,neutral>A Void Knight. We hold the balance, and lately we hold it thinly.");
 ~chatplayer("<p,quiz>Can I help?");
-~chatnpc("<p,neutral>When the landings resume you may. Until then, speak to the squires.");
+~chatnpc("<p,neutral>You may. Speak to the squire by the lander, and bring back|commendations - we trade for them.");
 
 [opnpc3,pest_voidknight_1] @pest_voidknight_exchange;
 [opnpc3,pest_voidknight_2] @pest_voidknight_exchange;
@@ -70,7 +85,11 @@ p_telejump($dest);
 [opnpc3,pest_voidknight_4] @pest_voidknight_exchange;
 
 [label,pest_voidknight_exchange]
-~chatnpc("<p,neutral>You have earned no commendations. Come back when you have fought for us.");
+if (%pest_commendation <= 0) {
+    ~chatnpc("<p,neutral>You have earned no commendations. Come back when you have fought for us.");
+    return;
+}
+@pest_exchange;
 
 // --- The squires ---
 // pest_squire_1 to _4 and the blacksmith all declared op1=Talk-to with nothing behind it. None of
@@ -88,4 +107,4 @@ p_telejump($dest);
 
 [opnpc1,pest_squire_blacksmith]
 ~chatplayer("<p,quiz>Do you make armour here?");
-~chatnpc("<p,neutral>Void knight equipment, for those who earn it. Nobody has earned it lately.");
+~chatnpc("<p,neutral>Void knight equipment, for those who earn it. The knights trade|it for commendations - I only keep it in good order.");

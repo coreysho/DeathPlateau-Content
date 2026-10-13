@@ -1,0 +1,16 @@
+// Which tier of pest an npc is, 1-5 ascending. Written onto all 50 monster records by
+// tools/genpeststats.py.
+//
+// A param rather than a category, for the reason fightcave.param gives for the same choice: it
+// carries the tier as well as the membership, so one lookup answers both "is this one of mine" and
+// "which one" - and ~pest_solo_pests_alive counts anything with a non-null value.
+[pest_tier]
+type=int
+default=null
+
+// Set to 1 on the four portals. Separate from pest_tier because a portal is the OBJECTIVE, not a
+// pest: it is counted by a different proc, it has no tier, and conflating the two would have the
+// game end when the last shifter died.
+[pest_portal]
+type=int
+default=null

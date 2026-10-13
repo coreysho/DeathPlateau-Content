@@ -1,0 +1,178 @@
+// THE FARM TELEPORT (12 October) - 27 destinations, one per farming site, on Explorer's ring 4.
+//
+// WHY THIS ITEM. Suggestion #9 was "a farming ring that tele's to all patches". Explorer's ring 4
+// was already in the build (general/configs/diary_rewards.obj, imported from an OSRS cache with
+// the rest of the diary rewards) carrying iop3=Teleport with nothing behind it - in Old School
+// that option is the cabbage patch, which this build has no use for. So the ring gets the farm
+// menu on the option it already advertises instead of a new item nobody would recognise, and the
+// option is relabelled "Farm Teleport" so it says what it does.
+//
+// IT HAS NO SOURCE YET, and that is not this file's problem to fix. The achievement diary itself
+// is not implemented - nothing in scripts/ gives out any of the twelve reward sets - so the ring
+// is reachable only by a staff spawn until the diary lands. The effect is here and works; the way
+// to earn it is suggestion #15.
+//
+// NO CHARGES, NO LEVEL REQUIREMENT. Every other teleport item in this build spends something
+// (dragonstone jewellery) or needs a level (the skill capes). This one spends nothing, because
+// the thing standing in front of it is a completed achievement diary - a gate so much heavier
+// than 30 Magic that charging for the teleport on top of it would be charging twice. The one
+// limit it does keep is the Wilderness ceiling (^farm_tele_wildy_max), which is about the one
+// place a free escape would matter.
+//
+// NOTHING HERE GUARDS AGAINST A FREE WORLD, and nothing needs to: the ring is members=yes, and on
+// an F2P node ObjType.decode strips every iop and wearop off a members obj, so the option this
+// file hangs off simply is not there. That is also why none of the other teleport items check.
+//
+// THE MENU IS TWO OR THREE CLICKS, never a wall of 27 lines. ~p_choice5 is the widest chat menu
+// this engine has, so the destinations are grouped the way a farm run is planned - the allotment
+// farms together, the hops together, trees, fruit trees, and everything that is one of a kind
+// behind "More...". Each leaf menu ends in "Nowhere."; the top menu does not, because all five of
+// its slots are groups and clicking away from a dialogue already closes it.
+
+// ============================================================================ the two ways in
+// Held and worn, because a ring you teleport with is a ring you are wearing, and taking it off to
+// use it is the sort of thing amulet_of_glory.rs2 added a wearop to avoid.
+
+[opheld3,explorers_ring_4] @farm_teleport_menu;
+[label,wearop1_explorers_ring_4] @farm_teleport_menu;
+
+// ============================================================================ the menus
+// Labels rather than procs: each one ends by jumping onward and nothing wants a return value, and
+// a proc cannot @jump to a label in this dialect.
+//
+// EVERY MENU TAKES ITS ANSWER INTO A LOCAL BEFORE JUMPING ON, which is what necklace_of_passage.rs2
+// does too: ~p_choice* suspends the script until the player clicks, and a suspending call is not
+// something to bury inside a jump's argument list.
+
+[label,farm_teleport_menu]
+def_int $group = ~p_choice5_header(
+    "Allotments, flowers and herbs.", 1,
+    "Hops patches.", 2,
+    "Tree patches.", 3,
+    "Fruit tree patches.", 4,
+    "More...", 5,
+    "Where would you like to go?");
+switch_int ($group) {
+    case 1 : @farm_teleport_allotments;
+    case 2 : @farm_teleport_hops;
+    case 3 : @farm_teleport_trees;
+    case 4 : @farm_teleport_fruit;
+    case 5 : @farm_teleport_more;
+}
+
+// The four big farms. One arrival each, serving that farm's two allotments, its flower patch and
+// its herb patch - which is why these four are named by town and not by patch.
+[label,farm_teleport_allotments]
+def_int $pick = ~p_choice5_header(
+    "Falador.", ^farm_tele_fally_allotment,
+    "Catherby.", ^farm_tele_catherby_allotment,
+    "Ardougne.", ^farm_tele_ardougne_allotment,
+    "Port Phasmatys.", ^farm_tele_phasmatys_allotment,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which farm?");
+@farm_teleport_go($pick);
+
+[label,farm_teleport_hops]
+def_int $pick = ~p_choice5_header(
+    "Lumbridge.", ^farm_tele_lumbridge_hops,
+    "Yanille.", ^farm_tele_yanille_hops,
+    "Entrana.", ^farm_tele_entrana_hops,
+    "Seers' Village.", ^farm_tele_seers_hops,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which hops patch?");
+@farm_teleport_go($pick);
+
+[label,farm_teleport_trees]
+def_int $pick = ~p_choice5_header(
+    "Lumbridge.", ^farm_tele_lumbridge_tree,
+    "Falador.", ^farm_tele_fally_tree,
+    "Taverley.", ^farm_tele_taverley_tree,
+    "Varrock.", ^farm_tele_varrock_tree,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which tree patch?");
+@farm_teleport_go($pick);
+
+[label,farm_teleport_fruit]
+def_int $pick = ~p_choice5_header(
+    "Tree Gnome Village.", ^farm_tele_gnome_village_fruit,
+    "Tree Gnome Stronghold.", ^farm_tele_gnome_stronghold_fruit,
+    "Brimhaven.", ^farm_tele_brimhaven_fruit,
+    "Catherby.", ^farm_tele_catherby_fruit,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which fruit tree patch?");
+@farm_teleport_go($pick);
+
+// Everything that is not one of a set of four. The belladonna patch is the only patch of its kind
+// in the world, so it is a destination here rather than a group of one.
+[label,farm_teleport_more]
+def_int $group = ~p_choice5_header(
+    "Bush patches.", 1,
+    "Spirit trees.", 2,
+    "Cactus, calquat and mushroom.", 3,
+    "Belladonna patch.", 4,
+    "Nowhere.", 5,
+    "Where would you like to go?");
+switch_int ($group) {
+    case 1 : @farm_teleport_bushes;
+    case 2 : @farm_teleport_spirit;
+    case 3 : @farm_teleport_odds;
+    case 4 : @farm_teleport_go(^farm_tele_draynor_belladonna);
+    case 5 : @farm_teleport_go(^farm_tele_nowhere);
+}
+
+[label,farm_teleport_bushes]
+def_int $pick = ~p_choice5_header(
+    "Rimmington.", ^farm_tele_rimmington_bush,
+    "Ardougne.", ^farm_tele_ardougne_bush,
+    "Varrock.", ^farm_tele_varrock_bush,
+    "Etceteria.", ^farm_tele_etceteria_bush,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which bush patch?");
+@farm_teleport_go($pick);
+
+[label,farm_teleport_spirit]
+def_int $pick = ~p_choice4_header(
+    "Port Sarim.", ^farm_tele_portsarim_spirit,
+    "Brimhaven.", ^farm_tele_brimhaven_spirit,
+    "Etceteria.", ^farm_tele_etceteria_spirit,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Which spirit tree patch?");
+@farm_teleport_go($pick);
+
+[label,farm_teleport_odds]
+def_int $pick = ~p_choice4_header(
+    "Al Kharid cactus.", ^farm_tele_alkharid_cactus,
+    "Tai Bwo Wannai calquat.", ^farm_tele_taibwo_calquat,
+    "Mort Myre mushroom.", ^farm_tele_mortmyre_mushroom,
+    "Nowhere.", ^farm_tele_nowhere,
+    "Where would you like to go?");
+@farm_teleport_go($pick);
+
+// ============================================================================ going there
+
+[label,farm_teleport_go](int $dest)
+// "Nowhere.", and the guard that makes every menu above safe to extend: a destination id that is
+// not in the table teleports nobody rather than resolving to the enum's default coord.
+if ($dest < 1 | $dest > ^farm_tele_count) {
+    mes("You remain where you were.");
+    return;
+}
+// ENTRANA IS STILL ENTRANA. The monk at Port Sarim searches you before he lets you on the boat
+// (areas/area_port_sarim/scripts/monk_of_entrana.rs2) and this would otherwise be the one way
+// onto the island with a rune platebody on. Same check he runs, so the rule does not depend on
+// which door you come in through.
+if ($dest = ^farm_tele_entrana_hops) {
+    if (~has_entrana_restricted_items = true) {
+        mes("Saradomin's will does not permit weapons or armour on holy Entrana.");
+        mes("You would have to leave them behind.");
+        return;
+    }
+}
+// The shared wilderness ceiling and pre-teleport checks (general/scripts/enchanted_jewellry/
+// charged_jewellery.rs2). Only the "may I" half is reused - there is no charge to spend - and
+// using it rather than re-deriving it is what keeps the blocked-teleport wording the same here as
+// on a glory.
+if (~charged_jewellery_allowed(^farm_tele_wildy_max) = false) {
+    return;
+}
+~player_teleport_normal(enum(int, coord, farm_teleport_coords, $dest));

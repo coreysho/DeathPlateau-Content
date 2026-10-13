@@ -1,0 +1,23 @@
+// The bound half of the vote model - see configs/vote.constant. scope=perm because it has to
+// survive a logout; that is the whole difference between a point and a ticket.
+//
+// Granted only by ~vote_redeem (one per ticket) and spent only by the vote shop, through
+// ~shop_wallet_spend. Nothing else writes it. ::setvar vote_points <n> is how to put some on a test
+// account until vote redeeming exists; ::give vote_ticket <n> is how to do it the player's way.
+[vote_points]
+type=int
+scope=perm
+
+// TICKETS CREDITED BUT NOT YET HANDED OVER. The seam for vote redeeming, which is not built yet.
+//
+// A vote is credited by something outside the game - a callback from whatever site the vote was
+// cast on - and that has no idea whether the player is standing in a bank with 28 free slots or
+// mid-fight with none. An add that can fail is a reward that can vanish, and "my vote didn't give
+// me anything" is the one bug a vote shop must not have. So the credit goes here, and the Vote
+// clerk hands the tickets over when there is room for them.
+//
+// ~vote_grant_tickets is the only door: whatever claim path gets written should call that and
+// nothing else.
+[vote_tickets_pending]
+type=int
+scope=perm

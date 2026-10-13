@@ -1,0 +1,59 @@
+// THE BURNING AMULET - what Lvl-3 Enchant does to a strung topaz amulet. Five teleports, and all
+// three destinations are in the Wilderness:
+//
+//   Lava Maze     m47_60   wilderness ~40, the maze north of the Mage Arena road
+//   Chaos Temple  m46_59   wilderness ~38
+//   Bandit Camp   m47_57   wilderness ~20
+//
+// NO WILDERNESS CEILING, and that is the one thing about this amulet that is a decision rather than
+// a copy. Every other teleport in this folder refuses above level 20 or 30 - that is what stops a
+// player escaping a fight. This one goes the other way: it is for GETTING to the deep Wilderness,
+// and a ceiling of 30 would block two of its three destinations outright. Old School handles the
+// same tension by asking first, so this asks first.
+//
+// It still cannot be used to escape: ~pre_tele_checks inside ~charged_jewellery_go is what refuses
+// a teleport while something is attacking you, and that is untouched.
+
+[opheld4,_burning_amulet]
+mes("You rub the amulet...");
+def_obj $item = last_item;
+def_int $slot = last_slot;
+p_delay(1);
+def_int $choice = ~p_choice4_header("Lava Maze.", 1, "Chaos Temple.", 2, "Bandit Camp.", 3, "Nowhere.", 4, "Where would you like to teleport to?");
+if ($choice = 4) {
+    mes("You remain where you were.");
+    return;
+}
+@burning_amulet_confirm($item, $slot, $choice, false);
+
+[label,wearop1__burning_amulet] @burning_amulet_confirm(last_item, last_slot, 1, true);
+[label,wearop2__burning_amulet] @burning_amulet_confirm(last_item, last_slot, 2, true);
+[label,wearop3__burning_amulet] @burning_amulet_confirm(last_item, last_slot, 3, true);
+
+// THE CONFIRMATION IS THE SAFETY, since the wilderness ceiling is not. Three destinations deep in
+// a PvP zone reached from one right-click is how a player ends up there by accident holding
+// everything they own, so every one of them asks, and the question names the level.
+[label,burning_amulet_confirm](obj $item, int $slot, int $choice, boolean $worn)
+def_string $where;
+def_int $level;
+switch_int ($choice) {
+    case 1 : $where = "the Lava Maze"; $level = 40;
+    case 2 : $where = "the Chaos Temple"; $level = 38;
+    case 3 : $where = "the Bandit Camp"; $level = 20;
+}
+if (~p_choice2("Teleport to <$where>.", 1, "Don't teleport.", 2) ! 1) {
+    mes("You remain where you were.");
+    return;
+}
+mes("<$where> is in level <tostring($level)> Wilderness.");
+@burning_amulet_teleport($item, $slot, $choice, $worn);
+
+[label,burning_amulet_teleport](obj $item, int $slot, int $choice, boolean $worn)
+def_coord $dest;
+switch_int ($choice) {
+    case 1 : $dest = map_findsquare(0_47_60_61_20, 0, 2, ^map_findsquare_lineofwalk); // Lava Maze
+    case 2 : $dest = map_findsquare(0_46_59_7_44, 0, 2, ^map_findsquare_lineofwalk); // Chaos Temple
+    case 3 : $dest = map_findsquare(0_47_57_30_50, 0, 2, ^map_findsquare_lineofwalk); // Bandit Camp
+}
+// -1: no ceiling. See the header.
+~charged_jewellery_go($item, $slot, $worn, $dest, -1, "Burning Amulet");

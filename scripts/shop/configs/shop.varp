@@ -20,3 +20,9 @@ scope=temp
 [shop_currency]
 type=namedobj
 scope=temp
+
+// Where the shop that is currently open takes payment from - see shop/configs/shop.constant. Set by
+// both openshop procs beside %shop_currency, and read only through the ~shop_wallet_* procs.
+[shop_wallet]
+type=int
+scope=temp

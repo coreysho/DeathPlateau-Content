@@ -1,0 +1,73 @@
+// THE VOID KNIGHTS' EXCHANGE - what commendation points buy.
+//
+// op3=Exchange on all four Void Knights was one of the four dead options the dead-op audit could
+// not fix: it needs a commendation-point system and there was none, so it answered "You have earned
+// no commendations" in world rather than doing nothing (pest_outpost.rs2 records that). There is a
+// point system now, so it does the thing it says.
+//
+// A DIALOGUE, NOT A SHOP INTERFACE. ~openshop trades objs for coins out of a stock inv; commendation
+// points are a varp, not an obj, so there is nothing for a shop to take. The Fight Cave's cape
+// exchange is the same shape for the same reason.
+//
+// THE PRICES ARE OLD SCHOOL'S and are deliberately not softened. A win pays 3-4 points, so a piece
+// of void equipment is sixty-odd games - which is exactly what it is in the game it came from. The
+// temptation with a solo variant is to make the reward match the smaller lobby; the reason not to
+// is that the gear would then mean less here than it does there, and the gear is the only reason
+// the minigame has a second session.
+//
+// The equip requirements (42 in six combat stats, 22 Prayer) are already enforced by
+// void_equip.rs2 and are deliberately NOT checked here: Old School sells it to anyone and lets them
+// look at it in the bank until they can wear it.
+
+// A LABEL, not a proc: a proc cannot @jump to a label, and this has to fall into the menu below.
+// It is jumped to from [label,pest_voidknight_exchange] in pest_outpost.rs2.
+[label,pest_exchange]
+~chatnpc("<p,neutral>You have <~pluralise(%pest_commendation, "commendation point")>.");
+@pest_exchange_menu;
+
+[label,pest_exchange_menu]
+switch_int (~p_choice5("Void knight top - 250.", 1,
+                       "Void knight robe - 250.", 2,
+                       "Void knight gloves - 150.", 3,
+                       "Void knight mace - 250.", 4,
+                       "Show me the helmets.", 5)) {
+    case 1 : @pest_buy(void_knight_top, 250);
+    case 2 : @pest_buy(void_knight_robe, 250);
+    case 3 : @pest_buy(void_knight_gloves, 150);
+    case 4 : @pest_buy(void_knight_mace, 250);
+    case 5 : @pest_exchange_helmets;
+}
+
+[label,pest_exchange_helmets]
+switch_int (~p_choice4("Void mage helm - 200.", 1,
+                       "Void ranger helm - 200.", 2,
+                       "Void melee helm - 200.", 3,
+                       "Nothing, thanks.", 4)) {
+    case 1 : @pest_buy(void_mage_helm, 200);
+    case 2 : @pest_buy(void_ranger_helm, 200);
+    case 3 : @pest_buy(void_melee_helm, 200);
+    case 4 : ~chatplayer("<p,neutral>Nothing, thanks.");
+}
+
+// The points are checked twice, before the question and after it, because ~p_choice2 pauses for a
+// click and a paused player's points can change - the same reason the Fight Cave's cape exchange
+// checks the cape twice.
+[label,pest_buy](namedobj $item, int $cost)
+if (%pest_commendation < $cost) {
+    ~chatnpc("<p,neutral>That costs <tostring($cost)> commendation points. You have <tostring(%pest_commendation)>.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    ~chatnpc("<p,neutral>You have no room to carry it.");
+    return;
+}
+~chatplayer("<p,neutral>I'll take the <lowercase(oc_name($item))>.");
+if (~p_choice2("Yes, <tostring($cost)> points.", 1, "Changed my mind.", 2) ! 1) {
+    return;
+}
+if (%pest_commendation < $cost) {
+    return;
+}
+%pest_commendation = sub(%pest_commendation, $cost);
+inv_add(inv, $item, 1);
+~objbox($item, "The Void Knight hands over the <lowercase(oc_name($item))>.|You have <~pluralise(%pest_commendation, "commendation point")> left.", 250, 0, 0);

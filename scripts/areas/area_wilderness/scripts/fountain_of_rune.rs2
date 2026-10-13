@@ -1,0 +1,109 @@
+// THE FOUNTAIN OF RUNE, and the Amulet of eternal glory (2026-10-12).
+//
+// WHY IT EXISTS, stated carefully because the obvious answer is wrong. This is NOT the only way to
+// recharge a glory: areas_heroes_guild/scripts/fountain_of_heroes.rs2 already does that, and has
+// since before this round - use a spent amulet on the Fountain of Heroes and it comes back a (4).
+// An earlier draft of this header claimed there was nowhere in the game to recharge one. There is,
+// and it is behind Heroes' Quest rather than behind 48 levels of Wilderness.
+//
+// So the reason this fountain is here is the AMULET OF ETERNAL GLORY, which has to come from
+// somewhere and which Old School puts at this fountain and nowhere else. The recharging is the
+// vehicle for the roll, not the feature. What it adds over the Heroes' Guild is a reason to take
+// jewellery into the deep Wilderness, which is the same argument the Death token and the
+// Undertaker are built on.
+//
+// It is also strictly better at the recharging itself - every amulet in one click rather than one
+// use per amulet - and that is deliberate: the Heroes' Guild is safe, so clicking there costs you
+// nothing but time, while a trip here is paid for in risk and should not also be paid for in
+// clicks.
+//
+// WHERE IT IS. Wilderness level 48, world 3371/3895 (0_52_60_43_55), which is where Old School puts
+// it. See the loc in area_wilderness/configs/wilderness.loc for how the tile was picked.
+//
+// THE DEAL IT OFFERS is the point of putting it up there: free, unlimited recharging, as deep in the
+// Wilderness as this build's map goes. No cost, no level, no quest - the walk IS the cost, and it
+// is a walk through 48 levels of PvP carrying jewellery worth recharging.
+//
+// IT RECHARGES EVERY GLORY YOU CARRY, in one click, pack and bank-free. Old School charges them one
+// at a time by using each amulet on the fountain; a trip this dangerous being spent clicking
+// twenty-eight times is not a mechanic, it is a tax, so this does the lot.
+//
+// ---------------------------------------------------------------------------------------------
+// THE AMULET OF ETERNAL GLORY
+// ---------------------------------------------------------------------------------------------
+// One roll per AMULET recharged, not per click, so bringing twenty-eight is twenty-eight chances -
+// which is what makes a full inventory of dead glories the thing you want to arrive with.
+//
+// 1 IN 250, AND OLD SCHOOL'S IS 1 IN 25,000. That is Corey's number ("1-250 not osrs bs"), and it
+// is a hundred times kinder. It is also the right call for this server rather than a concession:
+// 1/25,000 recharges is tuned for a game with a decade of players and a fountain you can reach
+// safely enough to make it a money-maker. Here it is a 48-wilderness walk, and at 1/25,000 nobody
+// would ever see one, so the item would exist and never be obtained - which is the state the 48
+// achievement diary items are already in and not a state worth adding to.
+//
+// At 1/250 with a full load of 27 dead glories it is about a 1-in-10 trip, which makes the amulet a
+// thing people chase rather than a thing people hear about.
+
+[oploc1,fountain_of_rune]
+if (p_finduid(uid) = false) {
+    return;
+}
+~fountain_of_rune_recharge;
+
+[proc,fountain_of_rune_recharge]
+mes("You dip your jewellery into the fountain...");
+def_int $recharged = 0;
+def_int $eternal = 0;
+// The four spent states plus the uncharged one. A (4) is already full and is deliberately NOT
+// counted or rolled - otherwise the best strategy would be to stand here clicking with one full
+// glory, which is not a trip to the deep Wilderness, it is an afk script.
+$recharged, $eternal = ~fountain_recharge_one(amulet_of_glory, $recharged, $eternal);
+$recharged, $eternal = ~fountain_recharge_one(amulet_of_glory_1, $recharged, $eternal);
+$recharged, $eternal = ~fountain_recharge_one(amulet_of_glory_2, $recharged, $eternal);
+$recharged, $eternal = ~fountain_recharge_one(amulet_of_glory_3, $recharged, $eternal);
+
+if ($recharged = 0 & $eternal = 0) {
+    ~mesbox("You have no amulets of glory that need recharging.");
+    return;
+}
+if ($recharged > 0) {
+    mes("Your <~pluralise($recharged, "amulet")> of glory <~fountain_is_are($recharged)> recharged.");
+}
+if ($eternal > 0) {
+    // Worth a broadcast: it is the rarest thing the Wilderness hands out that is not a boss drop,
+    // and ~broadcast_news is what the Infernal cape and the Fire cape use.
+    ~mesbox("One of the amulets comes out of the water glowing. It does not|look like it will ever stop.");
+    ~broadcast_news("Amulet of eternal glory!", "pulled an @dre@Amulet of eternal glory@bla@ out of the Fountain of Rune.");
+    ~collection_log_add(amulet_of_eternal_glory, $eternal);
+}
+
+// One obj type, however many of it are in the pack. Each one rolls for the eternal separately and a
+// hit replaces that amulet rather than the stack - which matters because a stack is what a player
+// who banked four dead glories is carrying.
+//
+// Returns the running totals so the caller can report once rather than per amulet.
+[proc,fountain_recharge_one](namedobj $spent, int $recharged, int $eternal)(int, int)
+def_int $count = inv_total(inv, $spent);
+if ($count = 0) {
+    return($recharged, $eternal);
+}
+def_int $i = 0;
+while ($i < $count) {
+    inv_del(inv, $spent, 1);
+    if (random(^fountain_eternal_rate) = 0) {
+        inv_add(inv, amulet_of_eternal_glory, 1);
+        $eternal = add($eternal, 1);
+    } else {
+        inv_add(inv, amulet_of_glory_4, 1);
+        $recharged = add($recharged, 1);
+    }
+    $i = add($i, 1);
+}
+return($recharged, $eternal);
+
+// "is" for one, "are" for more. ~pluralise does the noun; nothing does the verb.
+[proc,fountain_is_are](int $count)(string)
+if ($count = 1) {
+    return("is");
+}
+return("are");

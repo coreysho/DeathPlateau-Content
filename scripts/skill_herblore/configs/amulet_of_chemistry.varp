@@ -1,0 +1,9 @@
+// Charges left on the Amulet of chemistry, 5 down to 0.
+//
+// A VARP RATHER THAN A CHARGE CHAIN, which is the opposite of how every other charged item in this
+// build works (the glory, the games necklace and the five imported teleport items are each five or
+// eight separate objs with next_obj_stage pointing down the chain). Old School has exactly ONE
+// amulet of chemistry obj - the name carries no count and there is no (4)/(3)/(2)/(1) family in the
+// cache to import - so the count has nowhere to live but here.
+[herblore_chemistry_charges]
+scope=perm

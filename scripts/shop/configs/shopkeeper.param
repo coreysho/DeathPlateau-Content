@@ -23,3 +23,10 @@ default=Shop.
 [shop_currency]
 type=namedobj
 default=coins
+
+// WHERE this shopkeeper takes payment from - ^shop_wallet_inv (the obj in shop_currency, out of the
+// player's inventory) or ^shop_wallet_vote_points. Defaults to the inventory, so all 38 coin shops
+// and the four obj-currency ones keep working without being touched.
+[shop_wallet]
+type=int
+default=0

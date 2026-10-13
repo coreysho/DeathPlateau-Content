@@ -1,0 +1,338 @@
+// PEST CONTROL, SOLO - the game (2026-10-12).
+//
+// See configs/pest_solo.constant for every number and where it came from, and configs/pest.constant
+// for the state this replaces: the island, the lander, the portals and all 54 npcs were in the
+// cache with art and no content, and the minigame was flagged NOT BUILT rather than half-built.
+//
+// THE SHAPE OF IT. One player, one instance of the pest island, four portals and a Void Knight.
+// Kill all four portals before the clock runs out and before the knight dies. The knight loses a
+// hitpoint per living portal every eight ticks, so the clock and the knight are the same pressure
+// seen twice: open portals cost you time you do not have.
+//
+// WHY THE KNIGHT IS A CLOCK AND NOT A COMBATANT. Nothing in this engine lets an npc attack an npc -
+// every combat path reads a player uid - so pests cannot besiege him. Draining him per living
+// portal is the honest abstraction of "they are getting through", and it has the property the real
+// mechanic has: you lose by ignoring the portals.
+
+// ---------------------------------------------------------------------------------------------
+// Starting
+// ---------------------------------------------------------------------------------------------
+
+[proc,pest_solo_start]
+if (p_finduid(uid) = false) {
+    return;
+}
+if (%pest_solo_instance ! null) {
+    // Already on the island somehow - put them back rather than building a second one.
+    p_teleport(~pest_solo_at(^pest_solo_landing));
+    return;
+}
+if (~player_combat_level < ^pest_solo_combat_req) {
+    ~mesbox("You need a combat level of at least <tostring(^pest_solo_combat_req)> before the Void|Knights will send you down.");
+    return;
+}
+if (~pest_solo_build = false) {
+    ~mesbox("Every lander is out. Try again shortly.");
+    return;
+}
+%pest_solo_ticks = ^pest_solo_ticks;
+%pest_solo_knight_hp = ^pest_solo_knight_hp;
+p_teleport(~pest_solo_at(^pest_solo_landing));
+~pest_solo_spawn_knight;
+def_int $i = 0;
+while ($i < ^pest_solo_portals) {
+    ~pest_solo_spawn_portal($i);
+    $i = add($i, 1);
+}
+// settimer BEFORE the mesbox, deliberately: the box pauses for a click, and a clock that only
+// starts once the player has clicked it would hand out free time.
+settimer(pest_solo_tick, 1);
+~mesbox("The lander grounds on the shore.|@dbl@Kill all four portals@bla@ before the Void Knight falls.");
+
+// The whole 64x64 square, zone by zone: 8x8 of them, the Fight Cave's own loop. A half-built island
+// is worse than none - the player lands in a hole in the floor - so it is whole or it is nothing.
+[proc,pest_solo_build]()(boolean)
+def_coord $base = instance_create;
+if ($base = null) {
+    return(false);
+}
+def_int $zz = 0;
+while ($zz < ^pest_solo_zones) {
+    def_int $zx = 0;
+    while ($zx < ^pest_solo_zones) {
+        def_coord $dst = movecoord($base, calc($zx * 8), 0, calc($zz * 8));
+        def_coord $src = movecoord(^pest_solo_template, calc($zx * 8), 0, calc($zz * 8));
+        if (instance_setzone($dst, $src, 0) = false) {
+            instance_delete($base);
+            return(false);
+        }
+        $zx = calc($zx + 1);
+    }
+    $zz = calc($zz + 1);
+}
+%pest_solo_instance = $base;
+return(true);
+
+// A template coordinate translated into this player's instance. Every coordinate on the island goes
+// through here, so none is ever used raw.
+[proc,pest_solo_at](coord $tpl)(coord)
+if (%pest_solo_instance = null) {
+    return($tpl);
+}
+def_int $dx = sub(coordx($tpl), coordx(^pest_solo_template));
+def_int $dz = sub(coordz($tpl), coordz(^pest_solo_template));
+return(movecoord(%pest_solo_instance, $dx, 0, $dz));
+
+[proc,pest_solo_spawn_knight]
+npc_add(~pest_solo_at(^pest_solo_knight_coord), pest_voidknight_control1, ^pest_solo_npc_life);
+
+[proc,pest_solo_spawn_portal](int $index)
+npc_add(~pest_solo_at(enum(int, coord, pest_solo_portal_coord, $index)),
+        enum(int, npc, pest_solo_portal_npc, $index), ^pest_solo_npc_life);
+
+// ---------------------------------------------------------------------------------------------
+// The tick
+// ---------------------------------------------------------------------------------------------
+// One timer, running every tick, doing three things in this order: count the portals, drain the
+// knight, top the pests up. The order matters - a portal killed this tick must not also drain him.
+
+// NO p_finduid HERE, and that was a bug for one build: a NORMAL timer is already run WITH protected
+// access (Player.processTimers passes protect=true for PlayerTimerType.NORMAL, and only runs it at
+// all when canAccess() is true), so asking for it again fails and the whole tick returned early -
+// the clock never moved, the knight never drained and the game could not end. [timer,farming_tick]
+// has never had one either. tools/sim/pestsolo.ts caught it; a compile could not.
+[timer,pest_solo_tick]
+if (%pest_solo_instance = null) {
+    cleartimer(pest_solo_tick);
+    return;
+}
+def_int $portals = ~pest_solo_portals_alive;
+if ($portals = 0) {
+    ~pest_solo_win;
+    return;
+}
+%pest_solo_ticks = sub(%pest_solo_ticks, 1);
+if (%pest_solo_ticks <= 0) {
+    ~pest_solo_lose("The Void Knights call the landing off. You were too slow.");
+    return;
+}
+// The drain. Every ^pest_solo_drain_interval ticks, one hitpoint per portal still standing.
+if (modulo(%pest_solo_ticks, ^pest_solo_drain_interval) = 0) {
+    %pest_solo_knight_hp = sub(%pest_solo_knight_hp, $portals);
+    if (%pest_solo_knight_hp <= 0) {
+        %pest_solo_knight_hp = 0;
+        ~pest_solo_lose("The Void Knight falls. The pests pour through behind him.");
+        return;
+    }
+    // Told at the quarters rather than every drain: eight messages a minute is noise, four across
+    // the whole game is a warning.
+    ~pest_solo_knight_warning;
+}
+~pest_solo_top_up($portals);
+
+// A line when the knight crosses half and then a quarter, and nothing in between.
+[proc,pest_solo_knight_warning]
+if (%pest_solo_knight_hp = divide(^pest_solo_knight_hp, 2)) {
+    mes("@dbl@The Void Knight is wounded.@bla@");
+    return;
+}
+if (%pest_solo_knight_hp = divide(^pest_solo_knight_hp, 4)) {
+    mes("@dre@The Void Knight is badly wounded!@bla@");
+}
+
+// ---------------------------------------------------------------------------------------------
+// Counting what is alive
+// ---------------------------------------------------------------------------------------------
+// COUNTED, NOT TRACKED IN A VARP, which is the same decision ~fightcave_alive makes and for the
+// same reason: a counter drifts the moment anything despawns, and the end of the game hinges on
+// this number reaching zero.
+//
+// BOTH TESTS IN THE LOOP ARE LOAD-BEARING. Instance slots are 128 tiles apart and this search is 64
+// from a point inside one, so it reaches into the slot next door - without the instance test,
+// another player's portals would keep this player's game open forever.
+
+[proc,pest_solo_portals_alive]()(int)
+if (%pest_solo_instance = null) {
+    return(0);
+}
+def_int $count = 0;
+npc_findallany(~pest_solo_at(^pest_solo_knight_coord), 64, ^vis_off);
+while (npc_findnext = true) {
+    if (npc_param(pest_portal) ! null & instance_find(npc_coord) = %pest_solo_instance) {
+        $count = add($count, 1);
+    }
+}
+return($count);
+
+[proc,pest_solo_pests_alive]()(int)
+if (%pest_solo_instance = null) {
+    return(0);
+}
+def_int $count = 0;
+npc_findallany(~pest_solo_at(^pest_solo_knight_coord), 64, ^vis_off);
+while (npc_findnext = true) {
+    if (npc_param(pest_tier) ! null & instance_find(npc_coord) = %pest_solo_instance) {
+        $count = add($count, 1);
+    }
+}
+return($count);
+
+// ---------------------------------------------------------------------------------------------
+// Keeping the island populated
+// ---------------------------------------------------------------------------------------------
+// ^pest_solo_per_portal alive per living portal, topped up one per tick rather than all at once:
+// a burst of eight appearing on the same tick reads as a bug, and one a tick reaches the cap in
+// eight ticks anyway.
+
+[proc,pest_solo_top_up](int $portals)
+def_int $want = multiply($portals, ^pest_solo_per_portal);
+if (~pest_solo_pests_alive >= $want) {
+    return;
+}
+// From a portal that is actually still open, picked at random so the pressure moves around.
+def_int $from = random(^pest_solo_portals);
+def_coord $at = ~pest_solo_at(enum(int, coord, pest_solo_portal_coord, $from));
+if (npc_find($at, enum(int, npc, pest_solo_portal_npc, $from), 2, 0) = false) {
+    // That portal is dead - nothing spawns from it. Next tick will roll again.
+    return;
+}
+~pest_solo_spawn_pest($at);
+
+// One pest, beside the portal, of the tier this player's combat level earns. The family is rolled:
+// two melee to one of each ranged kind, so the island is mostly a melee fight with things shooting
+// at you from the edges, which is what Pest Control feels like.
+[proc,pest_solo_spawn_pest](coord $at)
+def_int $tier = ~pest_solo_tier;
+def_npc $type;
+switch_int (random(6)) {
+    case 0, 1 : $type = enum(int, npc, pest_solo_tier_melee_a, $tier);
+    case 2 : $type = enum(int, npc, pest_solo_tier_melee_b, $tier);
+    case 3 : $type = enum(int, npc, pest_solo_tier_mage, $tier);
+    case 4 : $type = enum(int, npc, pest_solo_tier_ranger, $tier);
+    case default : $type = enum(int, npc, pest_solo_tier_splatter, $tier);
+}
+npc_add($at, $type, ^pest_solo_npc_life);
+npc_setmode(opplayer2);
+
+// Combat level to tier. Old School uses three landers for this; one lander and a band table is the
+// same answer with one npc.
+[proc,pest_solo_tier]()(int)
+def_int $cb = ~player_combat_level;
+if ($cb >= ^pest_solo_tier_high) {
+    return(5);
+}
+if ($cb >= ^pest_solo_tier_mid) {
+    return(3);
+}
+return(1);
+
+// ---------------------------------------------------------------------------------------------
+// Winning, losing, leaving
+// ---------------------------------------------------------------------------------------------
+// All three end the same way, because all three have to: free the instance and put the player back
+// on the outpost. An instance left behind is a slot nobody can use until the server restarts, and
+// there are only 1024 of them.
+
+// THE CLEANUP RUNS BEFORE THE MESSAGE, and that order is the whole of a bug found by
+// tools/sim/pestsolo.ts. The first version read "pay, say, clean up" - and ~mesbox PAUSES for a
+// click. So the game ended, the points were paid, and then the script sat waiting on a dialogue
+// box with the instance still allocated and the player still standing on the island. A player who
+// did not click, or logged out, stayed there and the instance leaked; there are 1024 of them and
+// they are not reclaimed until a restart.
+//
+// Worse, this is the path a TIMER takes: [timer,pest_solo_tick] is what calls these, so the game
+// could not end itself at all. The sim's "doing nothing loses" check proved it - the knight hit 0
+// hitpoints on tick 400, exactly as pest_solo.constant predicts, and the game carried on.
+//
+// Freeing first is also better to play: the box appears while you are already on the pier, which
+// is where the news belongs.
+[proc,pest_solo_win]
+def_int $points = ^pest_solo_points_win;
+if (%pest_solo_knight_hp >= ^pest_solo_bonus_threshold) {
+    $points = add($points, ^pest_solo_points_bonus);
+}
+%pest_commendation = add(%pest_commendation, $points);
+~pest_solo_end;
+~mesbox("The last portal collapses.|You are awarded <~pluralise($points, "commendation point")>.");
+
+[proc,pest_solo_lose](string $why)
+~pest_solo_end;
+~mesbox("<$why>|You earn no commendation points.");
+
+// EVERY NPC IS DELETED BY HAND BEFORE THE INSTANCE GOES, and that is not belt-and-braces:
+// instance_delete does NOT remove the npcs standing in it. tools/sim/pestsolo.ts proved it - after
+// one game ended, its four portals and its Void Knight were still in the world, and the NEXT game
+// counted eight portals, so the knight drained twice as fast and the island filled with orphans
+// that only expire when their 30000-tick duration runs out.
+//
+// NOTE THE UID, FINISH ITERATING, THEN DELETE. npc_findallany hands back an NpcIterator over the
+// LIVE world rather than a snapshot (engine: NpcOps NPC_FINDALLANY -> new NpcIterator), so deleting
+// inside the findnext loop would be deleting from under the thing walking it - and this dialect has
+// no `break` to leave the loop early with (nothing in the build uses one; the compiler warns
+// "Value is discarded"). So each pass reads the whole search, remembers the FIRST npc it wants
+// gone, and deletes it once the loop is over. Then it searches again.
+//
+// The cap is what stops a bad day becoming an infinite loop: 4 portals + 1 knight + 8 pests is 13,
+// and 64 is comfortably past any state this game can reach.
+[proc,pest_solo_clear_npcs]
+def_int $guard = 0;
+while ($guard < 64) {
+    $guard = add($guard, 1);
+    def_npc_uid $target = null;
+    npc_findallany(~pest_solo_at(^pest_solo_knight_coord), 64, ^vis_off);
+    while (npc_findnext = true) {
+        if ($target = null
+                & instance_find(npc_coord) = %pest_solo_instance
+                & (npc_param(pest_tier) ! null | npc_param(pest_portal) ! null
+                   | npc_type = pest_voidknight_control1)) {
+            $target = npc_uid;
+        }
+    }
+    if ($target = null) {
+        return;
+    }
+    if (npc_finduid($target) = true) {
+        npc_del;
+    }
+}
+
+[proc,pest_solo_end]
+if (%pest_solo_instance = null) {
+    return;
+}
+cleartimer(pest_solo_tick);
+~pest_solo_clear_npcs;
+def_coord $inst = %pest_solo_instance;
+%pest_solo_instance = null;
+%pest_solo_ticks = 0;
+%pest_solo_knight_hp = 0;
+p_teleport(^pest_solo_outside);
+// The player is out before the instance goes: anyone still inside is standing on unallocated
+// collision, which blocks every step they try to take.
+instance_delete($inst);
+
+// Dying on the island. The game is SAFE, as Old School's is - you keep everything - so this runs
+// INSTEAD of the ordinary death, not after it. Same shape as the Fight Cave's own death label, and
+// the guard that sends it here is in [queue,player_death_default] (player/scripts/death.rs2).
+[label,pest_solo_death]
+~player_death;
+mes("Oh dear you are dead!");
+mes("The Void Knights pull you back to the outpost.");
+~combat_clearqueue;
+clearqueue(player_death_default);
+~prayer_deactivate_all;
+~pest_solo_lose("You were overrun.");
+~stat_reset_all;
+healenergy(10000);
+~clear_poison;
+anim(null, 0);
+p_stopaction;
+
+[proc,in_pest_solo](coord $coord)(boolean)
+if (%pest_solo_instance = null) {
+    return(false);
+}
+if (instance_find($coord) = %pest_solo_instance) {
+    return(true);
+}
+return(false);

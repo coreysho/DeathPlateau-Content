@@ -70,6 +70,11 @@ if (p_finduid(uid) = true) {
     } else if($obj = ibanstaff) {
         // https://youtu.be/n_ip_vEDbCA?si=0uESoOC98Fvl7HqS&t=2333
         mes("You equip the staff of Iban.");
+    } else if($obj = amulet_of_chemistry) {
+        // Gives a fresh amulet its five charges. Idempotent - it only writes when the count reads
+        // zero - so putting a part-used one back on does not refill it.
+        // skill_herblore/scripts/amulet_of_chemistry.rs2
+        ~chemistry_on_equip;
     }
 
     ~update_all($previous_weapon);

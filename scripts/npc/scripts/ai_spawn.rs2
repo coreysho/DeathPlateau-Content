@@ -1,3 +1,18 @@
 [ai_spawn,_]
 %npc_combat_xp_multiplier = npc_param(combat_xp_multiplier);
 %npc_start_coord = npc_coord;
+// Which way it stands, for the npcs that care - see npc/configs/npc_spawn.param. The default of -1
+// leaves the npc facing south, as every npc did before this existed.
+~npc_spawn_face(npc_param(spawn_face));
+
+// A spawn facing, from one of engine.constant's four ^exact_* directions. npc_facesquare sets both
+// faceAngle (what a client is told when it first sees the npc) and faceSquare (a direction update to
+// clients already watching), and nothing resets either until the npc moves or interacts - so an npc
+// that never does keeps this. One that does will face whoever it is talking to, which is right.
+[proc,npc_spawn_face](int $dir)
+switch_int ($dir) {
+    case ^exact_north : npc_facesquare(movecoord(npc_coord, 0, 0, 1));
+    case ^exact_east : npc_facesquare(movecoord(npc_coord, 1, 0, 0));
+    case ^exact_south : npc_facesquare(movecoord(npc_coord, 0, 0, -1));
+    case ^exact_west : npc_facesquare(movecoord(npc_coord, -1, 0, 0));
+}

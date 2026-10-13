@@ -30,6 +30,8 @@ switch_obj($item) {
     case watering_can_8 : ~farming_water($patch, $slot, watering_can_7);
     case watering_can_0 : mes("Your watering can is empty.");
     case gardening_trowel : ~farming_fill_plantpot($patch);
+    // Binds the amulet to this patch rather than doing anything to the crop - amulet_of_nature.rs2.
+    case nature_amulet : ~nature_amulet_bind($patch);
     case default : ~farming_plant($patch, $item);
 }
 
