@@ -1,0 +1,88 @@
+// RECOLOURING AN ABYSSAL WHIP, and taking it back off.
+//
+// Nine colours, bought from the Undertaker for Death tokens - the same shelf the outfit, the cape
+// and the Gravedigger kit come off. Two of the nine are Old School's own (volcanic and frozen),
+// six are originals, and the ninth is the Undertaker's house black-and-bone.
+//
+// THE ITEMS AND THE LOOKUP ARE GENERATED - tools/genwhipcolours.py writes configs/whip_colours.obj
+// and configs/whip_colours.enum. This file is only the two clicks, and it names no colour: adding
+// a tenth is a line in the generator's table and nothing here has to know.
+//
+// NOT THE ORNAMENT-KIT FRAMEWORK, and it was the first thing tried. minigames/game_trail/scripts/
+// ornament_kit.rs2 carries sixteen kits on three params - ornament_kit, ornament_kit2,
+// ornament_kit3 - and the base item names the kits that fit it. Three slots, nine colours: a whip
+// cannot name them all. The graceful recolours hit the same wall and answered it the same way, with
+// the pairing in an enum keyed on a colour number instead of in params on the base item.
+//
+// ONE TRIGGER FOR NINE KITS, ON THE KIT CATEGORY. [opheldu,X] is looked up on both halves of a use
+// and the engine swaps last_item/last_useitem so last_item is always the half that carried the
+// trigger (network/game/client/handler/OpHeldUHandler.ts), so one trigger catches the click
+// whichever way round the player does it.
+
+[opheldu,_whip_kit]
+~whip_recolour(last_item, last_useitem, last_useslot);
+
+// $kit is the kit, $whip what it was used on and $whipslot where that is in the pack.
+[proc,whip_recolour](obj $kit, obj $whip, int $whipslot)
+// ALREADY COLOURED IS CHECKED FIRST, and it is the check that matters. A coloured whip is a copy of
+// the plain record, so it keeps category=weapon_whip and would otherwise pass the test below - and
+// a second kit applied to it would consume the first with no message and no way to get it back.
+// That is the bug the graceful kits shipped with (a Falador kit on a Varrock cape ate 50 marks of
+// dye silently); here the colours are told apart by param=whip_from, which only a copy carries.
+if (oc_param($whip, whip_from) ! null) {
+    mes("That whip is already coloured. Revert it first.");
+    return;
+}
+if (oc_category($whip) ! weapon_whip) {
+    mes("The kit only works on an abyssal whip.");
+    return;
+}
+def_int $colour = oc_param($kit, whip_colour);
+def_namedobj $into = enum(int, namedobj, whip_colour_result, $colour);
+if ($into = null) {
+    // Cannot happen while the generator writes a row per colour, and is a silently swallowed kit
+    // if it ever can.
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, $kit, 1);
+inv_setslot(inv, $whipslot, $into, 1);
+~objbox($into, "You work the dye into the whip.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// Revert
+// ---------------------------------------------------------------------------------------------
+// Hands back BOTH the plain whip and the kit, so a colour can be moved from whip to whip for
+// nothing and a change of mind costs nothing - the same promise ornament_kit.rs2 and the graceful
+// kits make, and the reason none of them needs a confirmation box on the way in.
+//
+// It is also what keeps the results being untradeable from locking anything away: the plain whip
+// that comes back is tradeable again.
+//
+// TWO ITEMS ARRIVE WHERE ONE LEFT, so a full pack needs a free slot. Checked before anything is
+// deleted: the alternative is a kit on the floor, and this is the one place a player would not be
+// looking for it.
+
+// Jumped to from the nine generated triggers in whip_revert.rs2 - see that file for why there are
+// nine of them and not one on a category.
+[label,whip_revert]
+def_obj $item = last_item;
+def_int $slot = last_slot;
+def_namedobj $plain = oc_param($item, whip_from);
+def_int $colour = oc_param($item, whip_colour);
+if ($plain = null | $colour = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_namedobj $kit = enum(int, namedobj, whip_colour_kit, $colour);
+if ($kit = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need a free inventory space to take the colour off.");
+    return;
+}
+inv_setslot(inv, $slot, $plain, 1);
+inv_add(inv, $kit, 1);
+~objbox($kit, "You work the dye back out of the whip.", 250, 0, 0);

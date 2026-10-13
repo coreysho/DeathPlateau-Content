@@ -42,9 +42,14 @@
 // has eight. slayershop has carried stackall=yes with fifty slayer gems for the same reason.
 //
 // restock=yes, one at a time: the shelf refills, so the shop is a tap and not a race.
+//
+// SEVENTEEN ROWS AS OF 13 OCTOBER: the eight he already sold, plus one abyssal whip colour kit per
+// row (areas/area_wilderness/configs/whip_colours.obj, generated). Nine of the seventeen are the
+// whip kits, and they are the first thing on this shelf that is not his own outfit - the ninth,
+// Gravedigger, is black with bone links and is the whip that matches the helmet.
 [death_token_shop]
 scope=shared
-size=8
+size=17
 restock=yes
 stackall=yes
 allstock=no
@@ -56,3 +61,12 @@ stock5=undertaker_boots,1000,1
 stock6=undertaker_cane,1000,1
 stock7=gravedigger_kit,1000,1
 stock8=undertaker_cape,1000,1
+stock9=whip_kit_volcanic,1000,1
+stock10=whip_kit_frozen,1000,1
+stock11=whip_kit_venom,1000,1
+stock12=whip_kit_gilded,1000,1
+stock13=whip_kit_shadow,1000,1
+stock14=whip_kit_bloodbark,1000,1
+stock15=whip_kit_tempest,1000,1
+stock16=whip_kit_bone,1000,1
+stock17=whip_kit_gravedigger,1000,1

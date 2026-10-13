@@ -816,6 +816,15 @@ data=items,undertaker_boots
 data=items,undertaker_cane
 data=items,undertaker_cape
 data=items,gravedigger_kit
+data=items,whip_kit_volcanic
+data=items,whip_kit_frozen
+data=items,whip_kit_venom
+data=items,whip_kit_gilded
+data=items,whip_kit_shadow
+data=items,whip_kit_bloodbark
+data=items,whip_kit_tempest
+data=items,whip_kit_bone
+data=items,whip_kit_gravedigger
 data=items,abyssal_head
 data=items,abyssal_whip
 data=items,black_mask
@@ -1754,7 +1763,7 @@ data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
 
-// The Undertaker: 7 items
+// The Undertaker: 16 items
 [collection_log_death_tokens]
 table=collection_log_entry
 data=name,"The Undertaker"
@@ -1765,6 +1774,15 @@ data=items,undertaker_boots
 data=items,undertaker_cane
 data=items,undertaker_cape
 data=items,gravedigger_kit
+data=items,whip_kit_volcanic
+data=items,whip_kit_frozen
+data=items,whip_kit_venom
+data=items,whip_kit_gilded
+data=items,whip_kit_shadow
+data=items,whip_kit_bloodbark
+data=items,whip_kit_tempest
+data=items,whip_kit_bone
+data=items,whip_kit_gravedigger
 
 // Slayer: 10 items
 [collection_log_slayer]

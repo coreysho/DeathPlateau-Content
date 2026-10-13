@@ -1,0 +1,14 @@
+// Params for the abyssal whip recolours (configs/whip_colours.obj, generated).
+
+// Which of the nine colours this is. Carried by BOTH the kit and the whip it makes, which is what
+// lets the pairing live in an enum rather than in three ornament_kit slots a whip cannot spare.
+[whip_colour]
+type=int
+default=-1
+
+// The plain whip a colour reverts to. Only a coloured whip carries it, so it is also how
+// ~whip_recolour tells a coloured whip from a plain one - see that proc on why that check comes
+// first.
+[whip_from]
+type=namedobj
+default=null
