@@ -448,11 +448,41 @@ fi
 # is easy to deploy content while the engine silently stays behind.
 say "Updating repositories"
 
-# pack/inv.pack is tracked but a build appends to it, so the server always has a local
-# edit that blocks the pull. The committed version is the right one.
-if ! git -C "$CONTENT" diff --quiet -- pack/inv.pack 2>/dev/null; then
-    printf '  discarding local edit to pack/inv.pack (a build appended to it)\n'
-    git -C "$CONTENT" checkout -- pack/inv.pack
+# EVERY pack/*.pack is build output that we also hand-edit, and the build rewrites all of them every
+# time it runs. tools/pack/PackFileBase.save() writes nothing but
+#
+#     Array.from(this.pack.entries()).sort((a, b) => a[0] - b[0])
+#          .map(([id, name]) => `${id}=${name}`).join('\n') + '\n'
+#
+# newline-joined with one at the end, sorted ascending by id. So anything in a committed pack that
+# the packer would not have written - a blank line, a CRLF, a missing final newline, an id out of
+# order - is deleted by the first build on this box, which leaves this checkout DIRTY and makes the
+# NEXT deploy's pull abort before it has done a thing:
+#
+#     error: Your local changes to the following files would be overwritten by merge:
+#             pack/obj.pack
+#             pack/seq.pack
+#     Aborting
+#
+# That is a real deploy, 13 October 2026, and the cause was one blank line in each of those two
+# files. Nobody had touched them here - the previous deploy's own build had. It hides because the
+# build heals the file in whichever working tree ran it, so the repo is only fixed if that file
+# happens to be staged, which is exactly how obj.pack got fixed in passing and seq.pack did not.
+#
+# A pack difference in THIS checkout is therefore always build output and never anything worth
+# keeping, so the committed version wins. The files are named as they go, because a deploy quietly
+# throwing work away would be worse than the abort it replaces.
+#
+# This grew out of a version that did pack/inv.pack alone. rs2check rule 25 now refuses a pack file
+# committed in a form the build would rewrite, so this should never find anything again - it stays
+# because the cost of being wrong about that is a deploy that stops half way through.
+PACKS_DIRTY=$(git -C "$CONTENT" diff HEAD --name-only -- 'pack/*.pack' 2>/dev/null || true)
+if [ -n "$PACKS_DIRTY" ]; then
+    printf '  discarding local edits to %s pack file(s) - a build on this box rewrote them:\n' \
+        "$(printf '%s\n' "$PACKS_DIRTY" | wc -l)"
+    printf '%s\n' "$PACKS_DIRTY" | sed 's/^/    /'
+    # HEAD rather than the index: a merge aborts over a staged change too, and nothing here stages.
+    printf '%s\n' "$PACKS_DIRTY" | xargs git -C "$CONTENT" checkout HEAD --
 fi
 
 # (dev) the dev world's watcher rebuilds into pack/ too, and --branch switches branch: dev's
