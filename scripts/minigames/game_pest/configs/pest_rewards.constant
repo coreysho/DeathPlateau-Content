@@ -1,0 +1,66 @@
+// THE VOID KNIGHTS' REWARD WINDOW (13 October, Corey: "lets add the void knight exchange to an
+// interface instead of chatbox. copy osrs; allow pts to be exchanged for xp, void knight equipment
+// to be bought").
+//
+// WHY IT WAS A DIALOGUE, and why that reason stopped applying. The exchange was chat menus because
+// ~openshop trades objs for coins out of a stock inv and commendation points are a varp - there is
+// nothing for a shop interface to take. That is still true, and it is not what this is: this is a
+// REWARD window of the same family as the Slayer one (skill_slayer/scripts/slayer_window.rs2),
+// which has the same problem and solves it by drawing its own rows rather than being a shop.
+//
+// SO IT IS THE SLAYER WINDOW'S SHAPE, down to the generator: tools/genvoidui.py writes the
+// interface and the plumbing the way tools/genslayerui.py does, both of them off genmenus' shared
+// frame, and the rewards themselves stay data in configs/pest_rewards.enum. That is three
+// generators sharing one frame and one id space now.
+
+// The two tabs. Old School's window has more - resource packs, the void seal, the elite upgrades -
+// and every one of them is left out for the same reason: the ITEM does not exist in this cache.
+// obj.pack has the seven pieces below and nothing else of the set, so a Packs tab would be a tab
+// of things that cannot be handed over. See the note in pest_rewards.enum.
+^pest_tab_xp = 0
+^pest_tab_gear = 1
+^pest_tabs = 2
+
+// The longest list either tab shows - seven skills, seven items - so no tab needs a page.
+^pest_ui_rows = 7
+
+// The click bound. Same reasoning as ^slayer_ui_clicks: a menu loop that cannot end would hang the
+// player's script, and the engine spends ONE opcode budget on a whole window session.
+^pest_ui_clicks = 128
+
+// The three row colours: at rest, under the pointer, and selected. The Slayer window's, because
+// two reward windows that look different for no reason is just two windows.
+^pest_ui_row_off = 0x4A3F31
+^pest_ui_row_hover = 0x6F6250
+^pest_ui_row_on = 0x8C7F63
+^pest_ui_tab_off = 0x3E3529
+^pest_ui_tab_on = 0x6F6250
+
+// ---------------------------------------------------------------------------------------------
+// Experience
+// ---------------------------------------------------------------------------------------------
+// OLD SCHOOL'S OWN FORMULA, from the Void Knights' Reward Options page:
+//
+//     xp per point = floor(level * level / 600) * N
+//
+// with N = 35 for Attack, Strength, Defence and Hitpoints, 32 for Ranged and Magic, and 18 for
+// Prayer. The multipliers are in pest_rewards.enum beside the skills they belong to; the 600 and
+// the level are here.
+//
+// THE LEVEL IS THE BASE LEVEL, not the boosted one - a potion must not pay experience.
+^pest_xp_divisor = 600
+
+// Below 25 the formula pays floor(24*24/600) = 0, so Old School refuses the trade outright rather
+// than taking a point for nothing. Checking it is what makes the refusal a sentence instead of a
+// silent no-op.
+^pest_xp_min_level = 25
+
+// THE BATCHES, and the bonus for using them. Old School sells experience 1, 10 or 100 points at a
+// time and pays 1% extra on ten and 10% extra on a hundred - the only thing in the window that
+// rewards saving points up rather than spending them as they arrive.
+^pest_xp_batch_one = 1
+^pest_xp_batch_ten = 10
+^pest_xp_batch_hundred = 100
+^pest_xp_bonus_ten = 1
+^pest_xp_bonus_hundred = 10
+^pest_xp_batches = 3
