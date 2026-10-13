@@ -230,6 +230,11 @@ while ($count >= 0) {
     $count = calc($count - 1);
 }
 
+// THE SAME TWO KINDS OF TABLE as the pickpocket column above, and the same rule. Every chest in
+// the game is the guaranteed kind today - all six rows carry weight 128, which is how the Ardougne
+// castle chest pays its coins AND its shark AND its ore AND its sapphire - so this walk has never
+// over-paid anybody. It would have the moment somebody wrote a weighted chest, the way the H.A.M.
+// member's thirty-six rows did, so it is given the same guard rather than left as a trap.
 [proc,trapped_chest_check_for_reward](dbrow $data)
 def_int $count = calc(db_getfieldcount($data, trapped_chest:loot) - 1);
 def_int $reward_rarity_denominator = 128;
@@ -240,12 +245,18 @@ while ($count >= 0) {
     def_int $reward_rarity_numerator;
     $reward, $reward_quantity_min, $reward_quantity_max, $reward_rarity_numerator = db_getfield($data, trapped_chest:loot, $count);
 
-    def_int $roll = random($reward_rarity_denominator);
-    $reward_rarity_denominator = sub($reward_rarity_denominator, $reward_rarity_numerator);
-    if ($roll >= $reward_rarity_denominator) {
-        def_int $quantity_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
-        // Trapped chests can reward more than 1.
-        inv_add(inv, $reward, $quantity_roll);
+    if ($reward_rarity_numerator >= $reward_rarity_denominator) {
+        // Trapped chests can reward more than one KIND of thing, when every row is guaranteed.
+        def_int $always_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
+        inv_add(inv, $reward, $always_roll);
+    } else {
+        def_int $roll = random($reward_rarity_denominator);
+        $reward_rarity_denominator = sub($reward_rarity_denominator, $reward_rarity_numerator);
+        if ($roll >= $reward_rarity_denominator) {
+            def_int $quantity_roll = ~random_range($reward_quantity_min, $reward_quantity_max);
+            inv_add(inv, $reward, $quantity_roll);
+            return;
+        }
     }
 
     $count = calc($count - 1);
