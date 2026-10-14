@@ -9,8 +9,9 @@
 // for the whole model, and scripts/mourning2_doors.rs2 (generated) for which door reads which beam.
 
 // =========================================================================== the sockets
-// Four bits per pillar: 0 empty, 1-4 a mirror in one of its rotations, 5-9 a crystal. Seven
-// pillars to a varp, the first two being the cache's own mourning_temple_mirrors_a and _b.
+// Five bits per pillar: 0 empty, 1-4 a mirror lying flat in one of its rotations, 5-9 a crystal,
+// 10-17 a mirror tilted to send a beam up or down. Six pillars to a varp, the first two blocks
+// being the cache's own mourning_temple_mirrors_a and _b.
 [proc,mt_socket_read](int $pillar)(int)
 def_int $i = sub($pillar, 1);
 def_int $lo = multiply(modulo($i, ^mt_sockets_per_varp), ^mt_socket_bits);
@@ -21,6 +22,7 @@ switch_int (divide($i, ^mt_sockets_per_varp)) {
     case 2 : return(getbit_range(%mourning_temple_sockets_c, $lo, $hi));
     case 3 : return(getbit_range(%mourning_temple_sockets_d, $lo, $hi));
     case 4 : return(getbit_range(%mourning_temple_sockets_e, $lo, $hi));
+    case 5 : return(getbit_range(%mourning_temple_sockets_f, $lo, $hi));
 }
 return(^mt_socket_empty);
 
@@ -34,27 +36,69 @@ switch_int (divide($i, ^mt_sockets_per_varp)) {
     case 2 : %mourning_temple_sockets_c = setbit_range_toint(%mourning_temple_sockets_c, $value, $lo, $hi);
     case 3 : %mourning_temple_sockets_d = setbit_range_toint(%mourning_temple_sockets_d, $value, $lo, $hi);
     case 4 : %mourning_temple_sockets_e = setbit_range_toint(%mourning_temple_sockets_e, $value, $lo, $hi);
+    case 5 : %mourning_temple_sockets_f = setbit_range_toint(%mourning_temple_sockets_f, $value, $lo, $hi);
 }
 
-// Returns the rotation PLUS ONE, so that zero can mean "no mirror on this pillar".
+// The socket's value if there is a MIRROR in it, flat or tilted, and 0 if there is not. (It used to
+// return the rotation plus one, which could not describe a tilted mirror at all.)
 [proc,mt_mirror_at](int $pillar)(int)
 def_int $v = ~mt_socket_read($pillar);
 if ($v >= ^mt_socket_mirror & $v < ^mt_socket_crystal) {
-    return(add(sub($v, ^mt_socket_mirror), 1));
+    return($v);
+}
+if ($v >= ^mt_socket_tilt) {
+    return($v);
 }
 return(0);
+
+// The rotation of a FLAT mirror, 0 to 3, or -1 for anything else.
+[proc,mt_mirror_flat](int $pillar)(int)
+def_int $v = ~mt_socket_read($pillar);
+if ($v >= ^mt_socket_mirror & $v < ^mt_socket_crystal) {
+    return(sub($v, ^mt_socket_mirror));
+}
+return(-1);
 
 // The colour of the crystal in this socket, or dark for "no crystal".
 [proc,mt_crystal_at](int $pillar)(int)
 def_int $v = ~mt_socket_read($pillar);
-if ($v >= ^mt_socket_crystal) {
+if ($v >= ^mt_socket_crystal & $v < ^mt_socket_tilt) {
     return(add(sub($v, ^mt_socket_crystal), 1));
 }
 return(^mt_colour_dark);
 
-// Silvered on one side, so three of the four rotations do nothing to any given beam.
-[proc,mt_reflect](int $rot, int $dir)(int)
-switch_int ($rot) {
+[proc,mt_opposite](int $dir)(int)
+switch_int ($dir) {
+    case ^mt_dir_north : return(^mt_dir_south);
+    case ^mt_dir_south : return(^mt_dir_north);
+    case ^mt_dir_east : return(^mt_dir_west);
+    case ^mt_dir_west : return(^mt_dir_east);
+    case ^mt_dir_up : return(^mt_dir_down);
+    case ^mt_dir_down : return(^mt_dir_up);
+}
+return(0);
+
+// WHAT A MIRROR DOES TO A BEAM, and it is silvered on one face, so each setting turns exactly one
+// corner - two transitions, one each way along it, and every other direction hits the back and
+// stops. A flat mirror turns a corridor into the corridor beside it. A tilted one turns a corridor
+// into the shaft above or below it, which is the whole of the third dimension.
+[proc,mt_mirror_turn](int $socket, int $dir)(int)
+if ($socket >= ^mt_socket_tilt) {
+    def_int $i = sub($socket, ^mt_socket_tilt);
+    def_int $lift = add(divide($i, 2), 1);
+    def_int $vert = ^mt_dir_up;
+    if (modulo($i, 2) = 1) {
+        $vert = ^mt_dir_down;
+    }
+    if ($dir = $lift) {
+        return($vert);
+    }
+    if ($dir = ~mt_opposite($vert)) {
+        return(~mt_opposite($lift));
+    }
+    return(0);
+}
+switch_int (sub($socket, ^mt_socket_mirror)) {
     case 0 :
         if ($dir = ^mt_dir_east) { return(^mt_dir_north); }
         if ($dir = ^mt_dir_south) { return(^mt_dir_west); }
@@ -69,6 +113,37 @@ switch_int ($rot) {
         if ($dir = ^mt_dir_north) { return(^mt_dir_west); }
 }
 return(0);
+
+[proc,mt_dir_name](int $dir)(string)
+switch_int ($dir) {
+    case ^mt_dir_north : return("north");
+    case ^mt_dir_east : return("east");
+    case ^mt_dir_south : return("south");
+    case ^mt_dir_west : return("west");
+    case ^mt_dir_up : return("up");
+    case ^mt_dir_down : return("down");
+}
+return("nowhere");
+
+// How a socket reads out loud, for Search and for the collector.
+[proc,mt_socket_name](int $pillar)(string)
+def_int $v = ~mt_socket_read($pillar);
+if ($v = ^mt_socket_empty) {
+    return("an empty socket");
+}
+if ($v >= ^mt_socket_tilt) {
+    def_int $i = sub($v, ^mt_socket_tilt);
+    def_string $way = "up";
+    if (modulo($i, 2) = 1) {
+        $way = "down";
+    }
+    return(append(append("a mirror tilted to send the light travelling ",
+        ~mt_dir_name(add(divide($i, 2), 1))), append(" ", $way)));
+}
+if ($v >= ^mt_socket_crystal) {
+    return(append(append("a ", ~mt_colour_name(~mt_crystal_at($pillar))), " crystal"));
+}
+return("a mirror lying flat");
 
 // =========================================================================== the colours
 // The cache's numbering is a colour wheel; the arithmetic is done on a three-bit mask.
@@ -135,6 +210,12 @@ return(null);
 // out of the hole in the west wall. Every segment and every pillar it touches is lit in the colour
 // it is carrying at that point, and those varbits are transmitted, so the client draws exactly the
 // path - and the colour - the server walked.
+//
+// THE WALK IS IN THREE DIMENSIONS. Up and down are directions 5 and 6 and the graph has edges for
+// them: the pillars stack, so the same room on the floor above is a vertical neighbour, and the
+// beam between them is the lower pillar's own _up varbit. The shaft - floor 3 pillar a dropping two
+// floors onto floor 1 pillar b - used to be a hardcoded branch in here and is now simply the one
+// vertical edge that skips a floor.
 [proc,mt_trace]()(boolean)
 ~m2_dark;
 ~m2_pillars_dark;
@@ -146,10 +227,9 @@ def_int $steps = 0;
 while ($steps < ^mt_trace_steps) {
     $steps = add($steps, 1);
     // WHAT IS IN THIS PILLAR'S SOCKET comes first, before the beam goes anywhere, because the
-    // shaft pillars have sockets too. The first version did the shaft drop first and then the
-    // socket, which skipped the socket of the pillar at the bottom of the shaft entirely - and
-    // that pillar is the last one the beam passes before it leaves by the hole in the wall, so a
-    // crystal in it was the one crystal placement in the building that did nothing.
+    // shaft pillars have sockets too. A first version did the shaft drop first and then the socket,
+    // which skipped the socket of the pillar at the bottom of the shaft entirely - and that pillar
+    // is the last one the beam passes before it leaves by the hole in the wall.
     def_int $crystal = ~mt_crystal_at($p);
     if ($crystal > ^mt_colour_dark) {
         $c = ~mt_filter($c, $crystal);
@@ -160,34 +240,25 @@ while ($steps < ^mt_trace_steps) {
             return(false);
         }
     } else {
-        def_int $rot = ~mt_mirror_at($p);
-        if ($rot > 0) {
-            $d = ~mt_reflect(sub($rot, 1), $d);
+        def_int $mirror = ~mt_mirror_at($p);
+        if ($mirror > 0) {
+            $d = ~mt_mirror_turn($mirror, $d);
             if ($d = 0) {
                 // The back of the mirror. The beam stops here.
                 return(false);
             }
         }
     }
-    // The shaft is a chute, not a junction: light that reaches the top-floor shaft pillar falls two
-    // floors onto the same tile and leaves west along the bottom corridor. The drop is not a move
-    // along a corridor, so it takes a step of its own and the socket below gets its turn.
-    if ($p = ^mt_pillar_shaft_top) {
-        $p = ^mt_pillar_shaft_bottom;
-        $d = ^mt_dir_west;
-        ~m2_pillar_up($p, $c);
-    } else {
-        def_int $next = ~m2_edge($p, $d, $c);
-        if ($next = 0) {
-            // Out of the temple. Out of the west wall on the bottom floor is the one that counts.
-            if ($p = ^mt_pillar_shaft_bottom & $d = ^mt_dir_west) {
-                return(true);
-            }
-            return(false);
+    def_int $next = ~m2_edge($p, $d, $c);
+    if ($next = 0) {
+        // Out of the temple. Out of the west wall on the bottom floor is the one that counts.
+        if ($p = ^mt_pillar_shaft_bottom & $d = ^mt_dir_west) {
+            return(true);
         }
-        $p = $next;
-        ~m2_pillar_up($p, $c);
+        return(false);
     }
+    $p = $next;
+    ~m2_pillar_up($p, $c);
 }
 return(false);
 
@@ -567,20 +638,63 @@ if ($crystal > ^mt_colour_dark) {
     return;
 }
 if (~mt_mirror_at($pillar) > 0) {
-    if (inv_total(inv, mourning_mirror) > 0) {
-        @mt_place_mirror($pillar);
-    }
-    ~mesbox("A hand mirror is set in the socket at head height, turned to catch the light from one side. Using it, or using another mirror on it, turns it a quarter.");
-    return;
+    @mt_mirror_menu($pillar);
 }
 if (inv_total(inv, mourning_mirror) > 0) {
     @mt_place_mirror($pillar);
 }
 ~mesbox("An octagonal pillar with an empty socket at head height. A small hand mirror would fit it, and so would one of the crystals.");
 
-// A mirror goes in at rotation 0 and each further click turns it a quarter; after the fourth it
-// comes back out. The mirror itself leaves the inventory while it is in the socket, because there
-// are only so many mirrors in the building and the whole puzzle is about having too few.
+// WHAT YOU CAN DO WITH A MIRROR THAT IS ALREADY IN A SOCKET. Four flat rotations was a click each;
+// tilting adds eight more settings, and clicking through twelve of them is not an interface. The
+// cache has no mirror interface at all - the pillars carry Search and nothing else - so this is the
+// chat options the engine has, which is how 2006 asked a question with more than two answers.
+[label,mt_mirror_menu](int $pillar)
+def_int $socket = ~mt_mirror_at($pillar);
+~mesbox("In the socket at head height: <~mt_socket_name($pillar)>.");
+switch_int (~p_choice4("Turn it a quarter turn.", 1, "Tilt it to send a beam up.", 2, "Tilt it to send a beam down.", 3, "Take it out.", 4)) {
+    case 1 :
+        def_int $rot = ~mt_mirror_flat($pillar);
+        if ($rot < 0) {
+            // it is tilted: a quarter turn lays it flat again
+            ~mt_socket_write($pillar, ^mt_socket_mirror);
+            mes("You lay the mirror flat again.");
+            ~mt_relight;
+            return;
+        }
+        ~mt_socket_write($pillar, add(^mt_socket_mirror, modulo(add($rot, 1), 4)));
+        mes("You turn the mirror a quarter turn.");
+        ~mt_relight;
+        return;
+    case 2 : @mt_tilt_mirror($pillar, 0);
+    case 3 : @mt_tilt_mirror($pillar, 1);
+    case 4 :
+        if (inv_freespace(inv) = 0) {
+            ~mesbox("Your hands are too full to take it back.");
+            return;
+        }
+        ~mt_socket_write($pillar, ^mt_socket_empty);
+        inv_add(inv, mourning_mirror, 1);
+        mes("You take the mirror back out.");
+        ~mt_relight;
+        return;
+}
+
+// Which beam goes through the floor or the ceiling: the walkthrough says it the same way round -
+// "point Mirror #5 so the western light points down" - so the question is which travelling beam.
+[label,mt_tilt_mirror](int $pillar, int $down)
+def_int $dir = ~p_choice4("The beam travelling north.", ^mt_dir_north, "The beam travelling east.", ^mt_dir_east, "The beam travelling south.", ^mt_dir_south, "The beam travelling west.", ^mt_dir_west);
+~mt_socket_write($pillar, add(add(^mt_socket_tilt, multiply(sub($dir, 1), 2)), $down));
+def_string $way = "up";
+if ($down = 1) {
+    $way = "down";
+}
+mes("You tilt the mirror: a beam travelling <~mt_dir_name($dir)> will go <$way>.");
+~mt_relight;
+
+// A mirror goes in flat and each further click turns it a quarter; after the fourth it comes back
+// out. The mirror itself leaves the inventory while it is in the socket, because there are only so
+// many mirrors in the building and the whole puzzle is about having too few.
 [label,mt_place_mirror](int $pillar)
 if (%mourning_quest_main < ^mt_inside) {
     ~mesbox("An octagonal pillar with a socket at head height, and no reason yet to put anything in it.");
@@ -590,31 +704,41 @@ if (~mt_crystal_at($pillar) > ^mt_colour_dark) {
     ~mesbox("There is a crystal in this socket. One thing at a time.");
     return;
 }
-def_int $rot = ~mt_mirror_at($pillar);
-if ($rot = 0) {
-    if (inv_total(inv, mourning_mirror) = 0) {
-        ~mesbox("You have no mirror to put in it.");
+// USING A MIRROR ON AN OCCUPIED SOCKET IS STILL A QUARTER TURN, because that is the quick way to
+// work a corner and it is how the puzzle was played: click, look, click. The full set of settings -
+// the eight tilts - is on Search, which is the op the pillar actually carries.
+def_int $already = ~mt_mirror_at($pillar);
+if ($already > 0) {
+    def_int $rot = ~mt_mirror_flat($pillar);
+    if ($rot < 0) {
+        ~mt_socket_write($pillar, ^mt_socket_mirror);
+        mes("You lay the tilted mirror flat again.");
+        ~mt_relight;
         return;
     }
-    inv_del(inv, mourning_mirror, 1);
-    ~mt_socket_write($pillar, ^mt_socket_mirror);
-    mes("You set the mirror in the socket.");
+    if ($rot >= 3) {
+        if (inv_freespace(inv) = 0) {
+            ~mesbox("Your hands are too full to take it back.");
+            return;
+        }
+        ~mt_socket_write($pillar, ^mt_socket_empty);
+        inv_add(inv, mourning_mirror, 1);
+        mes("You take the mirror back out.");
+        ~mt_relight;
+        return;
+    }
+    ~mt_socket_write($pillar, add(^mt_socket_mirror, add($rot, 1)));
+    mes("You turn the mirror a quarter turn.");
     ~mt_relight;
     return;
 }
-if ($rot >= 4) {
-    if (inv_freespace(inv) = 0) {
-        ~mesbox("Your hands are too full to take it back.");
-        return;
-    }
-    ~mt_socket_write($pillar, ^mt_socket_empty);
-    inv_add(inv, mourning_mirror, 1);
-    mes("You take the mirror back out.");
-    ~mt_relight;
+if (inv_total(inv, mourning_mirror) = 0) {
+    ~mesbox("You have no mirror to put in it.");
     return;
 }
-~mt_socket_write($pillar, add(^mt_socket_mirror, $rot));
-mes("You turn the mirror a quarter turn.");
+inv_del(inv, mourning_mirror, 1);
+~mt_socket_write($pillar, ^mt_socket_mirror);
+mes("You set the mirror in the socket.");
 ~mt_relight;
 
 // A crystal goes in and the beam that passes the pillar comes out its colour. Using the same

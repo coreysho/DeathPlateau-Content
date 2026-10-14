@@ -9,7 +9,12 @@ Writes:
 
 WHERE EACH PART COMES FROM, because the two halves have different sources:
 
-  The EDGE TABLE is read back out of the existing mourning2_graph.rs2 and re-emitted. It was
+  The VERTICAL EDGES are derived here, from the pillar table in the file's own header: the pillars
+  stack, so the same room on the next floor up is a vertical neighbour, and the beam between them is
+  the lower pillar's _up varbit. They are rebuilt on every run, so this is the file to change if the
+  third dimension is ever wrong.
+
+  The HORIZONTAL EDGE TABLE is read back out of the existing mourning2_graph.rs2 and re-emitted. It was
   extracted from maps/m29_72.jm2 once - every edge is the real run of mourning_light_temple_beam_*
   tiles between two real pillars - and that extraction is not repeated here, because re-deriving a
   graph that is already correct and already verified symmetric (86 edges) only risks disagreeing
@@ -68,6 +73,39 @@ def write(path, text):
 
 
 # --------------------------------------------------------------------------- the edge table
+def parse_pillars_header(header):
+    """pillar id -> (floor, room) off the header table the extractor wrote."""
+    out = {}
+    for m in re.finditer(r'// (\d+)\s+floor (\d) pillar ([0-9a-z]+)\s', header):
+        out[int(m.group(1))] = (int(m.group(2)), m.group(3))
+    return out
+
+
+def vertical_edges(pillars, ups):
+    """THE THIRD DIMENSION, derived rather than measured: the pillars stack - floor 1 room 3 is on
+    (42,57) and so are floor 2 room 3 and floor 3 room 3 - so a vertical edge is the same room on
+    the next floor up, where both pillars exist. The beam between them is the LOWER pillar's
+    <floor>_<room>_up varbit, which is also the varbit its own loc renders, because the cache's lit
+    pillar model is a pillar with light going up out of it.
+
+    The shaft is the one exception and the one the old trace hardcoded: floor 3 pillar a drops two
+    floors onto floor 1 pillar b, with no floor 2 pillar in between."""
+    byroom = {}
+    for pid, (floor, room) in pillars.items():
+        byroom[(floor, room)] = pid
+    edges = {}
+    for pid, (floor, room) in sorted(pillars.items()):
+        above = byroom.get((floor + 1, room))
+        if above is None:
+            continue
+        seg = ups.get(pid)
+        edges[(pid, 5)] = ([seg] if seg else [], above)
+        edges[(above, 6)] = ([seg] if seg else [], pid)
+    # the shaft, which is a chute and not a corridor
+    edges[(29, 6)] = ([], 6)
+    return edges
+
+
 def parse_graph(src):
     """(pillar, dir) -> ([segment varbit, ...], next pillar), plus the three list procs."""
     edges = {}
@@ -288,10 +326,17 @@ def parse_pillars(src):
 def main():
     src = read(GRAPH)
     edges, dark, ups, pdark, header = parse_graph(src)
-    print('  edge table: %d edges over %d pillars, %d segments cleared, %d pillars lit'
-          % (len(edges), len({p for p, _ in edges}), len(dark), len(ups)))
+    horizontal = len(edges)
+    pillars = parse_pillars_header(header)
+    assert len(pillars) == 35, 'parsed %d pillars from the header' % len(pillars)
+    # a re-run must not double-count: the vertical edges are derived, so they are rebuilt every time
+    edges = {k: v for k, v in edges.items() if k[1] <= 4}
+    horizontal = len(edges)
+    edges.update(vertical_edges(pillars, ups))
+    print('  edge table: %d horizontal edges, %d vertical, over %d pillars; %d segments cleared'
+          % (horizontal, len(edges) - horizontal, len({p for p, _ in edges}), len(dark)))
     # symmetry is the check that the extraction was right, and it has to stay true
-    opposite = {1: 3, 2: 4, 3: 1, 4: 2}
+    opposite = {1: 3, 2: 4, 3: 1, 4: 2, 5: 6, 6: 5}
     for (p, d), (_, n) in edges.items():
         if n and (n, opposite[d]) not in edges:
             # The shaft is a chute, not a corridor: floor 3 pillar a takes the light and

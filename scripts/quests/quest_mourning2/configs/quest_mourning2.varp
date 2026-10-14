@@ -13,3 +13,8 @@ scope=perm
 
 [mourning_temple_sockets_e]
 scope=perm
+
+// The fourth block. Five bits a socket and six sockets a varp means six blocks for thirty-five
+// pillars, and the first two are the cache's own mourning_temple_mirrors_a and _b.
+[mourning_temple_sockets_f]
+scope=perm

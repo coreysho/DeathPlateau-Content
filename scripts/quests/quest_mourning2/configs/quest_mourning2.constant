@@ -38,10 +38,18 @@
 //   3   travelling east  -> south     travelling north -> west
 //
 // A pillar with no mirror lets the beam straight through. That is the whole rule.
+//
+// AND IT GOES UP AND DOWN. A mirror tilted on its side takes a beam travelling along a corridor and
+// sends it through the ceiling, or through the floor, and the cache is explicit about it: there are
+// 43 mourning_light_temple_<floor>_<room>_up varbits, three bits each, one per pillar, and the ten
+// mourning_pillar_light_cross_* tiles are 28-state enums whose children include a VERTICAL beam in
+// each of the seven colours. Three floors of sixteen rooms is one puzzle, not three.
 ^mt_dir_north = 1
 ^mt_dir_east = 2
 ^mt_dir_south = 3
 ^mt_dir_west = 4
+^mt_dir_up = 5
+^mt_dir_down = 6
 
 ^mt_pillar_shaft_top = 29      // floor 3 pillar a, the shaft head at (25,31)
 ^mt_pillar_shaft_bottom = 6    // floor 1 pillar b, the same tile two floors down
@@ -86,17 +94,30 @@
 ^mt_mask_all = 7
 
 // ---------------------------------------------------------------------------- the sockets
-// One socket per pillar, four bits each: 0 empty, 1-4 a hand mirror in one of its four rotations,
-// 5-9 a crystal. Thirty-five pillars at four bits is 140 bits, which is five lots of seven - seven
-// rather than eight so that no socket ever straddles a varp's sign bit.
+// One socket per pillar, FIVE bits each:
 //
-// The first two blocks are the cache's own mourning_temple_mirrors_a and _b, which are perm-scoped
-// varps that exist for nothing else; the other three are in configs/quest_mourning2.varp.
+//    0       empty
+//    1-4     a hand mirror lying flat, in one of its four rotations
+//    5-9     a crystal: red, yellow, green, cyan, blue
+//    10-17   a hand mirror tilted: ^mt_socket_tilt + (direction - 1) * 2, + 1 for down
+//    18-19   spare, for the two fractured crystals
+//
+// A FLAT MIRROR TAKES THE BEAM ROUND A CORNER; A TILTED ONE TAKES IT THROUGH THE CEILING. Tilted
+// states are a pair (direction, up or down) and mean "the beam travelling that way goes up (or
+// down)" - which is how the walkthrough says it: "point Mirror #5 so the western light points down".
+// Each state carries two transitions, because a mirror is reversible: tilt(north, up) sends a beam
+// travelling north upwards, and a beam coming down southwards.
+//
+// Thirty-five pillars at five bits is 175 bits, which is six lots of six (36 slots, one spare) -
+// six rather than seven so that no socket ever straddles a varp's sign bit. The first two blocks
+// are the cache's own mourning_temple_mirrors_a and _b, which are perm-scoped varps that exist for
+// nothing else; the other four are in configs/quest_mourning2.varp.
 ^mt_socket_empty = 0
 ^mt_socket_mirror = 1          // ^mt_socket_mirror + rotation, rotations 0-3
 ^mt_socket_crystal = 5         // ^mt_socket_crystal + colour - 1, colours 1-5 (red to blue)
-^mt_sockets_per_varp = 7
-^mt_socket_bits = 4
+^mt_socket_tilt = 10           // ^mt_socket_tilt + (dir - 1) * 2, and + 1 for down
+^mt_sockets_per_varp = 6
+^mt_socket_bits = 5
 ^mt_pillars = 35
 
 // What a chest pays out. The walkthrough has five chests giving two mirrors each (the last gives

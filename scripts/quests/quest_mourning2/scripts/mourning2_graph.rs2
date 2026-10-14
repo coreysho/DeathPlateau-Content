@@ -65,6 +65,9 @@ switch_int ($pillar) {
             %mourning_light_temple_1_3_west = $colour;
             %mourning_light_temple_1_1_east = $colour;
             return(1);
+        case 5 :
+            %mourning_light_temple_1_3_up = $colour;
+            return(14);
         }
     case 3 :
         switch_int ($dir) {
@@ -80,12 +83,18 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_1_6_west = $colour;
             return(0);
+        case 5 :
+            %mourning_light_temple_1_6_up = $colour;
+            return(16);
         }
     case 4 :
         switch_int ($dir) {
         case 4 :
             %mourning_light_temple_1_6_7 = $colour;
             return(3);
+        case 5 :
+            %mourning_light_temple_1_7_up = $colour;
+            return(17);
         }
     case 6 :
         switch_int ($dir) {
@@ -105,6 +114,9 @@ switch_int ($pillar) {
         case 3 :
             %mourning_light_temple_1_10_14 = $colour;
             return(11);
+        case 5 :
+            %mourning_light_temple_1_10_up = $colour;
+            return(19);
         }
     case 8 :
         switch_int ($dir) {
@@ -120,6 +132,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_1_10_11 = $colour;
             return(7);
+        case 5 :
+            %mourning_light_temple_1_11_up = $colour;
+            return(20);
         }
     case 9 :
         switch_int ($dir) {
@@ -160,6 +175,9 @@ switch_int ($pillar) {
             %mourning_light_temple_1_16_west = $colour;
             %mourning_light_temple_1_14_east = $colour;
             return(11);
+        case 5 :
+            %mourning_light_temple_1_16_up = $colour;
+            return(22);
         }
     case 13 :
         switch_int ($dir) {
@@ -172,6 +190,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_2_west = $colour;
             return(0);
+        case 5 :
+            %mourning_light_temple_2_2_up = $colour;
+            return(24);
         }
     case 14 :
         switch_int ($dir) {
@@ -184,6 +205,12 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_2_3 = $colour;
             return(13);
+        case 5 :
+            %mourning_light_temple_2_3_up = $colour;
+            return(25);
+        case 6 :
+            %mourning_light_temple_1_3_up = $colour;
+            return(2);
         }
     case 15 :
         switch_int ($dir) {
@@ -193,6 +220,9 @@ switch_int ($pillar) {
         case 2 :
             %mourning_light_temple_2_5_6 = $colour;
             return(16);
+        case 5 :
+            %mourning_light_temple_2_5_up = $colour;
+            return(26);
         }
     case 16 :
         switch_int ($dir) {
@@ -208,6 +238,12 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_5_6 = $colour;
             return(15);
+        case 5 :
+            %mourning_light_temple_2_6_up = $colour;
+            return(27);
+        case 6 :
+            %mourning_light_temple_1_6_up = $colour;
+            return(3);
         }
     case 17 :
         switch_int ($dir) {
@@ -217,6 +253,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_6_7 = $colour;
             return(16);
+        case 6 :
+            %mourning_light_temple_1_7_up = $colour;
+            return(4);
         }
     case 18 :
         switch_int ($dir) {
@@ -232,6 +271,12 @@ switch_int ($pillar) {
         case 2 :
             %mourning_light_temple_2_11_west = $colour;
             return(20);
+        case 5 :
+            %mourning_light_temple_2_10_up = $colour;
+            return(30);
+        case 6 :
+            %mourning_light_temple_1_10_up = $colour;
+            return(7);
         }
     case 20 :
         switch_int ($dir) {
@@ -247,6 +292,12 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_11_west = $colour;
             return(19);
+        case 5 :
+            %mourning_light_temple_2_11_up = $colour;
+            return(31);
+        case 6 :
+            %mourning_light_temple_1_11_up = $colour;
+            return(8);
         }
     case 21 :
         switch_int ($dir) {
@@ -260,6 +311,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_2_15_west = $colour;
             return(0);
+        case 5 :
+            %mourning_light_temple_2_15_up = $colour;
+            return(34);
         }
     case 22 :
         switch_int ($dir) {
@@ -270,6 +324,12 @@ switch_int ($pillar) {
             %mourning_light_temple_2_16_west = $colour;
             %mourning_light_temple_2_15_east = $colour;
             return(21);
+        case 5 :
+            %mourning_light_temple_2_16_up = $colour;
+            return(35);
+        case 6 :
+            %mourning_light_temple_1_16_up = $colour;
+            return(12);
         }
     case 23 :
         switch_int ($dir) {
@@ -291,6 +351,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_1_2 = $colour;
             return(23);
+        case 6 :
+            %mourning_light_temple_2_2_up = $colour;
+            return(13);
         }
     case 25 :
         switch_int ($dir) {
@@ -303,6 +366,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_2_3 = $colour;
             return(24);
+        case 6 :
+            %mourning_light_temple_2_3_up = $colour;
+            return(14);
         }
     case 26 :
         switch_int ($dir) {
@@ -315,6 +381,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_5_west = $colour;
             return(29);
+        case 6 :
+            %mourning_light_temple_2_5_up = $colour;
+            return(15);
         }
     case 27 :
         switch_int ($dir) {
@@ -330,6 +399,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_5_6 = $colour;
             return(26);
+        case 6 :
+            %mourning_light_temple_2_6_up = $colour;
+            return(16);
         }
     case 28 :
         switch_int ($dir) {
@@ -348,6 +420,8 @@ switch_int ($pillar) {
         case 2 :
             %mourning_light_temple_3_10_west = $colour;
             return(30);
+        case 6 :
+            return(6);
         }
     case 30 :
         switch_int ($dir) {
@@ -360,6 +434,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_10_west = $colour;
             return(29);
+        case 6 :
+            %mourning_light_temple_2_10_up = $colour;
+            return(19);
         }
     case 31 :
         switch_int ($dir) {
@@ -375,6 +452,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_10_11 = $colour;
             return(30);
+        case 6 :
+            %mourning_light_temple_2_11_up = $colour;
+            return(20);
         }
     case 32 :
         switch_int ($dir) {
@@ -402,6 +482,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_13_15 = $colour;
             return(33);
+        case 6 :
+            %mourning_light_temple_2_15_up = $colour;
+            return(21);
         }
     case 35 :
         switch_int ($dir) {
@@ -411,6 +494,9 @@ switch_int ($pillar) {
         case 4 :
             %mourning_light_temple_3_15_16 = $colour;
             return(34);
+        case 6 :
+            %mourning_light_temple_2_16_up = $colour;
+            return(22);
         }
 }
 return(0);
