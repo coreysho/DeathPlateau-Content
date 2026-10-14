@@ -163,7 +163,12 @@ data=rune,deathrune
 data=name,Death
 data=talisman,death_talisman
 data=multiplier,131
-data=enter_coord,0_34_75_32_29,0,0,0
+// ONE TILE OFF THE PORTAL, like every other altar. 0_34_75_32_29 is 2208,4829, which is the tile
+// deathtemple_exit_portal stands on - so arriving with a talisman put you inside the portal, on a
+// blocked tile. Air and mind land two tiles north of theirs; this now does the same. Nobody had
+// noticed because the Death Altar could not be reached: its ruins are inside the Temple of Light,
+// which had no way through until Mourning's End Part II was finished.
+data=enter_coord,0_34_75_32_31,0,0,0
 data=exit_coord,0_29_72_6_31,0,0,0
 
 // The Astral altar, on Lunar Isle (area_lunar_isle). Level 82 is this server's choice - Old School's is

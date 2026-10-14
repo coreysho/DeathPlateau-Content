@@ -120,8 +120,10 @@
 [opheld1,twocats_recipe]
     ~mesbox("My favourite recipe  -  Chocolate Cake | 1. Mix flour, eggs and milk together in a cake tin. | 2. Cook the cake by using it with a stove. | 3. Buy some chocolate and add it to the cake.");
 
-[opheld1,mourning_deathalter_list]
-    ~mesbox("Items I must collect: | Forty-five sundries, one of each  -  rope and a spade, cloth and thread, tinderbox, chisel, vials, teleport tablets and the rest. | Then one ticket from three, one book from four, and one key from three. | Fifty items in all. More than one trip, then.");
+// mourning_deathalter_list is read in quests/quest_mourning2/scripts/mourning2_altar.rs2 instead.
+// The text that was here described the modern fifty-item list; the 377 cache has twenty-one varbits
+// for Thorgel's items, which is the 2006 list, and the quest's own reader strikes out the ones he
+// already has.
 
 [opheld1,mourning_ederns_journal]
     ~mesbox("Prologue | I have given myself to the cause and joined the Death Guard. My brother Iestin still labours over the Grand Library  -  but the seals placed there by Seren herself ensure that her hidden knowledge will never be revealed.");

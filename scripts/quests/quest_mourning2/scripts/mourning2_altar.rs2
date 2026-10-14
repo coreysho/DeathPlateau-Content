@@ -1,0 +1,365 @@
+// Mourning's End Part II, the second half: the cave, the black crystal, Thorgel and the Death
+// Altar. None of this existed - the quest ended when the light left the hole in the west wall -
+// and all of it is in the cache, most of it already standing in the world.
+//
+//   mourning_dead_guard1..3 and mourning_dead_slave1..2   placed on mapsquare 30,72, op1=Search and
+//              no trigger. That cave is the way in on foot: the Part I excavation under the Mourner
+//              HQ is on 31,72, the cave is on 30,72, the temple on 29,72, and the only thing between
+//              the excavation and the cave is mourner_hideout_door4, an ordinary door.
+//   mourning_ederns_journal           "The journal of Nissyen Edern", a readable nothing gave out
+//   mourning_temple_obsidian_crystal  on the top floor at 1908,4638, a multiloc on
+//              mourning_light_temple_safe_guards: 0 is "A crystal that was broken a long time ago"
+//              and 1 is "A repowered crystal". That bit going to 1 is the real end of this quest.
+//   mourning_crystal_sample -> mourning_crystal_new_sample -> mourning_crystal_new_powered
+//   mourning_deathalter_dwarf   Thorgel, "A short angry guy", op1=Talk-to, placed at 1863,4643 and
+//              visible on mourning_light_door_1_c_first_time - which Arianwyn already sets - with no
+//              trigger at all.
+//   mourning_deathalter_list    "Item list - It is a list of items I need to collect", iop1=Read
+//   twenty-one one-bit varbits on mourning_part2_basevar2, each named after one item, and a two-bit
+//   mourning_dwarf_startedtask. The modern list is fifty items; this is the 2006 list, in order.
+//
+// deathtemple_ruined is placed at 1859,4638, four tiles from Thorgel, and the altar interior is on
+// mapsquare 34,75 with its exit portal - so the only thing missing was the talisman he gives you
+// for the list, and the generic rc_ruins handler does the rest.
+
+// =========================================================================== the cave
+// Five corpses, all op1=Search, and one of them has Edern's journal. Which one does not matter: the
+// first one searched gives it up, which is what the cutscene in the walkthrough does.
+[oploc1,mourning_dead_guard1] @mt_search_body(1);
+[oploc1,mourning_dead_guard2] @mt_search_body(1);
+[oploc1,mourning_dead_guard3] @mt_search_body(1);
+[oploc1,mourning_dead_slave1] @mt_search_body(0);
+[oploc1,mourning_dead_slave2] @mt_search_body(0);
+
+[label,mt_search_body](int $guard)
+p_arrivedelay;
+if (%mourning_quest_main < ^mt_arianwyn) {
+    ~mesbox("A body, a long way under West Ardougne, in the clothes of somebody who was told they were going to be a plague doctor.");
+    return;
+}
+// NO VARBIT FOR THIS, because the cache has none and the journal is its own record -
+// ~obj_gettotal counts the bank as well, so a player who read it and put it away does not get
+// handed a second one.
+if (~obj_gettotal(mourning_ederns_journal) > 0) {
+    if ($guard = 1) {
+        ~mesbox("A guard, and nothing left on him worth taking. Whatever happened down here happened to both sides.");
+        return;
+    }
+    ~mesbox("A slave in a mourner's mask, which is how the mourners get people to come down here.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~mesbox("There is something inside his jacket and you have no room for it.");
+    return;
+}
+if (%mourning_quest_main < ^mt_journal) {
+    %mourning_quest_main = ^mt_journal;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+inv_add(inv, mourning_ederns_journal, 1);
+~objbox(mourning_ederns_journal, "Inside his jacket is a journal, kept in a hand that got worse as it went on. The name on the front is Nissyen Edern.", 250, 0, divide(^objbox_height, 2));
+~mesbox("The last page is about a crystal at the top of the temple that the mourners could not break, could not move, and could not stop coming back to.");
+
+// =========================================================================== the black crystal
+// A chisel takes a piece off it. Arianwyn turns that piece into a crystal of his own, the altar
+// charges it, and the charged one goes back into the crystal it came off - which is the last act of
+// the quest, and the one thing in this building that the light was ever for.
+[oploc1,mourning_temple_obsidian_crystal]
+p_arrivedelay;
+if (%mourning_light_temple_safe_guards = ^mt_on) {
+    ~mesbox("The crystal is lit from the inside and warm to stand near, and the elves who built this temple would have known what that meant.");
+    return;
+}
+if (%mourning_quest_main < ^mt_arianwyn) {
+    ~mesbox("A black crystal the size of a cart, broken a very long time ago.");
+    return;
+}
+if (~mt_has_sample = true) {
+    ~mesbox("You have your piece of it. It will not miss a second one.");
+    return;
+}
+~mesbox("A black crystal the size of a cart. It is cracked across twice, the cracks are old, and a sliver of the edge would come away with a chisel.");
+
+[oplocu,mourning_temple_obsidian_crystal]
+if (last_useitem = mourning_crystal_new_powered) {
+    @mt_repower;
+}
+if (last_useitem ! chisel) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%mourning_light_temple_safe_guards = ^mt_on) {
+    ~mesbox("You are not taking a chisel to it now.");
+    return;
+}
+if (%mourning_quest_main < ^mt_arianwyn) {
+    ~mesbox("It is not your crystal and you have no reason to break pieces off it.");
+    return;
+}
+if (~mt_has_sample = true) {
+    ~mesbox("One piece is enough.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~mesbox("Your hands are full.");
+    return;
+}
+if_close;
+mes("You work the chisel into one of the old cracks.");
+anim(human_diamondcutting, 0);
+p_delay(4);
+inv_add(inv, mourning_crystal_sample, 1);
+if (%mourning_quest_main < ^mt_sample) {
+    %mourning_quest_main = ^mt_sample;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+~objbox(mourning_crystal_sample, "A sliver of the black crystal comes away in your hand. It is colder than the room.", 250, 0, divide(^objbox_height, 2));
+
+[proc,mt_has_sample]()(boolean)
+if (inv_total(inv, mourning_crystal_sample) > 0) { return(true); }
+if (inv_total(inv, mourning_crystal_new_sample) > 0) { return(true); }
+if (inv_total(inv, mourning_crystal_new_powered) > 0) { return(true); }
+return(false);
+
+// THE LAST ACT. The charged crystal goes back into the crystal it was cut from, the safe_guards bit
+// goes to 1, and mourning_temple_obsidian_crystal renders as "A repowered crystal".
+[label,mt_repower]
+p_arrivedelay;
+if (%mourning_light_temple_safe_guards = ^mt_on) {
+    ~mesbox("It is already lit.");
+    return;
+}
+if_close;
+mes("You hold the warm crystal against the cold one.");
+p_delay(3);
+inv_del(inv, mourning_crystal_new_powered, 1);
+%mourning_light_temple_safe_guards = ^mt_on;
+if (%mourning_quest_main < ^mt_repowered) {
+    %mourning_quest_main = ^mt_repowered;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+~mesbox("The piece goes back into the crack it came out of and stays there. | Then the whole crystal lights, from the inside, in no colour you could name, and the light in the corridors below changes to match it.");
+p_delay(3);
+~mesbox("Arianwyn is going to want to hear this from you and not from a messenger.");
+
+// =========================================================================== Thorgel
+// A dwarf at the end of a temple nobody has opened for six hundred years, who got in through the
+// Abyss. The list is his and the items are the 2006 list, in the cache's own order.
+[opnpc1,mourning_deathalter_dwarf]
+if (%mourning_quest_main < ^mt_inside) {
+    ~chatnpc("<p,angry>How did YOU get in here?");
+    return;
+}
+switch_int (%mourning_dwarf_startedtask) {
+    case ^mt_dwarf_none : @mt_thorgel_hello;
+    case ^mt_dwarf_list : @mt_thorgel_handin;
+    case default : @mt_thorgel_done;
+}
+
+[label,mt_thorgel_hello]
+~chatnpc("<p,angry>Six hundred years that door has been shut, and the one person who opens it is a human with a mirror.");
+~chatplayer("<p,quiz>How did you get in?");
+~chatnpc("<p,neutral>Through the Abyss, which I do not recommend, and out of a rift, which I recommend less. I came for the altar and I am not leaving without using it.");
+~chatplayer("<p,quiz>Then use it.");
+~chatnpc("<p,angry>It wants a talisman. I have no talisman. I have a list, which is what a dwarf gets instead of a talisman.");
+~chatnpc("<p,neutral>Bring me everything on it and I will have one made, and you may use the altar first. I am not in a hurry. I have been here eleven years.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Come back with a hand free.");
+    return;
+}
+%mourning_dwarf_startedtask = ^mt_dwarf_list;
+if (%mourning_quest_main < ^mt_thorgel) {
+    %mourning_quest_main = ^mt_thorgel;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+inv_add(inv, mourning_deathalter_list, 1);
+~objbox(mourning_deathalter_list, "Twenty-one items, written out in a hand that has had a great deal of time to practise.", 250, 0, divide(^objbox_height, 2));
+
+[label,mt_thorgel_handin]
+def_int $gave = ~mt_dwarf_take;
+def_int $left = ~mt_dwarf_left;
+if ($left > 0) {
+    if ($gave = 0) {
+        ~chatnpc("<p,neutral>Nothing on the list. <tostring($left)> to go.");
+        if (inv_total(inv, mourning_deathalter_list) = 0 & inv_freespace(inv) > 0) {
+            inv_add(inv, mourning_deathalter_list, 1);
+            ~chatnpc("<p,neutral>And you have lost the list. Here.");
+        }
+        return;
+    }
+    ~chatnpc("<p,happy><tostring($gave)> off the list. <tostring($left)> to go.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,angry>I am holding a talisman and you are holding everything else. Put something down.");
+    return;
+}
+%mourning_dwarf_startedtask = ^mt_dwarf_paid;
+if (%mourning_quest_main < ^mt_items) {
+    %mourning_quest_main = ^mt_items;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+if (inv_total(inv, mourning_deathalter_list) > 0) {
+    inv_del(inv, mourning_deathalter_list, 1);
+}
+inv_add(inv, death_talisman, 1);
+~objbox(death_talisman, "Thorgel counts the last of it twice, puts it all in a sack, and hands over a death talisman as though it were change.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,happy>That is the list. The ruins are west of me - use it on them and the altar is through. Take your turn first; I have waited eleven years and I can wait an hour.");
+
+[label,mt_thorgel_done]
+if (%mourning_quest_main >= ^mt_complete) {
+    ~chatnpc("<p,happy>Light. In a temple. Who would have thought it.");
+    return;
+}
+~chatnpc("<p,neutral>The ruins are west of me and the talisman is yours. Mine is being made.");
+
+// What is on the list, and which bit each item is: the twenty-one varbits on
+// mourning_part2_basevar2, bits 0 to 20, in bit order.
+[proc,mt_dwarf_obj](int $i)(namedobj)
+switch_int ($i) {
+    case 1 : return(blankrune);
+    case 2 : return(lobster_pot);
+    case 3 : return(fishing_rod);
+    case 4 : return(tinderbox);
+    case 5 : return(lockpick);
+    case 6 : return(bronze_med_helm);
+    case 7 : return(white_apron);
+    case 8 : return(jug_wine);
+    case 9 : return(kebab);
+    case 10 : return(leather_boots);
+    case 11 : return(swamppaste);
+    case 12 : return(redberries);
+    case 13 : return(cheese);
+    case 14 : return(vial_water);
+    case 15 : return(flax);
+    case 16 : return(gold_ring);
+    case 17 : return(egg);
+    case 18 : return(leather_gloves);
+    case 19 : return(cake_tin);
+    case 20 : return(necklace_mould);
+    case 21 : return(rotten_tomato);
+}
+return(null);
+
+[proc,mt_dwarf_has](int $i)(boolean)
+switch_int ($i) {
+    case 1 : if (%mourning_dwarf_rune = ^mt_on) { return(true); }
+    case 2 : if (%mourning_dwarf_lobsterpot = ^mt_on) { return(true); }
+    case 3 : if (%mourning_dwarf_fishingrod = ^mt_on) { return(true); }
+    case 4 : if (%mourning_dwarf_tinderbox = ^mt_on) { return(true); }
+    case 5 : if (%mourning_dwarf_lockpick = ^mt_on) { return(true); }
+    case 6 : if (%mourning_dwarf_helm = ^mt_on) { return(true); }
+    case 7 : if (%mourning_dwarf_apron = ^mt_on) { return(true); }
+    case 8 : if (%mourning_dwarf_wine = ^mt_on) { return(true); }
+    case 9 : if (%mourning_dwarf_kebab = ^mt_on) { return(true); }
+    case 10 : if (%mourning_dwarf_boots = ^mt_on) { return(true); }
+    case 11 : if (%mourning_dwarf_paste = ^mt_on) { return(true); }
+    case 12 : if (%mourning_dwarf_redberries = ^mt_on) { return(true); }
+    case 13 : if (%mourning_dwarf_cheese = ^mt_on) { return(true); }
+    case 14 : if (%mourning_dwarf_vial = ^mt_on) { return(true); }
+    case 15 : if (%mourning_dwarf_flax = ^mt_on) { return(true); }
+    case 16 : if (%mourning_dwarf_ring = ^mt_on) { return(true); }
+    case 17 : if (%mourning_dwarf_egg = ^mt_on) { return(true); }
+    case 18 : if (%mourning_dwarf_gloves = ^mt_on) { return(true); }
+    case 19 : if (%mourning_dwarf_tin = ^mt_on) { return(true); }
+    case 20 : if (%mourning_dwarf_necklace = ^mt_on) { return(true); }
+    case 21 : if (%mourning_dwarf_tomato = ^mt_on) { return(true); }
+}
+return(false);
+
+[proc,mt_dwarf_mark](int $i)()
+switch_int ($i) {
+    case 1 : %mourning_dwarf_rune = ^mt_on;
+    case 2 : %mourning_dwarf_lobsterpot = ^mt_on;
+    case 3 : %mourning_dwarf_fishingrod = ^mt_on;
+    case 4 : %mourning_dwarf_tinderbox = ^mt_on;
+    case 5 : %mourning_dwarf_lockpick = ^mt_on;
+    case 6 : %mourning_dwarf_helm = ^mt_on;
+    case 7 : %mourning_dwarf_apron = ^mt_on;
+    case 8 : %mourning_dwarf_wine = ^mt_on;
+    case 9 : %mourning_dwarf_kebab = ^mt_on;
+    case 10 : %mourning_dwarf_boots = ^mt_on;
+    case 11 : %mourning_dwarf_paste = ^mt_on;
+    case 12 : %mourning_dwarf_redberries = ^mt_on;
+    case 13 : %mourning_dwarf_cheese = ^mt_on;
+    case 14 : %mourning_dwarf_vial = ^mt_on;
+    case 15 : %mourning_dwarf_flax = ^mt_on;
+    case 16 : %mourning_dwarf_ring = ^mt_on;
+    case 17 : %mourning_dwarf_egg = ^mt_on;
+    case 18 : %mourning_dwarf_gloves = ^mt_on;
+    case 19 : %mourning_dwarf_tin = ^mt_on;
+    case 20 : %mourning_dwarf_necklace = ^mt_on;
+    case 21 : %mourning_dwarf_tomato = ^mt_on;
+}
+
+// Takes one of everything on the list that the player is carrying and has not handed over yet, and
+// returns how many went over the counter.
+[proc,mt_dwarf_take]()(int)
+def_int $i = 1;
+def_int $gave = 0;
+while ($i <= ^mt_dwarf_items) {
+    if (~mt_dwarf_has($i) = false) {
+        def_namedobj $obj = ~mt_dwarf_obj($i);
+        if (inv_total(inv, $obj) > 0) {
+            inv_del(inv, $obj, 1);
+            ~mt_dwarf_mark($i);
+            $gave = add($gave, 1);
+        }
+    }
+    $i = add($i, 1);
+}
+return($gave);
+
+[proc,mt_dwarf_left]()(int)
+def_int $i = 1;
+def_int $left = 0;
+while ($i <= ^mt_dwarf_items) {
+    if (~mt_dwarf_has($i) = false) {
+        $left = add($left, 1);
+    }
+    $i = add($i, 1);
+}
+return($left);
+
+// =========================================================================== the charge
+// [oplocu,death_altar] lives in skill_runecraft/scripts/runecraft_altars.rs2, beside the four
+// elemental altars that Lunar Diplomacy hooks the same way: an altar's use-on belongs with the
+// altars, or crafting runes by using essence on this one would break.
+[proc,mt_charge_crystal]()()
+p_arrivedelay;
+if (inv_total(inv, mourning_crystal_new_sample) = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if_close;
+mes("You hold the crystal against the altar.");
+anim(human_pickupfloor, 0);
+p_delay(4);
+inv_del(inv, mourning_crystal_new_sample, 1);
+inv_add(inv, mourning_crystal_new_powered, 1);
+if (%mourning_quest_main < ^mt_charged) {
+    %mourning_quest_main = ^mt_charged;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+~objbox(mourning_crystal_new_powered, "The altar does not move and does not make a sound, and the crystal in your hand goes from cold to warm over about four seconds.", 250, 0, divide(^objbox_height, 2));
+~mesbox("Now it goes back where it came from: the black crystal, on the top floor of the temple.");
+
+// The list itself, a readable the cache ships and nothing handed out. Items already
+// over the counter are struck through.
+[opheld1,mourning_deathalter_list]
+def_int $i = 1;
+def_string $text = "";
+while ($i <= ^mt_dwarf_items) {
+    def_string $line = lowercase(oc_name(~mt_dwarf_obj($i)));
+    if (~mt_dwarf_has($i) = true) {
+        $line = append("@str@", $line);
+    }
+    if ($i = 1) {
+        $text = $line;
+    } else {
+        $text = append($text, append(", ", $line));
+    }
+    $i = add($i, 1);
+}
+~mesbox(append("Thorgel wants one of each, and the ones he has are crossed out:|", $text));

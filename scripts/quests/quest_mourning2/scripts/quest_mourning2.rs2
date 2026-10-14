@@ -207,6 +207,9 @@ if ($out = false) {
 if (%mourning_quest_main < ^mt_inside | %mourning_quest_main >= ^mt_lit) {
     return(true);
 }
+// THE LIGHT IS NOT THE END OF THE QUEST, and used to be. What it opens is the black door at the
+// west end of the bottom floor, and behind that is the Death Altar, Thorgel and the crystal that
+// has to go back into the one on the top floor - see scripts/mourning2_altar.rs2.
 %mourning_quest_main = ^mt_lit;
 ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
 stat_advance(agility, 20000);
@@ -215,40 +218,79 @@ return(true);
 
 // =========================================================================== Arianwyn
 [proc,mt_arianwyn]()(boolean)
-switch_int (%mourning_quest_main) {
-    case ^mt_not_started :
-        if (%mourning_quest < ^mourning_complete) {
-            return(false);
-        }
-        ~chatnpc("<p,neutral>You went into Prifddinas' death altar dressed as a mourner and came out with a list. I have read the list.");
-        ~chatplayer("<p,quiz>And?");
-        ~chatnpc("<p,sad>It is not a list of the dead. It is a list of what they are being used for, and the answer is a temple under the Isafdar that my people sealed six hundred years ago and have not spoken about since.");
-        ~chatnpc("<p,neutral>It is built round a beam of light. There is a hole in the west wall of the bottom floor and the light is supposed to come out of it, and it has not for six centuries.");
-        %mourning_quest_main = ^mt_arianwyn;
-        %mourning_light_door_1_c_first_time = ^mt_on;
-        ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
-        ~chatnpc("<p,neutral>The tunnel is off the excavation. Open the chests in there - there are mirrors in them, and crystals, and the crystals are the half of it nobody remembers.");
-        ~chatnpc("<p,neutral>A door of light shows you the colour that opens it. That is the only instruction my people left.");
-        return(true);
-    case ^mt_lit :
-        ~mt_finish;
-        return(true);
-    case default :
-        if (%mourning_quest_main >= ^mt_complete) {
-            ~chatnpc("<p,happy>Six hundred years, and it was three mirrors and somebody prepared to count corners.");
-            return(true);
-        }
-        // The tunnel into the temple (cavewalltunnel_to_temple) is a multiloc on this bit and is a
-        // blank cave wall without it. Nothing used to set it, so the temple could not be entered.
-        %mourning_light_door_1_c_first_time = ^mt_on;
-        ~chatnpc("<p,neutral>The light has to come out of the west wall. Everything else in that building is a way of arranging that.");
-        return(true);
+if (%mourning_quest_main = ^mt_not_started) {
+    if (%mourning_quest < ^mourning_complete) {
+        return(false);
+    }
+    ~chatnpc("<p,neutral>You went into Prifddinas' death altar dressed as a mourner and came out with a list. I have read the list.");
+    ~chatplayer("<p,quiz>And?");
+    ~chatnpc("<p,sad>It is not a list of the dead. It is a list of what they are being used for, and the answer is a temple under the Isafdar that my people sealed six hundred years ago and have not spoken about since.");
+    ~chatnpc("<p,neutral>It is built round a beam of light. There is a hole in the west wall of the bottom floor and the light is supposed to come out of it, and it has not for six centuries.");
+    %mourning_quest_main = ^mt_arianwyn;
+    %mourning_light_door_1_c_first_time = ^mt_on;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+    ~chatnpc("<p,neutral>The way in is the mourners' own dig - through their door, west along the cave, and in at the east wall. Take a chisel. There is a black crystal at the top of that temple and I want a piece of it.");
+    ~chatnpc("<p,neutral>Open the chests in there while you are about it: mirrors, and crystals, and the crystals are the half of it nobody remembers. A door of light shows you the colour that opens it.");
+    return(true);
 }
-return(false);
+if (%mourning_quest_main >= ^mt_complete) {
+    ~chatnpc("<p,happy>Six hundred years, and it was three mirrors and somebody prepared to count corners.");
+    return(true);
+}
+// THE SLIVER OF THE BLACK CRYSTAL. He is the only elf left who can make anything of it, and the
+// cache's three objs are the three states: the sample, his crystal, and his crystal charged.
+if (inv_total(inv, mourning_crystal_sample) > 0) {
+    // a proc, not a label: mt_arianwyn is itself a proc and a proc cannot jump
+    ~mt_enchant;
+    return(true);
+}
+if (%mourning_quest_main = ^mt_repowered) {
+    ~mt_finish;
+    return(true);
+}
+if (%mourning_quest_main = ^mt_charged) {
+    ~chatnpc("<p,neutral>Then put it back where it came from. The crystal on the top floor is the one that has to hold it.");
+    return(true);
+}
+if (%mourning_quest_main >= ^mt_enchanted) {
+    ~chatnpc("<p,neutral>The crystal in your hand is unfinished. It wants an altar, and the only one left down there is behind the light.");
+    return(true);
+}
+if (%mourning_quest_main >= ^mt_lit) {
+    ~chatnpc("<p,happy>The light is out of the wall. Now find me a piece of that black crystal - there is a chisel's worth of it loose at the top of the temple.");
+    return(true);
+}
+// The tunnel into the temple (cavewalltunnel_to_temple) is a multiloc on this bit and is a blank
+// cave wall without it. Nothing used to set it, so the temple could not be entered.
+%mourning_light_door_1_c_first_time = ^mt_on;
+~chatnpc("<p,neutral>The light has to come out of the west wall. Everything else in that building is a way of arranging that.");
+return(true);
+
+[proc,mt_enchant]()()
+~chatplayer("<p,neutral>A piece of the black crystal.");
+~chatnpc("<p,shock>You took a CHISEL to it.");
+~chatplayer("<p,neutral>You asked me to.");
+~chatnpc("<p,neutral>...I did. Give it here.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And make room, because you are getting it back.");
+    return;
+}
+if_close;
+mes("Arianwyn turns the sliver over for a long time without saying anything.");
+p_delay(4);
+inv_del(inv, mourning_crystal_sample, 1);
+inv_add(inv, mourning_crystal_new_sample, 1);
+if (%mourning_quest_main < ^mt_enchanted) {
+    %mourning_quest_main = ^mt_enchanted;
+    ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
+}
+~objbox(mourning_crystal_new_sample, "He sings over it for a while, in the way the elves of Lletya sing over crystal, and what he hands back is a new crystal with the old one inside it.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>It is empty. It wants charging, and there is an altar of the dead under that temple that my people did not build and could not move.");
+~chatnpc("<p,neutral>When it is full, put it back in the crystal it came out of.");
 
 [proc,mt_finish]()()
-~chatplayer("<p,neutral>The light is coming out of the wall.");
-~chatnpc("<p,shock>...out of the hole.");
+~chatplayer("<p,neutral>The crystal at the top of the temple is lit.");
+~chatnpc("<p,shock>...lit.");
 if_close;
 mes("Arianwyn asks you to describe the route three times and writes it down twice.");
 p_delay(5);

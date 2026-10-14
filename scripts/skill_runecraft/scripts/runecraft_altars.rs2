@@ -11,6 +11,20 @@ if (oc_category(last_useitem) = talismans) {
     }
 }
 
+// Mourning's End Part II charges a crystal of Arianwyn's at the death altar, which is the altar
+// that quest exists to reach (quests/quest_mourning2/scripts/mourning2_altar.rs2).
+[oplocu,death_altar]
+switch_obj (last_useitem) {
+    case mourning_crystal_new_sample : ~mt_charge_crystal;
+    case blankrune, blankrune_high : @runecraft_runes;
+    case tiara : @runecraft_craft_tiaras(loc_type, last_useitem, last_useslot);
+    case default :
+        if (oc_category(last_useitem) = talismans) {
+            @runecraft_craft_tiaras(loc_type, last_useitem, last_useslot);
+        }
+        ~displaymessage(^dm_default);
+}
+
 // Use specific oplocu's for elemental altars due to combo rune runecrafting
 // Lunar Diplomacy enchants a Dramen staff at all four elemental altars, in the order air, fire,
 // water, earth (quests/quest_lunar/scripts/lunar_island.rs2).

@@ -142,13 +142,30 @@
 ^mt_collector = 1_29_72_58_31
 ^mt_lever = 1_29_72_57_31
 
-// Stages. mourning_quest_main is nine bits, so there is room to spare.
+// Stages. mourning_quest_main is eight bits, so there is room to spare, and the new ones went into
+// the gaps rather than renumbering - anybody halfway through keeps their place.
 ^mt_not_started = 0
 ^mt_arianwyn = 10       // Arianwyn has explained what is under the temple
 ^mt_inside = 20         // through the tunnel
+^mt_journal = 24        // Edern's journal, off a corpse in the cave
+^mt_sample = 26         // a sliver of the black crystal, taken with a chisel
 ^mt_mirrors = 30        // the chests opened
+^mt_enchanted = 34      // Arianwyn has made the sliver into a crystal of his own
 ^mt_lit = 40            // light out of the hole in the wall
+^mt_thorgel = 42        // Thorgel's list
+^mt_items = 44          // all twenty-one of them, and a death talisman for them
+^mt_charged = 46        // the crystal charged at the Death Altar
+^mt_repowered = 48      // and put back into the black crystal on the top floor
 ^mt_complete = 50
+
+// ---------------------------------------------------------------------------- Thorgel's list
+// Twenty-one items, which is the 2006 list: one one-bit varbit each on mourning_part2_basevar2,
+// bits 0 to 20, and the order of the switches in scripts/mourning2_altar.rs2 is the bit order.
+// mourning_dwarf_startedtask is two bits wide, which is three states and one spare.
+^mt_dwarf_items = 21
+^mt_dwarf_none = 0
+^mt_dwarf_list = 1
+^mt_dwarf_paid = 2
 
 ^mt_off = 0
 ^mt_on = 1

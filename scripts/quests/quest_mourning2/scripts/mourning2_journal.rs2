@@ -13,27 +13,74 @@ switch_int (%mourning_quest_main) {
         $text = append($text, "@str@It is built round a beam of light. There is a hole in the|");
         $text = append($text, "@str@west wall of the bottom floor and the light is supposed to|");
         $text = append($text, "@str@come out of it.|");
-        $text = append($text, "@dbl@The @dre@tunnel@dbl@ is off the excavation");
+        $text = append($text, "@dbl@In through the @dre@mourners' dig@dbl@ and west along the cave|");
+        $text = append($text, "@dbl@Take a @dre@chisel");
 
     case ^mt_inside :
         $text = "@str@Three floors, sixteen chambers apiece, a pillar at every|";
         $text = append($text, "@str@junction and a dead beam along every corridor.|");
-        $text = append($text, "@dbl@The @dre@fittings cupboards@dbl@ have the @dre@mirrors");
+        $text = append($text, "@dbl@@dre@Search the bodies@dbl@ in the cave|");
+        $text = append($text, "@dbl@The @dre@collector@dbl@ on the middle floor holds the temple's own|");
+        $text = append($text, "@dbl@@dre@mirrors@dbl@ and a @dre@crystal");
+
+    case ^mt_journal :
+        $text = "@str@Nissyen Edern kept a journal until he could not. The last|";
+        $text = append($text, "@str@page is about a crystal at the top of the temple that the|");
+        $text = append($text, "@str@mourners could not break, could not move, and could not|");
+        $text = append($text, "@str@stop coming back to.|");
+        $text = append($text, "@dbl@Take a @dre@chisel@dbl@ to the @dre@black crystal@dbl@ on the top floor");
+
+    case ^mt_sample :
+        $text = "@str@A sliver of the black crystal, colder than the room it came|";
+        $text = append($text, "@str@out of.|");
+        $text = append($text, "@dbl@Take it to @dre@Arianwyn@dbl@ in @dre@Lletya|");
+        $text = append($text, "@dbl@And get the @dre@light@dbl@ out of the west wall");
 
     case ^mt_mirrors :
         $text = "@str@A mirror takes the beam round one corner and is silvered on|";
         $text = append($text, "@str@one face only, so a quarter turn changes which corner it|");
         $text = append($text, "@str@will take, and three of the four turns do nothing at all.|");
         $text = append($text, "@str@An empty socket is not an obstacle - the beam goes straight|");
-        $text = append($text, "@str@through it.|");
+        $text = append($text, "@str@through it. A crystal keeps the colours it is made of and|");
+        $text = append($text, "@str@stops the rest.|");
         $text = append($text, "@dbl@The light enters at the @dre@top of the east wall@dbl@ and has to|");
         $text = append($text, "@dbl@leave by the @dre@hole in the west|");
-        $text = append($text, "@dbl@Use a @dre@mirror@dbl@ on a @dre@pillar@dbl@ to place and turn it|");
-        $text = append($text, "@dbl@The @dre@lever@dbl@ drops every mirror and starts again");
+        $text = append($text, "@dbl@A @dre@door of light@dbl@ shows the colour that opens it|");
+        $text = append($text, "@dbl@The @dre@lever@dbl@ drops every fitting into the @dre@collector");
+
+    case ^mt_enchanted :
+        $text = "@str@Arianwyn sang over the sliver and handed back a crystal of|";
+        $text = append($text, "@str@his own with the old one inside it. It is empty.|");
+        $text = append($text, "@dbl@It wants an @dre@altar@dbl@, and the only one down there is|");
+        $text = append($text, "@dbl@behind the @dre@light");
 
     case ^mt_lit :
         $text = "@str@The beam goes down the shaft, across the bottom floor and|";
-        $text = append($text, "@str@out through the hole in the west wall.|");
+        $text = append($text, "@str@out through the hole in the west wall - and the black door|");
+        $text = append($text, "@str@at that end is open.|");
+        $text = append($text, "@dbl@@dre@Thorgel@dbl@ is through it, by the @dre@Death Altar");
+
+    case ^mt_thorgel :
+        $text = "@str@A dwarf has been sat by the Death Altar for eleven years|";
+        $text = append($text, "@str@waiting for a talisman. He came in through the Abyss.|");
+        $text = append($text, "@dbl@Bring him the @dre@twenty-one items@dbl@ on his list|");
+        $text = append($text, "@dbl@@dre@Read the list@dbl@ to see what is left");
+
+    case ^mt_items :
+        $text = "@str@Thorgel counted it twice and handed over a death talisman|";
+        $text = append($text, "@str@as though it were change.|");
+        $text = append($text, "@dbl@Use the @dre@talisman@dbl@ on the @dre@ruins@dbl@ west of him|");
+        $text = append($text, "@dbl@Then use the @dre@crystal@dbl@ on the @dre@altar");
+
+    case ^mt_charged :
+        $text = "@str@The altar did not move and did not make a sound, and the|";
+        $text = append($text, "@str@crystal went from cold to warm.|");
+        $text = append($text, "@dbl@Put it back in the @dre@black crystal@dbl@ on the @dre@top floor");
+
+    case ^mt_repowered :
+        $text = "@str@The whole crystal lit, from the inside, in no colour I|";
+        $text = append($text, "@str@could name - and the light in the corridors below changed|");
+        $text = append($text, "@str@to match it.|");
         $text = append($text, "@dbl@Tell @dre@Arianwyn");
 
     case ^mt_complete :
