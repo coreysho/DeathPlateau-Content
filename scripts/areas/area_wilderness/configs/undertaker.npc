@@ -13,6 +13,22 @@
 //
 // The gold band on the hat is the one piece of colour he is allowed: the brightest faces of the
 // trimmed wizard hat are its trim, so they stay gold while everything else goes black.
+//
+// HE WEARS NOTHING UNDERNEATH HIS BOOTS. The list carried man_feet_basic (idk_42), the kit's
+// brown boot, as well as his own black one - and an npc's models are MERGED into one figure, so a
+// kit part left in the list is not replaced by the garment meant to replace it, it is drawn too.
+// The kit boot is the only brown thing on him: every other part is grey, black or his face, so the
+// brown reported at his feet was this and nothing else.
+//
+// WHY IT SHOWED AT ALL IS NOT SETTLED, and the comment says so rather than inventing a reason. Drawn
+// with a depth buffer the kit boot is strictly inside his own boot from every angle, so a still
+// render of the pair cannot reproduce it; the client has no depth buffer, it paints a priority
+// bucket by whole-unit depth bin, and these two touch at the heel and the sole - both reach z -18
+// and y 6 - where a tie goes to whichever face comes later in the merged list, which is the kit
+// boot. The ready animation moving the two meshes' labels apart would do it as well. Either way the
+// part should not be in the list.
+// The cache's own digworkmen carry the same pair, which is presumably where the habit came from.
+//
 // THE CHATHEAD IS ITS OWN SET OF MODELS, and his was a hat and a beard with nothing between them:
 // head1..headN are merged the way model1..modelN are, so a talking human needs the FACE model
 // first, then what he wears on it. He had no head on his BODY either - the hat sat on a collar.
@@ -29,7 +45,6 @@ model5=npc_undertaker_coat2
 model6=npc_undertaker_legs
 model7=npc_undertaker_cane
 model8=npc_undertaker_boots
-model9=idk_42
 head1=obj_pickpocket_guide_man
 head2=npc_undertaker_hat_head
 head3=npc_undertaker_beard_head
