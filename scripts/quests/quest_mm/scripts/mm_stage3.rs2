@@ -264,14 +264,74 @@ if ($form = null) {
 
 [label,mm_marim_gate](coord $south, coord $north)
 p_arrivedelay;
-def_coord $to = $north;
+// LEAVING IS NOT THE SAME AS ARRIVING. A human on the inside has already been arrested once and is
+// sneaking out; stopping them here would be a loop with no exit.
 if (coordz(coord) > coordz(loc_coord)) {
-    $to = $south;
+    mes("You push the huge gate open just far enough to slip through.");
+    sound_synth(door_open, 1, 0);
+    p_delay(1);
+    p_teleport($south);
+    return;
 }
-mes("You push the huge gate open just far enough to slip through.");
+// And going in. As a monkey nobody looks twice; as a human you are shot off your feet, which is how
+// the real quest gets you inside the walls - see [label,mm_jail_arrest].
+if (~mm_is_monkey = true) {
+    mes("You push the huge gate open just far enough to slip through.");
+    sound_synth(door_open, 1, 0);
+    p_delay(1);
+    p_teleport($north);
+    return;
+}
+@mm_jail_arrest;
+
+// ===================================================================================================
+// The jail
+// ===================================================================================================
+// Wiki steps 13-14: walk into Marim as a human, get shot and arrested, watch the guard pattern, pick
+// the cell lock and escape. This was flagged as deliberately not built on the grounds that the cache
+// gave no cell coordinate, no guard and no escape route. It gives all three:
+//
+//   mm_jail_door             2771,2795   the one cell door with a lock worth picking
+//   mm_jail_door_unpickable  2774,2796, 2774,2798, 2774,2801
+//   mm_monkey_archer         six, on the walkways above the gate - which is who shoots you
+//   mm_jail_count            an eight-bit counter
+//   mm_player_is_unconscious a flag for precisely this
+//
+// And the jail sits north of the gate in the same walkable region as Garkor, so getting out of the
+// cell is what gets you into Marim. A lockpick is on the wiki's item list for this quest.
+//
+// No damage is dealt. Being knocked out is the arrest, not a fight, and taking a chunk off a player
+// who cannot refuse the event would mean a quest step that can kill you for walking.
+[label,mm_jail_arrest]
+if_close;
+mes("An arrow goes past your ear and into the gatepost.");
+sound_synth(arrow_launch, 1, 0);
+p_delay(2);
+%mm_player_is_unconscious = ^true;
+%mm_jail_count = add(%mm_jail_count, 1);
+mes("The second one does not miss, and the ground comes up to meet you.");
+p_delay(3);
+p_telejump(^mm_jail_cell);
+%mm_player_is_unconscious = ^false;
+~mesbox("You wake up on a stone floor behind a bamboo door, with your things beside you and a headache that suggests the monkeys of Marim have done this before.");
+
+[oploc1,mm_jail_door]
+p_arrivedelay;
+if (inv_total(inv, lockpick) = 0) {
+    ~mesbox("The lock is bamboo and brass, and it is not going to open for fingers. A lockpick would do it.");
+    return;
+}
+mes("You work the lockpick into the bamboo.");
+p_delay(3);
 sound_synth(door_open, 1, 0);
+mes("The lock gives.");
 p_delay(1);
-p_teleport($to);
+p_teleport(^mm_jail_outside);
+~mesbox("You are inside the walls of Marim, which is further than the gate was ever going to get you.");
+
+[oploc1,mm_jail_door_unpickable]
+p_arrivedelay;
+~mesbox("This one has no lock on the outside at all. Whoever is in it is not getting out, and neither is anyone getting in.");
 
 // ===================================================================================================
 // Marim: the elder guards and Kruk
@@ -365,7 +425,13 @@ if (npc_findexact(^mm_awowogei_throne, mm_awowogei_cutscene) = true) {
 }
 npc_add(^mm_awowogei_throne, mm_awowogei_cutscene, 500);
 
-[opnpc1,mm_awowogei_cutscene]
+// He is on a dais, and no tile beside him can be walked to from the floor the player is dropped
+// on - the same problem Kruk and the caged zoo monkeys have, and the same answer: an approach
+// trigger, so the conversation happens across the throne room rather than not at all.
+[opnpc1,mm_awowogei_cutscene] @mm_awowogei_talk;
+[apnpc1,mm_awowogei_cutscene] @mm_awowogei_talk;
+
+[label,mm_awowogei_talk]
 if (~mm_is_monkey = false) {
     ~mesbox("The king does not look at you. Two guards do, and they are already moving.");
     return;

@@ -70,6 +70,13 @@
 // The Grand Tree and Tree Gnome Village, both implemented. No skill requirements; the real quest
 // gates on combat ability rather than levels.
 
+// --- The Karamja leg (wiki steps 2-6), and the jail (13-14) ---
+^mm_caranock_spoken = 1          // %mm_caranock, the cache's own counter for him
+^mm_narnode_briefed = 1          // %mm_narnode: he has written the orders
+^mm_gandius_shipyard = 0_46_47_12_17   // 2956,3025  G.L.O. Caranock's office, north of the gate
+^mm_jail_cell = 0_43_43_27_42    // 2771,2794  inside the one cell with a lock worth picking
+^mm_jail_outside = 0_43_43_27_44 // 2771,2796  the other side of that door, which is inside Marim
+
 // --- Coordinates ---
 // Each arrival tile was picked by reading the LOC section of the map square and finding a tile with
 // either nothing on it or only shape-22 ground decoration, which does not block.

@@ -21,15 +21,17 @@ if (%mm_main >= ^mm_started) {
 ~chatnpc("<p,neutral>Daero. He drinks in the Blurberry bar upstairs, and he knows every unofficial thing this stronghold has ever done. Tell him I sent you.");
 %mm_main = ^mm_started;
 ~send_quest_progress(questlist:mm, 1, ^mm_complete);
-// The seal and the orders are what Garkor will accept in place of a name. Both objs exist in the
-// cache - "the official Gnome Royal Seal, signed by King Narnode Shareen" and "unreadable orders
-// handwritten by King Narnode Shareen" - and nothing gave either of them out.
-if (inv_freespace(inv) >= 2) {
+// THE SEAL NOW, THE ORDERS LATER. He used to hand over both at once and send you to Daero, which
+// skipped the whole Karamja leg - the glider to Gandius, the shipyard, and G.L.O. Caranock, who is
+// the reason the King knows anything is wrong. The orders are what he writes AFTER you report back,
+// and they are what Daero will talk to.
+if (inv_freespace(inv) >= 1) {
     inv_add(inv, mm_gnome_royal_seal, 1);
-    inv_add(inv, mm_narnode_orders, 1);
-    ~objbox(mm_gnome_royal_seal, "The King presses his seal into your hand, with a folded order underneath it.", 250, 0, divide(^objbox_height, 2));
-    ~chatnpc("<p,neutral>Whoever you find out there will want to see that before they believe a word.");
+    ~objbox(mm_gnome_royal_seal, "The King presses his seal into your hand.", 250, 0, divide(^objbox_height, 2));
 }
+~chatplayer("<p,quiz>Where do I start?");
+~chatnpc("<p,neutral>The shipyard. Our shipyard, on Karamja - the glider at the top of this tree goes to Gandius, and it is a short walk north from there.");
+~chatnpc("<p,neutral>A gnome called G.L.O. Caranock runs it, and the 10th Squad's orders went through his office. Show him the seal.");
 ~chatnpc("<p,worried>And Traveller - do not tell my advisors.");
 
 [label,mm_narnode_progress]
@@ -38,7 +40,9 @@ if (%mm_main = ^mm_demon_dead) {
 }
 ~chatplayer("<p,happy>Hello your highness!");
 switch_int (%mm_main) {
-    case ^mm_started, ^mm_daero_briefed :
+    case ^mm_started :
+        @mm_narnode_shipyard;
+    case ^mm_daero_briefed :
         ~chatnpc("<p,neutral>Daero. Upstairs, in the bar. He will not look pleased to see you; that is simply his face.");
     case ^mm_in_hangar :
         ~chatnpc("<p,shock>You found the hangar? Then you have already seen more than I am supposed to know about.");
@@ -61,6 +65,73 @@ switch_int (%mm_main) {
     case default :
         ~chatnpc("<p,happy>Better than ever, thanks to you!");
 }
+
+
+// The middle of the Karamja leg: he sends you to Caranock, and he writes the orders when you come
+// back with what Caranock said. %mm_caranock and %mm_narnode are the cache's own dialogue counters
+// for the two of them, which is why no stage number had to move.
+[label,mm_narnode_shipyard]
+if (%mm_caranock < ^mm_caranock_spoken) {
+    ~chatnpc("<p,neutral>G.L.O. Caranock, at the shipyard on Karamja. The glider at the top of this tree, then north.");
+    if (~obj_gettotal(mm_gnome_royal_seal) < 1 & inv_freespace(inv) >= 1) {
+        ~chatplayer("<p,sad>I've lost your seal.");
+        ~chatnpc("<p,neutral>Then take another. I have a drawer of them and only one stronghold.");
+        inv_add(inv, mm_gnome_royal_seal, 1);
+    }
+    return;
+}
+if (%mm_narnode >= ^mm_narnode_briefed) {
+    ~chatnpc("<p,neutral>Daero. Upstairs, in the bar, and he will want to see what I wrote.");
+    if (~obj_gettotal(mm_narnode_orders) < 1 & inv_freespace(inv) >= 1) {
+        ~chatplayer("<p,sad>I've lost the orders.");
+        ~chatnpc("<p,worried>Then I shall write them again, and this time do not lose them.");
+        inv_add(inv, mm_narnode_orders, 1);
+    }
+    return;
+}
+~chatplayer("<p,neutral>Caranock is shipping something to an island that is not on any chart.");
+~chatnpc("<p,shock>He told you that?");
+~chatplayer("<p,neutral>Not in those words. He told me who signed for it.");
+~chatnpc("<p,angry>Glough. Of course it was Glough.");
+if (inv_freespace(inv) < 1) {
+    ~chatnpc("<p,neutral>I am going to write something down and you have nowhere to put it. Make room.");
+    return;
+}
+~chatnpc("<p,neutral>Then I shall write it down, and you shall take it to Daero, and neither of us will say the word 'official' again.");
+inv_add(inv, mm_narnode_orders, 1);
+%mm_narnode = ^mm_narnode_briefed;
+~objbox(mm_narnode_orders, "The King writes for a while in a hand that nobody who has not been a king could read, folds it twice, and gives it to you.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,worried>Daero drinks in the Blurberry bar. Show him that and he will stop pretending.");
+
+// --- G.L.O. Caranock ---
+// Placed at m46_47 (12,17) in the shipyard office on Karamja, and he had no script. The gate north
+// of him needs nothing from this quest: [oploc1,_shipyard_gate] in quest_grandtree.rs2 already
+// opens for anyone who has finished The Grand Tree, which Monkey Madness requires.
+[opnpc1,mm_caranock]
+if (%mm_main < ^mm_started) {
+    ~chatnpc("<p,neutral>This is a working shipyard. Whatever you are selling, I am not buying it.");
+    return;
+}
+if (%mm_caranock >= ^mm_caranock_spoken) {
+    ~chatnpc("<p,worried>I have told you more than I should have. Go and tell the King, and leave my name out of it.");
+    return;
+}
+if (inv_total(inv, mm_gnome_royal_seal) < 1) {
+    ~chatplayer("<p,quiz>I'm here about the 10th Squad.");
+    ~chatnpc("<p,angry>I do not know what that is, and if I did I would not discuss it with somebody who walked in off a glider.");
+    ~chatnpc("<p,neutral>Bring something with the King's seal on it and I shall reconsider my memory.");
+    return;
+}
+~chatplayer("<p,neutral>The King's seal. The 10th Squad.");
+~chatnpc("<p,worried>...put that away.");
+~chatplayer("<p,quiz>Where did they go?");
+~chatnpc("<p,neutral>I load ships. I do not ask where they are going. There is a run south of Karamja that has been going out twice a month for a year and comes back empty.");
+~chatplayer("<p,quiz>Going where?");
+~chatnpc("<p,angry>There is nothing down there. No port, no chart, no gnome who will admit to having drawn one.");
+~chatnpc("<p,worried>And it is signed for by a name I am not going to say out loud in my own office.");
+%mm_caranock = ^mm_caranock_spoken;
+~mesbox("He does not say the name. He does not have to - there is one gnome whose business this would be, and he is in a cell under the Grand Tree.");
+~chatnpc("<p,neutral>Tell the King. And if you are going down there, the monkeys on this island leave their bones lying about - somebody once told me a mage can do a great deal with a monkey's bones.");
 
 // --- Daero ---
 // Placed twice: m38_54 p1 (52,30) in the Blurberry bar, and m41_70 (24,34) in the hangar. Which one
@@ -90,8 +161,17 @@ if (%mm_main >= ^mm_daero_briefed) {
 // The three topics are the cache's own mm_daero_option_bit_one/two/three. Read as the three things
 // you get to ask him about before he will take you anywhere; each is remembered so he does not
 // repeat himself, and when all three are done the trip is offered.
-~chatplayer("<p,neutral>King Narnode sent me. It's about the 10th Squad.");
-~chatnpc("<p,angry>Did he. In a bar. Sit down and keep your voice at that level.");
+// THE ORDERS ARE THE INTRODUCTION. Before the Karamja leg existed he would brief anyone who said
+// the King's name; now he wants the thing the King wrote after hearing what Caranock said, which is
+// what mm_narnode_orders is for.
+if (inv_total(inv, mm_narnode_orders) < 1) {
+    ~chatplayer("<p,neutral>King Narnode sent me. It's about the 10th Squad.");
+    ~chatnpc("<p,angry>Did he. In a bar, to a stranger, about a squad that officially never left.");
+    ~chatnpc("<p,neutral>If the King has something to say to me he can write it down. Come back when he has.");
+    return;
+}
+~chatplayer("<p,neutral>The King wrote this. It's about the 10th Squad.");
+~chatnpc("<p,angry>...that is his hand. Sit down and keep your voice at that level.");
 @mm_daero_topics;
 
 [label,mm_daero_topics]
