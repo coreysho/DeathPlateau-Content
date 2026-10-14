@@ -1,73 +1,56 @@
 // Mourning's End Part II - a temple built round a beam of light, and one hole in one wall that the
 // light has to come out of.
+//
+// THE LIGHT HAS A COLOUR. Every light varbit in this building is three bits wide and every beam loc
+// and pillar is a multiloc on one of them with the same seven children - red, yellow, green, cyan,
+// blue, magenta, white - and the fourteen doorways are two-state multilocs that show, when shut,
+// the colour that opens them. So the temple is a colour puzzle, and the crystals are filters: a
+// crystal passes the components it is made of and stops the rest. See configs/quest_mourning2.constant
+// for the whole model, and scripts/mourning2_doors.rs2 (generated) for which door reads which beam.
 
-// =========================================================================== the mirrors
-// Five slots, eight bits each: six bits of pillar id and two of rotation. mourning_temple_mirrors_a
-// holds four of them and _b the fifth.
-[proc,mt_slot_read](int $slot)(int)
-if ($slot < 4) {
-    return(getbit_range(%mourning_temple_mirrors_a, multiply($slot, 8), add(multiply($slot, 8), 7)));
+// =========================================================================== the sockets
+// Four bits per pillar: 0 empty, 1-4 a mirror in one of its rotations, 5-9 a crystal. Seven
+// pillars to a varp, the first two being the cache's own mourning_temple_mirrors_a and _b.
+[proc,mt_socket_read](int $pillar)(int)
+def_int $i = sub($pillar, 1);
+def_int $lo = multiply(modulo($i, ^mt_sockets_per_varp), ^mt_socket_bits);
+def_int $hi = add($lo, sub(^mt_socket_bits, 1));
+switch_int (divide($i, ^mt_sockets_per_varp)) {
+    case 0 : return(getbit_range(%mourning_temple_mirrors_a, $lo, $hi));
+    case 1 : return(getbit_range(%mourning_temple_mirrors_b, $lo, $hi));
+    case 2 : return(getbit_range(%mourning_temple_sockets_c, $lo, $hi));
+    case 3 : return(getbit_range(%mourning_temple_sockets_d, $lo, $hi));
+    case 4 : return(getbit_range(%mourning_temple_sockets_e, $lo, $hi));
 }
-return(getbit_range(%mourning_temple_mirrors_b, 0, 7));
+return(^mt_socket_empty);
 
-[proc,mt_slot_write](int $slot, int $value)()
-if ($slot < 4) {
-    %mourning_temple_mirrors_a = setbit_range_toint(%mourning_temple_mirrors_a, $value, multiply($slot, 8), add(multiply($slot, 8), 7));
-    return;
+[proc,mt_socket_write](int $pillar, int $value)()
+def_int $i = sub($pillar, 1);
+def_int $lo = multiply(modulo($i, ^mt_sockets_per_varp), ^mt_socket_bits);
+def_int $hi = add($lo, sub(^mt_socket_bits, 1));
+switch_int (divide($i, ^mt_sockets_per_varp)) {
+    case 0 : %mourning_temple_mirrors_a = setbit_range_toint(%mourning_temple_mirrors_a, $value, $lo, $hi);
+    case 1 : %mourning_temple_mirrors_b = setbit_range_toint(%mourning_temple_mirrors_b, $value, $lo, $hi);
+    case 2 : %mourning_temple_sockets_c = setbit_range_toint(%mourning_temple_sockets_c, $value, $lo, $hi);
+    case 3 : %mourning_temple_sockets_d = setbit_range_toint(%mourning_temple_sockets_d, $value, $lo, $hi);
+    case 4 : %mourning_temple_sockets_e = setbit_range_toint(%mourning_temple_sockets_e, $value, $lo, $hi);
 }
-%mourning_temple_mirrors_b = setbit_range_toint(%mourning_temple_mirrors_b, $value, 0, 7);
 
 // Returns the rotation PLUS ONE, so that zero can mean "no mirror on this pillar".
 [proc,mt_mirror_at](int $pillar)(int)
-def_int $i = 0;
-while ($i < ^mt_mirror_slots) {
-    def_int $v = ~mt_slot_read($i);
-    if (getbit_range($v, 2, 7) = $pillar) {
-        return(add(and($v, 3), 1));
-    }
-    $i = add($i, 1);
+def_int $v = ~mt_socket_read($pillar);
+if ($v >= ^mt_socket_mirror & $v < ^mt_socket_crystal) {
+    return(add(sub($v, ^mt_socket_mirror), 1));
 }
 return(0);
 
-[proc,mt_mirror_count]()(int)
-def_int $i = 0;
-def_int $n = 0;
-while ($i < ^mt_mirror_slots) {
-    if (getbit_range(~mt_slot_read($i), 2, 7) > 0) { $n = add($n, 1); }
-    $i = add($i, 1);
+// The colour of the crystal in this socket, or dark for "no crystal".
+[proc,mt_crystal_at](int $pillar)(int)
+def_int $v = ~mt_socket_read($pillar);
+if ($v >= ^mt_socket_crystal) {
+    return(add(sub($v, ^mt_socket_crystal), 1));
 }
-return($n);
-
-[proc,mt_mirror_put](int $pillar, int $rot)(boolean)
-def_int $i = 0;
-while ($i < ^mt_mirror_slots) {
-    def_int $v = ~mt_slot_read($i);
-    if (getbit_range($v, 2, 7) = $pillar) {
-        ~mt_slot_write($i, add(multiply($pillar, 4), $rot));
-        return(true);
-    }
-    $i = add($i, 1);
-}
-$i = 0;
-while ($i < ^mt_mirror_slots) {
-    if (getbit_range(~mt_slot_read($i), 2, 7) = 0) {
-        ~mt_slot_write($i, add(multiply($pillar, 4), $rot));
-        return(true);
-    }
-    $i = add($i, 1);
-}
-return(false);
-
-[proc,mt_mirror_clear](int $pillar)(boolean)
-def_int $i = 0;
-while ($i < ^mt_mirror_slots) {
-    if (getbit_range(~mt_slot_read($i), 2, 7) = $pillar) {
-        ~mt_slot_write($i, 0);
-        return(true);
-    }
-    $i = add($i, 1);
-}
-return(false);
+return(^mt_colour_dark);
 
 // Silvered on one side, so three of the four rotations do nothing to any given beam.
 [proc,mt_reflect](int $rot, int $dir)(int)
@@ -87,25 +70,95 @@ switch_int ($rot) {
 }
 return(0);
 
+// =========================================================================== the colours
+// The cache's numbering is a colour wheel; the arithmetic is done on a three-bit mask.
+[proc,mt_colour_mask](int $colour)(int)
+switch_int ($colour) {
+    case ^mt_colour_red : return(^mt_mask_red);
+    case ^mt_colour_yellow : return(add(^mt_mask_red, ^mt_mask_green));
+    case ^mt_colour_green : return(^mt_mask_green);
+    case ^mt_colour_cyan : return(add(^mt_mask_green, ^mt_mask_blue));
+    case ^mt_colour_blue : return(^mt_mask_blue);
+    case ^mt_colour_magenta : return(add(^mt_mask_red, ^mt_mask_blue));
+    case ^mt_colour_white : return(^mt_mask_all);
+}
+return(0);
+
+[proc,mt_mask_colour](int $mask)(int)
+switch_int ($mask) {
+    case 1 : return(^mt_colour_red);
+    case 2 : return(^mt_colour_green);
+    case 3 : return(^mt_colour_yellow);
+    case 4 : return(^mt_colour_blue);
+    case 5 : return(^mt_colour_magenta);
+    case 6 : return(^mt_colour_cyan);
+    case 7 : return(^mt_colour_white);
+}
+return(^mt_colour_dark);
+
+// White through yellow is yellow. Cyan and then yellow is green. Red through cyan is nothing.
+[proc,mt_filter](int $colour, int $crystal)(int)
+return(~mt_mask_colour(and(~mt_colour_mask($colour), ~mt_colour_mask($crystal))));
+
+[proc,mt_colour_name](int $colour)(string)
+switch_int ($colour) {
+    case ^mt_colour_red : return("red");
+    case ^mt_colour_yellow : return("yellow");
+    case ^mt_colour_green : return("green");
+    case ^mt_colour_cyan : return("cyan");
+    case ^mt_colour_blue : return("blue");
+    case ^mt_colour_magenta : return("magenta");
+    case ^mt_colour_white : return("white");
+}
+return("dark");
+
+[proc,mt_crystal_colour](obj $crystal)(int)
+if ($crystal = mourning_crystal_red) { return(^mt_colour_red); }
+if ($crystal = mourning_crystal_yellow) { return(^mt_colour_yellow); }
+if ($crystal = mourning_crystal_green) { return(^mt_colour_green); }
+if ($crystal = mourning_crystal_cyan) { return(^mt_colour_cyan); }
+if ($crystal = mourning_crystal_blue) { return(^mt_colour_blue); }
+return(^mt_colour_dark);
+
+[proc,mt_crystal_obj](int $colour)(namedobj)
+switch_int ($colour) {
+    case ^mt_colour_red : return(mourning_crystal_red);
+    case ^mt_colour_yellow : return(mourning_crystal_yellow);
+    case ^mt_colour_green : return(mourning_crystal_green);
+    case ^mt_colour_cyan : return(mourning_crystal_cyan);
+    case ^mt_colour_blue : return(mourning_crystal_blue);
+}
+return(null);
+
 // =========================================================================== the trace
 // Clear everything, then walk the beam from the entry until it stops, leaves the temple, or gets
-// out of the hole in the west wall. Every segment and every pillar it touches is lit as it goes,
-// and those varbits are transmitted, so the client draws exactly the path the server walked.
+// out of the hole in the west wall. Every segment and every pillar it touches is lit in the colour
+// it is carrying at that point, and those varbits are transmitted, so the client draws exactly the
+// path - and the colour - the server walked.
 [proc,mt_trace]()(boolean)
 ~m2_dark;
 ~m2_pillars_dark;
 def_int $p = ^mt_pillar_entry;
 def_int $d = ^mt_entry_dir;
+def_int $c = ^mt_colour_white;
 def_int $steps = 0;
-~m2_pillar_up($p, ^mt_colour_white);
+~m2_pillar_up($p, $c);
 while ($steps < ^mt_trace_steps) {
     $steps = add($steps, 1);
-    // The shaft is a chute, not a junction: light that reaches the top-floor shaft pillar falls two
-    // floors onto the same tile and leaves west along the bottom corridor.
-    if ($p = ^mt_pillar_shaft_top) {
-        $p = ^mt_pillar_shaft_bottom;
-        $d = ^mt_dir_west;
-        ~m2_pillar_up($p, ^mt_colour_white);
+    // WHAT IS IN THIS PILLAR'S SOCKET comes first, before the beam goes anywhere, because the
+    // shaft pillars have sockets too. The first version did the shaft drop first and then the
+    // socket, which skipped the socket of the pillar at the bottom of the shaft entirely - and
+    // that pillar is the last one the beam passes before it leaves by the hole in the wall, so a
+    // crystal in it was the one crystal placement in the building that did nothing.
+    def_int $crystal = ~mt_crystal_at($p);
+    if ($crystal > ^mt_colour_dark) {
+        $c = ~mt_filter($c, $crystal);
+        // A crystal can take the last component out of a beam, and then there is nothing left to
+        // travel: red light into a cyan crystal is the end of the beam.
+        ~m2_pillar_up($p, $c);
+        if ($c = ^mt_colour_dark) {
+            return(false);
+        }
     } else {
         def_int $rot = ~mt_mirror_at($p);
         if ($rot > 0) {
@@ -116,30 +169,49 @@ while ($steps < ^mt_trace_steps) {
             }
         }
     }
-    def_int $next = ~m2_edge($p, $d);
-    if ($next = 0) {
-        // Out of the temple. Out of the west wall on the bottom floor is the one that counts.
-        if ($p = ^mt_pillar_shaft_bottom & $d = ^mt_dir_west) {
-            return(true);
+    // The shaft is a chute, not a junction: light that reaches the top-floor shaft pillar falls two
+    // floors onto the same tile and leaves west along the bottom corridor. The drop is not a move
+    // along a corridor, so it takes a step of its own and the socket below gets its turn.
+    if ($p = ^mt_pillar_shaft_top) {
+        $p = ^mt_pillar_shaft_bottom;
+        $d = ^mt_dir_west;
+        ~m2_pillar_up($p, $c);
+    } else {
+        def_int $next = ~m2_edge($p, $d, $c);
+        if ($next = 0) {
+            // Out of the temple. Out of the west wall on the bottom floor is the one that counts.
+            if ($p = ^mt_pillar_shaft_bottom & $d = ^mt_dir_west) {
+                return(true);
+            }
+            return(false);
         }
-        return(false);
+        $p = $next;
+        ~m2_pillar_up($p, $c);
     }
-    $p = $next;
-    ~m2_pillar_up($p, ^mt_colour_white);
 }
 return(false);
 
-[proc,mt_retrace]()()
-if (~mt_trace = false) {
-    return;
+// THE DOORS ARE PART OF THE LIGHT and have to be recomputed every time it moves, so nothing may
+// call ~mt_trace on its own: a door left open after the beam that opened it has gone is a hole in
+// the puzzle, and a door left shut under a beam of the right colour is a player stuck in a room.
+//
+// NOTICING THAT THE QUEST IS DONE belongs here too, for the same reason. A first version left that
+// to a separate ~mt_retrace which the mirror and crystal handlers did not call, so the light went
+// out through the hole in the wall and the quest did not react.
+[proc,mt_relight]()(boolean)
+def_boolean $out = ~mt_trace;
+~m2_doors;
+if ($out = false) {
+    return(false);
 }
-if (%mourning_quest_main >= ^mt_lit) {
-    return;
+if (%mourning_quest_main < ^mt_inside | %mourning_quest_main >= ^mt_lit) {
+    return(true);
 }
 %mourning_quest_main = ^mt_lit;
 ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
 stat_advance(agility, 20000);
 ~mesbox("The beam goes down the shaft, across the bottom floor and out through the hole in the west wall, and something on the other side of that wall starts to make a noise it has not made in a very long time.");
+return(true);
 
 // =========================================================================== Arianwyn
 [proc,mt_arianwyn]()(boolean)
@@ -155,7 +227,8 @@ switch_int (%mourning_quest_main) {
         %mourning_quest_main = ^mt_arianwyn;
         %mourning_light_door_1_c_first_time = ^mt_on;
         ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
-        ~chatnpc("<p,neutral>The tunnel is off the excavation. Take a mirror or two out of the fittings cupboards when you are in there; you are going to need them.");
+        ~chatnpc("<p,neutral>The tunnel is off the excavation. Open the chests in there - there are mirrors in them, and crystals, and the crystals are the half of it nobody remembers.");
+        ~chatnpc("<p,neutral>A door of light shows you the colour that opens it. That is the only instruction my people left.");
         return(true);
     case ^mt_lit :
         ~mt_finish;
@@ -198,8 +271,10 @@ if (%mourning_quest_main < ^mt_arianwyn) {
 mes("You crawl through.");
 p_delay(3);
 p_teleport(^mt_temple_entry);
+~mt_relight;
 if (%mourning_quest_main = ^mt_arianwyn) {
     %mourning_quest_main = ^mt_inside;
+    ~mt_tray_seed;
     ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
     ~mesbox("Three floors of it, and every floor is one room in sixteen parts with a pillar at every junction and a dead beam of light lying along every corridor. | Somebody built this to be solved.");
 }
@@ -248,28 +323,22 @@ if (coordx(coord) < coordx(loc_coord)) {
 }
 
 // =========================================================================== the doors of light
-// Fourteen doorways, each a shell on its own mourning_door_* varbit, and the only ops on them -
-// Pass, and Pass-through once lit - had no trigger. The player comes in through the tunnel into
-// floor 1 pillar 13's chamber, which is shut on both sides by two of them, so nothing past the
-// first cupboard could be reached. They let the player through (the colour logic that decides
-// which light opens which door in the original is not modelled - see mourning2_graph.rs2).
-[oploc1,mourning_door_1_1_east] @mt_door_pass;
-[oploc1,mourning_door_1_1_south] @mt_door_pass;
-[oploc1,mourning_door_1_13_east] @mt_door_pass;
-[oploc1,mourning_door_1_13_north] @mt_door_pass;
-[oploc1,mourning_door_1_16_north] @mt_door_pass;
-[oploc1,mourning_door_1_16_west] @mt_door_pass;
-[oploc1,mourning_door_1_b] @mt_door_pass;
-[oploc1,mourning_door_1_c] @mt_door_pass;
-[oploc1,mourning_door_2_16_north] @mt_door_pass;
-[oploc1,mourning_door_2_16_west] @mt_door_pass;
-[oploc1,mourning_door_2_4_south] @mt_door_pass;
-[oploc1,mourning_door_2_4_west] @mt_door_pass;
-
+// Fourteen doorways, each a shell on its own mourning_door_* varbit, and each one a two-state
+// multiloc: shut it is a door of light in the colour that opens it, open it is white. The varbit is
+// set by ~m2_doors (generated, from the map) every time the beam moves, so by the time a player
+// clicks one the answer is already decided - this trigger only reports it and steps through.
 // A door of light is a blocking tile in a doorway: angles 0 and 2 span east-west, so it is passed
 // north-south; 1 and 3 the other way. Step to the tile on the far side of it.
-[label,mt_door_pass]
+[label,mt_door_pass](int $open, int $colour)
 p_arrivedelay;
+if ($open = ^mt_off) {
+    if ($colour = ^mt_colour_dark) {
+        ~mesbox("A doorway with no light in it at all, and nothing to walk through but the dark. Something has to be lit on the other side of this wall.");
+        return;
+    }
+    ~mesbox("A door of pure light, and it is <~mt_colour_name($colour)>. It will let you through when the light standing in this doorway is <~mt_colour_name($colour)> too, and not before.");
+    return;
+}
 def_coord $door = loc_coord;
 if (loc_angle = 0 | loc_angle = 2) {
     if (coordz(coord) < coordz($door)) {
@@ -297,62 +366,122 @@ if (%mourning_quest_main < ^mt_lit) {
 p_delay(1);
 p_teleport(^mt_tunnel_outside);
 
-// =========================================================================== the fittings cupboards
-[oploc1,mourning_temple_light_parts_2_closed] @mt_cupboard_open(2);
-[oploc1,mourning_temple_light_parts_3_closed] @mt_cupboard_open(3);
-[oploc1,mourning_temple_light_parts_4_closed] @mt_cupboard_open(4);
-[oploc1,mourning_temple_light_parts_5_closed] @mt_cupboard_open(5);
-[oploc1,mourning_temple_light_parts_6_closed] @mt_cupboard_open(6);
+// =========================================================================== the chests
+// Five chests, named Closed chest and Open chest in the cache, one to a room across the three
+// floors. The walkthrough has each of them paying out two mirrors, and three of them a crystal as
+// well; which cache chest is which chest in the walkthrough is not settled until the puzzle is
+// solved from the inside, so the crystals are spread one per chest with the yellow one in the chest
+// nearest the way in.
+[oploc1,mourning_temple_light_parts_2_closed] @mt_chest_open(2);
+[oploc1,mourning_temple_light_parts_3_closed] @mt_chest_open(3);
+[oploc1,mourning_temple_light_parts_4_closed] @mt_chest_open(4);
+[oploc1,mourning_temple_light_parts_5_closed] @mt_chest_open(5);
+[oploc1,mourning_temple_light_parts_6_closed] @mt_chest_open(6);
 
-// The cupboards are plain locs, not multilocs, so setting the varbit alone left the closed one in
-// place - Open again, never Search - and the hand mirror could not be had. Swap the loc as every
-// other cupboard does.
-[label,mt_cupboard_open](int $n)
+// The chests are plain locs, not multilocs, so setting the varbit alone left the closed one in
+// place - Open again, never Search - and the fittings could not be had. Swap the loc as every
+// other chest does.
+[label,mt_chest_open](int $n)
 p_arrivedelay;
-mes("You open the cupboard.");
+mes("You open the chest.");
 switch_int ($n) {
-    case 2 : %mourning_temple_parts_2 = ^mt_on; loc_change(mourning_temple_light_parts_2_open, 300);
-    case 3 : %mourning_temple_parts_3 = ^mt_on; loc_change(mourning_temple_light_parts_3_open, 300);
-    case 4 : %mourning_temple_parts_4 = ^mt_on; loc_change(mourning_temple_light_parts_4_open, 300);
-    case 5 : %mourning_temple_parts_5 = ^mt_on; loc_change(mourning_temple_light_parts_5_open, 300);
-    case 6 : %mourning_temple_parts_6 = ^mt_on; loc_change(mourning_temple_light_parts_6_open, 300);
+    case 2 : loc_change(mourning_temple_light_parts_2_open, 300);
+    case 3 : loc_change(mourning_temple_light_parts_3_open, 300);
+    case 4 : loc_change(mourning_temple_light_parts_4_open, 300);
+    case 5 : loc_change(mourning_temple_light_parts_5_open, 300);
+    case 6 : loc_change(mourning_temple_light_parts_6_open, 300);
+}
+
+// WHAT mourning_temple_parts_1..6 ARE FOR. Six bits for six chests, one each, and they are the
+// player's own - which is what a shared world loc cannot record. They are not the lid: the lid is
+// the loc swap above, which every chest in the game does the same way. They are whether this
+// player has had the fittings out of that chest.
+[proc,mt_chest_taken](int $n)(boolean)
+switch_int ($n) {
+    case 2 : if (%mourning_temple_parts_2 = ^mt_on) { return(true); }
+    case 3 : if (%mourning_temple_parts_3 = ^mt_on) { return(true); }
+    case 4 : if (%mourning_temple_parts_4 = ^mt_on) { return(true); }
+    case 5 : if (%mourning_temple_parts_5 = ^mt_on) { return(true); }
+    case 6 : if (%mourning_temple_parts_6 = ^mt_on) { return(true); }
+}
+return(false);
+
+[proc,mt_chest_take](int $n)()
+switch_int ($n) {
+    case 2 : %mourning_temple_parts_2 = ^mt_on;
+    case 3 : %mourning_temple_parts_3 = ^mt_on;
+    case 4 : %mourning_temple_parts_4 = ^mt_on;
+    case 5 : %mourning_temple_parts_5 = ^mt_on;
+    case 6 : %mourning_temple_parts_6 = ^mt_on;
+}
+
+[oploc1,mourning_temple_light_parts_2_open] @mt_chest_search(2);
+[oploc1,mourning_temple_light_parts_3_open] @mt_chest_search(3);
+[oploc1,mourning_temple_light_parts_4_open] @mt_chest_search(4);
+[oploc1,mourning_temple_light_parts_5_open] @mt_chest_search(5);
+[oploc1,mourning_temple_light_parts_6_open] @mt_chest_search(6);
+
+[label,mt_chest_search](int $n)
+p_arrivedelay;
+if (~mt_chest_taken($n) = true) {
+    ~mesbox("Spare glass, spare brackets and a great deal of dust. The useful things are out of this one already.");
+    return;
+}
+def_int $colour = ^mt_colour_dark;
+// The chain the doors make: the tray's yellow crystal opens the two yellow rooms, one of which
+// holds the cyan crystal; cyan opens room 13 and its blue crystal; blue opens floor 2 room 16 and
+// its red one. The magenta room is behind a colour no single crystal can make.
+switch_int ($n) {
+    case 5 : $colour = ^mt_colour_cyan;
+    case 4 : $colour = ^mt_colour_blue;
+    case 2 : $colour = ^mt_colour_red;
+}
+def_namedobj $crystal = ~mt_crystal_obj($colour);
+def_int $want = ^mt_chest_mirrors;
+if ($crystal ! null) {
+    $want = add($want, 1);
+}
+if (inv_total(inv, mourning_colour_wheel) = 0) {
+    $want = add($want, 1);
+}
+if (inv_freespace(inv) < $want) {
+    ~mesbox("There is more in this chest than you have room for.");
+    return;
+}
+~mt_chest_take($n);
+inv_add(inv, mourning_mirror, ^mt_chest_mirrors);
+if (inv_total(inv, mourning_colour_wheel) = 0) {
+    inv_add(inv, mourning_colour_wheel, 1);
 }
 if (%mourning_quest_main = ^mt_inside) {
     %mourning_quest_main = ^mt_mirrors;
     ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
 }
-
-[oploc1,mourning_temple_light_parts_2_open] @mt_cupboard_search;
-[oploc1,mourning_temple_light_parts_3_open] @mt_cupboard_search;
-[oploc1,mourning_temple_light_parts_4_open] @mt_cupboard_search;
-[oploc1,mourning_temple_light_parts_5_open] @mt_cupboard_search;
-[oploc1,mourning_temple_light_parts_6_open] @mt_cupboard_search;
-
-[label,mt_cupboard_search]
-p_arrivedelay;
-if (inv_total(inv, mourning_mirror) > 0) {
-    ~mesbox("Spare glass, spare brackets and a great deal of dust. You are already carrying the useful thing.");
+if ($crystal ! null) {
+    inv_add(inv, $crystal, 1);
+    ~objbox($crystal, "<tostring(^mt_chest_mirrors)> hand mirrors, and under them a crystal the colour of <~mt_colour_name($colour)> glass. Light that goes through it comes out that colour and no other.", 250, 0, divide(^objbox_height, 2));
     return;
 }
-if (inv_freespace(inv) < 2) {
-    mes("You have no room.");
-    return;
-}
-inv_add(inv, mourning_mirror, 1);
-if (inv_total(inv, mourning_colour_wheel) = 0) {
-    inv_add(inv, mourning_colour_wheel, 1);
-    ~mesbox("A small hand mirror, and behind it a colour wheel that the temple's builders evidently expected somebody to need.");
-    return;
-}
-mes("A small hand mirror.");
+~mesbox("<tostring(^mt_chest_mirrors)> hand mirrors, in brackets, wrapped in cloth that has not been touched in six hundred years.");
 
-[oploc2,mourning_temple_light_parts_2_open] @mt_cupboard_shut(2);
-[oploc2,mourning_temple_light_parts_3_open] @mt_cupboard_shut(3);
-[oploc2,mourning_temple_light_parts_4_open] @mt_cupboard_shut(4);
-[oploc2,mourning_temple_light_parts_5_open] @mt_cupboard_shut(5);
-[oploc2,mourning_temple_light_parts_6_open] @mt_cupboard_shut(6);
+[proc,mt_mirrors_placed]()(int)
+def_int $p = 1;
+def_int $n = 0;
+while ($p <= ^mt_pillars) {
+    if (~mt_mirror_at($p) > 0) {
+        $n = add($n, 1);
+    }
+    $p = add($p, 1);
+}
+return($n);
 
-[label,mt_cupboard_shut](int $n)
+[oploc2,mourning_temple_light_parts_2_open] @mt_chest_shut(2);
+[oploc2,mourning_temple_light_parts_3_open] @mt_chest_shut(3);
+[oploc2,mourning_temple_light_parts_4_open] @mt_chest_shut(4);
+[oploc2,mourning_temple_light_parts_5_open] @mt_chest_shut(5);
+[oploc2,mourning_temple_light_parts_6_open] @mt_chest_shut(6);
+
+[label,mt_chest_shut](int $n)
 p_arrivedelay;
 switch_int ($n) {
     case 2 : %mourning_temple_parts_2 = ^mt_off; loc_change(mourning_temple_light_parts_2_closed, 300);
@@ -361,32 +490,238 @@ switch_int ($n) {
     case 5 : %mourning_temple_parts_5 = ^mt_off; loc_change(mourning_temple_light_parts_5_closed, 300);
     case 6 : %mourning_temple_parts_6 = ^mt_off; loc_change(mourning_temple_light_parts_6_closed, 300);
 }
-mes("You shut the cupboard.");
+mes("You shut the chest.");
 
-// =========================================================================== the reset tray
+// =========================================================================== the pillar sockets
+// The triggers are generated into mourning2_pillars.rs2, one pair per pillar; the logic is here.
+[label,mt_use_on_pillar](int $pillar)
+def_obj $used = last_useitem;
+if ($used = mourning_mirror) {
+    p_arrivedelay;
+    @mt_place_mirror($pillar);
+}
+if (~mt_crystal_colour($used) > ^mt_colour_dark) {
+    p_arrivedelay;
+    @mt_place_crystal($pillar, ~mt_crystal_colour($used));
+}
+~displaymessage(^dm_default);
+
+[label,mt_search_pillar](int $pillar)
+p_arrivedelay;
+if (%mourning_quest_main < ^mt_inside) {
+    ~mesbox("An octagonal pillar with a socket at head height, and no reason yet to put anything in it.");
+    return;
+}
+def_int $crystal = ~mt_crystal_at($pillar);
+if ($crystal > ^mt_colour_dark) {
+    if (inv_freespace(inv) = 0) {
+        ~mesbox("A crystal the colour of <~mt_colour_name($crystal)> glass is set in the socket, and your hands are full.");
+        return;
+    }
+    inv_add(inv, ~mt_crystal_obj($crystal), 1);
+    ~mt_socket_write($pillar, ^mt_socket_empty);
+    mes("You take the <~mt_colour_name($crystal)> crystal back out of the socket.");
+    ~mt_relight;
+    return;
+}
+if (~mt_mirror_at($pillar) > 0) {
+    if (inv_total(inv, mourning_mirror) > 0) {
+        @mt_place_mirror($pillar);
+    }
+    ~mesbox("A hand mirror is set in the socket at head height, turned to catch the light from one side. Using it, or using another mirror on it, turns it a quarter.");
+    return;
+}
+if (inv_total(inv, mourning_mirror) > 0) {
+    @mt_place_mirror($pillar);
+}
+~mesbox("An octagonal pillar with an empty socket at head height. A small hand mirror would fit it, and so would one of the crystals.");
+
+// A mirror goes in at rotation 0 and each further click turns it a quarter; after the fourth it
+// comes back out. The mirror itself leaves the inventory while it is in the socket, because there
+// are only so many mirrors in the building and the whole puzzle is about having too few.
+[label,mt_place_mirror](int $pillar)
+if (%mourning_quest_main < ^mt_inside) {
+    ~mesbox("An octagonal pillar with a socket at head height, and no reason yet to put anything in it.");
+    return;
+}
+if (~mt_crystal_at($pillar) > ^mt_colour_dark) {
+    ~mesbox("There is a crystal in this socket. One thing at a time.");
+    return;
+}
+def_int $rot = ~mt_mirror_at($pillar);
+if ($rot = 0) {
+    if (inv_total(inv, mourning_mirror) = 0) {
+        ~mesbox("You have no mirror to put in it.");
+        return;
+    }
+    inv_del(inv, mourning_mirror, 1);
+    ~mt_socket_write($pillar, ^mt_socket_mirror);
+    mes("You set the mirror in the socket.");
+    ~mt_relight;
+    return;
+}
+if ($rot >= 4) {
+    if (inv_freespace(inv) = 0) {
+        ~mesbox("Your hands are too full to take it back.");
+        return;
+    }
+    ~mt_socket_write($pillar, ^mt_socket_empty);
+    inv_add(inv, mourning_mirror, 1);
+    mes("You take the mirror back out.");
+    ~mt_relight;
+    return;
+}
+~mt_socket_write($pillar, add(^mt_socket_mirror, $rot));
+mes("You turn the mirror a quarter turn.");
+~mt_relight;
+
+// A crystal goes in and the beam that passes the pillar comes out its colour. Using the same
+// crystal on the socket again takes it back; using a different one swaps them over.
+[label,mt_place_crystal](int $pillar, int $colour)
+if (%mourning_quest_main < ^mt_inside) {
+    ~mesbox("An octagonal pillar with a socket at head height, and no reason yet to put anything in it.");
+    return;
+}
+if (~mt_mirror_at($pillar) > 0) {
+    ~mesbox("There is a mirror in this socket. Take it out first.");
+    return;
+}
+def_int $already = ~mt_crystal_at($pillar);
+if ($already = $colour) {
+    ~mt_socket_write($pillar, ^mt_socket_empty);
+    inv_add(inv, ~mt_crystal_obj($colour), 1);
+    mes("You take the <~mt_colour_name($colour)> crystal back out of the socket.");
+    ~mt_relight;
+    return;
+}
+if ($already > ^mt_colour_dark) {
+    inv_del(inv, ~mt_crystal_obj($colour), 1);
+    inv_add(inv, ~mt_crystal_obj($already), 1);
+    ~mt_socket_write($pillar, add(^mt_socket_crystal, sub($colour, 1)));
+    mes("You swap the <~mt_colour_name($already)> crystal for the <~mt_colour_name($colour)> one.");
+    ~mt_relight;
+    return;
+}
+inv_del(inv, ~mt_crystal_obj($colour), 1);
+~mt_socket_write($pillar, add(^mt_socket_crystal, sub($colour, 1)));
+mes("You set the <~mt_colour_name($colour)> crystal in the socket.");
+~mt_relight;
+
+// =========================================================================== the collector
+// THE CACHE NAMES BOTH HALVES OF THIS. mourning_temple_light_wall_lever is "Crystal collector - A
+// Lever", op1=Pull, and mourning_temple_light_wall_collector is "Crystal collector - A collection
+// point", op1=Collect; and the tray they share has six bits for a count of mirrors
+// (mourning_temple_mirrors_reset_tray) and one bit each for a red, a blue and an orange crystal.
+// So Pull takes every fitting out of every socket in the building and drops it in the tray, and
+// Collect hands the tray over - which is the walkthrough's "pull the crystal dispenser to reset,
+// then collect all items".
+//
+// IT IS ALSO WHERE THE TEMPLE'S OWN KIT COMES FROM. Every chest in the building is behind a door
+// of light - two yellow, one cyan, one blue and one magenta - so a player with no mirrors and no
+// crystal cannot open any of them, and the first mirrors cannot be chest mirrors. The tray starts
+// with the fittings the temple was left with, which is what the walkthrough collects before it
+// touches a chest.
+[proc,mt_tray_seed]()()
+%mourning_temple_mirrors_reset_tray = ^mt_tray_start_mirrors;
+%mourning_temple_orange_crystal_reset_tray = ^mt_on;
+
+// The tray has a bit for a red, a blue and an orange crystal and none for cyan or green, so those
+// two go back to the player's hands instead, and stay in their socket if there is no room.
+[proc,mt_tray_take_crystal](int $colour)(boolean)
+if ($colour = ^mt_colour_red & %mourning_temple_red_crystal_reset_tray = ^mt_off) {
+    %mourning_temple_red_crystal_reset_tray = ^mt_on;
+    return(true);
+}
+if ($colour = ^mt_colour_blue & %mourning_temple_blue_crystal_reset_tray = ^mt_off) {
+    %mourning_temple_blue_crystal_reset_tray = ^mt_on;
+    return(true);
+}
+if ($colour = ^mt_colour_yellow & %mourning_temple_orange_crystal_reset_tray = ^mt_off) {
+    %mourning_temple_orange_crystal_reset_tray = ^mt_on;
+    return(true);
+}
+return(false);
+
 [oploc1,mourning_temple_light_wall_lever]
 p_arrivedelay;
 anim(human_leverdown, 0);
 p_delay(3);
-%mourning_temple_mirrors_a = 0;
-%mourning_temple_mirrors_b = 0;
-~mt_trace;
-~mesbox("Every mirror in the building drops out of its socket at once and the beam goes back to where it starts. | Whoever built this expected people to want that button.");
-
-[oploc1,mourning_temple_light_wall_collector]
-def_int $n = ~mt_mirror_count;
-if (~mt_trace = true) {
-    ~mesbox("The collector is full of light. <tostring($n)> mirrors are in their sockets and the beam is coming out of the west wall.");
+def_int $p = 1;
+def_int $in = 0;
+def_int $stuck = 0;
+while ($p <= ^mt_pillars) {
+    def_int $crystal = ~mt_crystal_at($p);
+    if (~mt_mirror_at($p) > 0) {
+        %mourning_temple_mirrors_reset_tray = add(%mourning_temple_mirrors_reset_tray, 1);
+        ~mt_socket_write($p, ^mt_socket_empty);
+        $in = add($in, 1);
+    }
+    if ($crystal > ^mt_colour_dark) {
+        if (~mt_tray_take_crystal($crystal) = true) {
+            ~mt_socket_write($p, ^mt_socket_empty);
+            $in = add($in, 1);
+        } else {
+            if (inv_freespace(inv) > 0) {
+                inv_add(inv, ~mt_crystal_obj($crystal), 1);
+                ~mt_socket_write($p, ^mt_socket_empty);
+                $in = add($in, 1);
+            } else {
+                $stuck = add($stuck, 1);
+            }
+        }
+    }
+    $p = add($p, 1);
+}
+~mt_relight;
+if ($stuck > 0) {
+    ~mesbox("Every fitting in the building drops out of its socket at once. <tostring($stuck)> of them are left lying where they fell, because the collector has no shelf for them and your hands are full.");
     return;
 }
-~mesbox("The collector is dark. <tostring($n)> mirrors are in their sockets. | A mirror turns a beam ninety degrees and only from one side: a quarter turn changes which two corners it will take. A pillar with nothing in it lets the beam straight through.");
+~mesbox("Every fitting in the building drops out of its socket at once and the beam goes back to where it starts. | <tostring($in)> of them are waiting in the collector by the lever.");
+
+[oploc1,mourning_temple_light_wall_collector]
+p_arrivedelay;
+def_int $out = 0;
+while (%mourning_temple_mirrors_reset_tray > 0 & inv_freespace(inv) > 0) {
+    %mourning_temple_mirrors_reset_tray = sub(%mourning_temple_mirrors_reset_tray, 1);
+    inv_add(inv, mourning_mirror, 1);
+    $out = add($out, 1);
+}
+if (inv_total(inv, mourning_colour_wheel) = 0 & $out > 0 & inv_freespace(inv) > 0) {
+    inv_add(inv, mourning_colour_wheel, 1);
+}
+if (%mourning_temple_orange_crystal_reset_tray = ^mt_on & inv_freespace(inv) > 0) {
+    %mourning_temple_orange_crystal_reset_tray = ^mt_off;
+    inv_add(inv, mourning_crystal_yellow, 1);
+    $out = add($out, 1);
+}
+if (%mourning_temple_red_crystal_reset_tray = ^mt_on & inv_freespace(inv) > 0) {
+    %mourning_temple_red_crystal_reset_tray = ^mt_off;
+    inv_add(inv, mourning_crystal_red, 1);
+    $out = add($out, 1);
+}
+if (%mourning_temple_blue_crystal_reset_tray = ^mt_on & inv_freespace(inv) > 0) {
+    %mourning_temple_blue_crystal_reset_tray = ^mt_off;
+    inv_add(inv, mourning_crystal_blue, 1);
+    $out = add($out, 1);
+}
+if ($out > 0) {
+    ~mesbox("You take <tostring($out)> fittings out of the collector. | A mirror turns a beam ninety degrees and only from one side: a quarter turn changes which two corners it will take. An empty socket is not an obstacle. A crystal keeps the colours it is made of and stops the rest.");
+    return;
+}
+def_int $n = ~mt_mirrors_placed;
+if (~mt_relight = true) {
+    ~mesbox("The collector is empty and full of light: <tostring($n)> mirrors are in their sockets and the beam is coming out of the west wall.");
+    return;
+}
+~mesbox("The collector is empty and dark. <tostring($n)> mirrors are in their sockets. | Pull the lever beside it and every fitting in the building comes back here.");
 
 // =========================================================================== the final pillar
 // mourning_temple_final_pillar_of_light carries no ops, so the handler that used to be here could
 // never fire. The collector says the same thing and can be clicked.
 
 [opheld1,mourning_colour_wheel]
-~mesbox("A colour wheel, and on the back of it, in a hand six hundred years old: | A MIRROR TAKES THE BEAM ROUND ONE CORNER AND IT IS SILVERED ON ONE FACE ONLY. | A QUARTER TURN CHANGES WHICH CORNER. | AN EMPTY SOCKET IS NOT AN OBSTACLE. | THE LIGHT ENTERS AT THE TOP OF THE EAST WALL AND MUST LEAVE BY THE HOLE IN THE WEST.");
+~mesbox("A colour wheel, and on the back of it, in a hand six hundred years old: | A MIRROR TAKES THE BEAM ROUND ONE CORNER AND IT IS SILVERED ON ONE FACE ONLY. | A QUARTER TURN CHANGES WHICH CORNER. | AN EMPTY SOCKET IS NOT AN OBSTACLE. | A CRYSTAL KEEPS WHAT IT IS MADE OF: YELLOW THEN CYAN LEAVES GREEN, AND RED THEN CYAN LEAVES NOTHING. | THE LIGHT ENTERS AT THE TOP OF THE EAST WALL AND MUST LEAVE BY THE HOLE IN THE WEST.");
 
 [opheld1,mourning_mirror]
 ~mesbox("A small hand mirror. It fits the sockets on the pillars, and it fits them four ways.");

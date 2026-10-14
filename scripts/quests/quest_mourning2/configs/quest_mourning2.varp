@@ -1,0 +1,15 @@
+// What is in each of the Temple of Light's thirty-five pillar sockets: four bits each, 0 empty,
+// 1-4 a hand mirror in one of its rotations, 5-9 a crystal. See configs/quest_mourning2.constant.
+//
+// The first fourteen pillars live in the cache's own mourning_temple_mirrors_a and _b, which are
+// perm-scoped varps that exist for nothing else and are not transmitted - the client never needs to
+// know where a mirror is, only what colour the beams are. These three carry the other twenty-one,
+// seven to a varp, so that no socket straddles a sign bit.
+[mourning_temple_sockets_c]
+scope=perm
+
+[mourning_temple_sockets_d]
+scope=perm
+
+[mourning_temple_sockets_e]
+scope=perm
