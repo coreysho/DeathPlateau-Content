@@ -49,9 +49,14 @@ BASE = 'slayer_helm'
 # Lines the base block owns that a colour must NOT inherit: it has its own art, its own camera,
 # its own name, and its params are decided per variant. Copying the model lines was the whole bug
 # this round fixed; copying param=slayer_* gave every colour each param twice in the last one.
+# param=ornament_ is excluded for the same reason as param=imbue_: the pairing is to ONE obj. The
+# plain helmet points at slayer_helm_gravedigger, so a colour inheriting that line would let a
+# Gravedigger kit be used on a red helmet and hand back the plain Gravedigger helm, throwing the
+# red away. The plain helmet gained those params after this file was last generated, so a rebuild
+# quietly added them to all fourteen colours - caught by reading the regenerated diff.
 OVERRIDDEN = ('name=', 'desc=', 'model=', 'manwear=', 'womanwear=', 'manhead=', 'womanhead=',
               '2dzoom=', '2dxan=', '2dyan=', '2dzan=', '2dxof=', '2dyof=',
-              'recol', 'param=slayer_', 'param=imbue_')
+              'recol', 'param=slayer_', 'param=imbue_', 'param=ornament_')
 
 
 def read(p):
@@ -293,6 +298,15 @@ def main():
           '// survive. A colour with no head gives back five things, not six.', '']
     for key, c, imbued in made:
         r.append('[opheld3,%s] @slayer_helm_check;' % key)
+    r.append('')
+    # AND THE SAME CHECK WHILE IT IS ON YOUR HEAD. Every colour carries wearop1=Check, copied from
+    # the plain helmet along with the rest of its config, but only the opheld3 above was ever
+    # generated - so Check worked in the pack and did nothing at all when worn, on all fourteen
+    # colours and both imbue states. tools/sim/wearop.ts sweeps for exactly that: a worn option
+    # with no [label,wearop<n>_...] behind it. The plain helmet has had both since slayer_helm.rs2.
+    r += ['// The worn Check, which wearop1=Check on every colour needs behind it.', '']
+    for key, c, imbued in made:
+        r.append('[label,wearop1_%s] @slayer_helm_check;' % key)
     r.append('')
     for key, c, imbued in made:
         mask = 'black_mask_i' if imbued else 'black_mask'
