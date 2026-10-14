@@ -56,11 +56,32 @@ def read(path):
 
 
 def cache_symbols():
+    """Every [name] in the cache, by kind, plus each one's category.
+
+    THE CATEGORY MATTERS because it is a second way of being used. ahoy_ghost_banker carries
+    category=bank_teller and ahoy_ghost_shopkeeper carries category=shop_keeper and
+    param=owned_shop,ahoy_generalshop - and [apnpc1,_bank_teller] and [opnpc1,_shop_keeper] handle
+    them without ever naming them. Port Phasmatys's bank and general store work. The first version of
+    this tool reported both as unscripted, which is the same mistake as a checker that only matches
+    one syntax: a confident zero, arrived at by not looking.
+    """
     out = {}
+    cats = {}
     for kind in KINDS:
         path = os.path.join(UNPACK, CACHE_FILES[kind])
-        out[kind] = set(re.findall(r'^\[([a-z0-9_]+)\]', read(path), re.M)) if os.path.exists(path) else set()
-    return out
+        if not os.path.exists(path):
+            out[kind] = set()
+            continue
+        text = read(path)
+        out[kind] = set(re.findall(r'^\[([a-z0-9_]+)\]', text, re.M))
+        name = None
+        for line in text.splitlines():
+            m = re.match(r'^\[([a-z0-9_]+)\]', line)
+            if m:
+                name = m.group(1)
+            elif name and line.startswith('category='):
+                cats[name] = line.split('=', 1)[1].strip()
+    return out, cats
 
 
 def walk_text(root, skip_unpack=True):
@@ -106,7 +127,7 @@ def main(argv):
     verbose = '-v' in argv or '--verbose' in argv
     wanted = [a for a in argv if not a.startswith('-')]
 
-    cache = cache_symbols()
+    cache, cats = cache_symbols()
     whole = walk_text(SCRIPTS)
     used = set(re.findall(r'\b([a-z0-9_]{4,})\b', whole))
 
@@ -134,8 +155,13 @@ def main(argv):
                 if not any(name.startswith(p + '_') for p in pres):
                     continue
                 total += 1
-                if name not in used:
-                    unused[kind].append(name)
+                if name in used:
+                    continue
+                cat = cats.get(name)
+                # the category counts as a reference: [opnpc1,_shop_keeper] names no npc
+                if cat and (cat in used or ('_' + cat) in used):
+                    continue
+                unused[kind].append(name)
         if not total:
             continue
         score = sum(WEIGHT[k] * len(v) for k, v in unused.items())
