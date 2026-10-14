@@ -1,0 +1,97 @@
+// Ankou - https://oldschool.runescape.wiki/w/Ankou
+//
+// REPORTED FROM PLAY: they dropped bones and nothing else. They had no table at all. The twenty-one
+// of them went into the Forgotten Cemetery on 9 October with their npc config, their art and their
+// slayer tag, and no [ai_queue3,ankou] - so every kill fell through to the wildcard [ai_queue3,_],
+// which is the handler for a monster that has no table, and the only thing that reaches the floor
+// there is the npc's own death_drop. npc_drops.dbrow lists them in the wildcard group too, which is
+// the generator honestly reporting that there was nothing to read.
+//
+// Old School's MEMBERS table, at 128ths rather than its own 100ths, with four decisions:
+//
+//   NOT THE FORGOTTEN CEMETERY VARIANT, even though that is where ours stand. Old School's Cemetery
+//   ankou swap the 33/100 coin line for 60 Dark fishing bait at 38/100 - and dark fishing bait is
+//   Barbarian fishing, which is post-2006 and not in this build. With the item that defines that
+//   variant missing, the ordinary table IS the table; taking the Cemetery one would have meant
+//   deleting a third of the drops and replacing them with nothing.
+//
+//   RUNE ESSENCE FOR PURE ESSENCE. Old School drops 15 noted pure essence at 5/100. Pure essence
+//   does not exist here; rune essence is the same slot in a 2006 build, so it takes the line.
+//
+//   NO SEED TABLE. Old School rolls one at 1/100 and this build has no seed-table proc to call
+//   (shared_droptables.rs2 has herbs, jewels and the ultrarare). Its 1/128 goes to nothing, which
+//   is where a roll with nothing to give belongs.
+//
+//   THE CLUE IS OLD SCHOOL'S OWN 1/512, not ^trail_hard_droprate's 128. The constant is this
+//   build's standard rate and the lava dragon uses it because Old School gives THAT monster an
+//   elite and the mapping had to be invented. Here Old School already says hard, and says 1/512,
+//   so there is nothing to invent and no reason to make them four times more generous.
+//
+// LEFT OUT, and why: the left skull half (Stronghold of Security only), brimstone keys (Konar),
+// the Catacombs tertiaries, fried mushrooms (no such item here), the looting bag at 1/3 (Cemetery
+// only in Old School, and at that rate it would make the Slayer shop's own looting bag row
+// pointless - worth a decision rather than a quiet 1-in-3 flood), and Larran's key and Slayer's
+// enchantment, which are Krystilia's and are not coming now that she is not being built.
+//
+// The bands below add to 128: weapons 2, runes 39, materials 9, coins 55, other 6, the shared
+// tables 7, and 10 that give nothing.
+
+[ai_queue3,ankou] @ankou_drop_table;
+
+[label,ankou_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+
+// Always - the bones that were, until now, the whole table.
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+
+// Tertiary, at Old School's own rate for this monster rather than the house constant.
+~trail_hardcluedrop(512, npc_coord);
+
+def_int $random = random(128);
+
+// ---- weapons and armour, 2/128 ----
+if ($random < 1) {
+    obj_add(npc_coord, black_knife, 1, ^lootdrop_duration);
+} else if ($random < 2) {
+    obj_add(npc_coord, black_robe, 1, ^lootdrop_duration);
+
+// ---- runes and ammunition, 39/128 ----
+} else if ($random < 15) {
+    obj_add(npc_coord, deathrune, 10, ^lootdrop_duration);
+} else if ($random < 24) {
+    obj_add(npc_coord, lawrune, 2, ^lootdrop_duration);
+} else if ($random < 32) {
+    obj_add(npc_coord, bloodrune, 11, ^lootdrop_duration);
+} else if ($random < 37) {
+    obj_add(npc_coord, adamant_arrow, ~random_range(5, 14), ^lootdrop_duration);
+} else if ($random < 41) {
+    obj_add(npc_coord, bloodrune, 5, ^lootdrop_duration);
+
+// ---- materials, 9/128 ----
+} else if ($random < 47) {
+    obj_add(npc_coord, cert_blankrune, 15, ^lootdrop_duration);
+} else if ($random < 50) {
+    obj_add(npc_coord, cert_mithril_ore, ~random_range(3, 7), ^lootdrop_duration);
+
+// ---- coins, 55/128 ----
+} else if ($random < 92) {
+    obj_add(npc_coord, coins, 8, ^lootdrop_duration);
+} else if ($random < 105) {
+    obj_add(npc_coord, coins, ~random_range(5, 204), ^lootdrop_duration);
+
+// ---- other, 6/128 ----
+} else if ($random < 108) {
+    obj_add(npc_coord, bass, 1, ^lootdrop_duration);
+} else if ($random < 111) {
+    obj_add(npc_coord, weapon_poison, 1, ^lootdrop_duration);
+
+// ---- the shared tables, 7/128 ----
+} else if ($random < 115) {
+    obj_add(npc_coord, ~randomherb, ^lootdrop_duration);
+} else if ($random < 118) {
+    obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+}
+// 118-127 is nothing: Old School's own 7/100, plus the 1/100 seed roll this build cannot make.
