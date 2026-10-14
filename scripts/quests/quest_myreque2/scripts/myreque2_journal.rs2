@@ -81,7 +81,30 @@ switch_int (%myreque_2_quest) {
     case ^m2_tomb :
         $text = "@str@The plaster over the tomb has taken the impression of what|";
         $text = append($text, "@str@was carved under it, and it is not an epitaph.|");
-        $text = append($text, "@dbl@Take it to @dre@Veliaf");
+        $text = append($text, "@dbl@Take the @dre@fragment@dbl@ to @dre@Veliaf");
+
+    case ^m2_recipe :
+        $text = "@str@It is not an epitaph. It is a recipe: silver and mithril cast|";
+        $text = append($text, "@str@together with a sapphire for the head, the stone enchanted,|");
+        $text = append($text, "@str@and the whole thing charged in water that was never|");
+        $text = append($text, "@str@blessed.|");
+        $text = append($text, "@dbl@The mould is the @dre@carving itself@dbl@ - take @dre@soft clay@dbl@ to the lid");
+
+    case ^m2_mould :
+        $text = "@str@The clay came away with the whole shape of it.|";
+        $text = append($text, "@dbl@A @dre@furnace@dbl@, with a @dre@silver bar@dbl@, a @dre@mithril bar@dbl@ and a|");
+        $text = append($text, "@dbl@@dre@sapphire");
+
+    case ^m2_rod :
+        $text = "@str@A silvthrill rod: mithril and silver in one piece with a|";
+        $text = append($text, "@str@sapphire seated in the head. It does nothing at all.|");
+        $text = append($text, "@dbl@Cast @dre@Lvl-1 Enchant@dbl@ on the stone|");
+        $text = append($text, "@dbl@Then charge it down the @dre@well@dbl@ under @dre@Paterdomus@dbl@, with a|");
+        $text = append($text, "@dbl@@dre@rope");
+
+    case ^m2_charged :
+        $text = "@str@Ten charges, and the rod is cold enough to hurt.|";
+        $text = append($text, "@dbl@Take the @dre@Rod of Ivandis@dbl@ to @dre@Veliaf");
 
     case ^m2_complete :
         $text = "@str@Burgh de Rott has a shop, a bank, a lit furnace and six|";
@@ -90,7 +113,8 @@ switch_int (%myreque_2_quest) {
         $text = append($text, "@str@Ivandis Seergaze was the seventh of the Sleeping Seven and|");
         $text = append($text, "@str@somebody removed him from every history in the temple,|");
         $text = append($text, "@str@because what he worked out was not an epitaph. It was a|");
-        $text = append($text, "@str@method.||");
+        $text = append($text, "@str@method - and the rod it describes is in my hands, with ten|");
+        $text = append($text, "@str@charges in it.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :

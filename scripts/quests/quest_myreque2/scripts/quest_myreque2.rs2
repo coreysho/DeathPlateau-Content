@@ -24,7 +24,11 @@ switch_int (%myreque_2_quest) {
     case ^m2_base : @m2_veliaf_moved_in;
     case ^m2_temple : @m2_veliaf_temple;
     case ^m2_books : @m2_veliaf_books;
-    case ^m2_tomb : @m2_finish;
+    case ^m2_tomb : @m2_recipe;
+    case ^m2_recipe : @m2_veliaf_recipe_idle;
+    case ^m2_mould : @m2_veliaf_recipe_idle;
+    case ^m2_rod : @m2_veliaf_recipe_idle;
+    case ^m2_charged : @m2_finish;
     case default :
         if (%myreque_2_quest >= ^m2_complete) {
             ~chatnpc("<p,happy>Ivandis Seergaze. Two hundred years and it turns out somebody had already worked out how to kill them, and then died before he could tell anyone who mattered.");
@@ -79,13 +83,40 @@ switch_int (~p_choice2("Why hasn't anyone helped them?", 1, "Forty people is not
 ~chatnpc("<p,shock>A tomb. Under the Hollows. We have been walking past it for twenty years.");
 ~chatnpc("<p,neutral>The boards on that door were put there by somebody who did not want it found and I had always assumed they were structural.");
 
-[label,m2_finish]
+// He reads the fragment. It is a recipe, and that is where the rod starts.
+[label,m2_recipe]
 ~chatplayer("<p,neutral>The tomb is open.");
 if_close;
 mes("Veliaf reads the plaster fragment twice and then a third time.");
 p_delay(5);
 ~mesbox("Ivandis Seergaze was one of seven warrior priests, and he is the only one of the seven who is not in the histories, and the reason he is not in the histories is that what he worked out was not something the temple wanted written down. | It is a recipe. It is a way of making silver do to a vampyre what it has always very nearly done.");
 p_delay(3);
+%myreque_2_quest = ^m2_recipe;
+~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+~chatnpc("<p,neutral>Silver and mithril cast together, with a sapphire for the head, and the stone enchanted. Then it wants charging, and the fragment is specific about where: the well under Paterdomus, which has never been blessed.");
+~chatnpc("<p,neutral>The mould is the carving itself. Take clay to the lid.");
+
+[label,m2_veliaf_recipe_idle]
+if (%myreque_2_quest = ^m2_mould) {
+    ~chatnpc("<p,neutral>You have the shape of it. Silver and mithril and a sapphire, at a furnace.");
+    return;
+}
+if (%myreque_2_quest = ^m2_rod) {
+    ~chatnpc("<p,neutral>A beautiful rod that does nothing. Enchant the stone, then charge it down the well.");
+    return;
+}
+~chatnpc("<p,neutral>Clay against the carving on the lid. That is your mould.");
+
+[label,m2_finish]
+~chatplayer("<p,happy>It is made, and it is charged.");
+~chatnpc("<p,shock>...give me that.");
+if_close;
+mes("Veliaf turns the rod over twice and does not let go of it.");
+p_delay(5);
+inv_del(inv, burgh_rod_command_final_10, 1);
+~mesbox("\"Sixty years,\" he says. \"Sixty years of hurting them and running, and a dead priest had the answer written on his own coffin lid the whole time.\" | He hands it straight back. \"You made it. You carry it. There are ten charges in that and I want to know what happens to the first thing you use one on.\"");
+p_delay(3);
+inv_add(inv, burgh_rod_command_final_10, 1);
 %myreque_2_quest = ^m2_complete;
 %blood_tithe_visible = ^m2_tithe_over;
 stat_advance(attack, 20000);

@@ -253,16 +253,18 @@ def silver(panel):
         'are the same click - a silver bar on a furnace - so one of them has to win, and the',
         'window is the one that shows all seven products and names the mould you lack.',
         '',
-        'Three of the seven have no obj in pack/obj.pack at all: the lightning rod, the silvthrill',
-        'rod and the demonic sigil belong to quests this build does not have. Their moulds do not',
-        'exist either, so those three panels simply never flip to the make state. Nothing special',
-        'is done about them and nothing needs to be.',
+        'FOUR OF THE SEVEN ARE JEWELLERY and take a silver bar each: the two symbols, the sickle',
+        'and the tiara, all driven off crafting_jewelry_struct. The silvthrill rod is the fifth and',
+        'is not jewellery - it is the step In Aid of the Myreque owns, silver and mithril and a',
+        'sapphire together - so its slot flips on the mould that quest hands out, and its',
+        'button goes to the quest. The lightning rod and the demonic sigil belong to quests this',
+        'build does not have yet, and their slots stay on the need-a-mould side by themselves.',
     ]
     b = ['// There is NO [oplocu,_smithing_furnace] here on purpose: smelting.rs2 already owns that',
          '// trigger and a duplicate is a hard build error. Its silver_bar case calls this proc.',
          '[proc,silver_casting_open]']
     for p in prods:
-        if p['struct']:
+        if p['struct'] or p.get('handler'):
             b += ['if (inv_total(inv, %s) > 0) {' % p['mould'],
                   '    inv_transmit(%s, silver_casting:slot_%s);' % (p['inv'], p['key']),
                   '    if_sethide(silver_casting:make_%s, false);' % p['key'],
@@ -278,6 +280,17 @@ def silver(panel):
                   'if_sethide(silver_casting:need_%s, false);' % p['key']]
     b += ['if_openmain(silver_casting);', '']
     for p in prods:
+        # A PRODUCT WITH A HANDLER IS A QUEST STEP, and it gets one button rather than three: the
+        # Make 5 and Make 10 of the generic slot are for jewellery, and nobody casts ten Rods of
+        # Ivandis. Its button goes to the quest's own label, which is where the extra materials and
+        # the quest's own stage live.
+        if p.get('handler'):
+            b += ['[inv_button1,silver_casting:slot_%s]' % p['key'],
+                  'if (p_finduid(uid) = true) {',
+                  '    @%s;' % p['handler'],
+                  '}',
+                  '']
+            continue
         if not p['struct']:
             continue
         for n, count in ((1, 1), (2, 5), (3, 10)):

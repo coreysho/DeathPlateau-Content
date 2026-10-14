@@ -8,6 +8,12 @@ data=experience,175
 data=convertobj,sapphire_ring,ring_of_recoil,human_cast_enchantring,enchant_ring,enchant_sapphire_ring
 data=convertobj,strung_sapphire_amulet,amulet_of_magic,human_enchantamuletlvl1,enchant_amulet_lvl1,enchant_sapphire_amulet
 data=convertobj,sapphire_necklace,necklace_of_minigames_8,human_enchantamuletlvl1,enchant_amulet_lvl1,enchant_sapphire_amulet
+// The silvthrill rod, which is In Aid of the Myreque's own step: the rod is cast with a sapphire in
+// the head of it and the walkthrough has you cast Lvl-1 Enchant on the stone. burgh_rod_command1 and
+// burgh_rod_command2 are the cache's two rods - the same description, the second one "it has been
+// enchanted" - and nothing could turn one into the other. It takes the sapphire ring's animation,
+// because what is being enchanted is a sapphire.
+data=convertobj,burgh_rod_command1,burgh_rod_command2,human_cast_enchantring,enchant_ring,enchant_sapphire_ring
 data=additional_reqmessage,"This spell can only be cast on Sapphire Amulets, Necklaces and Rings."
 data=specificobj_reqmessage,unstrung_sapphire_amulet,You need to string the Sapphire Amulet before enchanting it.
 

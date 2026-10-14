@@ -51,7 +51,20 @@
 ^m2_temple = 80         // sent to the Paterdomus catacombs
 ^m2_books = 90          // the histories read, the library opened
 ^m2_tomb = 100          // Ivandis's tomb opened
+// THE ROD, which is what the quest is for. The fragment off the tomb is a recipe, and the cache has
+// every piece of what it describes: the clay mould, the silvthrill rod, the enchanted rod and ten
+// charge states of the Rod of Ivandis. The new stages go in the gaps, so nobody halfway through
+// loses their place.
+^m2_recipe = 102        // Veliaf has read the fragment and said what it is
+^m2_mould = 104         // soft clay against the carving on the coffin
+^m2_rod = 106           // cast at a furnace: silver, mithril and a sapphire
+^m2_charged = 108       // lowered down the well under Paterdomus
 ^m2_complete = 110
+
+// Casting the rod. The walkthrough gives no Crafting level for it, so this is the level the rest of
+// the silver panel's quest pieces sit at and the experience a sapphire ring pays.
+^m2_rod_crafting = 20
+^m2_rod_crafting_xp = 1000
 
 ^m2_off = 0
 ^m2_on = 1

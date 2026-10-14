@@ -1,0 +1,137 @@
+// THE ROD OF IVANDIS, which is what this quest is for and what it did not have. The 377 cache
+// ships the whole chain and nothing referenced a single piece of it:
+//
+//   burgh_rod_clay                "Rod clay mould - Rod of Ivandis mould"
+//   burgh_rod_command1            "Silvthrill rod - A silvery rod of mithril and silver with a
+//                                  sapphire on the top."
+//   burgh_rod_command2            the same rod, "it has been enchanted"
+//   burgh_rod_command_final_1..10 "Rod of ivandis(1)" to "(10)", a partially charged rod to a
+//                                 fully charged one - ten charge states, in the cache, unused
+//   burgh_well                    the well under Paterdomus, "It smells stagnant."
+//
+// And the panel for casting it has been in pack/interface.pack all along:
+// silver_casting:make_silvthrill_rod, slot_silvthrill_rod, need_silvthrill_rod. The window's spec
+// (tools/adoptspec.json) already knew the rod was burgh_rod_command1 and left the slot on the
+// need-a-mould side because nothing in the build handed out the mould. This is what hands it out.
+//
+// The quest already ended with Veliaf reading the plaster fragment off Ivandis's tomb and saying
+// what it is: "It is a recipe. It is a way of making silver do to a vampyre what it has always very
+// nearly done." That sentence is the hook this hangs on - the recipe, and then the rod.
+
+// =========================================================================== the mould
+// Soft clay against the carving on the coffin lid takes the impression of it.
+[oplocu,burgh_ancient_coffin]
+if (last_useitem ! softclay) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%myreque_2_quest < ^m2_recipe) {
+    ~mesbox("A stone lid with a carving on it, and no reason yet to take a copy of the carving.");
+    return;
+}
+if (~obj_gettotal(burgh_rod_clay) > 0 | ~m2_has_rod = true) {
+    ~mesbox("You have the mould already.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~mesbox("Your hands are full.");
+    return;
+}
+if_close;
+mes("You press the clay into the carving on the lid.");
+anim(human_pickupfloor, 0);
+p_delay(4);
+inv_del(inv, softclay, 1);
+inv_add(inv, burgh_rod_clay, 1);
+if (%myreque_2_quest < ^m2_mould) {
+    %myreque_2_quest = ^m2_mould;
+    ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+}
+~objbox(burgh_rod_clay, "The clay comes away with the whole shape of it: a rod, the length of a forearm, with a seat at the top for a stone.", 250, 0, divide(^objbox_height, 2));
+~mesbox("The recipe is silver and mithril together, and a sapphire for the head. A furnace will do the rest.");
+
+// Whether the player has got as far as any version of the rod, so the mould is not handed out twice
+// and the coffin stops offering.
+[proc,m2_has_rod]()(boolean)
+if (~obj_gettotal(burgh_rod_command1) > 0 | ~obj_gettotal(burgh_rod_command2) > 0) {
+    return(true);
+}
+if (~obj_gettotal(burgh_rod_command_final_10) > 0) {
+    return(true);
+}
+if (%myreque_2_quest >= ^m2_complete) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the casting
+// The furnace's Silver Casting window offers the rod as soon as the mould is in your hands - the
+// panel and its slot have always been there - and its button comes here rather than to the generic
+// silver_casting_go, because the rod is the one product on that panel that takes more than a silver
+// bar: silver and mithril and a sapphire, which is what the inscription says.
+[label,myreque2_cast_rod]
+if (inv_total(inv, burgh_rod_clay) < 1) {
+    ~mesbox("You require a mould to make that.");
+    return;
+}
+if_close;
+if (inv_total(inv, silver_bar) < 1 | inv_total(inv, mithril_bar) < 1 | inv_total(inv, sapphire) < 1) {
+    ~mesbox("The rod wants a silver bar, a mithril bar and a sapphire, and you are short of at least one of them.");
+    return;
+}
+if (stat(crafting) < ^m2_rod_crafting) {
+    ~mesbox("You need level <tostring(^m2_rod_crafting)> Crafting to cast something this fine.");
+    return;
+}
+anim(human_furnace, 0);
+sound_synth(furnace, 1, 0);
+p_delay(3);
+inv_del(inv, silver_bar, 1);
+inv_del(inv, mithril_bar, 1);
+inv_del(inv, sapphire, 1);
+inv_add(inv, burgh_rod_command1, 1);
+stat_advance(crafting, ^m2_rod_crafting_xp);
+if (%myreque_2_quest < ^m2_rod) {
+    %myreque_2_quest = ^m2_rod;
+    ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+}
+~objbox(burgh_rod_command1, "The two metals go in separately and come out as one rod, with the sapphire seated in the head of it.", 250, 0, divide(^objbox_height, 2));
+~mesbox("It is a beautiful piece of work and it does nothing at all. The inscription says the stone has to be enchanted.");
+
+// The enchanting is the game's own: scripts/skill_magic/configs/magic_spells.dbrow has a convertobj
+// line turning burgh_rod_command1 into burgh_rod_command2 under Lvl-1 Enchant, which is the spell a
+// sapphire takes and the spell the walkthrough names.
+
+// =========================================================================== the well
+// "It smells stagnant." The rod goes down it on a rope and comes up charged.
+[oplocu,burgh_well]
+if (last_useitem ! burgh_rod_command2) {
+    if (last_useitem = burgh_rod_command1) {
+        ~mesbox("The sapphire is dead. It wants enchanting before this water will do anything for it.");
+        return;
+    }
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (inv_total(inv, rope) < 1) {
+    ~mesbox("It is a long way down and you are not letting go of the rod. You need a rope.");
+    return;
+}
+if_close;
+mes("You tie the rod to the rope and lower it into the well.");
+anim(human_pickupfloor, 0);
+p_delay(5);
+inv_del(inv, burgh_rod_command2, 1);
+inv_add(inv, burgh_rod_command_final_10, 1);
+if (%myreque_2_quest < ^m2_charged) {
+    %myreque_2_quest = ^m2_charged;
+    ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+}
+~objbox(burgh_rod_command_final_10, "What comes back up is not wet. The sapphire has gone the colour of the water and the whole rod is cold enough to hurt.", 250, 0, divide(^objbox_height, 2));
+~mesbox("Ten charges, by the feel of it, and one of them is one more than any vampyre in this swamp has ever had to worry about.");
+
+[oploc1,burgh_well]
+p_arrivedelay;
+~mesbox("A well, under a temple, in the one place in this country where the water has never been blessed. It smells stagnant.");
