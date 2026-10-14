@@ -641,3 +641,18 @@ switch_coord (loc_coord) {
     case 2_52_46_28_37 : ~climb_ladder(1_52_46_28_38, false);
     case default : ~climb_ladder(movecoord(coord, 0, -1, 0), false);
 }
+
+// THE ONE-WAY LADDER at 3356,2981. The switch above has a case for climbing DOWN from level 2 on
+// that tile, and the switch above that has the matching case for climbing UP to it from level 1 -
+// but the loc standing on the level-1 tile is not feud_ladder. m52_46 was re-imported for the
+// Pollnivneach rooftop course and osrsloc_6261 took the tile: same ladder, same model, same
+// Climb-up, and it is OSRS loc 6261 where the 377 cache's feud_ladder is also 6261, which is how
+// one replaced the other without anybody noticing. It carried op1=Climb-up with no trigger in any
+// script, so that upper floor could be climbed down from and never up to.
+//
+// It is placed exactly once in the whole build (maps/m52_46.jm2, level 1, local 28,37), so one
+// destination is the whole of it rather than another switch. Found by audit2, which had the tile
+// written down as a feud_ladder and threw when it was not there.
+[oploc1,osrsloc_6261]
+p_arrivedelay;
+~climb_ladder(2_52_46_28_38, true);
