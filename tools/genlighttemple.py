@@ -150,9 +150,12 @@ def parse_graph(src):
     return edges, varlist('m2_dark'), ups, varlist('m2_pillars_dark'), header
 
 
-def emit_graph(edges, dark, ups, pdark, header):
+def emit_graph(edges, dark, ups, pdark, header, bysegment, crossings):
     out = [header.rstrip(NL), '']
-    out.append('[proc,m2_edge](int $pillar, int $dir, int $colour)(int)')
+    out.append('// Returns the pillar the beam arrives at - 0 if it leaves the building - AND the colour it is')
+    out.append('// carrying when it gets there, which is not always the colour it set out with: a crossing tile')
+    out.append('// where another beam is already standing adds the two together.')
+    out.append('[proc,m2_edge](int $pillar, int $dir, int $colour)(int, int)')
     out.append('switch_int ($pillar) {')
     for pillar in sorted({p for p, _ in edges}):
         out.append('    case %d :' % pillar)
@@ -163,10 +166,13 @@ def emit_graph(edges, dark, ups, pdark, header):
             out.append('        case %d :' % d)
             for s in segs:
                 out.append('            %%%s = $colour;' % s)
-            out.append('            return(%d);' % nxt)
+                for var, axis in sorted(bysegment.get(s, ())):
+                    out.append('            $colour = ~m2_cross_%s(%d, $colour);'
+                               % (var.replace('mourning_pillar_light_cross_', ''), axis))
+            out.append('            return(%d, $colour);' % nxt)
         out.append('        }')
     out.append('}')
-    out.append('return(0);')
+    out.append('return(0, $colour);')
     out.append('')
     out.append('// Every segment back to dark. The trace clears the whole temple and relights only')
     out.append('// the path the beam actually takes, so a mirror that breaks the path puts out')
@@ -174,6 +180,9 @@ def emit_graph(edges, dark, ups, pdark, header):
     out.append('[proc,m2_dark]()()')
     for s in dark:
         out.append('%%%s = 0;' % s)
+    out.append('// and the ten crossing tiles, which are enums rather than plain colours')
+    for var in sorted(crossings):
+        out.append('%%%s = 0;' % var)
     out.append('')
     out.append('// Each pillar has its own <floor>_<room>_up varbit on mourning_quest_vert_beams1-5, and')
     out.append('// the pillar loc is a multiloc on it: 0 is dark and 1-7 are the seven colours.')
@@ -186,7 +195,7 @@ def emit_graph(edges, dark, ups, pdark, header):
     out.append('[proc,m2_pillars_dark]()()')
     for s in pdark:
         out.append('%%%s = 0;' % s)
-    out.append('')
+    out.append(emit_cross_procs(crossings))
     return NL.join(out)
 
 
@@ -323,6 +332,100 @@ def parse_pillars(src):
     return order
 
 
+# --------------------------------------------------------------------------- the crossing tiles
+# TEN TILES WHERE TWO CORRIDORS CROSS AND NO PILLAR STANDS. Each is a
+# mourning_light_temple_beam_cross_<floor>_<room> loc on a mourning_pillar_light_cross_* varbit,
+# and those varbits are 28-state enums where every other light varbit in the building is a 3-bit
+# colour:
+#
+#    1-7    a north-south beam, in the seven colours
+#    8-14   an east-west beam
+#    15-21  a vertical beam
+#    22-28  a crossed beam - two of them, at once
+#
+# Nothing wrote them, so ten tiles in the middle of lit corridors stayed dark. Which segment runs
+# through which crossing, and on which axis, is read off the map here: the beam locs on the tiles
+# north and south of a crossing belong to its north-south run and the ones east and west to its
+# east-west run, and each of those locs carries the segment varbit as its own multivar.
+CROSS_NS = 0
+CROSS_EW = 7
+CROSS_VERT = 14
+CROSS_BOTH = 21
+
+
+def crosstable():
+    """segment varbit -> [(crossing varbit, axis base), ...], and the crossings themselves."""
+    cfg = read(LOCCFG)
+    beamvar, crossvar = {}, {}
+    for block in re.split(NL + r'(?=\[)', cfg):
+        m = re.match(r'\[([a-z0-9_]+)\]', block)
+        if not m:
+            continue
+        name = m.group(1)
+        mv = re.search(r'multivar=([a-z0-9_]+)', block)
+        if not mv:
+            continue
+        if name.startswith('mourning_light_temple_beam_cross_'):
+            crossvar[name] = mv.group(1)
+        elif name.startswith('mourning_light_temple_beam_'):
+            beamvar[name] = mv.group(1)
+
+    ids = locnames()
+    grid = mapgrid(ids)
+    bysegment = {}
+    crossings = {}
+    for (pl, x, z), ns in sorted(grid.items()):
+        for n in ns:
+            if n not in crossvar:
+                continue
+            var = crossvar[n]
+            # ONE OF THE ELEVEN IS NOT A CROSSING AT ALL: the loc at floor 2 room 8 is a
+            # beam_cross loc whose multivar is mourning_light_temple_2_8_up, a plain three-bit
+            # colour, so it is a vertical beam and the vertical edges already light it.
+            if var.endswith('_up'):
+                continue
+            crossings[var] = (pl, x, z)
+            for dx, axis in ((1, CROSS_EW), (-1, CROSS_EW)):
+                for nb in grid.get((pl, x + dx, z), []):
+                    if nb in beamvar:
+                        bysegment.setdefault(beamvar[nb], set()).add((var, axis))
+            for dz, axis in ((1, CROSS_NS), (-1, CROSS_NS)):
+                for nb in grid.get((pl, x, z + dz), []):
+                    if nb in beamvar:
+                        bysegment.setdefault(beamvar[nb], set()).add((var, axis))
+    return bysegment, crossings
+
+
+def emit_cross_procs(crossings):
+    out = ['',
+           '// Each crossing tile gets its own proc, because a varbit cannot be passed to one. $axis',
+           '// is 0 for a north-south beam, 7 for east-west, 14 for a vertical one; a beam arriving',
+           '// at a tile that already holds a beam on ANOTHER axis makes it a crossed beam, and the',
+           '// colour it is drawn in is the two colours added - which is the only way anything in',
+           '// this temple can be magenta.']
+    for var in sorted(crossings):
+        short = var.replace('mourning_pillar_light_cross_', '')
+        out.append('')
+        out.append('[proc,m2_cross_%s](int $axis, int $colour)(int)' % short)
+        out.append('def_int $now = %%%s;' % var)
+        out.append('if ($now = ^mt_colour_dark) {')
+        out.append('    %%%s = add($axis, $colour);' % var)
+        out.append('    return($colour);')
+        out.append('}')
+        out.append('if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {')
+        out.append('    // the same axis again: the two together are what shows')
+        out.append('    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);')
+        out.append('    %%%s = add($axis, $both);' % var)
+        out.append('    return($both);')
+        out.append('}')
+        out.append('// TWO BEAMS CROSSING, and they add - which is the only way to magenta.')
+        out.append('def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);')
+        out.append('%%%s = add(^mt_cross_both, $sum);' % var)
+        out.append('return($sum);')
+    out.append('')
+    return NL.join(out)
+
+
 def main():
     src = read(GRAPH)
     edges, dark, ups, pdark, header = parse_graph(src)
@@ -342,7 +445,9 @@ def main():
             # The shaft is a chute, not a corridor: floor 3 pillar a takes the light and
             # drops it two floors. Every other asymmetry would be a mistake.
             print('  one-way edge (expected only for the shaft): %d --%d--> %d' % (p, d, n))
-    print('  graph: ' + write(GRAPH, emit_graph(edges, dark, ups, pdark, header)))
+    bysegment, crossings = crosstable()
+    print('  %d crossing tiles, on %d segments' % (len(crossings), len(bysegment)))
+    print('  graph: ' + write(GRAPH, emit_graph(edges, dark, ups, pdark, header, bysegment, crossings)))
     rows = doortable()
     for door, colour, seg, tiles in rows:
         print('  door %-24s colour %d  %s' % (door, colour, seg or 'NO BEAM - shut for good'))

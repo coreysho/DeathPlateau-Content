@@ -140,6 +140,12 @@ if ($v >= ^mt_socket_tilt) {
     return(append(append("a mirror tilted to send the light travelling ",
         ~mt_dir_name(add(divide($i, 2), 1))), append(" ", $way)));
 }
+if ($v >= ^mt_socket_fractured) {
+    def_int $fw = 0;
+    def_int $fd = 0;
+    $fw, $fd = ~mt_fractured_at($pillar);
+    return(append("a fractured crystal, its clear edge to the ", ~mt_dir_name($fd)));
+}
 if ($v >= ^mt_socket_crystal) {
     return(append(append("a ", ~mt_colour_name(~mt_crystal_at($pillar))), " crystal"));
 }
@@ -205,62 +211,170 @@ switch_int ($colour) {
 }
 return(null);
 
+// =========================================================================== mixing and crossings
+// Two beams that cross ADD, which is the one place in this temple where a colour gets brighter
+// rather than dimmer: red and blue cross and the tile is magenta, and the beams carry magenta out
+// of it. Everything else here is a filter and can only take components away.
+[proc,mt_colour_add](int $a, int $b)(int)
+return(~mt_mask_colour(or(~mt_colour_mask($a), ~mt_colour_mask($b))));
+
+// The colour out of one of the ten 28-state crossing varbits, whichever block it is in.
+[proc,mt_cross_colour](int $state)(int)
+if ($state > ^mt_cross_both) {
+    return(sub($state, ^mt_cross_both));
+}
+if ($state > ^mt_cross_vert) {
+    return(sub($state, ^mt_cross_vert));
+}
+if ($state > ^mt_cross_ew) {
+    return(sub($state, ^mt_cross_ew));
+}
+return($state);
+
+// =========================================================================== fractured crystals
+// Which fractured crystal is in this socket (1 or 2), and which way its clear edge points.
+[proc,mt_fractured_at](int $pillar)(int, int)
+def_int $v = ~mt_socket_read($pillar);
+if ($v < ^mt_socket_fractured) {
+    return(0, 0);
+}
+def_int $i = sub($v, ^mt_socket_fractured);
+return(add(divide($i, ^mt_fractured_dirs), 1), add(modulo($i, ^mt_fractured_dirs), 1));
+
+[proc,mt_fractured_obj](int $which)(namedobj)
+if ($which = 1) {
+    return(mourning_fractured_crystal_1);
+}
+if ($which = 2) {
+    return(mourning_fractured_crystal_2);
+}
+return(null);
+
+[proc,mt_fractured_which](obj $obj)(int)
+if ($obj = mourning_fractured_crystal_1) {
+    return(1);
+}
+if ($obj = mourning_fractured_crystal_2) {
+    return(2);
+}
+return(0);
+
 // =========================================================================== the trace
 // Clear everything, then walk the beam from the entry until it stops, leaves the temple, or gets
-// out of the hole in the west wall. Every segment and every pillar it touches is lit in the colour
-// it is carrying at that point, and those varbits are transmitted, so the client draws exactly the
-// path - and the colour - the server walked.
+// out of the hole in the west wall. Every segment, pillar and crossing it touches is lit in the
+// colour it is carrying at that point, and those varbits are transmitted, so the client draws
+// exactly the path - and the colour - the server walked.
 //
-// THE WALK IS IN THREE DIMENSIONS. Up and down are directions 5 and 6 and the graph has edges for
-// them: the pillars stack, so the same room on the floor above is a vertical neighbour, and the
-// beam between them is the lower pillar's own _up varbit. The shaft - floor 3 pillar a dropping two
-// floors onto floor 1 pillar b - used to be a hardcoded branch in here and is now simply the one
-// vertical edge that skips a floor.
-[proc,mt_trace]()(boolean)
-~m2_dark;
-~m2_pillars_dark;
-def_int $p = ^mt_pillar_entry;
-def_int $d = ^mt_entry_dir;
-def_int $c = ^mt_colour_white;
+// THE WALK IS IN THREE DIMENSIONS and there can be MORE THAN ONE BEAM. Up and down are directions
+// 5 and 6 and the graph has edges for them; a fractured crystal splits a beam in two. ~mt_walk
+// takes one beam to its end and hands back the one split it met on the way, so the trace is four
+// walks in a chain - the beam that comes in, and up to three split off it - which is one more than
+// two fractured crystals can produce.
+//
+// IT RUNS THE WHOLE CHAIN TWICE, and nothing is cleared in between, because a beam can only see the
+// crossings the beams before it made. The writes are idempotent - a segment is assigned and a
+// crossing is OR-ed - so the second pass is what lets the first beam carry a crossed colour it
+// could not have known about on the way through.
+[proc,mt_walk](int $p, int $d, int $c)(int, int, int, boolean)
 def_int $steps = 0;
+def_int $split_p = 0;
+def_int $split_d = 0;
+def_int $split_c = 0;
 ~m2_pillar_up($p, $c);
 while ($steps < ^mt_trace_steps) {
     $steps = add($steps, 1);
-    // WHAT IS IN THIS PILLAR'S SOCKET comes first, before the beam goes anywhere, because the
-    // shaft pillars have sockets too. A first version did the shaft drop first and then the socket,
-    // which skipped the socket of the pillar at the bottom of the shaft entirely - and that pillar
-    // is the last one the beam passes before it leaves by the hole in the wall.
     def_int $crystal = ~mt_crystal_at($p);
     if ($crystal > ^mt_colour_dark) {
         $c = ~mt_filter($c, $crystal);
-        // A crystal can take the last component out of a beam, and then there is nothing left to
-        // travel: red light into a cyan crystal is the end of the beam.
         ~m2_pillar_up($p, $c);
         if ($c = ^mt_colour_dark) {
-            return(false);
+            // a crystal can take the last component out of a beam: red light into a cyan crystal
+            return($split_p, $split_d, $split_c, false);
         }
     } else {
-        def_int $mirror = ~mt_mirror_at($p);
-        if ($mirror > 0) {
-            $d = ~mt_mirror_turn($mirror, $d);
-            if ($d = 0) {
-                // The back of the mirror. The beam stops here.
-                return(false);
+        def_int $which = 0;
+        def_int $edge = 0;
+        $which, $edge = ~mt_fractured_at($p);
+        if ($which > 0) {
+            // THE SPLIT. The beam carries straight on and a copy of it leaves along the clear
+            // edge. Only the first split of a walk is handed back; a walk that meets two
+            // fractured crystals loses the second, which two crystals cannot arrange.
+            if ($split_p = 0 & $edge ! $d & $edge ! ~mt_opposite($d)) {
+                $split_p = $p;
+                $split_d = $edge;
+                $split_c = $c;
+            }
+        } else {
+            def_int $mirror = ~mt_mirror_at($p);
+            if ($mirror > 0) {
+                $d = ~mt_mirror_turn($mirror, $d);
+                if ($d = 0) {
+                    // the back of the mirror
+                    return($split_p, $split_d, $split_c, false);
+                }
             }
         }
     }
-    def_int $next = ~m2_edge($p, $d, $c);
+    def_int $next = 0;
+    def_int $carry = 0;
+    $next, $carry = ~m2_edge($p, $d, $c);
+    $c = $carry;
     if ($next = 0) {
-        // Out of the temple. Out of the west wall on the bottom floor is the one that counts.
+        // out of the temple; out of the west wall on the bottom floor is the one that counts
         if ($p = ^mt_pillar_shaft_bottom & $d = ^mt_dir_west) {
-            return(true);
+            return($split_p, $split_d, $split_c, true);
         }
-        return(false);
+        return($split_p, $split_d, $split_c, false);
     }
     $p = $next;
     ~m2_pillar_up($p, $c);
 }
-return(false);
+return($split_p, $split_d, $split_c, false);
+
+[proc,mt_trace]()(boolean)
+~m2_dark;
+~m2_pillars_dark;
+def_boolean $out = false;
+def_int $pass = 0;
+while ($pass < 2) {
+    $pass = add($pass, 1);
+    def_int $p1 = 0;
+    def_int $d1 = 0;
+    def_int $c1 = 0;
+    def_boolean $hit = false;
+    $p1, $d1, $c1, $hit = ~mt_walk(^mt_pillar_entry, ^mt_entry_dir, ^mt_colour_white);
+    if ($hit = true) {
+        $out = true;
+    }
+    if ($p1 > 0) {
+        def_int $p2 = 0;
+        def_int $d2 = 0;
+        def_int $c2 = 0;
+        $p2, $d2, $c2, $hit = ~mt_walk($p1, $d1, $c1);
+        if ($hit = true) {
+            $out = true;
+        }
+        if ($p2 > 0) {
+            def_int $p3 = 0;
+            def_int $d3 = 0;
+            def_int $c3 = 0;
+            $p3, $d3, $c3, $hit = ~mt_walk($p2, $d2, $c2);
+            if ($hit = true) {
+                $out = true;
+            }
+            if ($p3 > 0) {
+                def_int $p4 = 0;
+                def_int $d4 = 0;
+                def_int $c4 = 0;
+                $p4, $d4, $c4, $hit = ~mt_walk($p3, $d3, $c3);
+                if ($hit = true) {
+                    $out = true;
+                }
+            }
+        }
+    }
+}
+return($out);
 
 // THE DOORS ARE PART OF THE LIGHT and have to be recomputed every time it moves, so nothing may
 // call ~mt_trace on its own: a door left open after the beam that opened it has gone is a hole in
@@ -549,9 +663,20 @@ switch_int ($n) {
     case 4 : $colour = ^mt_colour_blue;
     case 2 : $colour = ^mt_colour_red;
 }
+// AND THE TWO FRACTURED CRYSTALS, which are what make a second beam and therefore magenta: one
+// with the red crystal, since red and blue crossing is the only way to it, and the other in the
+// room behind the magenta door itself.
+def_namedobj $fractured = null;
+switch_int ($n) {
+    case 2 : $fractured = mourning_fractured_crystal_1;
+    case 3 : $fractured = mourning_fractured_crystal_2;
+}
 def_namedobj $crystal = ~mt_crystal_obj($colour);
 def_int $want = ^mt_chest_mirrors;
 if ($crystal ! null) {
+    $want = add($want, 1);
+}
+if ($fractured ! null) {
     $want = add($want, 1);
 }
 if (inv_total(inv, mourning_colour_wheel) = 0) {
@@ -570,9 +695,16 @@ if (%mourning_quest_main = ^mt_inside) {
     %mourning_quest_main = ^mt_mirrors;
     ~send_quest_progress(questlist:mourning2, %mourning_quest_main, ^mt_complete);
 }
+if ($fractured ! null) {
+    inv_add(inv, $fractured, 1);
+}
 if ($crystal ! null) {
     inv_add(inv, $crystal, 1);
     ~objbox($crystal, "<tostring(^mt_chest_mirrors)> hand mirrors, and under them a crystal the colour of <~mt_colour_name($colour)> glass. Light that goes through it comes out that colour and no other.", 250, 0, divide(^objbox_height, 2));
+    return;
+}
+if ($fractured ! null) {
+    ~objbox($fractured, "<tostring(^mt_chest_mirrors)> hand mirrors, and under them a crystal with a crack all the way through it and one edge polished clear. A beam that goes into it comes out twice.", 250, 0, divide(^objbox_height, 2));
     return;
 }
 ~mesbox("<tostring(^mt_chest_mirrors)> hand mirrors, in brackets, wrapped in cloth that has not been touched in six hundred years.");
@@ -617,6 +749,10 @@ if (~mt_crystal_colour($used) > ^mt_colour_dark) {
     p_arrivedelay;
     @mt_place_crystal($pillar, ~mt_crystal_colour($used));
 }
+if (~mt_fractured_which($used) > 0) {
+    p_arrivedelay;
+    @mt_place_fractured($pillar, ~mt_fractured_which($used));
+}
 ~displaymessage(^dm_default);
 
 [label,mt_search_pillar](int $pillar)
@@ -634,6 +770,20 @@ if ($crystal > ^mt_colour_dark) {
     inv_add(inv, ~mt_crystal_obj($crystal), 1);
     ~mt_socket_write($pillar, ^mt_socket_empty);
     mes("You take the <~mt_colour_name($crystal)> crystal back out of the socket.");
+    ~mt_relight;
+    return;
+}
+def_int $fwhich = 0;
+def_int $fdir = 0;
+$fwhich, $fdir = ~mt_fractured_at($pillar);
+if ($fwhich > 0) {
+    if (inv_freespace(inv) = 0) {
+        ~mesbox("A fractured crystal is set in the socket with its clear edge to the <~mt_dir_name($fdir)>, and your hands are full.");
+        return;
+    }
+    inv_add(inv, ~mt_fractured_obj($fwhich), 1);
+    ~mt_socket_write($pillar, ^mt_socket_empty);
+    mes("You take the fractured crystal back out of the socket.");
     ~mt_relight;
     return;
 }
@@ -771,6 +921,41 @@ if ($already > ^mt_colour_dark) {
 inv_del(inv, ~mt_crystal_obj($colour), 1);
 ~mt_socket_write($pillar, add(^mt_socket_crystal, sub($colour, 1)));
 mes("You set the <~mt_colour_name($colour)> crystal in the socket.");
+~mt_relight;
+
+// A fractured crystal splits the beam: it carries on through and a copy leaves along the edge that
+// is clear. Which edge is the player's to set, and the walkthrough calls those orientations
+// vertical and horizontal - so the menu asks for a direction, with up and down behind one option.
+[label,mt_place_fractured](int $pillar, int $which)
+if (%mourning_quest_main < ^mt_inside) {
+    ~mesbox("An octagonal pillar with a socket at head height, and no reason yet to put anything in it.");
+    return;
+}
+if (~mt_mirror_at($pillar) > 0 | ~mt_crystal_at($pillar) > ^mt_colour_dark) {
+    ~mesbox("There is something in this socket already. One thing at a time.");
+    return;
+}
+def_int $have = 0;
+def_int $old = 0;
+$have, $old = ~mt_fractured_at($pillar);
+if ($have = $which) {
+    ~mt_socket_write($pillar, ^mt_socket_empty);
+    inv_add(inv, ~mt_fractured_obj($which), 1);
+    mes("You take the fractured crystal back out of the socket.");
+    ~mt_relight;
+    return;
+}
+if ($have > 0) {
+    ~mesbox("The other fractured crystal is in this socket.");
+    return;
+}
+def_int $dir = ~p_choice5("Along the edge pointing north.", ^mt_dir_north, "East.", ^mt_dir_east, "South.", ^mt_dir_south, "West.", ^mt_dir_west, "Up, or down.", 0);
+if ($dir = 0) {
+    $dir = ~p_choice2("Up.", ^mt_dir_up, "Down.", ^mt_dir_down);
+}
+inv_del(inv, ~mt_fractured_obj($which), 1);
+~mt_socket_write($pillar, add(add(^mt_socket_fractured, multiply(sub($which, 1), ^mt_fractured_dirs)), sub($dir, 1)));
+mes("You set the fractured crystal with its clear edge to the <~mt_dir_name($dir)>. A beam through it will come out twice.");
 ~mt_relight;
 
 // =========================================================================== the collector

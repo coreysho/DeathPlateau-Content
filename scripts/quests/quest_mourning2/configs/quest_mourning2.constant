@@ -100,7 +100,7 @@
 //    1-4     a hand mirror lying flat, in one of its four rotations
 //    5-9     a crystal: red, yellow, green, cyan, blue
 //    10-17   a hand mirror tilted: ^mt_socket_tilt + (direction - 1) * 2, + 1 for down
-//    18-19   spare, for the two fractured crystals
+//    18-29   a fractured crystal, with the edge that is clear pointing one of six ways
 //
 // A FLAT MIRROR TAKES THE BEAM ROUND A CORNER; A TILTED ONE TAKES IT THROUGH THE CEILING. Tilted
 // states are a pair (direction, up or down) and mean "the beam travelling that way goes up (or
@@ -145,6 +145,39 @@
 // and the magenta one is behind a colour no crystal in the building can make on its own. Two beams
 // meeting at one of the ten mourning_pillar_light_cross_* pillars is the only thing left that could
 // make it, and that is the next stage of this rebuild.
+
+// ---------------------------------------------------------------------------- the crossings
+// Ten tiles where two corridors cross and no pillar stands. Their varbits are the only ones in the
+// building that are not a plain colour: 28 states, in four blocks of seven.
+//
+//    0       dark
+//    1-7     a north-south beam, in the seven colours
+//    8-14    an east-west beam
+//    15-21   a vertical beam
+//    22-28   a crossed beam - both at once
+//
+// AND A CROSSED BEAM IS WHERE MAGENTA COMES FROM. A crystal is a filter and no filter can put a
+// colour back, so nothing in this temple can make magenta on one beam - but two beams crossing add,
+// and red and blue together are magenta. That is what the three magenta doors are for, and what the
+// fractured crystals are for, because a second beam has to come from somewhere.
+^mt_cross_ns = 0
+^mt_cross_ew = 7
+^mt_cross_vert = 14
+^mt_cross_both = 21
+
+// ---------------------------------------------------------------------------- fractured crystals
+// "A fractured crystal, one of the edges is clear." Two of them in the cache and neither had a
+// handler. A fractured crystal does not filter: it SPLITS. The beam carries on through it and a
+// copy of the same colour leaves along the edge that is clear, which is the direction the player
+// sets - the walkthrough calls those orientations vertical and horizontal.
+//
+// Socket values 18 to 29: ^mt_socket_fractured + (which - 1) * 6 + (direction - 1).
+^mt_socket_fractured = 18
+^mt_fractured_dirs = 6
+
+// How many beams the trace will carry. One comes in and each fractured crystal splits one, so two
+// crystals make at most three; four is one more than the temple can produce.
+^mt_beams = 4
 
 // ---------------------------------------------------------------------------- places
 ^mt_tunnel_outside = 0_36_153_7_1       // in front of the tunnel mouth (7,0 is the tunnel loc)

@@ -41,465 +41,484 @@
 // 34  floor 3 pillar 15  [(42, 5)]
 // 35  floor 3 pillar 16  [(59, 5)]
 
-[proc,m2_edge](int $pillar, int $dir, int $colour)(int)
+// Returns the pillar the beam arrives at - 0 if it leaves the building - AND the colour it is
+// carrying when it gets there, which is not always the colour it set out with: a crossing tile
+// where another beam is already standing adds the two together.
+[proc,m2_edge](int $pillar, int $dir, int $colour)(int, int)
 switch_int ($pillar) {
     case 1 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_1_1_east = $colour;
             %mourning_light_temple_1_3_west = $colour;
-            return(2);
+            $colour = ~m2_cross_1_2(7, $colour);
+            return(2, $colour);
         case 3 :
             %mourning_light_temple_1_1_south = $colour;
-            return(0);
+            return(0, $colour);
         }
     case 2 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_1_3_east = $colour;
-            return(0);
+            return(0, $colour);
         case 3 :
             %mourning_light_temple_1_3_6 = $colour;
-            return(3);
+            return(3, $colour);
         case 4 :
             %mourning_light_temple_1_3_west = $colour;
+            $colour = ~m2_cross_1_2(7, $colour);
             %mourning_light_temple_1_1_east = $colour;
-            return(1);
+            return(1, $colour);
         case 5 :
             %mourning_light_temple_1_3_up = $colour;
-            return(14);
+            return(14, $colour);
         }
     case 3 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_1_3_6 = $colour;
-            return(2);
+            return(2, $colour);
         case 2 :
             %mourning_light_temple_1_6_7 = $colour;
-            return(4);
+            return(4, $colour);
         case 3 :
             %mourning_light_temple_1_6_11 = $colour;
-            return(8);
+            return(8, $colour);
         case 4 :
             %mourning_light_temple_1_6_west = $colour;
-            return(0);
+            $colour = ~m2_cross_1_5(7, $colour);
+            return(0, $colour);
         case 5 :
             %mourning_light_temple_1_6_up = $colour;
-            return(16);
+            return(16, $colour);
         }
     case 4 :
         switch_int ($dir) {
         case 4 :
             %mourning_light_temple_1_6_7 = $colour;
-            return(3);
+            return(3, $colour);
         case 5 :
             %mourning_light_temple_1_7_up = $colour;
-            return(17);
+            return(17, $colour);
         }
     case 6 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_1_b_east = $colour;
-            return(0);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_1_b_west = $colour;
             %mourning_light_temple_1_d_west = $colour;
-            return(0);
+            return(0, $colour);
         }
     case 7 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_1_10_11 = $colour;
-            return(8);
+            return(8, $colour);
         case 3 :
             %mourning_light_temple_1_10_14 = $colour;
-            return(11);
+            return(11, $colour);
         case 5 :
             %mourning_light_temple_1_10_up = $colour;
-            return(19);
+            return(19, $colour);
         }
     case 8 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_1_6_11 = $colour;
-            return(3);
+            return(3, $colour);
         case 2 :
             %mourning_light_temple_1_11_12 = $colour;
-            return(9);
+            return(9, $colour);
         case 3 :
             %mourning_light_temple_1_11_south = $colour;
-            return(0);
+            $colour = ~m2_cross_1_15(0, $colour);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_1_10_11 = $colour;
-            return(7);
+            return(7, $colour);
         case 5 :
             %mourning_light_temple_1_11_up = $colour;
-            return(20);
+            return(20, $colour);
         }
     case 9 :
         switch_int ($dir) {
         case 4 :
             %mourning_light_temple_1_11_12 = $colour;
-            return(8);
+            return(8, $colour);
         }
     case 10 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_1_13_north = $colour;
-            return(0);
+            return(0, $colour);
         case 2 :
             %mourning_light_temple_1_13_east = $colour;
             %mourning_light_temple_1_14_west = $colour;
-            return(11);
+            return(11, $colour);
         }
     case 11 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_1_10_14 = $colour;
-            return(7);
+            return(7, $colour);
         case 2 :
             %mourning_light_temple_1_14_east = $colour;
+            $colour = ~m2_cross_1_15(7, $colour);
             %mourning_light_temple_1_16_west = $colour;
-            return(12);
+            return(12, $colour);
         case 4 :
             %mourning_light_temple_1_14_west = $colour;
             %mourning_light_temple_1_13_east = $colour;
-            return(10);
+            return(10, $colour);
         }
     case 12 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_1_16_north = $colour;
-            return(0);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_1_16_west = $colour;
             %mourning_light_temple_1_14_east = $colour;
-            return(11);
+            $colour = ~m2_cross_1_15(7, $colour);
+            return(11, $colour);
         case 5 :
             %mourning_light_temple_1_16_up = $colour;
-            return(22);
+            return(22, $colour);
         }
     case 13 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_2_2_3 = $colour;
-            return(14);
+            return(14, $colour);
         case 3 :
             %mourning_light_temple_2_2_5 = $colour;
-            return(15);
+            return(15, $colour);
         case 4 :
             %mourning_light_temple_2_2_west = $colour;
-            return(0);
+            $colour = ~m2_cross_2_1(7, $colour);
+            return(0, $colour);
         case 5 :
             %mourning_light_temple_2_2_up = $colour;
-            return(24);
+            return(24, $colour);
         }
     case 14 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_2_3_east = $colour;
-            return(0);
+            return(0, $colour);
         case 3 :
             %mourning_light_temple_2_3_south = $colour;
-            return(0);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_2_2_3 = $colour;
-            return(13);
+            return(13, $colour);
         case 5 :
             %mourning_light_temple_2_3_up = $colour;
-            return(25);
+            return(25, $colour);
         case 6 :
             %mourning_light_temple_1_3_up = $colour;
-            return(2);
+            return(2, $colour);
         }
     case 15 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_2_5 = $colour;
-            return(13);
+            return(13, $colour);
         case 2 :
             %mourning_light_temple_2_5_6 = $colour;
-            return(16);
+            return(16, $colour);
         case 5 :
             %mourning_light_temple_2_5_up = $colour;
-            return(26);
+            return(26, $colour);
         }
     case 16 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_6_north = $colour;
-            return(0);
+            return(0, $colour);
         case 2 :
             %mourning_light_temple_2_6_7 = $colour;
-            return(17);
+            return(17, $colour);
         case 3 :
             %mourning_light_temple_2_6_11 = $colour;
-            return(20);
+            return(20, $colour);
         case 4 :
             %mourning_light_temple_2_5_6 = $colour;
-            return(15);
+            return(15, $colour);
         case 5 :
             %mourning_light_temple_2_6_up = $colour;
-            return(27);
+            return(27, $colour);
         case 6 :
             %mourning_light_temple_1_6_up = $colour;
-            return(3);
+            return(3, $colour);
         }
     case 17 :
         switch_int ($dir) {
         case 3 :
             %mourning_light_temple_2_7_9 = $colour;
-            return(18);
+            return(18, $colour);
         case 4 :
             %mourning_light_temple_2_6_7 = $colour;
-            return(16);
+            return(16, $colour);
         case 6 :
             %mourning_light_temple_1_7_up = $colour;
-            return(4);
+            return(4, $colour);
         }
     case 18 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_7_9 = $colour;
-            return(17);
+            return(17, $colour);
         case 3 :
             %mourning_light_temple_2_9_south = $colour;
-            return(0);
+            return(0, $colour);
         }
     case 19 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_2_11_west = $colour;
-            return(20);
+            return(20, $colour);
         case 5 :
             %mourning_light_temple_2_10_up = $colour;
-            return(30);
+            return(30, $colour);
         case 6 :
             %mourning_light_temple_1_10_up = $colour;
-            return(7);
+            return(7, $colour);
         }
     case 20 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_6_11 = $colour;
-            return(16);
+            return(16, $colour);
         case 2 :
             %mourning_light_temple_2_11_east = $colour;
-            return(0);
+            $colour = ~m2_cross_2_12(7, $colour);
+            return(0, $colour);
         case 3 :
             %mourning_light_temple_2_11_15 = $colour;
-            return(21);
+            return(21, $colour);
         case 4 :
             %mourning_light_temple_2_11_west = $colour;
-            return(19);
+            return(19, $colour);
         case 5 :
             %mourning_light_temple_2_11_up = $colour;
-            return(31);
+            return(31, $colour);
         case 6 :
             %mourning_light_temple_1_11_up = $colour;
-            return(8);
+            return(8, $colour);
         }
     case 21 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_11_15 = $colour;
-            return(20);
+            return(20, $colour);
         case 2 :
             %mourning_light_temple_2_15_east = $colour;
             %mourning_light_temple_2_16_west = $colour;
-            return(22);
+            return(22, $colour);
         case 4 :
             %mourning_light_temple_2_15_west = $colour;
-            return(0);
+            $colour = ~m2_cross_2_13(7, $colour);
+            $colour = ~m2_cross_2_14(7, $colour);
+            return(0, $colour);
         case 5 :
             %mourning_light_temple_2_15_up = $colour;
-            return(34);
+            return(34, $colour);
         }
     case 22 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_2_16_north = $colour;
-            return(0);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_2_16_west = $colour;
             %mourning_light_temple_2_15_east = $colour;
-            return(21);
+            return(21, $colour);
         case 5 :
             %mourning_light_temple_2_16_up = $colour;
-            return(35);
+            return(35, $colour);
         case 6 :
             %mourning_light_temple_1_16_up = $colour;
-            return(12);
+            return(12, $colour);
         }
     case 23 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_3_1_2 = $colour;
-            return(24);
+            return(24, $colour);
         case 3 :
             %mourning_light_temple_3_1_8 = $colour;
-            return(28);
+            return(28, $colour);
         }
     case 24 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_3_2_3 = $colour;
-            return(25);
+            return(25, $colour);
         case 3 :
             %mourning_light_temple_3_2_5 = $colour;
-            return(26);
+            return(26, $colour);
         case 4 :
             %mourning_light_temple_3_1_2 = $colour;
-            return(23);
+            return(23, $colour);
         case 6 :
             %mourning_light_temple_2_2_up = $colour;
-            return(13);
+            return(13, $colour);
         }
     case 25 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_3_3_east = $colour;
-            return(0);
+            $colour = ~m2_cross_3_4(7, $colour);
+            return(0, $colour);
         case 3 :
             %mourning_light_temple_3_3_south = $colour;
-            return(0);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_3_2_3 = $colour;
-            return(24);
+            return(24, $colour);
         case 6 :
             %mourning_light_temple_2_3_up = $colour;
-            return(14);
+            return(14, $colour);
         }
     case 26 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_2_5 = $colour;
-            return(24);
+            return(24, $colour);
         case 2 :
             %mourning_light_temple_3_5_6 = $colour;
-            return(27);
+            return(27, $colour);
         case 4 :
             %mourning_light_temple_3_5_west = $colour;
-            return(29);
+            return(29, $colour);
         case 6 :
             %mourning_light_temple_2_5_up = $colour;
-            return(15);
+            return(15, $colour);
         }
     case 27 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_6_north = $colour;
-            return(0);
+            return(0, $colour);
         case 2 :
             %mourning_light_temple_3_6_east = $colour;
-            return(0);
+            $colour = ~m2_cross_3_7(7, $colour);
+            return(0, $colour);
         case 3 :
             %mourning_light_temple_3_6_11 = $colour;
-            return(31);
+            return(31, $colour);
         case 4 :
             %mourning_light_temple_3_5_6 = $colour;
-            return(26);
+            return(26, $colour);
         case 6 :
             %mourning_light_temple_2_6_up = $colour;
-            return(16);
+            return(16, $colour);
         }
     case 28 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_1_8 = $colour;
-            return(23);
+            return(23, $colour);
         case 2 :
             %mourning_light_temple_3_8_east = $colour;
-            return(29);
+            return(29, $colour);
         case 3 :
             %mourning_light_temple_3_8_13 = $colour;
-            return(33);
+            return(33, $colour);
         }
     case 29 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_3_10_west = $colour;
-            return(30);
+            return(30, $colour);
         case 6 :
-            return(6);
+            return(6, $colour);
         }
     case 30 :
         switch_int ($dir) {
         case 2 :
             %mourning_light_temple_3_10_11 = $colour;
-            return(31);
+            return(31, $colour);
         case 3 :
             %mourning_light_temple_3_10_south = $colour;
-            return(0);
+            $colour = ~m2_cross_3_14(0, $colour);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_3_10_west = $colour;
-            return(29);
+            return(29, $colour);
         case 6 :
             %mourning_light_temple_2_10_up = $colour;
-            return(19);
+            return(19, $colour);
         }
     case 31 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_6_11 = $colour;
-            return(27);
+            return(27, $colour);
         case 2 :
             %mourning_light_temple_3_11_12 = $colour;
-            return(32);
+            return(32, $colour);
         case 3 :
             %mourning_light_temple_3_11_15 = $colour;
-            return(34);
+            return(34, $colour);
         case 4 :
             %mourning_light_temple_3_10_11 = $colour;
-            return(30);
+            return(30, $colour);
         case 6 :
             %mourning_light_temple_2_11_up = $colour;
-            return(20);
+            return(20, $colour);
         }
     case 32 :
         switch_int ($dir) {
         case 4 :
             %mourning_light_temple_3_11_12 = $colour;
-            return(31);
+            return(31, $colour);
         }
     case 33 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_8_13 = $colour;
-            return(28);
+            return(28, $colour);
         case 2 :
             %mourning_light_temple_3_13_15 = $colour;
-            return(34);
+            $colour = ~m2_cross_3_14(7, $colour);
+            return(34, $colour);
         }
     case 34 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_11_15 = $colour;
-            return(31);
+            return(31, $colour);
         case 2 :
             %mourning_light_temple_3_15_16 = $colour;
-            return(35);
+            return(35, $colour);
         case 4 :
             %mourning_light_temple_3_13_15 = $colour;
-            return(33);
+            $colour = ~m2_cross_3_14(7, $colour);
+            return(33, $colour);
         case 6 :
             %mourning_light_temple_2_15_up = $colour;
-            return(21);
+            return(21, $colour);
         }
     case 35 :
         switch_int ($dir) {
         case 1 :
             %mourning_light_temple_3_16_north = $colour;
-            return(0);
+            $colour = ~m2_cross_3_4(0, $colour);
+            return(0, $colour);
         case 4 :
             %mourning_light_temple_3_15_16 = $colour;
-            return(34);
+            return(34, $colour);
         case 6 :
             %mourning_light_temple_2_16_up = $colour;
-            return(22);
+            return(22, $colour);
         }
 }
-return(0);
+return(0, $colour);
 
 // Every segment back to dark. The trace clears the whole temple and relights only
 // the path the beam actually takes, so a mirror that breaks the path puts out
@@ -565,6 +584,17 @@ return(0);
 %mourning_light_temple_3_6_north = 0;
 %mourning_light_temple_3_8_13 = 0;
 %mourning_light_temple_3_8_east = 0;
+// and the ten crossing tiles, which are enums rather than plain colours
+%mourning_pillar_light_cross_1_15 = 0;
+%mourning_pillar_light_cross_1_2 = 0;
+%mourning_pillar_light_cross_1_5 = 0;
+%mourning_pillar_light_cross_2_1 = 0;
+%mourning_pillar_light_cross_2_12 = 0;
+%mourning_pillar_light_cross_2_13 = 0;
+%mourning_pillar_light_cross_2_14 = 0;
+%mourning_pillar_light_cross_3_14 = 0;
+%mourning_pillar_light_cross_3_4 = 0;
+%mourning_pillar_light_cross_3_7 = 0;
 
 // Each pillar has its own <floor>_<room>_up varbit on mourning_quest_vert_beams1-5, and
 // the pillar loc is a multiloc on it: 0 is dark and 1-7 are the seven colours.
@@ -648,3 +678,179 @@ switch_int ($pillar) {
 %mourning_light_temple_3_7_up = 0;
 %mourning_light_temple_3_8_up = 0;
 %mourning_light_temple_3_9_up = 0;
+
+// Each crossing tile gets its own proc, because a varbit cannot be passed to one. $axis
+// is 0 for a north-south beam, 7 for east-west, 14 for a vertical one; a beam arriving
+// at a tile that already holds a beam on ANOTHER axis makes it a crossed beam, and the
+// colour it is drawn in is the two colours added - which is the only way anything in
+// this temple can be magenta.
+
+[proc,m2_cross_1_15](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_1_15;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_1_15 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_1_15 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_1_15 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_1_2](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_1_2;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_1_2 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_1_2 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_1_2 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_1_5](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_1_5;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_1_5 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_1_5 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_1_5 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_2_1](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_2_1;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_2_1 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_2_1 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_2_1 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_2_12](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_2_12;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_2_12 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_2_12 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_2_12 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_2_13](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_2_13;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_2_13 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_2_13 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_2_13 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_2_14](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_2_14;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_2_14 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_2_14 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_2_14 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_3_14](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_3_14;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_3_14 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_3_14 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_3_14 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_3_4](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_3_4;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_3_4 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_3_4 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_3_4 = add(^mt_cross_both, $sum);
+return($sum);
+
+[proc,m2_cross_3_7](int $axis, int $colour)(int)
+def_int $now = %mourning_pillar_light_cross_3_7;
+if ($now = ^mt_colour_dark) {
+    %mourning_pillar_light_cross_3_7 = add($axis, $colour);
+    return($colour);
+}
+if ($now > $axis & $now <= add($axis, ^mt_colour_white)) {
+    // the same axis again: the two together are what shows
+    def_int $both = ~mt_colour_add(sub($now, $axis), $colour);
+    %mourning_pillar_light_cross_3_7 = add($axis, $both);
+    return($both);
+}
+// TWO BEAMS CROSSING, and they add - which is the only way to magenta.
+def_int $sum = ~mt_colour_add(~mt_cross_colour($now), $colour);
+%mourning_pillar_light_cross_3_7 = add(^mt_cross_both, $sum);
+return($sum);
