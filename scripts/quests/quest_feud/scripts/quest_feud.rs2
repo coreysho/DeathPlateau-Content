@@ -1,280 +1,611 @@
-// The Feud - Pollnivneach, two gangs and a mayor with no authority.
+// The Feud, part one - Al Kharid, the bar, the camels, and learning to steal.
+//
+// REBUILT 14 October 2026. See configs/quest_feud.constant for what the cache shipped and nothing
+// used, and "Claude outputs/quest-fidelity-feud.md" for the step-by-step comparison with the
+// walkthrough. Part two - the jewels, the hag's poison and the two champions - is in feud_traitor.rs2.
+//
+// THE ONE THING THAT DECIDED THE SHAPE OF THIS FILE. The villagers are a multinpc on feud_npc_multi
+// and their ops escalate with it:
+//
+//   feud_villager_N_1   op1=Talk-to  op3=Pickpocket
+//   feud_villager_N_2   op1=Talk-to  op3=Pickpocket  op4=Lure
+//   feud_villager_N_3   op1=Talk-to  op3=Pickpocket  op4=Lure  op5=Knock-Out
+//
+// and the bandit guards and the Menaphite doorman follow the same three steps. So feud_npc_multi is
+// not the town's mood, which is what the previous version read it as - it is how much thieving you
+// have been taught. Pickpocket, then lure, then knock out: that is Ali the Operator's apprenticeship
+// in the cache's own data, and it is wiki steps 10 through 14.
 
 // =========================================================================== Ali Morrisane
 [opnpc1,feud_ali_m]
 switch_int (%feud_var) {
     case ^feud_not_started : @feud_ali_start;
-    case ^feud_jewels : @feud_ali_finish;
+    case ^feud_told_mayor : @feud_ali_finish;
     case default :
         if (%feud_var >= ^feud_complete) {
             ~chatnpc("<p,happy>My cousin's cousin's cousin says you are the only outsider ever to have been useful in that village.");
             return;
         }
-        ~feud_show_leaders;
-        ~chatnpc("<p,neutral>Pollnivneach. South. You cannot miss it, it is the only thing down there.");
+        @feud_ali_disguise_shop;
 }
-
-// The two gang leaders are shells that render only at feud_boss_vis = 1 and feud_bandit_boss_vis =
-// 1, and nothing ever set either bit - so neither leader could be seen, let alone spoken to, and
-// the quest stopped at its first step. They are there from the moment Ali sends the player south.
-[proc,feud_show_leaders]()()
-if (%feud_var < ^feud_sent) {
-    return;
-}
-%feud_boss_vis = ^feud_on;
-%feud_bandit_boss_vis = ^feud_on;
 
 [label,feud_ali_start]
-~chatnpc("<p,angry>Twenty crates. TWENTY. Gone between here and Pollnivneach and nobody saw a thing.");
-switch_int (~p_choice2("I could look into it.", 1, "That sounds like your problem.", 2)) {
+// THIRTY THIEVING, AND NOT BOOSTABLE - the wiki's own note, and the only requirement this quest has.
+// It was not checked at all, which made the first half of a thieving quest available to somebody who
+// could not do any of it.
+if (stat_base(thieving) < ^feud_thieving_req) {
+    ~chatnpc("<p,neutral>You have honest hands. I have no use for honest hands.");
+    ~mesbox("You need a Thieving level of <tostring(^feud_thieving_req)> to start this quest.");
+    return;
+}
+~chatnpc("<p,angry>Pollnivneach. Have you been? Do not go.");
+switch_int (~p_choice2("Why not?", 1, "I wasn't going to.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>I wasn't going to.");
+        ~chatnpc("<p,neutral>Sensible. Nobody sensible goes to Pollnivneach.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>Why not?");
+}
+~chatnpc("<p,neutral>Two gangs. The Menaphites came up from the south and the bandits were always there, and between them they run the village and nothing else moves in it.");
+~chatnpc("<p,sad>Including my goods. Including, specifically, my goods.");
+switch_int (~p_choice2("I could go and look.", 1, "That sounds like your problem.", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>That sounds like your problem.");
         ~chatnpc("<p,angry>It IS my problem. That is what I have been saying.");
         return;
     case 1 :
-        ~chatplayer("<p,neutral>I could look into it.");
+        ~chatplayer("<p,neutral>I could go and look.");
 }
-~chatnpc("<p,neutral>Could you. Could you indeed.");
-~chatnpc("<p,neutral>Pollnivneach is run by two gangs who hate each other and a mayor who is frightened of both. Nothing moves through it without one of them knowing.");
-~chatnpc("<p,neutral>Go south. Talk to both leaders. Do not take sides until you have to, and then take the winning one.");
+~chatnpc("<p,quiz>You could. You would last about an hour looking like that.");
+~chatnpc("<p,neutral>Nobody in that village talks to a foreigner. So you will not be one - I sell a headpiece and a false beard, and together they make a man nobody looks at twice.");
 %feud_var = ^feud_sent;
-~feud_show_leaders;
 ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+@feud_ali_disguise_shop;
 
-[label,feud_ali_finish]
-if (inv_total(inv, feud_mayors_jewels) = 0) {
-    ~chatnpc("<p,neutral>You have the jewels and you have not got them with you. Think, please.");
+// He sells the two halves of the disguise. The wiki lists them as items required and names him as
+// the source, which is also the only sensible reading of a turban and a false beard in his stock.
+[label,feud_ali_disguise_shop]
+if (inv_total(inv, feud_desert_disguise) > 0 | inv_total(inv, feud_karidian_fakebeard_and_hat) > 0) {
+    ~chatnpc("<p,happy>You have the set. Go south, and do not tell anybody where you got it.");
     return;
 }
-~chatplayer("<p,happy>Your crates are in the bandit camp, and so were these.");
-~chatnpc("<p,shock>My crates! And - what are those?");
-~chatplayer("<p,neutral>The Mayor's wife's jewels. He is getting them back.");
-~chatnpc("<p,sad>Of course he is.");
+def_int $want = ~p_choice3("I'll take the headpiece.", 1, "I'll take the beard.", 2, "Nothing for now.", 3);
+if ($want = 3) {
+    ~chatplayer("<p,neutral>Nothing for now.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Your hands are full. Mine are not, which is the usual arrangement.");
+    return;
+}
+if ($want = 1) {
+    if (inv_total(inv, feud_karidian_turban) > 0) {
+        ~chatnpc("<p,neutral>You have one on you.");
+        return;
+    }
+    inv_add(inv, feud_karidian_turban, 1);
+    ~objbox(feud_karidian_turban, "Ali Morrisane hands over a Kharidian headpiece, and does not mention a price, which with him means he has already decided you will be back.", 250, 0, divide(^objbox_height, 2));
+    ~chatnpc("<p,neutral>Now the beard. A head without a beard is a foreigner in a hat.");
+    return;
+}
+if (inv_total(inv, feud_karidian_fakebeard) > 0) {
+    ~chatnpc("<p,neutral>You have one on you.");
+    return;
+}
+inv_add(inv, feud_karidian_fakebeard, 1);
+~objbox(feud_karidian_fakebeard, "It is somebody else's hair, and he is not going to say whose.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>Put them together. Then go south and be a local.");
+
+// The two halves make the thing the cache already has an obj for - and WHICH obj is not a choice.
+// There are two in the 377 cache with the same inventory model: feud_karidian_fakebeard_and_hat,
+// which has no wearpos, no wear option and no wear models at all, and feud_desert_disguise, which
+// has iop2=Wear and three wearpos entries - hat, head and jaw - with manwear, manwear2, manwear3
+// and the woman's set beside them. A disguise that covers your hat, your hair and your jaw is the
+// one the quest hands you; the other cannot be put on. A first version of this gave out the
+// unwearable one, and the playthrough crouched behind the cacti in its own face.
+[opheldu,feud_karidian_turban]
+def_obj $used = last_useitem;
+if ($used ! feud_karidian_fakebeard) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, feud_karidian_turban, 1);
+inv_del(inv, feud_karidian_fakebeard, 1);
+inv_add(inv, feud_desert_disguise, 1);
+~objbox(feud_desert_disguise, "The beard hooks under the headpiece. It is not a good disguise and it does not have to be - nobody in Pollnivneach looks at anybody.", 250, 0, divide(^objbox_height, 2));
+
+[label,feud_ali_finish]
+~chatplayer("<p,happy>Pollnivneach is quiet.");
+~chatnpc("<p,shock>Quiet. Pollnivneach.");
+~chatplayer("<p,neutral>Both gangs lost their leader in the same afternoon. The Mayor is running it.");
+~chatnpc("<p,laugh>Then my goods will travel, and I shall be able to afford to be generous.");
 if_close;
-mes("Ali Morrisane looks at the jewels for slightly longer than an honest man would.");
-p_delay(3);
-~chatnpc("<p,happy>Take them to him. And take this for the trouble, which was considerable, and which I will be dining out on for years.");
+mes("Ali Morrisane counts out five hundred coins twice, to be sure, and then once more.");
+p_delay(4);
 @feud_finish;
 
 [label,feud_finish]
 %feud_var = ^feud_complete;
-// The town settles once both gangs have been dealt with. One write, and every guard post, all
-// three groups of villagers and the doorman change at once.
-%feud_npc_multi = ^feud_town_settled;
-inv_del(inv, feud_mayors_jewels, 1);
+// The licence stays at two: pickpocketing villagers, bandits and Menaphite thugs is one of the
+// quest's own rewards, and the multinpc states that allow it are feud_npc_multi = 2.
+%feud_npc_multi = ^feud_thief_knock;
 stat_advance(thieving, 150000);
 session_log(^log_adventure, "Quest complete: The Feud");
-if (inv_freespace(inv) > 0) {
-    inv_add(inv, feud_desert_disguise, 1);
+if (inv_freespace(inv) >= 2) {
+    inv_add(inv, coins, 500);
+    inv_add(inv, blackjack_oak, 1);
 } else {
-    obj_add(coord, feud_desert_disguise, 1, ^lootdrop_duration);
+    obj_add(coord, coins, 500, ^lootdrop_duration);
+    obj_add(coord, blackjack_oak, 1, ^lootdrop_duration);
 }
-~send_quest_complete(questlist:feud, feud_desert_disguise, 200, ^feud_questpoints, "You have completed\\nThe Feud!", "1 Quest Point|15,000 Thieving XP|A desert disguise|Blackjacks and the Pollnivneach thieving");
+~send_quest_complete(questlist:feud, blackjack_oak, 200, ^feud_questpoints, "You have completed\\nThe Feud!", "1 Quest Point|15,000 Thieving XP|500 coins|An oak blackjack|Pollnivneach pickpocketing");
 
-// =========================================================================== the two gangs
-// feud_var_talk_gangs counts the leaders spoken to. Both shells render at 1 only, so each leader
-// has to be made visible before he can be found - which is what the doormen are for.
-[opnpc1,feud_menap_boss] @feud_gang_leader(1);
-[opnpc1,feud_bandit_boss] @feud_gang_leader(2);
-
-// The Menaphite thugs on the doors (feud_egyptian_doorman_multi, op1=Talk-to) had no trigger.
-[opnpc1,feud_egyptian_doorman_multi]
+// =========================================================================== the bar
+// Ali the Barman sells the beer, and later tells you who in this village drinks what - which is how
+// the poisoning gets its target. The second half of his dialogue lives in feud_traitor.rs2.
+[opnpc1,feud_ali_the_barman]
+if (%feud_var >= ^feud_jewels & %feud_var < ^feud_poisoned) {
+    @feud_barman_traitor;
+}
 if (%feud_var < ^feud_sent) {
-    ~chatnpc("<p,angry>Move along.");
+    ~chatnpc("<p,neutral>We do beer. That is the entire list.");
     return;
 }
-~feud_show_leaders;
-if (%feud_var >= ^feud_complete) {
-    ~chatnpc("<p,neutral>The boss says you are all right. For an outsider.");
+def_int $want = ~p_choice2("A beer, please.", 1, "Nothing, thanks.", 2);
+if ($want = 2) {
+    ~chatplayer("<p,neutral>Nothing, thanks.");
     return;
 }
-~chatnpc("<p,neutral>You want the boss, he is in the house behind me. Keep your hands where I can see them.");
+if (inv_total(inv, coins) < ^feud_beer_price) {
+    ~chatnpc("<p,neutral>Two coins. It is not good beer but it is two coins.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>In what?");
+    return;
+}
+inv_del(inv, coins, ^feud_beer_price);
+inv_add(inv, beer, 1);
+~chatnpc("<p,neutral>Two coins. If you are buying it for the one in the corner, buy three.");
 
-[label,feud_gang_leader](int $which)
+// Drunken Ali. THREE BEERS, ONE AT A TIME, with the whole conversation after each - which is the
+// wiki's own instruction, and which feud_var_drink is two bits wide for.
+[opnpcu,feud_drunken_ali]
+if (last_useitem ! beer) {
+    ~displaymessage(^dm_default);
+    return;
+}
 if (%feud_var < ^feud_sent) {
-    ~chatnpc("<p,angry>Out.");
+    ~chatnpc("<p,neutral>...who are you?");
     return;
 }
-if (%feud_var >= ^feud_camp & $which = 2) {
-    @feud_bandit_endgame;
-}
-if (%feud_var > ^feud_both_gangs) {
-    ~chatnpc("<p,neutral>We have spoken. Go and be somebody else's problem.");
+if (%feud_var_drink >= ^feud_beers_wanted) {
+    ~chatnpc("<p,happy>No more. I have told you everything I know and some of what I do not.");
     return;
 }
-if ($which = 1) {
-    ~chatnpc("<p,neutral>Menaphite. You are not. What do you want.");
-    ~chatplayer("<p,quiz>Twenty crates went missing on the road north.");
-    ~chatnpc("<p,angry>Then ask the bandits. We take a cut of what comes through. They take the whole thing and then they take the cart.");
+inv_del(inv, beer, 1);
+%feud_var_drink = add(%feud_var_drink, 1);
+if_close;
+mes("Drunken Ali takes the beer in both hands.");
+p_delay(3);
+switch_int (%feud_var_drink) {
+    case 1 :
+        ~chatnpc("<p,happy>You are a gentleman. Nobody buys me a drink. Nobody BUYS me a drink.");
+        ~chatplayer("<p,quiz>Who runs this village?");
+        ~chatnpc("<p,neutral>Nobody. Everybody. The Menaphites in the big tent and the bandits up the north end and a mayor who sits by the well and apologises.");
+    case 2 :
+        ~chatnpc("<p,happy>Another! You are the best man in this village and I have met all of them.");
+        ~chatplayer("<p,quiz>How does a man get in with the Menaphites?");
+        ~chatnpc("<p,laugh>You do not. They get in with you. Ali the Operator sits in that tent and watches who takes what, and when you are worth using he will use you.");
+    case 3 :
+        ~chatnpc("<p,shock>Three. Three! Sit down, you are family now.");
+        ~chatplayer("<p,quiz>Anything else I should know?");
+        ~chatnpc("<p,neutral>Ask the bandits about the Menaphites. Ask the Menaphites about the bandits. They will each tell you the truth about the other and lie about themselves, and between the two you will have the whole thing.");
+        if (%feud_var = ^feud_sent) {
+            %feud_var = ^feud_drunk;
+            ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+        }
+}
+
+[opnpc1,feud_drunken_ali]
+if (%feud_var_drink = ^feud_off) {
+    ~chatnpc("<p,sad>I would tell you, but my throat. My throat is the problem.");
+    ~chatplayer("<p,quiz>Would a beer help?");
+    ~chatnpc("<p,happy>It has never once failed to.");
+    return;
+}
+if (%feud_var_drink < ^feud_beers_wanted) {
+    ~chatnpc("<p,happy>You are the man with the beer. There was more beer, I thought.");
+    return;
+}
+~chatnpc("<p,happy>Ali the Operator. The big tent. Tell him Ali sent you - that will not help, everybody here is called Ali.");
+
+// =========================================================================== asking both gangs
+// Wiki steps 5 and 6: the bandits by the general store, and the Menaphite thugs west of the bar.
+// The guard posts and the doorman are the two gangs' rank and file, and both carried op1=Talk-to
+// with no trigger at all.
+[opnpc1,feud_arabian_guard_multi] @feud_ask_gang(1);
+[opnpc1,feud_arabian_guard2_multi] @feud_ask_gang(1);
+[opnpc1,feud_egyptian_doorman_multi] @feud_ask_gang(2);
+
+[label,feud_ask_gang](int $gang)
+if (%feud_var < ^feud_drunk) {
+    if ($gang = 1) {
+        ~chatnpc("<p,angry>Move along.");
+    } else {
+        ~chatnpc("<p,angry>The tent is not for you.");
+    }
+    return;
+}
+if (%feud_var >= ^feud_camels) {
+    @feud_gang_receipt($gang);
+}
+if ($gang = 1) {
+    ~chatplayer("<p,quiz>What's the trouble with the Menaphites?");
+    ~chatnpc("<p,angry>They came up here with their tents and their manners and they take a cut of everything that moves on that road.");
+    ~chatnpc("<p,neutral>We were taking it first. There is a difference and I am not going to explain it to you.");
 } else {
-    ~chatnpc("<p,angry>You walked in here. That was brave and it was stupid.");
-    ~chatplayer("<p,quiz>Twenty crates went missing on the road north.");
-    ~chatnpc("<p,laugh>Twenty-two, and the driver walked home. We were being generous.");
-    ~chatnpc("<p,neutral>You will not get them back by asking. Nobody gets anything in this village by asking.");
+    ~chatplayer("<p,quiz>What's the trouble with the bandits?");
+    ~chatnpc("<p,neutral>They are thieves. We are a business. You will not see the difference until somebody explains it badly to you.");
+    ~chatnpc("<p,angry>They take carts. Whole carts. Who takes a whole cart?");
 }
 if (%feud_var_talk_gangs >= ^feud_gangs_both) {
     return;
 }
 if (%feud_var_talk_gangs = ^feud_gangs_none) {
     %feud_var_talk_gangs = ^feud_gangs_one;
+    ~mesbox("One side's version. The other side will have a different one and it will be just as confident.");
     return;
 }
 %feud_var_talk_gangs = ^feud_gangs_both;
-%feud_var = ^feud_both_gangs;
-%feud_npc_multi = ^feud_town_stirred;
+%feud_var = ^feud_asked_gangs;
 ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~mesbox("Both gangs know your face now, which has changed the mood of the street. The Mayor is the only man in Pollnivneach who is not in one of them.");
+~mesbox("Both sides blame the other for the road. Neither of them mentioned the camels standing in the middle of the village, which is the only thing in Pollnivneach that nobody is arguing about.");
 
-// =========================================================================== the Mayor
-// [feud_mayor] renders feud_mayor_geom at feud_mayor_invis = 0 and nothing at 1, so setting that
-// bit is how he leaves.
-[opnpc1,feud_mayor]
-switch_int (%feud_var) {
-    case ^feud_both_gangs : @feud_mayor_hire;
-    case ^feud_mayor : @feud_mayor_notes;
-    case ^feud_notes : @feud_mayor_notes;
-    case ^feud_jewels : @feud_mayor_jewels;
-    case default :
-        if (%feud_var < ^feud_both_gangs) {
-            ~chatnpc("<p,sad>I am the Mayor. It is not worth what you think it is worth.");
-            return;
-        }
-        ~chatnpc("<p,sad>Any news on my wife's jewels?");
-        ~chatplayer("<p,neutral>Working on it.");
+// =========================================================================== the camels
+// Wiki step 7: buy BOTH camels for 500 coins, with two free spaces, and step 8: give a receipt to a
+// Menaphite and to a bandit. feud_camel_receipt and feud_var_comp_gangs - two bits, two gangs - are
+// the cache saying so.
+[opnpc1,feud_ali_the_discount_camel_seller]
+if (%feud_var < ^feud_asked_gangs) {
+    ~chatnpc("<p,happy>Camels! The finest camels! You do not want a camel.");
+    return;
 }
-
-[label,feud_mayor_hire]
-~chatnpc("<p,sad>You have talked to both of them. That makes you either very brave or very new.");
-~chatplayer("<p,quiz>Can you help me get some stolen crates back?");
-~chatnpc("<p,laugh>Can I. I am the Mayor of a town where I am the only man without a knife.");
-~chatnpc("<p,sad>But I will trade. The bandits took my wife's jewels out of my own house. Get those back and I will tell you everything I know about the crates, which is a great deal.");
-~chatnpc("<p,neutral>The house keys are in my safe and I cannot open my own safe, because my wife set the combination and my wife is not speaking to me.");
-%feud_var = ^feud_mayor;
-~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~chatnpc("<p,neutral>She left notes. She always leaves notes. Look in the bedroom.");
-
-[label,feud_mayor_notes]
-if (%feud_var = ^feud_notes) {
-    @feud_mayor_safe;
+if (%feud_var >= ^feud_camels) {
+    ~chatnpc("<p,happy>No refunds. It was a discount camel. That is what the discount was for.");
+    return;
 }
-if (inv_total(inv, feud_fib_hint) > 0 | inv_total(inv, feud_nos_note) > 0) {
-    ~chatnpc("<p,neutral>You have her notes. Neither of them is a number. That is my wife exactly.");
+if (inv_total(inv, feud_camel_receipt) > 0) {
+    ~chatnpc("<p,neutral>You have the paperwork. Go and make somebody else's day with it.");
+    return;
+}
+~chatplayer("<p,quiz>Why is nobody arguing about your camels?");
+~chatnpc("<p,sad>Because nobody buys them. Two left. Both of them have opinions.");
+switch_int (~p_choice2("I'll take both.", 1, "No thank you.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>No thank you.");
+        ~chatnpc("<p,sad>Nobody ever does.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>I'll take both.");
+}
+if (inv_total(inv, coins) < ^feud_camel_price) {
+    ~chatnpc("<p,neutral>Five hundred coins for the pair, which is theft, and I say that as a man who lives here.");
     return;
 }
 if (inv_freespace(inv) < 2) {
-    ~chatnpc("<p,neutral>I am going to hand you two pieces of paper and you have nowhere to put them.");
+    ~chatnpc("<p,neutral>Two camels, two receipts, and you have room for neither.");
     return;
 }
-~chatnpc("<p,sad>Here. Both of them. One is a list and one is a word, and I have been looking at them for a month.");
-inv_add(inv, feud_fib_hint, 1);
-inv_add(inv, feud_nos_note, 1);
-%feud_var = ^feud_notes;
+inv_del(inv, coins, ^feud_camel_price);
+inv_add(inv, feud_camel_receipt, 2);
+~objbox(feud_camel_receipt, "Two receipts, both for one camel, both signed by Ali. The camels stay where they are - you have bought the paperwork and the paperwork is the point.", 250, 0, divide(^objbox_height, 2));
+%feud_var = ^feud_camels;
 ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~chatnpc("<p,neutral>If you can make a number out of that, the safe is behind me and I will open it gladly.");
+~chatnpc("<p,happy>Now. Give one to a Menaphite and one to a bandit, and tell each of them it was the other's idea.");
 
-// The safe puzzle. feud_nos_note gives 1,1,2,3,5 in verse and feud_fib_hint names the sequence, so
-// the dial wants the sixth number. feud_safe_digit records what was said and feud_safe_correct
-// that it worked.
-[label,feud_mayor_safe]
-if (%feud_safe_correct = ^feud_safe_open) {
-    ~chatnpc("<p,happy>Eight. A month, and it was eight.");
+[label,feud_gang_receipt](int $gang)
+if (%feud_var > ^feud_camels) {
+    if ($gang = 1) {
+        ~chatnpc("<p,angry>That camel is still there. It is still looking at me.");
+    } else {
+        ~chatnpc("<p,angry>We do not want the camel. We are not a camel organisation.");
+    }
     return;
 }
-~chatnpc("<p,quiz>Well? What is the number?");
-def_int $answer = ~p_choice4("Six.", 6, "Eight.", 8, "Ten.", 10, "Fifteen.", 15);
-%feud_safe_digit = $answer;
-if ($answer ! ^feud_safe_answer) {
-    ~chatnpc("<p,sad>The dial goes round and comes back. That is not it.");
+if (inv_total(inv, feud_camel_receipt) = 0) {
+    ~chatnpc("<p,neutral>You said something about a camel and now you have nothing in your hands.");
     return;
 }
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>That is the one - and you have nowhere to put what is inside.");
-    return;
-}
-~chatplayer("<p,happy>Eight. Each number is the two before it added together.");
-~chatnpc("<p,shock>...she is going to be unbearable about this.");
-%feud_safe_correct = ^feud_safe_open;
-inv_add(inv, feud_mayors_house_keys, 1);
-%feud_var = ^feud_safe;
-~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~chatnpc("<p,neutral>The house keys. Nothing else in there at all, which tells you how thorough they were.");
-
-[label,feud_mayor_jewels]
-if (inv_total(inv, feud_mayors_jewels) = 0) {
-    ~chatnpc("<p,sad>You have them somewhere and not here.");
-    return;
-}
-~chatplayer("<p,happy>Your wife's jewels.");
-~chatnpc("<p,shock>She will speak to me again. She will actually speak to me again.");
-~chatnpc("<p,neutral>The crates went to the bandit camp and out again by cart, north, four days ago. Tell Morrisane to look in his own warehouse - the driver sold them back to him and he has not opened them.");
-~chatplayer("<p,angry>He what?");
-~chatnpc("<p,laugh>Welcome to Pollnivneach.");
-
-// =========================================================================== the notes
-// There is nothing in the Mayor's house that can be searched. feud_poorbed and feud_table_bare
-// carry no ops whatever - checked the whole feud loc family, and the only two with an op are
-// feud_closed_door_left and _right, both op1=Open. So the notes come from the Mayor's own hand
-// rather than from under a bed that cannot be looked under.
-
-// =========================================================================== the safe
-// feud_money_bowl is NOT a safe - it is "Money Pot: I suppose he wants my money", placed one tile
-// from the snake charmer, and it has no ops either. There is no strongbox loc anywhere in the
-// cache, so the combination is put to the Mayor instead: he is standing in front of it and cannot
-// work it out himself, which is the situation the quest describes anyway.
-
-// The keys are what gets the player into the locked side of the Mayor's house, where the blackjack
-// chapter starts.
-[oploc1,feud_closed_door_left] @feud_mayor_door;
-[oploc1,feud_closed_door_right] @feud_mayor_door;
-
-[label,feud_mayor_door]
-def_coord $door = loc_coord;
-p_arrivedelay;
-if (inv_total(inv, feud_mayors_house_keys) = 0) {
-    ~mesbox("Locked, and the Mayor keeps the keys in a safe he cannot open.");
-    return;
-}
-if (%feud_var = ^feud_safe) {
-    %feud_var = ^feud_blackjack;
-    %feud_var_mayorsdoor = ^feud_on;
-    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-    ~mesbox("The keys fit. Inside, somebody has been through the place already and taken everything small - which is going to mean learning how people here take things.");
-}
-mes("You unlock the door.");
-p_delay(1);
-// Both halves are walls on the east edge of their tile (angle 2), and the player reaches one from
-// the door's own tile, so the old "two tiles away from the door" worked out to no movement at all.
-if (coordx(coord) > coordx($door)) {
-    p_teleport(movecoord($door, 0, 0, calc(coordz(coord) - coordz($door))));
+inv_del(inv, feud_camel_receipt, 1);
+~chatplayer("<p,neutral>A gift. From the other lot.");
+if ($gang = 1) {
+    ~chatnpc("<p,shock>A camel. The Menaphites have given us a CAMEL.");
+    ~chatnpc("<p,angry>Is that a joke? Is that a Menaphite joke?");
 } else {
-    p_teleport(movecoord($door, 1, 0, calc(coordz(coord) - coordz($door))));
+    ~chatnpc("<p,shock>The bandits have sent us a camel.");
+    ~chatnpc("<p,angry>There is no reading of this that is not an insult.");
+}
+%feud_var_comp_gangs = add(%feud_var_comp_gangs, 1);
+if (%feud_var_comp_gangs < ^feud_gangs_both) {
+    ~mesbox("One gang now believes the other has sent them a camel as an insult. The other one still needs telling.");
+    return;
+}
+~mesbox("Both gangs now believe the other has sent them a camel. The village has not been this tense since the water ran out, and in the big tent somebody has noticed who did it.");
+%feud_boss_vis = ^feud_on;
+%feud_bandit_boss_vis = ^feud_on;
+
+// =========================================================================== Ali the Operator
+// The Menaphite boss in the purple tent, who renders only at feud_boss_vis = 1 - and nothing ever
+// set that bit, so he could not be seen, let alone joined. He is set visible by the camel joke,
+// which is when he notices you.
+[opnpc1,feud_menap_boss]
+if (%feud_var < ^feud_camels) {
+    ~chatnpc("<p,angry>Out.");
+    return;
+}
+if (%feud_var >= ^feud_jewels) {
+    @feud_operator_traitor;
+}
+switch_int (%feud_var) {
+    case ^feud_camels : @feud_operator_join;
+    case ^feud_joined : @feud_operator_first_job;
+    case ^feud_pickpocket : @feud_operator_urchin;
+    case ^feud_blackjack : @feud_operator_blackjack;
+    case ^feud_thief : @feud_operator_heist;
+    case ^feud_heist :
+        ~chatnpc("<p,neutral>The jewels. The large house by the fountain. You have the keys and I have a great deal of patience, and only one of those is unlimited.");
+    case default :
+        ~chatnpc("<p,neutral>Work, or get out of the tent.");
 }
 
-// =========================================================================== the blackjack
-// The seller renders at stage 28 and nowhere else, so the quest sits on 28 until the blackjack has
-// been bought AND used. Nothing after this point asks for one again.
+[label,feud_operator_join]
+~chatnpc("<p,laugh>Two camels. Two receipts. Both gangs at each other's throats by lunchtime and not one coin out of your own pocket.");
+~chatplayer("<p,neutral>Five hundred, actually.");
+~chatnpc("<p,happy>Then you are a man who spends money to make trouble, and I can use a man like that.");
+switch_int (~p_choice2("I want in.", 1, "I'm not joining a gang.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>I'm not joining a gang.");
+        ~chatnpc("<p,neutral>Everybody in this village is in a gang. The ones who say otherwise are in ours.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>I want in.");
+}
+~chatnpc("<p,neutral>Then show me you can take something off somebody. Anybody. One of the villagers - they have nothing worth having, which is why it is a test and not a job.");
+%feud_var = ^feud_joined;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+
+[label,feud_operator_first_job]
+if (%feud_talk_villager = ^feud_off) {
+    ~chatnpc("<p,neutral>A villager. Any villager. Take something off one and come back.");
+    return;
+}
+~chatplayer("<p,sad>He felt my hand. He shouted.");
+~chatnpc("<p,laugh>Of course he did. You walked up to a man in an empty street and put your fingers in his pocket.");
+~chatnpc("<p,neutral>There is a child by the well who will make a nuisance of himself for ten coins. Pay him, and take the purse while the man is looking at the child.");
+%feud_var = ^feud_pickpocket;
+%feud_var_urchin = ^feud_urchin_told;
+// The licence goes up: the villagers' Lure option appears at feud_npc_multi = 1, which is the
+// cache's own way of saying you have learnt the second trick.
+%feud_npc_multi = ^feud_thief_lure;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+
+[label,feud_operator_urchin]
+if (%feud_var_urchin < ^feud_urchin_used) {
+    ~chatnpc("<p,neutral>The child. Ten coins. Then the man with his back turned.");
+    return;
+}
+~chatplayer("<p,happy>He never felt it.");
+~chatnpc("<p,happy>No. Now the other way round - some of them you cannot distract, so you put them to sleep instead.");
+~chatnpc("<p,neutral>There is a man by the bar who sells blackjacks. Buy one, get a villager somewhere quiet, and knock him down before you go through his pockets.");
+%feud_var = ^feud_blackjack;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+~mesbox("A man has appeared near the bar with a bundle of short weighted sticks, which is the kind of thing that happens in this village when the big tent decides it should.");
+
+[label,feud_operator_blackjack]
+if (%feud_found_trait = ^feud_off) {
+    ~chatnpc("<p,neutral>Blackjack. Quiet corner. Villager. In that order, and do not get the order wrong.");
+    return;
+}
+~chatplayer("<p,neutral>He went down like a sack and I took everything he had.");
+~chatnpc("<p,happy>Then you are one of us, and I have a job that is not a test.");
+%feud_var = ^feud_thief;
+%feud_npc_multi = ^feud_thief_knock;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+@feud_operator_heist;
+
+// =========================================================================== the villagers
+// op3 Pickpocket, op4 Lure, op5 Knock-Out - the three states of feud_villager_N_*, and the three
+// steps of the apprenticeship. During the quest these are the lesson; afterwards they fall through
+// to the ordinary thieving table (see configs/pickpocking/feud_pollnivneach.dbrow).
+[opnpc3,feud_villager_multi_1] @feud_villager_pick;
+[opnpc3,feud_villager_multi_2] @feud_villager_pick;
+[opnpc3,feud_villager_multi_3] @feud_villager_pick;
+
+[label,feud_villager_pick]
+p_arrivedelay;
+if (%feud_var >= ^feud_thief) {
+    @attempt_pick_pocket(npc_type);
+}
+if (%feud_var < ^feud_joined) {
+    ~mesbox("You have no particular reason to go through this man's pockets, and he is watching you.");
+    return;
+}
+// THE FIRST ATTEMPT IS MEANT TO FAIL. It is the lesson: you cannot take anything off a man who is
+// looking at you, which is what Ali the Operator sends you to find out.
+if (%feud_var = ^feud_joined) {
+    anim(human_pickpocket, 0);
+    p_delay(2);
+    %feud_talk_villager = ^feud_on;
+    npc_say("Oi! Hands!");
+    ~mesbox("He feels your hand before it is halfway in, and he is loud about it. Ali the Operator is going to enjoy this.");
+    return;
+}
+if (%feud_var_urchin = ^feud_urchin_paid & ~feud_villager_is_marked = true) {
+    @feud_villager_pick_marked;
+}
+if (%feud_var = ^feud_pickpocket) {
+    anim(human_pickpocket, 0);
+    p_delay(2);
+    npc_say("Oi! Hands!");
+    ~mesbox("He is facing you, and he notices. The child by the well was not a suggestion.");
+    return;
+}
+// at ^feud_blackjack a conscious villager is still a conscious villager
+anim(human_pickpocket, 0);
+p_delay(2);
+npc_say("Oi! Hands!");
+~mesbox("Awake, he is hopeless. The man with the sticks by the bar had the right idea.");
+
+// The one the urchin is pestering. feud_closest_villager records which of the three groups it is,
+// rolled when the urchin is paid, so the player has to find the right one rather than any one.
+[proc,feud_villager_is_marked]()(boolean)
+// WHICH TYPE npc_type GIVES on a multinpc is not something to guess at: the villagers are
+// feud_villager_multi_N and render as feud_villager_N_1, _2 or _3 depending on feud_npc_multi, and
+// a first version of this compared only against the resolved names. It never matched once, the
+// urchin step never completed, and everything after it reported a cascade of empty state. Both
+// forms are accepted, so it cannot matter which one the engine hands over.
+if (%feud_closest_villager = 1) {
+    if (npc_type = feud_villager_multi_1 | npc_type = feud_villager_1_1
+        | npc_type = feud_villager_1_2 | npc_type = feud_villager_1_3) {
+        return(true);
+    }
+    return(false);
+}
+if (%feud_closest_villager = 2) {
+    if (npc_type = feud_villager_multi_2 | npc_type = feud_villager_2_1
+        | npc_type = feud_villager_2_2 | npc_type = feud_villager_2_3) {
+        return(true);
+    }
+    return(false);
+}
+if (%feud_closest_villager = 3) {
+    if (npc_type = feud_villager_multi_3 | npc_type = feud_villager_3_1
+        | npc_type = feud_villager_3_2 | npc_type = feud_villager_3_3) {
+        return(true);
+    }
+    return(false);
+}
+return(false);
+
+[label,feud_villager_pick_marked]
+anim(human_pickpocket, 0);
+p_delay(2);
+%feud_var_urchin = ^feud_urchin_used;
+%feud_distracted = ^feud_on;
+%feud_closest_villager = 0;
+~mesbox("The child is shouting something unrepeatable about the man's mother, the man is shouting back, and your hand is in and out of his pocket before either of them has finished the sentence.");
+
+// Lure, which the second multinpc state adds. It is what puts a villager somewhere nobody is
+// watching, and it is the half of the blackjack trick that is not the blackjack.
+[opnpc4,feud_villager_multi_2] @feud_villager_lure;
+[opnpc4,feud_villager_multi_3] @feud_villager_lure;
+
+[label,feud_villager_lure]
+p_arrivedelay;
+if (%feud_var < ^feud_blackjack) {
+    ~mesbox("You could get him on his own, and then you would be a stranger alone with a villager and no plan.");
+    return;
+}
+npc_say("What? Where?");
+~mesbox("He follows you round the corner, complaining, and stops where nobody can see either of you. Now would be the moment.");
+%feud_distracted = ^feud_on;
+
+// Knock-Out, the third state, and the only way the quest's own pickpocket succeeds.
+[opnpc5,feud_villager_multi_3] @feud_villager_knock;
+
+[label,feud_villager_knock]
+p_arrivedelay;
+if (inv_total(worn, blackjack_oak) = 0 & inv_total(worn, blackjack_willow) = 0) {
+    ~mesbox("You would need something short and heavy in your hand, and it would need to be in your hand rather than your bag.");
+    return;
+}
+if (%feud_distracted = ^feud_off) {
+    ~mesbox("Not in the open. Get him on his own first.");
+    return;
+}
+// There is no player swing animation in this cache - human_pickpocket is the only one of the
+// pair it ships - so the swing is that and the falling over is the npc's own stunned_blackjack.
+anim(human_pickpocket, 0);
+npc_anim(stunned_blackjack, 0);
+p_delay(3);
+%feud_distracted = ^feud_off;
+if (%feud_var = ^feud_blackjack & %feud_found_trait = ^feud_off) {
+    %feud_found_trait = ^feud_on;
+    ~mesbox("He folds up quietly. His pockets hold four coins, a bent key and a hair comb, and the whole business took about two seconds - which is what Ali the Operator wanted to hear.");
+    return;
+}
+~mesbox("He folds up quietly. Whatever he had is yours, and he will wake up blaming the heat.");
+@attempt_pick_pocket(npc_type);
+
+// =========================================================================== the street urchin
+// Three of him, by the well and the two side streets. feud_var_urchin, feud_distracted and
+// feud_urchin_again are all his, and none of them had ever been written.
+[opnpc1,feud_street_urchin]
+if (%feud_var_urchin = ^feud_urchin_none) {
+    ~chatnpc("<p,angry>I am not doing anything. You cannot prove I am doing anything.");
+    return;
+}
+if (%feud_var_urchin >= ^feud_urchin_used) {
+    if (%feud_urchin_again = ^feud_off) {
+        %feud_urchin_again = ^feud_on;
+        ~chatnpc("<p,happy>That was my best work. He is still telling people about it.");
+        return;
+    }
+    ~chatnpc("<p,happy>Ten coins any time you like.");
+    return;
+}
+if (%feud_var_urchin = ^feud_urchin_paid) {
+    ~chatnpc("<p,neutral>I am going. I am going. Keep up.");
+    return;
+}
+~chatplayer("<p,quiz>I hear you make a nuisance of yourself for money.");
+~chatnpc("<p,happy>Ten coins and I will make a nuisance of myself at anyone you point at.");
+switch_int (~p_choice2("Here's ten coins.", 1, "Not today.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Not today.");
+        ~chatnpc("<p,sad>Nobody ever wants a nuisance until they do.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Here's ten coins.");
+}
+if (inv_total(inv, coins) < ^feud_urchin_fee) {
+    ~chatnpc("<p,angry>You have not got ten coins. I can tell. I always can.");
+    return;
+}
+inv_del(inv, coins, ^feud_urchin_fee);
+%feud_var_urchin = ^feud_urchin_paid;
+%feud_closest_villager = calc(random(3) + 1);
+~chatnpc("<p,happy>Right. Watch this.");
+~mesbox("The child picks a villager out of the crowd and starts following him at a distance of about two feet, saying things. The man is already going red. | Find the one being pestered and go through his pockets while he is busy.");
+
+// =========================================================================== the blackjack seller
+// feud_black_jack_seller_multi is multivar=feud_var, multinpc=28,feud_bjseller: he renders at stage
+// 28 and nowhere else, which is the single clearest instruction the cache gives about this quest's
+// order. 28 is the moment Ali the Operator tells you to buy one.
 [opnpc1,feud_black_jack_seller_multi]
-~chatnpc("<p,neutral>You want to know how people take things here.");
-def_int $option = ~p_choice3("Yes.", 1, "What are you selling?", 2, "No.", 3);
+~chatnpc("<p,neutral>You will be the one the tent sent.");
+def_int $option = ~p_choice3("How does it work?", 1, "I'll buy one.", 2, "No.", 3);
 switch_int ($option) {
     case 3 :
         ~chatplayer("<p,neutral>No.");
         return;
-    case 2 : @feud_buy_blackjack; return;
+    case 2 : @feud_buy_blackjack;
     case 1 :
-        ~chatplayer("<p,neutral>Yes.");
+        ~chatplayer("<p,quiz>How does it work?");
 }
-~chatnpc("<p,neutral>You come up behind them, you knock them down, and you go through their pockets while they are deciding what happened.");
+~chatnpc("<p,neutral>You get him on his own. You knock him down. You go through his pockets while he is deciding what happened.");
 ~chatplayer("<p,shock>That's appalling.");
-~chatnpc("<p,laugh>It is Pollnivneach. Buy a blackjack.");
-~chatnpc("<p,neutral>Every villager here is wearing something you want. Find one on his own and take it off him.");
+~chatnpc("<p,laugh>It is Pollnivneach. Twenty coins.");
 @feud_buy_blackjack;
 
-// There is no shop inventory anywhere for feud_bjseller - ~openshop_activenpc would have opened
-// nothing at all - so he sells across the counter instead.
+// There is no shop inventory for feud_bjseller anywhere, so ~openshop_activenpc would open an empty
+// window. He sells across the counter instead.
 [label,feud_buy_blackjack]
-if (inv_total(inv, blackjack_oak) > 0 | inv_total(inv, blackjack_willow) > 0) {
-    ~chatnpc("<p,neutral>You have one. Go and use it.");
+if (inv_total(inv, blackjack_oak) > 0 | inv_total(inv, blackjack_willow) > 0
+    | inv_total(worn, blackjack_oak) > 0 | inv_total(worn, blackjack_willow) > 0) {
+    ~chatnpc("<p,neutral>You have one. Hold it properly and go and use it.");
     return;
 }
 if (inv_total(inv, coins) < 20) {
@@ -287,158 +618,10 @@ if (inv_freespace(inv) = 0) {
 }
 inv_del(inv, coins, 20);
 inv_add(inv, blackjack_oak, 1);
-~chatnpc("<p,happy>Oak. Willow if you get good at it, which you will not.");
+~chatnpc("<p,happy>Oak. Willow if you ever get good at it, which you will not.");
 
-[opnpcu,feud_villager_multi_1] @feud_blackjack_villager;
-[opnpcu,feud_villager_multi_2] @feud_blackjack_villager;
-[opnpcu,feud_villager_multi_3] @feud_blackjack_villager;
-
-[label,feud_blackjack_villager]
-def_obj $item = last_useitem;
-p_arrivedelay;
-if ($item ! blackjack_oak & $item ! blackjack_willow) {
-    ~displaymessage(^dm_default);
-    return;
-}
-if (%feud_var ! ^feud_blackjack) {
-    ~displaymessage(^dm_default);
-    return;
-}
-if (stat(thieving) < 30) {
-    mes("You need a Thieving level of 30 to do this without being seen.");
-    return;
-}
-mes("You bring the blackjack down.");
-anim(human_pickpocket, 0);
-p_delay(3);
-if (stat_random(thieving, 40, 85) = false) {
-    ~chatnpc("<p,angry>OI!");
-    ~damage_self(3);
-    mes("He turns round first, which is the wrong way for this to go.");
-    return;
-}
-if (inv_freespace(inv) < 2) {
-    mes("He goes down and you have nowhere to put anything.");
-    return;
-}
-inv_add(inv, feud_karidian_turban, 1);
-inv_add(inv, feud_karidian_fakebeard, 1);
-%feud_var = ^feud_traits;
-%feud_found_trait = ^feud_on;
-stat_advance(thieving, 2500);
-~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~mesbox("He goes down without a sound. He is wearing a headpiece and - for reasons you decide not to examine - a false beard, and you take both.");
-
-// =========================================================================== the disguise
-// Beard and headpiece make the Desert disguise. feud_karidian_fakebeard_and_hat, which this used to
-// make, has no wearpos in the cache, so it could never be put on - and the camp guards want the
-// disguise WORN - so the quest stopped at the gate. feud_desert_disguise is the same model and
-// wears on the head.
-[opheldu,feud_karidian_turban]
-if (last_useitem ! feud_karidian_fakebeard) {
-    ~displaymessage(^dm_default);
-    return;
-}
-inv_del(inv, feud_karidian_turban, 1);
-inv_del(inv, feud_karidian_fakebeard, 1);
-inv_add(inv, feud_desert_disguise, 1);
-if (%feud_var = ^feud_traits) {
-    %feud_var = ^feud_disguise;
-    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-}
-mes("Beard and headpiece together make something a bandit would not look at twice.");
-
-// =========================================================================== the bandit camp
-// The disguise is what gets past the camp guards. feud_arabian_guard_multi and its partner both
-// key on feud_npc_multi, so the guards on the gate are the same shells that changed when the town
-// was stirred up.
-[opnpc1,feud_arabian_guard_multi] @feud_camp_guard;
-[opnpc1,feud_arabian_guard2_multi] @feud_camp_guard;
-
-[label,feud_camp_guard]
-if (%feud_var < ^feud_disguise) {
-    ~chatnpc("<p,angry>Outsider. Keep walking.");
-    return;
-}
-if (%feud_var > ^feud_disguise) {
-    ~chatnpc("<p,neutral>Brother.");
-    return;
-}
-if (inv_total(worn, feud_desert_disguise) = 0 & inv_total(worn, feud_karidian_fakebeard_and_hat) = 0) {
-    ~chatnpc("<p,angry>Outsider. Keep walking.");
-    ~mesbox("The disguise is no use in your pack. It has to be on your face.");
-    return;
-}
-~chatnpc("<p,neutral>...brother. I did not know you.");
-~chatplayer("<p,neutral>I have been away.");
-~chatnpc("<p,neutral>Go on in. The leader is at the back and he is in a mood.");
-%feud_var = ^feud_camp;
-~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-
-// The cowardly bandit is the cache's own joke - "probably the weakest bandit in the world ....ever"
-// - and he is the one who will actually tell you where things are kept.
-[opnpc1,feud_arabian_guard_coward]
-if (%feud_var < ^feud_camp) {
-    ~chatnpc("<p,sad>Please do not. Please.");
-    return;
-}
-~chatnpc("<p,sad>You are not one of us. I can tell. I am not going to say anything.");
-~chatplayer("<p,neutral>Where are the jewels?");
-~chatnpc("<p,sad>The leader has them and he sleeps on them and he will fight you for them and he will win, and I am telling you this because I do not want to be here when it happens.");
-
-[label,feud_bandit_endgame]
-if (%feud_var >= ^feud_jewels) {
-    ~chatnpc("<p,angry>Get out of my camp.");
-    return;
-}
-if (%feud_given_jewels = ^feud_on) {
-    ~chatnpc("<p,angry>You have what you came for.");
-    return;
-}
-~chatnpc("<p,angry>You are not one of mine. You have got the beard right and everything else wrong.");
-~chatplayer("<p,neutral>I want the Mayor's jewels.");
-~chatnpc("<p,laugh>Everyone does. Nobody gets past Kamil.");
-if_close;
-mes("He does not shout for help. He just steps back, and something very large steps forward.");
-p_delay(3);
-// feud_bandit_toughguy is not placed anywhere in the map data - it is the champion, and it exists
-// to be spawned for this one fight.
-npc_add(coord, feud_bandit_toughguy, 300);
-~mesbox("The bandit champion. You are going to have to go through him.");
-
-// A death script runs as the npc: %feud_var is protected and the jewels go into a protected inv,
-// so it needs the hero's protected access - and when that is not free this frame (the player is
-// busy), it used to return and the jewels were never handed over. Queue it on the player instead.
-[ai_queue3,feud_bandit_toughguy]
-gosub(npc_death);
-if (npc_findhero = ^false) {
-    return;
-}
-if (p_finduid(uid) = true) {
-    @feud_champion_down;
-}
-queue(feud_champion_down, 0, 0);
-
-[queue,feud_champion_down]
-@feud_champion_down;
-
-[label,feud_champion_down]
-if (%feud_var ! ^feud_camp) {
-    return;
-}
-if (inv_freespace(inv) = 0) {
-    obj_add(coord, feud_mayors_jewels, 1, ^lootdrop_duration);
-} else {
-    inv_add(inv, feud_mayors_jewels, 1);
-}
-%feud_var = ^feud_jewels;
-%feud_given_jewels = ^feud_on;
-stat_advance(strength, 5000);
-~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-~mesbox("The champion goes down and the leader does not wait to see it finish. The jewels were on a string round his neck.");
-// =========================================================================== the rest of the village
-// Pollnivneach's ladders and the Mayor's upstairs furniture carried ops with no trigger at all.
-// Landings checked against the collision map (tools/sim/audit2.ts).
+// =========================================================================== Pollnivneach's ladders
+// These carried ops with no trigger at all. Landings checked against the collision map.
 [oploc1,feud_ladder]
 p_arrivedelay;
 switch_coord (loc_coord) {
@@ -458,23 +641,3 @@ switch_coord (loc_coord) {
     case 2_52_46_28_37 : ~climb_ladder(1_52_46_28_38, false);
     case default : ~climb_ladder(movecoord(coord, 0, -1, 0), false);
 }
-
-[oploc1,feud_mayors_bed]
-p_arrivedelay;
-mes("You search the bed. The Mayor sleeps badly, and on the side nearest the door.");
-
-[oploc1,feud_mayors_desk]
-p_arrivedelay;
-mes("You search the desk. Letters from both gangs, all of them demands, none of them answered.");
-
-[oploc1,feud_mayors_picture]
-p_arrivedelay;
-mes("A portrait of the Mayor's wife. She is looking at you as if you owe her money.");
-
-[oploc1,feud_cactus_row]
-p_arrivedelay;
-mes("You crouch behind the cacti for a moment. Nobody in Pollnivneach is fooled.");
-
-[oploc1,feud_poison_beer_table]
-p_arrivedelay;
-mes("You would not drink anything left standing about in this village.");

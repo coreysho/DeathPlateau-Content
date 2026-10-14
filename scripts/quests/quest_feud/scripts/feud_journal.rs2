@@ -1,76 +1,110 @@
+// The Feud's quest journal. Rewritten 14 October 2026 with the quest - the old entries described a
+// detective story about twenty missing crates and a mayor who hires you.
 [if_button,questlist:feud]
 def_string $text;
 
 switch_int (%feud_var) {
     case ^feud_not_started :
-        $text = "@dbl@I can start this quest by speaking to @dre@Ali Morrisane|";
-        $text = append($text, "@dbl@in the @dre@Al Kharid bazaar");
+        $text = "@dbl@@dre@Ali Morrisane@dbl@ in @dre@Al Kharid@dbl@ has lost goods on the road|";
+        $text = append($text, "@dbl@south to @dre@Pollnivneach|");
+        $text = append($text, "@dbl@I will need @dre@30 Thieving@dbl@, and it cannot be boosted");
 
     case ^feud_sent :
-        $text = "@str@Twenty crates went missing on the road to Pollnivneach|";
-        $text = append($text, "@str@and nobody saw a thing.|");
-        $text = append($text, "@dbl@The village is run by two gangs. I should speak to @dre@both|");
-        $text = append($text, "@dbl@leaders@dbl@ - the @dre@Menaphites@dbl@ in the north and the @dre@bandits|");
-        $text = append($text, "@dbl@in the south");
+        $text = "@str@Pollnivneach is run by two gangs and nothing moves through it|";
+        $text = append($text, "@str@without one of them knowing.|");
+        $text = append($text, "@dbl@Buy a @dre@Kharidian headpiece@dbl@ and a @dre@fake beard@dbl@ from Ali|");
+        $text = append($text, "@dbl@and put them together|");
+        $text = append($text, "@dbl@Then buy @dre@three beers@dbl@ for the drunk in the bar");
 
-    case ^feud_both_gangs :
-        $text = "@str@Both gangs know my face now.|";
-        $text = append($text, "@dbl@The @dre@Mayor@dbl@ is the only man in Pollnivneach who is not in|");
-        $text = append($text, "@dbl@one of them");
+    case ^feud_drunk :
+        $text = "@str@Three beers bought me everything Drunken Ali knows.|";
+        $text = append($text, "@dbl@Ask the @dre@bandits@dbl@ about the Menaphites|");
+        $text = append($text, "@dbl@Ask the @dre@Menaphites@dbl@ about the bandits");
 
-    case ^feud_mayor :
-        $text = "@str@The bandits took the Mayor's wife's jewels out of his own|";
-        $text = append($text, "@str@house. He will trade what he knows for them.|");
-        $text = append($text, "@dbl@The house keys are in a safe he cannot open. His wife left|");
-        $text = append($text, "@dbl@@dre@notes@dbl@ - I should ask him for them");
+    case ^feud_asked_gangs :
+        $text = "@str@Each gang blames the other for the road. Neither of them|";
+        $text = append($text, "@str@mentioned the camels.|");
+        $text = append($text, "@dbl@Buy @dre@both camels@dbl@ from the seller - @dre@500 coins@dbl@, and two|");
+        $text = append($text, "@dbl@free spaces|");
+        $text = append($text, "@dbl@Give a @dre@receipt@dbl@ to each gang");
 
-    case ^feud_notes :
-        $text = "@str@Two notes. One is a list of five numbers in verse and the|";
-        $text = append($text, "@str@other is a single word.|");
-        $text = append($text, "@dbl@@dre@Read both@dbl@, then tell the @dre@Mayor@dbl@ the number");
+    case ^feud_camels :
+        $text = "@str@Both gangs think the other sent them a camel.|";
+        $text = append($text, "@dbl@@dre@Ali the Operator@dbl@ in the big tent has noticed|");
+        $text = append($text, "@dbl@Ask him for work");
 
-    case ^feud_safe :
-        $text = "@str@Eight. Each number is the two before it added together.|";
-        $text = append($text, "@dbl@The @dre@house keys@dbl@ open the locked side of the Mayor's|");
-        $text = append($text, "@dbl@house");
+    case ^feud_joined :
+        $text = "@str@Ali the Operator will take me on if I can take something|";
+        $text = append($text, "@str@off somebody.|");
+        $text = append($text, "@dbl@@dre@Pickpocket a villager|");
+        $text = append($text, "@dbl@Then go back to the tent");
+
+    case ^feud_pickpocket :
+        $text = "@str@He felt my hand and shouted the street down.|";
+        $text = append($text, "@dbl@The @dre@street urchin@dbl@ by the well will be a nuisance for|");
+        $text = append($text, "@dbl@@dre@10 coins|");
+        $text = append($text, "@dbl@Pickpocket the villager he is pestering");
 
     case ^feud_blackjack :
-        $text = "@str@Everything small in the Mayor's house was taken, which|";
-        $text = append($text, "@str@means learning how people here take things.|");
-        $text = append($text, "@dbl@The @dre@blackjack seller@dbl@ is in the market. Buy one and use|");
-        $text = append($text, "@dbl@it on a @dre@villager");
+        $text = "@str@The urchin kept him busy and he never felt a thing.|";
+        $text = append($text, "@dbl@Buy a @dre@blackjack@dbl@ from the man by the bar|");
+        $text = append($text, "@dbl@@dre@Wield@dbl@ it, @dre@lure@dbl@ a villager somewhere quiet, and|");
+        $text = append($text, "@dbl@@dre@knock him out@dbl@ before going through his pockets");
 
-    case ^feud_traits :
-        $text = "@str@The villager was wearing a headpiece and a false beard.|";
-        $text = append($text, "@dbl@@dre@Put them together");
+    case ^feud_thief :
+        $text = "@str@One villager asleep in an alley, and I am in the gang.|";
+        $text = append($text, "@dbl@Ali the Operator has a job that is not a test");
 
-    case ^feud_disguise :
-        $text = "@str@Beard and headpiece together would pass for a bandit.|";
-        $text = append($text, "@dbl@@dre@Wear it@dbl@ - not carry it - and walk into the @dre@bandit camp|");
-        $text = append($text, "@dbl@in the south of the village");
-
-    case ^feud_camp :
-        $text = "@str@I am inside the camp and the leader knows I am not one of|";
-        $text = append($text, "@str@his.|");
-        $text = append($text, "@dbl@Nobody gets past @dre@Kamil");
+    case ^feud_heist :
+        $text = "@str@He wants the Mayor's wife's jewels, and he had the Mayor's|";
+        $text = append($text, "@str@own keys in his robe.|");
+        $text = append($text, "@dbl@Wear the @dre@disguise@dbl@ and @dre@gloves|");
+        $text = append($text, "@dbl@@dre@Hide behind the cactus@dbl@ until the guard passes|");
+        $text = append($text, "@dbl@Unlock the door, go upstairs, and @dre@search the picture");
 
     case ^feud_jewels :
-        $text = "@str@The champion is down and the jewels were on a string round|";
-        $text = append($text, "@str@the leader's neck.|");
-        $text = append($text, "@dbl@@dre@Ali Morrisane@dbl@ wanted to know about his crates");
+        $text = "@str@One, one, two, three, five, eight. The jewels were behind|";
+        $text = append($text, "@str@a portrait of the woman they belong to.|");
+        $text = append($text, "@dbl@Take them to @dre@Ali the Operator|");
+        $text = append($text, "@dbl@Then ask a @dre@thug@dbl@ what the gang does next");
 
-    case ^feud_complete :
-        $text = "@str@Twenty-two crates, in the end, and the driver walked home.|";
-        $text = append($text, "@str@Pollnivneach is run by two gangs and a mayor who was the|");
-        $text = append($text, "@str@only man in it without a knife.|");
-        $text = append($text, "@str@His wife's jewels were on the bandit leader's neck, and|");
-        $text = append($text, "@str@Morrisane's crates had been sold back to him by his own|");
-        $text = append($text, "@str@driver without him noticing.||");
-        $text = append($text, "@red@QUEST COMPLETE!");
+    case ^feud_traitor :
+        $text = "@str@They are going to poison the well. Four hundred people|";
+        $text = append($text, "@str@drink out of that well.|");
+        $text = append($text, "@dbl@The @dre@barman@dbl@ knows where the boss's beer is left|");
+        $text = append($text, "@dbl@@dre@Ali the Hag@dbl@ wants a @dre@snake in a basket@dbl@ and a bucket of|");
+        $text = append($text, "@dbl@@dre@ugthanki dung@dbl@ from a camel that drank something hot");
+
+    case ^feud_poison :
+        $text = "@str@The hag's poison will put a man down for a day and a night.|";
+        $text = append($text, "@dbl@Put it in the @dre@beer on the table@dbl@ by the bar door");
+
+    case ^feud_poisoned :
+        $text = "@str@The boss's beer is waiting for him and so is the day after.|";
+        $text = append($text, "@dbl@Tell the @dre@Menaphite leader@dbl@ outside the tent|");
+        $text = append($text, "@dbl@Their @dre@tough guy@dbl@ will want a word");
+
+    case ^feud_menaphite_down :
+        $text = "@str@The Menaphites have no boss and no champion.|";
+        $text = append($text, "@dbl@Tell a @dre@villager|");
+        $text = append($text, "@dbl@Then tell the @dre@bandit leader@dbl@ by the northern carpet");
+
+    case ^feud_bandit_down :
+        $text = "@str@Both gangs lost everybody who gave orders, inside one|";
+        $text = append($text, "@str@afternoon.|");
+        $text = append($text, "@dbl@Tell @dre@Ali the Mayor@dbl@, by the well");
+
+    case ^feud_told_mayor :
+        $text = "@str@The Mayor has been in his own house all morning with the|";
+        $text = append($text, "@str@door open.|");
+        $text = append($text, "@dbl@Go back to @dre@Ali Morrisane");
 
     case default :
-        $text = "@dbl@I can start this quest by speaking to @dre@Ali Morrisane|";
-        $text = append($text, "@dbl@in the @dre@Al Kharid bazaar");
+        $text = "@str@Pollnivneach had two gangs. I joined one of them, robbed the|";
+        $text = append($text, "@str@Mayor for it, found out what it was really for, and put the|");
+        $text = append($text, "@str@boss to sleep with a beer. Both champions are on the floor|");
+        $text = append($text, "@str@and the Mayor has his village back.|");
+        $text = append($text, "@dbl@@dre@QUEST COMPLETE");
 }
 
 ~quest_journal("The Feud", $text);

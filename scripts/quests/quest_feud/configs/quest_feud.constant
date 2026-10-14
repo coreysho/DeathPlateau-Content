@@ -1,70 +1,122 @@
-// The Feud.
+// The Feud - Pollnivneach, two gangs, and a thief's apprenticeship.
 //
-// Two varps. main_feud_var has transmit=yes, which it needs - feud_var, feud_npc_multi,
-// feud_boss_vis, feud_boss_vis2, feud_bandit_boss_vis and feud_mayor_invis are all multi keys off
-// it. feud_var_multi has no transmit and does not need one: nothing keys a multi on any of its
-// varbits. Neither had scope=perm.
+// REBUILT 14 October 2026. tools/questgaps.py ranked this first of 111 quest directories: 23 placed
+// npcs and 19 defined varbits that nothing referenced, on a quest with 134 cache symbols in total.
+// What was here was a well-written detective story about twenty missing crates in which the Mayor
+// hires you. The quest that was released is one where you JOIN the Menaphite gang, earn their trust
+// by thieving, steal the Mayor's wife's jewels FOR them, and then betray them - and the cache
+// shipped all of it. See "Claude outputs/quest-fidelity-feud.md" for the step-by-step comparison.
 //
+// THE VARBITS ARE THE DESIGN DOCUMENT, and their widths are the half of it that cannot be argued
+// with:
+//
+//   feud_var_drink        2 bits   three beers for Drunken Ali, one at a time
+//   feud_hag_list         2 bits   the hag wants two things: the snake and the dung
+//   feud_var_comp_gangs   2 bits   a camel receipt to each of the two gangs
+//   feud_var_urchin       2 bits   the street urchin, paid and used
+//   feud_closest_villager 2 bits   which villager has the arrow over their head
+//   feud_safe_digit       4 bits   a dial, not a yes-or-no
+//   feud_used_sauce       1 bit    the red hot sauce in the camel trough
+//   feud_var_witchbothered, feud_metwitch, feud_var_drink_found, feud_report_drink, feud_distracted,
+//   feud_ali_money, feud_found_trait, feud_talk_villager, feud_var_menaboss, feud_var_banditboss
+//
+// A quest with no snake in it does not ship a charm, an empty basket, a full basket, a charmer and a
+// money pot. A quest with no beer-poisoning in it does not ship a table whose op1 is Take-beer.
+
 // ---------------------------------------------------------------------------- the stage pin
+// feud_black_jack_seller_multi is multivar=feud_var, multinpc=28,feud_bjseller - the blackjack
+// seller renders at feud_var EXACTLY 28 and at no other value. So the ladder is built around that
+// number: 28 is the moment Ali the Operator tells you to go and buy one, which is wiki step 14.
 //
-//   [feud_black_jack_seller_multi]  multivar=feud_var  multinpc=28,feud_bjseller
-//
-// One entry. The blackjack seller exists at stage 28 and at no other value in the quest, so the
-// blackjack has to be bought AND used while the stage is sitting on 28. Everything about chapter
-// five is arranged around holding the player there until the blackjack work is finished; past 28
-// the seller is gone and nothing later asks for one again.
-//
-// ---------------------------------------------------------------------------- the town's mood
-// feud_npc_multi is 0-2 and five separate shells read it - the two guard posts, three groups of
-// villagers and the doorman:
-//
-//   [feud_arabian_guard_multi]    0,1 -> guard1_1     2 -> guard1_2
-//   [feud_arabian_guard2_multi]   0,1 -> guard2_1     2 -> guard2_2
-//   [feud_villager_multi_1]       0 -> 1_1   1 -> 1_2   2 -> 1_3
-//   [feud_villager_multi_2]       0 -> 2_1   1 -> 2_2   2 -> 2_3
-//   [feud_villager_multi_3]       0 -> 3_1   1 -> 3_2   2 -> 3_3
-//   [feud_egyptian_doorman_multi] 0,1 -> doorman_1     2 -> doorman_2
-//
-// One write changes who is standing in the street across the whole village at once. 0 is the town
-// as found, 1 is the town while the player is stirring it up, and 2 is after the gangs have been
-// dealt with.
-^feud_town_normal = 0
-^feud_town_stirred = 1
-^feud_town_settled = 2
-
-// ---------------------------------------------------------------------------- stages
+// feud_var is six bits, so 0-63, and the steps are spaced four apart to leave room.
 ^feud_not_started = 0
-^feud_sent = 5           // Ali Morrisane has sent the player south
-^feud_both_gangs = 10    // both leaders spoken to
-^feud_mayor = 15         // the Mayor will help, for his wife's jewels
-^feud_notes = 20         // both notes out of the Mayor's bedroom
-^feud_safe = 25          // the safe open, the house keys in hand
-^feud_blackjack = 28     // <- THE SELLER EXISTS HERE AND NOWHERE ELSE
-^feud_traits = 32        // a villager robbed of what the disguise needs
-^feud_disguise = 36      // turban and beard assembled
-^feud_camp = 40          // inside the bandit camp
-^feud_jewels = 45        // the jewels recovered
-^feud_complete = 50
+^feud_sent = 4             // Ali Morrisane has sold you the disguise and sent you south
+^feud_drunk = 8            // Drunken Ali has talked, three beers in
+^feud_asked_gangs = 12     // the bandits and the Menaphite thugs both questioned
+^feud_camels = 16          // two camels bought and a receipt given to each gang
+^feud_joined = 20          // Ali the Operator has taken you on
+^feud_pickpocket = 24      // one villager robbed badly, and the urchin business
+^feud_blackjack = 28       // <- THE BLACKJACK SELLER EXISTS AT THIS VALUE AND NOWHERE ELSE
+^feud_thief = 32           // a villager knocked out and robbed: you are in the gang
+^feud_heist = 36           // the Operator wants the Mayor's wife's jewels, and hands you the keys
+^feud_jewels = 40          // the jewels are out of the house and in his hands
+^feud_traitor = 44         // the thug has named the drink; the barman knows who pours it
+^feud_poison = 48          // the hag's poison in hand
+^feud_poisoned = 52        // the beer on the table is poisoned
+^feud_menaphite_down = 56  // the Tough Guy is dead
+^feud_bandit_down = 58     // the champion is dead
+^feud_told_mayor = 60      // Ali the Mayor knows the village is his again
+^feud_complete = 62
 
-// The safe. feud_nos_note is "a list of 5 numbers" and feud_fib_hint is a note "mentioning the
-// word 'Fibonacci'", so the safe wants the sixth number in the sequence the list starts.
-^feud_safe_answer = 8
-^feud_safe_shut = 0
-^feud_safe_open = 1
+^feud_thieving_req = 30    // and not boostable, which is the wiki's own note
+
+// ---------------------------------------------------------------------------- the town
+// feud_npc_multi drives the villagers, both guard posts and the doorman at once, and what it
+// changes is their OPS - op3 Pickpocket, then +op4 Lure, then +op5 Knock-Out. It is not the
+// town's mood, which is how the previous version read it. It is how much thieving you have been
+// taught, and it stays at two afterwards because that is one of the quest's rewards.
+^feud_thief_none = 0       // pickpocket only, and badly
+^feud_thief_lure = 1       // the urchin has taught you to get a man on his own
+^feud_thief_knock = 2      // and the blackjack does the rest
+
+// ---------------------------------------------------------------------------- counters
+^feud_beers_wanted = 3     // feud_var_drink is two bits, which is three beers and one to spare
+^feud_camel_price = 500
+^feud_urchin_fee = 10
+^feud_beer_price = 2
+^feud_sauce_price = 5
+^feud_pot_coin = 1
 
 ^feud_gangs_none = 0
 ^feud_gangs_one = 1
 ^feud_gangs_both = 2
 
+// feud_hag_list: what she is still waiting for
+^feud_hag_nothing = 0
+^feud_hag_asked = 1        // she has named both
+^feud_hag_one = 2          // one of the two handed over
+^feud_hag_both = 3         // and the other
+
+// feud_var_urchin
+^feud_urchin_none = 0
+^feud_urchin_told = 1      // the Operator has mentioned him
+^feud_urchin_paid = 2      // ten coins, and he is watching for your nod
+^feud_urchin_used = 3      // he has distracted one, and you took the purse
+
+// feud_report_drink
+^feud_report_none = 0
+^feud_report_barman = 1    // the barman has said who drinks what
+^feud_report_told = 2      // and the Operator has heard it
+
+// the dial behind the picture: 1, 1, 2, 3, 5, 8, clockwise
+^feud_safe_answer = 8
+^feud_safe_shut = 0
+^feud_safe_open = 1
+
 ^feud_off = 0
 ^feud_on = 1
 
 // ---------------------------------------------------------------------------- places
-// Pollnivneach is m52_46 (mapsquare origin 3328,2944). Ali Morrisane is up in Al Kharid.
-^feud_ali_m = 0_51_50_40_11              // 3304,3211  Al Kharid bazaar
-^feud_mayor_house = 0_52_46_32_26        // 3360,2970
-^feud_bandit_camp = 0_52_46_25_58        // 3353,3002  the bandit leader
-^feud_menap_house = 0_52_46_6_12         // 3334,2956  the Menaphite leader
-^feud_bjseller = 0_52_46_23_27           // 3351,2971
-^feud_well = 0_52_46_31_27               // 3359,2971
-^feud_beer_table = 0_52_46_28_13         // 3356,2957
+// Al Kharid is m51_50; Pollnivneach is m52_46.
+^feud_ali_m = 0_51_50_39_21             // 3303,3213  the bazaar, by the silk stall
+^feud_drunken_ali = 0_52_46_40_54       // 3360,2958  the bar
+^feud_barman = 0_52_46_41_53            // 3361,2957
+^feud_kebabman = 0_52_46_32_43          // 3352,2975
+^feud_camel_seller = 0_52_46_30_35      // 3350,2967
+^feud_hag = 0_52_46_28_55               // 3348,2987
+^feud_snakecharmer = 0_52_46_32_18      // 3352,2950
+^feud_menap_boss = 0_52_46_11_20        // 3331,2952  Ali the Operator, in the purple tent
+^feud_bandit_boss = 0_52_46_29_6        // 3349,3002  by the northern carpet
+^feud_mayor_coord = 0_52_46_39_32       // 3359,2968  by the well
+^feud_mayor_house = 0_52_46_32_26       // 3360,2970
+
+// --- The two pieces the cache configures and never places ---
+// feud_menap_boss2 (the Menaphite Leader) and the three ugthanki dung locs are all configured, all
+// carry the right ops or multinpc, and none of them is on any map square. Map files are generated,
+// so both are spawned from script at the moment they exist in the story.
+^feud_leader_spawn = 0_52_46_4_10       // 3332,2954  just outside the big tent
+^feud_dung_spawn = 0_52_46_19_22        // 3347,2966  behind the camel shop, beside the trough
+
+// The money pot sits a tile from the charmer and has no ops of its own, so the coin goes in by
+// using one on it.
+^feud_money_bowl = 0_52_46_33_19        // 3353,2951

@@ -1,0 +1,589 @@
+// The Feud, part two - the jewels, the hag's poison, and the two champions.
+//
+// Wiki steps 15 to 42. The heist was here in a different form (the Mayor hired you and handed over
+// his own keys) and the traitor arc was not here at all, which is most of the quest: the kebab
+// sauce, the camel trough, the dung, the money pot, the snake, the hag, and a poisoned beer on a
+// table whose op1 is Take-beer.
+//
+// Everything below is in the cache. Nothing new was drawn or invented except the dialogue.
+
+// =========================================================================== the heist
+// Wiki steps 15 to 21. Ali the Operator wants the Mayor's wife's jewels and gives you the keys; the
+// cactus, the picture and the dial do the rest.
+[label,feud_operator_heist]
+~chatnpc("<p,neutral>The large house by the fountain. The Mayor's. His wife has jewels and the Mayor has a guard who walks past the front door every so often.");
+~chatplayer("<p,quiz>And you want them.");
+~chatnpc("<p,happy>I want him to know we can take them. The jewels are incidental - though I shall keep them.");
+if (inv_total(inv, feud_mayors_house_keys) > 0 | %feud_var >= ^feud_heist) {
+    ~chatnpc("<p,neutral>You have the keys. Wear the beard, wait behind the cactus until the guard has gone past, and let yourself in.");
+    if (%feud_var < ^feud_heist) {
+        %feud_var = ^feud_heist;
+        ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+    }
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>I am holding out a set of keys and you are holding everything else.");
+    return;
+}
+inv_add(inv, feud_mayors_house_keys, 1);
+%feud_var = ^feud_heist;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+~objbox(feud_mayors_house_keys, "Ali the Operator produces the Mayor's own house keys from somewhere inside his robe, which answers a question you had not asked.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>Wear the beard. Wait behind the cactus until the guard has gone past. And wear gloves - that is a cactus.");
+
+// The cactus. op1=Hide-behind, and it answered with a joke about nobody being fooled.
+[oploc1,feud_cactus_row]
+p_arrivedelay;
+if (%feud_var ! ^feud_heist) {
+    ~mesbox("A row of cacti against the wall of the big house. There is a gap behind them, and nothing at all to hide from.");
+    return;
+}
+// GLOVES. The wiki lists "gloves that work" among the items and the reason is this loc; bare hands
+// get the spines. Anything in the hands slot counts, which is the generous reading and the one that
+// does not require knowing which of forty pairs the original accepted.
+if (inv_getobj(worn, ^wearpos_hands) = null) {
+    anim(human_pickpocket, 0);
+    p_delay(2);
+    ~damage_self(calc(random(3) + 2));
+    ~mesbox("You get a hand into the gap and the cactus gets a hand into you. Gloves. Any gloves.");
+    return;
+}
+if (inv_total(worn, feud_karidian_fakebeard_and_hat) = 0 & inv_total(worn, feud_desert_disguise) = 0) {
+    ~mesbox("You crouch behind the cacti in your own face, which is the one face in this village that everybody would remember.");
+    return;
+}
+if_close;
+mes("You get behind the cacti and wait.");
+p_delay(4);
+%feud_var_mayorsdoor = ^feud_on;
+~mesbox("The guard comes round the corner, looks at the door, looks at the cacti, and keeps walking. You have about a minute and the door is six feet away.");
+
+// The two halves of the front door, and the keys.
+[oploc1,feud_closed_door_left] @feud_mayor_door;
+[oploc1,feud_closed_door_right] @feud_mayor_door;
+
+[label,feud_mayor_door]
+def_coord $door = loc_coord;
+p_arrivedelay;
+if (inv_total(inv, feud_mayors_house_keys) = 0) {
+    ~mesbox("Locked. The Mayor's own keys are in a tent on the other side of the village, which he does not know.");
+    return;
+}
+if (%feud_var = ^feud_heist & %feud_var_mayorsdoor = ^feud_off) {
+    ~mesbox("The guard is somewhere on this street. Behind the cacti until he has gone past.");
+    return;
+}
+mes("You unlock the door.");
+p_delay(1);
+// Both halves are walls on the east edge of their tile (angle 2), and the player reaches one from
+// the door's own tile, so stepping two tiles would be stepping through the house.
+if (coordx(coord) > coordx($door)) {
+    p_teleport(movecoord($door, 0, 0, calc(coordz(coord) - coordz($door))));
+} else {
+    p_teleport(movecoord($door, 1, 0, calc(coordz(coord) - coordz($door))));
+}
+
+// The picture, which hides the dial - op1=Search, and it answered with a joke about the Mayor's wife
+// looking at you as if you owe her money.
+[oploc1,feud_mayors_picture]
+p_arrivedelay;
+if (%feud_safe_correct = ^feud_safe_open) {
+    ~mesbox("The portrait hangs crooked over an open dial and an empty recess.");
+    return;
+}
+if (%feud_var < ^feud_heist) {
+    ~mesbox("A portrait of the Mayor's wife. She is looking at you as if you owe her money.");
+    return;
+}
+~mesbox("The portrait swings out from the wall. Behind it is a brass dial with the numbers one to nine round it, and somebody has scratched a sequence into the plaster beside it: 1, 1, 2, 3, 5 - and then given up.");
+@feud_dial;
+
+[label,feud_dial]
+if (%feud_safe_correct = ^feud_safe_open) {
+    return;
+}
+~chatplayer("<p,quiz>One, one, two, three, five... and then what?");
+// feud_safe_digit is four bits for exactly this, and the answer is the next number in the sequence
+// scratched into the wall. The real dial is turned 1-1-2-3-5-8 clockwise; the last number is the
+// only one the player has to work out.
+def_int $answer = ~p_choice4("Six.", 6, "Seven.", 7, "Eight.", 8, "Ten.", 10);
+%feud_safe_digit = $answer;
+if ($answer ! ^feud_safe_answer) {
+    mes("The dial turns, clicks, and turns back.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~mesbox("The recess opens and you have nowhere to put what is in it.");
+    return;
+}
+mes("One, one, two, three, five, eight. Each number is the two before it added together.");
+p_delay(2);
+%feud_safe_correct = ^feud_safe_open;
+inv_add(inv, feud_mayors_jewels, 1);
+%feud_var = ^feud_jewels;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+~objbox(feud_mayors_jewels, "The recess holds one velvet roll, and the roll holds his wife's jewels. There is nothing else in there at all.", 250, 0, divide(^objbox_height, 2));
+
+// The bed and the desk. No longer the source of anything, and they say what is in the room instead
+// of a joke that goes nowhere.
+[oploc1,feud_mayors_bed]
+p_arrivedelay;
+~mesbox("The Mayor sleeps badly, and on the side nearest the door.");
+
+[oploc1,feud_mayors_desk]
+p_arrivedelay;
+~mesbox("Letters from both gangs. All of them demands, none of them answered, and one of them is a receipt for a camel.");
+
+// =========================================================================== the traitor
+// Wiki steps 23 to 34. You hand over the jewels, find out what the Menaphites are actually for, and
+// change sides - which is the half of this quest that did not exist.
+[label,feud_operator_traitor]
+if (%feud_var = ^feud_jewels) {
+    if (inv_total(inv, feud_mayors_jewels) = 0) {
+        ~chatnpc("<p,neutral>You have them somewhere that is not here. Think, please.");
+        return;
+    }
+    ~chatplayer("<p,neutral>Your jewels.");
+    inv_del(inv, feud_mayors_jewels, 1);
+    %feud_given_jewels = ^feud_on;
+    ~chatnpc("<p,happy>Not mine. Ours. There is a difference and you will learn it.");
+    ~chatplayer("<p,quiz>What happens to the Mayor?");
+    ~chatnpc("<p,neutral>Nothing. He will apologise to his wife and go on sitting by the well, and the village will watch him do it and understand who it belongs to.");
+    ~chatnpc("<p,laugh>Ask one of the thugs what we do next. They are proud of it and they cannot keep anything in.");
+    %feud_var = ^feud_traitor;
+    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+    return;
+}
+if (%feud_var = ^feud_traitor) {
+    if (%feud_report_drink < ^feud_report_barman) {
+        ~chatnpc("<p,neutral>Ask a thug. Ask the barman. Somebody in this village will tell you anything for nothing.");
+        return;
+    }
+    ~chatplayer("<p,neutral>You are going to poison the bandits' water.");
+    ~chatnpc("<p,happy>The well. All of it. One afternoon and there is one gang in Pollnivneach.");
+    ~chatplayer("<p,angry>There are four hundred people drinking out of that well.");
+    ~chatnpc("<p,neutral>Three hundred and ninety, after.");
+    %feud_report_drink = ^feud_report_told;
+    ~mesbox("He is not boasting. He is explaining, patiently, the way a man explains a sum - and the only thing in this village that will stop him is the one thing he taught you to do.");
+    return;
+}
+if (%feud_var = ^feud_poison | %feud_var = ^feud_poisoned) {
+    ~chatnpc("<p,happy>Soon. Very soon. Have a drink while you wait - the barman keeps one on the table for me.");
+    return;
+}
+~chatnpc("<p,angry>You.");
+
+// A Menaphite thug, who is proud of the plan. The doorman multinpc is the gang's rank and file and
+// his op1 is wired in part one; this is the branch that matters after the jewels.
+[opnpc1,feud_egyptian_minder]
+if (%feud_var < ^feud_traitor) {
+    ~chatnpc("<p,angry>The tent is not for you.");
+    return;
+}
+if (%feud_report_drink >= ^feud_report_barman) {
+    ~chatnpc("<p,worried>I should not have said anything about the well.");
+    return;
+}
+~chatplayer("<p,quiz>What happens to the bandits?");
+~chatnpc("<p,laugh>The well happens to the bandits.");
+~chatplayer("<p,quiz>The well?");
+~chatnpc("<p,shock>...nothing. I said nothing. Ask the barman what the boss drinks, if you are so interested in drinking.");
+%feud_report_drink = ^feud_report_barman;
+~mesbox("The well. Every bucket in Pollnivneach comes out of that well, and the thug has gone a colour that says he knows it.");
+
+[label,feud_barman_traitor]
+if (%feud_var >= ^feud_poisoned) {
+    ~chatnpc("<p,worried>He has not come in for his beer yet. He will.");
+    return;
+}
+if (%feud_report_drink < ^feud_report_barman) {
+    ~chatplayer("<p,quiz>Who drinks what in here?");
+    ~chatnpc("<p,neutral>Everybody drinks beer. There is nothing else.");
+    return;
+}
+~chatplayer("<p,quiz>What does the Menaphite boss drink?");
+~chatnpc("<p,worried>He does not come to the bar. I put one on the table by the door and he takes it on his way past, and I do not watch him do it.");
+~chatplayer("<p,neutral>Which table.");
+~chatnpc("<p,sad>The one by the door. I have said too much and I am going to go and polish something.");
+%feud_var_drink_found = ^feud_on;
+~mesbox("A beer, on a table, left out for one man. There is not a thing in this village that could not be solved by putting something in it.");
+
+// =========================================================================== the hag's poison
+// Wiki steps 27 to 32, and the longest chain in the quest: sauce, trough, dung, coin, charm, snake,
+// hag. Every obj and every loc state below is in the cache and none of them had a handler.
+[opnpc1,feud_kebabman]
+if (%feud_var < ^feud_traitor) {
+    ~chatnpc("<p,happy>Kebab? No? Everybody wants a kebab eventually.");
+    return;
+}
+if (inv_total(inv, superhot_kebab_sauce) > 0) {
+    ~chatnpc("<p,laugh>Careful with that. I am not joking about the careful.");
+    return;
+}
+if (%feud_kebab_again = ^feud_on) {
+    ~chatnpc("<p,happy>More sauce? You are the only customer I have ever had twice.");
+} else {
+    ~chatplayer("<p,quiz>I need something a camel would notice.");
+    ~chatnpc("<p,quiz>A camel.");
+    ~chatplayer("<p,neutral>A camel.");
+    ~chatnpc("<p,laugh>Then you want the red sauce. I keep it behind the counter because a man asked for it once and I have felt responsible ever since.");
+    %feud_kebab_again = ^feud_on;
+}
+switch_int (~p_choice2("I'll take a bottle.", 1, "Maybe not.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Maybe not.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>I'll take a bottle.");
+}
+if (inv_total(inv, coins) < ^feud_sauce_price) {
+    ~chatnpc("<p,neutral>Five coins. It is worth more and it costs me nothing, which is the best kind of stock.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Not in your hands it does not go.");
+    return;
+}
+inv_del(inv, coins, ^feud_sauce_price);
+inv_add(inv, superhot_kebab_sauce, 1);
+~objbox(superhot_kebab_sauce, "The bottle is warm to hold, which bottles should not be.", 250, 0, divide(^objbox_height, 2));
+
+// The camel trough behind the shop. The sauce goes in it; the camels do the rest.
+[oplocu,feud_foodtrough] @feud_sauce_trough;
+[oplocu,feud_foodtrough2] @feud_sauce_trough;
+
+[label,feud_sauce_trough]
+if (last_useitem ! superhot_kebab_sauce) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%feud_used_sauce = ^feud_on) {
+    ~mesbox("The trough has had quite enough sauce in it.");
+    return;
+}
+inv_del(inv, superhot_kebab_sauce, 1);
+%feud_used_sauce = ^feud_on;
+if_close;
+mes("You empty the bottle into the camels' water.");
+p_delay(3);
+// THE DUNG IS SPAWNED HERE because this is the only moment it could exist. All three states -
+// feud_ugthanki_pooh, _old and _poisoned - carry op1=Pick-up and none of them is placed on any map
+// square; the generated maps cannot be edited, so the poisoned one appears behind the shop when the
+// camels have drunk the sauce. An hour is long enough to walk to the hag and back twice.
+loc_add(^feud_dung_spawn, feud_ugthanki_pooh_poisoned, 0, centrepiece_straight, 6000);
+~mesbox("Both camels drink it without appearing to notice, and then stop, and then look at each other. What happens next happens behind the shop, and you can hear it from here.");
+
+// The dung, in three states: fresh, old, and - once the sauce has been through a camel - poisoned.
+// All three carry op1=Pick-up and none of them had a trigger.
+[oploc1,feud_ugthanki_pooh] @feud_pooh(0);
+[oploc1,feud_ugthanki_pooh_old] @feud_pooh(0);
+[oploc1,feud_ugthanki_pooh_poisoned] @feud_pooh(1);
+
+[label,feud_pooh](int $poisoned)
+p_arrivedelay;
+if (inv_total(inv, bucket_empty) = 0) {
+    ~mesbox("You are not picking that up with your hands. A bucket.");
+    return;
+}
+if ($poisoned = 0) {
+    ~mesbox("Ordinary ugthanki dung, which is to say remarkable, but not what the hag asked for. Hers has to have been through a camel that drank the sauce.");
+    return;
+}
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, feud_camel_poison_pooh_bucket, 1);
+~objbox(feud_camel_poison_pooh_bucket, "A bucket of it. It is the wrong colour and it is faintly warm, and the hag will be delighted.", 250, 0, divide(^objbox_height, 2));
+
+// The snake charmer's money pot. A coin in it buys the charm and the basket, which is the wiki's own
+// reading of a money pot one tile from a charmer.
+[oplocu,feud_money_bowl]
+if (last_useitem ! coins) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%feud_ali_money = ^feud_on) {
+    ~mesbox("You have paid him once. He is a snake charmer, not a shop.");
+    return;
+}
+if (inv_total(inv, coins) < ^feud_pot_coin) {
+    ~mesbox("You have nothing to put in it.");
+    return;
+}
+if (inv_freespace(inv) < 2) {
+    ~mesbox("He is going to hand you two things and you have room for neither.");
+    return;
+}
+inv_del(inv, coins, ^feud_pot_coin);
+%feud_ali_money = ^feud_on;
+inv_add(inv, snake_flute, 1);
+inv_add(inv, basket_for_snake, 1);
+if_close;
+mes("You drop a coin in the pot.");
+p_delay(2);
+// The pot is a loc, so there is no active npc to speak - the charmer is named explicitly.
+~chatnpc_specific("Ali the Snake Charmer", feud_snakecharmer, "<p,happy>A customer! Nobody pays. Take the charm and the basket - the snake is the easy part, the basket is the part people forget.");
+
+[opnpc1,feud_snakecharmer]
+if (%feud_ali_money = ^feud_off) {
+    ~chatnpc("<p,neutral>I charm snakes. There is a pot. The pot is how this works.");
+    return;
+}
+~chatnpc("<p,happy>Play it at a desert snake. Not at me. At a snake.");
+
+// Charming a snake into the basket. The two baskets are basket_for_snake and basket_with_snake, and
+// feud_charmers_snake is the one in his own basket - which is not the one you may have.
+[opnpcu,feud_desert_snake]
+if (last_useitem ! snake_flute) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (inv_total(inv, basket_with_snake) > 0) {
+    ~mesbox("You have a snake. One is the correct number of snakes.");
+    return;
+}
+if (inv_total(inv, basket_for_snake) = 0) {
+    ~mesbox("The snake comes up out of the sand and then has nowhere to go. You need the basket.");
+    return;
+}
+if_close;
+mes("You play the charm.");
+p_delay(4);
+inv_del(inv, basket_for_snake, 1);
+inv_add(inv, basket_with_snake, 1);
+~objbox(basket_with_snake, "The snake comes up, sways, and goes into the basket as though it had been meaning to all along.", 250, 0, divide(^objbox_height, 2));
+
+[opnpcu,feud_charmers_snake]
+if (last_useitem ! snake_flute) {
+    ~displaymessage(^dm_default);
+    return;
+}
+~mesbox("The charmer's own snake looks at you with the particular contempt of a professional.");
+
+// Ali the Hag. feud_hag_list is two bits because she wants two things, and feud_metwitch and
+// feud_var_witchbothered are hers as well.
+[opnpc1,feud_hag]
+if (%feud_var < ^feud_traitor) {
+    ~chatnpc("<p,angry>I am not telling fortunes and I am not selling anything.");
+    return;
+}
+if (%feud_var >= ^feud_poison) {
+    ~chatnpc("<p,happy>Did it work? Do not tell me. I would rather imagine it.");
+    return;
+}
+if (%feud_metwitch = ^feud_off) {
+    %feud_metwitch = ^feud_on;
+    ~chatplayer("<p,quiz>I need something that will put a man to sleep and not kill him.");
+    ~chatnpc("<p,laugh>Everybody needs that. Almost nobody needs it for a good reason.");
+    ~chatplayer("<p,neutral>The Menaphites are going to poison the well.");
+    ~chatnpc("<p,angry>...then they can have some of their own.");
+    ~chatnpc("<p,neutral>Two things. A snake, alive, in a basket. And a bucket of ugthanki dung from a camel that has had something hot - ordinary dung will not do, and I will know.");
+    %feud_hag_list = ^feud_hag_asked;
+    %feud_var_witchbothered = ^feud_on;
+    return;
+}
+@feud_hag_take;
+
+[label,feud_hag_take]
+if (inv_total(inv, basket_with_snake) > 0) {
+    inv_del(inv, basket_with_snake, 1);
+    inv_add(inv, basket_for_snake, 1);
+    %feud_hag_list = add(%feud_hag_list, 1);
+    ~chatnpc("<p,happy>A live one. Good. You may keep the basket, I have no use for baskets.");
+    @feud_hag_check;
+}
+if (inv_total(inv, feud_camel_poison_pooh_bucket) > 0) {
+    inv_del(inv, feud_camel_poison_pooh_bucket, 1);
+    %feud_hag_list = add(%feud_hag_list, 1);
+    ~chatnpc("<p,shock>That is the wrong colour. That is EXACTLY the wrong colour.");
+    @feud_hag_check;
+}
+~chatnpc("<p,neutral>A snake in a basket and a bucket of the wrong-coloured dung. I have not moved and neither has the list.");
+
+[label,feud_hag_check]
+if (%feud_hag_list < ^feud_hag_both) {
+    ~chatnpc("<p,neutral>One of the two. Bring the other.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>It goes in a vial and the vial goes in your hands, which are full.");
+    return;
+}
+if_close;
+mes("The hag works for a while with her back to you, and does not explain any of it.");
+p_delay(5);
+inv_add(inv, poison_from_hag, 1);
+%feud_var = ^feud_poison;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+~objbox(poison_from_hag, "A red viscous liquid in a vial. She does not say what is in it and you decide not to ask.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>It will put a man down for a day and a night. In a beer he will not taste it, and he will not be poisoning any wells on Thursday.");
+
+// The table by the door, whose op1 is Take-beer, and which used to say "you would not drink anything
+// left standing about in this village".
+[oplocu,feud_poison_beer_table]
+if (last_useitem ! poison_from_hag) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%feud_var >= ^feud_poisoned) {
+    ~mesbox("The beer on the table has had everything it needs.");
+    return;
+}
+if (%feud_var_drink_found = ^feud_off) {
+    ~mesbox("There is a beer on this table and no particular reason to put anything in it.");
+    return;
+}
+inv_del(inv, poison_from_hag, 1);
+%feud_var = ^feud_poisoned;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+if_close;
+mes("You tip the vial into the beer.");
+p_delay(3);
+// AND THE LEADER APPEARS. feud_menap_boss2 is configured with multivar=feud_boss_vis2 and
+// multinpc=1,feud_menap_boss_vis, and is placed nowhere - so he is added outside the tent and the
+// bit is set, which is what makes him render as the leader rather than as nothing.
+~feud_spawn_leader;
+~mesbox("It goes in without a mark. Now somebody has to tell the Menaphites that their boss is on the floor of the bar, and the only person in this village they would believe is one of their own.");
+
+[proc,feud_spawn_leader]
+%feud_boss_vis2 = ^feud_on;
+if (npc_findexact(^feud_leader_spawn, feud_menap_boss2) = true) {
+    return;
+}
+npc_add(^feud_leader_spawn, feud_menap_boss2, 30000);
+
+[oploc1,feud_poison_beer_table]
+p_arrivedelay;
+if (%feud_var_drink_found = ^feud_off) {
+    ~mesbox("A beer, standing on a table by the door, with nobody near it.");
+    return;
+}
+~mesbox("The beer the barman leaves out for the Menaphite boss. Taking it would only mean he was handed another one.");
+
+// =========================================================================== the two leaders
+// Wiki steps 35 to 40. Both bosses render only at their vis bits, which the camel joke sets.
+// feud_var_menaboss and feud_var_banditboss are the two halves of the endgame.
+[opnpc1,feud_menap_boss2] @feud_menaphite_leader;
+
+[label,feud_menaphite_leader]
+if (%feud_var < ^feud_poisoned) {
+    ~chatnpc("<p,angry>The boss is busy.");
+    return;
+}
+if (%feud_var_menaboss = ^feud_on) {
+    ~chatnpc("<p,worried>He has not woken up. Nobody is giving orders and nobody knows what to do.");
+    return;
+}
+~chatplayer("<p,neutral>Your boss is asleep on the floor of the bar.");
+~chatnpc("<p,shock>Asleep.");
+~chatplayer("<p,neutral>He had a beer.");
+~chatnpc("<p,angry>Then somebody has to answer for it and you are standing closest.");
+if_close;
+mes("He whistles, and something very large comes out of the tent.");
+p_delay(3);
+%feud_var_menaboss = ^feud_on;
+npc_add(movecoord(coord, 1, 0, 0), feud_menap_toughguy, 500);
+~mesbox("The Menaphites' tough guy is the size of a door and is not interested in anything you have to say.");
+
+[opnpc1,feud_bandit_boss]
+if (%feud_var < ^feud_menaphite_down) {
+    if (%feud_var < ^feud_camels) {
+        ~chatnpc("<p,angry>You walked in here. That was brave and it was stupid.");
+        return;
+    }
+    ~chatnpc("<p,angry>The Menaphites' business is the Menaphites' business until it is in my street.");
+    return;
+}
+if (%feud_var_banditboss = ^feud_on) {
+    ~chatnpc("<p,worried>Our champion is on the floor and theirs is on the floor. There is nobody left to be in charge of.");
+    return;
+}
+~chatplayer("<p,neutral>The Menaphites are finished. Their boss is asleep and their tough guy is on the floor.");
+~chatnpc("<p,laugh>Then the village is ours.");
+~chatplayer("<p,neutral>No.");
+~chatnpc("<p,angry>...say that again.");
+if_close;
+mes("He does not whistle. He simply looks past you, and the room empties except for one man.");
+p_delay(3);
+%feud_var_banditboss = ^feud_on;
+npc_add(movecoord(coord, 1, 0, 0), feud_bandit_toughguy, 500);
+~mesbox("The bandits' champion has been waiting for somebody to say that for years.");
+
+// Both champions die the same way, and either one being the last sets the stage on.
+[ai_queue3,feud_menap_toughguy] @feud_champion_dies(1);
+[ai_queue3,feud_bandit_toughguy] @feud_champion_dies(2);
+
+[label,feud_champion_dies](int $which)
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(feud_champion_down, 0, $which);
+
+[queue,feud_champion_down](int $which)
+if ($which = 1) {
+    if (%feud_var ! ^feud_poisoned) {
+        return;
+    }
+    %feud_var = ^feud_menaphite_down;
+    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+    mes("The Menaphites have no boss and no champion. Somebody should tell the bandits before they find out on their own.");
+    return;
+}
+if (%feud_var ! ^feud_menaphite_down) {
+    return;
+}
+%feud_var = ^feud_bandit_down;
+%feud_npc_multi = ^feud_thief_knock;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+mes("Both gangs lost everybody who gave orders inside one afternoon. The street is very quiet.");
+
+// =========================================================================== the villagers, and the Mayor
+// Wiki steps 37 and 40: you tell a villager, twice, and the village passes it on.
+[opnpc1,feud_villager_multi_1] @feud_villager_talk;
+[opnpc1,feud_villager_multi_2] @feud_villager_talk;
+[opnpc1,feud_villager_multi_3] @feud_villager_talk;
+
+[label,feud_villager_talk]
+if (%feud_var = ^feud_menaphite_down) {
+    ~chatplayer("<p,neutral>The Menaphite boss is asleep and their big man is finished.");
+    ~chatnpc("<p,shock>...both of them?");
+    ~chatnpc("<p,happy>I am going to tell everyone. I am going to tell everyone immediately.");
+    return;
+}
+if (%feud_var = ^feud_bandit_down) {
+    ~chatplayer("<p,neutral>Both gangs are finished.");
+    ~chatnpc("<p,shock>Both. BOTH.");
+    ~chatnpc("<p,happy>Tell the Mayor. He is by the well. He has been by the well for eleven years.");
+    return;
+}
+if (%feud_var >= ^feud_complete) {
+    ~chatnpc("<p,happy>Quiet, is not it. I keep waiting for it to stop being quiet.");
+    return;
+}
+~chatnpc("<p,neutral>I keep my head down and I keep my purse in my hand, and you should do the same.");
+
+[opnpc1,feud_mayor]
+if (%feud_var < ^feud_bandit_down) {
+    if (%feud_var >= ^feud_jewels) {
+        ~chatnpc("<p,sad>My wife's jewels have gone. I know who has them. I know exactly who has them, and there is not one thing I can do about it.");
+        return;
+    }
+    ~chatnpc("<p,sad>I am the Mayor of Pollnivneach. It is not a job, it is a seat by a well.");
+    return;
+}
+if (%feud_var >= ^feud_told_mayor) {
+    ~chatnpc("<p,happy>I have been in the house all morning. My own house. With the door open.");
+    return;
+}
+~chatplayer("<p,neutral>Both gangs are leaderless. The village is yours.");
+~chatnpc("<p,shock>Mine.");
+~chatplayer("<p,neutral>It always was. Nobody was letting you have it.");
+~chatnpc("<p,happy>...I shall have to do something. I shall have to do several things.");
+~chatnpc("<p,sad>My wife's jewels went with the Menaphites, and I am not going to ask how you know that.");
+%feud_var = ^feud_told_mayor;
+~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+~chatnpc("<p,neutral>Tell Morrisane his goods will travel. He will want to hear it from somebody he can shout at.");
