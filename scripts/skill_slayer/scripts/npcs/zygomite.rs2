@@ -157,6 +157,10 @@ while ($i > 0) {
 
 [proc,zygomite_spray_refill](obj $can)
 if (~zygomite_spray_is($can) = false) {
+    // SAY SOMETHING. This used to return in silence, so using the fungicide on anything that is
+    // not a spray can ate the click and gave no reply at all - the one opheldu in the build that
+    // did, which is what tools/sim/opheldu.ts sweeps for.
+    ~displaymessage(^dm_default);
     return;
 }
 if ($can = enum(int, namedobj, slayer_spray_charge_obj, 10)) {

@@ -81,6 +81,17 @@ mes("The <lowercase(oc_name($kit))> doesn't fit on that.");
 // declare iop5. (areas/area_wilderness/configs/gravedigger_kit.obj)
 [opheld5,slayer_helm_gravedigger] ~ornament_kit_revert(last_item);
 [opheld5,slayer_helm_gravedigger_i] ~ornament_kit_revert(last_item);
+
+// AND THEIR CHECK, in the pack and on your head. Both declare iop3=Check and wearop1=Check and
+// neither had a handler, so the option was there and did nothing in either place. The generated
+// colours get both from tools/genslayerhelm.py; these two are hand-written (they are an ornament
+// kit, not a colour, so they are not in slayerhelmspec.json) and were missed. @slayer_helm_check
+// is the plain helmet's own, so a Gravedigger reports its count the same way every other slayer
+// helmet does.
+[opheld3,slayer_helm_gravedigger] @slayer_helm_check;
+[opheld3,slayer_helm_gravedigger_i] @slayer_helm_check;
+[label,wearop1_slayer_helm_gravedigger] @slayer_helm_check;
+[label,wearop1_slayer_helm_gravedigger_i] @slayer_helm_check;
 [opheld4,amulet_of_fury_or] ~ornament_kit_revert(last_item);
 [opheld4,armadyl_godsword_or] ~ornament_kit_revert(last_item);
 [opheld4,bandos_godsword_or] ~ornament_kit_revert(last_item);
