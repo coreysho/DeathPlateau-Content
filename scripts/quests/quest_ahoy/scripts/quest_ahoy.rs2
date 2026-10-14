@@ -55,6 +55,9 @@ switch_int (%ahoy_questvar) {
     case ^ahoy_released : @ahoy_finish;
     case default :
         if (%ahoy_questvar >= ^ahoy_complete) {
+            if (~ahoy_replace_ectophial = true) {
+                return;
+            }
             ~chatnpc("<p,happy>He went. He waited two hundred years and then he went in about four seconds.");
             return;
         }
@@ -64,6 +67,38 @@ switch_int (%ahoy_questvar) {
         }
         ~chatnpc("<p,sad>Anything?");
 }
+
+// Kept through the 13 October rebuild from another session the same day. ~ahoy_give_petition
+// went with the rebuild - Gravingas hands out the petition now, which is who hands it out in the
+// real quest - but this is a real fix and Velorina is still the one who does it.
+// THE ECTOPHIAL WAS A ONE-SHOT REWARD. It is handed over once by ~send_quest_complete and nothing
+// gave out another, so a player who dropped it, or died with it, lost the Ectofuntus teleport for
+// good - and the Ectofuntus is the only way to use bonemeal, so that is a skill shut off by one
+// misclick. Old School has Velorina replace it free "by talking to her while wearing a ghostspeak
+// amulet", which is already the condition for talking to her at all here (~ahoy_can_hear, which
+// takes the enchanted Morytania amulet too).
+//
+// WHY THE BANK IS CHECKED AS WELL as the inventory: a phial sitting in your bank is not a lost
+// phial, and without that check the replacement is a one-click duplicator. The items are also
+// untradeable now (see all.obj) - without that, no containment check is enough, because a phial
+// given to another player is gone from every container this can see while still existing.
+//
+// Old School's one route to an EMPTY phial is asking for a replacement while already holding one.
+// That is deliberately not copied: here it would just be a second ectophial after one refill, for
+// an item nobody needs two of. The empty phial stays refillable at the Ectofuntus (ectofuntus.rs2)
+// because the ones created before the auto-refill landed are still in people's banks.
+[proc,ahoy_replace_ectophial]()(boolean)
+if (inv_total(inv, ectophial) > 0 | inv_total(inv, ectophial_empty) > 0
+    | inv_total(bank, ectophial) > 0 | inv_total(bank, ectophial_empty) > 0) {
+    return(false);
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,sad>You have nowhere to put it.");
+    return(true);
+}
+inv_add(inv, ectophial, 1);
+~chatnpc("<p,neutral>You lost it. Here - the Ectofuntus has never once run dry.");
+return(true);
 
 [label,ahoy_start]
 // THE TWO REQUIREMENTS, which were not checked at all - a level 3 with a ghostspeak amulet could

@@ -69,6 +69,12 @@
 ^animmag_chicken_price = 10
 // The Witch's price for the selected iron.
 ^animmag_iron_bars = 5
+// Polishing a pair of buttons: Crafting 3, and 5 experience for it. Both are the wiki's. The
+// level is low enough that nothing can realistically be blocked by it - the quest itself wants 19
+// Crafting - but it is the gate Old School has, and it is the reason there is a second message
+// for failing rather than just a silent success.
+^animmag_polish_level = 3
+^animmag_polish_xp = 50
 // Two 50xp Crafting nudges along the way ("Your work with the magnet increases your Crafting
 // experience slightly"). Stat values are xp x10.
 ^animmag_step_craft_xp = 500
