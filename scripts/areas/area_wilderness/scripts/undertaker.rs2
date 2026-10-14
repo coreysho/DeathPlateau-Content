@@ -103,8 +103,19 @@ switch_int (~p_choice3("What's up there?", 1, "What happened to your arm?", 2, "
 ~chatplayer("<p,quiz>Is it worth it?");
 ~chatnpc("<p,shifty>The further in you go, the more of them you find. That is not a recommendation.");
 
+// WHO TOOK IT. The arm used to be "one level further in than I had planned to" - true to the
+// character and true to nothing else. Naming KrazyFaken makes it a thing that HAPPENED, to someone,
+// at a place the player is about to walk into, and it costs the npc nothing to carry a name.
+//
+// He never says what KrazyFaken is - player, legend, rumour - because the veteran would not draw
+// that line and neither should the script. Whoever the player decides he is, the warning lands.
 [label,veteran_arm]
 ~chatplayer("<p,quiz>What happened to your arm?");
-~chatnpc("<p,sad>I went one level further in than I had planned to.");
+~chatnpc("<p,sad>KrazyFaken happened to it.");
+~chatplayer("<p,quiz>Who?");
+~chatnpc("<p,neutral>You will know when you meet him. Everyone does, once.");
+~chatnpc("<p,sad>I had a task, a full pack, and about four steps of confidence left. He had patience, and a better idea of where I was than I did.");
+~chatplayer("<p,quiz>And he took your arm?");
+~chatnpc("<p,neutral>He took everything. The arm I lost on the way out - that is just the part I got to keep a story about.");
 ~chatplayer("<p,sad>I'm sorry.");
 ~chatnpc("<p,neutral>Do not be. I came back, which is more than most. Just mind the signs. There is nothing on that line but boards on sticks, and it is still the last safe step you take.");
