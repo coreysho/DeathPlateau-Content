@@ -1,7 +1,22 @@
-[opnpc1,grandtree_glough]
+// HE IS IN A SEALED CAGE and no tile beside him can be walked to - that is deliberate, and it is
+// why he needs an approach trigger as well as an op one. Monkey Madness sends you here to buy the
+// hangar code off him, and without this you stand two tiles away and cannot start.
+[opnpc1,grandtree_glough] @grandtree_glough_talk;
+[apnpc1,grandtree_glough] @grandtree_glough_talk;
+
+[label,grandtree_glough_talk]
 switch_int(%grandtree) {
     // https://youtu.be/LFvLBRCxFwk?si=IKRtVRjysWWM9U4u&t=482, fixed at some point?
-    case ^grandtree_spoken_glough, ^grandtree_unlocked_trapdoor, ^grandtree_defeated_black_demon, ^grandtree_searching_daconia, ^grandtree_complete :
+    case ^grandtree_complete :
+        // Monkey Madness: he locked the hangar's launch panel and will sell the code for 200,000,
+        // which is the wiki's own alternative to the sliding puzzle. quest_mm.rs2 owns the dialogue.
+        if (%mm_main >= ^mm_in_hangar & %mm_hangar_puzzle_complete = ^false) {
+            @mm_glough_bribe;
+        }
+        ~chatplayer("<p,quiz>Hello?");
+        ~chatnpc("<p,angry>I warn you now, human: stay out of my affairs!");
+        ~chatplayer("<p,angry>I've stopped you before, Glough, and I'll stop you again!");
+    case ^grandtree_spoken_glough, ^grandtree_unlocked_trapdoor, ^grandtree_defeated_black_demon, ^grandtree_searching_daconia :
         // when underground during the fight, he will say this as well (before the cutscene update a few months after OSRS launch), if you interrupt the dialogue you have to go back down
         // https://youtu.be/OHlL7GZW2hw?si=ulwwb-_NUDHsVb9e&t=920
         ~chatplayer("<p,quiz>Hello?");

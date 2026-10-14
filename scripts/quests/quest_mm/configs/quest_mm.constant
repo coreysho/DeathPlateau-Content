@@ -70,6 +70,19 @@
 // The Grand Tree and Tree Gnome Village, both implemented. No skill requirements; the real quest
 // gates on combat ability rather than levels.
 
+// --- The warehouse and the cave under it (wiki steps 16-20) ---
+// See scripts/mm_warehouse.rs2. Every tile below was checked walkable, and the cave was flooded to
+// confirm the drop, the mould and both ropes are one connected region.
+^mm_warehouse_cave = 0_43_143_17_13     // 2769,9165  straight down from mm_crate_over_hole
+^mm_warehouse_rope_west = 0_43_43_12_13 // 2764,2765  the top of the western warehouse's rope
+^mm_warehouse_rope_east = 0_43_43_46_17 // 2798,2769  and the eastern one's
+
+// --- The hangar panel (wiki step 9) ---
+// bunker_controlpanal is placed at 2586,4507, the south-east corner of the hangar, which is where
+// the wiki puts the puzzle: "Solve the sliding puzzle on the south-eastern panel in the hangar, or
+// pay Glough 200,000 in the Stronghold." Both routes are built.
+^mm_glough_price = 200000
+
 // --- The Karamja leg (wiki steps 2-6), and the jail (13-14) ---
 ^mm_caranock_spoken = 1          // %mm_caranock, the cache's own counter for him
 ^mm_narnode_briefed = 1          // %mm_narnode: he has written the orders
@@ -220,6 +233,9 @@
 // --- Rewards ---
 // 3 quest points, and the wiki's two-way XP choice: 35,000 in two skills and 20,000 in the other
 // two. stat_advance takes tenths.
+// The squad will not take the last of the demon off you - see [label,mm_squad_swing].
+^mm_squad_damage_floor = 30
+
 ^mm_reward_xp_high = 350000
 ^mm_reward_xp_low = 200000
 ^mm_reward_coins = 10000

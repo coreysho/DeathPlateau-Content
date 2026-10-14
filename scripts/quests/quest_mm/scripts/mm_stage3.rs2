@@ -423,7 +423,13 @@ facesquare(^mm_awowogei_throne);
 if (npc_findexact(^mm_awowogei_throne, mm_awowogei_cutscene) = true) {
     return;
 }
-npc_add(^mm_awowogei_throne, mm_awowogei_cutscene, 500);
+// 500 ticks is five minutes, and a player who is carried up, told to fetch a monkey from
+// Ardougne and then comes back can easily spend longer than that in this room - at which point
+// the king has evaporated and the only npc of his type left in the world is the unspawned
+// cutscene copy on m41_71, eighteen hundred tiles away. A playthrough hit exactly that. Three
+// hours is long enough that it cannot happen inside one audience, and the proc is idempotent so
+// every carry re-asserts him anyway.
+npc_add(^mm_awowogei_throne, mm_awowogei_cutscene, 18000);
 
 // He is on a dais, and no tile beside him can be walked to from the floor the player is dropped
 // on - the same problem Kruk and the caged zoo monkeys have, and the same answer: an approach
@@ -597,10 +603,14 @@ if (%mm_main = ^mm_demon_dead) {
 // The arena is the room behind mm_wallcrack_final_battle_room on m37_154, the only square that loc is
 // placed on. It is small and pillared; every coordinate is derived in the constant file.
 //
-// DEVIATION, FLAGGED: in the real quest the 10th Squad fight alongside you and can steal the kill,
-// which heals the demon. Here they are spawned as onlookers and do no damage. Squad combat AI is a
-// large piece of work on its own, and the kill-steal mechanic exists in the original mainly as a
-// failure mode - a fight you can lose to your own allies. Left out deliberately rather than faked.
+// THE SQUAD FIGHT NOW. They used to stand and watch, which made the set piece a solo boss in a room
+// full of witnesses. Each of the three takes a swing at the demon every few ticks - see
+// [ai_queue4] below - and the animations and damage are real.
+//
+// ONE DELIBERATE DIVERGENCE, and it is the only part of this fight not taken from the original: they
+// cannot land the killing blow. In the real quest a squad member can take the kill, the demon heals,
+// and you fight it again - a failure mode you lose to your own allies rather than content. So their
+// damage stops at ^mm_squad_damage_floor hitpoints and the last of it is yours.
 
 [opheld2,mm_sigil]
 if (%mm_main < ^mm_has_sigil) {
@@ -642,6 +652,37 @@ if (npc_findexact(^mm_squad_spawn_2, mm_karam_final_battle) = false) {
 if (npc_findexact(^mm_squad_spawn_3, mm_zooknock_final_battle) = false) {
     npc_add(^mm_squad_spawn_3, mm_zooknock_final_battle, 500);
 }
+// and set all three swinging. Queue 4 on each of them; the queue re-arms itself while the demon is
+// alive and in the room.
+if (npc_findexact(^mm_squad_spawn_1, mm_garkor_final_battle) = true) {
+    npc_queue(4, 0, 4);
+}
+if (npc_findexact(^mm_squad_spawn_2, mm_karam_final_battle) = true) {
+    npc_queue(4, 0, 6);
+}
+if (npc_findexact(^mm_squad_spawn_3, mm_zooknock_final_battle) = true) {
+    npc_queue(4, 0, 8);
+}
+
+// Garkor and Karam swing; Zooknock throws something. One label, because the only difference between
+// the three of them is the animation.
+[ai_queue4,mm_garkor_final_battle] @mm_squad_swing(human_sword_slash);
+[ai_queue4,mm_karam_final_battle] @mm_squad_swing(human_sword_slash);
+[ai_queue4,mm_zooknock_final_battle] @mm_squad_swing(human_castwave);
+
+[label,mm_squad_swing](seq $anim)
+// Self first, then the demon: npc_find moves the active npc, so everything addressed to the squad
+// member has to happen before the search.
+npc_anim($anim, 0);
+npc_queue(4, 0, 5);
+if (npc_find(npc_coord, mm_demon, 12, 0) = false) {
+    return;
+}
+// THE FLOOR. Their damage stops here so the kill is always the player's - see the note above.
+if (npc_stat(hitpoints) <= ^mm_squad_damage_floor) {
+    return;
+}
+npc_damage(^hitmark_damage, calc(random(6) + 1));
 
 // The demon's death. Handed off through a PLAYER QUEUE rather than written from the death hook
 // directly: npc_findhero grants active_player but not p_active_player, and %mm_main is protected.

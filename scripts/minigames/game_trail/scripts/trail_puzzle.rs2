@@ -140,6 +140,11 @@ if (inv_getobj(trail_puzzleinv, 0) = trail_slidingpuzzleb01 &
 }
 return (false);
 
+// MONKEY MADNESS watches this trigger. Its hangar panel opens the same puzzle (see
+// [oploc1,bunker_controlpanal] in quests/quest_mm/scripts/quest_mm.rs2), and this is the only place
+// that knows a piece has just moved. Both guards matter: the stage, and standing in the hangar -
+// without the second one a player who happened to be at that stage would solve the panel by
+// finishing a clue puzzle in Varrock.
 [opheld5,_trail_puzzle_piece]
 def_int $slot = last_slot;
 def_int $open_slot = -1;
@@ -163,4 +168,20 @@ if($slot <= 19) {
 if($open_slot ! -1) {
     sound_synth(slide_puzzle, 1, 0);
     inv_movetoslot(trail_puzzleinv, trail_puzzleinv, $slot, $open_slot);
+}
+
+// MONKEY MADNESS watches this trigger. Its hangar panel opens the same puzzle (see
+// [oploc1,bunker_controlpanal] in quests/quest_mm/scripts/quest_mm.rs2) and this is the only
+// place that knows a piece has just moved. It has to be LAST: ~mesbox pauses, and a pausing
+// call corrupts last_slot, which the slide code above still needs.
+//
+// Both guards matter - the stage, and standing in the hangar. Without the second one a player
+// who happened to be at that stage would open the hangar doors by finishing a clue puzzle in
+// Varrock.
+if (%mm_main = ^mm_in_hangar & %mm_hangar_puzzle_complete = ^false
+    & inzone(^mm_hangar_zone_min, ^mm_hangar_zone_max, coord) = true) {
+    if (~trail_puzzle_complete = true) {
+        %mm_hangar_puzzle_complete = ^true;
+        ~mesbox("The last square slides home. Somewhere above you a great many bolts come undone at once, and the hangar doors start to move.");
+    }
 }

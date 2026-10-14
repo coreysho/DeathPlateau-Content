@@ -231,9 +231,65 @@ p_telejump(^mm_hangar_arrive);
 ~mesbox("The blindfold comes off. You are standing in a lit cavern the size of the Grand Tree's roots, and most of it is taken up by gliders.");
 
 [label,mm_daero_hangar]
+if (%mm_hangar_puzzle_complete = ^true) {
+    ~chatplayer("<p,quiz>The panel is working.");
+    ~chatnpc("<p,happy>So it is. Waydar is over there, and he has been bored for eleven years.");
+    return;
+}
 ~chatplayer("<p,quiz>So what is all this?");
-~chatnpc("<p,neutral>Officially, nothing. Waydar over there flies the only one of these that still has a pilot. Talk to him when you are ready to leave.");
-~chatnpc("<p,worried>And do not touch the levers.");
+~chatnpc("<p,neutral>Officially, nothing. Waydar flies the only one of these that still has a pilot, and he will not fly anything while the launch panel is dead.");
+~chatplayer("<p,quiz>What is wrong with it?");
+~chatnpc("<p,angry>Glough locked it, and he did it in the stupidest way available to a gnome: he scrambled the plate. Put it back together and it opens.");
+~chatnpc("<p,neutral>The panel is in the south-east corner. Or go and ask Glough nicely, if you have two hundred thousand coins and no shame.");
+
+// ===================================================================================================
+// The hangar panel
+// ===================================================================================================
+// Wiki step 9: "Solve the sliding puzzle on the south-eastern panel in the hangar, or pay Glough
+// 200,000 in the Stronghold." bunker_controlpanal is placed at 2586,4507 - the hangar's south-east
+// corner - and had no handler, so Waydar flew you out with nothing in the way.
+//
+// THE PUZZLE IS THE GAME'S OWN. minigames/game_trail/scripts/trail_puzzle.rs2 is a complete sliding
+// puzzle - trail_puzzleinv holds the twenty-four pieces, [opheld5,_trail_puzzle_piece] slides them
+// and ~trail_puzzle_complete says when it is done - so this opens that rather than growing a second
+// one. The picture is the clue-scroll picture, because the cache ships one set of puzzle pieces and
+// inventing a second means drawing twenty-four icons.
+[oploc1,bunker_controlpanal]
+p_arrivedelay;
+if (%mm_main < ^mm_in_hangar) {
+    ~mesbox("A panel of sliding brass squares, scrambled. Whatever it opens, it is not yours to open.");
+    return;
+}
+if (%mm_hangar_puzzle_complete = ^true) {
+    ~mesbox("The panel is whole and the light above it is green. It has nothing left to say to you.");
+    return;
+}
+@trail_open_puzzle;
+
+// Glough's price. He is in a cell under the Grand Tree with nothing to do and no reason to be
+// helpful, which is exactly when a gnome names a number - see quest_grandtree/scripts/glough.rs2,
+// which jumps here.
+[label,mm_glough_bribe]
+~chatplayer("<p,quiz>There's a panel in the hangar you locked.");
+~chatnpc("<p,laugh>There is a hangar? How interesting. I know nothing about any hangar.");
+~chatplayer("<p,neutral>Two hundred thousand coins.");
+~chatnpc("<p,happy>...for a hangar I know nothing about, that is a very fair price.");
+if (inv_total(inv, coins) < ^mm_glough_price) {
+    ~chatnpc("<p,neutral>Come back when you are carrying it. All of it, and in coins - I am in a cage, not a bank.");
+    return;
+}
+switch_int (~p_choice2("Pay him the 200,000.", 1, "I'll fix it myself.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>I'll fix it myself.");
+        ~chatnpc("<p,laugh>You will enjoy that. It is twenty-four squares and one of them is missing.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Fine.");
+}
+inv_del(inv, coins, ^mm_glough_price);
+%mm_hangar_puzzle_complete = ^true;
+~chatnpc("<p,happy>The override is four-seven-two-two. Tell Daero I said hello. Tell him I said it from in here.");
+~mesbox("Two hundred thousand coins, for four numbers. Glough is going to be unbearable about this for the rest of his sentence.");
 
 // --- Waydar ---
 // Placed at m41_70 (24,39) in the hangar and at m45_42 (17,39) on Crash Island, so he is the whole
@@ -246,6 +302,12 @@ if (%mm_main < ^mm_in_hangar) {
 }
 if (inzone(^mm_crash_island_min, ^mm_crash_island_max, npc_coord) = true) {
     @mm_waydar_return;
+}
+if (%mm_hangar_puzzle_complete = ^false) {
+    ~chatplayer("<p,quiz>Can you fly me out?");
+    ~chatnpc("<p,neutral>Not while the launch panel is scrambled, no. The doors do not open and I am not flying through them.");
+    ~chatnpc("<p,neutral>South-east corner. Put the plate back together, or buy the code off the gnome who locked it.");
+    return;
 }
 ~chatplayer("<p,quiz>Daero says you can fly me out.");
 ~chatnpc("<p,neutral>He would. It's a two-seater and the second seat is where the cargo goes, so mind your knees.");
@@ -263,6 +325,19 @@ if (%mm_main < ^mm_crash_island) {
 @mm_travel(^mm_crash_island_arrive, "The glider drops out of the hangar mouth, and for a long time there is nothing under you but water. Then there is an island.");
 
 [label,mm_waydar_return]
+// On Crash Island he is also the reference Lumdo wants, and Lumdo wants it twice.
+if (%mm_main < ^mm_ape_atoll & %mm_waydar < 2) {
+    %mm_waydar = add(%mm_waydar, 1);
+    if (%mm_waydar < 2) {
+        ~chatplayer("<p,quiz>Lumdo won't row me across.");
+        ~chatnpc("<p,laugh>Lumdo would not row his own mother across. Go and ask him again, and I shall have another word.");
+    } else {
+        ~chatplayer("<p,quiz>He still won't row me across.");
+        ~chatnpc("<p,neutral>LUMDO. The human is with the squad. Row them.");
+        ~chatnpc("<p,happy>He heard that. Go on.");
+    }
+    return;
+}
 ~chatplayer("<p,quiz>Can you take me back?");
 ~chatnpc("<p,neutral>To the hangar, yes. Anywhere a gnome would admit to, no.");
 def_int $go = ~p_choice2("The hangar will do.", 1, "I'll stay here.", 2);
@@ -296,6 +371,15 @@ p_telejump($dest);
 [opnpc1,mm_lumdo]
 if (%mm_main < ^mm_crash_island) {
     ~chatnpc("<p,neutral>I row for the squad, not for tourists.");
+    return;
+}
+// WAYDAR HAS TO VOUCH FOR YOU. The wiki: "Talk to Waydar twice to convince Lumdo, then talk to
+// Lumdo again." %mm_waydar is the cache's own counter for him and nothing else uses it, so it holds
+// how many times he has put in a word.
+if (%mm_main < ^mm_ape_atoll & %mm_waydar < 2) {
+    ~chatplayer("<p,quiz>Will you row me across?");
+    ~chatnpc("<p,angry>No. I have rowed six gnomes to that island and none of them back.");
+    ~chatnpc("<p,neutral>Ask the pilot. If Waydar says you are worth the trip I will think about it, and he will need telling twice.");
     return;
 }
 if (inzone(^mm_crash_island_min, ^mm_crash_island_max, npc_coord) = false) {
@@ -379,22 +463,18 @@ if (inv_total(inv, mm_gnome_royal_seal) < 1) {
 ~chatnpc("<p,neutral>Glough's business. The monkeys here are being made ready for something, and we came to find out what, and we cannot ask them because we cannot talk to them.");
 ~chatplayer("<p,quiz>So teach me the language.");
 ~chatnpc("<p,laugh>You cannot learn it. Your mouth is the wrong shape. Zooknock can get around that - he is our mage, and he is in the tunnels under the island.");
-// The mould and the dentures are handed over here rather than being scattered around the island.
-// Flagged as an interpretation: the cache ships both objs and the three mm_zooknock_has_* varbits
-// that consume them, but nothing in it says where either one is meant to come from. Having the squad
-// that has been camped here for months already hold them keeps the chain non-circular - you cannot
-// be sent to ask a monkey for the thing that lets you talk to monkeys.
-if (inv_freespace(inv) < 2) {
-    ~chatnpc("<p,neutral>I have two things to give you and you have nowhere to put them. Come back with your hands free.");
-    return;
-}
-inv_add(inv, mm_monkey_amulet_mould, 1);
-inv_add(inv, mm_monkey_dentures, 1);
+// HE NO LONGER HANDS THEM OVER. He used to, on the reading that the cache "says nothing about where
+// either one is meant to come from" - but it does: mm_denture_crate, mm_monkey_amulet_mould_crate
+// and a loc called mm_crate_over_hole, in and under the monkeys' own warehouse. Wiki steps 16-20,
+// and they are built now in scripts/mm_warehouse.rs2.
 %mm_main = ^mm_met_garkor;
 ~send_quest_progress(questlist:mm, 6, ^mm_complete);
-~objbox(mm_monkey_amulet_mould, "Garkor hands you an amulet mould shaped like a monkey's head, and a set of dentures that are still chattering.", 250, 0, divide(^objbox_height, 2));
-~chatnpc("<p,neutral>Zooknock needs those and a gold bar. Bring him all three. The tunnel mouth is on the west shore.");
-~chatnpc("<p,worried>And human - the tunnels are worse than the island.");
+~chatplayer("<p,quiz>So what does he need?");
+~chatnpc("<p,neutral>A gold bar, a mould cut for a monkey's head, and a set of their talking teeth. We had all three and we had them taken off us.");
+~chatplayer("<p,quiz>Taken where?");
+~chatnpc("<p,neutral>Their warehouse, west of here - the long building with its back to the hill. The teeth are in the crates inside it.");
+~chatnpc("<p,worried>The mould is under it. There is a crate in the south-east corner with no bottom in it, and I would heal up before you find that out.");
+~chatnpc("<p,neutral>Then the tunnel mouth on the west shore, and Zooknock. The tunnels are worse than the island.");
 
 [label,mm_garkor_progress]
 ~chatplayer("<p,happy>Garkor.");

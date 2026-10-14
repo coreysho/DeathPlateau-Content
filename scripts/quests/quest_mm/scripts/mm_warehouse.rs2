@@ -1,0 +1,141 @@
+// Monkey Madness: the monkeys' warehouse, and the cave under it.
+//
+// Wiki steps 16-20, and the last big piece of this quest that was not built. Garkor used to hand you
+// the M'amulet mould and the monkey dentures because the constant file said the cache "says nothing
+// about where either one is meant to come from". It says a great deal:
+//
+//   mm_denture_crate               2767,2769   the dentures
+//   mm_crate_over_hole             2769,2765   the crate you go through rather than into
+//   mm_monkey_amulet_mould_crate   2782,9172   the mould, in the cave UNDER the warehouse
+//   mm_climbing_rope_bottom_western_warehouse   2764,9165  the way back up
+//   mm_climbing_rope_bottom_eastern_warehouse   2798,9169  and the other one
+//
+// plus nine crates named after what is in them - bananas, an iron scimitar, a tinderbox, a needle,
+// thread, an eye of gnome - which is a warehouse you are meant to rummage through rather than a
+// room with two quest items in it. A loc called "crate over hole" is not ambiguous about its job.
+//
+// THE CRATES GIVE NOTHING but the two quest items. Each one says what is in it, because that is what
+// makes the room feel searched rather than scripted, and because nine crates that hand out a free
+// tinderbox every few minutes is a vending machine, not a warehouse.
+
+// =========================================================================== the dentures
+[oploc1,mm_denture_crate]
+p_arrivedelay;
+if (%mm_main < ^mm_met_garkor) {
+    ~mesbox("A crate of what look like sets of false teeth, which is not what you came to this island expecting to find.");
+    return;
+}
+if (%mm_zooknock_has_dentures = ^true | inv_total(inv, mm_monkey_dentures) > 0) {
+    ~mesbox("More teeth. You have all the teeth you need.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You have no room for what is in it.");
+    return;
+}
+mes("You search the stacked crates.");
+p_delay(2);
+inv_add(inv, mm_monkey_dentures, 1);
+~objbox(mm_monkey_dentures, "A set of false teeth, carved for a mouth the wrong shape for yours, and they are still chattering.", 250, 0, divide(^objbox_height, 2));
+~mesbox("Garkor said the mould was down here somewhere as well. Down being the word he used.");
+
+// =========================================================================== the hole
+// The crate in the south-east corner has no bottom, which the wiki puts plainly: "Search the
+// south-eastern crate to fall into a cave. Heal first, since the fall deals damage."
+[oploc1,mm_crate_over_hole]
+p_arrivedelay;
+if (%mm_main < ^mm_met_garkor) {
+    ~mesbox("The crate is nailed shut and does not sound full. You leave it alone.");
+    return;
+}
+if_close;
+mes("You lean into the crate.");
+p_delay(2);
+~mesbox("There is no bottom in it. There is no floor under it either, and you find out about both at the same time.");
+// The fall hurts. ~damage_eat is the ordinary player-damage proc, and a tenth of your maximum is
+// enough to matter to somebody who walked in on low hitpoints without being able to kill them: the
+// wiki's warning is "heal first", not "do not come here below ten".
+%mm_player_is_unconscious = ^true;
+p_telejump(^mm_warehouse_cave);
+~damage_self(calc(stat_base(hitpoints) / 10 + 1));
+%mm_player_is_unconscious = ^false;
+~mesbox("You land in a cave on a heap of somebody else's crates, in the dark, under a hole you are not going to reach from here.");
+
+// =========================================================================== the mould
+[oploc1,mm_monkey_amulet_mould_crate]
+p_arrivedelay;
+if (%mm_main < ^mm_met_garkor) {
+    ~mesbox("A crate of moulds for casting metal, none of which mean anything to you.");
+    return;
+}
+if (%mm_zooknock_has_amulet_mould = ^true | inv_total(inv, mm_monkey_amulet_mould) > 0) {
+    ~mesbox("The rest of the moulds in it are for things you have no interest in casting.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You have no room for what is in it.");
+    return;
+}
+mes("You search the crates.");
+p_delay(2);
+inv_add(inv, mm_monkey_amulet_mould, 1);
+~objbox(mm_monkey_amulet_mould, "An amulet mould shaped like a monkey's head. Whoever cut it was not making jewellery for a human.", 250, 0, divide(^objbox_height, 2));
+
+// =========================================================================== the way out
+// Two ropes, one under each warehouse, both hanging and neither of them climbable from the top -
+// which is the right way round: you come in through the crate and you leave up the rope.
+[oploc1,mm_climbing_rope_bottom_western_warehouse]
+p_arrivedelay;
+mes("You climb the rope.");
+~climb_ladder(^mm_warehouse_rope_west, true);
+
+[oploc1,mm_climbing_rope_bottom_eastern_warehouse]
+p_arrivedelay;
+mes("You climb the rope.");
+~climb_ladder(^mm_warehouse_rope_east, true);
+
+// =========================================================================== the rest of the stock
+// Named after their contents in the cache, so they say what is in them and hand over nothing.
+[oploc1,mm_banana_crate]
+p_arrivedelay;
+~mesbox("Bananas. The crate is full of them, and so is the one behind it, and so is the island.");
+
+[oploc1,mm_banana_crates_stacked]
+p_arrivedelay;
+~mesbox("More bananas, stacked higher than you are. Marim does not appear to export anything else.");
+
+[oploc1,mm_iron_scimitar_crate]
+p_arrivedelay;
+~mesbox("Iron scimitars, packed in straw, forty or fifty of them. Somebody has been arming this island.");
+
+[oploc1,mm_bronze_scimitar_crate]
+p_arrivedelay;
+~mesbox("Bronze scimitars, older than the iron ones and just as carefully packed.");
+
+[oploc1,mm_tinderbox_crate]
+p_arrivedelay;
+~mesbox("Tinderboxes. A crate of them, which for a town built out of bamboo seems unwise.");
+
+[oploc1,mm_needle_crate]
+p_arrivedelay;
+~mesbox("Needles, in paper packets, every one of them the wrong size for a monkey's hand.");
+
+[oploc1,mm_thread_crate]
+p_arrivedelay;
+~mesbox("Spools of thread, in about nine colours.");
+
+[oploc1,mm_chisel_crate]
+p_arrivedelay;
+~mesbox("Chisels, and a good deal of stone dust in the bottom of the crate.");
+
+[oploc1,mm_hammer_crate]
+p_arrivedelay;
+~mesbox("Hammers. Gnomish ones, by the handles.");
+
+[oploc1,mm_monkey_wrench_crate]
+p_arrivedelay;
+~mesbox("Wrenches, which somebody has labelled in gnomish as monkey wrenches. You decide not to ask.");
+
+[oploc1,mm_eye_of_gnome_crate]
+p_arrivedelay;
+~mesbox("Eyes of newt, relabelled. Somebody has crossed out 'newt' and written 'gnome' underneath it, and then crossed that out too.");
