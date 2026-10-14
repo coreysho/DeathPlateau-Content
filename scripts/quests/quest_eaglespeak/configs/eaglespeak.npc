@@ -283,6 +283,16 @@ size=3
 readyanim=eagle_giant_ready
 walkanim=eagle_giant_walk
 op1=Walk-past
+// IT GUARDS THE PASSAGE, SO IT DOES NOT WANDER. wanderrange is 5 by default in the engine and this
+// never set one, so a three-by-three bird drifted up to five tiles off its spawn record (m31_77,
+// level 3, local 23,26 = 2007,4954) - and one tile north of that is enough to make the nest
+// impossible to enter. With it at 2007,4955 the only tiles the engine counts as in reach of it are
+// 2006,4957 and 2007-2008,4958, all of them NORTH of the bird and so already inside the nest; the
+// whole southern approach, which is the side the passage arrives on, reads as out of reach. A player
+// walking up from the stone door could not click it at all, and [opnpc1,eagle_giant] is the only way
+// past: no swipe, no walk-past, no Nickolaus, no quest. Its own description is "It seems to be
+// protecting the nest", which is not something that paces about.
+wanderrange=0
 
 // The eagles circling Eagles' Peak (474 npc 5120, OSRS 5317). Nothing can be done with them.
 [eagle_flying]
