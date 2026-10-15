@@ -190,6 +190,27 @@
         "saradomin_plateskirt",
         "saradomin_kiteshield"
       ]
+    },
+    "rune_heraldic_kiteshield1": {
+      "osrs_source": "a clue scroll's rare table, which is where the *_shield_h1..h5 fifteen come from",
+      "why": "FIFTEEN MORE DUPLICATES, from the same 2026-10-04 import as the Saradomin four. The 377 cache carries the heraldic kiteshields as rune/adamant/black_heraldic_kiteshield1..5, and the import of Old School's 510 clue uniques brought them in again as *_shield_h1..h5, because Old School names them \"Rune shield (h1)\" and the importer had no way to see the cache already had them. Unlike the Saradomin four, NEITHER RECORD CARRIES A PARAM OR A GATE THE OTHER LACKS - both are complete, with the same stats and their own models - so the tie broke on the only thing that matters: the import's fifteen are what the clue tables hand out and what the collection log tracks, and the cache's fifteen are what nothing gives any more. The costume room chest held the cache's fifteen until 2026-10-15, which was fifteen slots that could never be filled; it holds the obtainable fifteen now, and the Defence skill guide's two icons point at them too",
+      "why_not_deleted": "the same reason the duplicate magic secateurs are not deleted: removing an obj id is not free, and a character handed one with ::give would be holding an item the server no longer defines. poh_battery group 55 is what closes the trap - it re-derives the chest's list from the reward tables, so a chest row naming one of these fifteen again goes red at once",
+      "also": [
+        "rune_heraldic_kiteshield2",
+        "rune_heraldic_kiteshield3",
+        "rune_heraldic_kiteshield4",
+        "rune_heraldic_kiteshield5",
+        "adamant_heraldic_kiteshield1",
+        "adamant_heraldic_kiteshield2",
+        "adamant_heraldic_kiteshield3",
+        "adamant_heraldic_kiteshield4",
+        "adamant_heraldic_kiteshield5",
+        "black_heraldic_kiteshield1",
+        "black_heraldic_kiteshield2",
+        "black_heraldic_kiteshield3",
+        "black_heraldic_kiteshield4",
+        "black_heraldic_kiteshield5"
+      ]
     }
   }
 }
