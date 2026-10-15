@@ -13,6 +13,25 @@ if (random(512) = 0) {
     obj_add(npc_coord, mystic_robe_top_dark, 1, ^lootdrop_duration);
     return;
 }
+// THE TWO GRANITE PIECES NOTHING GAVE OUT. granite_body and granite_helm were in the pack and in
+// the costume room's store list and gated for wearing in tier50.rs2, and no shop, drop or recipe
+// produced either - while granite_legs, granite_maul and granite_shield are all dropped. The
+// owner's call is that they come from here, with their siblings.
+//
+// THESE TWO RATES ARE NOT THE WIKI'S, because Old School's gargoyle drops neither of them (there
+// they are TzHaar-Hur-Lek's, for Tokkul). They sit on the scale this table already uses - the maul
+// at 1/256 and the mystic top at 1/512 - with the body the rarest thing a gargoyle gives, which is
+// the order their Tokkul prices put them in: 95,000 for the body against 75,000 for the helm.
+if (random(512) = 0) {
+    obj_add(npc_coord, granite_helm, 1, ^lootdrop_duration);
+    ~collection_log_add(granite_helm, 1); // not broadcast, so the collection log is told here
+    return;
+}
+if (random(1024) = 0) {
+    obj_add(npc_coord, granite_body, 1, ^lootdrop_duration);
+    ~collection_log_add(granite_body, 1);
+    return;
+}
 def_int $dropint = random(128);
 if ($dropint < 4) {
     obj_add(npc_coord, adamant_platelegs, 1, ^lootdrop_duration);

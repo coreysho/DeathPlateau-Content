@@ -1,0 +1,34 @@
+// ALI THE LEAFLET DROPPER, who stood at the Al Kharid gate handing out nothing.
+//
+// The boy is placed at 3284,3328, the flyer obj is in the pack, and readables_generated.rs2 already
+// answers a Read on it with Ali Morrisane's advert for the market - so the item and its words were
+// both here and the only npc who would give you one had no handler at all. Talk-to and Take-flyer
+// were two dead clicks in a built town; tools/silentnpcops.py is what found them.
+//
+// WHAT THE FLYER DOES is read, and that is all it does, which is what the obj has always been: the
+// "money off your next purchase" is Ali Morrisane's copy, not a mechanic, and no shop in this build
+// honours it. Taking one is free and repeatable - he is handing them out - but he will not give you
+// a second while you are already holding one, because a leaflet dropper with an infinite stack is
+// how an inventory fills up by accident.
+[opnpc1,ali_leaflet_dropper] @leaflet_dropper_talk;
+[opnpc3,ali_leaflet_dropper] @leaflet_dropper_flyer;
+
+[label,leaflet_dropper_talk]
+~chatnpc("<p,happy>Flyers! Free flyers! Al Kharid market, best prices in the desert!");
+switch_int (~p_choice2("I'll take one.", 1, "No thanks.", 2)) {
+    case 1 : @leaflet_dropper_flyer;
+    case 2 : ~chatplayer("<p,neutral>No thanks.");
+}
+
+[label,leaflet_dropper_flyer]
+p_arrivedelay;
+if (inv_total(inv, leaflet_dropper_flyer) > 0) {
+    ~chatnpc("<p,neutral>You've got one! Read it, give it to a friend, there's plenty more.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>You've not got a hand free, friend. Come back for one.");
+    return;
+}
+inv_add(inv, leaflet_dropper_flyer, 1);
+~objbox(leaflet_dropper_flyer, "The boy presses a flyer into your hand and is already looking past you for the next person.", 250, 0, divide(^objbox_height, 2));

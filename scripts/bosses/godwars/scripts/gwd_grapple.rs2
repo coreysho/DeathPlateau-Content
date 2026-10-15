@@ -1,0 +1,53 @@
+// THE MITH GRAPPLE, AND WHERE IT COMES FROM, which until now was nowhere at all.
+//
+// gwd_encampments.rs2 gates the Armadyl chasse crossing on carrying one - 70 Ranged, a crossbow in
+// hand and a grapple fired at the pillar across the gap - and the obj has sat in the pack since the
+// 474 import with no shop, no drop and no recipe behind it, so that crossing could not be made by
+// anybody. obtainable.py had it in the "mentioned, never given out" bucket and the two sims that
+// test the crossing hand one over with ::give, which is why nothing had ever said so out loud.
+// skillcape_perks.rs2 still notes "Fletching (no mithril grapple)" for the same reason.
+//
+// ONE STEP RATHER THAN OLD SCHOOL'S TWO, which is a choice and not an oversight. Old School smiths
+// a mith grapple TIP (59 Smithing, one mithril bar) and then attaches it to a rope; the tip is an
+// obj of its own with its own model and this cache does not carry one, so building both halves
+// means inventing an obj and a model rather than wiring up what is here. The level and the
+// experience are the tip's - 59 Smithing, 50 xp - and the rope is what Old School binds it to, so
+// the ingredients and the numbers are the wiki's even though the number of steps is not. If the tip
+// is ever imported, this label is where it splits in two.
+//
+// No anvil and no hammer: with the tip gone there is nothing to hammer, and the limbs-on-a-stock
+// recipes in skill_fletching work the same way - two items in the inventory and a level.
+[opheldu,rope] @gwd_grapple_make(last_item, last_useitem);
+[opheldu,mithril_bar] @gwd_grapple_make(last_item, last_useitem);
+
+[label,gwd_grapple_make](obj $held, obj $used)
+if ($held = rope & $used ! mithril_bar) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if ($held = mithril_bar & $used ! rope) {
+    ~displaymessage(^dm_default);
+    return;
+}
+// members=yes on the obj, and the crossing it is for is inside God Wars
+if (map_members = ^false) {
+    mes(^mes_members_skill);
+    return;
+}
+if (stat(smithing) < ^gwd_grapple_level) {
+    ~doubleobjbox(mithril_bar, rope,
+        "You need a Smithing level of <tostring(^gwd_grapple_level)> to work the bar into a grapple.", 200);
+    return;
+}
+p_arrivedelay;
+anim(human_pickupfloor, 0);
+mes("You work the mithril bar into a hook and bind it to the rope.");
+p_delay(2);
+if (inv_total(inv, mithril_bar) < 1 | inv_total(inv, rope) < 1) {
+    return;
+}
+inv_del(inv, mithril_bar, 1);
+inv_del(inv, rope, 1);
+inv_add(inv, mith_grapple, 1);
+~smithing_xp(^gwd_grapple_xp);
+~objbox(mith_grapple, "A mithril grapple. A crossbow will fire it across a gap.", 250, 0, divide(^objbox_height, 2));
