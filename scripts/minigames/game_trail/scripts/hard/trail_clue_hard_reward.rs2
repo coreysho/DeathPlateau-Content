@@ -249,9 +249,17 @@ switch_int ($random) {
 // Kourend's scarves and hoods are left out for the same reason as its banners, and so are the
 // seven ornament kits whose base item this build does not have - occult, torture, anguish,
 // tormented, dragon full helm, dragon kiteshield and dragon platebody.
+//
+// ONE ENTRY HERE IS NOT A CLUE REWARD AT ALL: the Thread of Elidinis, case 112. Old School puts
+// it in Tombs of Amascut, a raid this build has no content for, and it is the only way to stitch
+// a rune pouch into a divine one - so without a row here the thread, the divine pouch and the
+// upgrade and revert scripts behind them are all unreachable. It was case 33 of the hard table
+// until that table was replaced with Old School's own 158 on 2026-10-04, which correctly has no
+// room for a raid drop; this table, whose whole job is the uniques with nowhere else to come
+// from, is where it belongs.
 
 [proc,trail_clue_master_rare]
-def_int $random = random(112);
+def_int $random = random(113);
 
 switch_int ($random) {
     case 0 : inv_add(trail_rewardinv, dragon_chainbody_ornament_kit, 1);   // Dragon chainbody ornament kit
@@ -366,4 +374,5 @@ switch_int ($random) {
     case 109 : inv_add(trail_rewardinv, third_age_axe, 1);   // 3rd age axe
     case 110 : inv_add(trail_rewardinv, bloodhound, 1);   // Bloodhound
     case 111 : inv_add(trail_rewardinv, ring_of_third_age, 1);   // Ring of 3rd age
+    case 112 : inv_add(trail_rewardinv, thread_of_elidinis, 1);   // Thread of Elidinis - see above
 }
