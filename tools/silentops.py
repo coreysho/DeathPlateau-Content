@@ -32,33 +32,40 @@ thirty of those exist - and they counted for nothing until now.
     python3 tools/silentops.py            # verbs on at most 12 locs
     python3 tools/silentops.py --all
 """
-import collections, os, re, sys
+import collections, glob, os, re, sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIMIT = None if '--all' in sys.argv else 12
 
 
 def main():
-    loc = open(os.path.join(ROOT, 'scripts/_unpack/377/all.loc'),
-               encoding='utf-8', errors='ignore').read()
+    # EVERY .loc FILE, NOT JUST THE CACHE'S. This read scripts/_unpack/377/all.loc alone until
+    # 15 October and so saw half the world: 2,704 locs with an option out of 6,167, because every
+    # loc this fork has written - quest scenery, farming patches, cooking ranges, the canoe stations
+    # - lives in a content .loc beside its scripts. It also meant the multiloc map was half built,
+    # which is how fourteen farming Guide options read as silent while their shells answered them
+    # from scripts/skill_farming/configs/farming.loc.
+    locfiles = sorted(glob.glob(os.path.join(ROOT, 'scripts/**/*.loc'), recursive=True))
     pack = set(l.strip().split('=', 1)[1]
                for l in open(os.path.join(ROOT, 'pack/loc.pack'), encoding='utf-8') if '=' in l)
     ops, cats = collections.defaultdict(dict), {}
     shells = collections.defaultdict(set)   # variant -> the shells that can show it
-    for b in re.split(r'\n(?=\[)', loc):
-        m = re.match(r'\[([\w]+)\]', b)
-        if not m:
-            continue
-        n = m.group(1)
-        c = re.search(r'^category=(\w+)$', b, re.M)
-        if c:
-            cats[n] = c.group(1)
-        for v in re.findall(r'^multiloc=\d+,(\w+)$', b, re.M):
-            shells[v].add(n)
-        if n not in pack:
-            continue
-        for k, v in re.findall(r'^op([1-5])=(.*)$', b, re.M):
-            ops[n][int(k)] = v.strip()
+    for path in locfiles:
+        loc = open(path, encoding='utf-8', errors='ignore').read()
+        for b in re.split(r'\n(?=\[)', loc):
+            m = re.match(r'\[([\w]+)\]', b)
+            if not m:
+                continue
+            n = m.group(1)
+            c = re.search(r'^category=(\w+)$', b, re.M)
+            if c:
+                cats[n] = c.group(1)
+            for v in re.findall(r'^multiloc=\d+,(\w+)$', b, re.M):
+                shells[v].add(n)
+            if n not in pack:
+                continue
+            for k, v in re.findall(r'^op([1-5])=(.*)$', b, re.M):
+                ops[n][int(k)] = v.strip()
 
     blob = []
     for dp, _, fs in os.walk(os.path.join(ROOT, 'scripts')):
