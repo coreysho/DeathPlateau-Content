@@ -98,22 +98,39 @@ if (%zogre >= ^zogre_complete) {
 // which is what a player with neither quest running still hears.
 @handsand_rarve_talk;
 
+// HE WANTS THE CASE MADE, not a hunch. The cache keeps a bit for each thing he is shown -
+// thzfe_prismsold, thzfe_showntankard, thzfe_shownsignedportrait - and two more for what Sithik
+// has been shown, and the quest used to hand over the potion for a prism and a backpack alone.
 [label,zogre_rarve_identify]
 if (inv_total(inv, zogre_black_prism) = 0 | inv_total(inv, zogre_brentle_vahn_backpack) = 0) {
     ~chatnpc("<p,quiz>You have the look of someone about to show me something unpleasant. Get on with it.");
     ~chatplayer("<p,sad>I haven't got it on me.");
     return;
 }
-~chatplayer("<p,neutral>I found these under Jiggig.");
-mes("You show Rarve the prism and the backpack.");
-~chatnpc("<p,shock>Brentle Vahn. He has been missing two years and everyone assumed the obvious.");
-~chatnpc("<p,angry>And a focusing prism. Cut by somebody who knew exactly what they were doing and had no licence to do it.");
-~chatplayer("<p,quiz>Can you tell who?");
-~chatnpc("<p,neutral>I can tell you who drinks in the Dragon Inn with a tankard like the one you are also carrying, and who has been selling maps of places he has never been.");
-~chatnpc("<p,angry>Sithik Ints. Portrait painter, allegedly.");
-~chatplayer("<p,neutral>He'll deny it.");
+if (%thzfe_prismsold = 0) {
+    %thzfe_prismsold = 1;
+    ~chatplayer("<p,neutral>I found these under Jiggig.");
+    mes("You show Rarve the prism and the backpack.");
+    ~chatnpc("<p,shock>Brentle Vahn. He has been missing two years and everyone assumed the obvious.");
+    ~chatnpc("<p,angry>And a focusing prism. Cut by somebody who knew exactly what they were doing and had no licence to do it.");
+    ~chatplayer("<p,quiz>Can you tell who?");
+    ~chatnpc("<p,neutral>I can tell you who drinks in the Dragon Inn with a tankard like the one you are also carrying, and who has been selling maps of places he has never been.");
+    ~chatnpc("<p,angry>Sithik Ints. Portrait painter, allegedly.");
+    ~chatplayer("<p,neutral>Then let us have him.");
+    ~chatnpc("<p,neutral>On what? A tankard? I am a guild master, not a mob. Bring me something I can put in front of the guild.");
+    @zogre_rarve_wants;
+}
+if (~zogre_rarve_case = false) {
+    @zogre_rarve_wants;
+}
+%thzfe_showntankard = 1;
+%thzfe_shownsignedportrait = 1;
+~chatplayer("<p,neutral>His necromancy book. His H.A.M. book. His tankard. And a likeness of him with the innkeeper's name under it.");
+mes("Rarve lays the four of them out on the table and looks at them for a long time.");
+~chatnpc("<p,angry>A man who hates monsters, in the Humans Against Monsters, reading raising-spells and selling the way into an ogre tomb. That is not greed. That is a programme.");
+~chatplayer("<p,neutral>He'll deny all of it.");
 ~chatnpc("<p,happy>He will. So take him this. It is a tonic for his nerves, and it will turn him into an ogre for about a day.");
-~chatnpc("<p,neutral>He is upstairs in the house south-east of here, in bed, being ill at people.");
+~chatnpc("<p,neutral>He will not drink anything you hand him. There is a cup of tea on his drawers that he has been letting go cold for a week.");
 if (inv_freespace(inv) = 0) {
     ~chatnpc("<p,neutral>When you have somewhere to put it.");
     return;
@@ -122,6 +139,30 @@ if (inv_freespace(inv) = 0) {
 ~send_quest_progress(questlist:zogre, %zogre, ^zogre_complete);
 inv_add(inv, zogre_ogre_trans_potion, 1);
 mes("Rarve gives you a strange potion.");
+@zogre_place_tea;
+
+// The four things, and the two Sithik has already been made to deny.
+[proc,zogre_rarve_case]()(boolean)
+if (inv_total(inv, zogre_necrobook) = 0 | inv_total(inv, zogre_hambook) = 0) {
+    return(false);
+}
+if (inv_total(inv, zogre_dragon_tankard) = 0 | inv_total(inv, zogre_sithik_portrait_signed) = 0) {
+    return(false);
+}
+if (%thzfe_shownnecrobook = 0 | %thzfe_shownhambook = 0) {
+    return(false);
+}
+return(true);
+
+[label,zogre_rarve_wants]
+~chatnpc("<p,neutral>Four things. The necromancy book and the H.A.M. book out of his own rooms, and him denying both to your face. The tankard. And a likeness of him with the innkeeper's name under it.");
+~mesbox(append(append(append(append("So far: ", ~zogre_case_line(%thzfe_shownnecrobook, "the necromancy book, denied")), append(", ", ~zogre_case_line(%thzfe_shownhambook, "the H.A.M. book, denied"))), append(", ", ~zogre_case_line(%thzfe_innkeepermugshown, "the tankard identified"))), append(", ", ~zogre_case_line(%thzfe_innkeeperportraitshown, "the portrait signed"))));
+
+[proc,zogre_case_line](int $bit, string $what)(string)
+if ($bit = 1) {
+    return(append($what, " (done)"));
+}
+return($what);
 
 // =========================================================================== Irwin and the bookcase
 

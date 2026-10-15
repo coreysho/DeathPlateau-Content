@@ -1,0 +1,312 @@
+// INCRIMINATING SITHIK INTS - the middle act of Zogre Flesh Eaters, which the quest skipped.
+//
+// What it did: you showed Zavistic Rarve a prism and a dead man's backpack, he said "Sithik Ints,
+// portrait painter, allegedly" and handed you a potion that turns a man into an ogre. Four
+// sentences, and the whole investigation gone.
+//
+// What the cache kept, on the zombie_ogre varp, with nothing reading any of it:
+//
+//   thzfe_innkeepermugshown      bit 8    the tankard, shown to the innkeeper
+//   thzfe_innkeeperportraitshown bit 9    the portrait, shown to the innkeeper
+//   thzfe_shownnecrobook         bit 10   the necromancy book, shown to Sithik
+//   thzfe_shownhambook           bit 11   the book of 'h.a.m', shown to Sithik
+//   thzfe_showntankard           bit 12   the tankard, shown to Rarve
+//   thzfe_shownsignedportrait    bit 13   the signed portrait, shown to Rarve
+//   thzfe_prismsold              bit 26   the prism, shown to Rarve
+//
+// Seven bits for seven things shown to three people, which is the guide's own checklist: read the
+// three books, show them to Sithik, draw him, have the innkeeper sign the drawing, and take the
+// lot to Rarve. And the objs are all there too - zogre_portrait_book, zogre_necrobook,
+// zogre_hambook, zogre_sithik_portrait_good, _bad, _signed, zogre_cup_of_tea_sithix - along with
+// three locs in the bedroom that no script had ever opened: sithiks_drawers, sithiks_cupboard and
+// sithiks_wardrobe, all with Search, at 2593,3103 / 2593,3104 / 2590,3103 on the floor above the
+// guest house north of the Wizards' Guild.
+
+// =========================================================================== the bedroom
+// "Search the drawers, cupboard and wardrobe for Book of portraiture, Necromancy book, papyrus,
+// charcoal, and a book of 'H.A.M'." Which piece is in which is not written down anywhere, so they
+// are split the way the room would be: what he writes with in the drawers, what he reads on the
+// shelf, and what he would rather nobody found in the wardrobe.
+[oploc1,sithiks_drawers]
+p_arrivedelay;
+if (%zogre < ^zogre_found_evidence) {
+    ~mesbox("A sick man's drawers. You have no business in them yet.");
+    return;
+}
+if (inv_freespace(inv) < 2) {
+    ~mesbox("There is paper and charcoal in here and nowhere to put them.");
+    return;
+}
+mes("You search the drawers.");
+p_delay(1);
+inv_add(inv, papyrus, 1);
+if (inv_total(inv, charcoal) = 0) {
+    inv_add(inv, charcoal, 1);
+    ~mesbox("Papyrus, charcoal, and a great many unpaid bills. He is a portrait painter who has not painted anybody in two years.");
+    return;
+}
+~mesbox("More papyrus. He has plenty of it.");
+
+[oploc1,sithiks_cupboard]
+p_arrivedelay;
+if (%zogre < ^zogre_found_evidence) {
+    ~mesbox("A cupboard. It is not yours.");
+    return;
+}
+if (~obj_gettotal(zogre_portrait_book) > 0 & ~obj_gettotal(zogre_necrobook) > 0) {
+    ~mesbox("Nothing else in here but crockery.");
+    return;
+}
+if (inv_freespace(inv) < 2) {
+    ~mesbox("There are books in here and nowhere to put them.");
+    return;
+}
+mes("You search the cupboard.");
+p_delay(1);
+if (~obj_gettotal(zogre_portrait_book) = 0) {
+    inv_add(inv, zogre_portrait_book, 1);
+}
+if (~obj_gettotal(zogre_necrobook) = 0) {
+    inv_add(inv, zogre_necrobook, 1);
+}
+~mesbox("A book on taking likenesses, which is what he does, and underneath it a book of necromantic spells, which is not.");
+
+[oploc1,sithiks_wardrobe]
+p_arrivedelay;
+if (%zogre < ^zogre_found_evidence) {
+    ~mesbox("A wardrobe full of a sick man's clothes.");
+    return;
+}
+if (~obj_gettotal(zogre_hambook) > 0) {
+    ~mesbox("Nothing else behind the coats.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~mesbox("There is something behind the coats and nowhere to put it.");
+    return;
+}
+mes("You go through the coats.");
+p_delay(1);
+inv_add(inv, zogre_hambook, 1);
+~mesbox("Behind the coats, where a man keeps the thing he would not want found: Humans Against Monsters. Every year more of our people are taken by things that should not walk.");
+
+// =========================================================================== showing him things
+// Sithik is a loc, not an npc - the bed shell, whose two children are both name=Sithik Ints - so
+// everything is used on the bed and the face comes from ~chatnpc_specific.
+[oplocu,zogre_sithik_bed_entity]
+// last_useitem does not survive a yield, so it is read before the walk to the bed.
+def_obj $used = last_useitem;
+p_arrivedelay;
+if (%thzfe_sithik_transformed = ^zogre_sithik_is_ogre) {
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>I am an ogre. I am not interested in anything you are holding.");
+    return;
+}
+if ($used = zogre_necrobook) {
+    @zogre_show_sithik(^zogre_show_necrobook);
+}
+if ($used = zogre_hambook) {
+    @zogre_show_sithik(^zogre_show_hambook);
+}
+if ($used = zogre_portrait_book) {
+    @zogre_show_sithik(^zogre_show_portraitbook);
+}
+if ($used = papyrus) {
+    @zogre_draw_sithik;
+}
+if ($used = zogre_sithik_portrait_good | $used = zogre_sithik_portrait_bad) {
+    @zogre_show_portrait($used);
+}
+if ($used = zogre_ogre_trans_potion) {
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>I am not drinking anything handed to me by a stranger in my bedroom.");
+    ~mesbox("He would drink it if he thought it was his own. There is a cup of tea on the drawers.");
+    return;
+}
+~displaymessage(^dm_default);
+
+[label,zogre_show_sithik](int $which)
+if ($which = ^zogre_show_portraitbook) {
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,neutral>That is mine and it is the only honest thing in this room. Put it back.");
+    return;
+}
+if ($which = ^zogre_show_necrobook) {
+    if (%thzfe_shownnecrobook = 1) {
+        ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>I have told you. It is not mine.");
+        return;
+    }
+    %thzfe_shownnecrobook = 1;
+    ~chatplayer("<p,neutral>This was in your cupboard.");
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,shock>That is not mine.");
+    ~chatplayer("<p,quiz>It was under your book on portraiture.");
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>Then somebody put it there. Get out.");
+    @zogre_sithik_rattled;
+}
+if (%thzfe_shownhambook = 1) {
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>A man may read what he likes.");
+    return;
+}
+%thzfe_shownhambook = 1;
+~chatplayer("<p,neutral>And this was behind your coats.");
+~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,shock>...");
+~chatplayer("<p,quiz>Humans Against Monsters. A man who hates monsters, selling the way into an ogre tomb.");
+~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>A man may read what he likes. GET OUT.");
+@zogre_sithik_rattled;
+
+[label,zogre_sithik_rattled]
+if (%thzfe_shownnecrobook = 1 & %thzfe_shownhambook = 1) {
+    ~mesbox("He is frightened now, which is worth more than anything he has said. Rarve will want to see the books, the tankard and a likeness of the man who owns them.");
+}
+
+// The portrait. "Use Papyrus on Sithik" with charcoal, and the odds of the good one go up with
+// Crafting - "20+ is recommended to speed up the process".
+[label,zogre_draw_sithik]
+if (inv_total(inv, charcoal) = 0) {
+    ~mesbox("You have the paper and nothing to draw with.");
+    return;
+}
+if (~obj_gettotal(zogre_sithik_portrait_good) > 0) {
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>You have already drawn me. Once was too often.");
+    return;
+}
+if_close;
+mes("You sit at the end of the bed and draw him.");
+p_delay(5);
+inv_del(inv, papyrus, 1);
+if (random(^zogre_portrait_odds) < ~zogre_portrait_chance) {
+    inv_add(inv, zogre_sithik_portrait_good, 1);
+    ~objbox(zogre_sithik_portrait_good, "A classic realist charcoal portrait of Sithik. It is a good likeness and it is not a kind one.", 250, 0, divide(^objbox_height, 2));
+    stat_advance(crafting, ^zogre_portrait_xp);
+    return;
+}
+inv_add(inv, zogre_sithik_portrait_bad, 1);
+~objbox(zogre_sithik_portrait_bad, "A semi-nihilistic, pseudo-impressionistic, half-squarist charcoal sketch of Sithik. Nobody would know it was him.", 250, 0, divide(^objbox_height, 2));
+
+// A drawing is worth more Crafting than it is worth here, so the roll is a flat chance that climbs
+// with the level and never quite reaches certain.
+[proc,zogre_portrait_chance]()(int)
+def_int $chance = add(^zogre_portrait_base, stat(crafting));
+if ($chance > ^zogre_portrait_cap) {
+    $chance = ^zogre_portrait_cap;
+}
+return($chance);
+
+[label,zogre_show_portrait](obj $portrait)
+if ($portrait = zogre_sithik_portrait_bad) {
+    ~chatplayer("<p,happy>I drew you.");
+    ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>That is a shape. That is not a man.");
+    ~mesbox("He is right, and no innkeeper would recognise it. Draw him again.");
+    return;
+}
+~chatplayer("<p,happy>I drew you.");
+~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,shock>...that is not flattering.");
+switch_int (~p_choice2("It's honest.", 1, "It's the truth.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>It's the truth.");
+        ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,angry>The truth is a thing people say when they mean they have been unkind. Take it away.");
+    case 1 :
+        ~chatplayer("<p,neutral>It's honest.");
+        ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,sad>...it is. It is honest. Nobody has drawn me honestly in twenty years.");
+        ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,neutral>Keep it. Show it to whoever you like. It will do me no harm, because there is nothing to find.");
+}
+
+// =========================================================================== the tea
+// The cup is in the cache - zogre_cup_of_tea_sithix, "Looks like an innocent cup of tea" - and is
+// placed on no map square, so it is put on the drawers when Rarve hands over the potion and taken
+// away when it has been drunk. "He is not drinking anything handed to him by a stranger."
+[proc,zogre_tea_here]()(boolean)
+obj_findallzone(^zogre_tea_coord);
+while (obj_findnext = true) {
+    if (obj_type = zogre_cup_of_tea_sithix) {
+        return(true);
+    }
+}
+return(false);
+
+[label,zogre_place_tea]
+if (~zogre_tea_here = true) {
+    return;
+}
+obj_add(^zogre_tea_coord, zogre_cup_of_tea_sithix, 1, ^zogre_tea_duration);
+
+// obj_del works on the active obj, so the cup has to be found before it can be taken away.
+[label,zogre_clear_tea]
+obj_findallzone(^zogre_tea_coord);
+while (obj_findnext = true) {
+    if (obj_type = zogre_cup_of_tea_sithix) {
+        obj_del;
+        return;
+    }
+}
+
+[opobju,zogre_cup_of_tea_sithix]
+if (last_useitem ! zogre_ogre_trans_potion) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (%zogre >= ^zogre_tea_drugged) {
+    ~mesbox("It is already in there.");
+    return;
+}
+if_close;
+mes("You tip Rarve's potion into the cup of tea.");
+p_delay(3);
+inv_del(inv, zogre_ogre_trans_potion, 1);
+%zogre = ^zogre_tea_drugged;
+~send_quest_progress(questlist:zogre, %zogre, ^zogre_complete);
+queue(zogre_tea_drunk, ^zogre_tea_wait, 0);
+~mesbox("It does not change colour, which is the whole point of it. | Now leave the room. He will not touch it while you are standing over it.");
+
+[opobj1,zogre_cup_of_tea_sithix]
+p_arrivedelay;
+~mesbox("Sithik's tea. Cold, and he has not touched it.");
+
+// HE DRINKS IT WHEN YOU ARE NOT WATCHING, which is the guide's "go downstairs and back upstairs"
+// without taking the ladder off the generic stairs script: a queue on the player, a minute of game
+// time, and the noise carries wherever you have got to.
+[queue,zogre_tea_drunk]
+if (%thzfe_sithik_transformed = ^zogre_sithik_is_ogre) {
+    return;
+}
+%thzfe_sithik_transformed = ^zogre_sithik_is_ogre;
+@zogre_clear_tea;
+~mesbox("Somewhere behind you, somebody who has been quietly ill for two years makes a noise you have not heard a man make before. | It goes on for about four seconds.");
+
+// =========================================================================== the innkeeper
+// The Dragon Inn's bartender already has an [opnpcu] for the barcrawl card; these two cases are
+// added to it in areas/area_yanille/scripts/bartender.rs2 and come here.
+[label,zogre_bartender_tankard]
+if (%thzfe_innkeepermugshown = 1) {
+    ~chatnpc("<p,neutral>Sithik's tankard. I told you.");
+    return;
+}
+%thzfe_innkeepermugshown = 1;
+~chatplayer("<p,quiz>Do you know this tankard?");
+~chatnpc("<p,happy>That is one of mine. White, dragon on it, and there is only one man who ever took one out of this bar.");
+~chatnpc("<p,neutral>Sithik Ints. He drank here every night for a year and then stopped, about two years ago, which is also when he stopped paying.");
+~chatplayer("<p,quiz>Would you know him again?");
+~chatnpc("<p,happy>I would know him in the dark. Bring me a likeness and I will put my name to it.");
+
+[label,zogre_bartender_portrait](obj $portrait)
+if ($portrait = zogre_sithik_portrait_bad) {
+    ~chatnpc("<p,quiz>What is that supposed to be?");
+    ~chatplayer("<p,sad>It's Sithik.");
+    ~chatnpc("<p,angry>It is a lot of charcoal is what it is. Bring me one I can see his face in.");
+    return;
+}
+if (%thzfe_innkeepermugshown = 0) {
+    ~chatnpc("<p,quiz>Why would I sign a drawing of a man I have not been asked about?");
+    return;
+}
+if (%thzfe_innkeeperportraitshown = 1) {
+    ~chatnpc("<p,neutral>I have signed one already.");
+    return;
+}
+%thzfe_innkeeperportraitshown = 1;
+~chatplayer("<p,neutral>Is this him?");
+~chatnpc("<p,happy>That is Sithik Ints and I will say so to anybody.");
+if_close;
+mes("The bartender takes a pen from behind the bar and signs across the bottom of the portrait.");
+p_delay(3);
+inv_del(inv, zogre_sithik_portrait_good, 1);
+inv_add(inv, zogre_sithik_portrait_signed, 1);
+~objbox(zogre_sithik_portrait_signed, "A likeness of Sithik Ints with an innkeeper's name under it. In Yanille that is as good as a sworn statement.", 250, 0, divide(^objbox_height, 2));

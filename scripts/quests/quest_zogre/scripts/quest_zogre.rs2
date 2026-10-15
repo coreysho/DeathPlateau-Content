@@ -222,6 +222,15 @@ if (%zogre >= ^zogre_sithik_confessed) {
 ~chatplayer("<p,angry>A man called Brentle Vahn went in. He is still in there.");
 ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,sad>I know. I have known for two years.");
 ~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,neutral>The thing guarding it now is not one of the ordinary ones. They call it Slash Bash. Take the helm back to the ogres and perhaps they will stop digging their own dead up.");
+// "Obtain answers to all three questions in order to make Relicym's balm and Brutal arrows." He is
+// the one who knows both, so he is where the two bits are set - the comp ogre bow stays with
+// Grish, who is the one who shows you how to hold it.
+~chatplayer("<p,quiz>Their bones crumble. Nothing I own cuts them.");
+~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,neutral>Nothing sharp will. Blunt. Nails in a flighted arrow, and a bow an ogre could draw. The ogres have been doing it for two hundred years and nobody has ever asked them how.");
+~chatplayer("<p,quiz>And the sickness they carry?");
+~chatnpc_specific("Sithik Ints", zogre_sithik_man, "<p,neutral>Rogue purse and snake weed, in water. It is in every herbalist's book and nobody makes it because nobody but an ogre ever catches it.");
+%thzfe_makebrutalarrow = 1;
+%thzfe_makecuredisease = 1;
 %zogre = ^zogre_sithik_confessed;
 ~send_quest_progress(questlist:zogre, %zogre, ^zogre_complete);
 
@@ -287,6 +296,8 @@ stat_advance(herblore, 20000);
 // now read: brutal arrows are fletched in skill_fletching/scripts/ogre_arrows.rs2 and the comp ogre
 // bow is carved in skill_firemaking/scripts/achey.rs2 and strung off the fletching table.
 // Relicym's balm is Herblore and is still unbuilt.
+// Sithik taught the arrows and the balm when he confessed; this is the backstop for anyone who
+// was already past him when that moved, and the bow, which is Grish's.
 %thzfe_makebrutalarrow = 1;
 %thzfe_makecompozogrebow = 1;
 %thzfe_makecuredisease = 1;

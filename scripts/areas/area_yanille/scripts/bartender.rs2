@@ -42,6 +42,16 @@ switch_int($option) {
 if(testbit(%barcrawl, ^dragoninn_index) = ^false & last_useitem = barcrawl_card) {
     @dragoninn_barcrawl;
 }
+// ZOGRE FLESH EATERS. The tankard out of Brentle Vahn's backpack is one of this bar's, and the man
+// who took it out of here is Sithik Ints - so the innkeeper is the witness, and he signs the
+// portrait. quests/quest_zogre/scripts/zogre_yanille.rs2.
+if (last_useitem = zogre_dragon_tankard) {
+    @zogre_bartender_tankard;
+}
+if (last_useitem = zogre_sithik_portrait_good | last_useitem = zogre_sithik_portrait_bad) {
+    @zogre_bartender_portrait(last_useitem);
+}
+~displaymessage(^dm_default);
 
 [label,dragoninn_barcrawl]
 ~chatplayer("<p,happy>I'm doing Alfred Grimhand's Barcrawl.");

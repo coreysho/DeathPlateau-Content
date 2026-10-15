@@ -48,3 +48,21 @@
 ^comp_ogre_bow_level = 30
 ^comp_ogre_bow_xp = 450
 ^comp_ogre_bow_ranged = 30
+
+// ---------------------------------------------------------------------------- incriminating him
+// The guide's middle act, which the cache kept seven bits for. See scripts/zogre_yanille.rs2.
+^zogre_tea_drugged = 9          // between has_potion and sithik_confessed, which run in twos
+^zogre_tea_wait = 100           // a minute of game time, and he drinks it while you are elsewhere
+^zogre_tea_coord = 1_40_48_32_31   // 2592,3103, the floor between his bed and his drawers
+^zogre_tea_duration = 2000
+
+^zogre_show_necrobook = 1
+^zogre_show_hambook = 2
+^zogre_show_portraitbook = 3
+
+// The drawing. "20+ Crafting to increase the chances of succeeding at drawing the Sithik portrait"
+// - so a flat chance that climbs with the level and never quite reaches certain.
+^zogre_portrait_odds = 100
+^zogre_portrait_base = 20
+^zogre_portrait_cap = 90
+^zogre_portrait_xp = 150
