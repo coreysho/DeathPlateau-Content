@@ -6,6 +6,8 @@
 switch_int (%zogre) {
     case ^zogre_not_started : @zogre_grish_start;
     case ^zogre_bash_dead : @zogre_grish_finish;
+    case ^zogre_sithik_confessed : @zogre_grish_key;
+    case ^zogre_has_artefact : @zogre_grish_key;
     case default :
         if (%zogre >= ^zogre_complete) {
             ~chatnpc("<p,happy>Ancestors quiet. Grish sleep now. You come back any time.");
@@ -32,10 +34,10 @@ switch_int (~p_choice2("What's happening here?", 1, "Fine, I'm going.", 2)) {
 ~chatnpc("<p,shifty>Warning, human. Things down there not die like normal things. Blunt arrows work best on them - Uglug sell you some.");
 %zogre = ^zogre_warned;
 %thzfe_grish_warning_yes = 1;
-// The barricade's collapsed state. Collision comes from the placed shell and does not change with
-// the varbit, so this is the look of the place opening up rather than a gate being lifted.
-%thzfe_blocking_barricade = ^zogre_barricade_down;
 ~send_quest_progress(questlist:zogre, %zogre, ^zogre_complete);
+// THE BARRICADE IS THE GUARD'S, not Grish's: "Speak to Ogre guard to the east, he will remove the
+// barricade to gain access to the Zogre-infested area". scripts/zogre_jiggig.rs2.
+~chatnpc("<p,neutral>Guard east of here. Tell guard Grish say let you past barricade.");
 
 [label,zogre_grish_finish]
 if (inv_total(inv, zogre_artifacts) = 0) {

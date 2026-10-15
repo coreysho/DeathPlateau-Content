@@ -975,7 +975,8 @@ switch_coord (loc_coord) {
 // arrive delay?
 switch_coord (loc_coord) {
     case 0_38_47_53_34 : @zogre_jiggig_stairs_down; // Jiggig -> the burial tomb (Zogre Flesh Eaters)
-    case 2_38_147_11_9 : p_telejump(0_38_147_10_9); // the burial tomb -> its deepest chamber
+    // the burial tomb -> the ceremonial chamber, which is what the ogre gate key opens
+    case 2_38_147_11_9 : @zogre_chamber_stairs;
     case default : @unhandled_stairs(loc_coord);
 }
 

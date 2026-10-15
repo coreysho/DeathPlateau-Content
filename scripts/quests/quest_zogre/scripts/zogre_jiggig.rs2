@@ -1,0 +1,131 @@
+// JIGGIG, AND THE FOUR OGRES STANDING IN IT WITH NOTHING TO SAY.
+//
+// All four are placed on the map and all four have op1=Talk-to and no script:
+//
+//   zogre_ogre_guard         "Ogre guard", at 2454,3047, east of Grish - and the guide's second
+//                            step is "Speak to Ogre guard to the east, he will remove the
+//                            barricade to gain access to the Zogre-infested area", which the
+//                            quest was doing in Grish's own dialogue
+//   zogre_dying1 (Pilg)      at 2447,3048, "They're done for!"
+//   zogre_dying2 (Grug)      at 2450,3048, the same
+//   zogre_ogre_coffin_guard  two of them, at 2445,3036 and 2448,3034, vislevel 76, standing over
+//                            the coffins the quest asks you to open
+//
+// And zogre_tomb_artefact_key, "Ogre gate key - A key to some sort of special tomb area", which
+// nothing gave out: "Return and speak to Grish. He will give you an Ogre gate key to access the
+// Ceremonial chamber."
+
+// =========================================================================== the guard at the barricade
+[opnpc1,zogre_ogre_guard]
+if (%zogre < ^zogre_warned) {
+    ~chatnpc("<p,angry>Grish say no humans. You go talk Grish.");
+    return;
+}
+if (%thzfe_blocking_barricade = ^zogre_barricade_down) {
+    if (%zogre >= ^zogre_complete) {
+        ~chatnpc("<p,happy>Quiet now. Guard still guard. Guard always guard.");
+        return;
+    }
+    ~chatnpc("<p,neutral>Hole still open. You go in, you come out, you not bring dead ones with you.");
+    return;
+}
+~chatplayer("<p,neutral>Grish says you can let me through.");
+~chatnpc("<p,shock>Grish say that? Grish getting old.");
+~chatnpc("<p,angry>Barricade keep dead ones in. You go in, barricade not keep you in, because you not dead yet. That your problem.");
+if_close;
+mes("The ogre guard puts a shoulder to the barricade and the whole thing comes down in one piece.");
+p_delay(4);
+// The barricade's collapsed state. Collision comes from the placed shell and does not change with
+// the varbit, so this is the look of the place opening up rather than a gate being lifted.
+%thzfe_blocking_barricade = ^zogre_barricade_down;
+~mesbox("The way east is open. Climb over what is left of it.");
+
+// =========================================================================== Pilg and Grug
+// The two the cache calls "They're done for!" - which is the disease, and the reason the balm is
+// worth making.
+[opnpc1,zogre_dying1]
+if (%zogre < ^zogre_warned) {
+    ~chatnpc("<p,sad>...");
+    return;
+}
+~chatnpc("<p,sad>Pilg bitten. Pilg was fast once.");
+~chatplayer("<p,quiz>Bitten by what?");
+~chatnpc("<p,sad>By cousin. Cousin dead forty year. Cousin bite Pilg last week.");
+~chatnpc("<p,sad>Now Pilg hot, then Pilg cold, then Pilg not Pilg.");
+if (%thzfe_makecuredisease = 1) {
+    ~chatplayer("<p,happy>I know how to make something for that now.");
+    ~chatnpc("<p,happy>Then Pilg wait. Pilg good at wait.");
+}
+
+[opnpc1,zogre_dying2]
+if (%zogre < ^zogre_warned) {
+    ~chatnpc("<p,sad>...");
+    return;
+}
+~chatnpc("<p,sad>Grug not talk. Grug tired.");
+~chatplayer("<p,quiz>What happened to you?");
+~chatnpc("<p,sad>Same as Pilg. Same as everybody who go east.");
+~chatnpc("<p,angry>Human did this. Ogres not dig up ogres. Ogres leave ogres alone.");
+
+// =========================================================================== the coffin guards
+// Two of them, over the two coffins on the surface, which is where the coffin keys are used.
+[opnpc1,zogre_ogre_coffin_guard]
+if (%zogre < ^zogre_warned) {
+    ~chatnpc("<p,angry>Go away from boxes.");
+    return;
+}
+if (%zogre >= ^zogre_bash_dead) {
+    ~chatnpc("<p,happy>Boxes quiet. Guard happy. Guard still not let you in boxes.");
+    return;
+}
+~chatnpc("<p,neutral>These boxes ogre boxes. Ogres in them. Ogres stay in them.");
+~chatplayer("<p,quiz>Something has been getting into them.");
+~chatnpc("<p,angry>Not something. Someone. Someone with key, someone with light, someone who come at night and go before sun.");
+~chatnpc("<p,sad>Guard not catch him. Guard sleep one night in whole life and that the night.");
+
+// =========================================================================== the gate key
+// Grish hands it over once Sithik has told you what is down there, which is the guide's order.
+[label,zogre_grish_key]
+if (~obj_gettotal(zogre_tomb_artefact_key) > 0) {
+    ~chatnpc("<p,neutral>You have key. Go down. Take thing back.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Grish have key for you. You have no hands.");
+    return;
+}
+~chatplayer("<p,neutral>A man in Yanille sold the way in. There is a chamber under the tomb with something of yours on a stand in it.");
+~chatnpc("<p,shock>Ceremonial chamber. Nobody go in there. Not ogres, not for two hundred year.");
+~chatnpc("<p,neutral>Grish have key. Grish father have key, Grish father father have key. Nobody ever use.");
+inv_add(inv, zogre_tomb_artefact_key, 1);
+~objbox(zogre_tomb_artefact_key, "An ogre gate key, which is a bar of iron with a bend in it, and has been handed down three generations without once being turned.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,sad>Thing down there not ordinary dead one. Slash Bash. Big. Was big when alive, is worse now.");
+~chatnpc("<p,neutral>Blunt arrows. Big bow. Uglug sell. Go.");
+
+// =========================================================================== the ceremonial chamber
+// The stairs down to it are in ladders+stairs/scripts/stairs.rs2 and come here, because they are
+// the gate the key is for - and what is waiting at the bottom wakes up when they are used.
+[label,zogre_chamber_stairs]
+if (%zogre < ^zogre_sithik_confessed) {
+    ~mesbox("The stairs down are barred by an ogre gate with no handle on this side.");
+    return;
+}
+if (~obj_gettotal(zogre_tomb_artefact_key) = 0 & %zogre < ^zogre_bash_dead) {
+    ~mesbox("An ogre gate, locked. Grish has the key and has had it his whole life.");
+    return;
+}
+if (%zogre < ^zogre_bash_dead) {
+    @zogre_wake_bash;
+}
+p_telejump(^zogre_chamber_landing);
+
+[label,zogre_wake_bash]
+if (npc_find(^zogre_bash_spawn, zogre_slash_bash, 20, 0) = true) {
+    p_telejump(^zogre_chamber_landing);
+    return;
+}
+mes("The key turns, which it has not done in two hundred years.");
+p_delay(3);
+p_telejump(^zogre_chamber_landing);
+npc_add(^zogre_bash_spawn, zogre_slash_bash, ^zogre_bash_despawn);
+~mesbox("Something very large at the other end of the chamber stops pretending to be dead.");

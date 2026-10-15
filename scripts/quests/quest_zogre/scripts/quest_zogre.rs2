@@ -250,24 +250,12 @@ if (npc_find(0_40_48_39_15, zogre_human_zavistic_rarve, 3, 0) = false) {
     $summoned = true;
     mes("You ring the bell. Zavistic Rarve comes out of the guild to see who is making that noise.");
 }
-if (%zogre < ^zogre_sithik_confessed) {
-    if ($summoned = false) {
-        mes("You ring the bell. Zavistic Rarve is already out here.");
-    }
-    return;
+// SLASH BASH IS NOT WOKEN BY A BELL IN YANILLE ANY MORE. He was, because the quest had no way of
+// opening the ceremonial chamber; it has one now - Grish's gate key and the stairs down to it, in
+// scripts/zogre_jiggig.rs2 - so this is a doorbell again.
+if ($summoned = false) {
+    mes("You ring the bell. Zavistic Rarve is already out here.");
 }
-if (%zogre >= ^zogre_bash_dead) {
-    if ($summoned = false) {
-        mes("You ring the bell. It is a good bell.");
-    }
-    return;
-}
-if (npc_find(^zogre_bash_spawn, zogre_slash_bash, 20, 0) = true) {
-    mes("Something in the tomb at Jiggig is already awake and already angry.");
-    return;
-}
-npc_add(^zogre_bash_spawn, zogre_slash_bash, ^zogre_bash_despawn);
-~mesbox("The bell carries a long way. Somewhere under Jiggig, something very large stops pretending to be dead.");
 
 [ai_queue3,zogre_slash_bash]
 gosub(npc_death);
