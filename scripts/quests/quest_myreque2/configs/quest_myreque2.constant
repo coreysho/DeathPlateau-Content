@@ -159,3 +159,14 @@
 ^m2_who_liam = 26
 ^m2_who_miala = 27
 ^m2_who_verak = 28
+
+// ---------------------------------------------------------------------------- Aurel's crate
+// Ten bronze axes, three tinderboxes, and ten of whichever food he asks for. The cache sizes the
+// counters for exactly that: burgh_axes_crate and burgh_food_crate are four bits each on
+// myreque2_multivar, burgh_tinderbox_crate is two, and burgh_food_type is two bits for the roll.
+^m2_crate_axes = 10
+^m2_crate_food = 10
+^m2_crate_tinderboxes = 3
+
+^m2_food_mackerel = 1
+^m2_food_snails = 2

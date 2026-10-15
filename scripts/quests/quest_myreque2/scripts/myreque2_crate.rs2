@@ -1,0 +1,172 @@
+// AUREL'S CRATE, which is the general store's third repair and the one the quest did not have.
+// The walkthrough: "Talk to Aurel to receive a crate. Add the items Aurel requests to the crate:
+// 10 bronze axes, 10 raw mackerel or 10 snails (whichever is asked), and 3 tinderboxes. If you are
+// asked for items you do not want, walk away before receiving the crate to re-roll the request."
+//
+// The old version had the player lift three crates onto three sets of shelves in one line of mes,
+// which is not the step - and the cache says so down to the bit widths, on myreque2_multivar:
+//
+//   burgh_axes_crate       bits 9-12    four bits: a count, up to ten
+//   burgh_food_crate       bits 13-16   four bits: a count, up to ten
+//   burgh_tinderbox_crate  bits 17-18   two bits: a count, up to three
+//   burgh_crate_overseer   bits 9-18    the three of them read as one number
+//   burgh_food_type        myreque_2_main_var 13-14, which of the two foods he asked for
+//
+// Three counters, sized for ten, ten and three, and a two-bit roll for which food. The crate itself
+// is burgh_generalstore_crate, "An old and musty looking crate", whose only inventory option in the
+// cache is Search - so Search reads the contents - and the six locs that fill the shop floor and
+// the shelves are multilocs on burgh_store_stocked, which is the bit at the end of this.
+
+// =========================================================================== asking for it
+// Reached from [opnpc1,burgh_general_store_owner] once the roof and the wall are done.
+[label,m2_aurel_crate]
+if (~m2_crate_full = true) {
+    @m2_aurel_takes_crate;
+}
+if (inv_total(inv, burgh_generalstore_crate) > 0) {
+    @m2_aurel_reminds;
+}
+// THE ROLL IS WHAT THE WALKTHROUGH'S RE-ROLL RE-ROLLS, so it happens here, before he hands the
+// crate over: take the crate and the list is fixed, say you will come back and the next one is
+// rolled again.
+%burgh_food_type = add(random(2), 1);
+~chatnpc("<p,neutral>Roof and wall. Now the stock, and the stock is the part I cannot do: nobody will carry goods down that road for a village with no money in it.");
+~chatplayer("<p,quiz>So what do you need?");
+~chatnpc("<p,neutral>Ten bronze axes, because every roof in this village is held up with firewood. Three tinderboxes. And ten <~m2_food_name>, because a shop that sells nothing to eat is a cupboard.");
+def_int $take = ~p_choice2("I will fetch all that.", 1, "That is a lot. I will come back.", 2);
+if ($take = 2) {
+    ~chatnpc("<p,neutral>Come back and ask again. Half of what I want depends on what the swamp has given us that week anyway.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Come back with a hand free and I will give you a crate to put it all in.");
+    return;
+}
+inv_add(inv, burgh_generalstore_crate, 1);
+~objbox(burgh_generalstore_crate, "An old and musty crate with the bottom still in it, which in this village counts as equipment.", 250, 0, divide(^objbox_height, 2));
+
+[label,m2_aurel_reminds]
+~chatnpc("<p,neutral>Ten bronze axes, three tinderboxes, ten <~m2_food_name>. Put them in the crate and bring me the crate.");
+~mesbox(append(append("In the crate so far: ", ~m2_crate_state), "."));
+
+[label,m2_aurel_takes_crate]
+~chatplayer("<p,happy>Your stock.");
+~chatnpc("<p,shock>...all of it?");
+if_close;
+mes("Aurel takes the crate off you and puts the three lots onto three sets of shelves, slowly, one at a time.");
+p_delay(5);
+inv_del(inv, burgh_generalstore_crate, 1);
+%burgh_axes_crate = 0;
+%burgh_food_crate = 0;
+%burgh_tinderbox_crate = 0;
+// One bit, and six locs read it: three crates on the floor and three sets of shelves.
+%burgh_store_stocked = ^m2_on;
+stat_advance(strength, 5000);
+~mesbox("The shop has stock. By the time you are back out on the street somebody has bought a tinderbox, and by the time you reach the end of it there are fires lit along the whole length of the village.");
+
+// =========================================================================== what he asked for
+// Which food, and what counts as it. The snails are Mort Myre's own - the three snail corpses from
+// Nature Spirit - and any of the three will do, because a village that has been eating them for
+// sixty years does not sort them by size.
+[proc,m2_food_name]()(string)
+if (%burgh_food_type = ^m2_food_snails) {
+    return("snails");
+}
+return("raw mackerel");
+
+[proc,m2_is_crate_food](obj $obj)(boolean)
+if (%burgh_food_type = ^m2_food_snails) {
+    if ($obj = snail_corpse1 | $obj = snail_corpse2 | $obj = snail_corpse3) {
+        return(true);
+    }
+    return(false);
+}
+if ($obj = raw_mackerel) {
+    return(true);
+}
+return(false);
+
+[proc,m2_crate_full]()(boolean)
+if (%burgh_axes_crate < ^m2_crate_axes) {
+    return(false);
+}
+if (%burgh_food_crate < ^m2_crate_food) {
+    return(false);
+}
+if (%burgh_tinderbox_crate < ^m2_crate_tinderboxes) {
+    return(false);
+}
+return(true);
+
+[proc,m2_crate_state]()(string)
+def_string $out = append(append(tostring(%burgh_axes_crate), " of ten axes, "), append(tostring(%burgh_tinderbox_crate), " of three tinderboxes, "));
+return(append($out, append(append(tostring(%burgh_food_crate), " of ten "), ~m2_food_name)));
+
+// =========================================================================== filling it
+// One trigger, on the crate. The engine looks the pair up on the clicked obj first and on the held
+// one second, so this catches both directions for everything except a tinderbox used on the crate
+// the wrong way round - [opheldu,tinderbox] belongs to firemaking - and that one arrives here
+// through the opheldu hand-over.
+[opheldu,burgh_generalstore_crate]
+def_obj $obj = last_useitem;
+if ($obj = bronze_axe) {
+    @m2_crate_put($obj, ^m2_crate_axes, 1, "axes");
+}
+if ($obj = tinderbox) {
+    @m2_crate_put($obj, ^m2_crate_tinderboxes, 3, "tinderboxes");
+}
+if (~m2_is_crate_food($obj) = true) {
+    @m2_crate_put($obj, ^m2_crate_food, 2, ~m2_food_name);
+}
+if ($obj = raw_mackerel | $obj = snail_corpse1 | $obj = snail_corpse2 | $obj = snail_corpse3) {
+    ~mesbox("Aurel asked for <~m2_food_name>, not that.");
+    return;
+}
+~displaymessage(^dm_default);
+
+// Ten of a thing would be ten clicks, so the crate takes as many as you are holding and says what
+// is still missing.
+[label,m2_crate_put](obj $obj, int $want, int $which, string $what)
+def_int $in = ~m2_crate_count($which);
+if ($in >= $want) {
+    ~mesbox(append(append("The crate has all the ", $what), " it needs."));
+    return;
+}
+def_int $moved = inv_total(inv, $obj);
+if ($moved > sub($want, $in)) {
+    $moved = sub($want, $in);
+}
+inv_del(inv, $obj, $moved);
+$in = add($in, $moved);
+if ($which = 1) {
+    %burgh_axes_crate = $in;
+}
+if ($which = 2) {
+    %burgh_food_crate = $in;
+}
+if ($which = 3) {
+    %burgh_tinderbox_crate = $in;
+}
+if (~m2_crate_full = true) {
+    ~mesbox("You put the last of it in the crate. Aurel is behind the counter and has not looked up.");
+    return;
+}
+~mesbox(append(append(append("You put ", tostring($moved)), append(" in the crate. ", ~m2_crate_state)), "."));
+
+[proc,m2_crate_count](int $which)(int)
+if ($which = 2) {
+    return(%burgh_food_crate);
+}
+if ($which = 3) {
+    return(%burgh_tinderbox_crate);
+}
+return(%burgh_axes_crate);
+
+// Search, which is the crate's only inventory option in the cache. The stub for it is in
+// general_use/scripts/item_ops_generated.rs2 and points here.
+[label,m2_crate_search]
+if (~m2_crate_full = true) {
+    ~mesbox("A full crate: ten axes, three tinderboxes and ten <~m2_food_name>. Aurel wants the crate, not the list.");
+    return;
+}
+~mesbox(append(append("Aurel's crate. In it so far: ", ~m2_crate_state), "."));

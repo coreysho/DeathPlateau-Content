@@ -206,7 +206,7 @@ if (%myreque_2_quest < ^m2_arrived) {
     return;
 }
 if (%burgh_store_stocked = ^m2_on) {
-    ~chatnpc("<p,happy>Tinderboxes, axes and snails. It is not much of a range and it is the first range this village has had since I was a young man.");
+    ~chatnpc("<p,happy>Tinderboxes, axes and <~m2_food_name>. It is not much of a range and it is the first range this village has had since I was a young man.");
     return;
 }
 if (%burgh_store_roof = ^m2_off) {
@@ -218,14 +218,8 @@ if (%burgh_store_wall = ^m2_off) {
     ~chatnpc("<p,neutral>The roof is done. The wall is still open to the street and I am not stocking shelves that anybody can reach from outside.");
     return;
 }
-~chatnpc("<p,neutral>Roof and wall. Now: the stock is not missing, it is in three crates in the store room and none of us can lift them onto the shelves, because there are four people in this village under sixty.");
-if_close;
-mes("You put three crates onto three sets of shelves, which takes about ten minutes and changes the village more than anything else you do here.");
-p_delay(5);
-// One bit. Three crates, three sets of shelves, and every fire in the village.
-%burgh_store_stocked = ^m2_on;
-stat_advance(strength, 5000);
-~mesbox("The shop has stock. By the time you are back out on the street somebody has bought a tinderbox, and by the time you reach the end of it there are fires lit along the whole length of the village.");
+// Roof and wall done, and now the stock, which is his own step: scripts/myreque2_crate.rs2.
+@m2_aurel_crate;
 
 // The repairs take what the wiki says they take: 3 planks and 12 steel nails for the roof and for
 // each wall, 2 planks, 8 nails and a swamp paste for the bank booth, and a hammer for all of it -

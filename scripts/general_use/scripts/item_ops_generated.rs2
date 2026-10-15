@@ -158,7 +158,8 @@ if_openmain(xplamp);
 [opheld4,100_jubbly_balloon_toad_brown] ~mesbox("You release the toads. They hop away gratefully.");
 [opheld1,100_jubbly_balloon_toad_white] @hundred_place_toad(100_jubbly_balloon_toad_white);
 [opheld4,100_jubbly_balloon_toad_white] ~mesbox("You release the toads. They hop away gratefully.");
-[opheld1,burgh_generalstore_crate] ~mesbox("Nothing interesting happens.");
+// Search, on the crate Aurel hands out: quests/quest_myreque2/scripts/myreque2_crate.rs2
+[opheld1,burgh_generalstore_crate] @m2_crate_search;
 [opheld1,burgh_rod_command1] mes("A silvery rod of mithril and silver with a sapphire on the top.");
 [opheld1,burgh_rod_command2] mes("A silvery rod of mithril and silver with a sapphire on the top, it has been enchanted.");
 [opheld1,templetrek_yellow_token] ~mesbox("Nothing interesting happens.");
