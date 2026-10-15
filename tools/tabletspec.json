@@ -390,11 +390,16 @@
    "human_castteleport and teleport_casting for a teleport - which is the animation for casting",
    "the spell, not for smashing a tablet. Candidate seqs 4069, 4070, 4071 and 4731 were rendered",
    "on a player (tools/models/../render/osrsanim.py) and looked at: 4069 raises the tablet and",
-   "brings it down, 4071 and 4731 are the teleport shrink, 4070 is a plank carry."
+   "brings it down, 4071 and 4731 are the teleport shrink, 4070 is a plank carry.",
+   "HEIGHT 0, not 92. The shards blow out along the FLOOR in Old School - this is a ground",
+   "effect, not a chest-height one like the teleport spells' own graphic. At 92 it hung in the",
+   "air across the player's waist. It was fixed in the generated script by hand on 2026-10-09",
+   "(62011fd9) and the number here stayed 92, so gentablets.py put the waist-height one back",
+   "every time it ran and poh_battery, which reads this file, asked for the wrong one."
   ],
   "anim": "poh_tab_break",
   "spot": "poh_tab_break_gfx",
-  "height": 92
+  "height": 0
  },
  "quantities": {
   "_": [

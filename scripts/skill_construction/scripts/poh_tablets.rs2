@@ -163,7 +163,7 @@ while ($i < $count & $i < ^poh_tab_qty_max) {
 //
 // HEIGHT 0, not 92. The shards blow out along the FLOOR in Old School - this is a ground
 // effect, not a chest-height one like the teleport spells' own graphic. At 92 it hung in the
-// air across the player's waist.
+// air across the player's waist. The number is tabletspec.json's, so it is in one place.
 [proc,poh_tab_breakanim]
 anim(poh_tab_break, 0);
 spotanim_pl(poh_tab_break_gfx, 0, 0);
