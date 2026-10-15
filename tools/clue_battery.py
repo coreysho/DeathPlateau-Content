@@ -240,11 +240,18 @@ for t, txt in TIERS.items():
 
 print('8. the spec\'s own arithmetic, recomputed')
 src = SPEC['source']
+# 750 x H(6) IS EXACTLY 1837.5, which is the one case where recomputing a figure needs a stated
+# convention or the check argues with the spec about half a roll. It was an integer when the
+# denominator was 1,500 - 1500 x H(6) = 3675 - and halving it to land the set at about 600 caskets
+# rather than 1,200 put the .5 in. The spec truncates and so does this, because a figure for "how
+# many rolls the set takes" should not round up to a roll that has not happened; the three casket
+# figures below divide the truncated number, so all four agree.
 H = sum(1.0 / k for k in range(1, len(PIECES) + 1))
-want_rolls = round(src['denominator'] * H)
+want_rolls = int(src['denominator'] * H)
 check(src['expected_rolls_for_the_set'] == want_rolls,
-      'the rolls-for-the-set figure is %d x H(%d) recomputed, not a remembered number: %d against '
-      '%d' % (src['denominator'], len(PIECES), src['expected_rolls_for_the_set'], want_rolls))
+      'the rolls-for-the-set figure is %d x H(%d) recomputed and truncated, not a remembered '
+      'number: %d against %d'
+      % (src['denominator'], len(PIECES), src['expected_rolls_for_the_set'], want_rolls))
 _cbad = []
 for t, (base, span) in ROLLS.items():
     avg = base + (span - 1) / 2.0
@@ -292,9 +299,27 @@ _bbad = [t for t in ('easy', 'medium', 'hard')
          or 'trail_tier,^trail_tier_%s' % t not in BOX['trail_scrollbox_' + t].get('param', [])]
 check(not _bbad, 'three scroll boxes, stackable, each carrying its own tier: %s' % (_bbad or 'all three'))
 check(all(n in OBJP for n in BOX), 'and each has an id in pack/obj.pack')
+# NO TIER HAS A LIMIT, by the owner's call on 2026-10-02 - "drop the limit on the scroll box so
+# you can get however many you want" (c697ae9e). This check asked for the wiki's base 2 and went
+# red that day. Boxes stack and are untradeable, so a backlog costs one inventory slot per tier
+# and cannot be sold; there is nothing for a cap to protect. What still has to be true is the
+# MECHANISM, because the cap is turned off by a sentinel rather than by a big number: every tier
+# names ^trail_stackcap_none, and every place that compares against a cap tests for that sentinel
+# by name, so setting a tier back to a real number makes its limit work again, message and all.
 for t in ('easy', 'medium', 'hard'):
-    check(re.search(r'^\^trail_%s_stackcap = 2$' % t, CONST, re.M) is not None,
-          '^trail_%s_stackcap is 2, the wiki\'s base limit, shared by the clue and the boxes' % t)
+    check(re.search(r'^\^trail_%s_stackcap = \^trail_stackcap_none$' % t, CONST, re.M) is not None,
+          '^trail_%s_stackcap is ^trail_stackcap_none - no limit, as the owner asked' % t)
+check(re.search(r'^\^trail_stackcap_none = -1$', CONST, re.M) is not None,
+      '...and the sentinel is -1, which no count can reach by accident')
+_capsites = []
+for _r, _d, _f in os.walk(os.path.join(C, 'scripts')):
+    for _fn in _f:
+        if _fn.endswith('.rs2') and '^trail_stackcap_none' in nocomment(
+                open(os.path.join(_r, _fn), newline='').read().replace('\r\n', '\n')):
+            _capsites.append(_fn)
+check(len(_capsites) >= 2,
+      'and the places that compare against a cap test for the sentinel by name, so a real number '
+      'put back works again: %s' % ', '.join(sorted(_capsites)))
 _calls = {t: nocomment(txt).count('~trail_complete(^trail_tier_%s);' % t) for t, txt in TIERS.items()}
 check(all(v == 1 for v in _calls.values()),
       'each reward proc ends its trail through ~trail_complete with its own tier, once: %s' % _calls)
