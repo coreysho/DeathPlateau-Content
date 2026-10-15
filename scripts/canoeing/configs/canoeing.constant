@@ -1,0 +1,88 @@
+// CANOEING, which the 377 cache ships whole and nothing had ever touched.
+//
+// Four stations on the River Lum, each a 5x2 multiloc with fifteen indices and its own eight-bit
+// varbit, and the whole state machine is written into the config:
+//
+//   [canoeing_canoestation_lumbridge]  multivar=canoestation_state_lumbridge
+//     multiloc=0,canoestation_tree                 Chop-down
+//     multiloc=9,canoestation_tree_falling
+//     multiloc=10,canoestation_fallen_tree         Shape-Canoe
+//     multiloc=1,canoestation_log                  Float Log
+//     multiloc=2,canoestation_dugout               Float Canoe
+//     multiloc=3,canoestation_stabledugout         Float Canoe
+//     multiloc=4,canoestation_waka                 Float Canoe
+//     multiloc=5,canoestation_log_inwater          Paddle Log
+//     multiloc=6..8,*_inwater                      Paddle Canoe
+//     multiloc=11..14,canoeing_*_canoeing_station_in_water
+//
+// and two interfaces with Jagex's own text in them: canoeing ("WHAT SORT OF CANOE WOULD YOU LIKE
+// TO MAKE ?", four Build buttons) and canoe_map ("Please Select Your Destination", Lumbridge,
+// Champions Guild, Barbarian Village, Edgeville and "Wilderness Pond - No canoe trees here").
+//
+// The four canoe experts are in the cache too and are placed: canoeing_bill (Barfy Bill) at
+// Lumbridge, canoeing_tarquin at the Champions' Guild, canoeing_sigurd at the Barbarian Village
+// and canoeing_hari at Edgeville.
+//
+// The River Dougne's five stations and Ferox Enclave are later OSRS additions and are not in this
+// cache: five destinations is what canoe_map draws, and five is what this builds.
+
+// =========================================================================== the stations
+^canoe_lumbridge = 0
+^canoe_championsguild = 1
+^canoe_barbarianvillage = 2
+^canoe_edgeville = 3
+^canoe_wilderness = 4           // a destination, not a station: no trees up there
+
+^canoe_stations = 4
+
+// The multiloc indices, which are the cache's and not ours.
+^canoe_state_tree = 0
+^canoe_state_log = 1
+^canoe_state_dugout = 2
+^canoe_state_stable = 3
+^canoe_state_waka = 4
+^canoe_state_log_water = 5
+^canoe_state_dugout_water = 6
+^canoe_state_stable_water = 7
+^canoe_state_waka_water = 8
+^canoe_state_falling = 9
+^canoe_state_fallen = 10
+// A canoe on land is its index; floated, it is the same index plus four.
+^canoe_float_offset = 4
+
+// =========================================================================== the four canoes
+// "A Log: 12, 30xp, one stop. A Dugout: 27, 60xp, up to two. A Stable Dugout: 42, 90xp, up to
+// three. A Waka: 57, 150xp, anywhere, and the only one that will go into the Wilderness."
+^canoe_log_level = 12
+^canoe_log_xp = 300
+^canoe_log_reach = 1
+
+^canoe_dugout_level = 27
+^canoe_dugout_xp = 600
+^canoe_dugout_reach = 2
+
+^canoe_stable_level = 42
+^canoe_stable_xp = 900
+^canoe_stable_reach = 3
+
+^canoe_waka_level = 57
+^canoe_waka_xp = 1500
+^canoe_waka_reach = 3           // every stop on the river, and the pond as well
+
+
+// =========================================================================== where they land
+// A tile the station's own forceapproach allows, so the arrival is somewhere a player can stand
+// and walk off: 3243,3236 / 3203,3343 / 3112,3410 / 3132,3510, and the pond's south bank at
+// 3144,3792, which is the open ground beside the water south-east of the Lava Maze.
+^canoe_land_lumbridge = 0_50_50_43_36
+^canoe_land_championsguild = 0_50_52_3_15
+^canoe_land_barbarianvillage = 0_48_53_40_18
+^canoe_land_edgeville = 0_48_54_60_54
+^canoe_land_wilderness = 0_49_59_8_16
+
+// The station locs themselves, for finding which one the player is standing at.
+^canoe_loc_lumbridge = 0_50_50_41_35
+^canoe_loc_championsguild = 0_50_52_0_13
+^canoe_loc_barbarianvillage = 0_48_53_38_17
+^canoe_loc_edgeville = 0_48_54_58_52
+^canoe_station_range = 12
