@@ -98,6 +98,21 @@ check('~pet_receive($pet)' in body, 'a successful roll hands the pet to ~pet_rec
 check(body.find('~pet_receive') > body.find('random($chance)') > -1,
       'and only after the roll succeeds, so ~pet_owned is one inv sweep per pet rather than per action')
 check('obj_add(' not in code(body), 'and a skilling pet never lands on the floor')
+check('~pet_owned' not in body,
+      'and the roll does not ask who owns what BEFORE it has rolled - that is one inventory sweep '
+      'per log and per ore rather than one per pet earned')
+# AND THE FUNNEL'S OWN HALF, because a skilling pet is only as right as what it is handed to. These
+# two were checked here when the roll did them itself; they moved to ~pet_receive with everything
+# else, and this battery has to follow them rather than assume another one is watching.
+_FOLL = read('scripts/npc/scripts/follower.rs2')
+_owned = _FOLL.split('[proc,pet_owned]', 1)[1].split('\n[', 1)[0] if '[proc,pet_owned]' in _FOLL else ''
+_recv = _FOLL.split('[proc,pet_receive]', 1)[1].split('\n[', 1)[0] if '[proc,pet_receive]' in _FOLL else ''
+check('~pet_owned($pet) = true' in _recv and '~obj_gettotal($pet) > 0' in _owned
+      and '%follower_obj = $pet' in _owned and 'inv_total(lostpet_store, $pet) > 0' in _owned,
+      '...and ~pet_receive refuses one the player owns anywhere - pack, bank, worn, the one out '
+      'following them, and the one waiting at Probita\'s')
+check('inv_add(lostpet_store, $pet, 1);' in _recv and 'obj_add(' not in code(_recv),
+      '...and a full pack sends it to Probita\'s rather than the floor')
 
 # ============================================================================ 2
 print('2. the boss pets roll at their own rate, named at the call site')
