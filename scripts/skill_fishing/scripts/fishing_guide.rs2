@@ -1,7 +1,7 @@
 // Fishing skill guide, shown on the original RS2 skill guide interface
 // (see content/scripts/interfaces/skill_guide.rs2 for the generic driver).
-// Sea turtle and manta ray come from the Fishing Trawler and, since 13 October, from the one
-// Wilderness spot among the west dragons (skill_fishing/scripts/fishing_spots/wildyfish.rs2).
+// Sea turtle and manta ray come from the Fishing Trawler and, since 13 October, from the
+// Wilderness spots on the lake beside the east dragons (skill_fishing/scripts/fishing_spots/wildyfish.rs2).
 [proc,open_fishing_guide]
 ~skillguide_begin(^guide_fishing, "Fishing");
 def_int $lvl = stat(fishing);

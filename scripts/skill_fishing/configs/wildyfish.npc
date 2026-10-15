@@ -1,20 +1,29 @@
-// THE WILDERNESS FISHING SPOT (13 October). Suggestion #10 was "raw manta and sea turtle wildy near
-// west drags", and until now both fish came from the Fishing Trawler and nowhere else - the skill
-// guide said so out loud and the Fishing level-up messages at 79 and 81 told the player as much.
+// THE WILDERNESS FISHING SPOTS (13 October, moved east 15 October). Suggestion #10 asked for raw
+// manta and sea turtle in the Wilderness by the dragons; until then both fish came from the Fishing
+// Trawler and nowhere else - the skill guide said so out loud and the Fishing level-up messages at
+// 79 and 81 told the player as much.
 //
-// WHERE. 0_46_56_41_48, which is (2977,3616) - the pond in the middle of the three Wilderness green
-// dragons at (2973,3620), (2977,3611) and (2982,3618), three tiles from each. There is no real
-// coastline anywhere near them: the nearest shoreline a player can fish from is 79 tiles away at
-// (2912,3538), which is level 3 Wilderness and not "near west drags" by any reading. The pond's
-// tiles carry a water overlay (flo 5) and are walkable rather than blocked, so the spot npc simply
-// stands in it and the player fishes from alongside - which is how it looks in game anyway.
+// WHERE (moved 15 October). Four spots down the west shore of the lake beside the EAST dragons:
+// (3371,3685), (3367,3691), (3369,3697) and (3373,3700). The first home for them was the puddle in
+// the middle of the west dragons - the only water within reach of that group, and about one tile of
+// it. This is 165 tiles of real water with a shoreline to stand on, and the dragon group is twenty
+// IN THE WATER, ON THE EDGE, which is what every other fishing spot in the game is: the spot npc
+// stands on a water tile and the only walkable tile beside it is the bank. The lake was not blocked
+// at all - 165 tiles of water you could stroll across - so this also flags it, the way the river at
+// Lumbridge and the sea at Catherby are flagged. Check any cache spot and you will find the same
+// shape: f1 under the npc, one neighbour without it.
 //
-// LEVEL 13 WILDERNESS, from (3616 - 3520) / 8 + 1. Deep enough to be a real decision and shallow
-// enough to walk out of, which is the point: this is a sidegrade to the Trawler, not a replacement.
-// See skill_fishing/scripts/fishing_spots/wildyfish.rs2 for the rest of that argument.
+// WILDERNESS 21 TO 23, from (z - 3520) / 8 + 1: 21 at the southern spot, 23 at the two northern
+// ones. Deep enough to be a real decision and shallow enough to walk out of, which is the point:
+// this is a sidegrade to the Trawler, not a replacement. See
+// skill_fishing/scripts/fishing_spots/wildyfish.rs2 for the rest of that argument.
 //
-// moverestrict=nomove and wanderrange=0, as every other spot in this build: a fishing spot that
-// drifts is a fishing spot nobody can click twice.
+// FOUR SPOTS, NOT ONE, because one spot is a queue. They sit five or six tiles apart along the
+// shore, so a taken one is a few steps from a free one.
+//
+// STILL STATIC: moverestrict=nomove and wanderrange=0, as every other spot in this build. A fishing
+// spot that drifts is a fishing spot nobody can click twice; spread along a shoreline is what makes
+// this read as a shoal, and it costs the player nothing.
 
 [wildyfish]
 name=Fishing spot
