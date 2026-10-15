@@ -52,6 +52,16 @@ inv_del(inv, zogre_artifacts, 1);
 ~chatnpc("<p,happy>You put right. Grish teach you ogre way of arrows and potions - is useful for killing things that already dead.");
 queue(zogre_quest_complete, 0, 0);
 
+// "In order to equip this bow, players must first speak with Grish after reaching a certain point
+// in the quest" - thzfe_grish_warning_yes is the bit that says you have, and it is set by the
+// conversation above and by nothing else.
+[label,zogre_wield_comp_bow]
+if (%thzfe_grish_warning_yes = 0) {
+    mes("You have no idea how to hold this thing, let alone draw it.");
+    return;
+}
+@levelrequire_ranged(^comp_ogre_bow_ranged, last_slot);
+
 // =========================================================================== Zavistic Rarve
 
 [opnpc1,zogre_human_zavistic_rarve]

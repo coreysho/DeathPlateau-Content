@@ -1,4 +1,7 @@
-[opheld3,ogre_bow]
+[opheld3,ogre_bow] @ogre_bow_check_kills;
+
+// Both ogre bows have Check kills in the cache and both scratch the same tally.
+[label,ogre_bow_check_kills]
 if (%chompybird < ^chompybird_complete) {
     mes("You've scratched up no kills yet!");
     mes("You've got to complete the quest first!");

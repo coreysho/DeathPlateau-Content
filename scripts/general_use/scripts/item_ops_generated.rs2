@@ -71,7 +71,8 @@
 [opheld1,zogre_brentle_vahn_backpack] ~mesbox("You rummage through the backpack.");
 [opheld1,zogre_dragon_tankard] mes("A white ceramic mug with a dragon insignia. It came from the Dragon Inn in Yanille.");
 [opheld1,zogre_sithik_portrait_signed] ~mesbox("Nothing interesting happens.");
-[opheld3,zogre_bow] mes("You have killed 0 chompy birds.");
+// Check kills, on the other bow that has the option: quest_chompybird/scripts/ogre_bow.rs2
+[opheld3,zogre_bow] @ogre_bow_check_kills;
 // [opheld1,lost_tribe_brooch] moved to quests/quest_lost_tribe/scripts/quest_lost_tribe.rs2.
 [opheld3,cave_goblin_mining_helmet_lit]
     inv_delslot(inv, last_slot);

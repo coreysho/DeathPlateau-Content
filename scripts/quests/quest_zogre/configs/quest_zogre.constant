@@ -40,3 +40,11 @@
 // place and that are not multinpc children, so the boss is spawned when the tomb is opened up.
 ^zogre_bash_spawn = 2_38_147_8_50
 ^zogre_bash_despawn = 500
+
+// ---------------------------------------------------------------------------- the reward
+// The quest's three unlock bits are the quest's whole point: brutal arrows, the comp ogre bow and
+// Relicym's balm. The bow is the only composite bow Fletching can make - achey logs and wolf bones
+// with a knife for the unstrung one, then a bowstring - and it wants 30 Ranged to hold.
+^comp_ogre_bow_level = 30
+^comp_ogre_bow_xp = 450
+^comp_ogre_bow_ranged = 30

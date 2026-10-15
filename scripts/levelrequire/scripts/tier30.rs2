@@ -48,6 +48,9 @@
 [opheld2,maple_longbow] @levelrequire_ranged(30, last_slot);
 [opheld2,maple_shortbow] @levelrequire_ranged(30, last_slot);
 [opheld2,ogre_bow] @levelrequire_ranged(30, last_slot);
+// "In order to equip this bow, players must first speak with Grish after reaching a certain point
+// in Zogre Flesh Eaters" - quests/quest_zogre/scripts/zogre_npcs.rs2.
+[opheld2,zogre_bow] @zogre_wield_comp_bow;
 
 [opheld2,adamant_dart] @levelrequire_ranged(30, last_slot);
 [opheld2,adamant_dart_p] @levelrequire_ranged(30, last_slot);

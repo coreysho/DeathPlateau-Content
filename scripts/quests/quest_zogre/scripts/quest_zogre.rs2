@@ -283,9 +283,10 @@ if (%zogre = ^zogre_sithik_confessed) {
 stat_advance(ranged, 20000);
 stat_advance(fletching, 20000);
 stat_advance(herblore, 20000);
-// The three unlock bits the cache keeps for this quest's post-quest crafting. The recipes
-// themselves are Fletching and Herblore content rather than quest content and are not built here,
-// but the flags are set so that work has something to read.
+// The three unlock bits the cache keeps for this quest's post-quest crafting, and two of them are
+// now read: brutal arrows are fletched in skill_fletching/scripts/ogre_arrows.rs2 and the comp ogre
+// bow is carved in skill_firemaking/scripts/achey.rs2 and strung off the fletching table.
+// Relicym's balm is Herblore and is still unbuilt.
 %thzfe_makebrutalarrow = 1;
 %thzfe_makecompozogrebow = 1;
 %thzfe_makecuredisease = 1;

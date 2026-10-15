@@ -139,13 +139,15 @@ if ($weapon_cat ! weapon_bow & $weapon_cat ! weapon_crossbow) {
 }
 def_obj $ammo = inv_getobj(worn, ^wearpos_quiver);
 if ($ammo = null) {
-    if($rhand = ogre_bow) mes("There is no ammo left in your quiver");
+    if ($rhand = ogre_bow | $rhand = zogre_bow) mes("There is no ammo left in your quiver");
     else mes("There is no ammo left in your quiver.");
     return(null);
 }
 def_category $ammo_cat = oc_category($ammo);
-if (($rhand = ogre_bow & $ammo_cat ! ogre_arrows) | 
-    ($rhand ! ogre_bow & $weapon_cat = weapon_bow & $ammo_cat ! arrows)) {
+// Both ogre bows fire ogre arrows and brutal arrows and nothing else, and nothing else fires
+// them: "brutal arrows can only be fired from ogre bows and composite ogre bows".
+if ((~is_ogre_bow($rhand) = true & $ammo_cat ! ogre_arrows) |
+    (~is_ogre_bow($rhand) = false & $weapon_cat = weapon_bow & $ammo_cat ! arrows)) {
     mes("You can't use that ammo with your bow."); // todo confirm this for 2004.
     return(null);
 }
@@ -166,7 +168,7 @@ if (oc_param($ammo, levelrequire) > oc_param($rhand, levelrequire)) { //todo con
 return($ammo);
 
 [proc,player_ranged_use_weapon](obj $rhand, obj $ammo)(int)
-if ($ammo = ogre_arrow) spotanim_pl(oc_param($ammo, proj_launch), 50, 0);
+if ($ammo = ogre_arrow | oc_category($ammo) = ogre_arrows) spotanim_pl(oc_param($ammo, proj_launch), 50, 0);
 else spotanim_pl(oc_param($ammo, proj_launch), 96, 0);
 def_int $delay = 30;
 ~crystal_bow_shot; // crystal bow spends one charge per shot - see degrade/scripts/degrade.rs2
@@ -224,3 +226,10 @@ if (inv_freespace(worn) > 0) {
     inv_add(worn, smashed_glass, 1);
     inv_dropitem_delayed(worn, $coord, smashed_glass, 1, ^lootdrop_duration, $delay);
 }
+
+// The ogre bow and the comp ogre bow, which the cache keeps as two unrelated objs.
+[proc,is_ogre_bow](obj $bow)(boolean)
+if ($bow = ogre_bow | $bow = zogre_bow) {
+    return(true);
+}
+return(false);

@@ -81,3 +81,11 @@ data=item,unstrung_magic_longbow
 data=product,magic_longbow,1
 data=level,85
 data=experience,915
+
+// The only composite bow Fletching can make, and the bow Zogre Flesh Eaters is fought with.
+[stringing_comp_ogre_bow]
+table=fletching_table
+data=item,unstrung_zogre_bow
+data=product,zogre_bow,1
+data=level,30
+data=experience,450

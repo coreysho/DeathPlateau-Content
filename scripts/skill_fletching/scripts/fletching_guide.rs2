@@ -43,6 +43,13 @@ switch_int (%skillguide_page) {
 ~skillguide_row(1, $lvl, 1, bronze_arrow, "Bronze arrow");
 ~skillguide_row(2, $lvl, 1, bronze_dart, "Bronze dart");
 ~skillguide_row(3, $lvl, 5, ogre_arrow, "Ogre arrow");
+~skillguide_row(3, $lvl, 7, zogre_brutal_bronze, "Bronze brutal");
+~skillguide_row(3, $lvl, 18, zogre_brutal_iron, "Iron brutal");
+~skillguide_row(3, $lvl, 33, zogre_brutal_steel, "Steel brutal");
+~skillguide_row(3, $lvl, 38, zogre_brutal_black, "Black brutal");
+~skillguide_row(3, $lvl, 49, zogre_brutal_mithril, "Mithril brutal");
+~skillguide_row(3, $lvl, 62, zogre_brutal_adamant, "Adamant brutal");
+~skillguide_row(3, $lvl, 77, zogre_brutal_rune, "Rune brutal");
 ~skillguide_row(4, $lvl, 15, iron_arrow, "Iron arrow");
 ~skillguide_row(5, $lvl, 22, iron_dart, "Iron dart");
 ~skillguide_row(6, $lvl, 30, steel_arrow, "Steel arrow");

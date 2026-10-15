@@ -1,6 +1,6 @@
 [opheldu,achey_tree_logs]
 switch_obj(last_useitem) {
-    case knife : @make_ogre_shafts;
+    case knife : @cut_achey_logs;
     case tinderbox : @light_achey_inv(last_slot);
     case default : ~displaymessage(^dm_default);
 }
@@ -52,3 +52,37 @@ if (%action_delay < map_clock) {
     }
 }
 p_opobj(4);
+
+// ACHEY LOGS MAKE TWO THINGS. "With a knife, they can be made into 2-6 ogre arrow shafts. With a
+// knife and wolf bones, players can make an unstrung comp bow" - the one composite bow in the game
+// that Fletching can make, and the bow Zogre Flesh Eaters is fought with. The quest ships the
+// unstrung one and the strung one in the cache and there was no way to make either.
+[label,cut_achey_logs]
+if (inv_total(inv, wolf_bones) < 1) {
+    @make_ogre_shafts;
+}
+if (~multiobj2("What would you like to make?",
+        ogre_arrow_shaft, 0, -15, 175, "Arrow Shafts.", 0, 0,
+        unstrung_zogre_bow, 0, -15, 175, "Comp Ogre Bow.", 0, 0) = ogre_arrow_shaft) {
+    @make_ogre_shafts;
+}
+@make_comp_ogre_bow;
+
+[label,make_comp_ogre_bow]
+if (map_members = ^false) {
+    mes(^mes_members_fletching);
+    return;
+}
+if (%thzfe_makecompozogrebow = 0) {
+    mes("You have no idea how to make a bow out of this.");
+    return;
+}
+if (stat(fletching) < ^comp_ogre_bow_level) {
+    ~mesbox("You need a Fletching level of <tostring(^comp_ogre_bow_level)> to make that.");
+    return;
+}
+inv_del(inv, achey_tree_logs, 1);
+inv_del(inv, wolf_bones, 1);
+inv_add(inv, unstrung_zogre_bow, 1);
+mes("You carve the bow out of the achey wood and brace it with the wolf bones.");
+stat_advance(fletching, ^comp_ogre_bow_xp);

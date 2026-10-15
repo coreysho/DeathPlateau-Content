@@ -10,11 +10,55 @@ switch_obj(last_useitem) {
     case default : ~displaymessage(^dm_default);
 }
 
+// A flighted ogre arrow takes a wolf bone tip, which is Big Chompy Bird Hunting, or the blunt
+// flat end of a nail, which is Zogre Flesh Eaters - "instead of arrowtips, the brutal arrows use
+// the blunt flat sides of nails, therefore being brutal". Seven metals, and the cache has had all
+// seven arrows in it with no stats and no way of making one.
 [opheldu,ogre_headless_arrow]
 switch_obj(last_useitem) {
     case wolfbone_arrowheads : @make_ogre_arrows;
+    case nails_bronze : @make_brutal_arrows(nails_bronze, zogre_brutal_bronze, 7, 14);
+    case nails_iron : @make_brutal_arrows(nails_iron, zogre_brutal_iron, 18, 26);
+    case nails : @make_brutal_arrows(nails, zogre_brutal_steel, 33, 51);
+    case nails_black : @make_brutal_arrows(nails_black, zogre_brutal_black, 38, 65);
+    case nails_mithril : @make_brutal_arrows(nails_mithril, zogre_brutal_mithril, 49, 75);
+    case nails_adamant : @make_brutal_arrows(nails_adamant, zogre_brutal_adamant, 62, 102);
+    case nails_rune : @make_brutal_arrows(nails_rune, zogre_brutal_rune, 77, 125);
     case default : ~displaymessage(^dm_default);
 }
+
+// Six at a time, with a hammer, and only once Sithik has taught you how - which is what
+// thzfe_makebrutalarrow has been set for at the end of the quest with nothing reading it.
+[label,make_brutal_arrows](obj $nails, namedobj $arrow, int $level, int $xp)
+if (map_members = ^false) {
+    mes(^mes_members_fletching);
+    return;
+}
+if (%thzfe_makebrutalarrow = 0) {
+    mes("You have no idea what to do with these.");
+    return;
+}
+if (inv_total(inv, hammer) < 1) {
+    mes("You need a hammer to hit the nails in with.");
+    return;
+}
+if (stat(fletching) < $level) {
+    ~mesbox("You need a Fletching level of <tostring($level)> to make <lowercase(oc_name($arrow))> arrows.");
+    return;
+}
+def_int $count = min(inv_total(inv, ogre_headless_arrow), 6);
+if (min(inv_total(inv, $nails), 6) < $count) {
+    $count = min(inv_total(inv, $nails), 6);
+}
+inv_del(inv, ogre_headless_arrow, $count);
+inv_del(inv, $nails, $count);
+inv_add(inv, $arrow, $count);
+if ($count > 1) {
+    mes("You attach <tostring($count)> <lowercase(oc_name($nails))> to <tostring($count)> flighted ogre arrows.");
+} else {
+    mes("You attach a nail to a flighted ogre arrow.");
+}
+stat_advance(fletching, multiply($count, $xp));
 
 [label,make_ogre_shafts]
 if (map_members = ^false) {
