@@ -3,22 +3,25 @@
 // Trawler and nowhere else - the skill guide said so out loud and the Fishing level-up messages at
 // 79 and 81 told the player as much.
 //
-// WHERE (moved 15 October). Four spots along the coast east of the EAST dragons, on the water that
-// runs down the east side of map square 52_57: (3379,3672), (3383,3678), (3385,3681) and
-// (3387,3685), Wilderness 20 and 21. They were first put in the pond among the WEST dragons, and
-// then - briefly - on a patch of `water_no_texture` west of this coast, which looks like dull
-// ground in game, is not flagged as water and is not what anyone means by the water out here. The
-// real thing is the tiles carrying the water OVERLAY (o6 in the map), all 721 of them already
-// blocked by the cache, which is what the blue in the game is.
+// WHERE (moved 15 October). Four spots on the water east and north-east of the EAST dragons:
+// (3384,3676) and (3385,3687) on the east coast, Wilderness 20 and 21, and (3370,3715) and
+// (3373,3719) on the straight shore of the northern arm, Wilderness 25. They were first put in the
+// pond among the WEST dragons, then on a patch of `water_no_texture` - which paints flat dull
+// ground, carries no collision and is not what anyone means by the water out here - and then on the
+// shoreline tiles of the real water, where they still looked wrong.
 //
-// IN THE WATER, ON THE EDGE, which is what every other fishing spot in the game is: the spot npc
-// stands on a blocked water tile and the walkable tiles beside it are the bank. Check any cache
-// spot and you will find the same shape - f1 under the npc, a neighbour without it - and all four
-// of these sit on a stretch of bank you can walk to from the dragons without crossing a cliff
-// (flood-filled from a dragon tile to prove it, rather than assumed).
+// A SHORELINE TILE IS HALF LAND. The water overlay (o6) comes in two kinds: whole tiles, written
+// plain, and the beach tiles that cut a tile diagonally, written o6;shape;rotation. An npc draws at
+// the centre of its tile, and the centre of a diagonal beach tile IS the waterline - which is
+// exactly how it looked in game, bubbles sitting on the sand. These four stand on WHOLE water
+// tiles, so the bubbles are in the blue.
 //
-// FOUR SPOTS, NOT ONE, because one spot is a queue. They are four to six tiles apart along the
-// shore, so a taken one is a few steps from a free one.
+// THAT IS WHY THERE ARE ONLY FOUR AND WHY THEY ARE IN TWO PAIRS. A whole water tile is no use
+// unless a player can stand beside it, and the engine's reach for an npc is orthogonal only
+// (reachedEntity -> rsmod.reached with shape -2; no diagonals). Along this entire coast between
+// Wilderness 20 and 25 there are exactly six tiles that are whole water AND have a walkable
+// neighbour sharing an edge, and all six were flood-filled back to a green dragon tile to prove
+// they are not on a stranded piece of shore. These are four of them.
 //
 // STILL STATIC: moverestrict=nomove and wanderrange=0, as every other spot in this build. A fishing
 // spot that drifts is a fishing spot nobody can click twice; spread along a shoreline is what makes
