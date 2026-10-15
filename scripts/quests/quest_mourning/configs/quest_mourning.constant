@@ -170,3 +170,16 @@
 // (cookingshelves, placed all over Gielinor). Covers both map squares the quarters straddle.
 ^mourning_quarters_sw = 0_39_51_44_55
 ^mourning_quarters_ne = 0_39_52_63_10
+
+// ---------------------------------------------------------------------------- Lletya
+// The seven elves the map places and nothing spoke to. See scripts/lletya_elves.rs2.
+^lletya_goreu = 1
+^lletya_ysgawyn = 2
+^lletya_arvel = 3
+^lletya_mawrth = 4
+^lletya_kelyn = 5
+^lletya_eoin = 6
+^lletya_iona = 7
+
+// Five of them carry op3=Pickpocket in the cache, which is 85 Thieving.
+^lletya_elf_thieving = 85

@@ -1,0 +1,115 @@
+// LLETYA, AND THE SEVEN ELVES STANDING IN IT WITH NOTHING TO SAY.
+//
+// Every one of them is placed on the map, named in the cache, and had no script:
+//
+//   mourning_town_elf_1   Goreu    2338,3161   Talk-to, Pickpocket
+//   mourning_town_elf_2   Ysgawyn  2340,3166   Talk-to, Pickpocket   (upstairs)
+//   mourning_town_elf_3   Arvel    2334,3176   Talk-to, Pickpocket
+//   mourning_town_elf_4   Mawrth   2331,3168   Talk-to, Pickpocket
+//   mourning_town_elf_5   Kelyn    2342,3168   Talk-to, Pickpocket   (upstairs)
+//   mourning_elf_kid_1    Eoin     2340,3173   Talk-to
+//   mourning_elf_kid_2    Iona     2337,3173   Talk-to
+//
+// Goreu is the elf who walks you through Isafdar in Regicide, Ysgawyn leads the half of Lletya
+// that wants the war fought in the open, and Arvel, Mawrth and Kelyn are the three the Thieving
+// skill has always listed as pickpocketable. The two children are the only elves in the game born
+// after the clans left Prifddinas, which is the thing worth hearing from them.
+//
+// The Pickpocket option is the cache's, not an invention, and it is served in
+// skill_thieving/scripts/pickpocketing/pickpocket.rs2 with the elf row in pickpocket.dbrow.
+
+[opnpc1,mourning_town_elf_1] @lletya_elf_talk(^lletya_goreu);
+[opnpc1,mourning_town_elf_2] @lletya_elf_talk(^lletya_ysgawyn);
+[opnpc1,mourning_town_elf_3] @lletya_elf_talk(^lletya_arvel);
+[opnpc1,mourning_town_elf_4] @lletya_elf_talk(^lletya_mawrth);
+[opnpc1,mourning_town_elf_5] @lletya_elf_talk(^lletya_kelyn);
+[opnpc1,mourning_elf_kid_1] @lletya_elf_talk(^lletya_eoin);
+[opnpc1,mourning_elf_kid_2] @lletya_elf_talk(^lletya_iona);
+
+[label,lletya_elf_talk](int $who)
+// Before the mourners are exposed, nobody in this village trusts a human with anything.
+if (%mourning_quest_main < ^mourning_told_arianwyn) {
+    @lletya_elf_cold($who);
+}
+switch_int ($who) {
+    case ^lletya_goreu : @lletya_goreu_talk;
+    case ^lletya_ysgawyn : @lletya_ysgawyn_talk;
+    case ^lletya_arvel : @lletya_arvel_talk;
+    case ^lletya_mawrth : @lletya_mawrth_talk;
+    case ^lletya_kelyn : @lletya_kelyn_talk;
+    case ^lletya_eoin : @lletya_eoin_talk;
+    case ^lletya_iona : @lletya_iona_talk;
+}
+
+[label,lletya_elf_cold](int $who)
+if ($who = ^lletya_eoin | $who = ^lletya_iona) {
+    ~chatnpc("<p,shock>You're a human! A real one!");
+    ~chatnpc("<p,happy>Mother says I'm not to talk to you. Mother says that about everybody.");
+    return;
+}
+if ($who = ^lletya_goreu) {
+    ~chatnpc("<p,neutral>I brought you through Isafdar and I am still not certain I should have.");
+    return;
+}
+~chatnpc("<p,angry>Arianwyn vouched for you. That is the only reason you are standing here.");
+
+// =========================================================================== Goreu
+[label,lletya_goreu_talk]
+if (%mourning_quest_main >= ^mourning_complete) {
+    ~chatnpc("<p,happy>Word came back from West Ardougne. They opened the gates. After all this time somebody simply opened them.");
+    ~chatplayer("<p,neutral>It was not simple.");
+    ~chatnpc("<p,happy>No. I imagine not.");
+    return;
+}
+~chatnpc("<p,neutral>The traps in Isafdar are not there to kill elves. We know where they are.");
+~chatplayer("<p,quiz>Then who are they for?");
+~chatnpc("<p,sad>Anybody who comes looking for us, which for two hundred years has meant humans, and for the last twenty has meant the Mourners.");
+~chatnpc("<p,neutral>Keep to the path, watch the leaves, and do not run.");
+
+// =========================================================================== Ysgawyn
+[label,lletya_ysgawyn_talk]
+if (%mourning_quest_main >= ^mourning_complete) {
+    ~chatnpc("<p,angry>One shipment of poison stopped. One. There is a city with our name on it and a human army sitting in it.");
+    ~chatplayer("<p,quiz>You would rather we had done nothing?");
+    ~chatnpc("<p,sad>I would rather we had done it ourselves.");
+    return;
+}
+~chatnpc("<p,angry>Arianwyn wants evidence. Evidence. They are poisoning a city of human beings to keep us hidden and he wants paperwork.");
+~chatplayer("<p,quiz>What would you do?");
+~chatnpc("<p,angry>Walk to Prifddinas and take it back, and lose half of what is left of us doing it, and at least it would be over.");
+~chatnpc("<p,sad>He is right and I know he is right and I will not say so to his face.");
+
+// =========================================================================== Arvel
+[label,lletya_arvel_talk]
+~chatnpc("<p,neutral>I was born in Prifddinas. I remember the crystal singing in the walls when the wind came off the sea.");
+~chatplayer("<p,quiz>What happened to it?");
+~chatnpc("<p,sad>Nothing happened to it. That is the worst of it. It is still standing and we are not in it.");
+if (stat(thieving) >= ^lletya_elf_thieving) {
+    ~chatnpc("<p,angry>And stand further off. I know what your hands are for.");
+}
+
+// =========================================================================== Mawrth
+[label,lletya_mawrth_talk]
+~chatnpc("<p,neutral>Every tree in this village was grown, not cut. It takes eleven years to grow a house and we have moved three times.");
+~chatplayer("<p,quiz>Why move at all?");
+~chatnpc("<p,sad>Because the Mourners find us. Not quickly. But they find us, and then we grow another one somewhere else.");
+
+// =========================================================================== Kelyn
+[label,lletya_kelyn_talk]
+~chatnpc("<p,neutral>Oronwen will sell you crystal if Arianwyn says you may have it. She will not say what it costs until you ask twice.");
+~chatplayer("<p,quiz>And what does it cost?");
+~chatnpc("<p,happy>More than you have. It always does. That is how you know it is worth something.");
+
+// =========================================================================== the two children
+[label,lletya_eoin_talk]
+~chatnpc("<p,happy>Are you from the city? The human city? Is it true it has a wall all the way round and nobody can leave?");
+~chatplayer("<p,sad>Something like that.");
+~chatnpc("<p,quiz>Why would anybody build that?");
+~chatplayer("<p,sad>Nobody built it to keep them in. It just worked out that way.");
+~chatnpc("<p,neutral>That is what Mother says about here.");
+
+[label,lletya_iona_talk]
+~chatnpc("<p,happy>I have never seen Prifddinas. Eoin says he has but he is eleven and he has not.");
+~chatplayer("<p,quiz>What do they tell you about it?");
+~chatnpc("<p,neutral>That it sings. Everybody who is old enough says that and nobody says anything else about it, which I think means they cannot.");
+~chatnpc("<p,sad>I would settle for a village that stays where it is.");

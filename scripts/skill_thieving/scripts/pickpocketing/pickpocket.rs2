@@ -108,7 +108,7 @@
 // the canonical Man/Woman/Farmer/Guard/Paladin levels, XP and loot rather than invented numbers.
 //
 // Deliberately NOT included, because they want their own rates and loot rather than citizen-tier:
-// the five Lletya town elves (level 85), the Menaphite Thug and the nine Pollnivneach villagers
+// the Menaphite Thug and the nine Pollnivneach villagers
 // (blackjack targets, a system this server does not have), the Feud and Desert Treasure bandits,
 // both H.A.M. civilians, Sandy, Dr Fenkenstrain, Sigmund and the Saradominist Zealot.
 // Man
@@ -197,3 +197,11 @@ if (%action_delay > map_clock) {
 // pickpocket_ham_member in configs/pickpocking/pickpocket.dbrow.
 [opnpc3,favour_male_ham_civilian] @attempt_pick_pocket(npc_type);
 [opnpc3,favour_female_ham_civilian] @attempt_pick_pocket(npc_type);
+
+// THE LLETYA ELVES (2026-10-15), the last of the dead-op audit's deferrals. Their own row in
+// pickpocket.dbrow: level 85, 353.3 experience, and the loot the wiki has had for them all along.
+[opnpc3,mourning_town_elf_1] @attempt_pick_pocket(npc_type);
+[opnpc3,mourning_town_elf_2] @attempt_pick_pocket(npc_type);
+[opnpc3,mourning_town_elf_3] @attempt_pick_pocket(npc_type);
+[opnpc3,mourning_town_elf_4] @attempt_pick_pocket(npc_type);
+[opnpc3,mourning_town_elf_5] @attempt_pick_pocket(npc_type);

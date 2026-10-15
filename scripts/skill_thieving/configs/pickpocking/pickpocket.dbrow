@@ -274,3 +274,34 @@ data=loot,ham_badge,1,1,1
 data=loot,ham_hood,1,1,1
 data=pocket,H.A.M. member's pocket
 data=pet_base,257211
+
+// THE LLETYA ELVES. Five of them carry op3=Pickpocket in the cache - Goreu, Ysgawyn, Arvel,
+// Mawrth and Kelyn - and the 2026-09-08 dead-op audit left them out on purpose: "they want their
+// own rates and loot rather than citizen-tier". These are those rates.
+//
+// Level 85, 353.3 experience, a six second stun and 5 damage, and the loot table is the hero's
+// with nature runes where his blood runes are: coins 280-350 at 105/128, two death runes at 8, a
+// jug of wine at 6, three nature runes at 5, a fire orb at 2, a diamond at 1 and gold ore at 1.
+//
+// success_chance 15,99 puts the roll at 87/256 at level 85 and 100/256 at 99, which is the wiki's
+// 33.94% and 39.2% - stat_random is (low*(99-L) + high*(L-1))/98 + 1 out of 256.
+[pickpocket_elf]
+table=pickpocket
+data=npc,mourning_town_elf_1
+data=npc,mourning_town_elf_2
+data=npc,mourning_town_elf_3
+data=npc,mourning_town_elf_4
+data=npc,mourning_town_elf_5
+data=level,85
+data=experience,3533
+data=stun_ticks,10
+data=stun_damage,5
+data=success_chance,15,99
+data=loot,coins,280,350,105
+data=loot,deathrune,2,2,8
+data=loot,jug_wine,1,1,6
+data=loot,naturerune,3,3,5
+data=loot,fire_orb,1,1,2
+data=loot,diamond,1,1,1
+data=loot,gold_ore,1,1,1
+data=pocket,elf's pocket
