@@ -84,7 +84,9 @@ switch_int ($random) {
 // is why case 20 has always named the cache one and these four did not.
 //
 // The four unreachable imports stay in the pack and are named in tools/nosourcespec.json for the
-// same reason magic_secateurs is: deleting an obj id is not free.
+// same reason the duplicate magic secateurs are: deleting an obj id is not free. (Spelled out
+// like that on purpose - poh_battery group 66 asks that no file in the tree names that obj,
+// a comment included, because the trap it describes is one autocomplete away.)
 if (random(8) = 0) {
     gosub(trail_clue_master_rare);
     return;
