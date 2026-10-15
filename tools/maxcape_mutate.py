@@ -278,8 +278,17 @@ MUTS += [
   '13 ~avas_device turns a worn Max cape variant back into the device it was fused with'),
  (_AVA, 'if ($cape = avas_attractor) {\n    return(avas_attractor);\n}\n', '',
   '13 ...and it still returns each of the two plain devices'),
- (_AVA, '[proc,avas_attract]\ndef_namedobj $device = ~avas_device;',
-        '[proc,avas_attract]\ndef_obj $device = inv_getobj(worn, ^wearpos_back);',
+ # The opt-out branch went in between the header and this line, which is why the old pattern
+ # SKIPped: it matched the two as adjacent.
+ # ---- the God Wars flag, which is the spec's own and not one of the OSRS table's bonus slots
+ (_SPC, '"key": "saradomin", "gwd_prot": "gwd_prot_saradomin"', '"key": "saradomin"',
+  "13 ...and the same numbers the spec took out of OSRS's item table, plus the God Wars flag"),
+ (_VOBJ, 'param=magicdefence,10\nparam=gwd_prot_zamorak,1', 'param=magicdefence,10',
+  "13 each variant cape's combat bonuses are exactly its SOURCE cape's"),
+ (_SPC, '"key": "guthix"', '"key": "guthix", "gwd_prot": "gwd_prot_guthix"',
+  '13 and the flag is on the four Saradomin and Zamorak capes and no others'),
+ (_AVA, 'if (%avas_attract_off = true) {\n    return;\n}\ndef_namedobj $device = ~avas_device;',
+        'if (%avas_attract_off = true) {\n    return;\n}\ndef_obj $device = inv_getobj(worn, ^wearpos_back);',
   '13 ...and neither reads the cape slot itself any more'),
  (_AVA, '[proc,ranged_ammo_saved]()(boolean)\ndef_namedobj $device = ~avas_device;',
         '[proc,ranged_ammo_saved]()(boolean)\ndef_namedobj $device = null;',

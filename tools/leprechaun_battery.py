@@ -19,7 +19,14 @@ import json, math, os, re, sys
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENGINE = sys.argv[1] if len(sys.argv) > 1 else os.path.join(os.path.dirname(C), 'engine')
-CLIENT = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(C), 'client')
+# THE CLIENT CLONE IS 'javaclient' HERE, and 'client' was a guess that never matched: this check
+# has reported "pass its path as argv[2]" rather than looking at the client since it was written.
+# Both names are tried, and LOSTCITY_CLIENT wins over either, the same shape poh_battery uses for
+# the engine clone.
+CLIENT = sys.argv[2] if len(sys.argv) > 2 else os.environ.get('LOSTCITY_CLIENT') or next(
+    (os.path.join(os.path.dirname(C), _n) for _n in ('javaclient', 'client')
+     if os.path.isdir(os.path.join(os.path.dirname(C), _n))),
+    os.path.join(os.path.dirname(C), 'client'))
 
 def read(p): return open(os.path.join(C, p), newline='').read().replace('\r\n', '\n')
 def readat(root, p):
@@ -79,12 +86,19 @@ check('inv_size(bank), inv_freespace(bank)) >= ^bank_free_slots' in gate,
 
 # ============================================================================ 2
 print('2. the grid has a square for every slot, including the padding the tabs waste')
-W = 8
+# THE COLUMN COUNT IS READ, NOT REMEMBERED. It was 8 when this was written and the grid is 12
+# wide now, which moved the worst-case tab padding from 56 cells to 88 and the row count from 184
+# to 125 - so a remembered 8 had this section arguing with a grid that was right. It comes out of
+# tools/bankgeom.py, which is where genbanktabs.py gets it, and the interface is checked to agree
+# with that rather than with a number here. tools/banktab_sim.py reads it off the interface for the
+# same reason and says so in its own docstring.
 TABS = const(read('scripts/interface_bank/configs/bank.constant'), 'bank_tabs')
 grid = block(BANKIF, 'bank')
+W = int(re.search(r'(?m)^COLS = (\d+)$', read('tools/bankgeom.py')).group(1))
 rows = int(re.search(r'(?m)^height=(\d+)$', grid).group(1))
 pad = TABS * (W - 1)
-check(int(re.search(r'(?m)^width=(\d+)$', grid).group(1)) == W, 'the grid is 8 columns')
+check(int(re.search(r'(?m)^width=(\d+)$', grid).group(1)) == W,
+      'the grid is as many columns as bankgeom.py says, which is what the generator wrote: %d' % W)
 check(rows == math.ceil((TOTAL + pad) / W),
       'and ceil((%d + %d) / %d) = %d rows, which is what the generator computes (%d)'
       % (TOTAL, pad, W, math.ceil((TOTAL + pad) / W), rows))
@@ -107,10 +121,12 @@ pitch = int(margin.group(2)) + 32
 check(scroll == rows * pitch,
       'the layer can be scrolled to the last row: scroll %d = %d rows x %d (%d)'
       % (rows * pitch, rows, pitch, scroll))
-check("SIZE = _const('bank_total_slots')" in SIM and '_grid_rows()' in SIM
-      and "height=(\\d+)$" in SIM,
-      'banktab_sim.py reads both numbers out of the configs - a sim carrying its own 352 would '
-      'have gone on passing after the bank grew')
+# _grid_rows() became _grid(key), which reads the column count as well as the row count - the
+# change the grid's widening needed and the one this check had not followed.
+check("SIZE = _const('bank_total_slots')" in SIM and "def _grid(key)" in SIM
+      and "_grid('width')" in SIM and "_grid('height')" in SIM,
+      'banktab_sim.py reads all three numbers out of the configs - a sim carrying its own 352 '
+      'slots, or its own 8 columns, would have gone on passing after the bank grew')
 
 # ============================================================================ 3
 print('3. the packet the bigger bank has to fit through')

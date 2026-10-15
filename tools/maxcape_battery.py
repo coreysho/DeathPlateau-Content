@@ -503,14 +503,27 @@ for v in VSPEC['variants']:
 check(not _bad,
       "each variant cape's combat bonuses are exactly its SOURCE cape's, compared record to "
       'record: %s' % (_bad[:2] or 'all %d match their source' % len(KEYS)))
+# gwd_prot IS NOT ONE OF THE TABLE'S BONUSES and is not in the spec's bonuses block: it is this
+# build's God Wars flag, carried per variant in the spec's gwd_prot and emitted after the bonuses.
+# A Saradomin max cape has to have it or God Wars turns away a cape made FROM one that is let
+# through - so it is compared here with them rather than left out of the comparison.
 _sbad = []
 for v in VSPEC['variants']:
     got = _params(VOBJ.get('%s_max_cape' % v['key'], {}))
-    if got != {k: int(x) for k, x in v['bonuses'].items()}:
-        _sbad.append('%s: config %s, spec %s' % (v['key'], got, v['bonuses']))
+    want = {k: int(x) for k, x in v['bonuses'].items()}
+    if v.get('gwd_prot'):
+        want[v['gwd_prot']] = 1
+    if got != want:
+        _sbad.append('%s: config %s, spec %s' % (v['key'], got, want))
 check(not _sbad,
-      "...and the same numbers the spec took out of OSRS's item table, so source and variant "
-      'cannot have drifted together: %s' % (_sbad[:2] or 'all %d' % len(KEYS)))
+      "...and the same numbers the spec took out of OSRS's item table, plus the God Wars flag the "
+      'spec carries itself, so source and variant cannot have drifted together: %s'
+      % (_sbad[:2] or 'all %d' % len(KEYS)))
+# and only the two gods whose door God Wars has
+_gods = sorted(v['key'] for v in VSPEC['variants'] if v.get('gwd_prot'))
+check(_gods == ['imbued_saradomin', 'imbued_zamorak', 'saradomin', 'zamorak'],
+      'and the flag is on the four Saradomin and Zamorak capes and no others - God Wars has no '
+      'Guthix room: %s' % ', '.join(_gods))
 check(not [n for n, f in VOBJ.items() if n.endswith('_max_hood') and f.get('param')],
       'no hood carries a combat bonus, which is what every skillcape hood in this build does')
 
