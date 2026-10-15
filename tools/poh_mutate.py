@@ -331,15 +331,15 @@ if (inv_total(inv, coins) < $cost) {
  ('maps/m39_48.jm2', '0 45 27: 15296 10 0', '0 33 27: 15296 10 0',
   '15 town 5: the map and poh_loc_portal name the same tile ((0,'),
  ('scripts/skill_construction/configs/poh_costume.enum',
-  'val=71,boots_wizard', 'val=71,rune_platebody',
+  'val=95,boots_wizard', 'val=95,rune_platebody',
   '55 and nothing in the chest is something a shop sells:'),
  ('scripts/skill_construction/configs/poh_costume.enum',
-  'val=4,rune_full_helm_zamorak', 'val=4,rune_full_helm_saradomin',
+  'val=5,rune_full_helm_zamorak', 'val=5,rune_full_helm_saradomin',
   '55 no item is listed twice'),
  ('scripts/skill_construction/configs/poh_costume.enum',
-  '[poh_costume_set_first]\ninputtype=int\noutputtype=int\ndefault=null\nval=0,0\nval=1,4',
   '[poh_costume_set_first]\ninputtype=int\noutputtype=int\ndefault=null\nval=0,0\nval=1,5',
-  '55 the sets are consecutive and leave no item out: [(0, 3),'),
+  '[poh_costume_set_first]\ninputtype=int\noutputtype=int\ndefault=null\nval=0,0\nval=1,6',
+  '55 the sets are consecutive and leave no item out'),
  ('scripts/skill_construction/configs/poh_costume.inv',
   '[poh_costume_store]\nscope=perm', '[poh_costume_store]\nscope=temp',
   '55 poh_costume_store is scope=perm - the whole point is that it survives logout'),
@@ -735,18 +735,18 @@ if (inv_total(inv, coins) < $cost) {
  # a skilling script going round the funnel - neither the bonus nor the roll reaches it
  ('scripts/areas/area_abyss/scripts/abyss_outer.rs2',
   '~mining_xp(250);', 'stat_advance(mining, 250);',
-  '64 nothing outside a quest awards these ten directly'),
+  '64 nothing outside a quest awards these skills directly'),
  # the same for each of the three new ones: an agility obstacle, a pickpocket and the altar
  ('scripts/skill_agility/scripts/gnome_course.rs2',
   '~agility_xp(75);', 'stat_advance(agility, 75);',
-  '64 nothing outside a quest awards these ten directly'),
+  '64 nothing outside a quest awards these skills directly'),
  ('scripts/skill_thieving/scripts/thieving.rs2',
   '~thieving_xp($experience);', 'stat_advance(thieving, $experience);',
-  '64 nothing outside a quest awards these ten directly'),
+  '64 nothing outside a quest awards these skills directly'),
  ('scripts/skill_construction/scripts/poh_furn_ops.rs2',
   '~prayer_xp(calc(oc_param($bone, bone_exp) * $pct / 100));',
   'stat_advance(prayer, calc(oc_param($bone, bone_exp) * $pct / 100));',
-  '64 nothing outside a quest awards these ten directly'),
+  '64 nothing outside a quest awards these skills directly'),
  # ...and the one that made the carpenter's outfit possible at all
  ('tools/genfurn.py',
   "'~construction_xp(enum(int, int, poh_furn_xp, $item));',",
@@ -755,25 +755,25 @@ if (inv_total(inv, coins) < $cost) {
  # an outfit rolling for its neighbour, which would quietly hand a miner angler boots
  ('scripts/skilling_outfits/scripts/outfit_xp.rs2',
   '~outfit_roll(^outfit_prospector, $xp);', '~outfit_roll(^outfit_angler, $xp);',
-  '64 all ten experience procs roll for their own outfit'),
+  '64 every experience proc rolls for its own outfit'),
  # a proc that stopped rolling at all
  ('scripts/skilling_outfits/scripts/outfit_xp.rs2',
   '~outfit_roll(^outfit_eye, $xp);' + chr(10), '',
-  '64 ten rolls, one per proc'),
+  '64 one roll per proc and no more'),
  # the roll paid on the post-bonus xp, so three pieces make the fourth come faster
  ('scripts/skilling_outfits/scripts/outfit_xp.rs2',
   '~outfit_roll(^outfit_smiths, $xp);', '~outfit_roll(^outfit_smiths, calc($xp + $extra));',
-  '64 all ten experience procs roll for their own outfit'),
+  '64 every experience proc rolls for its own outfit'),
  # a bonus OSRS does not give, on one of the three that give none
  ('scripts/skilling_outfits/scripts/outfit_xp.rs2',
   '~outfit_roll(^outfit_graceful, $xp);\nstat_advance(agility, $xp);',
   '~outfit_roll(^outfit_graceful, $xp);\nstat_advance(agility, calc($xp + $extra));',
-  '64 all ten experience procs roll for their own outfit'),
+  '64 every experience proc rolls for its own outfit'),
  # ...and a bonus quietly dropped from one of the seven that do
  ('scripts/skilling_outfits/scripts/outfit_xp.rs2',
   'def_int $bonus = ~outfit_xp_bonus(prospector_helm, prospector_jacket, prospector_legs, prospector_boots);',
   'def_int $bonus = 0;',
-  '64 all ten experience procs roll for their own outfit'),
+  '64 every experience proc rolls for its own outfit'),
  # the table reordered, so a hat sits in the torso slot
  ('scripts/skilling_outfits/configs/outfits.enum',
   'val=6,angler_hat\nval=7,angler_top', 'val=6,angler_top\nval=7,angler_hat',
@@ -798,11 +798,11 @@ if (inv_total(inv, coins) < $cost) {
  # an outfit index that no longer lines up with the table it keys
  ('scripts/skilling_outfits/configs/outfits.constant',
   '^outfit_carpenters = 6', '^outfit_carpenters = 7',
-  '64 the ten outfits are 0..9 with no gap'),
+  '64 the outfits are numbered from zero with no gap'),
  # the stride shortened, which loses Graceful's cape and the Rogue gloves off the end
  ('scripts/skilling_outfits/configs/outfits.constant',
   '^outfit_pieces = 6', '^outfit_pieces = 5',
-  '64 ^outfit_count and ^outfit_pieces are the ten outfits and the six slots'),
+  '64 ^outfit_count and ^outfit_pieces are every outfit and the six slots'),
  # the guild hunter outfit quietly given a source, which is the reminder this check exists to be
  ('scripts/_unpack/727/all.inv',
   'stock1=pot_empty,5,10',
@@ -905,7 +905,7 @@ if (inv_total(inv, coins) < $cost) {
  ('scripts/general/configs/osrs_items.obj',
   "desc=If rocks could feel fear, they'd fear this.",
   "desc=If rocks could feel fear, they'd fear this.\nparam=imbue_into,dragon_pickaxe\nparam=imbue_from,dragon_pickaxe",
-  "66 and they are the 20 items OSRS's scroll list leaves this build"),
+  "66 and they are the 22 items OSRS's scroll list leaves this build"),
  # OSRS's OWN number for the seers ring instead of double THIS build's ring
  ('scripts/skill_slayer/configs/imbue_scroll.obj',
   'param=magicattack,8\nparam=magicdefence,8', 'param=magicattack,12\nparam=magicdefence,12',
@@ -928,7 +928,7 @@ if (inv_total(inv, coins) < $cost) {
  ('scripts/skill_slayer/scripts/slayer_helm.rs2',
   '[opheld4,slayer_helm_i] @slayer_helm_split(black_mask_i);',
   '[opheld6,slayer_helm_i] @slayer_helm_split(black_mask_i);',
-  '66 and no imbued helmet has one - all 15 get the scroll back out through Disassemble'),
+  '66 and no imbued helmet has one - all 16 get the scroll back out through Disassemble'),
  # the imbued rings back on the plain rings' meshes, which is how they shipped
  ('scripts/skill_slayer/configs/imbue_scroll.obj',
   'model=obj_seer_ring_i', 'model=obj_seer_ring',
@@ -1076,7 +1076,7 @@ if (inv_total(inv, coins) < $cost) {
  ('tools/obtainable.py',
   '    spec = json.loads(read(\'tools/slayerhelmspec.json\'))',
   '    return set(), []\n    spec = json.loads(read(\'tools/slayerhelmspec.json\'))',
-  '67 and names the other 24 as deliberate, by name'),
+  '67 and names the other 22 as deliberate, by name'),
  ]
 
 # ---- 64b: what the three outfits that pay no experience do instead ---------------------------
@@ -1215,7 +1215,7 @@ MUTS += [
  (_G_BAT, "for _rel, _t in _walk('.obj'):", "for _rel, _t in _walk('.obj-nothing'):",
   "64b the sweep below actually walked the obj configs"),
  (_G_OBJ, '[rogue_mask]', '[rogue_mask]\nparam=energy_restore,5',
-  "64b and no other obj config in the tree carries energy_restore"),
+  "64b and no obj config in the tree carries energy_restore but the six and their colours"),
  (_G_BAT, "for _rel, _t in _walk('.rs2'):", "for _rel, _t in _walk('.rs2-nothing'):",
   "64b and that sweep read the whole script tree rather than a handful"),
  (_G_EFF, '[proc,zealots_saves]',

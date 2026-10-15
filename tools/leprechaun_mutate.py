@@ -15,7 +15,12 @@ import os, shutil, subprocess, sys
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ENGINE = sys.argv[2] if len(sys.argv) > 2 else os.path.join(os.path.dirname(C), 'engine')
-CLIENT = sys.argv[3] if len(sys.argv) > 3 else os.path.join(os.path.dirname(C), 'client')
+# The client clone is 'javaclient' here; 'client' was a guess that matched nothing, so this exited
+# before running a single mutation. Both names are tried, and LOSTCITY_CLIENT wins over either.
+CLIENT = sys.argv[3] if len(sys.argv) > 3 else os.environ.get('LOSTCITY_CLIENT') or next(
+    (os.path.join(os.path.dirname(C), _n) for _n in ('javaclient', 'client')
+     if os.path.isdir(os.path.join(os.path.dirname(C), _n))),
+    os.path.join(os.path.dirname(C), 'client'))
 W = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'leprechaun_mutate_work')
 
 # the only three files the battery reads outside the content tree, copied in so they can be broken
@@ -64,18 +69,18 @@ MUTS = [
   '1 ...and it counts slots in use rather than trusting a running total'),
 
  # ---- 2 the grid
- (BIF, 'clientcode=206\nwidth=8\nheight=184', 'clientcode=206\nwidth=7\nheight=184',
-  '2 the grid is 8 columns'),
- (BIF, 'clientcode=206\nwidth=8\nheight=184', 'clientcode=206\nwidth=8\nheight=177',
-  '2 and ceil((1410 + 56) / 8) = 184 rows'),
- (BIF, 'height=194\nscroll=6992', 'height=194\nscroll=1938',
+ (BIF, 'clientcode=206\nwidth=12\nheight=125', 'clientcode=206\nwidth=11\nheight=125',
+  '2 the grid is as many columns as bankgeom.py says'),
+ (BIF, 'clientcode=206\nwidth=12\nheight=125', 'clientcode=206\nwidth=12\nheight=118',
+  '2 and ceil((1410 + 88) / 12) = 125 rows'),
+ (BIF, 'height=222\nscroll=4750', 'height=222\nscroll=1938',
   '2 the layer can be scrolled to the last row'),
  (GT, 'GRID_ROWS = -(-(bank_slots() + SLOT_PAD) // GRID_W)', 'GRID_ROWS = 184',
   '2 the row count is DERIVED from ^bank_total_slots'),
  (GT, "    return int(m.group(1))", "    return 1410",
   '2 ...by reading bank.constant inside bank_slots()'),
  (BSIM, "SIZE = _const('bank_total_slots')", "SIZE = 1410",
-  '2 banktab_sim.py reads both numbers out of the configs'),
+  '2 banktab_sim.py reads all three numbers out of the configs'),
 
  # ---- 3 the packet
  (ENC, 'for (let slot = capacity - 1; slot >= 0; slot--) {\n'

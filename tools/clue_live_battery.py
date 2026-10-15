@@ -8,7 +8,15 @@ tools/sim/harness.ts to resolve its imports, so it is copied there for the run a
 import os, shutil, subprocess, sys
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-E = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else os.path.join(C, '..', 'engine'))
+# THE ENGINE CLONE IS A SIBLING, under either of the two names it goes by, and LOSTCITY_ENGINE wins
+# over both - the shape poh_battery uses. Two of the four live batteries defaulted to '../Engine-TS'
+# alone, which is the upstream repo's name and not this one's, so running them without an argument
+# died on FileNotFoundError .../Engine-TS/tools/_<name>_live.ts instead of finding the engine beside
+# them. All four agree now.
+_EROOTS = ([os.environ['LOSTCITY_ENGINE']] if os.environ.get('LOSTCITY_ENGINE') else []) \
+    + [os.path.join(C, '..', e) for e in ('engine', 'Engine-TS')]
+E = os.path.abspath(sys.argv[1] if len(sys.argv) > 1 else next(
+    (r for r in _EROOTS if os.path.isdir(os.path.join(r, 'tools'))), _EROOTS[-1]))
 dst = os.path.join(E, 'tools', 'sim', '_clue_live.ts')
 # Booting the world creates the trading post's sqlite under data/; leave the engine as it was found.
 tp = os.path.join(E, 'data', 'tradingpost')

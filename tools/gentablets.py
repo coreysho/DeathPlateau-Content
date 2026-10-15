@@ -302,6 +302,10 @@ def emit_rs2(spec, rows, ids):
           '// The animation OSRS plays when a tablet is broken (seq 4069) and the graphic that goes with',
           '// it (spotanim 678, which animates itself). One proc, so every break path looks the same and',
           '// there is one place to change it.',
+          '//',
+          '// HEIGHT 0, not 92. The shards blow out along the FLOOR in Old School - this is a ground',
+          '// effect, not a chest-height one like the teleport spells\' own graphic. At 92 it hung in the',
+          '// air across the player\'s waist. The number is tabletspec.json\'s, so it is in one place.',
           '[proc,poh_tab_breakanim]',
           'anim(%s, 0);' % spec['break']['anim'],
           'spotanim_pl(%s, %d, 0);' % (spec['break']['spot'], spec['break']['height']), '']
@@ -362,7 +366,7 @@ def emit_rs2(spec, rows, ids):
           'mes("You break the tablet.");',
           'inv_del(inv, bones, $total);',
           'inv_add(inv, $product, $total);',
-          'sound_synth($sound, 0, 0);',
+          'sound_synth($sound, 1, 0);',
           '~poh_tab_breakanim;',
           'p_delay(2);', '',
           '// An enchant needs a target, so the five enchant tablets arrive here from [opheldu] with the',
@@ -384,7 +388,7 @@ def emit_rs2(spec, rows, ids):
           'mes("You break the tablet.");',
           'inv_setslot(inv, $slot, $final, 1);',
           '~poh_tab_breakanim;',
-          'sound_synth($sound, 0, 0);',
+          'sound_synth($sound, 1, 0);',
           'mes("You successfully enchant the <lowercase(oc_name($target))>.");',
           'p_delay(1);', '']
 

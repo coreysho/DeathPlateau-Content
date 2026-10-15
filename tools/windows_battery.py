@@ -265,14 +265,36 @@ for p in prods:
               'the %s layer for %s is driven' % (side, p['key']), 'yes')
 for p in prods:
     if not p['struct']:
-        check('inv_transmit(%s,' % p['inv'] not in sv,
-              '%s is never transmitted - no recipe, and nothing hands out its mould' % p['key'], 'yes')
+        # A WINDOW SLOT WITH NO CRAFTING STRUCT HAS TWO HONEST SHAPES, not one. It can stay dark -
+        # nothing transmits it and nothing hands its mould out - or a quest can own it: In Aid of
+        # the Myreque hands out burgh_rod_clay and drives silvthrill_rod from this window, with the
+        # slot's own [inv_button1] going to @myreque2_cast_rod. What is broken is a slot a player
+        # can click with nothing behind it, so the transmit has to come with that button.
+        _trans = 'inv_transmit(%s,' % p['inv'] in sv
+        _button = '[inv_button1,silver_casting:slot_%s]' % p['key'] in sv
+        check(not _trans or _button,
+              '%s is either never transmitted or has the quest button that owns its click' % p['key'],
+              'yes')
         if p['mould']:
             # NAMED is not GIVEN OUT. An earlier version of this grepped for the mould's name
             # anywhere in the scripts, so wiring the product - which reads the mould to decide
             # which layer to show - tripped this check rather than the one about transmitting.
-            check(not re.search(r'inv_add\([^)]*\b%s\b' % p['mould'], ALLRS2),
-                  'and nothing in the game hands out %s' % p['mould'], 'yes')
+            #
+            # AND "NOBODY HANDS IT OUT" IS NO LONGER THE ONLY RIGHT ANSWER. Two of these three
+            # moulds are handed out now - Dr Fenkenstrain gives the conductor mould and the Agrith
+            # quest gives the sigil mould - and both quests carry their own recipe on the mould's
+            # [opheldu], because a quest step has no Crafting level or experience for this window
+            # to copy. So what has to hold is one of two things: either nothing hands the mould
+            # out, or whatever does also owns a recipe for it. A mould a player can hold with no
+            # recipe anywhere is the broken case, and that is what this catches.
+            # A quest can also carry the recipe on THIS WINDOW's button for the slot instead of on
+            # the mould - which is what In Aid of the Myreque does with burgh_rod_clay - so that
+            # counts as a recipe too.
+            _given = re.search(r'inv_add\([^)]*\b%s\b' % p['mould'], ALLRS2) is not None
+            _recipe = re.search(r'\[opheldu,%s\]' % p['mould'], ALLRS2) is not None or _button
+            check(not _given or _recipe,
+                  'nothing hands out %s, or what does owns a recipe for it - on the mould\'s '
+                  '[opheldu] or on this window\'s button for the slot' % p['mould'], 'yes')
 
 
 # ---------------------------------------------------------------- 6

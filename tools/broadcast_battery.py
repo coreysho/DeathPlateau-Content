@@ -54,18 +54,39 @@ for proc in ('broadcast_name', 'broadcast_news', 'broadcast_drop', 'broadcast_pe
 drops = sum(s.count('~broadcast_drop(') for p, s in SCRIPTS)
 check(drops >= 12, 'the rare-drop tables call ~broadcast_drop (%d calls)' % drops)
 
-print('every pet announces')
-for p, want in (('scripts/npc/scripts/boss_pets.rs2', '~broadcast_pet($pet)'),
-                ('scripts/npc/scripts/skill_pets.rs2', '~broadcast_pet($pet)'),
-                ('scripts/areas/area_kraken_cove/scripts/kraken_drops.rs2', '~broadcast_pet(bosspet_kraken_item)'),
-                ('scripts/minigames/game_fightcave/scripts/fightcave_reward.rs2', '~broadcast_pet(bosspet_tzrek_jad_item)'),
-                ('scripts/minigames/game_fightcave/scripts/fightcave_exchange.rs2', '~broadcast_pet(bosspet_tzrek_jad_item)')):
-    check(want in nocomment(read(p)), '%s announces its pet' % p.split('/')[-1])
-# a skill pet that lands on the floor for a full pack is still a pet
-sp = nocomment(read('scripts/npc/scripts/skill_pets.rs2'))
-check(sp.count('~broadcast_pet($pet)') == 2, '...skill pets announce whether they go in the pack or on the floor')
-check('would have been followed' not in ''.join(s for _, s in SCRIPTS),
-      'no pet is announced as one the player "would have" had - by then they have it')
+print('every pet announces, because one proc hands every pet over')
+# THIS USED TO BE FIVE FILES AND THE STRING EACH HAD TO CONTAIN, and all five went red when pet
+# granting was funnelled into ~pet_receive (npc/scripts/follower.rs2), whose own header says it:
+# "Every pet the game hands out comes through here - boss drops, skilling, the Fight Cave, the
+# drop-rate boost". None of the five announces for itself any more and kraken_drops.rs2 does not
+# hand the pet over at all - it rolls, and ~bosspet_roll queues the funnel. Checking the funnel is
+# a stronger statement than checking five copies: a sixth route cannot forget to announce, because
+# announcing is not something a route does.
+FOLLOWER = nocomment(read('scripts/npc/scripts/follower.rs2'))
+_callers = sorted(p for p, s in SCRIPTS if '~broadcast_pet(' in s)
+check(_callers == ['scripts/npc/scripts/follower.rs2'],
+      '~broadcast_pet is called from one file and no other: %s' % ', '.join(_callers) or 'nowhere')
+_recv = FOLLOWER.split('[proc,pet_receive]', 1)[1].split('\n[', 1)[0] if '[proc,pet_receive]' in FOLLOWER else ''
+check('~broadcast_pet($pet)' in _recv,
+      '...and the call is inside ~pet_receive, which is the one proc that hands a pet over')
+# All three of its endings announce, because the call is after them and none of them returns: it
+# follows you, it goes in the pack, or it waits at Probita's. Only the already-owned path returns
+# early, and that one must NOT announce - the player has the pet already.
+check(_recv.count('return;') == 1 and _recv.index('return;') < _recv.index('~broadcast_pet($pet)'),
+      '...after all three of follow, pack and Probita\'s, with the one early return before it')
+check(_recv.count('would have been followed') == 1
+      and _recv.index('would have been followed') < _recv.index('return;'),
+      'the one path that does not announce is the one where the player owns it already, and its '
+      '"...would have been followed..." sits in front of that return')
+# and every route the header names reaches it
+for _p, _want in (('scripts/npc/scripts/boss_pets.rs2', '~pet_receive_later($pet, 0)'),
+                  ('scripts/npc/scripts/skill_pets.rs2', '~pet_receive($pet)'),
+                  ('scripts/areas/area_kraken_cove/scripts/kraken_drops.rs2', '~bosspet_roll(bosspet_kraken_item'),
+                  ('scripts/minigames/game_fightcave/scripts/fightcave_reward.rs2', '~pet_receive_later(bosspet_tzrek_jad_item'),
+                  ('scripts/minigames/game_fightcave/scripts/fightcave_exchange.rs2', '~pet_receive(bosspet_tzrek_jad_item)'),
+                  ('scripts/gamemodes/scripts/droprate.rs2', '~pet_receive_later($obj, 0)')):
+    check(_want in nocomment(read(_p)),
+          '%s hands its pet to the funnel rather than granting one itself' % _p.split('/')[-1])
 
 print('the icon sheet')
 try:

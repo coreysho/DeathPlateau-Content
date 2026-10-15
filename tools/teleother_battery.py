@@ -354,11 +354,21 @@ check(block(VARP, 'teleother_caster').count('type=player_uid') == 1,
 vids = {l.split('=', 1)[1]: int(l.split('=', 1)[0]) for l in VARPPACK.split('\n') if l.strip()}
 check(len(vids) == len([l for l in VARPPACK.split('\n') if l.strip()]),
       'no duplicate name in varp.pack')
+# PINNED, NOT "HIGHEST". These three were appended past every id that existed when they went in,
+# and that was the whole of what this check could say at the time - it went red the first time
+# anything else was appended after them, which is the normal way a varp is added and not a fault.
+# What a save file actually depends on is that an id NEVER MOVES: a character's varps are stored by
+# id, so 1190 has to go on meaning teleother_caster for as long as there are saves. So the three
+# are pinned to the numbers they were given, they stay contiguous and in order, and nothing else
+# in varp.pack may use those ids.
+PINNED = {'teleother_caster': 1190, 'teleother_spell': 1191, 'teleother_expires': 1192}
 mine = [vids[n] for n in ('teleother_caster', 'teleother_spell', 'teleother_expires')]
-check(mine == sorted(mine) and min(mine) > max(v for k, v in vids.items()
-                                               if not k.startswith('teleother_')),
-      'and all three were APPENDED past every existing id - a varp id is part of what a save '
-      'file means, so one can never be inserted')
+_moved = {n: vids.get(n) for n, i in PINNED.items() if vids.get(n) != i}
+check(not _moved and mine == sorted(mine) and mine == list(range(mine[0], mine[0] + 3)),
+      'and all three still hold the ids they were given, contiguous and in order - a varp id is '
+      'part of what a save '
+      'file means, so one can never move: %s'
+      % (_moved or ', '.join('%s=%d' % (n, i) for n, i in sorted(PINNED.items(), key=lambda x: x[1]))))
 
 # ============================================================================ 9
 print('9. Accept aid: the setting this spell reads, and the two handlers that were wrong')

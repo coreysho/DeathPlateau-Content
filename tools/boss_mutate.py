@@ -25,8 +25,9 @@ DTH = 'scripts/skill_combat/scripts/npc/npc_death.rs2'
 QL = 'scripts/interfaces/questlist.if'
 
 MUTS = [
- # ---- which twelve
- (CST, '^boss_kills_count = 12', '^boss_kills_count = 11',
+ # ---- which fourteen
+ # 12 when this was written; two more bosses have a counter since.
+ (CST, '^boss_kills_count = 14', '^boss_kills_count = 13',
   '1 ^boss_kills_count is counted from the spec rather than typed'),
  (CST, '^boss_kills_none = -1', '^boss_kills_none = 0',
   '1 and ^boss_kills_none is -1'),
@@ -44,14 +45,14 @@ MUTS = [
  (VAR, '[boss_kc_kbd]\nscope=perm', '[boss_kc_kbd]\nscope=temp',
   '2 every one is scope=perm'),
  (VAR, '[boss_kc_jad]', '[boss_kc_jadx]',
-  '2 twelve varps, one per boss, named after its key'),
+  '2 the spec names fourteen bosses with fourteen distinct keys'),
  (VAR, '[boss_kc_kq]\nscope=perm\nprotect=no',
        '[boss_kc_kq]\nscope=perm\nprotect=no\ntransmit=yes',
   '2 none is transmitted'),
 
  # ---- the two tables
  (ENM, 'val=chaoselemental,6', 'val=chaoselemental,7',
-  '3 boss_kill_index maps exactly the twelve npcs to slots 0..11'),
+  "3 boss_kill_name maps each slot to that boss's name"),
  (ENM, 'default=-1', 'default=0',
   '3 ...and everything else in the game answers -1'),
  (ENM, 'val=11,Giant Mole', 'val=11,Giant mole',
@@ -77,7 +78,7 @@ MUTS = [
        'switch_int ($slot) {\n    case default : return;\n    case 0 : %boss_kc_jad',
   '4 ...with a default case, and it is the LAST one'),
  (RS2, 'case 9 : return(%boss_kc_dag_prime);', 'case 9 : return(%boss_kc_dag_rex);',
-  '4 the read-back switch reads the same twelve, slot for slot'),
+  '4 the read-back switch reads the same counters, slot for slot'),
  (RS2, 'case default : return(0);', 'case default : return(1);',
   "4 ...and an unknown slot reads as no kills rather than as the first boss's"),
 
@@ -91,7 +92,7 @@ MUTS = [
  (IFF, 'text=Dagannoth Rex', 'text=Dagganoth Rex',
   '6 each row is labelled with its own boss'),
  (IFF, '[count7]\ntype=text', '[count7x]\ntype=text',
-  '6 twelve name rows and twelve count rows'),
+  '6 each row is labelled with its own boss'),
  (IFF, 'buttontype=close', 'buttontype=normal',
   '6 there is a close button, and it is buttontype=close'),
  (RS2, '$total = add($total, ~boss_kills_count(boss_kills:count4, ~boss_kill_get(4)));', '',

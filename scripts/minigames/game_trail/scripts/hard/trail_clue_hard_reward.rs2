@@ -70,6 +70,23 @@ switch_int ($random) {
 
 [proc,trail_clue_hard_rare]
 // One rare roll in eight goes to the elite and master table instead - see it below.
+//
+// FOUR ROWS NAME THE 377 CACHE'S OBJ, NOT THE IMPORTED ONE. Saradomin's platebody, platelegs,
+// plateskirt and kiteshield exist twice in this build: rune_platebody_saradomin and its three
+// siblings came with the 377 cache at 2661..2667, and saradomin_platebody and its three came in
+// with the 2026-10-04 import of Old School's own 510 uniques, which named every item the Old
+// School way and so did not notice the cache already had these four. The cache ones are the ones
+// the game is wired to - they carry param=saradominitem and param=gwd_prot_saradomin, which is
+// what God Wars reads to let you past Saradomin's door, tier40.rs2 gates the platebody behind
+// Dragon Slayer, animmag.enum lists it, and the costume room chest stores all four. The imported
+// ones carry none of that, so a clue that handed one over gave a Saradomin platebody that God
+// Wars did not recognise and the chest would not take. The full helm was never duplicated, which
+// is why case 20 has always named the cache one and these four did not.
+//
+// The four unreachable imports stay in the pack and are named in tools/nosourcespec.json for the
+// same reason the duplicate magic secateurs are: deleting an obj id is not free. (Spelled out
+// like that on purpose - poh_battery group 66 asks that no file in the tree names that obj,
+// a comment included, because the trap it describes is one autocomplete away.)
 if (random(8) = 0) {
     gosub(trail_clue_master_rare);
     return;
@@ -134,10 +151,10 @@ switch_int ($random) {
     case 54 : inv_add(trail_rewardinv, rune_platebody_h3, 1);   // Rune platebody (h3)
     case 55 : inv_add(trail_rewardinv, rune_platebody_h4, 1);   // Rune platebody (h4)
     case 56 : inv_add(trail_rewardinv, rune_platebody_h5, 1);   // Rune platebody (h5)
-    case 57 : inv_add(trail_rewardinv, saradomin_platebody, 1);   // Saradomin platebody
-    case 58 : inv_add(trail_rewardinv, saradomin_platelegs, 1);   // Saradomin platelegs
-    case 59 : inv_add(trail_rewardinv, saradomin_plateskirt, 1);   // Saradomin plateskirt
-    case 60 : inv_add(trail_rewardinv, saradomin_kiteshield, 1);   // Saradomin kiteshield
+    case 57 : inv_add(trail_rewardinv, rune_platebody_saradomin, 1);   // Saradomin platebody - the 377 one, see below
+    case 58 : inv_add(trail_rewardinv, rune_platelegs_saradomin, 1);   // Saradomin platelegs - the 377 one
+    case 59 : inv_add(trail_rewardinv, rune_plateskirt_saradomin, 1);   // Saradomin plateskirt - the 377 one
+    case 60 : inv_add(trail_rewardinv, rune_kiteshield_saradomin, 1);   // Saradomin kiteshield - the 377 one
     case 61 : inv_add(trail_rewardinv, ancient_full_helm, 1);   // Ancient full helm
     case 62 : inv_add(trail_rewardinv, ancient_platebody, 1);   // Ancient platebody
     case 63 : inv_add(trail_rewardinv, ancient_platelegs, 1);   // Ancient platelegs
@@ -249,9 +266,17 @@ switch_int ($random) {
 // Kourend's scarves and hoods are left out for the same reason as its banners, and so are the
 // seven ornament kits whose base item this build does not have - occult, torture, anguish,
 // tormented, dragon full helm, dragon kiteshield and dragon platebody.
+//
+// ONE ENTRY HERE IS NOT A CLUE REWARD AT ALL: the Thread of Elidinis, case 112. Old School puts
+// it in Tombs of Amascut, a raid this build has no content for, and it is the only way to stitch
+// a rune pouch into a divine one - so without a row here the thread, the divine pouch and the
+// upgrade and revert scripts behind them are all unreachable. It was case 33 of the hard table
+// until that table was replaced with Old School's own 158 on 2026-10-04, which correctly has no
+// room for a raid drop; this table, whose whole job is the uniques with nowhere else to come
+// from, is where it belongs.
 
 [proc,trail_clue_master_rare]
-def_int $random = random(112);
+def_int $random = random(113);
 
 switch_int ($random) {
     case 0 : inv_add(trail_rewardinv, dragon_chainbody_ornament_kit, 1);   // Dragon chainbody ornament kit
@@ -366,4 +391,5 @@ switch_int ($random) {
     case 109 : inv_add(trail_rewardinv, third_age_axe, 1);   // 3rd age axe
     case 110 : inv_add(trail_rewardinv, bloodhound, 1);   // Bloodhound
     case 111 : inv_add(trail_rewardinv, ring_of_third_age, 1);   // Ring of 3rd age
+    case 112 : inv_add(trail_rewardinv, thread_of_elidinis, 1);   // Thread of Elidinis - see above
 }

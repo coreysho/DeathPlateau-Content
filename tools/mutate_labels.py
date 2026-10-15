@@ -58,7 +58,11 @@ def harnesses():
         # poh_mutate's checker_for(), which returns a path per mutation. Read both, because a
         # harness this cannot identify is a harness this cannot audit - and saying so is the
         # point, but only when it is really unreadable.
-        got = re.findall(r"os\.path\.join\(W, 'tools', '(\w+\.py)'\)", src)
+        # The join may carry intermediate segments: gamemode_mutate and leprechaun_mutate copy the
+        # tree with a content/ directory inside the work dir, so theirs read
+        # os.path.join(W, 'content', 'tools', 'x_battery.py'). Both of them were reported as
+        # unreadable - which is this check failing on its own regex rather than on a harness.
+        got = re.findall(r"os\.path\.join\(W,(?: '[\w.]+',)* 'tools', '(\w+\.py)'\)", src)
         got += [m for m in re.findall(r"return '(?:tools/)?(\w+\.py)'", src)]
         out[fn[:-3]] = (sorted(set(got)), src)
     return out
@@ -104,7 +108,7 @@ def main():
               '%s says which check caught each mutation, rather than only that one did' % name)
         if not checkers:
             check(False, '%s: could not tell which checker it runs, so its labels cannot be '
-                         'audited - name it as os.path.join(W, \'tools\', \'x.py\')' % name)
+                         'audited - name it as os.path.join(W, ..., \'tools\', \'x.py\')' % name)
             continue
 
         hay = []

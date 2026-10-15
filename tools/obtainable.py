@@ -45,7 +45,58 @@ def read(p):
 # not enough: they still counted as a MENTION, which demotes an obj from "nothing anywhere mentions
 # these" to "worth a glance, not a bug list". That quietly hid seventeen more, including two
 # Graceful pieces, the mime set, the lederhosen, the frog mask and the zombie set.
-STORAGE_LISTS = ('poh_store_item', 'poh_costume_item')
+# A table that LISTS objs is not a table that GIVES them. Each of these names objs for a reason that
+# tells you nothing about whether a player can get one, and reading them as sources hides exactly the
+# items this tool exists to find:
+#   poh_store_item / poh_costume_item  what the costume room will put away for you. This one hid a
+#                                      carpenter's shirt that no shop sells behind a box that stores it.
+#   collection_log_items               the collection log's display order. collection_log.rs2 reads it
+#                                      to draw the window and to count what the player's own
+#                                      collection_log inv already holds; it hands out nothing, so
+#                                      every item in the log "had a source" - which is to say the log
+#                                      was reporting itself as the way to get them.
+#   macro_pillory_symbol               the fifteen colour-and-shape cubes stamped on the pillory
+#                                      cage's tumblers. macro_event_pillory.rs2 passes them to an
+#                                      interface to be DRAWN; nobody is ever handed one, and
+#                                      nosourcespec.json has said so in as many words for as long as
+#                                      the cubes have been in the tree.
+#   macro_quiz_item                    the quiz master's twelve answer pictures. macro_event_quiz.rs2
+#                                      picks three of them per question and hands them to ~multiobj3
+#                                      to be drawn as the choices. The prize is the mystery box; not
+#                                      one of the pictures is ever handed over.
+#   macro_digger_goods                 the sixteen grave goods. macro_event_gravedigger.rs2 reads
+#                                      them into macro_digger_coffin_inv, which is transmitted to
+#                                      the coffin interface and cleared - see DISPLAY_INVS below.
+#                                      The event's reward is the costume, in macro_digger_reward_obj,
+#                                      which IS a source and is read as one.
+#   macro_digger_symbol                the five "Its a symbol" stones. ~macro_digger_stone_show
+#                                      puts one on an interface so the player can read it off; the
+#                                      stone itself never leaves the script.
+#
+# Note the granularity: these are enum BLOCK names, not file names, and macro_events_gravedigger.enum
+# is why. One file holds both macro_digger_goods, which gives out nothing, and
+# macro_digger_reward_obj, which is the only way to get the gravedigger costume. Excluding by file
+# would have hidden the costume; excluding by block keeps it.
+STORAGE_LISTS = ('poh_store_item', 'poh_costume_item', 'collection_log_items', 'macro_pillory_symbol',
+                 'macro_quiz_item', 'macro_digger_goods', 'macro_digger_symbol')
+
+# A DISPLAY INV is not a source either, for the same reason a storage list is not: the obj goes in
+# and the player cannot take it out again. inv_add names it, so without this the inv_add rule below
+# reports the obj as obtainable.
+#   collection_log                     the tally behind the collection log window. collection_log.rs2
+#                                      adds to it and reads inv_total off it to colour a row in;
+#                                      nothing deletes from it or moves anything out of it, ever.
+#                                      Reading it as a source means the log reports itself as the way
+#                                      to get everything it lists.
+#   macro_digger_coffin_inv            the coffin's contents on the gravedigger puzzle's interface.
+#                                      Only inv_clear, inv_add and inv_transmit touch it. This is the
+#                                      skull and the pile of bones: nothing else in the game names
+#                                      them, so the puzzle's own scenery was their only "source".
+DISPLAY_INVS = ('collection_log', 'macro_digger_coffin_inv')
+
+# The same thing in dbrow form: collection_log.dbrow is generated from collectionlogspec.json and is
+# the pages of the log, nothing more.
+LISTING_DBROWS = ('collection_log.dbrow',)
 
 
 def without_storage_lists(text):
@@ -218,7 +269,17 @@ def main():
                 given[m.group(1)].add('shop:' + fn)
 
     # ---- scripts. inv_moveitem's DESTINATION is its second argument, so it is read separately.
-    ADD = re.compile(r'\b(?:\.)?(?:inv_add|inv_addall|inv_changeslot|npc_giveitem|obj_add|obj_addall)'
+    #
+    # ~macro_event_give_obj is in here with the engine commands because it is one: every random
+    # event pays out through it rather than calling inv_add itself, so without it the detector
+    # cannot see a single random event reward. That is how the Kiss the Frog set - the token, the
+    # mask and the four prince and princess pieces - stayed in nosourcespec.json for as long as it
+    # took somebody to read the event, which is implemented and hands out all six. If another
+    # give-wrapper of this shape turns up, it belongs on this list too; the test is that the proc's
+    # whole job is to put its obj argument in the player's inv.
+    ADD = re.compile(r'(?<![a-z0-9_])[.~]?'
+                     r'(?:inv_add|inv_addall|inv_changeslot|npc_giveitem|obj_add|obj_addall'
+                     r'|macro_event_give_obj)'
                      r'\(([^;]*?)\)\s*;', re.S)
     for dirpath, _dirs, files in os.walk(os.path.join(ROOT, 'scripts')):
         for fn in files:
@@ -229,6 +290,10 @@ def main():
                 continue
             t = read(rel)
             for m in ADD.finditer(t):
+                # inv_add's first argument is the inv being written to. A write into a display inv
+                # (see DISPLAY_INVS) is not a source - the obj goes in and never comes back out.
+                if m.group(1).split(',')[0].strip() in DISPLAY_INVS:
+                    continue
                 for w in re.findall(r'([a-z][a-z0-9_+]{2,})', m.group(1)):
                     if w in byname:
                         given[w].add(fn)
@@ -304,7 +369,7 @@ def main():
                         # shirt that no shop sells behind a fancy dress box that would store it.
                         if v in byname and cur not in STORAGE_LISTS:
                             given[v].add('table:' + fn)
-                    elif suffix == '.dbrow' and '=' in l:
+                    elif suffix == '.dbrow' and '=' in l and fn not in LISTING_DBROWS:
                         for w in re.findall(r'([a-z][a-z0-9_+]{2,})', l.split('=', 1)[1]):
                             if w in byname:
                                 given[w].add('dbrow:' + fn)

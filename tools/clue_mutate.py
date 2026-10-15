@@ -112,16 +112,25 @@ MUTS = [
        'case 26 : inv_add(trail_rewardinv, willow_longbow, 1);\n'
        '    case 27 : inv_add(trail_rewardinv, clue_hunter_boots, 1);',
   "7 easy's normal table still has exactly as many cases as its own random()"),
- (HD, 'def_int $random = random(34);', 'def_int $random = random(35);',
+ # random(34) was the hard rare table's bound until 2026-10-04 replaced it with Old School's own
+ # 158. The bound to bend is the switch's own, not the random(8) that branches into the elite and
+ # master table above it.
+ (HD, 'def_int $random = random(158);', 'def_int $random = random(159);',
   "7 hard's rare table still has exactly as many cases as its own random()"),
 
  # ---- the spec's arithmetic and the constants
  (SPC, '"expected_rolls_for_the_set": 1837', '"expected_rolls_for_the_set": 1800',
-  '8 the rolls-for-the-set figure is 750 x H(6) recomputed'),
+  '8 the rolls-for-the-set figure is 750 x H(6) recomputed and truncated'),
  (SPC, '"easy": 612', '"easy": 600',
   "8 and each tier's casket figure divides that by the roll count read out of THAT tier's"),
  (CST, '^clue_hunter_drop_denom = 750', '^clue_hunter_drop_denom = 700',
   '8 ^clue_hunter_drop_denom is 750 in trail.constant, the same as in the spec'),
+
+ # ---- the scroll box cap, which is off by a sentinel and not by a big number
+ (CST, '^trail_easy_stackcap = ^trail_stackcap_none', '^trail_easy_stackcap = 2',
+  '9 ^trail_easy_stackcap is ^trail_stackcap_none'),
+ (CST, '^trail_stackcap_none = -1', '^trail_stackcap_none = 0',
+  '9 ...and the sentinel is -1'),
  (CST, '^clue_hunter_pieces = 6', '^clue_hunter_pieces = 5',
   '8 and ^clue_hunter_pieces is 6, counted from the spec rather than typed'),
  (SPC, '"casket_effect": null', '"casket_effect": "doubles it"',

@@ -62,6 +62,17 @@ jobs:
         # and uncomment the next line.
         # token: ${{ secrets.ENGINE_TOKEN }}
 
+    # AND THE CLIENT, for the mutation-label step below. That step runs every checker as a
+    # subprocess, and leprechaun_battery reads the client as well as the engine: with no client
+    # beside content its two client checks print nothing, so the two labels naming them match no
+    # check and the step fails on a missing checkout rather than on drift. Same repository and ref
+    # as the battery's own job further down.
+    - uses: actions/checkout@v4
+      with:
+        repository: coreysho/DeathPlateau-Client
+        ref: dev-logging
+        path: client
+
     - uses: actions/setup-python@v5
       with:
         python-version: '3.12'

@@ -8,12 +8,31 @@
 // belongs in the chest cannot be quietly left out of it.
 //
 // The plain rune, adamant and black armour that clues also drop is deliberately NOT here, and
-// neither are the bows, dragonhide, studded leather, amulets, coins, runes or noted fish. The
-// chest is costume storage, not a second bank.
+// neither are the bows, plain dragonhide, plain studded leather, amulets, coins, runes or noted
+// fish. The chest is costume storage, not a second bank.
 //
-// 72 items in 16 sets. They are stored in SET ORDER and the first/last tables below are what make
+// 96 items in 20 sets. They are stored in SET ORDER and the first/last tables below are what make
 // a set addressable without an enum per set - the same idiom poh_fam_first/poh_fam_last uses for
 // the furniture families.
+//
+// GREW FROM 72 TO 96 ON 2026-10-15, because the hard rare table grew from 34 rows to Old School's
+// own 158 on 2026-10-04 and the chest was not re-derived after it. What came in:
+//   nine plateskirts, one per plate set - the chest held every set's helm, body, legs and shield
+//     and not one of its skirts
+//   the blue wizard robe skirt, trimmed and gold, beside the top that was already here
+//   green and blue dragonhide, trimmed and gold - the trims are clue-only, which is why they
+//     belong here while the plain hide does not
+//   studded body and chaps (g), same rule
+//   the three rune scimitar ornament kits
+//
+// AND THE FIFTEEN HERALDIC SHIELDS ARE THE IMPORT'S, not the cache's. This build has them twice:
+// the 377 cache's rune/adamant/black_heraldic_kiteshield1..5, and *_shield_h1..h5 imported with
+// Old School's 510 on 2026-10-04. Neither record carries a param or a gate the other lacks, so
+// the tie breaks on the only thing that matters to a chest: the import's fifteen are what the
+// clue tables hand out and what the collection log tracks, and the cache's fifteen are what
+// nothing gives any more. Fifteen slots that could never be filled are now fifteen that can. The
+// cache's fifteen are named in tools/nosourcespec.json for the same reason the duplicate magic
+// secateurs are.
 
 [poh_costume_item]
 inputtype=int
@@ -22,75 +41,99 @@ default=null
 val=0,rune_full_helm_saradomin
 val=1,rune_platebody_saradomin
 val=2,rune_platelegs_saradomin
-val=3,rune_kiteshield_saradomin
-val=4,rune_full_helm_zamorak
-val=5,rune_platebody_zamorak
-val=6,rune_platelegs_zamorak
-val=7,rune_kiteshield_zamorak
-val=8,rune_full_helm_guthix
-val=9,rune_platebody_guthix
-val=10,rune_platelegs_guthix
-val=11,rune_kiteshield_guthix
-val=12,rune_full_helm_gold
-val=13,rune_platebody_gold
-val=14,rune_platelegs_gold
-val=15,rune_kiteshield_gold
-val=16,rune_full_helm_trim
-val=17,rune_platebody_trim
-val=18,rune_platelegs_trim
-val=19,rune_kiteshield_trim
-val=20,adamant_full_helm_gold
-val=21,adamant_platebody_gold
-val=22,adamant_platelegs_gold
-val=23,adamant_kiteshield_gold
-val=24,adamant_full_helm_trim
-val=25,adamant_platebody_trim
-val=26,adamant_platelegs_trim
-val=27,adamant_kiteshield_trim
-val=28,black_full_helm_gold
-val=29,black_platebody_gold
-val=30,black_platelegs_gold
-val=31,black_kiteshield_gold
-val=32,black_full_helm_trim
-val=33,black_platebody_trim
-val=34,black_platelegs_trim
-val=35,black_kiteshield_trim
-val=36,rune_heraldic_kiteshield1
-val=37,rune_heraldic_kiteshield2
-val=38,rune_heraldic_kiteshield3
-val=39,rune_heraldic_kiteshield4
-val=40,rune_heraldic_kiteshield5
-val=41,adamant_heraldic_kiteshield1
-val=42,adamant_heraldic_kiteshield2
-val=43,adamant_heraldic_kiteshield3
-val=44,adamant_heraldic_kiteshield4
-val=45,adamant_heraldic_kiteshield5
-val=46,black_heraldic_kiteshield1
-val=47,black_heraldic_kiteshield2
-val=48,black_heraldic_kiteshield3
-val=49,black_heraldic_kiteshield4
-val=50,black_heraldic_kiteshield5
-val=51,bluewizhat_trim
-val=52,bluewizhat_trim_gold
-val=53,wizards_robe_trim
-val=54,wizards_robe_trim_gold
-val=55,enchanted_hat
-val=56,enchanted_robetop
-val=57,enchanted_robelegs
-val=58,berret_black
-val=59,berret_blue
-val=60,berret_white
-val=61,cavalier_black
-val=62,cavalier_brown
-val=63,cavalier_dark
-val=64,headband_black
-val=65,headband_brown
-val=66,headband_red
-val=67,highwaymanmask
-val=68,piratehat
-val=69,robinhoodhat
-val=70,boots_ranger
-val=71,boots_wizard
+val=3,rune_plateskirt_saradomin
+val=4,rune_kiteshield_saradomin
+val=5,rune_full_helm_zamorak
+val=6,rune_platebody_zamorak
+val=7,rune_platelegs_zamorak
+val=8,rune_plateskirt_zamorak
+val=9,rune_kiteshield_zamorak
+val=10,rune_full_helm_guthix
+val=11,rune_platebody_guthix
+val=12,rune_platelegs_guthix
+val=13,rune_plateskirt_guthix
+val=14,rune_kiteshield_guthix
+val=15,rune_full_helm_gold
+val=16,rune_platebody_gold
+val=17,rune_platelegs_gold
+val=18,rune_plateskirt_gold
+val=19,rune_kiteshield_gold
+val=20,rune_full_helm_trim
+val=21,rune_platebody_trim
+val=22,rune_platelegs_trim
+val=23,rune_plateskirt_trim
+val=24,rune_kiteshield_trim
+val=25,adamant_full_helm_gold
+val=26,adamant_platebody_gold
+val=27,adamant_platelegs_gold
+val=28,adamant_plateskirt_gold
+val=29,adamant_kiteshield_gold
+val=30,adamant_full_helm_trim
+val=31,adamant_platebody_trim
+val=32,adamant_platelegs_trim
+val=33,adamant_plateskirt_trim
+val=34,adamant_kiteshield_trim
+val=35,black_full_helm_gold
+val=36,black_platebody_gold
+val=37,black_platelegs_gold
+val=38,black_plateskirt_gold
+val=39,black_kiteshield_gold
+val=40,black_full_helm_trim
+val=41,black_platebody_trim
+val=42,black_platelegs_trim
+val=43,black_plateskirt_trim
+val=44,black_kiteshield_trim
+val=45,rune_shield_h1
+val=46,rune_shield_h2
+val=47,rune_shield_h3
+val=48,rune_shield_h4
+val=49,rune_shield_h5
+val=50,adamant_shield_h1
+val=51,adamant_shield_h2
+val=52,adamant_shield_h3
+val=53,adamant_shield_h4
+val=54,adamant_shield_h5
+val=55,black_shield_h1
+val=56,black_shield_h2
+val=57,black_shield_h3
+val=58,black_shield_h4
+val=59,black_shield_h5
+val=60,bluewizhat_trim
+val=61,bluewizhat_trim_gold
+val=62,wizards_robe_trim
+val=63,wizards_robe_trim_gold
+val=64,blue_skirt_trim
+val=65,blue_skirt_trim_gold
+val=66,enchanted_hat
+val=67,enchanted_robetop
+val=68,enchanted_robelegs
+val=69,dragonhide_body_trim
+val=70,dragonhide_body_trim_gold
+val=71,dragonhide_chaps_trim
+val=72,dragonhide_chaps_trim_gold
+val=73,blue_dragonhide_body_trim
+val=74,blue_dragonhide_body_trim_gold
+val=75,blue_dragonhide_chaps_trim
+val=76,blue_dragonhide_chaps_trim_gold
+val=77,studded_body_trim_gold
+val=78,studded_chaps_trim_gold
+val=79,rune_scimitar_ornament_kit_saradomin
+val=80,rune_scimitar_ornament_kit_guthix
+val=81,rune_scimitar_ornament_kit_zamorak
+val=82,berret_black
+val=83,berret_blue
+val=84,berret_white
+val=85,cavalier_black
+val=86,cavalier_brown
+val=87,cavalier_dark
+val=88,headband_black
+val=89,headband_brown
+val=90,headband_red
+val=91,highwaymanmask
+val=92,piratehat
+val=93,robinhoodhat
+val=94,boots_ranger
+val=95,boots_wizard
 
 [poh_costume_set_name]
 inputtype=int
@@ -110,8 +153,12 @@ val=10,Heraldic adamant shields
 val=11,Heraldic black shields
 val=12,Wizard robes
 val=13,Enchanted robes
-val=14,Hats and headwear
-val=15,Boots
+val=14,Green dragonhide (trimmed)
+val=15,Blue dragonhide (trimmed)
+val=16,Studded leather (gold-trimmed)
+val=17,Rune scimitar ornament kits
+val=18,Hats and headwear
+val=19,Boots
 
 // The first and last index into poh_costume_item that belongs to each set.
 [poh_costume_set_first]
@@ -119,42 +166,50 @@ inputtype=int
 outputtype=int
 default=null
 val=0,0
-val=1,4
-val=2,8
-val=3,12
-val=4,16
-val=5,20
-val=6,24
-val=7,28
-val=8,32
-val=9,36
-val=10,41
-val=11,46
-val=12,51
-val=13,55
-val=14,58
-val=15,70
+val=1,5
+val=2,10
+val=3,15
+val=4,20
+val=5,25
+val=6,30
+val=7,35
+val=8,40
+val=9,45
+val=10,50
+val=11,55
+val=12,60
+val=13,66
+val=14,69
+val=15,73
+val=16,77
+val=17,79
+val=18,82
+val=19,94
 
 [poh_costume_set_last]
 inputtype=int
 outputtype=int
 default=null
-val=0,3
-val=1,7
-val=2,11
-val=3,15
-val=4,19
-val=5,23
-val=6,27
-val=7,31
-val=8,35
-val=9,40
-val=10,45
-val=11,50
-val=12,54
-val=13,57
-val=14,69
-val=15,71
+val=0,4
+val=1,9
+val=2,14
+val=3,19
+val=4,24
+val=5,29
+val=6,34
+val=7,39
+val=8,44
+val=9,49
+val=10,54
+val=11,59
+val=12,65
+val=13,68
+val=14,72
+val=15,76
+val=16,78
+val=17,81
+val=18,93
+val=19,95
 
 // How many items each tier of chest holds. OSRS gives a better chest more room; these are the
 // tunable numbers, like the room prices, and they run a quarter of the list per tier.
@@ -162,7 +217,7 @@ val=15,71
 inputtype=int
 outputtype=int
 default=null
-val=1,18
-val=2,36
-val=3,54
-val=4,72
+val=1,24
+val=2,48
+val=3,72
+val=4,96

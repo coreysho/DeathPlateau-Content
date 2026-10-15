@@ -128,7 +128,12 @@ def_struct $struct = oc_param($fish, fishing_struct);
 inv_del(inv, $bait, 1);
 inv_add(inv, $fish, 1);
 ~fishing_xp(struct_param($struct, productexp));
-stat_advance(agility, struct_param($struct, barbfish_agil_str_exp));
+// THE AGILITY GOES THROUGH ~agility_xp, not stat_advance, because it is skilling agility and the
+// Graceful roll is on agility experience. Every other place that pays agility out does the same -
+// all four courses and the shortcuts, fourteen files - and this was the one that did not, so a
+// barbarian fisherman was the only skiller in the game whose agility could never find a Graceful
+// piece. Strength keeps stat_advance: there is no strength outfit to roll for.
+~agility_xp(struct_param($struct, barbfish_agil_str_exp));
 stat_advance(strength, struct_param($struct, barbfish_agil_str_exp));
 ~skillpet_roll(skillpet_heron_item, fishing, struct_param($struct, fishing_pet_base));
 mes(struct_param($struct, productmessage));

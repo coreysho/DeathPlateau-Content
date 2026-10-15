@@ -62,7 +62,7 @@ MUTS = [
        'walkanim=osrs_seq_2849\nreadyanim=osrs_seq_3309',
   '5 ...walk is OSRS seq 3313'),
  (NPC, 'readyanim=osrs_seq_6236\nvislevel=hide', 'readyanim=osrs_seq_6236\nvislevel=99',
-  '5 ...with no combat level and the timer that drives [ai_timer,_bosspet]'),
+  '5 ...with no combat level, and the every-tick timer that drives [ai_timer,_bosspet]'),
  # 6 - a placeholder creeping back
  (OBJ, 'model=obj_bosspet_giant_mole_item', 'model=obj_bird_egg_red',
   '6 obj_bird_egg_red (the recoloured bird egg) appears in neither pet config'),
@@ -82,7 +82,16 @@ MUTS = [
  # 10 - the sweep, which is now the whole of this group: WHERE a pet comes from moved to
  # tools/pet_battery.py when petspec.json took ownership of the rates, and its mutations live in
  # tools/pet_mutate.py. Nothing here should test a drop table.
- ('tools/petspec.json', '"skillpet_chinchompa": {', '"skillpet_chinchompa_typo": {',
+ # THE SWEEP READS bossartspec's items against the SCRIPTS and the by-design list, so bending
+ # petspec.json - which it does not read - changed nothing and this mutation went GREEN. Taking
+ # one roll call out puts Rocky in the "neither" column: nothing rolls it and nothing declares it
+ # sourceless, which is exactly the hole the sweep exists to find.
+ # The giant mole, because its item is rolled from exactly ONE place. Rocky was the first try and
+ # it stayed green: thieving.rs2 rolls it twice, once for pickpocketing and once for the stalls, so
+ # taking one away left the other and the sweep was right to say nothing.
+ ('scripts/drop_tables/scripts/giant_mole.rs2',
+  '~bosspet_roll(bosspet_giant_mole_item, ^bosspet_droprate);',
+  '~bosspet_roll(bosspet_kbd_item, ^bosspet_droprate);',
   '10 every pet item is either rolled by something or declared sourceless'),
 ]
 

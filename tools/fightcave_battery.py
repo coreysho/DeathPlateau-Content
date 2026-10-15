@@ -350,19 +350,40 @@ PETOBJ = blocks(read('scripts/npc/configs/boss_pets.obj'))
 PETSEQ = blocks(read('scripts/npc/configs/boss_pets.seq'))
 
 # --- the currency, which said "coins" in six places
-for what, needle in (('the till it counts', 'inv_total(inv, %shop_currency)'),
-                     ('what it takes', 'inv_del(inv, %shop_currency, $added_amt)'),
+#
+# THE WALLET MOVED BEHIND FOUR PROCS, and three of these checks went red with it. %shop_currency is
+# still the obj for a shop paid in coins or Tokkul, but a shop can now be paid in vote points,
+# which is a varp and not an obj at all - so counting the till, spending from it and naming it go
+# through ~shop_wallet_total, ~shop_wallet_spend and ~shop_wallet_name (shop/scripts/
+# shop_wallet.rs2), each of which branches on %shop_wallet and falls through to %shop_currency.
+# What the old checks were really protecting is intact and is what is checked here: nothing in the
+# buy or sell path names a currency, it asks what this shop's is.
+for what, needle in (('the till it counts', '~shop_wallet_total'),
+                     ('what it takes', '~shop_wallet_spend('),
                      ('what it pays', 'inv_add(inv, %shop_currency, $total_value)'),
                      ('the space it checks', 'inv_itemspace(inv, %shop_currency,'),
                      ('what it refuses to buy', '$item = %shop_currency'),
-                     ('what it says you are short of, in both places it prints it', None)):
+                     ('what it says you are short of, and both prices it quotes', None)):
     if needle is None:
-        # TWICE, not once: the currency's name is printed in the price quote AND in "you don't have
-        # enough", and testing for presence let the second be replaced by the word coins unnoticed.
-        check(SHOP.count('oc_name(%shop_currency)') == 2,
-              'the shop reads its currency for %s: %d' % (what, SHOP.count('oc_name(%shop_currency)')))
+        # THREE TIMES, not two: the buy quote, the sell quote and "you don't have enough". The sell
+        # quote was the one place left in the file that printed a currency instead of reading it -
+        # it said "gp" to a TzHaar trader who pays in Tokkul - and it is read now, which is why
+        # this is 3 where it used to be 2.
+        check(SHOP.count('~shop_wallet_name') == 3,
+              'the shop reads its currency for %s: %d' % (what, SHOP.count('~shop_wallet_name')))
     else:
         check(needle in SHOP, 'the shop reads its currency for %s' % what)
+# and the wallet's own four procs each answer for both kinds, so a coin shop behaves as it did
+WALLET = read('scripts/shop/scripts/shop_wallet.rs2')
+for _proc, _fallback in (('shop_wallet_name', 'oc_name(%shop_currency)'),
+                         ('shop_wallet_total', 'inv_total(inv, %shop_currency)'),
+                         ('shop_wallet_spend', 'inv_del(inv, %shop_currency, $amount)'),
+                         ('shop_wallet_exact_change', None)):
+    _b = WALLET.split('[proc,%s]' % _proc, 1)[1].split('\n[', 1)[0] if '[proc,%s]' % _proc in WALLET else ''
+    check('%shop_wallet = ^shop_wallet_vote_points' in _b
+          and (_fallback is None or _fallback in _b),
+          '~%s asks which wallet this shop uses%s'
+          % (_proc, '' if _fallback is None else ' and falls through to the obj one'))
 check(SHOP.count('%shop_currency =') == 2,
       '...and the currency is set in exactly those two places and nowhere else: %d'
       % SHOP.count('%shop_currency ='))
@@ -430,10 +451,24 @@ check(PETNPC[PET].get('resizeh', [None])[0] == '20',
 ROLL = REW.split('[proc,fightcave_pet_roll]', 1)[-1].split('\n[', 1)[0]
 check('random(^fightcave_pet_rate) ! 0' in ROLL, 'the pet rolls at ^fightcave_pet_rate')
 check(int(CONST['fightcave_pet_rate']) == 200, '...which is 200, the rate for a plain kill')
-check('~obj_gettotal(%s) > 0' % ITEM in ROLL and ('%%follower_obj = %s' % ITEM) in ROLL,
-      '...and never gives a second one, counting pack, bank, worn and the one out following you')
-check('~obj_giveorbank(%s, 1);' % ITEM in ROLL and 'obj_add' not in ROLL,
-      '...and hands it over rather than dropping it in an instance about to be deleted')
+# THE DUPLICATE TEST AND THE HAND-OVER MOVED TO ~pet_receive, which is now the one proc that hands
+# any pet over (npc/scripts/follower.rs2, whose header says so). This roll used to do both itself,
+# and these two checks asked for that - so they went red at the refactor while the behaviour they
+# describe got stronger, because it is the same code for every pet in the game. What is checked
+# here is that TzRek-Jad goes through it and that the behaviour on the other side is still right.
+FOLL = read('scripts/npc/scripts/follower.rs2')
+_owned = FOLL.split('[proc,pet_owned]', 1)[1].split('\n[', 1)[0] if '[proc,pet_owned]' in FOLL else ''
+_recv = FOLL.split('[proc,pet_receive]', 1)[1].split('\n[', 1)[0] if '[proc,pet_receive]' in FOLL else ''
+check('~pet_receive_later(%s, 1);' % ITEM in ROLL,
+      '...and hands it to ~pet_receive, a tick later because Jad\'s own death is still resolving')
+check('~obj_gettotal($pet) > 0' in _owned and '%follower_obj = $pet' in _owned
+      and 'inv_total(lostpet_store, $pet) > 0' in _owned and '~pet_owned($pet) = true' in _recv,
+      '...which never gives a second one, counting pack, bank, worn, the one out following you '
+      'and the one waiting at Probita\'s')
+check('obj_add' not in ROLL and 'obj_add' not in _recv
+      and 'inv_add(lostpet_store, $pet, 1);' in _recv,
+      '...and a full pack sends it to Probita\'s rather than the floor of an instance about to be '
+      'deleted')
 check('~fightcave_pet_roll;' in REW.split('[proc,fightcave_reward]', 1)[-1].split('\n[', 1)[0],
       'and killing Jad is what rolls it')
 
@@ -679,7 +714,13 @@ TEXPACK = {int(l.split('=')[0]): l.split('=', 1)[1]
            for l in read('pack/texture.pack').split('\n') if '=' in l}
 check(TEXPACK.get(INF['local_texture']) == INF['texture_name'],
       'texture %d is %s in texture.pack' % (INF['local_texture'], INF['texture_name']))
-check(max(TEXPACK) == INF['local_texture'] and sorted(TEXPACK) == list(range(max(TEXPACK) + 1)),
+# THE INFERNAL CAPE'S TEXTURE IS NO LONGER THE LAST ONE, and asking that it be was only ever a
+# proxy for the real rule. 0355b4e2 imported sparkle_imbue at 51 for the magic shortbow (i), so
+# max(TEXPACK) is 51 and lavacrust is 50. What the packer requires and the client's eviction loop
+# assumes is that the ids are CONTIGUOUS FROM 0 - a hole is what breaks both - and that is the half
+# of this that was doing the work. The cape's own id is checked by the line above, against the
+# spec, so a texture moving out from under it still goes red.
+check(sorted(TEXPACK) == list(range(max(TEXPACK) + 1)),
       '...and the texture ids are contiguous 0-%d, which the packer requires and the client\'s '
       'own eviction loop assumes' % max(TEXPACK))
 texpng = os.path.join(C, 'textures', INF['texture_name'] + '.png')

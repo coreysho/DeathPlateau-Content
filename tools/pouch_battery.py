@@ -88,8 +88,17 @@ check(not stray, 'no rune is read or spent straight from the inventory outside t
       % (stray or 'none'))
 # The four checks go through ~spell_rune_enough, which counts an element's combination runes as
 # well (~element_rune_total) - and every count in there is a ~rune_total, never the pack alone.
-check(len(re.findall(r'~spell_rune_enough\(\$rune\d', mc)) == 4,
-      'all four rune checks go through ~spell_rune_enough...')
+#
+# TWO PROCS ASK THE QUESTION, not one, and counting the calls across the whole file instead of per
+# proc is why this check failed for as long as that was true. ~check_spell_requirements is the one
+# that tells the player what is missing; ~spell_requirements_met is the same test without the
+# messages, for a spell the game picks on the player's behalf - the twinflame staff's weakness
+# autocast, where a failure means "cast the one they chose" rather than "say you have no runes".
+# Both have to go through ~spell_rune_enough or the silent one answers out of the inventory alone.
+for proc in ('proc,check_spell_requirements', 'proc,spell_requirements_met'):
+    asked = re.findall(r'~spell_rune_enough\(\$rune(\d)', code(block(MAGIC, proc)))
+    check(asked == ['1', '2', '3', '4'],
+          'all four rune checks in ~%s go through ~spell_rune_enough...' % proc.split(',')[1])
 ert = code(block(MAGIC, 'proc,element_rune_total'))
 check(ert.count('~rune_total(') == 17,
       '...which counts through ~rune_total: 4 kinds for each element, and the rune itself otherwise')
@@ -191,19 +200,30 @@ check('inv_add(inv, thread_of_elidinis, 1);' in rev,
 # WHERE THE THREAD COMES FROM. OSRS puts it in Tombs of Amascut, a raid with no content here, so
 # it is a rare out of the top clue tier - there is no elite tier in this build, hard is the top.
 TRAIL = read('scripts/minigames/game_trail/scripts/hard/trail_clue_hard_reward.rs2')
-rare = code(block(TRAIL, 'proc,trail_clue_hard_rare'))
+# IT IS IN THE ELITE AND MASTER TABLE, NOT THE HARD ONE, and that is deliberate. The hard rare
+# table was Old School's own 158 as of 2026-10-04, which has no room for a raid drop - the rewrite
+# that imported those 158 dropped the thread's row with it, and nothing noticed for ten days
+# because the thread was out of nosourcespec.json by then and the sweep's loudest bucket does not
+# print names. ~trail_clue_master_rare is the table for uniques with nowhere else to come from,
+# which is exactly what the thread is, and the hard rare roll reaches it one time in eight.
+rare = code(block(TRAIL, 'proc,trail_clue_master_rare'))
 check('inv_add(trail_rewardinv, thread_of_elidinis, 1);' in rare,
-      'the Thread of Elidinis is a rare reward from a hard clue')
+      'the Thread of Elidinis is a rare reward out of the top clue tier')
 check(TRAIL.count('thread_of_elidinis') == 1,
       'in exactly one place, so there is no second chance at it: %s'
       % TRAIL.count('thread_of_elidinis'))
 # The case list and the random() bound have to agree or the last case is unreachable - which is
-# how a reward gets added and never rolls. Counted, not assumed.
-cases = [int(m.group(1)) for m in re.finditer(r'^\s*case (\d+) :', rare, re.M)]
-bound = int(re.search(r'random\((\d+)\)', rare).group(1))
-check(cases == list(range(bound)),
-      'and the rare table\'s cases run 0..n-1 against its own random bound, so the thread\'s case '
-      'can actually come up: %d cases against random(%d)' % (len(cases), bound))
+# how a reward gets added and never rolls. Counted, not assumed, for both tables: the hard one
+# opens with its own random(8) for the branch into the master table, so the bound read here is the
+# one the switch is actually written against, $random's, rather than the first random in the proc.
+for proc in ('proc,trail_clue_hard_rare', 'proc,trail_clue_master_rare'):
+    body = code(block(TRAIL, proc))
+    cases = [int(m.group(1)) for m in re.finditer(r'^\s*case (\d+) :', body, re.M)]
+    bound = int(re.search(r'\$random = random\((\d+)\)', body).group(1))
+    check(cases == list(range(bound)),
+          '~%s\'s cases run 0..n-1 against its own random bound, so the last row added to it can '
+          'actually come up: %d cases against random(%d)'
+          % (proc.split(',')[1], len(cases), bound))
 # The REFUND still must not count as the source. It was excused by the spec's per-obj "ignore"
 # while the thread was sourceless; an obj with a source cannot carry one, so it moved to the
 # top-level not_a_source section - otherwise deleting the clue row would leave Revert looking

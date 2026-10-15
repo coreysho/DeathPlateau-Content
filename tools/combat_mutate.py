@@ -40,9 +40,14 @@ MUTS = [
         return;
     }''',
   '1 after the requirement check, so a spell you cannot cast does not arm it'),
- # the lamp and the state disagreeing - the button would read a bit nothing writes
- (STAFFIF, 'script1op1=testbit,lastcastspell,0', 'script1op1=testbit,lastcastspell,1',
-  '1 which is the bit the toggle button reads, so the lamp matches the state'),
+ # THE BIT ITSELF. This used to bend the staff interface's script1op1=testbit,lastcastspell,0 -
+ # the button reading a bit nothing writes - and that interface asks pushvar + lt,2 now, so the
+ # pattern had gone stale and the mutation SKIPped. What the check is about is the varbit: moving
+ # autocast_set off bit 0 makes every testbit in auto_cast.rs2 read a bit nothing sets.
+ ('scripts/_unpack/377/all.varbit',
+  '[autocast_set]\nbasevar=lastcastspell\nstartbit=0\nendbit=0',
+  '[autocast_set]\nbasevar=lastcastspell\nstartbit=1\nendbit=1',
+  '1 autocast_set is one bit of lastcastspell'),
 
  # ---- 2, the five rows. Removing one is the exact bug that was reported.
  (ROWS, 'data=spell,^iban_blast\n', 'data=spell,^iban_blast_gone\n',

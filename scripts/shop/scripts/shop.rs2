@@ -98,7 +98,10 @@ def_int $item_value = ~adjusted_item_cost_selling($item, inv_total(%shop, $item)
 if(~can_sell_obj($item) = false) {
     return;
 }
-mes("<$item_name>: shop will buy for <tostring($item_value)>gp.");
+// "gp" was the last place in this file that named a currency rather than reading it. A TzHaar
+// trader pays in Tokkul (param=shop_currency,tzhaar_token) and quoted the price in gp,
+// which is the same bug the wallet was built to end - it just was not in the buy path.
+mes("<$item_name>: shop will buy for <tostring($item_value)> <~shop_wallet_name>.");
 
 // Buy value
 [inv_button1,shop_template:inv]
