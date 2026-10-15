@@ -188,8 +188,8 @@ return(true);
 // side had a handler - so nobody could get into the village this quest rebuilds. The inn's front
 // door (ahoy_harbour_door, the same door Port Phasmatys uses) is in doors/scripts. The broken back
 // wall of the inn, over which the trapdoor and its rubble are reached, had no handler either.
-[oploc1,burgh_fencegate_l] ~walk_through_door;
-[oploc1,burgh_fencegate_r] ~walk_through_door;
+// The gate itself is in scripts/myreque2_village.rs2 now, because it is Florin's gate: it does not
+// open until something to eat has gone in the chest, which is the walkthrough's fifth step.
 
 [oploc1,burgh_agility_shortcut_fence]
 anim(human_jump_hurdle, 0);

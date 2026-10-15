@@ -42,6 +42,7 @@
 // which is how the inn trapdoor at (34,32) and the basement ladder at (34,32) are the same hole.
 ^m2_not_started = 0
 ^m2_sent = 10           // Veliaf has named Burgh de Rott
+^m2_fed = 12            // Florin has had something to eat and opened the gate
 ^m2_arrived = 20        // the village leader has explained what is wrong with it
 ^m2_rebuilt = 30        // shop, bank and furnace
 ^m2_tithe = 40          // the vampyres came to collect
@@ -122,3 +123,39 @@
 ^m2_tomb_entrance = 0_54_153_28_40
 ^m2_tomb_exit = 2_54_153_5_30
 ^m2_hollows_veliaf = 0_54_153_50_46
+
+// ---------------------------------------------------------------------------- the village
+// Thirty-one people, and the cache names every one of them. See scripts/myreque2_village.rs2.
+// Florin watches the gate and will not open it until something to eat has gone in the chest -
+// burgh_quest_food_chest_closed, which is in the cache and placed on no map square, so it is
+// added beside the gate when he asks for it and taken away when he has had it.
+^m2_food_chest_coord = 0_54_50_29_45    // 3485,3245, the swamp-road side of the gate
+^m2_marius_coord = 0_54_50_59_9        // 3515,3209, beside Gabriela, who is placed and he is not
+^m2_who_florin = 1
+^m2_who_sorin = 2
+^m2_who_luscion = 3
+^m2_who_sergiu = 4
+^m2_who_radu = 5
+^m2_who_grigore = 6
+^m2_who_ileana = 7
+^m2_who_valeria = 8
+^m2_who_emilia = 9
+^m2_who_calin = 10
+^m2_who_mihail = 11
+^m2_who_nicoleta = 12
+^m2_who_simona = 13
+^m2_who_vasile = 14
+^m2_who_razvan = 15
+^m2_who_luminata = 16
+^m2_who_catalina = 17
+^m2_who_ivan = 18
+^m2_who_victor = 19
+^m2_who_helena = 20
+^m2_who_teodor = 21
+^m2_who_marius = 22
+^m2_who_gabriela = 23
+^m2_who_vladimir = 24
+^m2_who_benjamin = 25
+^m2_who_liam = 26
+^m2_who_miala = 27
+^m2_who_verak = 28
