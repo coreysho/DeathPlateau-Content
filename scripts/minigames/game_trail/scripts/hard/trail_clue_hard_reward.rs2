@@ -70,6 +70,21 @@ switch_int ($random) {
 
 [proc,trail_clue_hard_rare]
 // One rare roll in eight goes to the elite and master table instead - see it below.
+//
+// FOUR ROWS NAME THE 377 CACHE'S OBJ, NOT THE IMPORTED ONE. Saradomin's platebody, platelegs,
+// plateskirt and kiteshield exist twice in this build: rune_platebody_saradomin and its three
+// siblings came with the 377 cache at 2661..2667, and saradomin_platebody and its three came in
+// with the 2026-10-04 import of Old School's own 510 uniques, which named every item the Old
+// School way and so did not notice the cache already had these four. The cache ones are the ones
+// the game is wired to - they carry param=saradominitem and param=gwd_prot_saradomin, which is
+// what God Wars reads to let you past Saradomin's door, tier40.rs2 gates the platebody behind
+// Dragon Slayer, animmag.enum lists it, and the costume room chest stores all four. The imported
+// ones carry none of that, so a clue that handed one over gave a Saradomin platebody that God
+// Wars did not recognise and the chest would not take. The full helm was never duplicated, which
+// is why case 20 has always named the cache one and these four did not.
+//
+// The four unreachable imports stay in the pack and are named in tools/nosourcespec.json for the
+// same reason magic_secateurs is: deleting an obj id is not free.
 if (random(8) = 0) {
     gosub(trail_clue_master_rare);
     return;
@@ -134,10 +149,10 @@ switch_int ($random) {
     case 54 : inv_add(trail_rewardinv, rune_platebody_h3, 1);   // Rune platebody (h3)
     case 55 : inv_add(trail_rewardinv, rune_platebody_h4, 1);   // Rune platebody (h4)
     case 56 : inv_add(trail_rewardinv, rune_platebody_h5, 1);   // Rune platebody (h5)
-    case 57 : inv_add(trail_rewardinv, saradomin_platebody, 1);   // Saradomin platebody
-    case 58 : inv_add(trail_rewardinv, saradomin_platelegs, 1);   // Saradomin platelegs
-    case 59 : inv_add(trail_rewardinv, saradomin_plateskirt, 1);   // Saradomin plateskirt
-    case 60 : inv_add(trail_rewardinv, saradomin_kiteshield, 1);   // Saradomin kiteshield
+    case 57 : inv_add(trail_rewardinv, rune_platebody_saradomin, 1);   // Saradomin platebody - the 377 one, see below
+    case 58 : inv_add(trail_rewardinv, rune_platelegs_saradomin, 1);   // Saradomin platelegs - the 377 one
+    case 59 : inv_add(trail_rewardinv, rune_plateskirt_saradomin, 1);   // Saradomin plateskirt - the 377 one
+    case 60 : inv_add(trail_rewardinv, rune_kiteshield_saradomin, 1);   // Saradomin kiteshield - the 377 one
     case 61 : inv_add(trail_rewardinv, ancient_full_helm, 1);   // Ancient full helm
     case 62 : inv_add(trail_rewardinv, ancient_platebody, 1);   // Ancient platebody
     case 63 : inv_add(trail_rewardinv, ancient_platelegs, 1);   // Ancient platelegs

@@ -180,6 +180,16 @@
         "lunar_emerald_lantern_lit",
         "moonclan_manual"
       ]
+    },
+    "saradomin_platebody": {
+      "osrs_source": "a hard clue scroll's rare table, which is where the 377 cache's own four come from now",
+      "why": "FOUR MORE DUPLICATES, AND THE SAME TRAP AS magic_secateurs. Saradomin's platebody, platelegs, plateskirt and kiteshield are in this build twice: the 377 cache carries them at 2661..2667 as rune_platebody_saradomin and its three siblings, and these four came in with the 2026-10-04 import of Old School's own 510 clue uniques, which named every item the Old School way and so did not see that the cache already had them. The cache ones are what the game is wired to - param=saradominitem and param=gwd_prot_saradomin for Saradomin's door in God Wars, tier40.rs2's Dragon Slayer gate on the platebody, animmag.enum, and all four stored in the costume room chest - and these four carry none of it. The hard rare table handed these out until 2026-10-15, so the Saradomin armour a clue gave you was the half that God Wars did not recognise and the chest would not take; it names the cache's four now. The full helm was never duplicated, which is why it was always right",
+      "why_not_deleted": "the same reason magic_secateurs is not deleted: removing an obj id is not free. A character handed one with ::give would be holding an item the server no longer defines, and dropping the pack/obj.pack line leaves a nameless default obj at that id rather than closing the gap. poh_battery group 55 is what closes the trap - it re-derives the costume chest's list from the reward tables, so a table row naming one of these four again goes red at once",
+      "also": [
+        "saradomin_platelegs",
+        "saradomin_plateskirt",
+        "saradomin_kiteshield"
+      ]
     }
   }
 }
