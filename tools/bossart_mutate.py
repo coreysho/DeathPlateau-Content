@@ -82,7 +82,13 @@ MUTS = [
  # 10 - the sweep, which is now the whole of this group: WHERE a pet comes from moved to
  # tools/pet_battery.py when petspec.json took ownership of the rates, and its mutations live in
  # tools/pet_mutate.py. Nothing here should test a drop table.
- ('tools/petspec.json', '"skillpet_chinchompa": {', '"skillpet_chinchompa_typo": {',
+ # THE SWEEP READS bossartspec's items against the SCRIPTS and the by-design list, so bending
+ # petspec.json - which it does not read - changed nothing and this mutation went GREEN. Taking
+ # one roll call out puts Rocky in the "neither" column: nothing rolls it and nothing declares it
+ # sourceless, which is exactly the hole the sweep exists to find.
+ ('scripts/skill_thieving/scripts/thieving.rs2',
+  '~skillpet_roll(skillpet_rocky_item, thieving, db_getfield($data, pickpocket:pet_base, 0));',
+  '~skillpet_roll(skillpet_heron_item, thieving, db_getfield($data, pickpocket:pet_base, 0));',
   '10 every pet item is either rolled by something or declared sourceless'),
 ]
 
