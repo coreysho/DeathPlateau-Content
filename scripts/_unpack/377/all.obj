@@ -20447,6 +20447,7 @@ param=identified_herb_exp,25
 param=identified_herb_message,You identify the herb. It is Snake Weed.
 param=brew_potion_struct,snakeweed_mixture
 tradeable=no
+param=brew_potion_struct_secondary,relicyms_balm_from_weed
 
 [unidentified_ardrigal]
 name=Herb
@@ -20581,6 +20582,8 @@ param=identified_herb_level,3
 param=identified_herb_exp,25
 param=identified_herb_message,You identify the herb. It is Rogues Purse.
 tradeable=no
+param=brew_potion_struct,rogues_purse_mixture
+param=brew_potion_struct_secondary,relicyms_balm_from_purse
 
 [mappart1]
 name=Map part
@@ -58206,6 +58209,9 @@ iop1=Drink
 iop4=Empty
 weight=35g
 category=potion
+param=next_obj_stage,relicyms_balm3
+param=decant_potion_enum,potion_relicyms_balm
+param=dose_count,4
 
 [cert_relicyms_balm4]
 certlink=relicyms_balm4
@@ -58227,6 +58233,9 @@ iop1=Drink
 iop4=Empty
 weight=30g
 category=potion
+param=next_obj_stage,relicyms_balm2
+param=decant_potion_enum,potion_relicyms_balm
+param=dose_count,3
 
 [cert_relicyms_balm3]
 certlink=relicyms_balm3
@@ -58248,6 +58257,9 @@ iop1=Drink
 iop4=Empty
 weight=25g
 category=potion
+param=next_obj_stage,relicyms_balm1
+param=decant_potion_enum,potion_relicyms_balm
+param=dose_count,2
 
 [cert_relicyms_balm2]
 certlink=relicyms_balm2
@@ -58269,6 +58281,9 @@ iop1=Drink
 iop4=Empty
 weight=20g
 category=potion
+param=next_obj_stage,vial_empty
+param=decant_potion_enum,potion_relicyms_balm
+param=dose_count,1
 
 [cert_relicyms_balm1]
 certlink=relicyms_balm1

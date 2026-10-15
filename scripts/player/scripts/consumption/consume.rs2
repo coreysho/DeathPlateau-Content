@@ -91,6 +91,9 @@ switch_obj(last_item) {
         @player_drink_potion(consume_effect_antivenom);
     case antivenom+1, antivenom+2, antivenom+3, antivenom+4 :
         @player_drink_potion(consume_effect_antivenom_plus);
+    // it cures disease and boosts nothing, so it must not fall through to the stat potions
+    case relicyms_balm1, relicyms_balm2, relicyms_balm3, relicyms_balm4 :
+        @player_drink_potion(consume_effect_relicym);
     case default : @player_drink_potion(consume_effect_stat);
 }
 [opheld1,macro_triffidfruit]@player_consume_item(consume_effect_strange_fruit, 2, 3);

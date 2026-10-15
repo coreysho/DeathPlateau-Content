@@ -22,6 +22,12 @@ if (~skillcape_worn(herblore) = true) {
 }
 ~attempt_brew_potion(last_useslot, last_slot);
 
+// RELICYM'S BALM. rogues_purse_sol is in the cache - "I need another ingredient to finish this
+// Rogues purse potion" - and had no trigger at all, so the one unfinished potion in the game that
+// nothing could finish was the one Zogre Flesh Eaters is for.
+[opheldu,rogues_purse_sol]
+~attempt_brew_potion(last_useslot, last_slot);
+
 [opheldu,guamvial]
 if(last_useitem = jangerberries) {
     if(%itwatchtower < ^itwatchtower_learned_potion) {
@@ -148,6 +154,12 @@ if (map_members = ^false) {
 }
 
 if($struct = ardrigal_mixture & %legendsquest < ^legends_talk_gujuo_pool) {
+    mes("You're not really sure what you would make out of this.");
+    return(false);
+}
+// Relicym's balm wants the same thing of Zogre Flesh Eaters: Sithik has to have told you how the
+// disease is cured. thzfe_makecuredisease is the bit that says he has.
+if (($struct = relicyms_balm_from_purse | $struct = relicyms_balm_from_weed) & %thzfe_makecuredisease = 0) {
     mes("You're not really sure what you would make out of this.");
     return(false);
 }

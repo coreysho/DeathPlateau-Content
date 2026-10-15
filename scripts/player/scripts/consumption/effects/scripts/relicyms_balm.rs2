@@ -1,0 +1,18 @@
+// RELICYM'S BALM. "A potion that can cure disease. To do so, multiple doses must be drunk, with
+// each dose weakening the strength of the disease. However, the potion does not offer any
+// temporary immunity, unlike Sanfew serum."
+//
+// Zogre Flesh Eaters' third unlock bit, thzfe_makecuredisease, has been set at the end of that
+// quest with nothing reading it, and the four doses have been in the cache since 2005 with
+// category=potion, Drink, Empty and no dose chain - so drinking one fell through to
+// consume_effect_stat and the balm behaved like an attack potion.
+//
+// There is no disease in this build to cure yet: the zogres' disease attack is not implemented, so
+// nothing can be diseased and a dose has nothing to weaken. What it must not do is boost a stat.
+[label,consume_effect_relicym]
+sound_synth(liquid, 1, 0);
+anim(human_eat, 0);
+def_obj $consumable = last_item;
+inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+~consume_effect_messages($consumable, stat(hitpoints), false);
+mes("You don't have any disease to cure.");

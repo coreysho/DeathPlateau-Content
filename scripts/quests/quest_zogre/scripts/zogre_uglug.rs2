@@ -1,0 +1,76 @@
+// UGLUG NAR, who has been standing at Jiggig with a shop nobody could open.
+//
+// The cache gives him Talk-to, Trade, category=shop_keeper and param=owned_shop,uglug_nar_shop -
+// and the shop's stock list is everything this quest is for: Relicym's balm, achey tree logs, a
+// knife, bow string, cooked chompy, coffin keys, all seven brutal arrows and a comp ogre bow. He
+// had no script of any kind, so his Trade was the generic [opnpc3,_shop_keeper] and the stock was
+// open to anybody who walked past, which is not how the shop is earned.
+//
+// "To open Uglug Nar's store, simply give him a Relicym's balm potion of any dosage, for which he
+// will pay 100 (1 dose), 300 (2 doses), 650 (3 doses) or 1000 (4 doses) gold." thzfe_sold_balm is
+// the bit the cache keeps for it, and Grish names him in the warning that starts the quest:
+// "Blunt arrows work best on them - Uglug sell you some."
+
+[opnpc1,zogre_uglug_nar]
+if (%thzfe_sold_balm = 1) {
+    ~chatnpc("<p,happy>Uglug have stuffsies! You want stuffsies?");
+    if (~p_choice2("Let's see what you've got.", 1, "Not now.", 2) = 1) {
+        ~uglug_shop;
+    }
+    return;
+}
+if (%zogre < ^zogre_warned) {
+    ~chatnpc("<p,angry>Human. Go away. Uglug not sell to human.");
+    return;
+}
+~chatnpc("<p,neutral>Grish say you help. Uglug not care. Uglug sell to ogres.");
+~chatplayer("<p,quiz>Grish said you sell blunt arrows.");
+~chatnpc("<p,neutral>Uglug sell many things. Not to human. Human no good for ogres.");
+~chatplayer("<p,quiz>What would make me good for ogres?");
+~chatnpc("<p,sad>Ogres sick. Dead things bite ogres, ogres get sick, ogres die slow. You bring Uglug medicine for sick, Uglug sell you anything.");
+~mesbox("Relicym's balm. Rogue's purse and snake weed in a vial of water, which is a recipe Sithik Ints knows and will tell you once he has stopped lying to you about everything else.");
+
+// Any dose, at the wiki's prices, and one is all he needs to open up.
+[opnpcu,zogre_uglug_nar]
+if (last_useitem = relicyms_balm4) {
+    @uglug_take_balm(relicyms_balm4, 1000);
+}
+if (last_useitem = relicyms_balm3) {
+    @uglug_take_balm(relicyms_balm3, 650);
+}
+if (last_useitem = relicyms_balm2) {
+    @uglug_take_balm(relicyms_balm2, 300);
+}
+if (last_useitem = relicyms_balm1) {
+    @uglug_take_balm(relicyms_balm1, 100);
+}
+~displaymessage(^dm_default);
+
+[label,uglug_take_balm](obj $balm, int $pay)
+if (inv_freespace(inv) = 0 & inv_total(inv, coins) = 0) {
+    ~chatnpc("<p,neutral>Uglug pay coins. You have no room for coins.");
+    return;
+}
+inv_del(inv, $balm, 1);
+inv_add(inv, coins, $pay);
+if (%thzfe_sold_balm = 0) {
+    %thzfe_sold_balm = 1;
+    ~chatnpc("<p,shock>...this is medicine for sick? This?");
+    ~chatnpc("<p,happy>Uglug try on cousin. Cousin stop dying. Uglug very happy with human.");
+    ~chatnpc("<p,happy>Uglug sell you stuffsies now. Blunt arrows, big bow, sticksies, everything.");
+    ~objbox(coins, append(append("Uglug counts out ", tostring($pay)), " coins and then opens a crate he has been sitting on."), 250, 0, divide(^objbox_height, 2));
+    ~uglug_shop;
+    return;
+}
+~chatnpc("<p,happy>More medicine! Uglug pay.");
+~objbox(coins, append(append("Uglug pays you ", tostring($pay)), " coins."), 250, 0, divide(^objbox_height, 2));
+
+[opnpc3,zogre_uglug_nar]
+if (%thzfe_sold_balm = 0) {
+    ~chatnpc("<p,angry>Uglug sell to ogres. Not human. Human bring medicine for sick ogres, then Uglug talk about stuffsies.");
+    return;
+}
+~uglug_shop;
+
+[proc,uglug_shop]
+~openshop_activenpc;

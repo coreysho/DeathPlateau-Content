@@ -1440,10 +1440,12 @@ if (last_useitem = ardrigal) {
     inv_del(inv, ardrigal, 1);
     inv_add(inv, bravery_pot, 1);
     ~objbox(bravery_pot, "It makes a heady brew. This must be what Gujuo was|talking about. You certainly would need to be brave to|drink this!", 250, 0, ^objbox_height);
+    return;
 }
-else {
-    ~displaymessage(^dm_default);
-}
+// ROGUE'S PURSE GOES IN THIS TOO, which is Relicym's balm and Zogre Flesh Eaters. This trigger is
+// the only [opheldu] the snakeweed mixture has, so anything that is not ardrigal goes to the
+// generic brewing path rather than straight to "Nothing interesting happens".
+~attempt_brew_potion(last_useslot, last_slot);
 
 [opheld1,bravery_pot]
 ~objbox(bravery_pot, "This bravery potion bubbles with a strange effervescence, but it smells very strange, like oily burnt oranges. Are you sure you want to drink it?", 250, 0, ^objbox_height);

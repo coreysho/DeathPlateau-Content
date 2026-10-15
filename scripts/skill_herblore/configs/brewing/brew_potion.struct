@@ -382,3 +382,29 @@ param=brew_potion_level,82
 param=brew_potion_exp,1900
 param=brew_potion_message,You mix the poison ivy berries into your potion.
 param=brew_potion_mixture,weapon_poison++
+
+// RELICYM'S BALM, which is Zogre Flesh Eaters' third unlock bit and was never read. The cache has
+// both halves of it - snakeweed_sol, which Legends' Quest uses, and rogues_purse_sol, which nothing
+// did - so it mixes either way round, as the wiki's own two-tab recipe does.
+[rogues_purse_mixture]
+param=brew_potion_ingredient,rogues_purse
+param=brew_potion_solvent,vial_water
+param=brew_potion_level,0
+param=brew_potion_message,You mix the rogue's purse into the vial of water.
+param=brew_potion_mixture,rogues_purse_sol
+
+[relicyms_balm_from_purse]
+param=brew_potion_ingredient,rogues_purse
+param=brew_potion_solvent,snakeweed_sol
+param=brew_potion_level,8
+param=brew_potion_exp,400
+param=brew_potion_message,You mix the rogue's purse into the snakeweed mixture.
+param=brew_potion_mixture,relicyms_balm3
+
+[relicyms_balm_from_weed]
+param=brew_potion_ingredient,snake_weed
+param=brew_potion_solvent,rogues_purse_sol
+param=brew_potion_level,8
+param=brew_potion_exp,400
+param=brew_potion_message,You mix the snake weed into the rogue's purse potion.
+param=brew_potion_mixture,relicyms_balm3
