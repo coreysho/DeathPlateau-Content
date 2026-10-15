@@ -1,0 +1,46 @@
+{
+  "_why": [
+    "THE TABLES tools/gennpcdrops.py CANNOT READ OUT OF THE SCRIPTS, and why each one is here.",
+    "",
+    "The generator runs every [ai_queue3] death trigger through its own small RuneScript",
+    "interpreter, which is the whole point of it: a drop table is script, not data, and a hand-kept",
+    "copy would be wrong the first time anybody edited a table. What it follows is the trigger, the",
+    "labels it jumps to and the procs it calls. What it does NOT follow is a drop handed to the",
+    "killer through queue() - the trigger ends, the reward runs later on the player - and it cannot",
+    "answer a varp, so a drop whose identity comes out of one is not a thing it can work out either.",
+    "",
+    "A row in here is therefore a drop the viewer should show that the interpreter has no way to",
+    "reach, written out by hand with the reason. It is not a place to put a table that is merely",
+    "inconvenient to derive: if the generator can reach it, it must, and gennpcdrops exits with an",
+    "error if an npc named here turns out to be derivable after all, so this file cannot quietly",
+    "shadow a real table."
+  ],
+  "hand": {
+    "hundred_dave_hellrat_behemoth": {
+      "trigger": "ai_queue3",
+      "why": [
+        "The behemoth's spice is not dropped at all: [ai_queue3,hundred_dave_hellrat_behemoth]",
+        "queues hundred_dave_behemoth_reward onto the hero, and THAT hands over the shaker - which",
+        "is deliberate and the script says why (a proc writing a player varp has its",
+        "p_active_player requirement credited to the call site, and inside an ai_queue nothing has",
+        "been found yet). So there is no obj_add in the trigger for the interpreter to see.",
+        "",
+        "And the colour is %hundred_dave_behemoth_colour, written when the player pulls the curtain",
+        "back, so WHICH shaker you get is not rolled - it is the curtain's. Every kill gives exactly",
+        "one 4-dose shaker of one of four colours, which is why the four rows are 1/4 each: it is",
+        "the only honest thing a per-item viewer can say about 'one of these four, always'. Four",
+        "rows of 'Always' would read as four shakers a kill.",
+        "",
+        "These four rows are what the file carried from the day the viewer was built (3780c83c) and",
+        "they are unchanged here; what is new is that re-running the generator keeps them instead of",
+        "dropping them, which is what gamemode_battery's gennpcdrops --check had been failing on."
+      ],
+      "drops": [
+        { "obj": "hundred_dave_spice_brown_4", "qty": "1", "rate": "1/4" },
+        { "obj": "hundred_dave_spice_orange_4", "qty": "1", "rate": "1/4" },
+        { "obj": "hundred_dave_spice_red_4", "qty": "1", "rate": "1/4" },
+        { "obj": "hundred_dave_spice_yellow_4", "qty": "1", "rate": "1/4" }
+      ]
+    }
+  }
+}

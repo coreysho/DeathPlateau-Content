@@ -9387,6 +9387,8 @@ op4=hidden
 op5=hidden
 wanderrange=0
 moverestrict=nomove
+category=freshfish
+param=whirlpool,macro_whirlpool_freshfish
 
 [saltfish]
 name=Fishing spot
@@ -9402,6 +9404,8 @@ op4=hidden
 op5=hidden
 wanderrange=0
 moverestrict=nomove
+category=saltfish
+param=whirlpool,macro_whirlpool_saltfish
 
 [rarefish]
 name=Fishing spot
@@ -9417,6 +9421,8 @@ op4=hidden
 op5=hidden
 wanderrange=0
 moverestrict=nomove
+category=rarefish
+param=whirlpool,macro_whirlpool_rarefish
 
 [memberfish]
 name=Fishing spot
@@ -9432,6 +9438,8 @@ op4=hidden
 op5=hidden
 wanderrange=0
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [artist1]
 name=Da Vinci
@@ -29524,6 +29532,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=freshfish
+param=whirlpool,macro_whirlpool_freshfish
 
 [0_35_50_freshfish]
 name=Fishing spot
@@ -29538,6 +29548,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=freshfish
+param=whirlpool,macro_whirlpool_freshfish
 
 [0_33_51_memberfish]
 name=Fishing spot
@@ -29552,6 +29564,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [regicide_rabbit]
 name=Rabbit
@@ -33192,6 +33206,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=saltfish
+param=whirlpool,macro_whirlpool_saltfish
 
 [0_41_57_rarefish]
 name=Fishing spot
@@ -33206,6 +33222,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=rarefish
+param=whirlpool,macro_whirlpool_rarefish
 
 [0_41_57_memberfish]
 name=Fishing spot
@@ -33220,6 +33238,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [horror_lighthousekeeeper_injured]
 name=Jossik
@@ -35214,6 +35234,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [0_42_42_memberfish]
 name=Fishing spot
@@ -35228,6 +35250,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [mm_daero]
 name=Daero
@@ -66205,6 +66229,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=freshfish
+param=whirlpool,macro_whirlpool_freshfish
 
 [magic_carpet_seller8]
 name=Rug Merchant
@@ -79518,6 +79544,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [0_55_49_memberfish]
 name=Fishing spot
@@ -79532,6 +79560,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=memberfish
+param=whirlpool,macro_whirlpool_memberfish
 
 [templetrek_vampire_1]
 name=Juvinate
@@ -85399,6 +85429,8 @@ op3=Harpoon
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=rarefish
+param=whirlpool,macro_whirlpool_rarefish
 
 [postie_pete]
 name=Postie Pete

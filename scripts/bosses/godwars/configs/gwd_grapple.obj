@@ -19,3 +19,43 @@ wearpos=quiver
 cost=48
 members=yes
 // TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+// THE TWO HALF-MADE STAGES, imported the same way (474 9416 and 9415) when the recipe was corrected
+// to Old School's three steps. 474 carries no obj at all for Old School's 9417, the unfinished
+// grapple, and 9415 is unused grapple art of the right metal - so that is what wears the name, with
+// the tip's own view and recolours beside it. The tip's cost, view and recolours are the cache's.
+[mith_grapple_tip]
+name=Mith grapple tip
+desc=A mithril grapple tip. It needs a bolt and a rope.
+model=obj_mith_grapple_tip
+2dxof=3
+2dyof=-6
+2dzoom=976
+2dxan=105
+2dyan=1823
+recol1s=11525
+recol1d=8460
+recol2s=9411
+recol2d=6346
+recol3s=7297
+recol3d=4232
+cost=30
+members=yes
+// Not worn and not fought with, so there is no wearpos, no bonus and no requirement to add.
+
+[mith_grapple_unf]
+name=Mith grapple (unf)
+desc=A mithril grapple tip on a bolt. It needs a rope.
+model=obj_mith_grapple_unf
+2dzoom=976
+2dxan=105
+2dyan=1823
+recol1s=11525
+recol1d=8460
+recol2s=9411
+recol2d=6346
+recol3s=7297
+recol3d=4232
+members=yes
+cost=48
+// Not worn and not fought with, so there is no wearpos, no bonus and no requirement to add.

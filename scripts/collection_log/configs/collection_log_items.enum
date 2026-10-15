@@ -770,10 +770,12 @@ val=757,whip_kit_gravedigger
 val=758,abyssal_head
 val=759,abyssal_whip
 val=760,black_mask
-val=761,granite_legs
-val=762,granite_maul
-val=763,imbued_heart
-val=764,trident_of_the_seas_uncharged
+val=761,granite_body
+val=762,granite_helm
+val=763,granite_legs
+val=764,granite_maul
+val=765,imbued_heart
+val=766,trident_of_the_seas_uncharged
 
 // AND BACK AGAIN: obj -> its index above, or -1 for an obj the log does not list. This is
 // the "is it in the log at all" test ~collection_log_add makes on every call, and the way it
@@ -1543,7 +1545,9 @@ val=whip_kit_gravedigger,757
 val=abyssal_head,758
 val=abyssal_whip,759
 val=black_mask,760
-val=granite_legs,761
-val=granite_maul,762
-val=imbued_heart,763
-val=trident_of_the_seas_uncharged,764
+val=granite_body,761
+val=granite_helm,762
+val=granite_legs,763
+val=granite_maul,764
+val=imbued_heart,765
+val=trident_of_the_seas_uncharged,766

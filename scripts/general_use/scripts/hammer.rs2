@@ -7,5 +7,9 @@ switch_obj (last_useitem) {
     // A coconut is cracked open with a hammer, which is the first step of coconut milk and so of
     // every antidote potion. skill_herblore/scripts/brewing/coconut_milk.rs2 has the rest.
     case coconut : @coconut_crack;
+    // A mithril bar under a hammer is a mith grapple tip, the first of Old School's three stages
+    // for the God Wars grapple. bosses/godwars/scripts/gwd_grapple.rs2 has the other two and says
+    // why the tip is made here rather than at the anvil the wiki uses.
+    case mithril_bar : @gwd_grapple_tip;
     case default : ~displaymessage(^dm_default);
 }

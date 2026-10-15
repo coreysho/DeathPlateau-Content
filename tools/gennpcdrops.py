@@ -49,11 +49,12 @@ and takes interface ids (tools/ifids.py) and the inv id.
 
 Re-run it whenever a drop script (or an npc's death_drop / category / Attack op) changes.
 """
-import os, re, sys, subprocess
+import json, os, re, sys, subprocess
 from fractions import Fraction
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 S = os.path.join(C, 'scripts')
+SPEC = os.path.join(C, 'tools/npcdropsspec.json')
 OUT_DBROW = os.path.join(S, 'drop_tables/configs/npc_drops.dbrow')
 OUT_ENUM = os.path.join(S, 'drop_tables/configs/npc_drops.enum')
 OUT_INV = os.path.join(S, 'drop_tables/configs/npc_drops.inv')
@@ -555,6 +556,7 @@ class Ctx:
         self.nextvar = 0
         self.parsed = {}
         self.depth = 0
+        self.key = None         # the trigger being run, so npc_queue cannot re-enter it
 
 
 # [proc,npc_death] is the funnel every death passes through, and what it adds is not the monster's
@@ -562,6 +564,15 @@ class Ctx:
 # shared rare table for the killer's mode, gamemodes/scripts/droprate.rs2). That last one is the
 # PLAYER'S, not the npc's, so the viewer states it per viewer instead (~npc_drops_open).
 SKIP_PROCS = {'npc_death'}
+# THE SLAYER FINISHERS, answered true. ~slayer_autofinish asks whether the killer's own unlock
+# finished the monster for them - Gargoyle Smasher and its siblings - and the answer decides only
+# HOW it dies, not what it drops: with the unlock the death carries straight on into [ai_queue4],
+# and without it the player uses the rock hammer, the bag of salt, the ice cooler or the spear and
+# the same [ai_queue4] runs from [opnpcu]. Taken as false, which is the default for a question this
+# cannot answer, the viewer said the gargoyle, the rockslug, the desert lizard and the two superiors
+# drop nothing at all - five tables missing because of a question whose two answers have the same
+# drops.
+TRUE_PROCS = {'slayer_autofinish'}
 # The boss pet roll (npc/scripts/boss_pets.rs2), counted where it is called: see call().
 PET_PROCS = {'bosspet_roll'}
 
@@ -955,6 +966,8 @@ def call(ctx, name, args, st, pinned):
                 emit(ctx, (pet, '1', None), s.prob / rate)
             out.append((s, ()))
         return out
+    if name in TRUE_PROCS:
+        return [(st, 1)]
     if name in SKIP_PROCS:
         return [(st, ())]
     key = ('proc', name) if ('proc', name) in ctx.scripts else ('label', name)
@@ -1180,6 +1193,16 @@ def run_stmt(ctx, stmt, st, pinned):
         e = stmt[1]
         if e[0] == 'cmd' and e[1] == 'obj_add':
             return obj_add(ctx, e[2], st, pinned)
+        # npc_queue(n, ...) CARRIES THIS NPC'S DEATH ON IN [ai_queue<n>], and five slayer monsters
+        # keep their whole drop table there: the gargoyle, the rockslug, the desert lizard and the
+        # two superiors all heal to 1 hitpoint in ai_queue3 and wait for the item that finishes
+        # them, then drop from ai_queue4. Not following it is why the viewer said those five dropped
+        # nothing at all - the one place an [ai_queue3] can hand its own death on to itself.
+        if e[0] == 'cmd' and e[1] == 'npc_queue' and e[2] and e[2][0][0] == 'lit':
+            nxt = trigger_for(ctx.npc, ctx.scripts, e[2][0][1])
+            if nxt is None or nxt == ctx.key:
+                return [(st, None)]
+            return [(s, None) for s, _ in run_call(ctx, nxt, [], st, pinned)]
         if e[0] == 'cmd' and e[1] == 'gosub':
             if e[2][0][0] != 'name':
                 raise Unsupported('gosub of an expression')
@@ -1261,13 +1284,14 @@ def emit(ctx, drop, p):
 
 # =========================================================================== per npc
 
-def trigger_for(npc, scripts):
-    if ('ai_queue3', npc.name) in scripts:
-        return ('ai_queue3', npc.name)
+def trigger_for(npc, scripts, which=3):
+    if ('ai_queue%d' % which, npc.name) in scripts:
+        return ('ai_queue%d' % which, npc.name)
     cat = npc.cfg.get('category')
-    if cat and ('ai_queue3', '_' + cat) in scripts:
-        return ('ai_queue3', '_' + cat)
-    return ('ai_queue3', '_')
+    if cat and ('ai_queue%d' % which, '_' + cat) in scripts:
+        return ('ai_queue%d' % which, '_' + cat)
+    key = ('ai_queue%d' % which, '_')
+    return key if which == 3 or key in scripts else None
 
 
 def table_for(npc, scripts):
@@ -1275,6 +1299,7 @@ def table_for(npc, scripts):
     ctx = Ctx(npc, scripts)
     ctx.parsed = PARSED_CACHE
     key = trigger_for(npc, scripts)
+    ctx.key = key
     body, _, _, _ = body_of(ctx, key)
     st = St(Fraction(1), {}, {})
     ends = run_block(ctx, body, [st], set())
@@ -1701,6 +1726,25 @@ def main():
         tables[name] = (disp, key, approx)
         if approx:
             approx_by.setdefault(key, set()).update(approx)
+    # THE TABLES THE INTERPRETER CANNOT REACH, out of tools/npcdropsspec.json with the reason for
+    # each one written beside it. A drop handed to the killer through queue() leaves no obj_add in
+    # the trigger to see, and an obj chosen by a varp is not something this can answer - the hell rat
+    # behemoth's spice is both at once. The guard matters more than the rows: if an npc named in the
+    # spec turns out to be derivable, that is an error rather than a hand-written table quietly
+    # shadowing a real one.
+    for hand_name, d in sorted(json.load(open(SPEC, encoding='utf-8'))['hand'].items()):
+        if hand_name in tables:
+            sys.exit('gennpcdrops: %s is derivable from the scripts now - take it out of %s'
+                     % (hand_name, os.path.relpath(SPEC, C)))
+        if hand_name not in npcs:
+            sys.exit('gennpcdrops: %s in %s is not an npc' % (hand_name, os.path.relpath(SPEC, C)))
+        raw = []
+        for row in d['drops']:
+            rate = row['rate']
+            p = Fraction(1) if rate == 'Always' else Fraction(1, int(rate.split('/')[1]))
+            raw.append((row['obj'], row['qty'], row.get('name'), p, p))
+        tables[hand_name] = (display(raw), (d.get('trigger', 'ai_queue3'), hand_name), set())
+
     if show:
         if show in tables:
             disp, key, approx = tables[show]
