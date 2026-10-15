@@ -11,6 +11,25 @@ if (%swansong >= ^swan_wom & %swansong <= ^swan_ambush) {
 
 [opnpc1,swan_herman] @swan_herman_talk;
 
+// DEVIN MENDELBERG, who had nothing to say to anybody. swan_boat_colonist carries op1=Talk-to
+// through its multinpc (it is swan_colonist_1 at every stage) and no script answered it, so the
+// click did nothing at all; eaglespeak's dead-op check caught him when he wandered into its box.
+// He is the only swan_boat_colonist in the whole map set and he is standing in map square 37_54,
+// which is the Gnome Stronghold - eight map squares from the colony he is a colonist of. That spawn
+// came in with the bulk map import (34ef090e) rather than from anything here, and whether he should
+// be there at all is one line in maps/m37_54.jm2; what is certainly wrong is a clickable npc with
+// no handler, which is this.
+//
+// HANDLER ON THE SHELL, as with swan_multioutside above: Player.getOpTrigger looks the trigger up
+// on the npc's own type and OpNpcHandler resolves multinpc only to decide whether the option
+// exists, so an [opnpc1,swan_colonist_1] would never fire.
+[opnpc1,swan_boat_colonist]
+if (%swansong < ^swan_complete) {
+    ~chatnpc("<p,neutral>Devin Mendelberg. I came out here for the fishing, and I have had a good deal more of the sea trolls than of the fish.");
+    return;
+}
+~chatnpc("<p,happy>Devin Mendelberg. The fishing is good again, now that nothing is eating the fishermen.");
+
 [label,swan_herman_talk]
 switch_int (%swansong) {
     case ^swan_not_started : @swan_start;
