@@ -426,10 +426,10 @@ data=items,rune_platebody_h2
 data=items,rune_platebody_h3
 data=items,rune_platebody_h4
 data=items,rune_platebody_h5
-data=items,saradomin_platebody
-data=items,saradomin_platelegs
-data=items,saradomin_plateskirt
-data=items,saradomin_kiteshield
+data=items,rune_platebody_saradomin
+data=items,rune_platelegs_saradomin
+data=items,rune_plateskirt_saradomin
+data=items,rune_kiteshield_saradomin
 data=items,ancient_full_helm
 data=items,ancient_platebody
 data=items,ancient_platelegs
@@ -639,6 +639,7 @@ data=items,third_age_pickaxe
 data=items,third_age_axe
 data=items,bloodhound
 data=items,ring_of_third_age
+data=items,thread_of_elidinis
 data=items,helm_of_raedwald
 data=items,clue_hunter_garb
 data=items,clue_hunter_gloves
@@ -1337,10 +1338,10 @@ data=items,rune_platebody_h2
 data=items,rune_platebody_h3
 data=items,rune_platebody_h4
 data=items,rune_platebody_h5
-data=items,saradomin_platebody
-data=items,saradomin_platelegs
-data=items,saradomin_plateskirt
-data=items,saradomin_kiteshield
+data=items,rune_platebody_saradomin
+data=items,rune_platelegs_saradomin
+data=items,rune_plateskirt_saradomin
+data=items,rune_kiteshield_saradomin
 data=items,ancient_full_helm
 data=items,ancient_platebody
 data=items,ancient_platelegs
@@ -1440,7 +1441,7 @@ data=items,third_age_robe
 data=items,third_age_amulet
 data=counters,"Hard clues completed",102
 
-// Elite & Master Rewards: 112 items
+// Elite & Master Rewards: 113 items
 [collection_log_clue_elite_master]
 table=collection_log_entry
 data=name,"Elite & Master Rewards"
@@ -1556,6 +1557,7 @@ data=items,third_age_pickaxe
 data=items,third_age_axe
 data=items,bloodhound
 data=items,ring_of_third_age
+data=items,thread_of_elidinis
 
 // Shared Clue Rewards: 18 items
 [collection_log_clue_shared]
