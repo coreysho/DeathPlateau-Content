@@ -170,6 +170,16 @@
         "wilderness_sword_2",
         "wilderness_sword_3"
       ]
+    },
+    "lunar_emerald_lens": {
+      "osrs_source": "Lunar Diplomacy: the lens is ground from an emerald and fitted to a bullseye lantern, and the lantern is what shows up the jinx symbols daubed round the Lady Zay. The manual is a Lunar Isle flavour item read during the quest",
+      "why": "THE QUEST IS IMPLEMENTED AND THIS PART OF IT IS NOT, and quest_lunar.rs2 says so in its own header: \"in 2006 Lokar took you to Pirates' Cove and Captain Bentley's Lady Zay was jinxed - five symbols daubed round four decks by a cabin boy, found with an emerald lantern. Every stair and ladder on that ship is a 474 loc with an unhandled Climb op, so no deck of it can be walked today and the symbols cannot be reached.\" The three emerald items are that puzzle's tools, so they wait on the ship's stairs rather than on anything of their own. The Moonclan manual is the fourth of the set: it carries iop1=Read, nothing handles it, and the lunar spellbook it is flavour for is already in the game through lunar_spells.dbrow. All four were imported from the 474 cache with the rest of lunar_items.obj and each still carries that file's \"TODO by hand\" line, which is the honest state of them",
+      "note": "these four were the whole of obtainable.py's \"nothing anywhere mentions these\" bucket - the only objs in the game that no script, table, shop, map or param names at all - which is the bucket that is meant to stay empty",
+      "also": [
+        "lunar_emerald_lantern",
+        "lunar_emerald_lantern_lit",
+        "moonclan_manual"
+      ]
     }
   }
 }
