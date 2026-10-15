@@ -139,15 +139,31 @@ assert m['type']==2, 'the mirror must be an inv component or the client will not
 
 ws=coms[names['magic:wind_strike']]
 print('wind_strike scripts', ws['scripts'])
+# THE STAVES COME OUT OF THE TABLE, not out of a list here. This assertion named three -
+# staff_of_air, air_battlestaff, mystic_air_staff - and went red the day the combination staves
+# landed, because smoke, mist and dust all supply air and so all six of them belong on the
+# button's worn-highlight list too. magic_staff.dbrow's magic_staff_air row is where the game
+# decides which staff supplies air; reading it means a tenth staff added to that row cannot make
+# this check wrong, only make it check more.
+staves=[]
+row=None
+for l in open('scripts/skill_magic/configs/magic_staff.dbrow'):
+    l=l.split('//')[0].strip()
+    if l.startswith('['):
+        row=l[1:-1]
+    elif row=='magic_staff_air' and l.startswith('data=staff,'):
+        staves.append(l.split(',',1)[1])
+assert len(staves)>=3, ('no staves read out of magic_staff_air', staves)
 want=[4,invcom,objs['airrune'], 4,mirror,objs['airrune'],
       4,invcom,objs['smokerune'], 4,mirror,objs['smokerune'],
       4,invcom,objs['mistrune'], 4,mirror,objs['mistrune'],
-      4,invcom,objs['dustrune'], 4,mirror,objs['dustrune'],
-      10,names['wornitems:worn'],objs['staff_of_air'],
-      10,names['wornitems:worn'],objs['air_battlestaff'],
-      10,names['wornitems:worn'],objs['mystic_air_staff'], 0]
+      4,invcom,objs['dustrune'], 4,mirror,objs['dustrune']]
+for s in staves:
+    want += [10,names['wornitems:worn'],objs[s]]
+want += [0]
 assert ws['scripts'][0]==want, (ws['scripts'][0], want)
-print('wind_strike script1 is exactly pack+pouch for all four runes, then the three staves: OK')
+print('wind_strike script1 is exactly pack+pouch for all four runes, then the %d staves '
+      'magic_staff_air lists: OK' % len(staves))
 
 # every spell/label script that counts a rune in the inventory counts it in the mirror too
 bad=0; checked=0

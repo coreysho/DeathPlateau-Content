@@ -97,7 +97,7 @@ def hsl16_to_rgb15(h):
     return v
 
 
-def record(local, o, bonuses, model_base, is_hood):
+def record(local, o, bonuses, model_base, is_hood, gwd_prot=None):
     L = ['[%s]' % local,
          'name=%s' % o['osrs_name']]
     if o.get('desc'):
@@ -132,6 +132,13 @@ def record(local, o, bonuses, model_base, is_hood):
         L.append('category=armour_cape')
     for k, v in bonuses.items():
         L.append('param=%s,%d' % (k, v))
+    # GOD WARS READS THIS, and it is not one of the OSRS table's bonus slots - it is this build's
+    # own flag, so it comes out of the spec's gwd_prot rather than its bonuses. gwd_altars.rs2 sums
+    # oc_param($item, gwd_prot_<god>) over the worn items to decide who gets past that god's door:
+    # without it a Saradomin max cape, made FROM a Saradomin cape, was turned away where the cape it
+    # was made from is let through. Guthix has none, because the dungeon has no Guthix room.
+    if gwd_prot:
+        L.append('param=%s,1' % gwd_prot)
     return L
 
 
@@ -165,7 +172,7 @@ def build(spec):
         cape_local = '%s_max_cape' % key
         hood_local = '%s_max_hood' % key
         L += record(cape_local, v['cape'], v['bonuses'],
-                    cape_local if own else 'max_cape', False) + ['']
+                    cape_local if own else 'max_cape', False, v.get('gwd_prot')) + ['']
         L += record(hood_local, v['hood'], {},
                     hood_local if own else 'max_hood', True) + ['']
         names += [cape_local, hood_local]

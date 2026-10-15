@@ -126,10 +126,21 @@ stray = [f for f in glob.glob(os.path.join(C, 'scripts', '**', '*.rs2'), recursi
 check(not stray, 'nothing else sends a spellbook tab of its own (the tutorial only ever shows the normal book): %s'
       % ([os.path.relpath(f, C) for f in stray] or 'nothing'))
 ISLE = read('scripts/areas/area_lunar_isle/scripts/lunar_isle.rs2')
-check('[oploc2,astral_altar]' in ISLE and '%lunar_unlocked = true;' in ISLE and '~set_spellbook(^spellbook_lunar);' in ISLE,
-      'praying at the Astral altar unlocks the book and puts you on it')
-check(re.search(r'\^lunar_unlock_magic = 65\b', read('scripts/areas/area_lunar_isle/configs/lunar_isle.constant')) is not None,
-      '...at 65 Magic')
+# THE ALTAR IS NOT THE UNLOCK ANY MORE, Lunar Diplomacy is. It used to hand the book to anyone
+# with 65 Magic who prayed there - ^lunar_unlock_magic, a constant that no longer exists - and that
+# was a stand-in for a quest that was not built. The quest is built: ~lunar_finish sets
+# %lunar_unlocked with the rest of the reward, because "Simply pray at the altar behind me to gain
+# the knowledge" is the Oneiromancer's own line and the Magic cape reads that varp. The altar is
+# now the switch, as the Desert Treasure altar is for Ancients, and it refuses anyone who has
+# neither finished the quest nor been given the right by the old altar.
+check('[oploc2,astral_altar]' in ISLE and '~set_spellbook(^spellbook_lunar);' in ISLE
+      and '~set_spellbook(^spellbook_normal);' in ISLE,
+      'praying at the Astral altar switches the book, both ways')
+check('if (%lunar_quest < ^lunar_complete & %lunar_unlocked ! true) {' in ISLE,
+      '...and refuses anyone who has neither finished Lunar Diplomacy nor been given the right by '
+      'the 65-Magic altar that stood in for it')
+check('%lunar_unlocked = true;' in read('scripts/quests/quest_lunar/scripts/quest_lunar.rs2'),
+      'and the quest is what unlocks it, with the rest of its reward')
 check('%lunar_unlocked = true' in read('scripts/skillcapes/scripts/skillcape_perks.rs2'), 'the Magic cape offers Lunar once it is unlocked')
 # boolean varps start at -1: `= false` is true of nobody who has never set them
 bad = re.findall(r'%(?:lunar_unlocked|vengeance|spellbook_swapped) = false\)', SRC)

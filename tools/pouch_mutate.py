@@ -28,13 +28,19 @@ SPEC = 'tools/nosourcespec.json'
 TRAIL = 'scripts/minigames/game_trail/scripts/hard/trail_clue_hard_reward.rs2'
 
 MUTS = [
- # ---- 6, where the thread comes from now that it comes from somewhere
- (TRAIL, '    case 33 : inv_add(trail_rewardinv, thread_of_elidinis, 1);\n', '',
-  '6 the Thread of Elidinis is a rare reward from a hard clue'),
- (TRAIL, 'def_int $random = random(34);', 'def_int $random = random(33);',
-  "6 and the rare table's cases run 0..n-1 against its own random bound"),
- (SPEC, '"thread_of_elidinis": [\n   "rune_pouch.rs2:opheld4,divine_rune_pouch"\n  ]',
-        '"thread_of_elidinis": [\n   "rune_pouch.rs2"\n  ]',
+ # ---- 6, where the thread comes from now that it comes from somewhere. Its row moved from the
+ # hard table to the elite and master one when the hard table became Old School's own 158, so
+ # both tables' bounds are mutated: the thread's row is only reachable if the table it is in the
+ # last row of rolls that far.
+ (TRAIL, '    case 112 : inv_add(trail_rewardinv, thread_of_elidinis, 1);   // Thread of Elidinis - see above\n', '',
+  '6 the Thread of Elidinis is a rare reward out of the top clue tier'),
+ (TRAIL, 'def_int $random = random(113);', 'def_int $random = random(112);',
+  "6 ~trail_clue_master_rare's cases run 0..n-1"),
+ (TRAIL, 'def_int $random = random(158);', 'def_int $random = random(157);',
+  "6 ~trail_clue_hard_rare's cases run 0..n-1"),
+ # Matched on the one string rather than the whole JSON block: the block's indentation is the
+ # dumper's, so a pattern that spelled it out went stale the first time the file was rewritten.
+ (SPEC, '"rune_pouch.rs2:opheld4,divine_rune_pouch"', '"rune_pouch.rs2"',
   '6 and Revert is still named as not-a-source, at script grain'), # ---- 6, the recipe's real second ingredient
  (POUCH, 'inv_del(inv, thread_of_elidinis, 1);', 'inv_del(inv, thread, 1);',
   '6 it spends a Thread of Elidinis'),
@@ -77,7 +83,7 @@ MUTS = [
 
  # ---- 9, the mirror
  (LOGIN, '~rune_pouch_mirror_start;\n', '',
-  '9 ...and login starts it, so it runs for the whole session'),
+  '9 ...and login starts it'),
  (MIRRORIF, 'type=inv', 'type=layer', '9 the mirror component is an inv'),
  (MIRRORIF, 'width=4', 'width=3', '9 ...and as many slots as the store has'),
  # A rune the spellbook can ask for that the client cannot see in the pouch: the spell stays grey
@@ -102,13 +108,22 @@ MUTS = [
   '1 a rune already inside tops up without needing a slot'),
  # 2 - a rune read or spend left looking only in the pack. One of these is the whole feature
  # silently not working for that spell.
- (MAGIC, 'if (~rune_total($rune2) < $rune_count2 & $rune2 ! null) {',
-         'if (inv_total(inv, $rune2) < $rune_count2 & $rune2 ! null) {',
-  '2 all four rune checks go through ~rune_total'),
+ # Aimed at ~element_rune_total since the per-rune checks moved behind ~spell_rune_enough: one of
+ # the seventeen reads in there going back to the pack alone is a mist rune in the pouch not
+ # paying an air cost.
+ (MAGIC, 'case airrune : return(calc(~rune_total(airrune) + ~rune_total(mistrune)',
+         'case airrune : return(calc(~rune_total(airrune) + inv_total(inv, mistrune)',
+  '2 ...which counts through ~rune_total'),
  (MAGIC, '~rune_del($rune3, $rune_count3);', 'inv_del(inv, $rune3, $rune_count3);',
-  '2 and all four spends through ~rune_del'),
- (ALCH, '~rune_total(naturerune)', 'inv_total(inv, naturerune)',
-  '2 alching a rune counts the same way the cast does'),
+  '2 and all four non-elemental spends through ~rune_del'),
+ (ALCH, 'def_int $spend = ~spell_rune_spend($spell_data, $item);', 'def_int $spend = 0;',
+  '2 alching a rune asks the cast what it will take'),
+ # The silent twin of ~check_spell_requirements, for the autocast that picks a spell for you. It
+ # asks the same question with no messages, and counting ~spell_rune_enough across the file
+ # instead of per proc is what let it be added without being checked.
+ (MAGIC, '    | ~spell_rune_enough($rune3, $rune_count3, $air, $water, $earth, $fire) = false',
+         '    | inv_total(inv, $rune3) < $rune_count3',
+  '2 all four rune checks in ~spell_requirements_met go through ~spell_rune_enough'),
  # 3 - the order and the shortfall
  (MAGIC, 'def_int $loose = min(inv_total(inv, $rune), $count);', 'def_int $loose = 0;',
   '3 ~rune_del takes what it can from the pack...'),

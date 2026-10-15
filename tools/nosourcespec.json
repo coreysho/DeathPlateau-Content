@@ -21,29 +21,9 @@
   },
   "ignore_is": "the scripts whose inv_add of this obj is a swap rather than a source, as 'file.rs2:script,header'. Named at script grain on purpose: a whole-file exemption would also excuse a real source added to that file later.",
   "objs": {
-    "macro_mime_mask": {
-      "osrs_source": "the Mime random event, seven completions for the full set",
-      "why": "the Mime is not one of the 26 random events this build implements - there is no macro_event_mime.rs2 and no npc for it. The outfit was imported with the rest of the antimacro table; it waits on the event, not on art",
-      "also": [
-        "macro_mime_boots",
-        "macro_mime_gloves",
-        "macro_mime_legs",
-        "macro_mime_top"
-      ]
-    },
-    "laderhosen_top": {
-      "osrs_source": "the Freaky Forester random event - the lederhosen as a reward, the pheasants as the thing he sends you to kill",
-      "why": "the Freaky Forester is not implemented here. Both halves of it are in this list together because they are one event: without the forester there is nothing to kill a pheasant for and nobody to pay you in lederhosen for doing it",
-      "also": [
-        "laderhosen_hat",
-        "laderhosen_legs",
-        "raw_macro_pheasant_bad",
-        "raw_macro_pheasant_good"
-      ]
-    },
     "macro_quiz_food1": {
       "osrs_source": "the Quiz Master random event",
-      "why": "the Quiz Master is not implemented. These ten are the quiz's own answer props - two each of food, weapon, armour, tool and jewel - and they exist only inside the event, so they have no source of their own even in OSRS",
+      "why": "THE QUIZ MASTER IS IMPLEMENTED and he does not hand these out. The ten are the quiz's own answer pictures - two each of food, weapon, armour, tool and jewel - and macro_quiz_ask picks three per question and passes them to ~multiobj3, which draws them with if_setobject and returns which one was clicked. The prize is macro_quiz_mystery_box, and that is obtainable. The ten have no source of their own in OSRS either, so this is correct rather than unfinished",
       "also": [
         "macro_quiz_armour1",
         "macro_quiz_armour2",
@@ -56,44 +36,22 @@
         "macro_quiz_weapon2"
       ]
     },
-    "evil_bob_uncooked_fish_correct": {
-      "osrs_source": "the Evil Bob random event, on his island",
-      "why": "Evil Bob is not implemented. The fishlike things and the man speak amulet exist only inside that event in OSRS too - they are how it is played, not a reward you keep",
-      "also": [
-        "evil_bob_amulet_of_manspeak",
-        "evil_bob_cooked_fish_correct",
-        "evil_bob_cooked_fish_incorrect",
-        "evil_bob_uncooked_fish_incorrect"
-      ]
+    "evil_bob_amulet_of_manspeak": {
+      "osrs_source": "Evil Bob's own neck, in the random event on his island",
+      "why": "EVIL BOB IS IMPLEMENTED and the four fishlike things came off this list on 2026-10-15: the cooked pair is what the net catches, and using one on the fire swaps it for the uncooked one. The amulet never was a reward - the event's header quotes the wiki on it, \"Evil Bob wore a manspeak amulet, which is how players are able to converse with him\", so the one in the cache is his. Nothing in OSRS hands a player one either"
     },
-    "macro_frog_token": {
-      "osrs_source": "the Kiss the Frog random event: a frog token, traded for the mask or the royal frog costume",
-      "why": "Kiss the Frog is not implemented. The token is the currency and the prince and princess clothing is what it buys, so all six stand or fall together",
+    "macro_digger_apron": {
+      "osrs_source": "nothing: the coffin's contents and the symbol stones are the Gravedigger random event's own furniture in OSRS too",
+      "why": "THE GRAVEDIGGER IS IMPLEMENTED and the five zombie pieces came off this list on 2026-10-15 - macro_digger_reward_obj is read by the event's reward branch and pays one out per completion. What is left is the puzzle itself and none of it can be held: the fifteen grave goods and the skull and the pile of bones are put in macro_digger_coffin_inv, which is only ever cleared, filled and transmitted to the coffin interface, and the five \"Its a symbol\" stones are put on an interface by ~macro_digger_stone_show so the player can read which trade the grave belongs to. Both tables are named in obtainable.py's STORAGE_LISTS and the inv in its DISPLAY_INVS for exactly this reason",
       "also": [
-        "macro_frog_mask",
-        "macro_prince_legs",
-        "macro_prince_torso",
-        "macro_princess_legs",
-        "macro_princess_torso"
-      ]
-    },
-    "macro_digger_shirt": {
-      "osrs_source": "the Gravedigger random event, five completions for the five zombie pieces",
-      "why": "the Gravedigger is not implemented. Five of these 27 are the zombie outfit; the other 22 are the props you sort into the coffins - an apron, a cake, a kebab, stone tools - which exist only inside the event",
-      "also": [
-        "macro_digger_apron",
         "macro_digger_bones",
-        "macro_digger_boots",
         "macro_digger_bowl_empty",
         "macro_digger_cake",
         "macro_digger_chefshat",
         "macro_digger_dibber",
-        "macro_digger_gloves",
         "macro_digger_hatchet",
         "macro_digger_kebab",
         "macro_digger_knife",
-        "macro_digger_legs",
-        "macro_digger_mask",
         "macro_digger_nuggets",
         "macro_digger_pick_axe",
         "macro_digger_plant_pot_empty",
@@ -211,6 +169,47 @@
         "wilderness_sword_1",
         "wilderness_sword_2",
         "wilderness_sword_3"
+      ]
+    },
+    "lunar_emerald_lens": {
+      "osrs_source": "Lunar Diplomacy: the lens is ground from an emerald and fitted to a bullseye lantern, and the lantern is what shows up the jinx symbols daubed round the Lady Zay. The manual is a Lunar Isle flavour item read during the quest",
+      "why": "THE QUEST IS IMPLEMENTED AND THIS PART OF IT IS NOT, and quest_lunar.rs2 says so in its own header: \"in 2006 Lokar took you to Pirates' Cove and Captain Bentley's Lady Zay was jinxed - five symbols daubed round four decks by a cabin boy, found with an emerald lantern. Every stair and ladder on that ship is a 474 loc with an unhandled Climb op, so no deck of it can be walked today and the symbols cannot be reached.\" The three emerald items are that puzzle's tools, so they wait on the ship's stairs rather than on anything of their own. The Moonclan manual is the fourth of the set: it carries iop1=Read, nothing handles it, and the lunar spellbook it is flavour for is already in the game through lunar_spells.dbrow. All four were imported from the 474 cache with the rest of lunar_items.obj and each still carries that file's \"TODO by hand\" line, which is the honest state of them",
+      "note": "these four were the whole of obtainable.py's \"nothing anywhere mentions these\" bucket - the only objs in the game that no script, table, shop, map or param names at all - which is the bucket that is meant to stay empty",
+      "also": [
+        "lunar_emerald_lantern",
+        "lunar_emerald_lantern_lit",
+        "moonclan_manual"
+      ]
+    },
+    "saradomin_platebody": {
+      "osrs_source": "a hard clue scroll's rare table, which is where the 377 cache's own four come from now",
+      "why": "FOUR MORE DUPLICATES, AND THE SAME TRAP AS magic_secateurs. Saradomin's platebody, platelegs, plateskirt and kiteshield are in this build twice: the 377 cache carries them at 2661..2667 as rune_platebody_saradomin and its three siblings, and these four came in with the 2026-10-04 import of Old School's own 510 clue uniques, which named every item the Old School way and so did not see that the cache already had them. The cache ones are what the game is wired to - param=saradominitem and param=gwd_prot_saradomin for Saradomin's door in God Wars, tier40.rs2's Dragon Slayer gate on the platebody, animmag.enum, and all four stored in the costume room chest - and these four carry none of it. The hard rare table handed these out until 2026-10-15, so the Saradomin armour a clue gave you was the half that God Wars did not recognise and the chest would not take; it names the cache's four now. The full helm was never duplicated, which is why it was always right",
+      "why_not_deleted": "the same reason magic_secateurs is not deleted: removing an obj id is not free. A character handed one with ::give would be holding an item the server no longer defines, and dropping the pack/obj.pack line leaves a nameless default obj at that id rather than closing the gap. poh_battery group 55 is what closes the trap - it re-derives the costume chest's list from the reward tables, so a table row naming one of these four again goes red at once",
+      "also": [
+        "saradomin_platelegs",
+        "saradomin_plateskirt",
+        "saradomin_kiteshield"
+      ]
+    },
+    "rune_heraldic_kiteshield1": {
+      "osrs_source": "a clue scroll's rare table, which is where the *_shield_h1..h5 fifteen come from",
+      "why": "FIFTEEN MORE DUPLICATES, from the same 2026-10-04 import as the Saradomin four. The 377 cache carries the heraldic kiteshields as rune/adamant/black_heraldic_kiteshield1..5, and the import of Old School's 510 clue uniques brought them in again as *_shield_h1..h5, because Old School names them \"Rune shield (h1)\" and the importer had no way to see the cache already had them. Unlike the Saradomin four, NEITHER RECORD CARRIES A PARAM OR A GATE THE OTHER LACKS - both are complete, with the same stats and their own models - so the tie broke on the only thing that matters: the import's fifteen are what the clue tables hand out and what the collection log tracks, and the cache's fifteen are what nothing gives any more. The costume room chest held the cache's fifteen until 2026-10-15, which was fifteen slots that could never be filled; it holds the obtainable fifteen now, and the Defence skill guide's two icons point at them too",
+      "why_not_deleted": "the same reason the duplicate magic secateurs are not deleted: removing an obj id is not free, and a character handed one with ::give would be holding an item the server no longer defines. poh_battery group 55 is what closes the trap - it re-derives the chest's list from the reward tables, so a chest row naming one of these fifteen again goes red at once",
+      "also": [
+        "rune_heraldic_kiteshield2",
+        "rune_heraldic_kiteshield3",
+        "rune_heraldic_kiteshield4",
+        "rune_heraldic_kiteshield5",
+        "adamant_heraldic_kiteshield1",
+        "adamant_heraldic_kiteshield2",
+        "adamant_heraldic_kiteshield3",
+        "adamant_heraldic_kiteshield4",
+        "adamant_heraldic_kiteshield5",
+        "black_heraldic_kiteshield1",
+        "black_heraldic_kiteshield2",
+        "black_heraldic_kiteshield3",
+        "black_heraldic_kiteshield4",
+        "black_heraldic_kiteshield5"
       ]
     }
   }

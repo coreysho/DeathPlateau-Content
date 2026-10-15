@@ -59,8 +59,8 @@
 // How many treasure trail reward items the chest knows about, and how many sets they fall into.
 // Both are the length of the tables in poh_costume.enum, which are derived from the clue reward
 // tables - battery group 55 re-derives them and fails if either number drifts.
-^poh_costume_items = 72
-^poh_costume_sets = 16
+^poh_costume_items = 96
+^poh_costume_sets = 20
 
 // ---- the archery target and the dartboard (poh_games.rs2, 2026-09-14) ----
 // Indices into poh_range_ammo: the six arrows first, then the six darts.

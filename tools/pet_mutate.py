@@ -11,6 +11,7 @@ C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 W = os.path.join(os.environ.get('TMPDIR', '/tmp'), 'pet_mutate_work')
 
 ROLL = 'scripts/npc/scripts/skill_pets.rs2'
+FOLL = 'scripts/npc/scripts/follower.rs2'
 BRS2 = 'scripts/npc/scripts/boss_pets.rs2'
 CONST = 'scripts/npc/configs/skill_pets.constant'
 BCONST = 'scripts/npc/configs/boss_pets.constant'
@@ -44,22 +45,30 @@ MUTS = [
   '1 and that sentinel is 0'),
  (ROLL, 'if ($chance < 1) {', 'if ($chance < -1) {',
   '1 the chance is floored at 1'),
- (ROLL, 'if (~pet_owned($pet) = true) {\n    return;\n}\n', '',
-  '1 owning one anywhere blocks a second, via ~pet_owned'),
+ # ~pet_receive owns the duplicate test and the full-pack path now (npc/scripts/follower.rs2),
+ # so these bend the funnel rather than the roll. The roll's own job is the rate.
+ (FOLL, 'if (~pet_owned($pet) = true) {\n    mes("You have a funny feeling like you would have been followed...");\n    return;\n}\n', '',
+  '1 ...and ~pet_receive refuses one the player owns anywhere'),
  # the inv sweep moved in front of the roll - correct, but one sweep per ACTION rather than per pet
  # the guards moved in front of the roll: correct behaviour, but one inventory sweep per ACTION
  # rather than one per pet earned - a skilling hook runs on every log and every ore.
  (ROLL, '''if (random($chance) ! 0) {
     return;
-}''', '''if (~pet_owned($pet) = true) {
+}
+// Old School's rules, as every pet''', '''if (~pet_owned($pet) = true) {
     return;
 }
 if (random($chance) ! 0) {
     return;
-}''',
-  '1 and it runs only after the roll succeeds'),
- (ROLL, 'obj_add(coord, $pet, 1, ^lootdrop_duration);', 'mes("It escapes.");',
-  '1 a full pack puts it on the floor rather than losing it'),
+}
+// Old School's rules, as every pet''',
+  '1 and the roll does not ask who owns what BEFORE it has rolled'),
+ # follower.rs2 has two of these - the death path's and ~pet_receive's - so the one this is
+ # aimed at is named by the message beneath it.
+ (FOLL, '''inv_add(lostpet_store, $pet, 1);
+    mes("You have a funny feeling like you're being followed, but you have no room for it.");''',
+        'mes("It escapes.");',
+  "1 ...and a full pack sends it to Probita's rather than the floor"),
  # 2 - the boss rates
  (BRS2, '[proc,bosspet_roll](namedobj $pet, int $rate)', '[proc,bosspet_roll](namedobj $pet)',
   '2 the rate is an argument'),
@@ -198,8 +207,8 @@ if (random($chance) ! 0) {
  # 7 - the two halves of a pet losing track of each other
  ('scripts/npc/configs/skill_pets.obj', 'param=follower_id,skillpet_beaver',
   'param=follower_id,skillpet_heron', '7 ...and the item names the npc'),
- ('scripts/npc/configs/skill_pets.npc', 'category=bosspet\nparam=pet_item_id,skillpet_rocky_item',
-  'param=pet_item_id,skillpet_rocky_item',
+ ('scripts/npc/configs/skill_pets.npc', 'category=bosspet\nfollower=yes\nparam=pet_item_id,skillpet_rocky_item',
+  'follower=yes\nparam=pet_item_id,skillpet_rocky_item',
   '7 ...both on the category the four follower triggers hang off'),
 ]
 

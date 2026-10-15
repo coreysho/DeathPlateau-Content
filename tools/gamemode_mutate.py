@@ -53,8 +53,10 @@ MUTS = [
   'realism +25%, 5x +7%, 10x nothing'),
  (DROPRS, 'scale($percent, 100, $chance)', '$chance',
   "each row at its own chance times the boost"),
- (DROPRS, '        if (~pet_owned($obj) = true) {\n            return;\n        }\n', '',
-  "a pet keeps ~bosspet_roll's rules"),
+ # ~pet_owned moved out of ~droprate_give and into ~pet_receive with every other pet rule, so the
+ # thing to bend is the delegation: a boost pet that does not reach the funnel keeps none of it.
+ (DROPRS, '~pet_receive_later($obj, 0)', 'obj_add($at, $obj, 1, ^lootdrop_duration)',
+  'a pet is handed to ~pet_receive, queued on the killer because this runs as the npc'),
  (DROPRS, 'return(^droprate_boost_realism);', 'return(^droprate_boost_10x);',
   'realism is the DEFAULT branch'),
  (DEATH, '~droprate_bonus;\n', '',

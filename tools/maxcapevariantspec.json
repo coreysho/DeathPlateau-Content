@@ -72,7 +72,8 @@
  "god_identity": {
   "counts_as_its_god_cape": true,
   "_decision": "A JUDGEMENT CALL, recorded as one. No wiki page states it outright in a sentence that could be quoted. Two pieces of evidence, both checkable: the wiki's God capes page lists all six max cape variants under god capes alongside the plain and imbued ones; and in the item table the variant carries the SAME god param as the plain cape (40 Saradomin, 41 Zamorak, 42 Guthix), which is the flag a god-spell requirement would read. The alternative - combining silently destroying a spell requirement - would be a trap with no upside.",
-  "_consequence": "The six god variants are accepted everywhere the plain and imbued capes are: casting the god spell outside the arena, the charged maximum of 30, and the Mage Arena battle mages. Those sites list capes by name in six files today and become one proc."
+  "_consequence": "The six god variants are accepted everywhere the plain and imbued capes are: casting the god spell outside the arena, the charged maximum of 30, and the Mage Arena battle mages. Those sites list capes by name in six files today and become one proc.",
+  "_god_wars": "AND GOD WARS, which was missed until 2026-10-15. gwd_altars.rs2 sums oc_param($item, gwd_prot_<god>) over the worn items to decide who gets past that god's door, so a Saradomin max cape - made FROM a Saradomin cape, which carries that param - was turned away where the cape it was made from is let through. It is carried per variant in gwd_prot below rather than in bonuses, because bonuses is the OSRS item table's slots 0..11 read out of the table and this param is this build's own. Guthix has none because God Wars has no Guthix room: the dungeon's four are Armadyl, Bandos, Saradomin and Zamorak, and this build has the two gods whose capes exist."
  },
  "not_buildable_here": {
   "_why": "A variant needs its source cape to exist in this build. These five do not, so they are left out rather than invented (accumulator_max_cape used to be a sixth; Animal Magnetism added Ava's accumulator, so it is a real variant now):",
@@ -221,7 +222,7 @@
    "god_param": null
   },
   {
-   "key": "saradomin",
+   "key": "saradomin", "gwd_prot": "gwd_prot_saradomin",
    "source_cape": "saradomin_cape",
    "cape": {
     "osrs_id": 13331,
@@ -433,7 +434,7 @@
    "god_param": 42
   },
   {
-   "key": "zamorak",
+   "key": "zamorak", "gwd_prot": "gwd_prot_zamorak",
    "source_cape": "zamorak_cape",
    "cape": {
     "osrs_id": 13333,
@@ -539,7 +540,7 @@
    "god_param": 41
   },
   {
-   "key": "imbued_saradomin",
+   "key": "imbued_saradomin", "gwd_prot": "gwd_prot_saradomin",
    "source_cape": "imbued_saradomin_cape",
    "cape": {
     "osrs_id": 21776,
@@ -753,7 +754,7 @@
    "god_param": 42
   },
   {
-   "key": "imbued_zamorak",
+   "key": "imbued_zamorak", "gwd_prot": "gwd_prot_zamorak",
    "source_cape": "imbued_zamorak_cape",
    "cape": {
     "osrs_id": 21780,

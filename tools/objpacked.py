@@ -305,9 +305,37 @@ def main():
               'drawn by the client - so nothing here disagrees with the OSRS table either: %s'
               % (len(rbad) and '%d empty, as they should be' % len(rbad) or 'nothing to compare'))
 
+    # ---- THE COLOUR VARIANTS ARE THE SAME SIX PIECES, and are checked as such rather than
+    # exempted. graceful_colours.obj recolours all six nine times over, and every recolour is the
+    # base piece in another colour: same model, same weight, same energy_restore. Listing them as
+    # "another obj carrying the param" was wrong, and so would silently allowing anything named
+    # graceful_* be - a variant whose numbers drifted from its base would pay more in Varrock's
+    # colours than in Draynor's, which is the one thing a recolour must never do.
+    variants = {n: base for n in byname for base in GRACE
+                if n != base and n.startswith(base + '_')}
+    check(len(variants) >= 6,
+          'the packed table carries the Graceful colour variants, so the comparison below is '
+          'against something rather than against an empty list: %d' % len(variants))
+    vbad = []
+    for n, base in sorted(variants.items()):
+        b = byname.get(base)
+        if not b:
+            continue
+        if byname[n].get('weight', 0) != b.get('weight', 0):
+            vbad.append('%s weight %s, %s has %s'
+                        % (n, byname[n].get('weight', 0), base, b.get('weight', 0)))
+        if byname[n]['params'].get(restore) != b['params'].get(restore):
+            vbad.append('%s energy_restore %s, %s has %s'
+                        % (n, byname[n]['params'].get(restore), base, b['params'].get(restore)))
+    check(not vbad,
+          'and each one carries its own base piece\'s weight and energy_restore exactly, so a '
+          'colour cannot be worth more than another: %s'
+          % (vbad[:3] or 'all %d match their base' % len(variants)))
+
     # ---- nothing else in the game carries the param by accident
     others = sorted(n for n, o in byname.items()
-                    if restore is not None and restore in o['params'] and n not in GRACE)
+                    if restore is not None and restore in o['params']
+                    and n not in GRACE and n not in variants)
     check(not others, 'and no other obj in the game carries energy_restore, so the bonus cannot '
                       'be picked up from somewhere unintended: %s' % (others[:5] or 'none'))
 
