@@ -3,10 +3,17 @@
 // tools/sim (for './harness.js' and the '#/' imports) and takes it out again. Build first.
 //
 // What the static checks in clue_battery.py cannot see and this does: a second clue of a tier
-// arriving as a scroll box, the stack limit of 2 shared by the clue and the boxes (inventory and
-// bank), tiers held side by side with their own progress, a box refusing to open while its tier has
-// a clue and opening once the trail is done, the spade picking the right clue out of three, and the
-// one-time move of the old %trail_status step bits at login.
+// arriving as a scroll box, boxes stacking with no cap set, the bank counting toward "do you
+// already have one of these", tiers held side by side with their own progress, a box refusing to
+// open while its tier has a clue and opening once the trail is done, the spade picking the right
+// clue out of three, and the one-time move of the old %trail_status step bits at login.
+//
+// THE CAP IS OFF, which is what this file had not been told. ^trail_easy_stackcap and its two
+// siblings are ^trail_stackcap_none (-1) - "no limit, as the owner asked", which clue_battery.py
+// asserts - and ~trail_cluedrop and ~trail_take_refused both test for that sentinel and skip the
+// comparison. This file still asserted the old limit of 2 and so reported twelve failures the first
+// time anybody ran it: it is not in CI, it needs a built pack and an engine beside content, and the
+// cap came off after it was written.
 import World from '#/engine/World.js';
 import * as H from './harness.js';
 import ObjType from '#/cache/config/ObjType.js';
@@ -116,16 +123,18 @@ check(g.length === 1 && ObjType.get(g[0].type).debugname === 'trail_scrollbox_ea
 take(p, g[0].type);
 check(count(p, 'trail_scrollbox_easy') === 1, 'picked up the easy scroll box');
 
-console.log('3. the stack limit is 2, shared by the clue and the boxes');
+console.log('3. no cap is set, so every further clue of the tier is another scroll box');
 H.clearLogs();
 drop(p, EASY);
 g = groundAt(X, Z);
-check(g.length === 0, `third drop at the limit drops nothing: ${g.map(o => ObjType.get(o.type).debugname).join(',') || 'nothing'}`);
-check(H.mesgs.some(m => m.text === 'You have a sneaking suspicion that you would have received an easy scroll box.'), `and says so: ${H.mesgs.map(m => m.text).join(' | ')}`);
-// a box on the floor from elsewhere cannot be taken over the limit
+check(g.length === 1 && ObjType.get(g[0].type).debugname === 'trail_scrollbox_easy', `third drop: ${g.map(o => ObjType.get(o.type).debugname).join(',') || 'nothing'}`);
+take(p, g[0].type);
+check(count(p, 'trail_scrollbox_easy') === 2, `two easy boxes held: ${count(p, 'trail_scrollbox_easy')}`);
+check(!H.mesgs.some(m => m.text.includes('sneaking suspicion')), `and nothing stands in for a drop that happened: ${H.mesgs.map(m => m.text).join(' | ')}`);
+// nor is a box on the floor refused for a limit that is not set
 H.clearLogs();
 const ref = run(p, '[proc,trail_take_refused]', [ObjType.getId('trail_scrollbox_easy'), 1]);
-check(ref[0] === 1, `taking another easy box at the limit is refused: ${H.mesgs.map(m => m.text).join(' | ')}`);
+check(ref[0] === 0, `another easy box off the floor is allowed: ${H.mesgs.map(m => m.text).join(' | ')}`);
 
 console.log('4. tiers are independent: a medium drop is a medium clue while holding an easy clue and box');
 drop(p, MEDIUM);
@@ -141,7 +150,7 @@ clearGround(X, Z);
 console.log('5. a box will not open while its tier has a clue');
 H.clearLogs();
 H.opheld(p, 'trail_scrollbox_easy', 1);
-check(count(p, 'trail_scrollbox_easy') === 1, 'box still there');
+check(count(p, 'trail_scrollbox_easy') === 2, `both boxes still there: ${count(p, 'trail_scrollbox_easy')}`);
 check(H.mesgs.some(m => m.text === 'The clue box refuses to open - you already have a clue.'), `and says why: ${H.mesgs.map(m => m.text).join(' | ')}`);
 
 console.log('6. progress is per tier');
@@ -167,30 +176,37 @@ check(run(p, '[proc,get_trail_progress]', [EASY])[0] === 0, 'easy progress clear
 p.closeModal();
 run(p, '[proc,trail_flush_rewards]');
 H.opheld(p, 'trail_scrollbox_easy', 1);
-check(count(p, 'trail_scrollbox_easy') === 0, 'box used');
+check(count(p, 'trail_scrollbox_easy') === 1, `one box used, one left: ${count(p, 'trail_scrollbox_easy')}`);
 check(invItems(p).some(i => i.cat === 'trail_clue_easy'), `a new easy clue: ${invItems(p).filter(i => i.cat.startsWith('trail')).map(i => i.name).join(',')}`);
 check(invItems(p).some(i => i.cat === 'trail_clue_medium'), 'the medium clue is untouched');
 
-console.log('8. two boxes and no clue: boxes stack to 2, a third is refused');
+console.log('8. boxes with no clue: they stack, and a clue off the floor is still allowed');
 H.clearInv(p);
 drop(p, HARD); // no hard held: a clue
 g = groundAt(X, Z);
+const hardClue = g[0].type;
 clearGround(X, Z);
 H.give(p, 'trail_scrollbox_hard', 2);
 check(invItems(p).filter(i => i.name === 'trail_scrollbox_hard').length === 1 && count(p, 'trail_scrollbox_hard') === 2, 'two hard boxes in one slot');
 drop(p, HARD);
-check(groundAt(X, Z).length === 0, 'at the limit (2 boxes) a hard drop gives nothing');
+g = groundAt(X, Z);
+check(g.length === 1 && ObjType.get(g[0].type).debugname === 'trail_scrollbox_hard', `a third hard drop is another box: ${g.map(o => ObjType.get(o.type).debugname).join(',') || 'nothing'}`);
+clearGround(X, Z);
 H.clearLogs();
-check(run(p, '[proc,trail_take_refused]', [g[0].type, 1])[0] === 1, `a hard clue off the floor is refused at the limit too: ${H.mesgs.map(m => m.text).join(' | ')}`);
+// ~trail_take_refused only turns a clue away when the tier already has a CLUE; boxes held are not
+// a clue, and with no cap there is nothing for the count to be over.
+check(run(p, '[proc,trail_take_refused]', [hardClue, 1])[0] === 0, `a hard clue off the floor is allowed while two boxes are held: ${H.mesgs.map(m => m.text).join(' | ')}`);
 H.opheld(p, 'trail_scrollbox_hard', 1);
 check(count(p, 'trail_scrollbox_hard') === 1 && invItems(p).some(i => i.cat === 'trail_clue_hard'), 'opening one gives a hard clue and leaves one box');
 
-console.log('9. the bank counts');
+console.log('9. the bank counts: a box banked still makes the next drop a box, not a fresh clue');
 H.clearInv(p);
 const bank = InvType.getId('bank');
 p.invAdd(bank, ObjType.getId('trail_scrollbox_medium'), 2);
 drop(p, MEDIUM);
-check(groundAt(X, Z).length === 0, 'two medium boxes in the bank: a medium drop gives nothing');
+g = groundAt(X, Z);
+check(g.length === 1 && ObjType.get(g[0].type).debugname === 'trail_scrollbox_medium', `two medium boxes in the bank: the drop is a box: ${g.map(o => ObjType.get(o.type).debugname).join(',') || 'nothing'}`);
+clearGround(X, Z);
 p.invDel(bank, ObjType.getId('trail_scrollbox_medium'), 2);
 
 console.log('10. legacy progress moves to the held tier at login');
