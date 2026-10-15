@@ -62,7 +62,7 @@ MUTS = [
        'walkanim=osrs_seq_2849\nreadyanim=osrs_seq_3309',
   '5 ...walk is OSRS seq 3313'),
  (NPC, 'readyanim=osrs_seq_6236\nvislevel=hide', 'readyanim=osrs_seq_6236\nvislevel=99',
-  '5 ...with no combat level and the timer that drives [ai_timer,_bosspet]'),
+  '5 ...with no combat level, and the every-tick timer that drives [ai_timer,_bosspet]'),
  # 6 - a placeholder creeping back
  (OBJ, 'model=obj_bosspet_giant_mole_item', 'model=obj_bird_egg_red',
   '6 obj_bird_egg_red (the recoloured bird egg) appears in neither pet config'),

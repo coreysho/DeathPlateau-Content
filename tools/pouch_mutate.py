@@ -83,7 +83,7 @@ MUTS = [
 
  # ---- 9, the mirror
  (LOGIN, '~rune_pouch_mirror_start;\n', '',
-  '9 ...and login starts it, so it runs for the whole session'),
+  '9 ...and login starts it'),
  (MIRRORIF, 'type=inv', 'type=layer', '9 the mirror component is an inv'),
  (MIRRORIF, 'width=4', 'width=3', '9 ...and as many slots as the store has'),
  # A rune the spellbook can ask for that the client cannot see in the pouch: the spell stays grey
@@ -115,7 +115,7 @@ MUTS = [
          'case airrune : return(calc(~rune_total(airrune) + inv_total(inv, mistrune)',
   '2 ...which counts through ~rune_total'),
  (MAGIC, '~rune_del($rune3, $rune_count3);', 'inv_del(inv, $rune3, $rune_count3);',
-  '2 and all four spends through ~rune_del'),
+  '2 and all four non-elemental spends through ~rune_del'),
  (ALCH, 'def_int $spend = ~spell_rune_spend($spell_data, $item);', 'def_int $spend = 0;',
   '2 alching a rune asks the cast what it will take'),
  # The silent twin of ~check_spell_requirements, for the autocast that picks a spell for you. It
