@@ -1,0 +1,396 @@
+// CANOEING ON THE RIVER LUM. The cache has had all of it since 377 and nothing had ever answered
+// a single click: tools/silentops.py reported Make-Canoe on four locs, Shape-Canoe on one, Float
+// Log, Float Canoe on three, Paddle Log and Paddle Canoe on seven, all silent.
+//
+// See configs/canoeing.constant for what the config says. The short version: each station is one
+// 5x2 multiloc whose fifteen indices are the whole state machine, so the varbit IS the canoe -
+// chop the tree, shape what is left, float it, and paddle it, and every step is the same loc with
+// a different index and a different Op 1.
+//
+// AND THE ANIMATIONS ARE ALL THERE TOO, which is how you know this was finished and shipped:
+// human_canoeing_carve_bronze_axe through _dragon_axe, one per axe; canoeing_pushing_into_water;
+// canoeing_getting_in; and canoeing_rowing, which carries replaceheldright=canoeing_paddle.
+
+// =========================================================================== the stations
+// One trigger per station, because Op 1 means Chop-down, Shape-Canoe, Float and Paddle at
+// different indices of the same loc, and a trigger is looked up on the base type.
+[oploc1,canoeing_canoestation_lumbridge] @canoe_click(^canoe_lumbridge);
+[oploc1,canoeing_canoestation_championsguild] @canoe_click(^canoe_championsguild);
+[oploc1,canoeing_canoestation_barbarianvillage] @canoe_click(^canoe_barbarianvillage);
+[oploc1,canoeing_canoestation_edgeville] @canoe_click(^canoe_edgeville);
+
+[proc,canoe_state](int $station)(int)
+if ($station = ^canoe_lumbridge) {
+    return(%canoestation_state_lumbridge);
+}
+if ($station = ^canoe_championsguild) {
+    return(%canoestation_state_championsguild);
+}
+if ($station = ^canoe_barbarianvillage) {
+    return(%canoestation_state_barbarianvillage);
+}
+return(%canoestation_state_edgeville);
+
+// A PROC AND NOT A LABEL, because @ is a jump: a label here would end every script that set a
+// state, and the teleport, the experience and the messages after it would never run.
+[proc,canoe_setstate](int $station, int $state)
+if ($station = ^canoe_lumbridge) {
+    %canoestation_state_lumbridge = $state;
+    return;
+}
+if ($station = ^canoe_championsguild) {
+    %canoestation_state_championsguild = $state;
+    return;
+}
+if ($station = ^canoe_barbarianvillage) {
+    %canoestation_state_barbarianvillage = $state;
+    return;
+}
+%canoestation_state_edgeville = $state;
+
+// "Making a canoe at another station will clear any previously left canoes."
+[proc,canoe_clear_others](int $keep)
+if ($keep ! ^canoe_lumbridge) {
+    %canoestation_state_lumbridge = ^canoe_state_tree;
+}
+if ($keep ! ^canoe_championsguild) {
+    %canoestation_state_championsguild = ^canoe_state_tree;
+}
+if ($keep ! ^canoe_barbarianvillage) {
+    %canoestation_state_barbarianvillage = ^canoe_state_tree;
+}
+if ($keep ! ^canoe_edgeville) {
+    %canoestation_state_edgeville = ^canoe_state_tree;
+}
+
+// WHICH STATION THE PLAYER IS STANDING AT, read off the ground rather than remembered in a varbit:
+// the interface handlers below need it and there is no spare bit in canoeing_menu for it.
+[proc,canoe_here]()(int)
+if (~coord_in_range(^canoe_loc_lumbridge, coord, ^canoe_station_range) = true) {
+    return(^canoe_lumbridge);
+}
+if (~coord_in_range(^canoe_loc_championsguild, coord, ^canoe_station_range) = true) {
+    return(^canoe_championsguild);
+}
+if (~coord_in_range(^canoe_loc_barbarianvillage, coord, ^canoe_station_range) = true) {
+    return(^canoe_barbarianvillage);
+}
+if (~coord_in_range(^canoe_loc_edgeville, coord, ^canoe_station_range) = true) {
+    return(^canoe_edgeville);
+}
+return(-1);
+
+[proc,coord_in_range](coord $a, coord $b, int $range)(boolean)
+if (coordy($a) ! coordy($b)) {
+    return(false);
+}
+if (sub(max(coordx($a), coordx($b)), min(coordx($a), coordx($b))) > $range) {
+    return(false);
+}
+if (sub(max(coordz($a), coordz($b)), min(coordz($a), coordz($b))) > $range) {
+    return(false);
+}
+return(true);
+
+[label,canoe_click](int $station)
+def_int $state = ~canoe_state($station);
+if ($state = ^canoe_state_tree) {
+    @canoe_chop($station);
+}
+if ($state = ^canoe_state_falling) {
+    ~mesbox("The tree is coming down. Give it a moment.");
+    return;
+}
+if ($state = ^canoe_state_fallen) {
+    @canoe_shape($station);
+}
+if ($state >= ^canoe_state_log_water) {
+    @canoe_paddle($station);
+}
+@canoe_float($station);
+
+// =========================================================================== chopping it down
+// NOT WOODCUTTING'S ROLL. A tree you cut for logs is a repeating action - op 1 arms the timer and
+// the hidden op 3 comes back round until a roll succeeds - and the station is not: its base loc
+// carries op1=Make-Canoe and nothing else, so p_oploc(3) has nothing to re-fire and one click is
+// the whole action. What the axe changes is how long it takes, which is the wiki's "like other
+// Woodcutting interactions, building one is faster with higher-tier axes".
+[label,canoe_chop](int $station)
+def_namedobj $axe = ~woodcutting_axe_checker(true);
+if ($axe = null) {
+    return;
+}
+if (stat(woodcutting) < ^canoe_log_level) {
+    ~mesbox("You need a Woodcutting level of <tostring(^canoe_log_level)> to make a canoe out of this.");
+    return;
+}
+mes("You chop away at the tree.");
+anim(struct_param(oc_param($axe, woodcutting_struct), skill_anim), 0);
+sound_synth(woodchop1, 1, 0);
+p_delay(~canoe_axe_delay($axe));
+anim(null, 0);
+sound_synth(tree_fall, 1, 0);
+~canoe_setstate($station, ^canoe_state_fallen);
+~mesbox("The tree comes down across the bank, which is where a canoe starts.");
+
+// Five ticks with a bronze axe, two with a dragon one.
+[proc,canoe_axe_delay](obj $axe)(int)
+if ($axe = dragon_axe | $axe = third_age_axe | $axe = rune_axe | $axe = gilded_axe) {
+    return(2);
+}
+if ($axe = adamant_axe | $axe = mithril_axe) {
+    return(3);
+}
+if ($axe = black_axe | $axe = steel_axe) {
+    return(4);
+}
+return(5);
+
+// =========================================================================== shaping it
+// The panel is the cache's: canoeing, "WHAT SORT OF CANOE WOULD YOU LIKE TO MAKE ?", with a Build
+// button and a Make button for each of the four.
+[label,canoe_shape](int $station)
+if (~woodcutting_axe_checker(true) = null) {
+    return;
+}
+if_openmain(canoeing);
+
+[if_button,canoeing:com_8] @canoe_build(^canoe_state_log);
+[if_button,canoeing:com_25] @canoe_build(^canoe_state_log);
+[if_button,canoeing:com_6] @canoe_build(^canoe_state_dugout);
+[if_button,canoeing:com_26] @canoe_build(^canoe_state_dugout);
+[if_button,canoeing:com_3] @canoe_build(^canoe_state_stable);
+[if_button,canoeing:com_27] @canoe_build(^canoe_state_stable);
+[if_button,canoeing:com_14] @canoe_build(^canoe_state_waka);
+[if_button,canoeing:com_28] @canoe_build(^canoe_state_waka);
+
+[label,canoe_build](int $canoe)
+def_int $station = ~canoe_here;
+if ($station < 0) {
+    if_close;
+    return;
+}
+if (~canoe_state($station) ! ^canoe_state_fallen) {
+    if_close;
+    return;
+}
+def_namedobj $axe = ~woodcutting_axe_checker(true);
+if ($axe = null) {
+    if_close;
+    return;
+}
+if (stat(woodcutting) < ~canoe_level($canoe)) {
+    if_close;
+    ~mesbox(append(append("You need a Woodcutting level of ", tostring(~canoe_level($canoe))), " to shape that one."));
+    return;
+}
+if_close;
+mes("You shape the fallen tree into a canoe.");
+anim(~canoe_carve_anim($axe), 0);
+p_delay(add(~canoe_axe_delay($axe), 2));
+anim(null, 0);
+~canoe_clear_others($station);
+~canoe_setstate($station, $canoe);
+%canoe_type = $canoe;
+~woodcutting_xp(~canoe_xp($canoe));
+~mesbox("The canoe is finished. Push it into the water when you are ready.");
+
+// One carving animation per axe, all eight of them in the cache and none of them ever played.
+[proc,canoe_carve_anim](obj $axe)(seq)
+if ($axe = dragon_axe | $axe = third_age_axe | $axe = gilded_axe) {
+    return(human_canoeing_carve_dragon_axe);
+}
+if ($axe = rune_axe) {
+    return(human_canoeing_carve_rune_axe);
+}
+if ($axe = adamant_axe) {
+    return(human_canoeing_carve_adamant_axe);
+}
+if ($axe = mithril_axe) {
+    return(human_canoeing_carve_mithril_axe);
+}
+if ($axe = black_axe) {
+    return(human_canoeing_carve_black_axe);
+}
+if ($axe = steel_axe) {
+    return(human_canoeing_carve_steel_axe);
+}
+if ($axe = iron_axe) {
+    return(human_canoeing_carve_iron_axe);
+}
+return(human_canoeing_carve_bronze_axe);
+
+[proc,canoe_level](int $canoe)(int)
+if ($canoe = ^canoe_state_log) {
+    return(^canoe_log_level);
+}
+if ($canoe = ^canoe_state_dugout) {
+    return(^canoe_dugout_level);
+}
+if ($canoe = ^canoe_state_stable) {
+    return(^canoe_stable_level);
+}
+return(^canoe_waka_level);
+
+[proc,canoe_xp](int $canoe)(int)
+if ($canoe = ^canoe_state_log) {
+    return(^canoe_log_xp);
+}
+if ($canoe = ^canoe_state_dugout) {
+    return(^canoe_dugout_xp);
+}
+if ($canoe = ^canoe_state_stable) {
+    return(^canoe_stable_xp);
+}
+return(^canoe_waka_xp);
+
+// How far it will carry you: one stop, two, three, or anywhere on the river - and the Wilderness
+// pond only for a waka.
+[proc,canoe_reach](int $canoe)(int)
+if ($canoe = ^canoe_state_log) {
+    return(^canoe_log_reach);
+}
+if ($canoe = ^canoe_state_dugout) {
+    return(^canoe_dugout_reach);
+}
+if ($canoe = ^canoe_state_stable) {
+    return(^canoe_stable_reach);
+}
+return(^canoe_waka_reach);
+
+// =========================================================================== floating it
+[label,canoe_float](int $station)
+def_int $state = ~canoe_state($station);
+if ($state < ^canoe_state_log | $state > ^canoe_state_waka) {
+    ~displaymessage(^dm_default);
+    return;
+}
+mes("You push the canoe into the water.");
+anim(canoeing_pushing_into_water, 0);
+p_delay(3);
+anim(null, 0);
+~canoe_setstate($station, add($state, ^canoe_float_offset));
+~mesbox("It floats, which is the part nobody is ever sure about.");
+
+// =========================================================================== paddling it
+[label,canoe_paddle](int $station)
+~canoe_map_markers($station);
+if_openmain(canoe_map);
+
+// "You are here" is four separate markers on the map, one per station, and only the one you are
+// standing at belongs on the screen.
+[proc,canoe_map_markers](int $station)
+if_sethide(canoe_map:com_54, true);
+if_sethide(canoe_map:com_51, true);
+if_sethide(canoe_map:com_48, true);
+if_sethide(canoe_map:com_39, true);
+if ($station = ^canoe_lumbridge) {
+    if_sethide(canoe_map:com_54, false);
+    return;
+}
+if ($station = ^canoe_championsguild) {
+    if_sethide(canoe_map:com_51, false);
+    return;
+}
+if ($station = ^canoe_barbarianvillage) {
+    if_sethide(canoe_map:com_48, false);
+    return;
+}
+if_sethide(canoe_map:com_39, false);
+
+// The map's five destinations, each with a pin and a label that do the same thing.
+[if_button,canoe_map:com_13] @canoe_travel(^canoe_lumbridge);
+[if_button,canoe_map:com_34] @canoe_travel(^canoe_lumbridge);
+[if_button,canoe_map:com_15] @canoe_travel(^canoe_championsguild);
+[if_button,canoe_map:com_35] @canoe_travel(^canoe_championsguild);
+[if_button,canoe_map:com_17] @canoe_travel(^canoe_barbarianvillage);
+[if_button,canoe_map:com_36] @canoe_travel(^canoe_barbarianvillage);
+[if_button,canoe_map:com_40] @canoe_travel(^canoe_edgeville);
+[if_button,canoe_map:com_41] @canoe_travel(^canoe_edgeville);
+[if_button,canoe_map:com_37] @canoe_travel(^canoe_wilderness);
+
+[label,canoe_travel](int $to)
+def_int $from = ~canoe_here;
+if ($from < 0) {
+    if_close;
+    return;
+}
+def_int $state = ~canoe_state($from);
+if ($state < ^canoe_state_log_water) {
+    if_close;
+    return;
+}
+def_int $canoe = sub($state, ^canoe_float_offset);
+if ($to = $from) {
+    if_close;
+    ~mesbox("You are already here.");
+    return;
+}
+if ($to = ^canoe_wilderness & $canoe ! ^canoe_state_waka) {
+    if_close;
+    ~mesbox("Only a waka will get up that far, and this is not a waka.");
+    return;
+}
+if ($to ! ^canoe_wilderness) {
+    def_int $stops = sub($to, $from);
+    if ($stops < 0) {
+        $stops = sub($from, $to);
+    }
+    if ($stops > ~canoe_reach($canoe)) {
+        if_close;
+        ~mesbox(append(append("This canoe will carry you ", tostring(~canoe_reach($canoe))), " stops along the river and no further."));
+        return;
+    }
+}
+if_close;
+anim(canoeing_getting_in, 0);
+p_delay(2);
+mes("You paddle out into the river.");
+anim(canoeing_rowing, 0);
+p_delay(5);
+anim(null, 0);
+// The canoe sinks after one trip, and the tree the station cut down has grown back by the time
+// anybody is looking at it again.
+~canoe_setstate($from, ^canoe_state_tree);
+%canoe_type = ^canoe_state_tree;
+p_teleport(~canoe_landing($to));
+p_delay(2);
+if ($to = ^canoe_wilderness) {
+    ~mesbox("You pull the canoe up onto the bank of a pond with nothing around it, and it sinks anyway. | There are no canoe trees up here, and everything that walks past this water is hostile.");
+    return;
+}
+~mesbox("The canoe sinks as you step off it, which is what they all do.");
+
+[proc,canoe_landing](int $to)(coord)
+if ($to = ^canoe_lumbridge) {
+    return(^canoe_land_lumbridge);
+}
+if ($to = ^canoe_championsguild) {
+    return(^canoe_land_championsguild);
+}
+if ($to = ^canoe_barbarianvillage) {
+    return(^canoe_land_barbarianvillage);
+}
+if ($to = ^canoe_edgeville) {
+    return(^canoe_land_edgeville);
+}
+return(^canoe_land_wilderness);
+
+// =========================================================================== the four experts
+// Barfy Bill, Tarquin, Sigurd and Hari, all placed, all with Talk-to and nothing to say.
+[opnpc1,canoeing_bill] @canoe_expert_talk;
+[opnpc1,canoeing_tarquin] @canoe_expert_talk;
+[opnpc1,canoeing_sigurd] @canoe_expert_talk;
+[opnpc1,canoeing_hari] @canoe_expert_talk;
+
+[label,canoe_expert_talk]
+~chatnpc("<p,happy>Fancy a trip up the river? Chop that tree and shape yourself a canoe.");
+if (~p_choice2("What sort of canoe can I make?", 1, "No thanks.", 2) = 2) {
+    ~chatplayer("<p,neutral>No thanks.");
+    return;
+}
+~chatplayer("<p,quiz>What sort of canoe can I make?");
+~chatnpc("<p,neutral>Depends what you can cut. A log will take you one stop. A dugout, two. A stable dugout, three.");
+~chatnpc("<p,happy>And a waka will take you anywhere on this river, including the one place nobody sensible paddles to.");
+~chatplayer("<p,quiz>Which is?");
+~chatnpc("<p,shifty>The pond up in the Wilderness. No trees up there, so it is a one-way trip, and the things that live round it do not own canoes.");
