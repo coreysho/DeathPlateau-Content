@@ -271,8 +271,19 @@ for p in prods:
             # NAMED is not GIVEN OUT. An earlier version of this grepped for the mould's name
             # anywhere in the scripts, so wiring the product - which reads the mould to decide
             # which layer to show - tripped this check rather than the one about transmitting.
-            check(not re.search(r'inv_add\([^)]*\b%s\b' % p['mould'], ALLRS2),
-                  'and nothing in the game hands out %s' % p['mould'], 'yes')
+            #
+            # AND "NOBODY HANDS IT OUT" IS NO LONGER THE ONLY RIGHT ANSWER. Two of these three
+            # moulds are handed out now - Dr Fenkenstrain gives the conductor mould and the Agrith
+            # quest gives the sigil mould - and both quests carry their own recipe on the mould's
+            # [opheldu], because a quest step has no Crafting level or experience for this window
+            # to copy. So what has to hold is one of two things: either nothing hands the mould
+            # out, or whatever does also owns a recipe for it. A mould a player can hold with no
+            # recipe anywhere is the broken case, and that is what this catches.
+            _given = re.search(r'inv_add\([^)]*\b%s\b' % p['mould'], ALLRS2) is not None
+            _recipe = re.search(r'\[opheldu,%s\]' % p['mould'], ALLRS2) is not None
+            check(not _given or _recipe,
+                  'nothing hands out %s, or what does owns a recipe for it on its own [opheldu]'
+                  % p['mould'], 'yes')
 
 
 # ---------------------------------------------------------------- 6

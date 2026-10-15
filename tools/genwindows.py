@@ -272,8 +272,14 @@ def silver(panel):
                   '    if_sethide(silver_casting:need_%s, false);' % p['key'],
                   '}']
         else:
-            b += ['// %s: a quest step with no Crafting level or experience to copy, and nothing' % p['key'],
-                  '// in this build hands out its mould, so it stays on the need side by itself.',
+            # NOT "nothing hands out its mould" any more, which two of these three outgrew: Dr
+            # Fenkenstrain gives the conductor mould and the Agrith quest gives the sigil mould,
+            # and each quest carries its own recipe on the mould's [opheldu]. What is true of all
+            # three is that this window has no number to charge for the step, so it is the window
+            # that stays out of it rather than the mould that nobody has.
+            b += ['// %s: a quest step with no Crafting level or experience to copy, so it stays' % p['key'],
+                  '// on the need side by itself. Whatever hands its mould out carries the recipe',
+                  '// too, on that mould\'s own [opheldu] - this window is not where it happens.',
                   'if_sethide(silver_casting:make_%s, true);' % p['key'],
                   'if_sethide(silver_casting:need_%s, false);' % p['key']]
     b += ['if_openmain(silver_casting);', '']

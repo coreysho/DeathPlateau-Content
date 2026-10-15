@@ -515,7 +515,16 @@ check('scale($percent, 100, $chance)' in b and 'random(^droprate_units)' in b,
 check(const('droprate_units') == 10000000, '^droprate_units is BONUS_UNITS, ten million')
 check('while (true)' not in code(b), 'the loop is bounded by the row count')
 g = DROPRS.split('[proc,droprate_give]', 1)[1].split('\n[', 1)[0]
-check('~pet_owned($obj)' in g and '~broadcast_pet($obj)' in g, "a pet keeps ~bosspet_roll's rules")
+# A PET GOES THROUGH THE FUNNEL, which is a stronger statement than the two calls this used to ask
+# for. ~pet_receive (npc/scripts/follower.rs2) is the one proc that hands any pet over: it refuses
+# one the player owns anywhere, puts it in the pack or at Probita's if something is already
+# following, and announces it - so the boost's pet keeps every rule a boss drop's does because it
+# is the same code. ~pet_receive_later rather than ~pet_receive because this runs as the npc, and
+# the varp the funnel writes is the killer's.
+check('~pet_receive_later($obj, 0)' in g,
+      "a pet is handed to ~pet_receive, queued on the killer because this runs as the npc")
+check('~pet_owned' not in g and '~broadcast_pet' not in g,
+      '...and does not keep a second copy of the funnel\'s rules beside it')
 check(all(x in g for x in ('~trail_easycluedrop(1, $at)', '~trail_mediumcluedrop(1, $at)', '~trail_hardcluedrop(1, $at)')),
       "a clue goes through its tier's own proc, one clue at a time")
 check('collection_log_item_index' in g and '~broadcast_drop($obj)' in g,
@@ -565,9 +574,15 @@ check('%xp_rate' not in code(DEATH), 'the death funnel never reads %xp_rate itse
 import subprocess as _sp2
 r2 = _sp2.run([sys.executable, os.path.join(C, 'tools/gennpcdrops.py'), '--check'],
               capture_output=True, text=True, cwd=C)
+# THE LAST 300 CHARACTERS WERE THE WRONG 300. --check prints every npc whose death script it could
+# not read a literal drop out of, then the one line that matters - "out of date: <file>" - so the
+# tail of its output was the middle of that list and the failure read as "%upass". The out-of-date
+# lines are quoted instead, which is what somebody reading this has to act on.
+_stale = [l for l in (r2.stderr or r2.stdout).split('\n') if l.startswith('out of date:')]
 check(r2.returncode == 0 and 'wrote' not in r2.stdout.split('gennpcdrops:')[0],
       'tools/gennpcdrops.py --check: the drop data is what the death scripts say'
-      + ('' if r2.returncode == 0 else ': ' + (r2.stderr or r2.stdout)[-300:]))
+      + ('' if r2.returncode == 0
+         else ': ' + '; '.join(_stale) if _stale else ': ' + (r2.stderr or r2.stdout)[-200:]))
 
 print()
 print('ALL PASS' if fails == 0 else '%d FAILED' % fails)

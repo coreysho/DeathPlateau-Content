@@ -195,7 +195,7 @@ def repack(panels):
     ids_order = [l for l in order_raw.replace('\r\n', '\n').split('\n') if l.strip()]
 
     old_for = {p['iface']: re.match(r'.*/(inter_\d+)\.if$', p['src']).group(1) for p in panels}
-    keep, dropped, own = [], set(), {}
+    keep, dropped, own, had = [], set(), {}, {}
     for l in pack:
         i, nm = l.split('=', 1)
         base = nm.split(':', 1)[0]
@@ -207,6 +207,15 @@ def repack(panels):
             keep.append('%s=%s' % (i, hit))
         else:
             dropped.add(i)
+            # WHAT ID THIS COMPONENT ALREADY HAD. Every component of the panel is dropped here and
+            # re-emitted below, and re-emitting them from max(used) + 1 moved the whole panel to
+            # the end of the pack EVERY RUN - 474 components renumbered by a re-run that changed
+            # nothing else, which is why windows_battery's "re-running them changes nothing" was
+            # red. An interface id is part of what the packed artefact means, so a component whose
+            # name has not changed gets its own id back and only a new name takes a new one. The
+            # first adoption still allocates fresh, because that is when the names change: com_21
+            # becomes smelt_1_silver and there is no old id under that name.
+            had[(hit, nm.split(':', 1)[1])] = int(i)
     ids_order = [l for l in ids_order if l not in dropped]
     used = {int(l.split('=', 1)[0]) for l in keep}
     nxt = max(used) + 1
@@ -218,13 +227,16 @@ def repack(panels):
                              % (iface, old_for[iface], iface))
         got = []
         for n in p['_names']:
-            while nxt in used:
+            i = had.get((iface, n))
+            if i is None or i in used:
+                while nxt in used:
+                    nxt += 1
+                i = nxt
                 nxt += 1
-            keep.append('%s=%s:%s' % (nxt, iface, n))
-            ids_order.append(str(nxt))
-            used.add(nxt)
-            got.append(nxt)
-            nxt += 1
+            keep.append('%s=%s:%s' % (i, iface, n))
+            ids_order.append(str(i))
+            used.add(i)
+            got.append(i)
         mine[iface] = got
     keep.sort(key=lambda l: int(l.split('=', 1)[0]))
     ids_order.sort(key=int)

@@ -44,8 +44,9 @@ if (inv_total(inv, sickle_mould) > 0) {
     if_sethide(silver_casting:make_silver_sickle, true);
     if_sethide(silver_casting:need_silver_sickle, false);
 }
-// lightning_rod: a quest step with no Crafting level or experience to copy, and nothing
-// in this build hands out its mould, so it stays on the need side by itself.
+// lightning_rod: a quest step with no Crafting level or experience to copy, so it stays
+// on the need side by itself. Whatever hands its mould out carries the recipe
+// too, on that mould's own [opheldu] - this window is not where it happens.
 if_sethide(silver_casting:make_lightning_rod, true);
 if_sethide(silver_casting:need_lightning_rod, false);
 if (inv_total(inv, tiara_mould) > 0) {
@@ -56,12 +57,14 @@ if (inv_total(inv, tiara_mould) > 0) {
     if_sethide(silver_casting:make_tiara, true);
     if_sethide(silver_casting:need_tiara, false);
 }
-// silvthrill_rod: a quest step with no Crafting level or experience to copy, and nothing
-// in this build hands out its mould, so it stays on the need side by itself.
+// silvthrill_rod: a quest step with no Crafting level or experience to copy, so it stays
+// on the need side by itself. Whatever hands its mould out carries the recipe
+// too, on that mould's own [opheldu] - this window is not where it happens.
 if_sethide(silver_casting:make_silvthrill_rod, true);
 if_sethide(silver_casting:need_silvthrill_rod, false);
-// demonic_sigil: a quest step with no Crafting level or experience to copy, and nothing
-// in this build hands out its mould, so it stays on the need side by itself.
+// demonic_sigil: a quest step with no Crafting level or experience to copy, so it stays
+// on the need side by itself. Whatever hands its mould out carries the recipe
+// too, on that mould's own [opheldu] - this window is not where it happens.
 if_sethide(silver_casting:make_demonic_sigil, true);
 if_sethide(silver_casting:need_demonic_sigil, false);
 if_openmain(silver_casting);
