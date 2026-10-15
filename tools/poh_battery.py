@@ -2437,10 +2437,20 @@ check(all(ammo[i].endswith('_arrow') for i in range(AF, AL + 1)), 'the arrow ran
 check(all(ammo[i].endswith('_dart') for i in range(DF, DL + 1)), 'and the dart range really is darts')
 
 # every one of these is inside somebody's house
+#
+# poh_needs_company IS NOT ONE OF THE OWN-HOUSE ONES, and was not meant to be from the day guests
+# could use the owner's furniture (f3fb1661). Everything else here writes to the house, so it is
+# the owner's; this one only says why a games room game cannot be played, which is as true for a
+# guest as for the owner - and telling a guest "You can only use that in your own house" when they
+# click the hangman chest would be a worse answer than the one they came for. So it takes
+# ~poh_in_house(loc_coord), the read-only test, and the check is for a house test rather than for
+# that house test. Still a check: without one the op fires on the loc outside any instance.
+HOUSE_GUARD = {'poh_needs_company': '~poh_in_house(loc_coord)'}
 for proc in ('poh_archery', 'poh_darts', 'poh_lever_pull', 'poh_needs_company', 'poh_no_parts',
              'poh_prize_chest'):
     body = GAMES.split('[proc,%s]' % proc, 1)[1].split('\n[', 1)[0]
-    check('~poh_in_own_house' in body, '%s checks you are in your own house' % proc)
+    guard = HOUSE_GUARD.get(proc, '~poh_in_own_house')
+    check(guard in body, '%s checks you are in %s' % (proc, 'a house' if proc in HOUSE_GUARD else 'your own house'))
 
 # ============================================================================ 57
 print('57. the windows resolve, in all six styles')
@@ -3822,10 +3832,39 @@ check(_objfiles > 1 and 'graceful_hood' in _allobj,
       'the sweep below actually walked the obj configs and found the Graceful pieces in them, so '
       'an empty result means nothing else carries the param rather than that nothing was read: '
       '%d files' % _objfiles)
-_extra = sorted(n for n in _allobj if n not in _GRACE_PIECES)
+# THE COLOUR VARIANTS ARE THE SAME SIX PIECES. graceful_colours.obj recolours all six nine times
+# over, and a recolour is the base piece in another colour - same model, same weight, same
+# energy_restore. Counting them as "another obj carrying the param" was wrong; letting anything
+# named graceful_* carry it would be wrong the other way, since a variant whose numbers drifted
+# from its base would pay more in Varrock's colours than in Draynor's. So they are checked against
+# their base rather than exempted, and the packed-table half of this is in tools/objpacked.py.
+_vbase = {n: b for n in _allobj for b in _GRACE_PIECES if n != b and n.startswith(b + '_')}
+_extra = sorted(n for n in _allobj if n not in _GRACE_PIECES and n not in _vbase)
 check(not _extra,
-      'and no other obj config in the tree carries energy_restore, so the bonus cannot be picked '
-      'up from something unintended: %s' % (_extra[:5] or 'the six and nothing else'))
+      'and no obj config in the tree carries energy_restore but the six and their colours, so the '
+      'bonus cannot be picked up from something unintended: %s' % (_extra[:5] or 'the six and their colours'))
+_CFGS = {}
+for _rel, _t in _walk('.obj'):
+    _cur = None
+    for _line in _t.split('\n'):
+        _m = re.match(r'^\[(\w+)\]$', _line)
+        if _m:
+            _cur = _m.group(1)
+        elif _cur and re.match(r'^(weight|param=energy_restore)=?', _line) and '=' in _line:
+            _k, _v = _line.split('=', 1)
+            if _k == 'weight':
+                _CFGS.setdefault(_cur, {})['weight'] = _v.strip()
+            elif _line.startswith('param=energy_restore,'):
+                _CFGS.setdefault(_cur, {})['pct'] = _line.split(',', 1)[1].strip()
+check(len(_vbase) >= 6,
+      'the obj configs carry the Graceful colour variants, so the comparison below is against '
+      'something rather than against an empty list: %d' % len(_vbase))
+_vdrift = ['%s %s, %s has %s' % (n, _CFGS.get(n, {}).get(k), b, _CFGS.get(b, {}).get(k))
+           for n, b in sorted(_vbase.items()) for k in ('weight', 'pct')
+           if _CFGS.get(n, {}).get(k) != _CFGS.get(b, {}).get(k)]
+check(not _vdrift,
+      "and each colour carries its base piece's weight and energy_restore exactly: %s"
+      % (_vdrift[:3] or 'all %d match their base' % len(_vbase)))
 
 # THE DEPARTURE IS WRITTEN DOWN WHERE SOMEBODY WOULD LOOK, and says both numbers. A departure
 # this size that is only in a spec file is a departure nobody reading the configs will find.
