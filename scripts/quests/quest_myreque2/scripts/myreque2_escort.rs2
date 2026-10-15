@@ -1,0 +1,326 @@
+// IVAN STROM'S ESCORT - the guide's steps 31 to 35, and the last piece of this quest that the
+// cache had and the scripts did not.
+//
+//   burgh_ivan_strom_temple_ambush          "Ivan Strom - A member of the Myreque and an aspiring
+//                                            young priest", vislevel hidden, Talk-to, a bronze
+//                                            sword in his hand
+//   burgh_ivan_strom_temple_ambush_sickle   the same man, and the only difference in the whole def
+//                                            is model11: obj_silver_sickle_manwear
+//   burgh_ivan_temple_vampire_juve_1, _2    two Vampyre Juvinates, vislevel 75
+//   burgh_ivan_armour_give_helm/_legs/_body  three bits, and _control is the three as one number
+//   burgh_ivan_food_give                     four bits: how much food he is carrying
+//
+// Two npcs that differ only by what is in his hand, two level 75s called "temple ambush", three
+// bits for three pieces of armour and a counter for food. That is the whole step written down:
+// you give him something to wear, something to eat and something silver, and you walk him from the
+// Myreque cellar to Drezel - and halfway up the swamp road, at the gate, two of them are waiting.
+//
+// HOW HE FOLLOWS. This is the random events' machinery, which is the only follower this build has:
+// npc_add, npc_setmode(playerfollow), and the npc's own timer to pick him up when the swamp has got
+// between the two of you (macro_events.rs2's ~macro_event_lost does the same with a smokepuff).
+// Everything on the npc side of the walk is kept in npc vars, not in the player's - an ai_timer has
+// no protected access and cannot write a transmitted varp - so the food he is carrying is copied
+// onto him when he sets off and counted down there.
+
+// =========================================================================== is he here
+[proc,m2_ivan_alive]()(boolean)
+if (npc_finduid(%burgh_ivan_uid) = true) {
+    return(true);
+}
+return(false);
+
+// Put him in the cellar, beside Veliaf, where the guide has him waiting.
+[label,m2_ivan_place]
+// Only while the walk is the step: m2_veliaf_temple is also where the library instructions live and
+// is read again at ^m2_temple, by which time Ivan is a novice at Paterdomus.
+if (%myreque_2_quest < ^m2_escort | %myreque_2_quest > ^m2_escorted) {
+    return;
+}
+if (~m2_ivan_alive = true) {
+    return;
+}
+npc_add(^m2_cellar_ivan, burgh_ivan_strom_temple_ambush, ^m2_ivan_duration);
+%burgh_ivan_uid = npc_uid;
+%npc_burgh_ivan_player = uid;
+npc_setmode(none);
+
+// Whether he is walking with you rather than standing in the cellar.
+[proc,m2_ivan_walking]()(boolean)
+if (~m2_ivan_alive = false) {
+    return(false);
+}
+if (%npc_int = ^m2_ivan_waiting) {
+    return(false);
+}
+return(true);
+
+// =========================================================================== what he needs
+[proc,m2_ivan_armoured]()(boolean)
+if (%burgh_ivan_armour_give_helm = ^m2_off) {
+    return(false);
+}
+if (%burgh_ivan_armour_give_body = ^m2_off) {
+    return(false);
+}
+if (%burgh_ivan_armour_give_legs = ^m2_off) {
+    return(false);
+}
+return(true);
+
+[proc,m2_ivan_wants]()(string)
+def_string $out = "";
+if (%burgh_ivan_armour_give_helm = ^m2_off) {
+    $out = append($out, "something for his head, ");
+}
+if (%burgh_ivan_armour_give_body = ^m2_off) {
+    $out = append($out, "something for his chest, ");
+}
+if (%burgh_ivan_armour_give_legs = ^m2_off) {
+    $out = append($out, "something for his legs, ");
+}
+if (%burgh_ivan_food_give = 0) {
+    $out = append($out, "and something to eat, ");
+}
+return($out);
+
+[opnpc1,burgh_ivan_strom_temple_ambush] @m2_ivan_talk;
+[opnpc1,burgh_ivan_strom_temple_ambush_sickle] @m2_ivan_talk;
+
+[label,m2_ivan_talk]
+if (%myreque_2_quest > ^m2_escorted) {
+    ~chatnpc("<p,happy>Drezel has me reading four hours a day and the other twenty I am asking him questions. I have never been so happy.");
+    return;
+}
+if (~m2_ivan_walking = true) {
+    @m2_ivan_walking_talk;
+}
+~chatnpc("<p,neutral>Veliaf says you are walking me to Paterdomus. I am going to be a priest and the man who would ordain me is on the other side of Mort Myre.");
+if (~m2_ivan_armoured = false | %burgh_ivan_food_give = 0) {
+    ~chatnpc("<p,sad>I have a gown and a bronze sword and no idea what I am doing. I need <~m2_ivan_wants>and I would not say no to something silver.");
+    ~mesbox("Use what he needs on him: armour for his head, his chest and his legs, food for the walk, and a silver sickle if you have one - silver is the only thing a juvinate is afraid of.");
+    return;
+}
+if (~p_choice2("Let's go.", 1, "Not yet.", 2) = 2) {
+    ~chatnpc("<p,neutral>I will be here. I have been here all my life.");
+    return;
+}
+@m2_ivan_setoff;
+
+[label,m2_ivan_walking_talk]
+if (%npc_int = ^m2_ambush_done) {
+    ~chatnpc("<p,happy>I have seen two of them die. Nobody in Burgh de Rott has seen that.");
+    // THE JOURNAL CATCHES UP HERE AND NOT AT THE GATE. The ambush is sprung by his own timer, and
+    // an ai_timer has no protected access: myreque_2_main_var is transmitted, so a varbit on it can
+    // only be written by a trigger that has it, and this is the first one after the fight.
+    if (%myreque_2_quest = ^m2_escort) {
+        %myreque_2_quest = ^m2_escorted;
+        ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+    }
+    return;
+}
+~chatnpc("<p,sad>Keep going. I would rather not be in this swamp after dark, and it is always after dark.");
+
+// Everything you hand him. Head, chest and legs are the three bits the cache keeps for exactly
+// this, food is the four-bit counter, and a silver sickle is the difference between the two Ivans.
+[opnpcu,burgh_ivan_strom_temple_ambush] @m2_ivan_give;
+[opnpcu,burgh_ivan_strom_temple_ambush_sickle] @m2_ivan_give;
+
+[label,m2_ivan_give]
+if (%myreque_2_quest < ^m2_escort | %myreque_2_quest > ^m2_escorted) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (last_useitem = silver_sickle) {
+    if (npc_type = burgh_ivan_strom_temple_ambush_sickle) {
+        ~chatnpc("<p,neutral>I have one. One is all I can hold.");
+        return;
+    }
+    inv_del(inv, silver_sickle, 1);
+    npc_changetype(burgh_ivan_strom_temple_ambush_sickle, ^m2_ivan_duration);
+    // A CHANGETYPE REWRITES THE UID: Npc.changeType does uid = (type << 16) | nid, so the varp that
+    // says which npc he is has to be written again - his own timer deletes an Ivan whose uid is not
+    // the one the player is walking with, which after this is every Ivan.
+    %burgh_ivan_uid = npc_uid;
+    ~chatnpc("<p,happy>Silver. My grandmother had a silver spoon and she buried it so they could not take it.");
+    return;
+}
+if (~is_food_item(last_useitem) = true) {
+    if (%burgh_ivan_food_give >= ^m2_ivan_food_max) {
+        ~chatnpc("<p,neutral>I cannot carry any more of it.");
+        return;
+    }
+    inv_del(inv, last_useitem, 1);
+    %burgh_ivan_food_give = add(%burgh_ivan_food_give, 1);
+    ~chatnpc("<p,happy>Thank you. That is <tostring(%burgh_ivan_food_give)> now.");
+    return;
+}
+if (oc_wearpos(last_useitem) = ^wearpos_hat | oc_wearpos(last_useitem) = ^wearpos_head) {
+    @m2_ivan_wear(^m2_ivan_part_helm);
+}
+if (oc_wearpos(last_useitem) = ^wearpos_torso) {
+    @m2_ivan_wear(^m2_ivan_part_body);
+}
+if (oc_wearpos(last_useitem) = ^wearpos_legs) {
+    @m2_ivan_wear(^m2_ivan_part_legs);
+}
+~displaymessage(^dm_default);
+
+[label,m2_ivan_wear](int $part)
+if (~m2_ivan_has_part($part) = true) {
+    ~chatnpc("<p,neutral>I am wearing one of those already.");
+    return;
+}
+inv_del(inv, last_useitem, 1);
+if ($part = ^m2_ivan_part_helm) {
+    %burgh_ivan_armour_give_helm = ^m2_on;
+}
+if ($part = ^m2_ivan_part_body) {
+    %burgh_ivan_armour_give_body = ^m2_on;
+}
+if ($part = ^m2_ivan_part_legs) {
+    %burgh_ivan_armour_give_legs = ^m2_on;
+}
+~chatnpc("<p,happy>It does not fit and I am not taking it off.");
+if (~m2_ivan_armoured = true) {
+    ~chatnpc("<p,neutral>Now I look like a man who is going somewhere.");
+}
+
+[proc,m2_ivan_has_part](int $part)(boolean)
+if ($part = ^m2_ivan_part_helm) {
+    return(~m2_bit_set(%burgh_ivan_armour_give_helm));
+}
+if ($part = ^m2_ivan_part_body) {
+    return(~m2_bit_set(%burgh_ivan_armour_give_body));
+}
+return(~m2_bit_set(%burgh_ivan_armour_give_legs));
+
+[proc,m2_bit_set](int $bit)(boolean)
+if ($bit = ^m2_on) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== setting off
+// What he is carrying stops being the player's business here: the armour becomes the hits he can
+// take and the food becomes a count on him, because his own timer has neither an active player nor
+// protected access once the two of you are walking.
+[label,m2_ivan_setoff]
+%npc_int = ^m2_ivan_walking_flag;
+%npc_int2 = %burgh_ivan_food_give;
+if (%burgh_ivan_armour_give_helm = ^m2_on) {
+    npc_statadd(hitpoints, ^m2_ivan_armour_hp, 0);
+}
+if (%burgh_ivan_armour_give_body = ^m2_on) {
+    npc_statadd(hitpoints, ^m2_ivan_armour_hp, 0);
+}
+if (%burgh_ivan_armour_give_legs = ^m2_on) {
+    npc_statadd(hitpoints, ^m2_ivan_armour_hp, 0);
+}
+%npc_burgh_ivan_player = uid;
+npc_setmode(playerfollow);
+npc_settimer(^m2_ivan_tick);
+~chatnpc("<p,neutral>Out the back and north. Do not stop at the gate, whatever the man at the gate says.");
+
+// =========================================================================== the walk
+[ai_timer,burgh_ivan_strom_temple_ambush] @m2_ivan_step;
+[ai_timer,burgh_ivan_strom_temple_ambush_sickle] @m2_ivan_step;
+
+[label,m2_ivan_step]
+if (finduid(%npc_burgh_ivan_player) = false) {
+    npc_del;
+    return;
+}
+// A second escort leaves the first one standing in the swamp.
+if (npc_uid ! %burgh_ivan_uid) {
+    npc_del;
+    return;
+}
+if (%myreque_2_quest > ^m2_escorted) {
+    npc_del;
+    return;
+}
+// HE DOES NOT GET LOST. Out of range, or on the wrong level, and he comes to you - which is what
+// the random events do, and what the swamp road needs: it is four map squares long and there is a
+// gate and a temple door in it.
+if (coordy(coord) ! coordy(npc_coord) | npc_range(coord) > ^m2_ivan_follow_range) {
+    npc_tele(map_findsquare(coord, 1, 2, ^map_findsquare_lineofwalk));
+}
+npc_setmode(playerfollow);
+// Eating. The food you gave him is a number on him now, and he puts one away when he is hurt.
+if (npc_stat(hitpoints) <= ^m2_ivan_low & %npc_int2 > 0) {
+    %npc_int2 = sub(%npc_int2, 1);
+    npc_statheal(hitpoints, ^m2_ivan_heal, 0);
+    npc_say("Give me a moment.");
+}
+// THE ORDER HERE MATTERS, because @ is a jump and not a call: the ambush is checked before the
+// swing, and the swing is last, because npc_huntall makes each npc it finds the active one in turn
+// and Ivan is not reachable again afterwards.
+if (%npc_int ! ^m2_ambush_done) {
+    if (~m2_in_ambush(coord) = true) {
+        @m2_ivan_ambush;
+    }
+}
+// The sickle is not for show.
+if (npc_type = burgh_ivan_strom_temple_ambush_sickle) {
+    @m2_ivan_swing;
+}
+
+// Adjacent only, and only at the two that are here for him.
+[label,m2_ivan_swing]
+if (random(^m2_ivan_swing_odds) ! 0) {
+    return;
+}
+def_coord $at = npc_coord;
+npc_huntall($at, 1, 1);
+while (npc_findnext = true) {
+    if (npc_type = burgh_ivan_temple_vampire_juve_1 | npc_type = burgh_ivan_temple_vampire_juve_2) {
+        ~npc_default_damage(random(^m2_ivan_hit));
+    }
+}
+
+// =========================================================================== the ambush
+// North of the gate, on the Paterdomus side, where the ghouls are and the swamp stops.
+[proc,m2_in_ambush](coord $coord)(boolean)
+if (coordy($coord) ! 0) {
+    return(false);
+}
+if (coordx($coord) < ^m2_ambush_x1 | coordx($coord) > ^m2_ambush_x2) {
+    return(false);
+}
+if (coordz($coord) < ^m2_ambush_z1 | coordz($coord) > ^m2_ambush_z2) {
+    return(false);
+}
+return(true);
+
+[label,m2_ivan_ambush]
+%npc_int = ^m2_ambush_done;
+npc_say("They knew. Somebody told them.");
+def_coord $at = npc_coord;
+npc_add(map_findsquare($at, 1, 2, ^map_findsquare_lineofwalk), burgh_ivan_temple_vampire_juve_1, ^m2_juve_duration);
+npc_settimer(^m2_juve_tick);
+npc_setmode(opplayer2);
+npc_add(map_findsquare($at, 1, 2, ^map_findsquare_lineofwalk), burgh_ivan_temple_vampire_juve_2, ^m2_juve_duration);
+npc_settimer(^m2_juve_tick);
+npc_setmode(opplayer2);
+
+// They came for him, so they bite him between swings at whoever is in the way. This is the only
+// npc-versus-npc damage route this build has: npc_huntall for everything adjacent and
+// ~npc_default_damage on each, which is what the God Wars skirmish and Commander Montai's catapult
+// both do.
+[ai_timer,burgh_ivan_temple_vampire_juve_1] @m2_juve_bite;
+[ai_timer,burgh_ivan_temple_vampire_juve_2] @m2_juve_bite;
+
+[label,m2_juve_bite]
+if (npc_findhero = ^true) {
+    return;
+}
+if (random(^m2_juve_bite_odds) ! 0) {
+    return;
+}
+def_coord $at = npc_coord;
+npc_huntall($at, 1, 1);
+while (npc_findnext = true) {
+    if (npc_type = burgh_ivan_strom_temple_ambush | npc_type = burgh_ivan_strom_temple_ambush_sickle) {
+        ~npc_default_damage(random(^m2_juve_bite_max));
+    }
+}

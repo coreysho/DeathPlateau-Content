@@ -49,7 +49,12 @@
 ^m2_tithe_broken = 50   // Gadderanks did not leave with a full barrel
 ^m2_base = 60           // the inn cellar is open
 ^m2_arrived_myreque = 70
-^m2_temple = 80         // sent to the Paterdomus catacombs
+// IVAN STROM, the guide's steps 31-35: Veliaf asks you to walk the boy who wants to be a priest
+// through Mort Myre to Drezel, and the cache has the two of him - with a bronze sword and with a
+// silver sickle - and the two level 75s who are waiting at the gate.
+^m2_escort = 72         // Veliaf has asked, and Ivan is in the cellar
+^m2_escorted = 74       // the ambush is behind you
+^m2_temple = 80         // Drezel has the library key, and the catacombs
 ^m2_books = 90          // the histories read, the library opened
 ^m2_tomb = 100          // Ivandis's tomb opened
 // THE ROD, which is what the quest is for. The fragment off the tomb is a recipe, and the cache has
@@ -170,3 +175,38 @@
 
 ^m2_food_mackerel = 1
 ^m2_food_snails = 2
+
+// ---------------------------------------------------------------------------- Ivan Strom
+// The guide's steps 31-35: you walk Ivan from the Myreque cellar to Drezel, and two juvinates are
+// waiting on the Paterdomus side of the gate. See scripts/myreque2_escort.rs2.
+^m2_cellar_ivan = 0_54_150_35_32       // by the cellar ladder, which is where Veliaf says he is
+^m2_ivan_duration = 3000
+^m2_ivan_tick = 3
+^m2_ivan_follow_range = 12
+^m2_ivan_food_max = 15                 // four bits, and he is carrying it
+^m2_ivan_armour_hp = 10                // what each piece of armour is worth in hits
+^m2_ivan_low = 15
+^m2_ivan_heal = 8
+^m2_ivan_hit = 9                       // with the sickle
+^m2_ivan_swing_odds = 2
+
+^m2_ivan_part_helm = 1
+^m2_ivan_part_body = 2
+^m2_ivan_part_legs = 3
+
+// What is on him, in his own npc_int: nobody else reads it and it does not survive the walk.
+^m2_ivan_waiting = 0
+^m2_ivan_walking_flag = 1
+^m2_ambush_done = 2
+
+// North of Ulizius's gate, which is the one way out of Mort Myre - 3447,3456 - and the first
+// ground on the Paterdomus side.
+^m2_ambush_x1 = 3436
+^m2_ambush_x2 = 3455
+^m2_ambush_z1 = 3456
+^m2_ambush_z2 = 3472
+
+^m2_juve_duration = 1000
+^m2_juve_tick = 4
+^m2_juve_bite_odds = 3
+^m2_juve_bite_max = 7

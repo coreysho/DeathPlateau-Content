@@ -1,4 +1,17 @@
 [opnpc1,priestperiltrappedmonk2]
+// IN AID OF THE MYREQUE: you walk Ivan Strom up from Burgh de Rott and Drezel takes him in, and
+// the key to the temple library comes with him. See quests/quest_myreque2/scripts/myreque2_escort.
+// npc_finduid is how you ask whether Ivan is here and it makes HIM the active npc, so Drezel is
+// put back before a word is said - otherwise the next ~chatnpc is Ivan talking.
+if (%myreque_2_quest = ^m2_escort | %myreque_2_quest = ^m2_escorted) {
+    def_npc_uid $drezel = npc_uid;
+    def_boolean $ivan = ~m2_ivan_walking;
+    if (npc_finduid($drezel) = true) {
+        if ($ivan = true) {
+            @m2_drezel_takes_ivan;
+        }
+    }
+}
 if (%priestperil = ^priestperil_meet_in_mausoleum) {
     @priestperil_drezel_meet_in_mausoleum;
 } else if (%priestperil = ^priestperil_begin_bring_essence) {
@@ -379,3 +392,31 @@ inv_add(inv, apple_pie, 3);
 [label,drezel_okthanks]
 ~chatplayer("<p,neutral>Ok, thanks");
 ~chatnpc("<p,neutral>Many thanks to you, <displayname()>!");
+
+// =========================================================================== In Aid of the Myreque
+// "Escort Ivan Strom to Paterdomus." He arrives, Drezel keeps him, and the library key - which the
+// quest used to find in an invented chest in the Burgh de Rott cellar - comes from the man who has
+// been sitting on it.
+[label,m2_drezel_takes_ivan]
+~chatplayer("<p,neutral>This is Ivan Strom. He walked here from Burgh de Rott.");
+~chatnpc("<p,shock>Through the swamp? On foot?");
+~chatplayer("<p,neutral>We were met at the gate.");
+~chatnpc("<p,sad>Of course you were.");
+~chatnpc("<p,happy>Then he stays. There has not been a novice in this temple since the monks turned, and I have been reading alone for eleven years.");
+~chatplayer("<p,quiz>There is a library down in the catacombs. I need to get into it.");
+~chatnpc("<p,shock>There is no library in the catacombs.");
+~chatplayer("<p,neutral>There is a keyhole in a wall with no door in it.");
+if_close;
+mes("Drezel looks at the boy, and then at the floor, and then takes a key off a ring that has four keys on it.");
+p_delay(4);
+inv_add(inv, burgh_key, 1);
+%myreque_2_quest = ^m2_temple;
+~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
+~objbox(burgh_key, "A key, labelled, in a hand nobody has used in two hundred years: Temple Library.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,sad>I have had that for eleven years and I have never once used it. Whatever is down there, the temple put it down there, and the temple was not in the habit of hiding things it was proud of.");
+// Ivan stays with Drezel, which on this side of the engine means he stops being an npc that walks
+// behind you. Last, because finding him takes the active npc off Drezel.
+if (~m2_ivan_alive = true) {
+    npc_del;
+}
+%burgh_ivan_uid = null;

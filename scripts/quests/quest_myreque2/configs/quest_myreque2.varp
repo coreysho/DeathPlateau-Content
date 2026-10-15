@@ -1,0 +1,7 @@
+// Ivan Strom, while he is walking behind you. The escort is the random events' follower machinery
+// - npc_add, npc_setmode(playerfollow), and an ai_timer that picks him up when the swamp has got
+// between the two of you - and that needs somewhere to keep which npc he is. Not perm: a trek does
+// not survive a logout, and the quest stage remembers where you were.
+[burgh_ivan_uid]
+protect=no
+type=npc_uid

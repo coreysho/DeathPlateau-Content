@@ -1,0 +1,4 @@
+// Who Ivan is walking behind. His own timer runs on him, not on the player, so it needs the player
+// back - the same shape as the random events' npc_macro_event_target.
+[npc_burgh_ivan_player]
+type=player_uid

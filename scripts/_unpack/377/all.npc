@@ -78376,6 +78376,16 @@ op1=Talk-to
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 head1=npc_omart_head
+wanderrange=0
+maxrange=64
+hitpoints=40
+attack=1
+strength=1
+defence=20
+magic=1
+ranged=1
+param=death_anim,human_death
+param=death_drop,null
 
 [burgh_ivan_strom_temple_ambush_sickle]
 name=Ivan Strom
@@ -78408,6 +78418,16 @@ op1=Talk-to
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 head1=npc_omart_head
+wanderrange=0
+maxrange=64
+hitpoints=40
+attack=1
+strength=1
+defence=20
+magic=1
+ranged=1
+param=death_anim,human_death
+param=death_drop,null
 
 [burgh_ivan_temple_vampire_juve_1]
 name=Vampyre Juvinate
@@ -78427,6 +78447,19 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 vislevel=75
 head1=npc_3514_head
+wanderrange=3
+maxrange=12
+huntrange=5
+respawnrate=50
+hitpoints=75
+attack=70
+strength=60
+defence=58
+magic=1
+ranged=1
+param=damagetype,^crush_style
+param=death_anim,human_death
+param=death_drop,null
 
 [burgh_ivan_temple_vampire_juve_2]
 name=Vampyre Juvinate
@@ -78454,6 +78487,19 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 vislevel=50
 head1=npc_3514_head
+wanderrange=3
+maxrange=12
+huntrange=5
+respawnrate=50
+hitpoints=55
+attack=50
+strength=38
+defence=32
+magic=1
+ranged=1
+param=damagetype,^crush_style
+param=death_anim,human_death
+param=death_drop,null
 
 [burgh_rescue_veliaf_hurtz_talk]
 name=Veliaf Hurtz

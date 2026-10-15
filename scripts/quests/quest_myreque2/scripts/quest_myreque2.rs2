@@ -22,6 +22,8 @@ switch_int (%myreque_2_quest) {
         ~chatnpc("<p,happy>You took a barrel off Gadderanks. We are coming. Open the inn cellar and we are coming.");
         return;
     case ^m2_base : @m2_veliaf_moved_in;
+    case ^m2_escort : @m2_veliaf_escort;
+    case ^m2_escorted : @m2_veliaf_escort;
     case ^m2_temple : @m2_veliaf_temple;
     case ^m2_books : @m2_veliaf_books;
     case ^m2_tomb : @m2_recipe;
@@ -70,7 +72,7 @@ switch_int (~p_choice2("Why hasn't anyone helped them?", 1, "Forty people is not
 [label,m2_veliaf_moved_in]
 ~chatnpc("<p,happy>Six of us, in a dry cellar, in a town that is glad we are here. I have not had a week like this since I was nineteen.");
 ~chatplayer("<p,quiz>So what now?");
-%myreque_2_quest = ^m2_temple;
+%myreque_2_quest = ^m2_escort;
 ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
 @m2_veliaf_temple;
 
@@ -78,6 +80,26 @@ switch_int (~p_choice2("Why hasn't anyone helped them?", 1, "Forty people is not
 ~chatnpc("<p,neutral>Silver works on them and we have known that for sixty years and it is not enough. Silver hurts them. It does not finish them.");
 ~chatnpc("<p,neutral>Somebody once did better. There is a name in the Paterdomus histories - Ivandis Seergaze - and the priests down there will not discuss him.");
 ~chatnpc("<p,neutral>Go and read. The catacombs under the temple have a library and I have never been able to get into it.");
+~chatnpc("<p,neutral>And take Ivan with you.");
+~chatplayer("<p,quiz>Who is Ivan?");
+~chatnpc("<p,neutral>Ivan Strom. Nineteen, reads everything, wants to be a priest, and the nearest man who could ordain him is Drezel, on the other side of Mort Myre. He has been waiting four years for somebody to walk him up that road.");
+~chatnpc("<p,sad>Do not let him go alone. They know what he is.");
+@m2_ivan_place;
+
+// He is in the cellar, or he is in the swamp behind you, or he is dead and this puts him back by
+// the ladder - which is the only way to start the walk again.
+[label,m2_veliaf_escort]
+if (~m2_ivan_walking = true) {
+    ~chatnpc("<p,neutral>He is behind you. Keep him there.");
+    return;
+}
+if (~m2_ivan_alive = true) {
+    ~chatnpc("<p,neutral>Ivan is by the ladder with a bronze sword and a gown. Give him something better than that before you take him out of here.");
+    return;
+}
+~chatnpc("<p,sad>He came back on his own. He will not say how.");
+%myreque_2_quest = ^m2_escort;
+@m2_ivan_place;
 
 [label,m2_veliaf_books]
 ~chatnpc("<p,shock>A tomb. Under the Hollows. We have been walking past it for twenty years.");
@@ -693,21 +715,9 @@ inv_add(inv, burgh_plaster_inscription_ivandis, 1);
 ~mesbox("Under the plaster there is carving, and the plaster itself has taken the impression of it. | A fragment comes away in your hand with the whole of it on the back.");
 
 // =========================================================================== the chest in the cellar
+// IT DOES NOT HOLD THE LIBRARY KEY. It used to, because the quest had no way of reaching Drezel
+// and the key had to come from somewhere; the guide has Drezel hand it over when you bring Ivan to
+// him, and now the escort does. The chest is a chest.
 [oploc1,burgh_chest_closed]
 p_arrivedelay;
-if (inv_total(inv, burgh_key) > 0 | %myreque_2_quest > ^m2_temple) {
-    ~mesbox("Empty now.");
-    return;
-}
-if (%myreque_2_quest < ^m2_temple) {
-    ~mesbox("Locked, and nobody in Burgh de Rott has ever claimed it.");
-    return;
-}
-if (inv_freespace(inv) = 0) {
-    mes("You have no room.");
-    return;
-}
-mes("The lock is older than the chest and comes away in one piece.");
-p_delay(2);
-inv_add(inv, burgh_key, 1);
-~mesbox("A key, labelled, in a hand nobody has used in two hundred years: Temple Library.");
+~mesbox("Locked, and nobody in Burgh de Rott has ever claimed it. Whatever is in it has been in it longer than the people upstairs have been alive.");

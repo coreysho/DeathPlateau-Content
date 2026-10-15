@@ -62,13 +62,23 @@ switch_int (%myreque_2_quest) {
         $text = append($text, "@str@than not.|");
         $text = append($text, "@dbl@Speak to @dre@Veliaf@dbl@ in the cellar");
 
+    case ^m2_escort :
+        $text = "@str@Silver hurts them. It does not finish them. Somebody once|";
+        $text = append($text, "@str@did better, and his name is in the Paterdomus histories.|");
+        $text = append($text, "@dbl@Walk @dre@Ivan Strom@dbl@ from the cellar to @dre@Drezel@dbl@ at|");
+        $text = append($text, "@dbl@@dre@Paterdomus@dbl@. Give him @dre@armour@dbl@, @dre@food@dbl@ and a|");
+        $text = append($text, "@dbl@@dre@silver sickle@dbl@ before you go");
+
+    case ^m2_escorted :
+        $text = "@str@Two juvinates were waiting at the gate. They knew his name.|";
+        $text = append($text, "@dbl@Take @dre@Ivan@dbl@ the rest of the way to @dre@Drezel");
+
     case ^m2_temple :
         $text = "@str@Silver hurts them. It does not finish them. Somebody once|";
         $text = append($text, "@str@did better, and his name is in the Paterdomus histories and|");
         $text = append($text, "@str@the priests will not discuss him.|");
         $text = append($text, "@dbl@The @dre@catacombs@dbl@ under @dre@Paterdomus@dbl@ have a library|");
-        $text = append($text, "@dbl@The @dre@key@dbl@ is in a chest nobody in Burgh de Rott has ever|");
-        $text = append($text, "@dbl@claimed");
+        $text = append($text, "@dbl@@dre@Drezel@dbl@ gave you the key for walking Ivan up");
 
     case ^m2_books :
         $text = "@str@Seven warrior priests. The book names six and then says|";
