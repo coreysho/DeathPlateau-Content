@@ -39463,6 +39463,7 @@ model=obj_mort_slimey_eel
 2dxan=256
 members=yes
 weight=2kg
+param=fishing_struct,fishing_struct_mort_slimey_eel
 
 [cert_mort_slimey_eel]
 certlink=mort_slimey_eel
@@ -62643,6 +62644,7 @@ members=yes
 2dxan=296
 cost=15
 weight=500g
+param=fishing_struct,fishing_struct_raw_cave_eel
 
 [burnt_cave_eel]
 name=Burnt cave eel
@@ -62696,6 +62698,7 @@ members=yes
 iop1=Eat
 cost=5
 weight=500g
+param=fishing_struct,fishing_struct_giant_frogspawn
 
 [cert_raw_cave_eel]
 certlink=raw_cave_eel

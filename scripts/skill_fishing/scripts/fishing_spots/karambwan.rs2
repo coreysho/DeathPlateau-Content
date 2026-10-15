@@ -1,0 +1,37 @@
+// THE KARAMBWAN SPOTS - five spawn points offering Fish, which answered nothing.
+//
+// Tai Bwo Wannai Trio ends by handing over a karambwan vessel and the quest's own completion panel
+// lists "Karambwan fishing" as the reward, and that reward worked only one way: dropping the loaded
+// vessel from your inventory inside a zone off the east coast. The three spot records the maps place
+// (lubufu_karambwan, 0_45_48_karambwan, general_karambwan) carried one op and no category, so the
+// obvious thing - clicking Fish on the spot the fish are in - did nothing at all.
+// tools/silentnpcops.py listed all five points; this is them answering.
+//
+// ONE CLICK, ONE DROP, and that is the cache's own shape: these records carry op1=Fish and no hidden
+// continuation op, so there is nothing for a repeating fishing clock to be driven through - unlike
+// every other spot in this directory, which has a spare op for exactly that. So the Fish op does
+// what the vessel does: one drop, one roll, the karambwanji gone either way.
+//
+// THE SPOT IS THE DEEP WATER, so it does not repeat the vessel's zone check. Dropping the vessel by
+// hand has to ask where you are standing; clicking a karambwan spot has already answered that.
+//
+// The level, the rates, the experience and the bait all stay where they were - quests/quest_tbwt/
+// scripts/quest_tbwt.rs2, which this jumps into - so there is one karambwan catch in the build and
+// not two that can drift apart.
+
+[opnpc1,_karambwan]
+if (inv_total(inv, tbwt_karambwan_vessel_loaded_with_karambwanji) > 0) {
+    @tbwt_karambwan_drop;
+}
+if (inv_total(inv, tbwt_karambwan_vessel) > 0) {
+    ~mesbox("The vessel is empty. It wants a karambwanji in it - the little bright ones, netted in the village.");
+    return;
+}
+~mesbox("Something dark green is down there and it is not going to be netted, hooked or harpooned. Lubufu, on the Brimhaven jetty, is the man who knows how.");
+
+[opnpcu,_karambwan]
+switch_obj(last_useitem) {
+    case tbwt_karambwan_vessel_loaded_with_karambwanji : @tbwt_karambwan_drop;
+    case tbwt_karambwan_vessel : ~mesbox("The vessel is empty. It wants a karambwanji in it.");
+    case default : @fishing_wrong_spot_message(last_useitem);
+}

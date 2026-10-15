@@ -152,11 +152,14 @@
      "key": "fishing_pet_base",
      "bases": {
       "fishing_struct_anchovies": 870330,
+      "fishing_struct_giant_frogspawn": 0,
       "fishing_struct_herring": 1056000,
       "fishing_struct_lava_eel": 0,
       "fishing_struct_lobster": 116129,
       "fishing_struct_mantaray": 0,
+      "fishing_struct_mort_slimey_eel": 0,
       "fishing_struct_pike": 305792,
+      "fishing_struct_raw_cave_eel": 257770,
       "fishing_struct_salmon": 923616,
       "fishing_struct_sardine": 1056000,
       "fishing_struct_seaturtle": 0,
@@ -172,7 +175,7 @@
     "skillpet_heron_big_net": 1147827,
     "skillpet_heron_trawler": 5000
    },
-   "note": "OSRS's figures are per fish, so each one lives on its own fishing struct. The big net is the exception: the wiki gives one figure for big net fishing as an ACTIVITY, and one haul can bring up boots, seaweed, two mackerel, a cod and a bass at once, so it is rolled once per haul that caught something, out of a constant. The Fishing Trawler has its own figure too and is rolled once per game landed, since its net can only be pulled after a journey that finished. The lava eel, manta ray and sea turtle have no row on the wiki and so give no pet, as in OSRS."
+   "note": "OSRS's figures are per fish, so each one lives on its own fishing struct. The big net is the exception: the wiki gives one figure for big net fishing as an ACTIVITY, and one haul can bring up boots, seaweed, two mackerel, a cod and a bass at once, so it is rolled once per haul that caught something, out of a constant. The Fishing Trawler has its own figure too and is rolled once per game landed, since its net can only be pulled after a journey that finished. The lava eel, manta ray and sea turtle have no row on the wiki and so give no pet, as in OSRS, and the slimy eel and the frog spawn are the same - the Heron table lists neither. The cave eel it does list, at 257,770, the same figure the tuna and the swordfish carry."
   },
   "skillpet_tangleroot": {
    "stat": "farming",

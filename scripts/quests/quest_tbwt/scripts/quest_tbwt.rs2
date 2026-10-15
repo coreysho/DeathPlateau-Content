@@ -440,6 +440,13 @@ if (~inzone_karambwan = false) {
     ~mesbox("There is nowhere here deep enough. Lubufu said to drop it where the water goes dark - off the east coast, where Tiadeche stands.");
     return;
 }
+@tbwt_karambwan_drop;
+
+// THE DROP ITSELF, which the Fish op on a karambwan spot also arrives at. The spot IS the deep
+// water, so it skips the zone check above and comes straight here - skill_fishing/scripts/
+// fishing_spots/karambwan.rs2 is the other door, and the maps' three spot records could not be
+// clicked at all until it was written.
+[label,tbwt_karambwan_drop]
 if (stat(fishing) < 65) {
     mes("You need a Fishing level of 65 to bring one of these up.");
     return;

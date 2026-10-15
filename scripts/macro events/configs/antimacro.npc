@@ -1490,6 +1490,48 @@ moverestrict=nomove
 category=memberfish
 param=is_whirlpool,^true
 
+// THE TWO KINDS THE SWAMP AND THE CAVES NEEDED, added with their spots. A whirlpool is the fishing
+// random event's own npc and macro_event_whirlpool_spawn reaches it through the SPOT's whirlpool
+// param, so a kind without one of these would throw the first time the event rolled rather than
+// turn into a whirlpool. Each carries the ops its spot carries and its kind's category, because the
+// handlers keep answering while it is a whirlpool - that is how a player loses a rod to one.
+[macro_whirlpool_slimey_eel]
+name=Fishing spot
+desc=I can see 'things' swimming in the water.
+model1=whirlpool_8
+vislevel=hide
+readyanim=whirlpool
+resizeh=32
+resizev=32
+op1=Bait
+op3=hidden
+op5=hidden
+alwaysontop=yes
+defaultmode=none
+wanderrange=0
+moverestrict=nomove
+category=slimey_eel
+param=is_whirlpool,^true
+
+[macro_whirlpool_cavefish]
+name=Fishing spot
+desc=I can see fish swimming in the water.
+model1=whirlpool_8
+vislevel=hide
+readyanim=whirlpool
+resizeh=32
+resizev=32
+op1=Net
+op3=Bait
+op4=hidden
+op5=hidden
+alwaysontop=yes
+defaultmode=none
+wanderrange=0
+moverestrict=nomove
+category=cavefish
+param=is_whirlpool,^true
+
 [macro_dwarf]
 name=Drunken Dwarf
 desc=He's had a fair bit to drink...

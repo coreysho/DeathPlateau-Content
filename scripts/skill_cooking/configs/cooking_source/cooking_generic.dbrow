@@ -601,3 +601,38 @@ data=experience,725
 data=successchance,88,432
 data=cantcookmessage_range,You need an open fire to roast the rabbit on the spit.
 data=successmessage,You roast the rabbit over the fire.
+
+// THE TWO EELS, which could not be cooked because nothing produced them to cook. Both spots are
+// wired now (skill_fishing/scripts/fishing_spots/slimeyeel.rs2 and cavefish.rs2), and the cooked
+// forms have been sitting in the Hitpoints guide and the consumption table all along.
+//
+// THE BURN CURVES ARE THE WIKI'S OWN PAIRS, not a curve fitted to its chart: every food page's
+// {{Skilling success chart}} carries the low= and high= the game passes to stat_random, and those
+// are these. Cooked slimy eel is low=63 high=382, which is 25% a try at level 1 and certain from
+// 61; cave eel is low=38 high=332 - the lobster's pair, which this file already carries three times
+// - 15.2% at level 1 and certain from 74. Both match the levels those two pages state in words.
+// https://oldschool.runescape.wiki/w/Cooked_slimy_eel  https://oldschool.runescape.wiki/w/Cave_eel
+//
+// The messages are written out because the default builds itself from the cooked obj's name, and
+// "You successfully cook a cooked slimy eel" is not a sentence.
+[cooking_generic_slimey_eel]
+table=cooking_generic
+data=uncooked,mort_slimey_eel
+data=cooked,mort_slimey_eel_cooked
+data=burnt,burnt_eel
+data=levelrequired,28
+data=experience,950
+data=successchance,63,382
+data=successmessage,You cook the slimy eel.
+data=burnmessage,You accidentally burn the slimy eel.
+
+[cooking_generic_cave_eel]
+table=cooking_generic
+data=uncooked,raw_cave_eel
+data=cooked,cave_eel
+data=burnt,burnt_cave_eel
+data=levelrequired,38
+data=experience,1150
+data=successchance,38,332
+data=successmessage,You cook the cave eel.
+data=burnmessage,You accidentally burn the cave eel.
