@@ -148,7 +148,10 @@
 ^gwd_skirmish_odds = 5
 ^gwd_skirmish_maxhit = 4
 
-// THE MITH GRAPPLE'S RECIPE (gwd_grapple.rs2). Old School's numbers for the grapple TIP, which is
-// the step this collapses: 59 Smithing and 50 experience, from one mithril bar.
-^gwd_grapple_level = 59
-^gwd_grapple_xp = 500
+// THE MITH GRAPPLE'S RECIPE (gwd_grapple.rs2), Old School's three stages and its numbers: a hammer
+// on a mithril bar for the tip, the tip on a mithril bolt for the unfinished grapple, and a rope to
+// finish it. The experience is in tenths, as stat_advance and ~smithing_xp take it.
+^gwd_grapple_tip_level = 59
+^gwd_grapple_tip_xp = 500
+^gwd_grapple_fletch_level = 59
+^gwd_grapple_unf_xp = 110
