@@ -86,9 +86,12 @@ MUTS = [
  # petspec.json - which it does not read - changed nothing and this mutation went GREEN. Taking
  # one roll call out puts Rocky in the "neither" column: nothing rolls it and nothing declares it
  # sourceless, which is exactly the hole the sweep exists to find.
- ('scripts/skill_thieving/scripts/thieving.rs2',
-  '~skillpet_roll(skillpet_rocky_item, thieving, db_getfield($data, pickpocket:pet_base, 0));',
-  '~skillpet_roll(skillpet_heron_item, thieving, db_getfield($data, pickpocket:pet_base, 0));',
+ # The giant mole, because its item is rolled from exactly ONE place. Rocky was the first try and
+ # it stayed green: thieving.rs2 rolls it twice, once for pickpocketing and once for the stalls, so
+ # taking one away left the other and the sweep was right to say nothing.
+ ('scripts/drop_tables/scripts/giant_mole.rs2',
+  '~bosspet_roll(bosspet_giant_mole_item, ^bosspet_droprate);',
+  '~bosspet_roll(bosspet_kbd_item, ^bosspet_droprate);',
   '10 every pet item is either rolled by something or declared sourceless'),
 ]
 
