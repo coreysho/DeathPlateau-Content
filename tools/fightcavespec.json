@@ -249,7 +249,14 @@
       "  sheet - the LINING, seen from outside. The cache's own winding is right, and matches",
       "  377's own Fire cape face for face: the lining layer is culled from behind and the crust",
       "  layer from the front. model_sha1 pins all three models as the cache's own geometry,",
-      "  re-encoded and otherwise untouched.",
+      "  re-encoded, with the one deliberate change below and nothing else.",
+      "  THE TWO WORN MODELS' HASHES MOVED ON 2026-10-13, and the inventory model's did not. That is",
+      "  1e84179f, which gave the collar and shoulder faces of 140 capes priority bucket 10 so the",
+      "  torso stops painting over them - the fault reported as \"all capes clipping around the same",
+      "  area\". tools/capecollar.py carries the rule and is idempotent: running it today retunes 0",
+      "  capes, so these bytes are its output over the imported bytes and nothing else. The old",
+      "  hashes were f4b94fe215ba2ec1abb42ee111f4f490a60d213f (manwear) and",
+      "  8ee5c4a73b75ea007532c9a507e6a5b6847130da (womanwear), kept here so the history reads.",
       "  texture_pixels_sha1 is a hash of the DECODED pixels, not of the file: the bridge that",
       "  copies a file to the laptop re-encodes PNGs - same pixels, 5,770 more bytes - so a file",
       "  hash passes in the cloud and fails on the machine that matters.",
@@ -262,8 +269,8 @@
     "infernal": {"osrs": 21295, "cost": 80000, "lava_faces": 30, "osrs_texture": 59, "osrs_sprite": 318, "local_texture": 50, "texture_name": "lavacrust", "anim_dir": 1, "anim_speed": 1, "right_hsl": 3875, "wrong_hsl": 12818, "texture_pixels_sha1": "1f1fd2c9c972380c6db15d4ecdaa4b66a683d00b", "texture_colours": 204, "fire_cape_lava_faces": 25, "winding": "as the cache has it", "palette_len": 205, "crash_index": -128,
     "model_sha1": {
       "obj_tzhaar_cape_infernal": "7b1756fce825e4018bfe7332e7601a8374e33122",
-      "obj_tzhaar_cape_infernal_manwear": "f4b94fe215ba2ec1abb42ee111f4f490a60d213f",
-      "obj_tzhaar_cape_infernal_womanwear": "8ee5c4a73b75ea007532c9a507e6a5b6847130da"
+      "obj_tzhaar_cape_infernal_manwear": "78344ec05d204ca01d5b19c6325e4e75cae4097e",
+      "obj_tzhaar_cape_infernal_womanwear": "41f08dd0705da7378093e09b4f67885ad48c65f8"
     }},
     "infernal_bonuses": {
       "stabattack": 4,

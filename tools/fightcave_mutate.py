@@ -18,6 +18,8 @@ REW = 'scripts/minigames/game_fightcave/scripts/fightcave_reward.rs2'
 ALLNPC = 'scripts/_unpack/377/all.npc'
 SPEC = 'tools/fightcavespec.json'
 SHOP = 'scripts/shop/scripts/shop.rs2'
+WALLET = 'scripts/shop/scripts/shop_wallet.rs2'
+FOLL = 'scripts/npc/scripts/follower.rs2'
 SHOPPARAM = 'scripts/shop/configs/shopkeeper.param'
 TRADERS = 'scripts/areas/area_karamja/configs/tzhaar_traders.npc'
 INV727 = 'scripts/_unpack/727/all.inv'
@@ -150,24 +152,35 @@ if (multiply(npc_stat(hitpoints), 2) <= npc_basestat(hitpoints)) {
         '~fightcave_end(%fightcave_wave);\n~stat_reset_all;',
   '6 ...and pays for the waves that were survived, not the one they died on'),
  # 7 - Tokkul, the three shops and the pet
- (SHOP, 'def_int $current_gp = inv_total(inv, %shop_currency);',
+ # The till, what it spends and what it names all moved behind the wallet procs when a shop could
+ # be paid in vote points, so these bend the wallet rather than shop.rs2's old inv_total/inv_del.
+ (SHOP, 'def_int $current_gp = ~shop_wallet_total;',
         'def_int $current_gp = inv_total(inv, coins);',
   '7 the shop reads its currency for the till it counts'),
- (SHOP, 'inv_del(inv, %shop_currency, $added_amt);', 'inv_del(inv, coins, $added_amt);',
+ (WALLET, 'return(inv_total(inv, %shop_currency));', 'return(inv_total(inv, coins));',
+  '7 ~shop_wallet_total asks which wallet this shop uses and falls through to the obj one'),
+ (SHOP, '~shop_wallet_spend($added_amt);', 'inv_del(inv, coins, $added_amt);',
   '7 the shop reads its currency for what it takes'),
+ (WALLET, 'inv_del(inv, %shop_currency, $amount);', 'inv_del(inv, coins, $amount);',
+  '7 ~shop_wallet_spend asks which wallet this shop uses and falls through to the obj one'),
  (SHOP, 'inv_add(inv, %shop_currency, $total_value);', 'inv_add(inv, coins, $total_value);',
   '7 the shop reads its currency for what it pays'),
  (SHOP, 'inv_itemspace(inv, %shop_currency,', 'inv_itemspace(inv, coins,',
   '7 the shop reads its currency for the space it checks'),
  (SHOP, 'if ($item = %shop_currency) {', 'if ($item = coins) {',
   '7 the shop reads its currency for what it refuses to buy'),
- (SHOP, 'mes("You don\'t have enough <lowercase(oc_name(%shop_currency))>.");',
+ (SHOP, 'mes("You don\'t have enough <~shop_wallet_name>.");',
         'mes("You don\'t have enough coins.");',
-  '7 the shop reads its currency for what it says you are short of, in both places it prints it'),
+  '7 the shop reads its currency for what it says you are short of, and both prices it quotes'),
+ (SHOP, 'mes("<$item_name>: shop will buy for <tostring($item_value)> <~shop_wallet_name>.");',
+        'mes("<$item_name>: shop will buy for <tostring($item_value)>gp.");',
+  '7 the shop reads its currency for what it says you are short of, and both prices it quotes'),
+ (WALLET, 'return(lowercase(oc_name(%shop_currency)));', 'return("coins");',
+  '7 ~shop_wallet_name asks which wallet this shop uses and falls through to the obj one'),
  (SHOP, '%shop_currency = npc_param(shop_currency);',
         '%shop_currency = npc_param(shop_currency);\n%shop_currency = coins;',
   '7 ...and the currency is set in exactly those two places and nowhere else'),
- (SHOP, '%shop_currency = coins;\n%shop = $shop;', '%shop = $shop;',
+ (SHOP, '%shop_currency = coins;\n%shop_wallet = ^shop_wallet_inv;\n', '',
   '7 ~openshop still sets coins, so its 38 callers did not have to change'),
  (SHOP, '%shop_currency = npc_param(shop_currency);\n', '',
   '7 ...and a shopkeeper\'s own shop reads the param'),
@@ -210,11 +223,13 @@ if (multiply(npc_stat(hitpoints), 2) <= npc_basestat(hitpoints)) {
   '7 and it is rendered at the cache\'s own 20, which is the joke'),
  (CONST, '^fightcave_pet_rate = 200', '^fightcave_pet_rate = 100',
   '7 ...which is 200, the rate for a plain kill'),
- (REW, 'if (~obj_gettotal(bosspet_tzrek_jad_item) > 0) {\n    return;\n}\n', '',
-  '7 ...and never gives a second one, counting pack, bank, worn and the one out following you'),
- (REW, '~obj_giveorbank(bosspet_tzrek_jad_item, 1);',
-        'obj_add(coord, bosspet_tzrek_jad_item, 1, 100);',
-  '7 ...and hands it over rather than dropping it in an instance about to be deleted'),
+ (FOLL, 'if (~obj_gettotal($pet) > 0) {\n    return(true);\n}\n', '',
+  '7 ...which never gives a second one, counting pack, bank, worn, the one out following you'),
+ (FOLL, 'inv_add(lostpet_store, $pet, 1);\n    mes("You have a funny feeling like you\'re being followed, but you have no room for it.");',
+        'obj_add(coord, $pet, 1, 100);',
+  "7 ...and a full pack sends it to Probita's rather than the floor of an instance about to be"),
+ (REW, '~pet_receive_later(bosspet_tzrek_jad_item, 1);', '~pet_receive_later(bosspet_tzrek_jad_item, 0);',
+  "7 ...and hands it to ~pet_receive, a tick later because Jad's own death is still resolving"),
  (REW, '~fightcave_pet_roll;\n', '',
   '7 and killing Jad is what rolls it'),
  # ---------------------------------------------------------------------------- 8, the OSRS art
