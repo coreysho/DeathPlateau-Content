@@ -1,0 +1,22 @@
+// OLIVIA, who keeps the Draynor seed market and remembers being robbed.
+//
+// She needed no script before: category=shop_keeper and param=owned_shop,seed_stall gave her Trade
+// and Talk-to for free. But the stall behind her has op2=Steal from, which nothing answered until
+// now (skill_thieving/scripts/stalls/stealing.rs2), and every other stall owner in the game turns
+// on a thief - "She will only trade with players if they have not stolen from her stalls within the
+// last 30 minutes."
+//
+// The timer is the same longqueue machinery the baker, the tea seller and the silk merchant use,
+// with its own bit in %thieving_stall_timer so it survives a logout.
+
+[opnpc1,seed_merchant]
+if (getqueue(stolen_from_stall_seed) > 0) {
+    @stall_owner_alert_guards;
+}
+@shop_keeper_talk;
+
+[opnpc3,seed_merchant]
+if (getqueue(stolen_from_stall_seed) > 0) {
+    @stall_owner_alert_guards;
+}
+~openshop_activenpc;

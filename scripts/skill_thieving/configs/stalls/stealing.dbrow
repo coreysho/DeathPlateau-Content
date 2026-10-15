@@ -117,3 +117,39 @@ data=loot_total,128
 data=stall,gem stall
 data=stall,a gem
 data=pet_base,36490
+
+// THE DRAYNOR SEED STALL, which tools/silentops.py has been reporting as the one loc in the game
+// advertising "Steal from" with nothing behind it. Olivia keeps it and the Market Guard watches
+// it, both of them already standing there.
+//
+// Level 27 and 10 experience are the wiki's. The respawn is NINE seconds and not three: the update
+// that cut it is from 2024. The seventeen seeds' drop rates add to exactly 1000/1000 as weights,
+// which is how a stall table of this age was written.
+[stealing_seed_stall]
+table=stealing
+data=loc,seed_stall
+data=owner,seed_merchant
+data=guard,wom_marketguard
+data=level,27
+data=experience,100
+data=respawn_ticks,15
+data=loot,hammerstone_hop_seed,1,1,120,a hammerstone seed
+data=loot,potato_seed,1,1,119,a potato seed
+data=loot,marigold_seed,1,1,119,a marigold seed
+data=loot,barley_seed,1,1,118,a barley seed
+data=loot,onion_seed,1,1,89,an onion seed
+data=loot,asgarnian_hop_seed,1,1,83,an asgarnian seed
+data=loot,cabbage_seed,1,1,71,a cabbage seed
+data=loot,yanillian_hop_seed,1,1,47,a yanillian seed
+data=loot,rosemary_seed,1,1,36,a rosemary seed
+data=loot,nasturtium_seed,1,1,35,a nasturtium seed
+data=loot,tomato_seed,1,1,35,a tomato seed
+data=loot,jute_seed,1,1,35,a jute seed
+data=loot,sweetcorn_seed,1,1,30,a sweetcorn seed
+data=loot,krandorian_hop_seed,1,1,24,a krandorian seed
+data=loot,strawberry_seed,1,1,18,a strawberry seed
+data=loot,wildblood_hop_seed,1,1,12,a wildblood seed
+data=loot,watermelon_seed,1,1,9,a watermelon seed
+data=loot_total,1000
+data=stall,seed stall
+data=pet_base,35815

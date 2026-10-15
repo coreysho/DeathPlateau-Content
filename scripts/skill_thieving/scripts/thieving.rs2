@@ -93,6 +93,9 @@ switch_loc (loc_type) {
     case gem_stall_stealing : 
         longqueue(stolen_from_stall_gem, ^gem_stall_timer, ^discard, 0);
         %thieving_stall_timer = setbit(%thieving_stall_timer, ^gem_stall_index);
+    case seed_stall :
+        longqueue(stolen_from_stall_seed, ^seed_stall_timer, ^discard, 0);
+        %thieving_stall_timer = setbit(%thieving_stall_timer, ^seed_stall_index);
 }
 ~stealing_check_for_reward($data);
 ~thieving_xp($experience);

@@ -15,3 +15,8 @@
 ^spice_stall_index = 6
 //todo: double check this trade timer for gem stall
 ^gem_stall_index = 7
+
+// Olivia: "She will only trade with players if they have not stolen from her stalls within the last
+// 30 minutes" - and a minute is a hundred ticks, which is how the seven above are written.
+^seed_stall_timer = 3000
+^seed_stall_index = 8
