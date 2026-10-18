@@ -53727,6 +53727,7 @@ model=obj_oil_lamp_empty
 cost=25
 members=yes
 weight=1lb
+param=crafting_glass_struct,oil_lamp_empty
 
 [cert_oil_lamp_empty]
 certlink=oil_lamp_empty
@@ -53743,6 +53744,7 @@ model=obj_candle_lantern_empty
 cost=10
 members=yes
 weight=2lb
+param=crafting_glass_struct,candle_lantern_empty
 
 [cert_candle_lantern_empty]
 certlink=candle_lantern_empty
@@ -53892,6 +53894,7 @@ model=obj_bullseye_lantern_lens
 cost=70
 members=yes
 weight=1oz
+param=crafting_glass_struct,bullseye_lantern_lens
 
 [cert_bullseye_lantern_lens]
 certlink=bullseye_lantern_lens
@@ -84492,6 +84495,7 @@ members=yes
 ambient=40
 contrast=20
 weight=3lb
+param=crafting_glass_struct,fishbowl_empty
 
 [fishbowl_water]
 name=Fishbowl
