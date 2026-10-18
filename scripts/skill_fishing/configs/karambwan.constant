@@ -1,0 +1,5 @@
+// The Fishing level a karambwan needs, which is the one number the Tai Bwo Wannai Trio reward is
+// gated on. It lives here beside the other fishing levels rather than inside the quest, because
+// the quest is only one of the two doors onto the catch - skill_fishing/scripts/fishing_spots/
+// karambwan.rs2 is the other - and configs/fishing.struct carries the rate and the experience.
+^karambwan_level = 65

@@ -146,3 +146,21 @@ param=productmessage,You catch some frog spawn.
 param=success_low,16
 param=success_high,96
 param=fishing_pet_base,0
+
+// THE KARAMBWAN, whose numbers were mine and are now the wiki's. The catch itself lives in
+// quests/quest_tbwt/scripts/quest_tbwt.rs2 (the vessel dropped by hand) and is reached from
+// skill_fishing/scripts/fishing_spots/karambwan.rs2 (the spot clicked) - two doors, one roll - and
+// it is the one fish here that cannot go through ~fish_roll, because a karambwan takes the
+// karambwanji whether or not it is caught and ~fish_roll deletes bait only on a catch. So the
+// struct holds the numbers and that label reads them out of it.
+//
+// 50 experience and low=5 high=160 at 65, which is Old School's published pair and the same source
+// every other struct in this file is built from. The original 2004 value was 105 and RuneScape 3
+// still pays it; this build has followed Old School everywhere else it had the choice - cooking one
+// thoroughly already pays Old School's 190 - so it follows it here.
+[fishing_struct_tbwt_raw_karambwan]
+param=productexp,500
+param=productmessage,Something heavy goes into the vessel and does not come out again. You do not look too closely.
+param=success_low,5
+param=success_high,160
+param=fishing_pet_base,170874
