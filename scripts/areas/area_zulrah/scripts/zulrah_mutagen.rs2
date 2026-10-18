@@ -49,3 +49,41 @@ inv_setslot(inv, $slot, $into, 1);
 // "will I lose my charges" is the question anybody holding a 1,100-scale helm would be asking.
 %serpentine_helm_charges = $keep;
 ~objbox($into, "The mutagen soaks into the helm. It is a <lowercase(oc_name($into))> now, and its scales are untouched.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// Restore: putting a mutated helm back
+// ---------------------------------------------------------------------------------------------
+// THE OPTION WAS IN THE MENU AND NOTHING ANSWERED IT. All four mutated records carry iop4=Restore
+// (it is Old School's own menu - the wiki lists "Wear, Check, Restore, Uncharge" charged and
+// "Restore, Drop" uncharged) and the family answered iop2, iop3, iop5 and opheldu but had no
+// [opheld4,...], so Restore was a click that did nothing at all. tools/silentobjops.py is how it
+// was found and this is it answered.
+//
+// THE MUTAGEN DOES NOT COME BACK. "The mutagen is consumed upon use" - it is spent the moment it
+// soaks in, so restoring puts the helm back to the serpentine record it came from and returns
+// nothing. That makes Restore as one-way as the mutation was, which is why it asks first, in the
+// same two lines the mutation asks in.
+//
+// THE SCALES ARE UNTOUCHED, for the same reason they survive the mutation: they are the player's
+// varp and not the item's, so the swap cannot disturb them. It is said out loud because a player
+// holding a full helm will not take that on trust.
+[opheld4,_serpentine_helm]
+def_int $slot = last_slot;
+def_obj $helm = last_item;
+def_namedobj $back = oc_param($helm, mutagen_restore);
+if ($back = null) {
+    // the plain serpentine helm, which has nothing to go back to and no Restore in its menu either
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $keep = %serpentine_helm_charges;
+~mesbox("Restoring your <lowercase(oc_name($helm))> cannot be undone. The mutagen was used up when it went in and will not come back.");
+if (~p_choice2("Restore it to a <lowercase(oc_name($back))>.", 1, "Leave it alone.", 2) ! 1) {
+    return;
+}
+if (inv_getobj(inv, $slot) ! $helm) {
+    return;    // they moved it while the box was up
+}
+inv_setslot(inv, $slot, $back, 1);
+%serpentine_helm_charges = $keep;
+~objbox($back, "The colour drains out of the helm. It is a <lowercase(oc_name($back))> again, and its scales are untouched.", 250, 0, 0);

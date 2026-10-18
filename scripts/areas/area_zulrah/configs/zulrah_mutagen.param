@@ -31,3 +31,12 @@ default=null
 [mutagen_into2]
 type=namedobj
 default=null
+
+// ON A MUTATED HELM: the record Restore puts it back to. One slot and not two, because a helm
+// knows which state it is already in - a charged tanzanite helm restores to a charged serpentine
+// helm and an uncharged one to an uncharged one, so each of the four records names its own.
+// Only the mutated four carry it, which is also how [opheld4,_serpentine_helm] tells a helm that
+// has something to restore from the plain serpentine helm, which has not.
+[mutagen_restore]
+type=namedobj
+default=null
