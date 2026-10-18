@@ -343,15 +343,43 @@ def build_rs2(spec):
         L.append('[opheldu,%s_max_cape] @maxvariant_split;' % v['key'])
     ngod = sum(1 for v in V if GOD_OF.get(v['key']))
     L += ['',
-          '// THE %s GOD VARIANTS EQUIP LIKE A GOD CAPE, so the staff of another god refuses them.'
-          % word(ngod).upper(),
-          '// The other %s need no trigger at all: [opheld2,_] in player/scripts/equip.rs2 wears'
+          '// EVERY ONE OF THE %s NEEDS THE NINETY-NINES, which is the one thing they all had in'
+          % word(len(V)),
+          '// common and the one thing none of them checked. A variant IS a Max cape - it is the',
+          '// same cape with a source cape fused into it - so the gate is the plain cape\'s own, the',
+          '// count of 99s against the skills that have a cape (skillcapes/scripts/skillcape_equip',
+          '// .rs2, [opheld2,max_cape]), read the same way so the two cannot disagree.',
+          '//',
+          '// IT WAS NOT A HOLE IN SIX OF THEM, IT WAS A HOLE IN ALL %s. The %s god variants went'
+          % (word(len(V)).upper(), word(ngod)),
+          '// straight to @god_cape_equip, which asks about the staff in your hand and nothing',
+          '// else; the other %s had no trigger at all and fell through to [opheld2,_], which wears'
           % word(len(V) - ngod),
-          '// anything that has nothing more specific to say.']
+          '// anything. Either way a brand new account could wear one, and did - reported from the',
+          '// game as "max cape equippable at 1 def".',
+          '//',
+          '// THE %s GOD VARIANTS STILL EQUIP LIKE A GOD CAPE on top of that, so the staff of'
+          % word(ngod).upper(),
+          '// another god refuses them: @god_cape_equip is a jump, so it ends this label and does',
+          '// the staff check and the equip itself. ^god_none is the rest of them, and means there',
+          '// is no god to conflict with rather than "no check".',
+          '//',
+          '// The hoods are not in here on purpose: a skillcape hood is cosmetic and ungated in the',
+          '// live game, and skillcape_equip.rs2 says so about the plain ones too.',
+          '[label,maxvariant_equip](int $god)',
+          'if (~skillcape_count_99s < ~skillcape_stats) {',
+          '    mes("You need level 99 in all <tostring(~skillcape_stats)> skills to wear the Max cape.");',
+          '    return;',
+          '}',
+          'if ($god ! ^god_none) {',
+          '    @god_cape_equip($god);',
+          '}',
+          '~equip(last_slot);',
+          '']
     for v in V:
         g = GOD_OF.get(v['key'])
-        if g:
-            L.append('[opheld2,%s_max_cape] @god_cape_equip(^god_%s);' % (v['key'], g))
+        L.append('[opheld2,%s_max_cape] @maxvariant_equip(^god_%s);'
+                 % (v['key'], g if g else 'none'))
     L.append('')
     return '\n'.join(L)
 
