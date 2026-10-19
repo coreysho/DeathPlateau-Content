@@ -1,0 +1,59 @@
+// THE TWO BREWERS, who have been standing beside their own vats since this build existed with
+// op1=Talk-to and nothing behind it.
+//
+//   blandebir   "An expert on the brewing of ales and cider."   Keldagrim, 2916,10195
+//   metarialus  "In his former life an expert brewer."          Port Phasmatys cellar, 3678,9958
+//
+// The cache cast them as the tutors and the descriptions say so, which is the whole brief here:
+// explain what goes in a vat, and sell the one ingredient that cannot be grown, cooked or crushed.
+//
+// THE YEAST IS THE ONLY STOCK. Blandebir takes coins and Metarialus takes ectotokens - which is
+// the Port Phasmatys arrangement for everything else in that town - and the price difference is one
+// param, since a shop charges an item's own cost scaled by shop_sell_multiplier: ale yeast costs 25,
+// so 100 is Blandebir's 25 coins and 20 is Metarialus's 5 tokens.
+//
+// Neither sells beer glasses or kegs. Both are in general stores and pubs already, and a shelf
+// stocked on a guess is harder to take back than one that was never there.
+
+[opnpc1,blandebir] @brewer_talk(^brew_keldagrim);
+[opnpc1,metarialus] @brewer_talk(^brew_phasmatys);
+
+[label,brewer_talk](int $brewery)
+if ($brewery = ^brew_phasmatys) {
+    ~chatnpc("<p,neutral>Welcome to my cellar. I brewed the finest ales in Morytania, once.");
+} else {
+    ~chatnpc("<p,happy>Hello there! Come to learn the brewer's art?");
+}
+def_int $choice = ~p_choice3("How do I brew ale?", 1, "Can I buy some ale yeast?", 2, "No thanks.", 3);
+if ($choice = 1) {
+    ~chatplayer("<p,quiz>How do I brew ale?");
+    @brewer_explain($brewery);
+}
+if ($choice = 2) {
+    ~chatplayer("<p,quiz>Can I buy some ale yeast?");
+    if ($brewery = ^brew_phasmatys) {
+        ~chatnpc("<p,neutral>I have plenty. Ectotokens only - coins are no use to the dead.");
+    } else {
+        ~chatnpc("<p,happy>A pot of it, fresh from the last batch.");
+    }
+    ~openshop_activenpc;
+    return;
+}
+~chatplayer("<p,neutral>No thanks.");
+
+// What the vat wants, in the order it wants it. The ingredient list is deliberately not recited
+// drink by drink: that is ten rows of table, and the examine text on each hops state already names
+// the one it holds.
+[label,brewer_explain](int $brewery)
+~chatnpc("<p,neutral>Two buckets of water in the vat first, then two handfuls of|barley malt - barley roasted on a range.");
+~chatnpc("<p,neutral>Then whatever gives the ale its name: hops for most of them,|Harralander for a Greenman's, oak roots for an Axeman's Folly.");
+~chatnpc("<p,neutral>Last of all the yeast, and then you wait. A day or so, and it|will have fermented - or gone bad, which happens to the best|of us.");
+~chatnpc("<p,happy>Turn the valve when it is done and it runs into the barrel.|Eight pints in there: eight glasses, or two calquat kegs.");
+def_int $more = ~p_choice2("What about cider?", 1, "Thanks, I will try it.", 2);
+if ($more = 2) {
+    ~chatplayer("<p,happy>Thanks, I will try it.");
+    return;
+}
+~chatplayer("<p,quiz>What about cider?");
+~chatnpc("<p,happy>Cider is its own thing - no water, no malt. Four buckets of|apple mush and the yeast, nothing else.");
+~chatnpc("<p,neutral>The press is right there. Four cooking apples and a bucket|to catch it in.");

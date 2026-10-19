@@ -1,0 +1,28 @@
+// THE TWO BREWERS' SHELVES, which hold one thing each.
+//
+// Ale yeast is the only brewing ingredient a player cannot get for themselves: barley is farmed and
+// malted on a range, hops are farmed, Harralander is picked, oak roots come off a farmed oak,
+// chocolate dust is ground, bittercap mushrooms are grown and apple mush is crushed at the press
+// standing next to the vat. The yeast is bought, and these are the two counters that sell it.
+//
+// allstock=no ON BOTH, and it matters more on Metarialus than on Blandebir: a shop that buys
+// anything and pays in ectotokens would turn a bronze dagger into Port Phasmatys currency.
+//
+// size=8 rather than 1 so adding a row is one line and not a resize. restock=yes with a rate of
+// 100 keeps the row full at the pace every other general store uses.
+
+[blandebir_shop]
+scope=shared
+size=8
+restock=yes
+stackall=yes
+allstock=no
+stock1=ale_yeast,10,100
+
+[metarialus_shop]
+scope=shared
+size=8
+restock=yes
+stackall=yes
+allstock=no
+stock1=ale_yeast,10,100

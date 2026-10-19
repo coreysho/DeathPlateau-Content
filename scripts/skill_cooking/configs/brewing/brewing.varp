@@ -1,0 +1,13 @@
+// WHEN EACH BREW WENT ON, in world minutes, kept the way farming keeps a patch's clock: not
+// transmitted, because the client needs nothing but the vat's appearance varbit (which the cache
+// already has, in farming_varp_9), and scope=perm, because a brew runs whether or not anybody is
+// logged in.
+//
+// One per brewery. 0 means no brew is running, which is why ~brew_settime never writes a 0 for a
+// live brew - world_minute is only 0 for the first minute of a world's life.
+
+[brewing_time_1]
+scope=perm
+
+[brewing_time_2]
+scope=perm

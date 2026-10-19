@@ -73818,6 +73818,10 @@ model=obj_pot_flour
 members=yes
 members=yes
 weight=100oz
+// The cache left this at the default cost of 1, which would have put it on the brewers' shelves
+// for a single coin. 25 is what Old School charges for a pot of it, and a shop charges an obj its
+// own cost.
+cost=25
 
 [cert_ale_yeast]
 certlink=ale_yeast

@@ -1,0 +1,517 @@
+// ALE BREWING. Two breweries the cache built and furnished and nobody could use: see
+// configs/brewing/brewing.constant for what the config already said, which is nearly all of it.
+//
+// The shape of it: water and barley malt into the vat, then the ingredient that names the ale, then
+// the yeast; two growth cycles later the brew is a normal batch, a mature one or a ruined one; the
+// valve runs it into the barrel, and the barrel pours eight pints into eight beer glasses or two
+// calquat kegs.
+//
+// EVERY STATE LIVES IN THE CACHE'S OWN VARBIT, so there is nothing here to keep in step with the
+// client: setting brewing_vat_varbit_1 changes what the vat looks like, what its examine text says
+// and - at the barrel - which of Level and Drain its Op 1 is.
+
+// =========================================================================== the two varbit pairs
+// Procs, not labels: @ is a jump, and a vat state that ended the script which set it would take the
+// experience and the messages after it with it.
+[proc,brew_vat](int $brewery)(int)
+if ($brewery = ^brew_keldagrim) {
+    return(%brewing_vat_varbit_1);
+}
+return(%brewing_vat_varbit_2);
+
+[proc,brew_vat_set](int $brewery, int $state)
+if ($brewery = ^brew_keldagrim) {
+    %brewing_vat_varbit_1 = $state;
+    return;
+}
+%brewing_vat_varbit_2 = $state;
+
+[proc,brew_barrel](int $brewery)(int)
+if ($brewery = ^brew_keldagrim) {
+    return(%brewing_barrel_varbit_1);
+}
+return(%brewing_barrel_varbit_2);
+
+[proc,brew_barrel_set](int $brewery, int $state)
+if ($brewery = ^brew_keldagrim) {
+    %brewing_barrel_varbit_1 = $state;
+    return;
+}
+%brewing_barrel_varbit_2 = $state;
+
+[proc,brew_time](int $brewery)(int)
+if ($brewery = ^brew_keldagrim) {
+    return(%brewing_time_1);
+}
+return(%brewing_time_2);
+
+[proc,brew_time_set](int $brewery, int $minute)
+if ($brewery = ^brew_keldagrim) {
+    %brewing_time_1 = $minute;
+    return;
+}
+%brewing_time_2 = $minute;
+
+// How long one fermenting cycle actually takes here. The authentic 640 is halved where it is READ,
+// the way ~farming_growth_minutes does it, so the real figure stays in the config.
+[proc,brew_cycle]()(int)
+return(max(1, divide(^brew_cycle_minutes, ^brew_cycle_divisor)));
+
+// =========================================================================== reading a vat state
+// Which of the five states of a drink this is - hops, fermenting, fermenting again, finished,
+// mature - or -1 for anything that is not one of them: empty, water, barley malt, the two bad
+// batches, and the Kelda Stout range that belongs to Forgettable Tale.
+[proc,brew_stage](int $state)(int)
+if ($state < ^brew_vat_first_hops | $state >= ^brew_vat_bad_ale) {
+    return(-1);
+}
+def_int $off = modulo(sub($state, ^brew_vat_first_hops), ^brew_vat_stride);
+if ($off > ^brew_vat_off_mature) {
+    return(-1);
+}
+return($off);
+
+// The row of whichever drink this vat state belongs to, or null.
+[proc,brew_row](int $state)(dbrow)
+def_int $stage = ~brew_stage($state);
+if ($stage < 0) {
+    return(null);
+}
+db_find(brewing:hops_state, sub($state, $stage));
+return(db_findnext);
+
+// The row for a drink's slot in the barrel: normal barrels start at 8 and mature ones at 136, eight
+// indices each, so the slot is also the drink number.
+[proc,brew_barrel_row](int $state)(dbrow)
+def_int $slot = -1;
+if ($state >= ^brew_barrel_mature_first) {
+    $slot = divide(sub($state, ^brew_barrel_mature_first), ^brew_barrel_stride);
+} else if ($state >= ^brew_barrel_first) {
+    $slot = divide(sub($state, ^brew_barrel_first), ^brew_barrel_stride);
+}
+if ($slot < 0) {
+    return(null);
+}
+db_find(brewing:hops_state, add(^brew_vat_first_hops, multiply($slot, ^brew_vat_stride)));
+return(db_findnext);
+
+[proc,brew_barrel_mature](int $state)(boolean)
+if ($state >= ^brew_barrel_mature_first) {
+    return(true);
+}
+return(false);
+
+// How many pints are left in a barrel holding a drink: the eight indices of its slot are 1 to 8.
+[proc,brew_barrel_pints](int $state)(int)
+if ($state >= ^brew_barrel_mature_first) {
+    return(add(modulo(sub($state, ^brew_barrel_mature_first), ^brew_barrel_stride), 1));
+}
+if ($state >= ^brew_barrel_first) {
+    return(add(modulo(sub($state, ^brew_barrel_first), ^brew_barrel_stride), 1));
+}
+return(0);
+
+// =========================================================================== the clock
+// A brew runs whether or not anybody is logged in, so this replays whatever happened while they
+// were away. Safe to call as often as you like, and called before every click on a vat.
+[proc,brew_update](int $brewery)
+def_int $state = ~brew_vat($brewery);
+def_int $stage = ~brew_stage($state);
+if ($stage ! ^brew_vat_off_ferment1 & $stage ! ^brew_vat_off_ferment2) {
+    return;
+}
+def_int $now = world_minute;
+def_int $start = ~brew_time($brewery);
+if ($start = 0 | $start > $now) {
+    // Never stamped, or the host clock moved backwards. Start the wait from now rather than
+    // deciding a brew on an implausible number of cycles.
+    ~brew_time_set($brewery, $now);
+    return;
+}
+def_int $cycles = divide(sub($now, $start), ~brew_cycle);
+if ($cycles < ^brew_cycles) {
+    if ($cycles >= 1 & $stage = ^brew_vat_off_ferment1) {
+        ~brew_vat_set($brewery, add(sub($state, $stage), ^brew_vat_off_ferment2));
+    }
+    return;
+}
+// Both cycles are up: the batch is decided. Flat roll out of 128 - 6 mature, 16 bad, the rest a
+// normal batch - because the Cooking level does not enter into it.
+def_int $hops = sub($state, $stage);
+def_int $roll = random(^brew_roll_total);
+~brew_time_set($brewery, 0);
+if ($roll < ^brew_roll_mature) {
+    ~brew_vat_set($brewery, add($hops, ^brew_vat_off_mature));
+    return;
+}
+if ($roll < add(^brew_roll_mature, ^brew_roll_bad)) {
+    def_dbrow $row = ~brew_row($state);
+    if ($row ! null & db_getfield($row, brewing:no_malt, 0) = 1) {
+        ~brew_vat_set($brewery, ^brew_vat_bad_cider);
+        return;
+    }
+    ~brew_vat_set($brewery, ^brew_vat_bad_ale);
+    return;
+}
+~brew_vat_set($brewery, add($hops, ^brew_vat_off_done));
+
+[proc,brewing_login]
+~brew_update(^brew_keldagrim);
+~brew_update(^brew_phasmatys);
+settimer(brewing_tick, ^brew_tick_interval);
+
+// Once a minute while online, so a vat finishes in front of a player standing at it rather than
+// waiting for them to click it.
+[timer,brewing_tick]
+~brew_update(^brew_keldagrim);
+~brew_update(^brew_phasmatys);
+
+// =========================================================================== the vat
+// The vats carry no ops at all - everything goes in by using an item on them - so one trigger each
+// is the whole of it.
+[oplocu,brewing_vat_1] @brew_vat_use(^brew_keldagrim);
+[oplocu,brewing_vat_2] @brew_vat_use(^brew_phasmatys);
+
+[label,brew_vat_use](int $brewery)
+def_obj $used = last_useitem;
+~brew_update($brewery);
+def_int $state = ~brew_vat($brewery);
+def_int $stage = ~brew_stage($state);
+
+// Water. Both buckets at once, because there is no cache state for a vat holding one of them.
+if ($used = bucket_water) {
+    if ($state ! ^brew_vat_empty) {
+        @brew_vat_occupied($state);
+    }
+    if (inv_total(inv, bucket_water) < ^brew_water_needed) {
+        mes("You need <tostring(^brew_water_needed)> buckets of water to fill the vat.");
+        return;
+    }
+    inv_del(inv, bucket_water, ^brew_water_needed);
+    inv_add(inv, bucket_empty, ^brew_water_needed);
+    anim(farming_pour_water, 0);
+    sound_synth(farming_fill, 1, 0);
+    mes("You pour two buckets of water into the vat.");
+    ~brew_vat_set($brewery, ^brew_vat_water);
+    return;
+}
+
+// Barley malt, also two at a time.
+if ($used = barley_malt) {
+    if ($state ! ^brew_vat_water) {
+        if ($state = ^brew_vat_empty) {
+            mes("You need to fill the vat with water first.");
+            return;
+        }
+        @brew_vat_occupied($state);
+    }
+    if (inv_total(inv, barley_malt) < ^brew_malt_needed) {
+        mes("You need <tostring(^brew_malt_needed)> barley malt to mix with the water.");
+        return;
+    }
+    inv_del(inv, barley_malt, ^brew_malt_needed);
+    sound_synth(farming_fill, 1, 0);
+    mes("You mix the barley malt into the water.");
+    ~brew_vat_set($brewery, ^brew_vat_barley);
+    return;
+}
+
+// The yeast, which is what starts it fermenting.
+if ($used = ale_yeast) {
+    if ($stage ! ^brew_vat_off_hops) {
+        if ($state = ^brew_vat_empty | $state = ^brew_vat_water | $state = ^brew_vat_barley) {
+            mes("There is nothing in the vat for the yeast to ferment yet.");
+            return;
+        }
+        @brew_vat_occupied($state);
+    }
+    inv_del(inv, ale_yeast, ^brew_yeast_needed);
+    inv_add(inv, pot_empty, ^brew_yeast_needed);
+    sound_synth(farming_fill, 1, 0);
+    mes("You add the ale yeast to the vat, and the mixture begins to ferment.");
+    ~brew_vat_set($brewery, add($state, ^brew_vat_off_ferment1));
+    ~brew_time_set($brewery, world_minute);
+    return;
+}
+
+// Anything else: is it the ingredient that names a drink?
+db_find(brewing:ingredient, $used);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    @brew_vat_nothing($used);
+}
+def_int $hops = db_getfield($row, brewing:hops_state, 0);
+def_int $count = db_getfield($row, brewing:ingredient_count, 0);
+def_int $level = db_getfield($row, brewing:level, 0);
+def_string $name = db_getfield($row, brewing:name, 0);
+// Cider is brewed from apple mush alone, so its vat has to be empty rather than full of malt.
+def_int $wants = ^brew_vat_barley;
+if (db_getfield($row, brewing:no_malt, 0) = 1) {
+    $wants = ^brew_vat_empty;
+}
+if ($state ! $wants) {
+    if ($state = ^brew_vat_empty | $state = ^brew_vat_water | $state = ^brew_vat_barley) {
+        if ($wants = ^brew_vat_empty) {
+            mes("The apple mush needs a vat to itself - no water, no barley malt.");
+            return;
+        }
+        mes("You need water and barley malt in the vat before the <lowercase($name)> ingredients.");
+        return;
+    }
+    @brew_vat_occupied($state);
+}
+if (stat(cooking) < $level) {
+    ~mesbox("You need a Cooking level of <tostring($level)> to brew <$name>.");
+    return;
+}
+if (inv_total(inv, $used) < $count) {
+    mes("You need <tostring($count)> <lowercase(oc_name($used))> to brew <$name>.");
+    return;
+}
+inv_del(inv, $used, $count);
+// Apple mush comes in buckets and the buckets come back.
+if ($used = apple_mush) {
+    inv_add(inv, bucket_empty, $count);
+}
+sound_synth(farming_fill, 1, 0);
+mes("You add the <lowercase(oc_name($used))> to the vat.");
+~brew_vat_set($brewery, $hops);
+
+// Said by every path that cannot add anything because something is already in the vat.
+[label,brew_vat_occupied](int $state)
+def_int $stage = ~brew_stage($state);
+if ($stage = ^brew_vat_off_ferment1 | $stage = ^brew_vat_off_ferment2) {
+    mes("This vat is already fermenting.");
+    return;
+}
+if ($stage = ^brew_vat_off_done | $stage = ^brew_vat_off_mature) {
+    mes("There is a finished brew in this vat. Run it into the barrel first.");
+    return;
+}
+if ($state = ^brew_vat_bad_ale | $state = ^brew_vat_bad_cider) {
+    mes("This vat is full of a batch that has gone bad. Drain it first.");
+    return;
+}
+mes("There is already something in this vat.");
+
+// Using something on a vat that has nothing to do with brewing.
+[label,brew_vat_nothing](obj $used)
+if ($used = beer_glass | $used = calquat_fruit_keg_empty) {
+    mes("The ale has to go into the barrel before you can fill anything from it.");
+    return;
+}
+mes("Nothing interesting happens.");
+
+// =========================================================================== the valve
+// "This controls the flow of ale to the barrel." Op 1 is Turn, and turning it empties the vat into
+// the barrel whatever is in there - which is how a ruined batch and a half-fermented one get out.
+[oploc1,vat_valve_1] @brew_valve(^brew_keldagrim);
+[oploc1,vat_valve_2] @brew_valve(^brew_phasmatys);
+
+[label,brew_valve](int $brewery)
+~brew_update($brewery);
+def_int $state = ~brew_vat($brewery);
+def_int $barrel = ~brew_barrel($brewery);
+if ($state = ^brew_vat_empty) {
+    mes("The vat is empty.");
+    return;
+}
+if ($barrel ! ^brew_barrel_empty) {
+    mes("The barrel is still full. You need to empty it before you run anything else in.");
+    return;
+}
+anim(human_pull_lever, 0);
+sound_synth(brew_drain_water, 1, 0);
+p_delay(2);
+def_int $stage = ~brew_stage($state);
+def_dbrow $row = ~brew_row($state);
+
+// A finished brew: eight pints into the barrel, and the Cooking experience for the batch - the one
+// point in the process where the ale actually exists.
+if ($stage = ^brew_vat_off_done | $stage = ^brew_vat_off_mature) {
+    def_int $slot = divide(sub(sub($state, $stage), ^brew_vat_first_hops), ^brew_vat_stride);
+    def_int $base = ^brew_barrel_first;
+    if ($stage = ^brew_vat_off_mature) {
+        $base = ^brew_barrel_mature_first;
+    }
+    ~brew_barrel_set($brewery, add(add($base, multiply($slot, ^brew_barrel_stride)), sub(^brew_pints_per_barrel, 1)));
+    ~brew_vat_set($brewery, ^brew_vat_empty);
+    stat_advance(cooking, db_getfield($row, brewing:experience, 0));
+    if ($stage = ^brew_vat_off_mature) {
+        mes("You run the mature <db_getfield($row, brewing:name, 0)> into the barrel.");
+        return;
+    }
+    mes("You run the <db_getfield($row, brewing:name, 0)> into the barrel.");
+    return;
+}
+
+// A batch that went bad.
+if ($state = ^brew_vat_bad_ale | $state = ^brew_vat_bad_cider) {
+    ~brew_barrel_set($brewery, ^brew_barrel_bad_ale);
+    if ($state = ^brew_vat_bad_cider) {
+        ~brew_barrel_set($brewery, ^brew_barrel_bad_cider);
+    }
+    ~brew_vat_set($brewery, ^brew_vat_empty);
+    mes("You run the spoiled batch into the barrel.");
+    return;
+}
+
+// A finished Kelda Stout goes into the barrel's own Kelda state and pays nothing: it is a quest
+// brew, not a Cooking one. Nothing can reach this until Forgettable Tale is wired up, and it is
+// here so that when it is, the valve does not pour the quest away.
+if ($state = ^brew_vat_kelda_done) {
+    ~brew_barrel_set($brewery, ^brew_barrel_kelda);
+    ~brew_vat_set($brewery, ^brew_vat_empty);
+    mes("You run the Kelda Stout into the barrel.");
+    return;
+}
+
+// Anything else is unfermented liquid, and the barrel has a state for exactly that.
+~brew_barrel_set($brewery, ^brew_barrel_unfermented);
+~brew_vat_set($brewery, ^brew_vat_empty);
+mes("You run the unfermented liquid into the barrel. That batch is wasted.");
+
+// =========================================================================== the barrel
+// One Op 1 that the multiloc makes read Level on a barrel of ale and Drain on one holding something
+// nobody wants to drink.
+[oploc1,brewing_barrel_1] @brew_barrel_op(^brew_keldagrim);
+[oploc1,brewing_barrel_2] @brew_barrel_op(^brew_phasmatys);
+
+[label,brew_barrel_op](int $brewery)
+def_int $state = ~brew_barrel($brewery);
+if ($state = ^brew_barrel_empty) {
+    mes("The barrel is empty.");
+    return;
+}
+if ($state = ^brew_barrel_bad_ale | $state = ^brew_barrel_bad_cider | $state = ^brew_barrel_unfermented) {
+    anim(human_pull_lever, 0);
+    sound_synth(brew_drain_water, 1, 0);
+    p_delay(2);
+    ~brew_barrel_set($brewery, ^brew_barrel_empty);
+    mes("You drain the barrel away.");
+    return;
+}
+if ($state = ^brew_barrel_kelda) {
+    mes("The barrel is full of Kelda Stout.");
+    return;
+}
+def_dbrow $row = ~brew_barrel_row($state);
+if ($row = null) {
+    mes("The barrel is empty.");
+    return;
+}
+def_int $pints = ~brew_barrel_pints($state);
+def_string $name = db_getfield($row, brewing:name, 0);
+if (~brew_barrel_mature($state) = true) {
+    $name = "mature <$name>";
+}
+if ($pints = 1) {
+    mes("There is one pint of <$name> left in the barrel.");
+    return;
+}
+mes("There are <tostring($pints)> pints of <$name> in the barrel.");
+
+// Filling from it: a beer glass takes one pint, an empty calquat keg takes up to four.
+[oplocu,brewing_barrel_1] @brew_barrel_use(^brew_keldagrim);
+[oplocu,brewing_barrel_2] @brew_barrel_use(^brew_phasmatys);
+
+[label,brew_barrel_use](int $brewery)
+def_obj $used = last_useitem;
+def_int $state = ~brew_barrel($brewery);
+if ($used ! beer_glass & $used ! calquat_fruit_keg_empty) {
+    mes("Nothing interesting happens.");
+    return;
+}
+if ($state = ^brew_barrel_empty) {
+    mes("The barrel is empty.");
+    return;
+}
+if ($state = ^brew_barrel_bad_ale | $state = ^brew_barrel_bad_cider | $state = ^brew_barrel_unfermented) {
+    mes("You would not want to drink what is in there. Drain it away instead.");
+    return;
+}
+def_dbrow $row = ~brew_barrel_row($state);
+if ($row = null) {
+    mes("You cannot fill anything from that.");
+    return;
+}
+def_int $pints = ~brew_barrel_pints($state);
+def_boolean $mature = ~brew_barrel_mature($state);
+def_int $take = 1;
+if ($used = calquat_fruit_keg_empty) {
+    $take = min($pints, ^brew_pints_per_keg);
+}
+def_namedobj $filled;
+if ($used = beer_glass) {
+    $filled = db_getfield($row, brewing:drink, 0);
+    if ($mature = true) {
+        $filled = db_getfield($row, brewing:mature_drink, 0);
+    }
+} else {
+    def_namedobj $k1;
+    def_namedobj $k2;
+    def_namedobj $k3;
+    def_namedobj $k4;
+    if ($mature = true) {
+        $k1, $k2, $k3, $k4 = db_getfield($row, brewing:mature_keg, 0);
+    } else {
+        $k1, $k2, $k3, $k4 = db_getfield($row, brewing:keg, 0);
+    }
+    switch_int ($take) {
+        case 1 : $filled = $k1;
+        case 2 : $filled = $k2;
+        case 3 : $filled = $k3;
+        case default : $filled = $k4;
+    }
+}
+inv_del(inv, $used, 1);
+inv_add(inv, $filled, 1);
+sound_synth(farming_pourpint, 1, 0);
+mes("You fill the <lowercase(oc_name($used))> from the barrel.");
+// Draw the pints off the barrel; the last one empties it.
+if ($take >= $pints) {
+    ~brew_barrel_set($brewery, ^brew_barrel_empty);
+    return;
+}
+~brew_barrel_set($brewery, sub($state, $take));
+
+// =========================================================================== the apple press
+// Two locs with no ops and no varbit: the barrel and the tap that runs out of it. With no state to
+// hold apples halfway, the crush is one action - four cooking apples and an empty bucket in, a
+// bucket of apple mush out - and either half of the press answers for it.
+[oplocu,farming_applebarrel_empty] @brew_press;
+[oplocu,farming_applebarrel_tap] @brew_press;
+
+[label,brew_press]
+def_obj $used = last_useitem;
+if ($used ! cooking_apple & $used ! bucket_empty) {
+    mes("Nothing interesting happens.");
+    return;
+}
+if (inv_total(inv, cooking_apple) < ^brew_apples_per_mush) {
+    mes("You need <tostring(^brew_apples_per_mush)> cooking apples to make a bucket of apple mush.");
+    return;
+}
+if (inv_total(inv, bucket_empty) < 1) {
+    mes("You need an empty bucket to catch the apple mush.");
+    return;
+}
+anim(human_pickupfloor, 0);
+sound_synth(apple_splat, 1, 0);
+p_delay(2);
+inv_del(inv, cooking_apple, ^brew_apples_per_mush);
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, apple_mush, 1);
+mes("You crush the apples and fill the bucket with apple mush.");
+
+// =========================================================================== the way into the cellar
+// The trapdoor in the floor of the Port Phasmatys pub, which has been placed with op1=Open and no
+// script behind it for as long as this build has existed - so the whole brewery below it, vat,
+// barrel, press, brewer and all, has never been reachable.
+[oploc1,phasmatys_brewery_trapdoor]
+p_arrivedelay;
+~climb_ladder(^brew_cellar_coord, false);
+
+[oploc1,phasmatys_brewery_ladder]
+p_arrivedelay;
+~climb_ladder(^brew_pub_coord, true);

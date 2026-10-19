@@ -51765,6 +51765,12 @@ op1=Talk-to
 vislevel=hide
 head1=npc_lawgof2_head
 head2=npc_1847_head
+// THE BREWING TUTOR SELLS ALE YEAST, the one brewing ingredient a player cannot farm, cook or
+// crush for themselves. He carries no category=shop_keeper and the cache never gave him a Trade
+// option, so the counter opens from his dialogue (skill_cooking/scripts/brewing/brewers.rs2)
+// instead of from an op the client was never told to draw.
+param=owned_shop,blandebir_shop
+param=shop_title,Blandebir's Brewing Supplies
 
 [metarialus]
 name=Metarialus
@@ -51790,6 +51796,13 @@ contrast=50
 op1=Talk-to
 vislevel=hide
 head1=npc_1686_head
+// The same counter in the Port Phasmatys cellar, and the dead take ectotokens like everything
+// else in that town. The price IS the multiplier: ale yeast costs 25, and 20 per cent of that is
+// the five tokens Old School charges here.
+param=owned_shop,metarialus_shop
+param=shop_title,Metarialus' Brewing Supplies
+param=shop_currency,ectotoken
+param=shop_sell_multiplier,20
 
 [elstan]
 name=Elstan

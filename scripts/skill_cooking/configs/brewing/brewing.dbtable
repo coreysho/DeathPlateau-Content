@@ -1,0 +1,29 @@
+// THE TEN BREWS. One row each, keyed two ways: by the ingredient that names the ale (which is what
+// a player puts in the vat) and by the vat's own hops state (which is what the varbit holds while
+// it ferments). Both are INDEXED because both are looked up.
+//
+// Every ingredient in here is named by the cache's own examine text on the matching hops state -
+// "a mixture of water, barley malt, and Harralander", "...and Bittercap mushrooms", "...and oak
+// roots", "...and chocolate dust" - so the table is read off the config rather than assembled from
+// a wiki page. The counts and the levels are Old School's: four of the ingredient, except Axeman's
+// Folly, which is the one brew that takes a single oak root.
+[brewing]
+// The vat index this drink's hops state sits at: 4 + 6n for drink n.
+column=hops_state,int,INDEXED,REQUIRED
+// What the player tips in, and how many of it.
+column=ingredient,obj,INDEXED,REQUIRED
+column=ingredient_count,int
+// For "You need a Cooking level of N to brew X." and the barrel's Level message.
+column=name,string
+column=level,int
+// Tenths, as every stat_advance in this build takes them.
+column=experience,int
+// The pint, and the pint of the matured batch.
+column=drink,namedobj
+column=mature_drink,namedobj
+// One, two, three and four pints in a calquat keg, normal then mature.
+column=keg,namedobj,namedobj,namedobj,namedobj
+column=mature_keg,namedobj,namedobj,namedobj,namedobj
+// Cider is brewed from apple mush alone - no water, no barley malt - and the bad batch it can turn
+// into is bad cider rather than bad ale. It is the only row where either is true.
+column=no_malt,int

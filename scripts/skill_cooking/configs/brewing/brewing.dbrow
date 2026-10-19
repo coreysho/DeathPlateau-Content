@@ -1,0 +1,137 @@
+// The ten brews, in the cache's own order: drink n has its hops state at 4 + 6n, so Dwarven Stout
+// is 4, Asgarnian Ale 10, and cider - the last index and the lowest level - is 58.
+
+[brewing_dwarven_stout]
+table=brewing
+data=hops_state,4
+data=ingredient,hammerstone_hops
+data=ingredient_count,4
+data=name,Dwarven Stout
+data=level,19
+data=experience,2150
+data=drink,dwarven_stout
+data=mature_drink,mature_dwarven_stout
+data=keg,keg_dwarven_stout_1,keg_dwarven_stout_2,keg_dwarven_stout_3,keg_dwarven_stout_4
+data=mature_keg,keg_mature_dwarven_stout_1,keg_mature_dwarven_stout_2,keg_mature_dwarven_stout_3,keg_mature_dwarven_stout_4
+
+[brewing_asgarnian_ale]
+table=brewing
+data=hops_state,10
+data=ingredient,asgarnian_hops
+data=ingredient_count,4
+data=name,Asgarnian Ale
+data=level,24
+data=experience,2480
+data=drink,asgarnian_ale
+data=mature_drink,mature_asgarnian_ale
+data=keg,keg_asgarnian_ale_1,keg_asgarnian_ale_2,keg_asgarnian_ale_3,keg_asgarnian_ale_4
+data=mature_keg,keg_mature_asgarnian_ale_1,keg_mature_asgarnian_ale_2,keg_mature_asgarnian_ale_3,keg_mature_asgarnian_ale_4
+
+[brewing_greenmans_ale]
+table=brewing
+data=hops_state,16
+data=ingredient,harralander
+data=ingredient_count,4
+data=name,Greenman's Ale
+data=level,29
+data=experience,2810
+data=drink,greenmans_ale
+data=mature_drink,mature_greenmans_ale
+data=keg,keg_greenmans_ale_1,keg_greenmans_ale_2,keg_greenmans_ale_3,keg_greenmans_ale_4
+data=mature_keg,keg_mature_greenmans_ale_1,keg_mature_greenmans_ale_2,keg_mature_greenmans_ale_3,keg_mature_greenmans_ale_4
+
+[brewing_wizards_mind_bomb]
+table=brewing
+data=hops_state,22
+data=ingredient,yanillian_hops
+data=ingredient_count,4
+data=name,Wizard's Mind Bomb
+data=level,34
+data=experience,3140
+data=drink,wizards_mind_bomb
+data=mature_drink,mature_wizards_mind_bomb
+data=keg,keg_wizards_mind_bomb_1,keg_wizards_mind_bomb_2,keg_wizards_mind_bomb_3,keg_wizards_mind_bomb_4
+data=mature_keg,keg_mature_wizards_mind_bomb_1,keg_mature_wizards_mind_bomb_2,keg_mature_wizards_mind_bomb_3,keg_mature_wizards_mind_bomb_4
+
+[brewing_dragon_bitter]
+table=brewing
+data=hops_state,28
+data=ingredient,krandorian_hops
+data=ingredient_count,4
+data=name,Dragon Bitter
+data=level,39
+data=experience,3470
+data=drink,dragon_bitter
+data=mature_drink,mature_dragon_bitter
+data=keg,keg_dragon_bitter_1,keg_dragon_bitter_2,keg_dragon_bitter_3,keg_dragon_bitter_4
+data=mature_keg,keg_mature_dragon_bitter_1,keg_mature_dragon_bitter_2,keg_mature_dragon_bitter_3,keg_mature_dragon_bitter_4
+
+[brewing_moonlight_mead]
+table=brewing
+data=hops_state,34
+data=ingredient,bittercap_mushroom
+data=ingredient_count,4
+data=name,Moonlight Mead
+data=level,44
+data=experience,3800
+data=drink,moonlight_mead
+data=mature_drink,mature_moonlight_mead
+data=keg,keg_moonlight_mead_1,keg_moonlight_mead_2,keg_moonlight_mead_3,keg_moonlight_mead_4
+data=mature_keg,keg_mature_moonlight_mead_1,keg_mature_moonlight_mead_2,keg_mature_moonlight_mead_3,keg_mature_moonlight_mead_4
+
+// The one brew that takes a single ingredient, and the cache says so: "...a mixture of water,
+// barley malt, and oak roots", with oak_roots being one root off a farmed oak.
+[brewing_axemans_folly]
+table=brewing
+data=hops_state,40
+data=ingredient,oak_roots
+data=ingredient_count,1
+data=name,Axeman's Folly
+data=level,49
+data=experience,4130
+data=drink,axemans_folly
+data=mature_drink,mature_axemans_folly
+data=keg,keg_axemans_folly_1,keg_axemans_folly_2,keg_axemans_folly_3,keg_axemans_folly_4
+data=mature_keg,keg_mature_axemans_folly_1,keg_mature_axemans_folly_2,keg_mature_axemans_folly_3,keg_mature_axemans_folly_4
+
+[brewing_chefs_delight]
+table=brewing
+data=hops_state,46
+data=ingredient,chocolate_dust
+data=ingredient_count,4
+data=name,Chef's Delight
+data=level,54
+data=experience,4460
+data=drink,chefs_delight
+data=mature_drink,mature_chefs_delight
+data=keg,keg_chefs_delight_1,keg_chefs_delight_2,keg_chefs_delight_3,keg_chefs_delight_4
+data=mature_keg,keg_mature_chefs_delight_1,keg_mature_chefs_delight_2,keg_mature_chefs_delight_3,keg_mature_chefs_delight_4
+
+[brewing_slayers_respite]
+table=brewing
+data=hops_state,52
+data=ingredient,wildblood_hops
+data=ingredient_count,4
+data=name,Slayer's Respite
+data=level,59
+data=experience,4790
+data=drink,slayers_respite
+data=mature_drink,mature_slayers_respite
+data=keg,keg_slayers_respite_1,keg_slayers_respite_2,keg_slayers_respite_3,keg_slayers_respite_4
+data=mature_keg,keg_mature_slayers_respite_1,keg_mature_slayers_respite_2,keg_mature_slayers_respite_3,keg_mature_slayers_respite_4
+
+// Cider: four buckets of apple mush and the yeast, and nothing else. "This vat contains some apple
+// mush" is the whole of state 58 - no water, no malt - and a failed batch is bad cider, not bad ale.
+[brewing_cider]
+table=brewing
+data=hops_state,58
+data=ingredient,apple_mush
+data=ingredient_count,4
+data=name,cider
+data=level,14
+data=experience,1820
+data=drink,cider
+data=mature_drink,mature_cider
+data=keg,keg_cider_1,keg_cider_2,keg_cider_3,keg_cider_4
+data=mature_keg,keg_mature_cider_1,keg_mature_cider_2,keg_mature_cider_3,keg_mature_cider_4
+data=no_malt,1

@@ -1,0 +1,146 @@
+// ALE BREWING, which the 377 cache ships whole - two breweries, built and furnished, with nobody
+// able to get into one of them and not a single click answered in either.
+//
+// WHAT WAS ALREADY THERE. Both breweries are placed on the map, down to the shelves:
+//
+//   Keldagrim, level 1      brewing_vat_1 2917,10194   brewing_barrel_1 2917,10193
+//                           vat_valve_1   2918,10193   Blandebir        2916,10195
+//                           farming_applebarrel_empty 2914,10192 + _tap 2915,10192
+//
+//   Port Phasmatys cellar   brewing_vat_2 3679,9961    brewing_barrel_2 3679,9960
+//                           vat_valve_2   3680,9960    Metarialus       3678,9958
+//                           farming_applebarrel_empty 3676,9958 + _tap 3677,9958
+//                           phasmatys_brewery_ladder  3682,9962
+//
+// The way into the cellar is phasmatys_brewery_trapdoor at 3681,3498, in the floor of the pub, with
+// op1=Open and nothing behind it - which is why that whole room has been unreachable. The ladder at
+// 3682,9962 is the way back up, and the two of them are the only connection the cellar has.
+//
+// Blandebir is "An expert on the brewing of ales and cider" and Metarialus "In his former life an
+// expert brewer": the cache cast the tutors and sat them next to their own vats.
+//
+// WHAT THE CONFIG SAYS THE VATS DO. Each vat is a 2x2 multiloc over its own eight-bit varbit, and
+// the fifteen-odd indices are the state machine. brewing_vat_1 reads canoe-clear:
+//
+//   0  vat_empty                   This vat is empty.
+//   1  vat_water                   This vat is filled with water.
+//   2  vat_barley                  ...a mixture of water and barley malt.
+//   4  vat_dwarven_stout_hops      ...water, barley malt, and Hammerstone hops.
+//   5  vat_dwarven_stout_brewing_1 Dwarven Stout is fermenting in this vat.
+//   6  vat_dwarven_stout_brewing_2 (the same, with the brewing bgsound)
+//   7  vat_dwarven_stout_normal    This vat is filled with Dwarven Stout.
+//   8  vat_dwarven_stout_mature    This vat is filled with mature Dwarven Stout.
+//
+// and then the same five states again every six indices for the next drink, ten drinks deep, with
+// 64 and 65 for bad ale and bad cider and 68..71 for the Kelda Stout of Forgettable Tale. The
+// examine text of each hops state NAMES ITS INGREDIENT - Harralander, Bittercap mushrooms, oak
+// roots, chocolate dust - so the recipe table below is the cache's, not a reconstruction.
+//
+// The barrel is the same idea at a different stride: 0 empty, 1 bad ale, 2 bad cider, 3 Kelda
+// Stout, 4 unfermented liquid, then eight indices per drink for how many pints are left in it, and
+// the whole run again 128 higher for the mature version. Eight pints to a barrel, which is also
+// what Old School fills from one: eight beer glasses or two calquat kegs.
+//
+// Both varbits plus both barrels live in farming_varp_9 (transmit=yes), eight bits each, which is
+// the other reason there are exactly two breweries and not three.
+//
+// WHAT IS NOT IN THIS CACHE, and so is not here. "The stuff" is Trouble Brewing, 2007 - the obj
+// does not exist in 377 and the mature chance is the unaided one. There is no vat in the Keldagrim
+// pub cellar and no third brewery.
+
+// =========================================================================== the two breweries
+// Numbered as the cache numbers them, so brewing_vat_1 is vat 1. Which brewery a click is at comes
+// from the loc that was clicked, never from the player's coordinates.
+^brew_keldagrim = 1
+^brew_phasmatys = 2
+
+// =========================================================================== the vat states
+^brew_vat_empty = 0
+^brew_vat_water = 1
+^brew_vat_barley = 2
+// A drink's five states start here and repeat every six indices.
+^brew_vat_first_hops = 4
+^brew_vat_stride = 6
+^brew_vat_off_hops = 0
+^brew_vat_off_ferment1 = 1
+^brew_vat_off_ferment2 = 2
+^brew_vat_off_done = 3
+^brew_vat_off_mature = 4
+^brew_vat_bad_ale = 64
+^brew_vat_bad_cider = 65
+
+// KELDA STOUT, the brew of Forgettable Tale, which the cache gives four states of its own at the
+// top of the vat's range and one in the barrel. The quest is not wired up, so nothing can reach
+// these yet; they are named here so that when it is, the valve and the barrel already know what to
+// do with a Kelda brew instead of pouring it away as unfermented liquid.
+^brew_vat_kelda_hops = 68
+^brew_vat_kelda_ferment1 = 69
+^brew_vat_kelda_ferment2 = 70
+^brew_vat_kelda_done = 71
+
+// =========================================================================== the barrel states
+^brew_barrel_empty = 0
+^brew_barrel_bad_ale = 1
+^brew_barrel_bad_cider = 2
+^brew_barrel_kelda = 3
+^brew_barrel_unfermented = 4
+^brew_barrel_first = 8
+^brew_barrel_stride = 8
+^brew_barrel_mature_first = 136
+// Eight pints in, eight pints out.
+^brew_pints_per_barrel = 8
+^brew_pints_per_keg = 4
+
+// =========================================================================== what goes in
+// 2 buckets of water, 2 barley malt, the drink's own ingredient, 1 ale yeast. Cider takes neither
+// water nor malt - "This vat contains some apple mush" is the whole of its first state.
+^brew_water_needed = 2
+^brew_malt_needed = 2
+^brew_yeast_needed = 1
+
+// BOTH BUCKETS GO IN AT ONCE, and so do both handfuls of malt. There is no cache state for a vat
+// holding one bucket of water: state 1 is "filled with water", state 2 is "a mixture of water and
+// barley malt", and the eight bits are entirely spent on the ten drinks. A half-filled vat is a
+// thing the config cannot describe, so it is not a thing that happens - one click, two buckets.
+
+// =========================================================================== how long it takes
+// Old School brews on the farming growth clock: one 640-minute cycle to reach the second fermenting
+// state, another to finish, which is the 21h20m the wiki quotes.
+^brew_cycle_minutes = 640
+^brew_cycles = 2
+
+// ...AND IT IS HALVED HERE, by the rule farming already follows. suggestion #22 ("reducing farming
+// patch times", 13 October) halves every patch family whose longest crop runs past three hours -
+// calquat went 21.3h -> 10.7h - and a brew at 21h20m is the same complaint in a different building.
+// The divisor is applied where the clock is READ (~brew_cycle), exactly as ~farming_growth_minutes
+// does it, so the authentic 640 above stays legible and a re-import cannot quietly undo this.
+^brew_cycle_divisor = 2
+
+// How often a logged-in player's vats are brought up to date: 100 ticks is a minute, which farming
+// uses for the same job and for the same reason - the vat has to already be in the right state by
+// the time somebody walks up to it, because the client draws it straight from the varbit.
+^brew_tick_interval = 100
+
+// =========================================================================== how it turns out
+// Rolled out of 128 when the last cycle lands, which is Old School's own denominator: 6 mature,
+// 16 bad, the remaining 106 a normal batch. (Those are the figures WITHOUT "the stuff", which is
+// the only kind of brewing this cache can do.) Cooking level does not enter into it - players
+// tested that and it does not - so this rolls flat.
+^brew_roll_total = 128
+^brew_roll_mature = 6
+^brew_roll_bad = 16
+
+// =========================================================================== the apple press
+// The press is two locs with no ops and no varbit of its own: the barrel and the tap that runs from
+// it. Nothing in the cache can represent a barrel with two apples in it, so the crushing is one
+// action - four cooking apples and an empty bucket in, one bucket of apple mush out - and either
+// half of the press answers to it.
+^brew_apples_per_mush = 4
+
+// =========================================================================== the cellar
+// Down through the pub floor onto the tile beside the ladder (3681,9962), and back up the ladder to
+// the one tile the trapdoor can be used from (3681,3497). Both were measured, and the second one
+// matters: the trapdoor carries forceapproach=13, which leaves exactly one side open - come up
+// anywhere else in that pub and the next click on it answers "I can't reach that!".
+^brew_cellar_coord = 0_57_155_33_42
+^brew_pub_coord = 0_57_54_33_41

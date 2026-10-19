@@ -102,6 +102,8 @@ if (%tutorial < ^tutorial_complete & ~in_tutorial_island(coord) = true) {
 ~castlewars_login;
 // Replay whatever the player's crops did while they were logged out, then keep them ticking.
 ~farming_login;
+// The two breweries run on the same clock, and a brew ferments whether or not anyone is here.
+~brewing_login;
 // Throne of Miscellania: old saves onto the original quest, and the kingdom's missed days paid out
 ~misc_login;
 // Anything that happened on the trading post while they were away.

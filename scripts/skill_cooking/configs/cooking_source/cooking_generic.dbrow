@@ -601,3 +601,18 @@ data=experience,725
 data=successchance,88,432
 data=cantcookmessage_range,You need an open fire to roast the rabbit on the spit.
 data=successmessage,You roast the rabbit over the fire.
+
+// MALTING BARLEY, which is the first step of every ale in the game and had nowhere to happen.
+// A handful of barley roasted on a range comes out as barley malt: no level, no experience, and
+// it cannot be done over a fire - a cooking range is the only thing that will do it. It never
+// burns, which is what successchance 1,1 means here.
+// https://oldschool.runescape.wiki/w/Barley_malt
+[cooking_generic_barley_malt]
+table=cooking_generic
+data=uncooked,barley
+data=cooked,barley_malt
+data=levelrequired,1
+data=experience,0
+data=successchance,1,1
+data=cantcookmessage_fire,You need a range to roast the barley into malt.
+data=successmessage,You roast the barley into malt.
