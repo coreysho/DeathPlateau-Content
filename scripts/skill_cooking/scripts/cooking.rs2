@@ -98,6 +98,25 @@ if (inv_total(worn, gauntlets_of_cooking) > 0 & ($low_gauntlets > null | $high_g
 def_namedobj $burnt_item = db_getfield($data,cooking_generic:burnt,0);
 def_namedobj $additional_item = db_getfield($data,cooking_generic:additional,0);
 def_int $experience = db_getfield($data,cooking_generic:experience,0);
+// KARAMBWAN, the one fish with two ways to cook it. The table row is the poor cook, which is all
+// anybody can do until the Trio is behind them - the quest wants the poison, and the poison is
+// what a karambwan cooked badly IS. Once it is over, the player picks, and the thorough cook
+// changes exactly two things: what comes out and what it pays. The roll, the burn, the anim, the
+// Cook-X count and the macro event are all the generic ones, which is why this sits here and not
+// in a karambwan script of its own.
+if ($uncooked_item = tbwt_raw_karambwan & %tbwt_main = ^tbwt_complete) {
+    def_int $how = ~p_choice2("Cook it thoroughly.", 1, "Cook it poorly.", 2);
+    if_close;
+    if ($how = 1) {
+        if (stat(cooking) < ^karambwan_thorough_level) {
+            ~mesbox("You need a Cooking level of <tostring(^karambwan_thorough_level)> to cook one of these through.");
+            return;
+        }
+        $cooked_item = tbwt_cooked_karambwan;
+        $experience = ^karambwan_thorough_xp;
+        $succesmessage = "You cook the karambwan through. It is safe.";
+    }
+}
 if (inv_total(inv, $uncooked_item) = 1) {
     @cook_item($low, $high, $anim, $succesmessage, $burnmessage, $uncooked_item, $cooked_item, $burnt_item, $additional_item, $experience);
     return;

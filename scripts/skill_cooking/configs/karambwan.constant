@@ -1,0 +1,7 @@
+// THE THOROUGH COOK, which is the half of karambwan cooking that cannot live in cooking_generic:
+// the table holds one row per raw obj and this fish has two outcomes, so the row carries the poor
+// cook and these two numbers override it when the player asks for the other one
+// (skill_cooking/scripts/cooking.rs2). Level 30 and 190xp, against level 1 and 80xp for the poor
+// cook: oldschool.runescape.wiki/w/Cooked_karambwan.
+^karambwan_thorough_level = 30
+^karambwan_thorough_xp = 1900
