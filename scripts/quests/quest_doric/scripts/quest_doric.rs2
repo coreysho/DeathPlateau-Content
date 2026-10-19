@@ -53,7 +53,7 @@ def_int $option = ~p_choice4("I wanted to use your anvils.", 1, "Mind your own b
 
 if ($option = 1) {
     ~chatplayer("<p,neutral>I wanted to use your anvils.");
-    ~chatnpc("<p,neutral>My anvils get enough work with my own use. I make amulets, it takes a lot of work. If you could get me some more materials, I could let you use them.");
+    ~chatnpc("<p,neutral>My anvils get enough work with my own use. I make pickaxes, it takes a lot of work. If you could get me some more materials, I could let you use them.");
     @start_quest_options;
 } else if ($option = 2) {
     ~chatplayer("<p,angry>Mind your own business, shortstuff!");
@@ -63,7 +63,7 @@ if ($option = 1) {
     ~chatnpc("<p,happy>We have a fine town here, it suits us very well. Please enjoy your travels, and do visit my friends in their mine.");
 } else if ($option = 4) {
     ~chatplayer("<p,quiz>What do you make here?");
-    ~chatnpc("<p,happy>I make amulets. I am the best maker of them in Gielinor!");
+    ~chatnpc("<p,happy>I make pickaxes. I am the best maker of them in Gielinor!");
     ~chatplayer("<p,quiz>Do you have any to sell?");
     ~chatnpc("<p,neutral>Not at the moment, sorry. Try again later.");
 }
