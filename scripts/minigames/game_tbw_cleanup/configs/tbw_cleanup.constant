@@ -1,0 +1,132 @@
+// TAI BWO WANNAI CLEANUP, which the 377 cache ships whole and nothing had ever answered: the
+// jungle is placed, the fence is placed, the gate is placed, the whole village cast is in the npc
+// table, and tools/silentops.py has had "Hack 12" on a line of its own for months.
+//
+// WHAT IS ALREADY ON THE MAP (measured, not guessed):
+//
+//   34  tai_bwo_jungle_vegetation_easy_1    Light Jungle    op4=Hack  op3=Hidden
+//   34  tai_bwo_jungle_vegetation_med_1     Medium Jungle   op4=Hack  op3=Hidden
+//    9  tai_bwo_jungle_vegetation_hard_1    Dense Jungle    op4=Hack  op3=Hidden
+//   62  village_fence_rotten                the fence to repair
+//    2  tbwcu_bamboo_door_l / _r            op1=Open  op2=Quick-Pay(100)
+//
+// and five variants of each jungle tier exist in the cache, of which the fifth has NO Hack op and
+// reads "This has been chopped away" - so variant 5 is the cleared patch and 1-4 are four models
+// of the same standing bush. Every tier carries anim=tbw_cleanup_bush_shake and mapscene=5.
+//
+// THE OP NUMBERS ARE THE CACHE'S: Hack is op 4 and op 3 is "Hidden", which is exactly how
+// woodcutting repeats a swing - [oploc1] starts, [oploc3] continues. Here it is [oploc4] that
+// starts, because that is the op the client draws.
+//
+// ---------------------------------------------------------------------------- favour
+// The cache spends thirty bits on this, and the widths say what the units are:
+//
+//   tai_bwo_cleanup   vill_comm_points   bits 0-9     the favour the player has banked
+//                     vill_comm_max      bits 10-19   what counts as full
+//                     villagers_visible  bit 20       the villagers are out
+//                     cleanup_progress   bits 21-23
+//                     broodoomask1/2/3   bits 24-29
+//   tbw_cleanup_temp  tbw_overlayopen    bit 0
+//                     broodoo_attack     bit 1
+//                     favour_percentage  bits 2-11    what the overlay shows
+//                     eventchance        bits 12-14
+//                     reinforcemessage   bit 15
+//
+// Ten bits is 0..1023, and Old School's favour is a percentage quoted to one decimal place - light
+// jungle is 0.3%, a light thatching spar 0.1%. So the unit here is a TENTH OF A PER CENT, 1000 is
+// 100%, and that is why three separate ten-bit fields exist instead of one byte.
+//
+// vill_comm_points is the persistent store and favour_percentage lives on a temp varp, so the
+// percentage is a display of the points and not a second copy of them. THERE IS NO OVERLAY
+// INTERFACE IN THE PACK - nothing matching tbw/tai/favour/cleanup - so the number is reported in
+// chat and tbw_overlayopen stays 0 until there is something to open.
+
+// =========================================================================== favour
+^tbwcu_favour_full = 1000        // 100.0%, in tenths
+^tbwcu_favour_tenths = 10        // tenths per whole per cent, for the messages
+
+// What a hack is worth, in tenths of a per cent. Old School's own figures.
+^tbwcu_favour_light = 3          // 0.3%
+^tbwcu_favour_med = 5            // 0.5%
+^tbwcu_favour_dense = 10         // 1.0%
+
+// And what a repair is worth, which is deliberately less than hacking the same spar out of the
+// jungle: 0.1%, 0.3% and 0.5%.
+^tbwcu_fence_favour_light = 1
+^tbwcu_fence_favour_med = 3
+^tbwcu_fence_favour_dense = 5
+
+// A broodoo victim is about 3%.
+^tbwcu_favour_broodoo = 30
+
+// =========================================================================== hacking
+// The three tiers, their Woodcutting requirements and their experience, all Old School's:
+//   Light   10   32 xp     Medium  20   55 xp     Dense  35   80 xp
+// A failed swing pays 1 xp, which is Old School's too and is why the figures below are in tenths.
+^tbwcu_xp_light = 320
+^tbwcu_xp_med = 550
+^tbwcu_xp_dense = 800
+^tbwcu_xp_fail = 10
+
+^tbwcu_level_light = 10
+^tbwcu_level_med = 20
+^tbwcu_level_dense = 35
+
+// How long a hacked patch stays cleared. The jungle is meant to be thick again by the time a player
+// has walked a circuit of it, so this is short and scaled by population the way every other
+// respawn in this build is.
+^tbwcu_regrow = 50
+
+// =========================================================================== the event roll
+// After every successful hack, one roll for a gout tuber and then one roll on Old School's own
+// event table, which is out of 99 and adds up to exactly 99:
+//
+//   jungle spider 22   tribesman 21   bush snake 21   large mosquito 8
+//   mosquito swarm (17) 7   mosquito swarm (20) 6   gem rock 5
+//   broodoo victim: food 4, poison 3, disease 2
+//
+// The three broodoo victims are tbwcu_broodoo_combat, _poison and _disease in the cache - named for
+// what they do to you rather than for the cure they drop - and each has an _instant twin, which is
+// the one that is already standing there when the bush comes apart.
+^tbwcu_event_total = 99
+^tbwcu_event_spider = 22
+^tbwcu_event_tribesman = 43     // 22 + 21
+^tbwcu_event_snake = 64         // + 21
+^tbwcu_event_mosquito = 72      // + 8
+^tbwcu_event_swarm3 = 79        // + 7
+^tbwcu_event_swarm5 = 85        // + 6
+^tbwcu_event_gemrock = 90       // + 5
+^tbwcu_event_broodoo_combat = 94 // + 4
+^tbwcu_event_broodoo_poison = 97 // + 3
+// everything above that is the disease victim: 97, 98 - two in 99
+
+// The gout tuber, which is rolled before the table: 1 in 100 at Woodcutting 10 and 1 in 33 at 99,
+// straight-line between the two. Old School has you dig it out of the cleared patch, but this cache
+// has no dug-earth loc anywhere near the tai_bwo block to dig at - so the tuber comes out of the
+// jungle with the spars, and the spade stays out of it.
+^tbwcu_tuber_low = 100
+^tbwcu_tuber_high = 33
+
+// How long an event monster or a gem rock sticks around if it is ignored.
+^tbwcu_event_life = 300
+^tbwcu_gemrock_level = 40
+^tbwcu_gemrock_gems = 3
+^tbwcu_gemrock_xp = 650
+
+// =========================================================================== the Hardwood Grove
+// "Hardwood Grove Doors", op1=Open and op2=Quick-Pay(100): a hundred trading sticks to get in, and
+// teak and mahogany on the other side. hardwood_grove_paid is the bit that remembers you paid.
+^tbwcu_grove_price = 100
+
+// =========================================================================== the fence
+// How long a repaired section stands before it rots back. loc_change's own duration does the
+// reverting - it restores the section the map placed, which is the rotten one - so this number is
+// the whole of the decay. Half an hour at four ticks a second, scaled by population.
+^tbwcu_fence_life = 3000
+
+^tbwcu_off = 0
+^tbwcu_on = 1
+
+// How long the grove doors stay out of the way: long enough to walk through, short enough that
+// they are shut again behind you.
+^tbwcu_grove_open_ticks = 10

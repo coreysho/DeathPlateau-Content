@@ -1,0 +1,65 @@
+// WHERE THE SUCCESS PAIRS COME FROM, since this is the one part of the minigame the wiki does not
+// publish: Old School gives every tier's level, experience and favour, and says only that the gem
+// machetes "chop faster". So the pairs are built the way the woodcutting table's are - low is the
+// chance at level 1 and high the chance at 99, out of 256, fed to stat_random - and set so that:
+//
+//   a plain machete at the tier's own level lands roughly one swing in three, which is what a tree
+//   of the same requirement does in this build (the normal tree is 64/200 at level 1);
+//   each gem blade is about a fifth faster than the one below it, in the order the cache lists
+//   them - opal, jade, red topaz;
+//   and dense jungle at 99 with a red topaz machete is close to every swing, because that is what
+//   99 Woodcutting does to a yew.
+//
+// The three tiers' own numbers - 10/20/35 and 32/55/80 xp and 0.3/0.5/1.0% - are Old School's.
+// https://oldschool.runescape.wiki/w/Tai_Bwo_Wannai_Cleanup
+
+[tbwcu_jungle_light]
+table=tbwcu_jungle
+data=jungle,tai_bwo_jungle_vegetation_easy_1
+data=jungle,tai_bwo_jungle_vegetation_easy_2
+data=jungle,tai_bwo_jungle_vegetation_easy_3
+data=jungle,tai_bwo_jungle_vegetation_easy_4
+data=cleared,tai_bwo_jungle_vegetation_easy_5
+data=name,light jungle
+data=levelrequired,10
+data=experience,320
+data=favour,3
+data=spar,thatching_spar_light
+data=successchance,machette,60,180
+data=successchance,machette_opal,72,208
+data=successchance,machette_jade,86,236
+data=successchance,machette_redtopaz,104,256
+
+[tbwcu_jungle_medium]
+table=tbwcu_jungle
+data=jungle,tai_bwo_jungle_vegetation_med_1
+data=jungle,tai_bwo_jungle_vegetation_med_2
+data=jungle,tai_bwo_jungle_vegetation_med_3
+data=jungle,tai_bwo_jungle_vegetation_med_4
+data=cleared,tai_bwo_jungle_vegetation_med_5
+data=name,medium jungle
+data=levelrequired,20
+data=experience,550
+data=favour,5
+data=spar,thatching_spar_med
+data=successchance,machette,40,150
+data=successchance,machette_opal,48,174
+data=successchance,machette_jade,58,200
+data=successchance,machette_redtopaz,70,230
+
+[tbwcu_jungle_dense]
+table=tbwcu_jungle
+data=jungle,tai_bwo_jungle_vegetation_hard_1
+data=jungle,tai_bwo_jungle_vegetation_hard_2
+data=jungle,tai_bwo_jungle_vegetation_hard_3
+data=jungle,tai_bwo_jungle_vegetation_hard_4
+data=cleared,tai_bwo_jungle_vegetation_hard_5
+data=name,dense jungle
+data=levelrequired,35
+data=experience,800
+data=favour,10
+data=spar,thatching_spar_dense
+data=successchance,machette,24,120
+data=successchance,machette_opal,29,140
+data=successchance,machette_jade,35,164
+data=successchance,machette_redtopaz,42,192

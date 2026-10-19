@@ -1,0 +1,330 @@
+// HACKING THE JUNGLE, which is the whole of Tai Bwo Wannai Cleanup's engine: see
+// configs/tbw_cleanup.constant for what the cache already said, which is nearly all of it.
+//
+// Seventy-seven patches of jungle are placed around the village, every one of them advertising
+// "Hack" with nothing behind it, and the cache even numbered the ops the way woodcutting numbers
+// them: op 4 starts the swing and the hidden op 3 repeats it.
+
+// =========================================================================== the triggers
+// One pair per standing variant. The cache ships four models of each tier and the table lists all
+// four in its own row, so every one of these lands on the same code.
+[oploc4,tai_bwo_jungle_vegetation_easy_1] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_easy_2] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_easy_3] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_easy_4] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_med_1] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_med_2] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_med_3] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_med_4] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_hard_1] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_hard_2] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_hard_3] @tbwcu_hack;
+[oploc4,tai_bwo_jungle_vegetation_hard_4] @tbwcu_hack;
+
+[oploc3,tai_bwo_jungle_vegetation_easy_1] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_easy_2] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_easy_3] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_easy_4] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_med_1] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_med_2] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_med_3] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_med_4] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_hard_1] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_hard_2] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_hard_3] @tbwcu_hack_again;
+[oploc3,tai_bwo_jungle_vegetation_hard_4] @tbwcu_hack_again;
+
+// A machete in hand, on a bush: the same courtesy woodcutting does an axe.
+[oplocu,tai_bwo_jungle_vegetation_easy_1] @tbwcu_hack_with;
+[oplocu,tai_bwo_jungle_vegetation_med_1] @tbwcu_hack_with;
+[oplocu,tai_bwo_jungle_vegetation_hard_1] @tbwcu_hack_with;
+
+[label,tbwcu_hack_with]
+switch_obj(last_useitem) {
+    case machette, machette_opal, machette_jade, machette_redtopaz : p_oploc(4);
+    case default : ~displaymessage(^dm_default);
+}
+
+// =========================================================================== the machete
+// The best blade the player has, worn or carried. The order is the cache's own listing of them, and
+// it is also the order of their success pairs in the table.
+[proc,tbwcu_machete]()(namedobj)
+def_obj $hand = inv_getobj(worn, ^wearpos_rhand);
+if ($hand = machette_redtopaz | inv_total(inv, machette_redtopaz) > 0) {
+    return(machette_redtopaz);
+}
+if ($hand = machette_jade | inv_total(inv, machette_jade) > 0) {
+    return(machette_jade);
+}
+if ($hand = machette_opal | inv_total(inv, machette_opal) > 0) {
+    return(machette_opal);
+}
+if ($hand = machette | inv_total(inv, machette) > 0) {
+    return(machette);
+}
+return(null);
+
+// =========================================================================== favour
+// vill_comm_points is the bank, in tenths of a per cent; favour_percentage on the temp varp is what
+// an overlay would show, and is kept in step so that the day an overlay exists it needs no new
+// bookkeeping. vill_comm_max is written once so that "full" is stated in the save rather than only
+// in this file.
+[proc,tbwcu_favour]()(int)
+return(%vill_comm_points);
+
+[proc,tbwcu_favour_add](int $tenths)
+if (%vill_comm_max ! ^tbwcu_favour_full) {
+    %vill_comm_max = ^tbwcu_favour_full;
+}
+def_int $was = %vill_comm_points;
+def_int $now = min(^tbwcu_favour_full, add($was, $tenths));
+%vill_comm_points = $now;
+%favour_percentage = $now;
+// There is no overlay interface in this pack, so the only place the number can be said is here.
+// Reported when the whole per cent changes, which for light jungle is one message in three swings.
+if (divide($now, ^tbwcu_favour_tenths) > divide($was, ^tbwcu_favour_tenths)) {
+    if ($now >= ^tbwcu_favour_full) {
+        mes("The village is as tidy as it has ever been: favour is at 100%.");
+        return;
+    }
+    mes("The village's favour with you is now <tostring(divide($now, ^tbwcu_favour_tenths))>%.");
+}
+
+// =========================================================================== the swing
+[label,tbwcu_hack]
+db_find(tbwcu_jungle:jungle, loc_type);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (map_members = ^false) {
+    mes(^mes_members_feature);
+    return;
+}
+def_int $level = db_getfield($row, tbwcu_jungle:levelrequired, 0);
+if (stat(woodcutting) < $level) {
+    anim(null, 0);
+    mes("You need a Woodcutting level of <tostring($level)> to cut through <db_getfield($row, tbwcu_jungle:name, 0)>.");
+    return;
+}
+def_namedobj $machete = ~tbwcu_machete;
+if ($machete = null) {
+    anim(null, 0);
+    mes("You need a machete to cut through the jungle.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    mes("Your inventory is too full to hold any more.");
+    return;
+}
+if (afk_event = ^true) {
+    ~macro_event_general_spawn(~macro_event_set_random);
+    return;
+}
+// The skilling clock, handled exactly as woodcutting handles it: the first click sets it and the
+// hidden op does the work on the beat.
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 3);
+    p_oploc(4);
+    return;
+}
+anim(human_machette_chop, 0);
+mes("You swing your machete at the jungle.");
+if (%action_delay = map_clock) {
+    @tbwcu_swing($row, $machete);
+}
+p_oploc(3);
+
+[label,tbwcu_hack_again]
+db_find(tbwcu_jungle:jungle, loc_type);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    return;
+}
+def_namedobj $machete = ~tbwcu_machete;
+if ($machete = null) {
+    anim(null, 0);
+    mes("You need a machete to cut through the jungle.");
+    return;
+}
+if (stat(woodcutting) < db_getfield($row, tbwcu_jungle:levelrequired, 0)) {
+    anim(null, 0);
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    mes("Your inventory is too full to hold any more.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 3);
+} else if (%action_delay = map_clock) {
+    anim(human_machette_chop, 0);
+    @tbwcu_swing($row, $machete);
+}
+p_oploc(3);
+
+// The pair for this machete, picked out of the row's LIST exactly as woodcutting picks an axe's.
+[proc,tbwcu_successchance](dbrow $row, namedobj $machete)(int, int)
+def_int $count = calc(db_getfieldcount($row, tbwcu_jungle:successchance) - 1);
+while ($count >= 0) {
+    def_namedobj $blade;
+    def_int $low;
+    def_int $high;
+    $blade, $low, $high = db_getfield($row, tbwcu_jungle:successchance, $count);
+    if ($blade = $machete) {
+        return($low, $high);
+    }
+    $count = calc($count - 1);
+}
+return(null, null);
+
+// One swing's worth: a spar and the favour if it bites, a single experience point if it does not.
+[label,tbwcu_swing](dbrow $row, namedobj $machete)
+def_int $low;
+def_int $high;
+$low, $high = ~tbwcu_successchance($row, $machete);
+if (stat_random(woodcutting, $low, $high) = false) {
+    // The cache ships machete_fail beside machete_slash, so a swing that does not bite has its own
+    // sound - and Old School pays one experience point for it, which is the only reason a figure
+    // that small exists anywhere in this build.
+    sound_synth(machete_fail, 1, 0);
+    ~woodcutting_xp(^tbwcu_xp_fail);
+    p_oploc(3);
+    return;
+}
+sound_synth(machete_slash, 1, 0);
+def_namedobj $spar = db_getfield($row, tbwcu_jungle:spar, 0);
+inv_add(inv, $spar, 1);
+mes("You hack away the undergrowth and keep a <lowercase(oc_name($spar))>.");
+~woodcutting_xp(db_getfield($row, tbwcu_jungle:experience, 0));
+~tbwcu_favour_add(db_getfield($row, tbwcu_jungle:favour, 0));
+anim(null, 0);
+// The patch comes apart, and grows back.
+loc_change(db_getfield($row, tbwcu_jungle:cleared, 0), ~scale_by_playercount(^tbwcu_regrow));
+@tbwcu_event($row);
+
+// =========================================================================== what was in the bush
+// A roll for a gout tuber first - 1 in 100 at Woodcutting 10, 1 in 33 at 99, straight-line - and
+// then one roll on the cache's own event table. Both are Old School's.
+[label,tbwcu_event](dbrow $row)
+def_int $level = stat(woodcutting);
+def_int $span = sub(^tbwcu_tuber_low, ^tbwcu_tuber_high);
+def_int $above = max(0, sub($level, ^tbwcu_level_light));
+def_int $odds = sub(^tbwcu_tuber_low, divide(multiply($above, $span), sub(99, ^tbwcu_level_light)));
+if (random(max(1, $odds)) = 0) {
+    if (inv_freespace(inv) > 0) {
+        inv_add(inv, village_rare_tuber, 1);
+        mes("You find a gout tuber among the roots.");
+        return;
+    }
+}
+def_int $roll = random(^tbwcu_event_total);
+if ($roll >= ^tbwcu_event_swarm5 & $roll < ^tbwcu_event_gemrock) {
+    // The rock was under the bush: it stands where the jungle did until somebody mines it.
+    loc_change(~tbwcu_gem_rock, ^tbwcu_event_life);
+    mes("Hacking away the jungle uncovers a rock encrusted with gems.");
+    return;
+}
+def_npc $what = ~tbwcu_event_npc($roll);
+if ($what = null) {
+    return;
+}
+def_coord $where = map_findsquare(coord, 1, 2, ^map_findsquare_lineofwalk);
+if ($where = null) {
+    return;
+}
+npc_add($where, $what, ^tbwcu_event_life);
+npc_setmode(opplayer2);
+
+// Which of the three rocks is a matter of appearance only, so it is rolled.
+[proc,tbwcu_gem_rock]()(loc)
+switch_int (random(3)) {
+    case 0 : return(village_gem_rock1);
+    case 1 : return(village_gem_rock2);
+}
+return(village_gem_rock3);
+
+// The table, in the cache's own order. The "_instant" twins are the ones already on their feet when
+// the bush comes apart, which is what a monster that was hiding in it should be.
+[proc,tbwcu_event_npc](int $roll)(npc)
+if ($roll < ^tbwcu_event_spider) {
+    return(tbwcu_jungle_spider);
+}
+if ($roll < ^tbwcu_event_tribesman) {
+    return(tbwcu_tribesman_instant);
+}
+if ($roll < ^tbwcu_event_snake) {
+    return(tbwcu_snakejungle_appear);
+}
+if ($roll < ^tbwcu_event_mosquito) {
+    return(tbwcu_mosquito_single);
+}
+if ($roll < ^tbwcu_event_swarm3) {
+    return(tbwcu_mosquito_swarm3);
+}
+if ($roll < ^tbwcu_event_swarm5) {
+    return(tbwcu_mosquito_swarm5);
+}
+// The gem rock is not an npc: the caller turns the patch into one.
+if ($roll < ^tbwcu_event_gemrock) {
+    return(null);
+}
+if ($roll < ^tbwcu_event_broodoo_combat) {
+    return(tbwcu_broodoo_combat_instant);
+}
+if ($roll < ^tbwcu_event_broodoo_poison) {
+    return(tbwcu_broodoo_poison_instant);
+}
+return(tbwcu_broodoo_disease_instant);
+
+// =========================================================================== the gem rock
+// op1=Mine, op2=Prospect and the hidden op 3, same as the Shilo Village rock - but this one is the
+// cleanup's, and Old School pays three gems for it against Shilo's one, at 40 Mining.
+[oploc1,village_gem_rock1] @tbwcu_mine_gems;
+[oploc1,village_gem_rock2] @tbwcu_mine_gems;
+[oploc1,village_gem_rock3] @tbwcu_mine_gems;
+[oploc2,village_gem_rock1] @tbwcu_prospect_gems;
+[oploc2,village_gem_rock2] @tbwcu_prospect_gems;
+[oploc2,village_gem_rock3] @tbwcu_prospect_gems;
+
+[label,tbwcu_prospect_gems]
+mes("You examine the rock for ores...");
+sound_synth(prospect, 1, 0);
+p_delay(2);
+mes("The rock is encrusted with gems.");
+
+[label,tbwcu_mine_gems]
+if (stat(mining) < ^tbwcu_gemrock_level) {
+    mes("You need a Mining level of <tostring(^tbwcu_gemrock_level)> to mine this rock.");
+    return;
+}
+def_obj $pick = ~pickaxe_checker;
+if ($pick = null) {
+    mes("You need a pickaxe to mine this rock.");
+    return;
+}
+if (inv_freespace(inv) < ^tbwcu_gemrock_gems) {
+    mes("You need room for <tostring(^tbwcu_gemrock_gems)> gems before you can mine this.");
+    return;
+}
+anim(oc_param($pick, mining_animation), 0);
+sound_synth(mine, 1, 0);
+mes("You swing your pickaxe at the rock.");
+p_delay(3);
+def_int $i = 0;
+while ($i < ^tbwcu_gemrock_gems) {
+    def_namedobj $gem;
+    def_int $count;
+    $gem, $count = ~roll_on_drop_table(gem_rock_table);
+    inv_add(inv, $gem, 1);
+    $i = add($i, 1);
+}
+sound_synth(found_gem, 1, 0);
+anim(null, 0);
+~mining_xp(^tbwcu_gemrock_xp);
+mes("You pry three gems out of the rock.");
+// The jungle was here first, and comes back once the rock is gone.
+loc_del(~scale_by_playercount(^tbwcu_regrow));

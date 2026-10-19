@@ -1,0 +1,95 @@
+// THE HARDWOOD GROVE DOORS at 2817,3083 and 2817,3084, which the cache placed with two ops and
+// nothing behind either of them:
+//
+//   [tbwcu_bamboo_door_l]  "Hardwood Grove Doors"  op1=Open  op2=Quick-Pay(100)
+//   [tbwcu_bamboo_door_r]  the same, mirrored
+//
+// The price is written into the op label, which is as plain as the cache ever gets: a hundred
+// trading sticks to get in, and teak and mahogany on the other side.
+//
+// hardwood_grove_paid is the cache's bit for having paid. It is set on the way in and cleared on
+// the way out, so one payment buys one visit rather than permanent membership - and so that walking
+// back out of the grove never asks for a second hundred.
+//
+// HOW THE DOORS OPEN. This pair carries no category and no next_loc_stage, so the double-door
+// machinery in scripts/doors cannot drive them, and their _inactive_ twins are the same bamboo wall
+// with its ops taken away rather than an opened model. So they open the way every other gate in
+// this build without an opened model opens: both halves are deleted for long enough to walk
+// through, and the map puts them back.
+
+[oploc1,tbwcu_bamboo_door_l] @tbwcu_grove_open;
+[oploc1,tbwcu_bamboo_door_r] @tbwcu_grove_open;
+[oploc2,tbwcu_bamboo_door_l] @tbwcu_grove_quickpay;
+[oploc2,tbwcu_bamboo_door_r] @tbwcu_grove_quickpay;
+
+// Which side of the doors the player is on. The pair runs north-south at x=2817 and the hardwoods
+// are at x=2819 and beyond, so the grove is east of them.
+//
+// THE DOOR'S OWN TILE COUNTS AS INSIDE, which is why this is >= and not >: both halves are angle 0
+// wall_straight, and a wall at angle 0 sits on the WEST edge of the tile it is placed on. So the
+// player the engine walks up to the east face of it is standing on 2817 itself, and a > test reads
+// that as still being outside - which charged a second hundred sticks on the way out.
+[proc,tbwcu_in_grove]()(boolean)
+if (coordx(coord) >= coordx(loc_coord)) {
+    return(true);
+}
+return(false);
+
+[label,tbwcu_grove_open]
+if (map_members = ^false) {
+    mes(^mes_members_gate);
+    return;
+}
+// Leaving is free, and it clears the bit so the next visit is paid for again.
+if (~tbwcu_in_grove = true) {
+    %hardwood_grove_paid = ^tbwcu_off;
+    @tbwcu_grove_through;
+}
+if (%hardwood_grove_paid = ^tbwcu_on) {
+    @tbwcu_grove_through;
+}
+def_int $choice = ~p_choice2("Pay 100 trading sticks.", 1, "Not right now.", 2);
+if ($choice = 2) {
+    return;
+}
+@tbwcu_grove_pay;
+
+[label,tbwcu_grove_quickpay]
+if (map_members = ^false) {
+    mes(^mes_members_gate);
+    return;
+}
+if (~tbwcu_in_grove = true) {
+    %hardwood_grove_paid = ^tbwcu_off;
+    @tbwcu_grove_through;
+}
+if (%hardwood_grove_paid = ^tbwcu_on) {
+    @tbwcu_grove_through;
+}
+@tbwcu_grove_pay;
+
+[label,tbwcu_grove_pay]
+if (inv_total(inv, village_trade_sticks) < ^tbwcu_grove_price) {
+    mes("You need <tostring(^tbwcu_grove_price)> trading sticks to get into the grove.");
+    return;
+}
+inv_del(inv, village_trade_sticks, ^tbwcu_grove_price);
+%hardwood_grove_paid = ^tbwcu_on;
+mes("You pay <tostring(^tbwcu_grove_price)> trading sticks.");
+@tbwcu_grove_through;
+
+// Both halves out of the way for long enough to walk through, and the map puts them back.
+[label,tbwcu_grove_through]
+def_coord $here = loc_coord;
+def_coord $other = movecoord($here, 0, 0, 1);
+if (coordz(coord) > coordz($here)) {
+    $other = movecoord($here, 0, 0, -1);
+}
+sound_synth(gate_open, 1, 0);
+loc_del(^tbwcu_grove_open_ticks);
+loc_findallzone($other);
+while (loc_findnext = true) {
+    if (loc_coord = $other) {
+        loc_del(^tbwcu_grove_open_ticks);
+    }
+}

@@ -1,0 +1,208 @@
+// THE VILLAGE FENCE, which is the other half of the cleanup and the reason the jungle is worth
+// hacking: sixty-two sections of village_fence_rotten are placed around Tai Bwo Wannai, every one
+// of them offering "Repair" with nothing behind it.
+//
+// The cache states the whole repair in five locs:
+//
+//   village_fence_rotten        "A damaged wooden fence."   op1=Repair   op3/op4=Hidden
+//   village_fence_fixed1        "Partial fence"             op1=Repair   op3/op4=Hidden
+//   village_fence_fixed2        "Partial fence"             op1=Repair   op3/op4=Hidden
+//   village_fence_fixed3        "Partial fence"             op1=Repair   op3/op4=Hidden
+//   village_fence_fixedcomplete "Village fence"             op1=Reinforce
+//
+// Four stages of thatching and then a finished fence that can only be reinforced, which is exactly
+// what Old School describes - and the stages are the loc, so there is nothing per-section to store.
+//
+// WHY A SPAR CAN FAIL TO ADVANCE A STAGE. Old School says light jungle "needs more spars for fence
+// repair" and dense is "very good for it", but the fence's progress IS its loc state and the cache
+// gives it four stages, not twelve. So the tiers differ in how often a spar is enough: a dense spar
+// always moves the section on, a medium one two times in three, a light one one time in three. The
+// experience and the favour are paid for the SPAR, every time, which is what makes the figures Old
+// School quotes per spar (28.1, 42.1 and 65.1) the ones that come out of this.
+
+// =========================================================================== the triggers
+[oploc1,village_fence_rotten] @tbwcu_fence_repair;
+[oploc1,village_fence_fixed1] @tbwcu_fence_repair;
+[oploc1,village_fence_fixed2] @tbwcu_fence_repair;
+[oploc1,village_fence_fixed3] @tbwcu_fence_repair;
+[oploc3,village_fence_rotten] @tbwcu_fence_again;
+[oploc3,village_fence_fixed1] @tbwcu_fence_again;
+[oploc3,village_fence_fixed2] @tbwcu_fence_again;
+[oploc3,village_fence_fixed3] @tbwcu_fence_again;
+[oploc4,village_fence_rotten] @tbwcu_fence_again;
+[oploc4,village_fence_fixed1] @tbwcu_fence_again;
+[oploc4,village_fence_fixed2] @tbwcu_fence_again;
+[oploc4,village_fence_fixed3] @tbwcu_fence_again;
+[oploc1,village_fence_fixedcomplete] @tbwcu_fence_reinforce;
+
+// Using a spar on the fence picks that spar rather than the best one carried.
+[oplocu,village_fence_rotten] @tbwcu_fence_with;
+[oplocu,village_fence_fixed1] @tbwcu_fence_with;
+[oplocu,village_fence_fixed2] @tbwcu_fence_with;
+[oplocu,village_fence_fixed3] @tbwcu_fence_with;
+[oplocu,village_fence_fixedcomplete] @tbwcu_fence_with;
+
+[label,tbwcu_fence_with]
+switch_obj(last_useitem) {
+    case thatching_spar_light, thatching_spar_med, thatching_spar_dense : p_oploc(1);
+    case machette, machette_opal, machette_jade, machette_redtopaz : p_oploc(1);
+    case default : ~displaymessage(^dm_default);
+}
+
+// =========================================================================== the spar
+// The best spar carried, because dense is the one Old School calls good for this and a player who
+// has cut dense jungle wants it spent here.
+[proc,tbwcu_best_spar]()(namedobj)
+if (inv_total(inv, thatching_spar_dense) > 0) {
+    return(thatching_spar_dense);
+}
+if (inv_total(inv, thatching_spar_med) > 0) {
+    return(thatching_spar_med);
+}
+if (inv_total(inv, thatching_spar_light) > 0) {
+    return(thatching_spar_light);
+}
+return(null);
+
+[proc,tbwcu_spar_xp](namedobj $spar)(int)
+if ($spar = thatching_spar_dense) {
+    return(651);
+}
+if ($spar = thatching_spar_med) {
+    return(421);
+}
+return(281);
+
+[proc,tbwcu_spar_favour](namedobj $spar)(int)
+if ($spar = thatching_spar_dense) {
+    return(^tbwcu_fence_favour_dense);
+}
+if ($spar = thatching_spar_med) {
+    return(^tbwcu_fence_favour_med);
+}
+return(^tbwcu_fence_favour_light);
+
+// Out of three: a dense spar is always enough, a medium one usually, a light one seldom.
+[proc,tbwcu_spar_holds](namedobj $spar)(boolean)
+if ($spar = thatching_spar_dense) {
+    return(true);
+}
+if ($spar = thatching_spar_med) {
+    if (random(3) < 2) {
+        return(true);
+    }
+    return(false);
+}
+if (random(3) = 0) {
+    return(true);
+}
+return(false);
+
+// The next stage up from whatever is being repaired.
+[proc,tbwcu_fence_next](loc $stage)(loc)
+if ($stage = village_fence_rotten) {
+    return(village_fence_fixed1);
+}
+if ($stage = village_fence_fixed1) {
+    return(village_fence_fixed2);
+}
+if ($stage = village_fence_fixed2) {
+    return(village_fence_fixed3);
+}
+return(village_fence_fixedcomplete);
+
+// =========================================================================== repairing
+[label,tbwcu_fence_repair]
+if (map_members = ^false) {
+    mes(^mes_members_feature);
+    return;
+}
+if (~tbwcu_machete = null) {
+    anim(null, 0);
+    mes("You need a machete to trim the spars to length.");
+    return;
+}
+if (~tbwcu_best_spar = null) {
+    anim(null, 0);
+    mes("You need thatching spars to repair the fence. Hack some out of the jungle.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 3);
+    p_oploc(1);
+    return;
+}
+anim(human_machette_chop, 0);
+mes("You work on the fence.");
+if (%action_delay = map_clock) {
+    @tbwcu_fence_work;
+}
+p_oploc(3);
+
+[label,tbwcu_fence_again]
+if (~tbwcu_machete = null | ~tbwcu_best_spar = null) {
+    anim(null, 0);
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 3);
+} else if (%action_delay = map_clock) {
+    anim(human_machette_chop, 0);
+    @tbwcu_fence_work;
+}
+p_oploc(3);
+
+// One spar's worth of work.
+[label,tbwcu_fence_work]
+def_namedobj $spar = ~tbwcu_best_spar;
+def_loc $stage = loc_type;
+inv_del(inv, $spar, 1);
+~woodcutting_xp(~tbwcu_spar_xp($spar));
+~tbwcu_favour_add(~tbwcu_spar_favour($spar));
+sound_synth(machete_slash, 1, 0);
+if (~tbwcu_spar_holds($spar) = false) {
+    mes("The <lowercase(oc_name($spar))> splits before it is in place.");
+    p_oploc(3);
+    return;
+}
+def_loc $next = ~tbwcu_fence_next($stage);
+// The fence rots back to where it started on its own, which is what the duration on a loc_change
+// does for free - it reverts to the section the map placed, and the map placed rotten fence.
+loc_change($next, ~scale_by_playercount(^tbwcu_fence_life));
+if ($next = village_fence_fixedcomplete) {
+    anim(null, 0);
+    mes("That section of fence is whole again.");
+    return;
+}
+mes("You thatch another course onto the fence.");
+p_oploc(3);
+
+// =========================================================================== reinforcing
+// A finished section has no stage left to reach, so a spar spent on it buys the same experience and
+// favour and pushes back the day it rots. reinforcemessage is the cache's bit for saying so once.
+[label,tbwcu_fence_reinforce]
+if (map_members = ^false) {
+    mes(^mes_members_feature);
+    return;
+}
+if (~tbwcu_machete = null) {
+    mes("You need a machete to trim the spars to length.");
+    return;
+}
+def_namedobj $spar = ~tbwcu_best_spar;
+if ($spar = null) {
+    mes("You need thatching spars to reinforce the fence.");
+    return;
+}
+if (%reinforcemessage = ^tbwcu_off) {
+    %reinforcemessage = ^tbwcu_on;
+    ~mesbox("This section is already whole. Working on it anyway will keep it standing longer, and the village notices the effort either way.");
+}
+anim(human_machette_chop, 0);
+p_delay(2);
+inv_del(inv, $spar, 1);
+sound_synth(machete_slash, 1, 0);
+~woodcutting_xp(~tbwcu_spar_xp($spar));
+~tbwcu_favour_add(~tbwcu_spar_favour($spar));
+loc_change(village_fence_fixedcomplete, ~scale_by_playercount(^tbwcu_fence_life));
+mes("You reinforce the fence.");

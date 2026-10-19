@@ -1,0 +1,21 @@
+// THE THREE TIERS OF JUNGLE. One row each, keyed on the four standing variants of that tier, so a
+// click on any of them finds its own row - the same shape as woodcutting's trees table, which also
+// lists several locs per row.
+//
+// successchance is per machete, exactly as the trees table lists a pair per axe: the gem-bladed
+// machetes from Gabooty's are faster, which is the only thing Old School says about them.
+[tbwcu_jungle]
+// The four standing variants. LIST, because the cache ships four models of each bush.
+column=jungle,loc,LIST,INDEXED,REQUIRED
+// Variant 5: no Hack op, "This has been chopped away".
+column=cleared,loc
+column=name,string
+column=levelrequired,int
+// Tenths, as every stat_advance in this build takes them.
+column=experience,int
+// Tenths of a per cent of village favour.
+column=favour,int
+// What the swing pays out, and what the fence is repaired with.
+column=spar,namedobj
+// One low/high pair per machete, fed to stat_random.
+column=successchance,namedobj,int,int,LIST
