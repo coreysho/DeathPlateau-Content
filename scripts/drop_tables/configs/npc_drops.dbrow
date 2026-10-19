@@ -309,13 +309,7 @@ data=npc,grandtree_foreman
 data=npc,guard_bandit
 data=npc,guarddog
 data=npc,guthix_mage
-data=npc,gwd_balfrug_kreeyath
-data=npc,gwd_bree
-data=npc,gwd_flight_kilisa
-data=npc,gwd_flockleader_geerin
 data=npc,gwd_goblin
-data=npc,gwd_grimspike
-data=npc,gwd_growler
 data=npc,gwd_hellhound
 data=npc,gwd_hobgoblin
 data=npc,gwd_ork_1
@@ -325,12 +319,6 @@ data=npc,gwd_ork_4
 data=npc,gwd_saradomin_knight_1
 data=npc,gwd_saradomin_knight_2
 data=npc,gwd_saradomin_priest
-data=npc,gwd_starlight
-data=npc,gwd_steelwill
-data=npc,gwd_strongstack
-data=npc,gwd_tstanon_karlak
-data=npc,gwd_wingman_skree
-data=npc,gwd_zakln_gritch
 data=npc,hauntedmine_boss_ghost
 data=npc,hauntedmine_suprise_ghost
 data=npc,hazeel_cultist
@@ -377,12 +365,6 @@ data=npc,macro_hyde_underwater_4
 data=npc,macro_hyde_underwater_5
 data=npc,macro_hyde_underwater_6
 data=npc,mdaughter_bearman
-data=drop,bones,Bones,1,Always
-
-[npc_drops_mdaughter_bearman_fighter]
-table=npc_drops
-// [ai_queue3,_]
-// assumed false: %arthur, npc_stat()
 data=npc,mdaughter_bearman_fighter
 data=npc,mdaughter_camp_female1
 data=npc,mdaughter_camp_female2
@@ -395,6 +377,12 @@ data=npc,misc_etc_man_3
 data=npc,misc_etc_woman_1
 data=npc,misc_etc_woman_2
 data=npc,misc_etc_woman_3
+data=drop,bones,Bones,1,Always
+
+[npc_drops_misc_man_1]
+table=npc_drops
+// [ai_queue3,_]
+// assumed false: %arthur, npc_stat()
 data=npc,misc_man_1
 data=npc,misc_man_2
 data=npc,misc_man_3
@@ -7226,6 +7214,160 @@ data=bonus,keyhalf1,1,1,1831,0
 data=bonus,keyhalf2,1,1,1831,0
 data=bonus,rune_javelin,5,5,1831,0
 
+[npc_drops_gwd_balfrug_kreeyath]
+table=npc_drops
+// [ai_queue3,gwd_balfrug_kreeyath]
+data=npc,gwd_balfrug_kreeyath
+data=npc,gwd_tstanon_karlak
+data=drop,ashes,Ashes,1,Always
+data=drop,coins,Coins,1300-1400,1/1.88
+data=drop,bloodrune,Blood rune,5-10,1/15.88
+data=drop,deathrune,Death rune,5-10,1/15.88
+data=drop,shark,Shark,3,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,potato_tuna+sweetcorn,Tuna potato,2,1/15.88
+data=drop,cert_wine_of_zamorak,Wine of zamorak (noted),5-10,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/18.14
+data=drop,3dose2attack,Super attack(3),1,1/63.5
+data=drop,3dose2strength,Super strength(3),1,1/63.5
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,zamorakian_spear,Zamorakian spear,1,1/5376
+data=bonus,coins,1300,1400,5332786,0
+data=bonus,bloodrune,5,10,629921,0
+data=bonus,deathrune,5,10,629921,0
+data=bonus,shark,3,3,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,potato_tuna+sweetcorn,2,2,629921,0
+data=bonus,cert_wine_of_zamorak,5,10,629921,0
+data=bonus,steel_arrow,95,100,551181,0
+data=bonus,3dose2attack,1,1,157480,0
+data=bonus,3dose2strength,1,1,157480,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,zamorakian_spear,1,1,1860,0
+
+[npc_drops_gwd_bree]
+table=npc_drops
+// [ai_queue3,gwd_bree]
+data=npc,gwd_bree
+data=npc,gwd_growler
+data=npc,gwd_starlight
+data=drop,bones,Bones,1,Always
+data=drop,coins,Coins,1300-1400,1/1.99
+data=drop,cert_unidentified_ranarr,Herb (Ranarr) (noted),1,1/15.88
+data=drop,lawrune,Law rune,5-10,1/15.88
+data=drop,monkfish,Monkfish,3,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,summer_pie,Summer pie,1,1/15.88
+data=drop,cert_unicorn_horn,Unicorn horn (noted),6,1/15.88
+data=drop,cert_snape_grass,Snape grass (noted),5,1/18.14
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,saradomin_sword,Saradomin sword,1,1/5376
+data=bonus,coins,1300,1400,5017825,0
+data=bonus,cert_unidentified_ranarr,1,1,629921,0
+data=bonus,lawrune,5,10,629921,0
+data=bonus,monkfish,3,3,629921,0
+data=bonus,steel_arrow,95,100,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,summer_pie,1,1,629921,0
+data=bonus,cert_unicorn_horn,6,6,629921,0
+data=bonus,cert_snape_grass,5,5,551181,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,saradomin_sword,1,1,1860,0
+
+[npc_drops_gwd_flight_kilisa]
+table=npc_drops
+// [ai_queue3,gwd_flight_kilisa]
+data=npc,gwd_flight_kilisa
+data=npc,gwd_flockleader_geerin
+data=npc,gwd_wingman_skree
+data=drop,bones,Bones,1,Always
+data=drop,feather,Feather,1-11,Always
+data=drop,coins,Coins,1000-1100,1/1.77
+data=drop,cert_crushed_bird_nest,Crushed nest (noted),2,1/15.88
+data=drop,cert_unidentified_kwuarm,Herb (Kwuarm) (noted),1,1/15.88
+data=drop,mantaray,Manta ray,2,1/15.88
+data=drop,potato_mushroom+onion,Mushroom potato,3,1/15.88
+data=drop,smokerune,Smoke rune,10-15,1/15.88
+data=drop,steel_dart,Steel dart,91-101,1/15.88
+data=drop,steel_arrow,Steel arrow,91-101,1/18.14
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,armadyl_chainskirt,Armadyl chainskirt,1,1/16129
+data=drop,armadyl_chestplate,Armadyl chestplate,1,1/16129
+data=drop,armadyl_helmet,Armadyl helmet,1,1/16129
+data=bonus,coins,1000,1100,5647746,0
+data=bonus,cert_crushed_bird_nest,2,2,629921,0
+data=bonus,cert_unidentified_kwuarm,1,1,629921,0
+data=bonus,mantaray,2,2,629921,0
+data=bonus,potato_mushroom+onion,3,3,629921,0
+data=bonus,smokerune,10,15,629921,0
+data=bonus,steel_dart,91,101,629921,0
+data=bonus,steel_arrow,91,101,551181,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,armadyl_chainskirt,1,1,620,0
+data=bonus,armadyl_chestplate,1,1,620,0
+data=bonus,armadyl_helmet,1,1,620,0
+
+[npc_drops_gwd_grimspike]
+table=npc_drops
+// [ai_queue3,gwd_grimspike]
+data=npc,gwd_grimspike
+data=drop,bones,Bones,1,Always
+data=drop,coins,Coins,1400-1500,1/1.88
+data=drop,eye_patch,Eye patch,1,1/6
+data=drop,potato_chilli+carne,Chilli potato,3,1/15.88
+data=drop,cosmicrune,Cosmic rune,25-30,1/15.88
+data=drop,cert_limpwurt_root,Limpwurt root (noted),5,1/15.88
+data=drop,naturerune,Nature rune,15-20,1/15.88
+data=drop,shark,Shark,2,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/18.14
+data=drop,3dose2strength,Super strength(3),1,1/63.5
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,champions_challenge_goblin,Champion scroll,1,1/5000
+data=drop,bandos_boots,Bandos boots,1,1/16256
+data=drop,bandos_chestplate,Bandos chestplate,1,1/16256
+data=drop,bandos_tassets,Bandos tassets,1,1/16256
+data=bonus,coins,1400,1500,5332800,0
+data=bonus,eye_patch,1,1,1666667,0
+data=bonus,potato_chilli+carne,3,3,629921,0
+data=bonus,cosmicrune,25,30,629921,0
+data=bonus,cert_limpwurt_root,5,5,629921,0
+data=bonus,naturerune,15,20,629921,0
+data=bonus,shark,2,2,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,steel_arrow,95,100,551181,0
+data=bonus,3dose2strength,1,1,157480,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,champions_challenge_goblin,1,1,2000,0
+data=bonus,bandos_boots,1,1,615,0
+data=bonus,bandos_chestplate,1,1,615,0
+data=bonus,bandos_tassets,1,1,615,0
+
 [npc_drops_gwd_jogre]
 table=npc_drops
 // [ai_queue3,_]
@@ -7407,6 +7549,128 @@ data=bonus,uncut_diamond,1,1,4921,0
 data=bonus,keyhalf1,1,1,2461,0
 data=bonus,keyhalf2,1,1,2461,0
 data=bonus,rune_javelin,5,5,2461,0
+
+[npc_drops_gwd_steelwill]
+table=npc_drops
+// [ai_queue3,gwd_steelwill]
+data=npc,gwd_steelwill
+data=drop,bones,Bones,1,Always
+data=drop,coins,Coins,1400-1500,1/1.88
+data=drop,beer,Beer,1,1/6
+data=drop,potato_chilli+carne,Chilli potato,3,1/15.88
+data=drop,cosmicrune,Cosmic rune,25-30,1/15.88
+data=drop,cert_limpwurt_root,Limpwurt root (noted),5,1/15.88
+data=drop,naturerune,Nature rune,15-20,1/15.88
+data=drop,shark,Shark,2,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/18.14
+data=drop,3dose2strength,Super strength(3),1,1/63.5
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,champions_challenge_goblin,Champion scroll,1,1/5000
+data=drop,bandos_boots,Bandos boots,1,1/16256
+data=drop,bandos_chestplate,Bandos chestplate,1,1/16256
+data=drop,bandos_tassets,Bandos tassets,1,1/16256
+data=bonus,coins,1400,1500,5332800,0
+data=bonus,beer,1,1,1666667,0
+data=bonus,potato_chilli+carne,3,3,629921,0
+data=bonus,cosmicrune,25,30,629921,0
+data=bonus,cert_limpwurt_root,5,5,629921,0
+data=bonus,naturerune,15,20,629921,0
+data=bonus,shark,2,2,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,steel_arrow,95,100,551181,0
+data=bonus,3dose2strength,1,1,157480,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,champions_challenge_goblin,1,1,2000,0
+data=bonus,bandos_boots,1,1,615,0
+data=bonus,bandos_chestplate,1,1,615,0
+data=bonus,bandos_tassets,1,1,615,0
+
+[npc_drops_gwd_strongstack]
+table=npc_drops
+// [ai_queue3,gwd_strongstack]
+data=npc,gwd_strongstack
+data=drop,bones,Bones,1,Always
+data=drop,coins,Coins,1400-1500,1/1.88
+data=drop,kebab,Kebab,1,1/6
+data=drop,potato_chilli+carne,Chilli potato,3,1/15.88
+data=drop,cosmicrune,Cosmic rune,25-30,1/15.88
+data=drop,cert_limpwurt_root,Limpwurt root (noted),5,1/15.88
+data=drop,naturerune,Nature rune,15-20,1/15.88
+data=drop,shark,Shark,2,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/18.14
+data=drop,3dose2strength,Super strength(3),1,1/63.5
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,champions_challenge_goblin,Champion scroll,1,1/5000
+data=drop,bandos_boots,Bandos boots,1,1/16256
+data=drop,bandos_chestplate,Bandos chestplate,1,1/16256
+data=drop,bandos_tassets,Bandos tassets,1,1/16256
+data=bonus,coins,1400,1500,5332800,0
+data=bonus,kebab,1,1,1666667,0
+data=bonus,potato_chilli+carne,3,3,629921,0
+data=bonus,cosmicrune,25,30,629921,0
+data=bonus,cert_limpwurt_root,5,5,629921,0
+data=bonus,naturerune,15,20,629921,0
+data=bonus,shark,2,2,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,steel_arrow,95,100,551181,0
+data=bonus,3dose2strength,1,1,157480,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,champions_challenge_goblin,1,1,2000,0
+data=bonus,bandos_boots,1,1,615,0
+data=bonus,bandos_chestplate,1,1,615,0
+data=bonus,bandos_tassets,1,1,615,0
+
+[npc_drops_gwd_zakln_gritch]
+table=npc_drops
+// [ai_queue3,gwd_zakln_gritch]
+data=npc,gwd_zakln_gritch
+data=drop,ashes,Ashes,1,Always
+data=drop,coins,Coins,1300-1400,1/1.88
+data=drop,bloodrune,Blood rune,5-10,1/15.88
+data=drop,deathrune,Death rune,5-10,1/15.88
+data=drop,shark,Shark,3,1/15.88
+data=drop,steel_dart,Steel dart,95-100,1/15.88
+data=drop,potato_tuna+sweetcorn,Tuna potato,2,1/15.88
+data=drop,cert_wine_of_zamorak,Wine of zamorak (noted),5-10,1/15.88
+data=drop,steel_arrow,Steel arrow,95-100,1/18.14
+data=drop,3dose2attack,Super attack(3),1,1/63.5
+data=drop,3dose2strength,Super strength(3),1,1/63.5
+data=drop,trail_clue_hard_map001,Clue scroll (hard),1,1/128
+data=drop,godsword_shard_1,Godsword shard 1,1,1/1524
+data=drop,godsword_shard_2,Godsword shard 2,1,1/1524
+data=drop,godsword_shard_3,Godsword shard 3,1,1/1524
+data=drop,champions_challenge_lesserdemon,Champion scroll,1,1/5000
+data=drop,zamorakian_spear,Zamorakian spear,1,1/5376
+data=bonus,coins,1300,1400,5332786,0
+data=bonus,bloodrune,5,10,629921,0
+data=bonus,deathrune,5,10,629921,0
+data=bonus,shark,3,3,629921,0
+data=bonus,steel_dart,95,100,629921,0
+data=bonus,potato_tuna+sweetcorn,2,2,629921,0
+data=bonus,cert_wine_of_zamorak,5,10,629921,0
+data=bonus,steel_arrow,95,100,551181,0
+data=bonus,3dose2attack,1,1,157480,0
+data=bonus,3dose2strength,1,1,157480,0
+data=bonus,trail_clue_hard_map001,1,1,78125,4
+data=bonus,godsword_shard_1,1,1,6562,0
+data=bonus,godsword_shard_2,1,1,6562,0
+data=bonus,godsword_shard_3,1,1,6562,0
+data=bonus,champions_challenge_lesserdemon,1,1,2000,0
+data=bonus,zamorakian_spear,1,1,1860,0
 
 [npc_drops_hellhound]
 table=npc_drops

@@ -31523,14 +31523,16 @@ recol1d=7397
 active=no
 
 [horror_jumping_spot1]
-name=Basalt rock
-desc=I can jump off this one.
+// The SOUTH BEACH, not a rock - the far end of the first chain, on the sand you walk in on. Old
+// School calls it "Beach", offers Jump-to, and examines "Safety!".
+name=Beach
+desc=Safety!
 model=horror_jumping_spot1
 active=yes
 mapscene=21
 blockwalk=no
 blockrange=no
-op1=Jump-across
+op1=Jump-to
 
 [horror_jumping_spot2]
 name=Basalt rock
@@ -31613,14 +31615,16 @@ blockrange=no
 op1=Jump-across
 
 [horror_jumping_spot10]
-name=Basalt rock
-desc=I can jump off this one.
+// The NORTH SHORE, the lighthouse island's own ground. "Rocky shore" in Old School, Jump-to, and
+// it examines "It looks barren" - with no full stop, which is the live game's own typo.
+name=Rocky shore
+desc=It looks barren
 model=horror_jumping_spot1
 active=yes
 mapscene=21
 blockwalk=no
 blockrange=no
-op1=Jump-across
+op1=Jump-to
 
 [horror_basalt_step_1]
 model=horror_basalt_step1

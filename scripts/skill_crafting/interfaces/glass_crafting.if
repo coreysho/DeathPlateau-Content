@@ -65,7 +65,11 @@ x=307
 y=69
 width=64
 height=96
-model=obj_candle_lantern_unlit
+// The EMPTY lantern and the EMPTY lamp, which is what glassblowing makes - the panel shipped
+// showing the ones with a candle and a wick in them. The candle models have identical bounds,
+// so the framing is untouched; the empty lamp is a sixth narrower, so its zoom comes in to
+// match (zoom is inverse - see tools/ifmodels.py).
+model=obj_candle_lantern_empty
 zoom=741
 xan=53
 yan=1965
@@ -76,8 +80,8 @@ x=392
 y=66
 width=64
 height=96
-model=obj_oil_lamp_unlit
-zoom=687
+model=obj_oil_lamp_empty
+zoom=615
 xan=197
 yan=1921
 

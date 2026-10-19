@@ -130,3 +130,50 @@ anim(agility_climbing_down, 0);
 p_delay(2);
 p_telejump(^gwd_entrance_inside);
 
+
+// ---------------------------------------------------------------- the rocky handholds
+// Reported as one of the battlefield's three dead clicks: two "Rocky handholds" carrying op1=Climb
+// with nothing behind either of them. It is a real Old School shortcut - 60 Agility, no
+// experience, one way - and it goes down the cliff off the north-east corner of the battlefield
+// into level 32 Wilderness, north-west of the Forgotten Cemetery.
+//
+// ONE WAY IS NOT A CHOICE HERE, it is the geography: both locs sit on the battlefield side of the
+// cliff, so there is nothing to click from the Wilderness, and no branch is needed to stop the
+// player coming back. That matches what the shortcut does in the live game.
+//
+// stat_base and not stat, for the same reason the boulder and the crack use it: the chill is
+// taking a point off every stat every ten ticks, and a player who walked up here on exactly 60
+// Agility would be refused their own way out a minute later.
+[oploc1,osrsloc_26400] @gwd_handholds;
+[oploc1,osrsloc_26402] @gwd_handholds;
+
+[label,gwd_handholds]
+if (stat_base(agility) < ^gwd_handholds_agility) {
+    mes("You need an Agility level of <tostring(^gwd_handholds_agility)> to climb down there.");
+    return;
+}
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You find a grip on the ice and start down the cliff.");
+// agility_climbing_down for the reason the rope gives below: human_climbing_down loops=8 and
+// holds its last frame for ever.
+anim(agility_climbing_down, 0);
+p_delay(2);
+mes("You come off the cliff into the Wilderness, and the cold lets go of you.");
+p_telejump(^gwd_handholds_wilderness);
+~refresh_chill;
+
+// ---------------------------------------------------------------- the old fire pit
+// The battlefield's third dead click, and the one that cannot be answered properly here. In the
+// live game this is where a Fire of Unseasonal Warmth goes, and a built one stops the chill - but
+// it wants Making Friends with My Arm finished, 60 Construction, two mahogany planks, two steel
+// bars and 750 efh, 1,100 te and 700 urt salt out of the Weiss mine. None of that exists in this
+// build: there is no quest, no mine and no salt obj in the whole cache.
+//
+// So it says the true half of the game's own refusal - "You can't see what would burn very well
+// here." - and stops there. The live line goes on to name the quest, which would be pointing a
+// player at something that is not here.
+[oploc1,osrsloc_33317]
+p_arrivedelay;
+facesquare(loc_coord);
+mes("You can't see what would burn very well here.");

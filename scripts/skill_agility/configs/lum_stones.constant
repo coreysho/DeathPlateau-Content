@@ -1,0 +1,20 @@
+// THE RIVER LUM STEPPING STONES, west of the Champions' Guild - four of them in a row at
+// 3150..3153, z3363, with the west bank at 3149 and the east bank at 3154. The river is one tile
+// wide at the banks and blocked for eight tiles either side at z3362, so the crossing line is the
+// only way on or off: a player can reach a stone from the bank beside it or from the stone beside
+// it, and from nowhere else.
+//
+// Level 31, three experience for the crossing and one for failing it, which is what Old School
+// documents (/w/Stepping_stone_(Champions'_Guild)). The experience is a per-CROSSING total rather
+// than a per-stone one - the southern stones spell that out, "2.5 on the first and third stone,
+// for a total of 5 XP per crossing" - so it is paid once, on the jump onto the stone beside the
+// bank you are heading for. That is the jump that puts the river behind you, and it means hopping
+// off the bank you started from and back again pays nothing.
+^lum_stones_level = 31
+^lum_stones_xp = 30
+^lum_stones_failxp = 10
+^lum_stones_west_bank = 0_49_52_13_35
+^lum_stones_east_bank = 0_49_52_18_35
+// ...and the stone beside each bank, which is where the crossing in that direction is paid for.
+^lum_stones_west_stone = 0_49_52_14_35
+^lum_stones_east_stone = 0_49_52_17_35

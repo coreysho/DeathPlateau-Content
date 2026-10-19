@@ -484,34 +484,17 @@ return(false);
 
 // Cooked properly it is food; cooked badly it is the poison the Shaikahan needs. The cache has
 // both objs and there is nothing else the poorly cooked one could be for.
+//
+// THE COOKING ITSELF IS NOT HERE. It used to be - a tinderbox on a raw karambwan, one roll, no
+// burn, no experience for the poison - and it is a fire or a range now, like every other fish in
+// the game, through cooking_generic and skill_cooking/scripts/cooking.rs2. All a knife gets is
+// the line below, because a raw one is not paste and not dinner.
 [opheldu,tbwt_raw_karambwan]
-def_obj $item = last_useitem;
-if ($item ! tinderbox & $item ! knife) {
+if (last_useitem ! knife) {
     ~displaymessage(^dm_default);
     return;
 }
-if ($item = knife) {
-    ~mesbox("Raw, it is just an unpleasant animal. It has to be cooked before it is either food or poison.");
-    return;
-}
-if (stat(cooking) < 30) {
-    mes("You need a Cooking level of 30 to risk this.");
-    return;
-}
-if_close;
-mes("You cook the karambwan over a fire.");
-p_delay(4);
-inv_del(inv, tbwt_raw_karambwan, 1);
-// Undercooking it is the useful failure, so this is weighted towards it while the quest still
-// wants poison and towards food once it does not.
-if (%tbwt_tamayu = ^tbwt_son_helped | stat_random(cooking, 40, 90) = true) {
-    inv_add(inv, tbwt_cooked_karambwan, 1);
-    stat_advance(cooking, 1900);
-    mes("You cook it through. It is safe.");
-    return;
-}
-inv_add(inv, tbwt_poorly_cooked_karambwan, 1);
-~mesbox("The outside is done and the inside is not, which for this animal is the difference between dinner and a weapon.");
+~mesbox("Raw, it is just an unpleasant animal. It has to be cooked before it is either food or poison.");
 
 [opheldu,tbwt_poorly_cooked_karambwan]
 if (last_useitem ! knife) {

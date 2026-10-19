@@ -1,15 +1,29 @@
 // Basalt rocks - the causeway out to the lighthouse (Corey, 2026-09-05).
 //
-// Ten locs named "Basalt rock" (horror_jumping_spot1..10), all placed on plane 1 around the north
-// side of the lighthouse island, each already carrying op1=Jump-across and the examine "I can jump
-// off this one." Nothing in the repo referenced any of them, so every one of those right-click
-// options was dead.
+// Ten locs (horror_jumping_spot1..10) around the north side of the lighthouse island, each already
+// carrying op1 and an examine, and nothing in the repo referenced any of them, so every one of
+// those right-click options was dead.
 //
 // They are not a single line of stones. The map places two separate chains:
 //   spots 1-4   x=2522, z=3595 / 3597 / 3600 / 3602
 //   spots 5-10  (2518,3611) (2516,3611) then x=2514, z=3613 / 3615 / 3617 / 3619
 // so the player hops rock to rock by clicking the next one, which is how the obstacle actually
 // works - you jump ONTO the rock you clicked.
+//
+// AND TWO OF THE TEN ARE NOT ROCKS. Reported as "too big of click box for rocks", and this is what
+// that was: spot1 at 2522,3595 is on the sand you walk in on, spot10 at 2514,3619 is on the
+// island's own ground, and both carried "Jump-across Basalt rock" - a rock's option sitting on
+// ground a player walks over, so the beach tile could not be left-clicked to walk onto.
+//
+// Old School has them as two different locs at the two ends: "Beach" on the south sand, Jump-to,
+// examine "Safety!", and "Rocky shore" on the north, Jump-to, examine "It looks barren"
+// (/w/Basalt_rock lists all ten, eight rocks and these two). They are the landing you jump TO off
+// the last rock, which is why neither can be failed - and they are renamed, re-examined and
+// re-optioned in _unpack/377/all.loc to say so.
+//
+// What is left of the complaint is the models: all ten share one flat 128x128 zero-height quad,
+// because this cache has no basalt rock models, so the clickable square is the whole tile under a
+// rock the terrain draws. Narrowing that means putting models in the cache.
 //
 // There is no Agility level requirement in 2006; it is a chance-based obstacle that gets reliable
 // somewhere around level 35, and the middle rocks of a chain cannot be failed at all. Failing drops
@@ -21,7 +35,7 @@
 // [aploc1] fires on approach instead; the 4-tile guard below still forces you onto a
 // neighbouring rock rather than letting you cross the bay in one click. The whole causeway
 // is on PLANE 1 - walking there from plane 0 will never reach it.
-[aploc1,horror_jumping_spot1]  ~horror_basalt_jump(false);
+[aploc1,horror_jumping_spot1]  ~horror_basalt_jump(true);
 [aploc1,horror_jumping_spot2]  ~horror_basalt_jump(false);
 [aploc1,horror_jumping_spot3]  ~horror_basalt_jump(true);
 [aploc1,horror_jumping_spot4]  ~horror_basalt_jump(false);
@@ -30,9 +44,9 @@
 [aploc1,horror_jumping_spot7]  ~horror_basalt_jump(true);
 [aploc1,horror_jumping_spot8]  ~horror_basalt_jump(true);
 [aploc1,horror_jumping_spot9]  ~horror_basalt_jump(false);
-[aploc1,horror_jumping_spot10] ~horror_basalt_jump(false);
+[aploc1,horror_jumping_spot10] ~horror_basalt_jump(true);
 
-[oploc1,horror_jumping_spot1]  ~horror_basalt_jump(false);
+[oploc1,horror_jumping_spot1]  ~horror_basalt_jump(true);
 [oploc1,horror_jumping_spot2]  ~horror_basalt_jump(false);
 [oploc1,horror_jumping_spot3]  ~horror_basalt_jump(true);
 [oploc1,horror_jumping_spot4]  ~horror_basalt_jump(false);
@@ -41,7 +55,7 @@
 [oploc1,horror_jumping_spot7]  ~horror_basalt_jump(true);
 [oploc1,horror_jumping_spot8]  ~horror_basalt_jump(true);
 [oploc1,horror_jumping_spot9]  ~horror_basalt_jump(false);
-[oploc1,horror_jumping_spot10] ~horror_basalt_jump(false);
+[oploc1,horror_jumping_spot10] ~horror_basalt_jump(true);
 
 // $safe marks the centremost rocks of each chain, which cannot be failed.
 // The lighthouse dagannoths are ranged monsters (damagetype ^ranged_style, spike projectile) that
@@ -103,7 +117,13 @@ if ($safe = false & stat_random(agility, 60, 200) = false) {
     stat_advance(agility, 5);
     return;
 }
-mes("You jump from one rock to the next.");
+// The two ends are ground rather than rock, so the line says so - you are getting OFF the
+// causeway, which is the one jump on it that cannot go wrong.
+if (loc_type = horror_jumping_spot1 | loc_type = horror_jumping_spot10) {
+    mes("You jump onto solid ground.");
+} else {
+    mes("You jump from one rock to the next.");
+}
 sound_synth(jump_no_land, 1, 20);
 ~agility_exactmove(human_steppingstonejump, 20, 2, coord, loc_coord, 48, 60, $dir, false);
 stat_advance(agility, 20);

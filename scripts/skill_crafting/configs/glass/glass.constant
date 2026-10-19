@@ -1,0 +1,4 @@
+// The count Make X passes, which means "ask the player". It has to be a number no real count can
+// be: the panel's other three buttons pass 1, 5 and 10, and p_countdialog cannot return a
+// negative, so -1 is free.
+^glass_make_x = -1

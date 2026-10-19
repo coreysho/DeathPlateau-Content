@@ -651,3 +651,29 @@ data=experience,1150
 data=successchance,38,332
 data=successmessage,You cook the cave eel.
 data=burnmessage,You accidentally burn the cave eel.
+
+// KARAMBWAN IS THE ONE FISH WITH TWO WAYS TO COOK IT, and a different food at the end of each:
+// poorly for the poison the Shaikahan needs, thoroughly for the food that heals 18. This row is
+// the poor cook, because it is the one anybody can do - level 1, and the only outcome there is
+// until the quest is behind you. The thorough cook overrides the two fields that differ
+// (skill_cooking/scripts/cooking.rs2); the roll and the burn are the same either way.
+// 80xp poorly, 190xp thoroughly, 70/255 on a fire or a range:
+// oldschool.runescape.wiki/w/Raw_karambwan and /w/Poison_karambwan.
+[cooking_generic_tbwt_raw_karambwan]
+table=cooking_generic
+data=uncooked,tbwt_raw_karambwan
+data=cooked,tbwt_poorly_cooked_karambwan
+data=burnt,tbwt_burnt_karambwan
+data=levelrequired,1
+data=experience,800
+data=successchance,70,255
+data=successmessage,You cook the karambwan. The outside is done and the inside is not.
+data=burnmessage,You accidentally burn the karambwan.
+
+// "There is nothing to be gained from heating a burnt octopus." - the game's own line for it, and
+// the reason this row exists at all: without it a burnt one answers "You can't cook that."
+[cooking_generic_tbwt_burnt_karambwan]
+table=cooking_generic
+data=uncooked,tbwt_burnt_karambwan
+data=cantcookmessage_fire,There is nothing to be gained from heating a burnt octopus.
+data=cantcookmessage_range,There is nothing to be gained from heating a burnt octopus.
