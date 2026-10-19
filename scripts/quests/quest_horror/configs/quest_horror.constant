@@ -98,3 +98,15 @@
 // How long the copy's mechanism shows lit after a player relights it. The copy is shared, so this is
 // only the moment of the repair; the player's own %horror_lighting is what the quest reads.
 ^horror_torch_lit_duration = 200
+
+// ---------------------------------------------------------------- the basalt causeway
+// WHERE A FAILED JUMP PUTS YOU. "It is possible to slip on the rocks, which results in the player
+// falling into the water, being swept back to shore, and taking up to 10 damage" - so a slip ends
+// on the mainland beach at the south end of the causeway, not on the rock you were aiming at.
+// 2523,3594: the sand one tile south-east of the first rock, walkable and joined to the outpost
+// side (checked by walking it in tools/sim/basalt.ts).
+^horror_basalt_shore = 0_39_56_27_10
+
+// "Bring food as the platforms have a high failure rate even with decent agility, and a max hit
+// of 10."
+^horror_basalt_max_damage = 10
