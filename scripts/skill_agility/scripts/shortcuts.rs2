@@ -283,14 +283,20 @@ if(stat(agility) < 29) {
 // THE FENCE SOUTH OF VARROCK, which carried op1=Jump-over and nothing answered it - so the click
 // said "Nothing interesting happens", which is how it was reported from the game. It is OSRS's own
 // shortcut (loc 16518 there, at 3240,3334): Agility 13, no experience at all, and a jump rather
-// than a squeeze, so it hurdles over on the stile's geometry rather than crawling through on the
-// broken fence's.
+// than a squeeze.
+//
+// IT IS NOT A STILE, which is what the second report was - "jumps you to the east/west instead of
+// north/south". ~climb_stile is written for the four 1x2 stile OBJECTS (shape 10), where the angle
+// says which way the stile faces; this fence is a 1x1 WALL (shape 0, angle 3), where the angle says
+// which EDGE of the tile the wall sits on. The two conventions are perpendicular to each other, so
+// reading one with the other sent the player along the fence instead of over it: from 3240,3334 it
+// put them at 3242,3335, two tiles east and still on the wrong side.
 [oploc1,loc_9300]
 if(stat(agility) < 13) {
     mes("You need an agility level of 13 to attempt to jump over this fence.");
     return;
 }
-~climb_stile(human_jump_hurdle);
+~hurdle_wall(human_jump_hurdle);
 
 [oploc1,loc_9309]
 if(stat(agility) < 26) { 
@@ -495,6 +501,49 @@ p_teleport($start_coord);
 p_delay(0);
 ~agility_exactmove($anim, 30, 2, $start_coord, $end_coord, 30, 94, $dir, true);
 p_teleport($walk_coord);
+
+// OVER A WALL-SHAPED OBSTACLE, which is the other half of ~climb_stile below. A shape-0 loc's angle
+// is the EDGE of its tile the wall lies on, so the two tiles it separates are the loc's own and the
+// neighbour across that edge, and the crossing runs perpendicular to the edge. Which way round the
+// player goes is read off which side of the boundary they are standing on, so one proc does both
+// directions and a player standing diagonally still crosses rather than sliding along it.
+[proc,hurdle_wall](seq $anim)
+def_coord $low = movecoord(loc_coord, 0, 0, -1);
+def_coord $high = loc_coord;
+def_boolean $northsouth = true;
+if (loc_angle = ^loc_north) {
+    $low = loc_coord;
+    $high = movecoord(loc_coord, 0, 0, 1);
+} else if (loc_angle = ^loc_west) {
+    $northsouth = false;
+    $low = movecoord(loc_coord, -1, 0, 0);
+    $high = loc_coord;
+} else if (loc_angle = ^loc_east) {
+    $northsouth = false;
+    $low = loc_coord;
+    $high = movecoord(loc_coord, 1, 0, 0);
+}
+def_coord $start = $low;
+def_coord $end = $high;
+def_int $dir = ^exact_north;
+if ($northsouth = true) {
+    if (coordz(coord) > coordz($low)) {
+        $start = $high;
+        $end = $low;
+        $dir = ^exact_south;
+    }
+} else {
+    $dir = ^exact_east;
+    if (coordx(coord) > coordx($low)) {
+        $start = $high;
+        $end = $low;
+        $dir = ^exact_west;
+    }
+}
+p_teleport($start);
+p_delay(0);
+~agility_exactmove($anim, 30, 2, $start, $end, 30, 94, $dir, true);
+p_teleport($end);
 
 [proc,climb_fence]
 def_coord $start_coord = loc_coord;
