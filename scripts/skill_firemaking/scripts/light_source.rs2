@@ -47,3 +47,27 @@ inv_del(inv, candle_lantern_empty, 1);
 inv_del(inv, $candle, 1);
 inv_add(inv, $lantern, 1);
 mes("You put the candle in the lantern.");
+
+// ---------------------------------------------------------------- putting it out again
+// Reported as "cant extinguish candle lantern - says no wearpos". The five lit lanterns all carry
+// iop2=Extinguish and none of them had a trigger, so the click fell through to [opheld2,_] in
+// player/scripts/equip.rs2, which tried to WEAR the lantern and printed ~equip's debug line
+// because a lantern has no wearpos. (That global is also why the earlier opheld audit never saw
+// them: it looked for options with no handler at all, and op2 always had one.)
+//
+// The five are every lit light source whose Extinguish sits on op2 - the lamp, the two candle
+// lanterns and the two lanterns proper. The candles, the torch, the sapphire lantern and the cave
+// goblin helmet carry theirs on op1 or op3 and have always worked
+// (general_use/scripts/item_ops_generated.rs2).
+[opheld2,oil_lamp_lit] ~extinguish_light_source(oil_lamp_unlit);
+[opheld2,oil_lantern_lit] ~extinguish_light_source(oil_lantern_unlit);
+[opheld2,bullseye_lantern_lit] ~extinguish_light_source(bullseye_lantern_unlit);
+[opheld2,candle_lantern_lit] ~extinguish_light_source(candle_lantern_unlit);
+[opheld2,candle_lantern_black_lit] ~extinguish_light_source(candle_lantern_black_unlit);
+
+// Written back into the slot it came from rather than added, so a full inventory can still put a
+// lantern out - and so the lantern does not move while you are looking at it.
+[proc,extinguish_light_source](namedobj $unlit)
+inv_delslot(inv, last_slot);
+inv_setslot(inv, last_slot, $unlit, 1);
+mes("You extinguish the <lowercase(oc_name($unlit))>.");

@@ -2,3 +2,31 @@
 %rjquest = ^romeojuliet_complete;
 session_log(^log_adventure, "Quest complete: Romeo & Juliet");
 ~send_quest_complete(questlist:romeojuliet, cadava, 250, ^romeojuliet_questpoints, "You have completed the\\nRomeo & Juliet Quest!", "");
+
+// ---------------------------------------------------------------- drinking it yourself
+// The potion carries iop1=Look-at and iop2=Drink. Look-at has its line in
+// general_use/scripts/item_ops_generated.rs2; Drink fell through to [opheld2,_] in
+// player/scripts/equip.rs2, which tried to WEAR the potion and printed ~equip's debug line.
+// (Found by the opheld2 sweep behind "cant extinguish candle lantern - says no wearpos".)
+//
+// "The potion can only be drunk while in the Apothecary's house and, when drunk, will cause the
+// player to black out for a short amount of time. Drinking this potion will not result in any
+// actual damage to the player, nor will it poison the player. After drinking the potion, the
+// player will exclaim 'Urk!', and yields the message 'Oh dear...you are nearly dead.'"
+// (https://oldschool.runescape.wiki/w/Cadava_potion)
+//
+// Being in the Apothecary's house is read as being within sight of the Apothecary, which is the
+// same thing: he stands in the one room, and his house is the only place the potion exists.
+[opheld2,cadava]
+if (npc_find(coord, apothecary, ^cadava_drink_range, 0) = false) {
+    ~mesbox("You had better not drink this. Juliet is the one who needs it, and the Apothecary is the only one who could brew another.");
+    return;
+}
+inv_del(inv, cadava, 1);
+anim(human_drink_from_vial_cadava, 0);
+say("Urk!");
+mes("Oh dear...you are nearly dead.");
+// The blackout: no damage and no poison, so nothing is taken off the player - what it costs is the
+// time. p_delay is what the live game's fade amounts to from the player's side.
+p_delay(^cadava_blackout_ticks);
+mes("You come round on the Apothecary's floor, with a headache and no potion.");

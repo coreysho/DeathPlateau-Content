@@ -129,15 +129,9 @@
 [opheld3,devious_glowingpouch] mes("There are 0 essence in this pouch.");
 [opheld1,win05_20puppet_box] ~mesbox("Nothing interesting happens.");
 [opheld1,win05_20bauble_box] ~mesbox("Nothing interesting happens.");
-[opheld1,win05_marionette_complete_blue_alive] ~mesbox("Nothing interesting happens.");
-[opheld3,win05_marionette_complete_blue_alive] ~mesbox("Nothing interesting happens.");
-[opheld4,win05_marionette_complete_blue_alive] ~mesbox("Nothing interesting happens.");
-[opheld1,win05_marionette_complete_green_alive] ~mesbox("Nothing interesting happens.");
-[opheld3,win05_marionette_complete_green_alive] ~mesbox("Nothing interesting happens.");
-[opheld4,win05_marionette_complete_green_alive] ~mesbox("Nothing interesting happens.");
-[opheld1,win05_marionette_complete_red_alive] ~mesbox("Nothing interesting happens.");
-[opheld3,win05_marionette_complete_red_alive] ~mesbox("Nothing interesting happens.");
-[opheld4,win05_marionette_complete_red_alive] ~mesbox("Nothing interesting happens.");
+// The nine marionette stubs that sat here (all "Nothing interesting happens.") are gone:
+// misc/scripts/holiday_emotes.rs2 owns Jump, Walk, Bow and Dance now, and plays the four
+// sequences the cache has always had for them. The yo-yo's four options live there too.
 [opheld1,magictraining_proghat_dull] mes("Telekinetic: 0. Alchemist: 0. Enchantment: 0. Graveyard: 0. Now stop bothering me.");
 [opheld1,magictraining_proghat_energised] mes("Telekinetic: 300. Alchemist: 300. Enchantment: 300. Graveyard: 300. Now stop bothering me.");
 [opheld1,magictraining_proghat_full] mes("Telekinetic: 600. Alchemist: 600. Enchantment: 600. Graveyard: 600. Now stop bothering me.");
@@ -171,3 +165,40 @@ if_openmain(xplamp);
 // The five coffins' Check is the Gravedigger event's, in
 // "macro events"/scripts/general/macro_event_gravedigger.rs2 - it opens the window that shows
 // what is inside, which is the only way to tell one coffin from another.
+
+// ---------------------------------------------------------------- the op2 sweep
+// Reported as "cant extinguish candle lantern - says no wearpos" and swept out from there. op2 is
+// the one option this file's first pass could not see: every other op with no trigger is simply
+// dead, but op2 has [opheld2,_] in player/scripts/equip.rs2 behind it, so an obj whose op2 is NOT
+// Wear got the equip code anyway - which wore it if it had a wearpos and printed ~equip's debug
+// line if it did not. Eighty-six objs were in that state. The light sources went to
+// skill_firemaking/scripts/light_source.rs2, the baskets and sacks to containers_generated.rs2 next
+// to their Fill handlers, the teas to the consume table, the yo-yo and marionettes to
+// misc/scripts/holiday_emotes.rs2, and the vials and the potion to the quests that own them. These
+// are the rest: the ones with nothing behind them but a line.
+[opheld2,waa_helper] mes("Nothing interesting happens.");
+[opheld2,trick_or_treat_head] ~mesbox("Nothing interesting happens.");
+[opheld2,devious_glowingpouch] mes("You empty the pouch.");
+[opheld2,fishbowl_net] mes("You untangle the net.");
+// Ghosts Ahoy. Read (op1, above) prints the figures; following them is a thing you do on the
+// island, with the map in your hand, and not a thing you do to the map.
+[opheld2,ahoy_map_complete] ~mesbox("The directions start from the red cross on Dragontooth Island. You will have to be standing there to follow them.");
+// A Jagex Moderator's potato, which is why it is all talk and no effect: "Drinking this potion
+// will not result in any actual damage to the player" is the closest the live game comes to
+// documenting what any of its options do. Peel and Slice were dead too.
+[opheld1,rotten_potato] mes("Yuk! You're not peeling that.");
+[opheld2,rotten_potato] mes("Yuk! You're not eating that.");
+[opheld3,rotten_potato] mes("Yuk! You're not slicing that.");
+// The Dig Site's panning tray. The panning code in quests/quest_itexam/scripts/area_digsite.rs2
+// hands over the nuggets itself and only uses this obj as the picture in the box, so a tray with
+// gold in it is not something a player ends up holding - but if one ever is, searching it is how
+// the gold comes out, and the empty tray is what is left.
+[opheld2,tray_gold]
+    if (inv_freespace(inv) = 0) {
+        mes("You don't have enough inventory space to take the nuggets out.");
+        return;
+    }
+    inv_delslot(inv, last_slot);
+    inv_setslot(inv, last_slot, tray_empty, 1);
+    inv_add(inv, nuggets, 1);
+    mes("You search the tray and pick the gold nuggets out of the mud.");

@@ -658,3 +658,194 @@ mes("You fill the container.");
 // ---------------------------------------------------------------- other fills
 [opheld1,devious_glowingpouch]
     mes("You fill it with what you are carrying.");
+
+// ---------------------------------------------------------------- taking one back out
+// Every filled basket and every filled sack carries iop2=Remove-one, and not one of them had a
+// trigger: the click fell through to [opheld2,_] in player/scripts/equip.rs2, which tried to WEAR
+// the basket and printed ~equip's debug line because a basket has no wearpos. Hidden from the
+// earlier audit by that same global, which is why these arrive with the Extinguish handlers in
+// skill_firemaking/scripts/light_source.rs2 rather than with the Fill handlers above.
+//
+// Removing one is Fill run backwards and it is spelt out the same way, a trigger per count, because
+// the count lives in the obj id and there is nothing to compute it from. The lowest container hands
+// back the empty basket or sack; Old School's own change note - "the Remove-one option was removed
+// for baskets only containing one" - came later than this revision, so the cache's option stands.
+//
+// No message on success: the produce appearing in the inventory is the feedback, as in the live
+// game. The only thing said is the refusal, because that is the case with nothing to see.
+
+[opheld2,basket_apple_1]
+    ~container_remove_one(cooking_apple, basket_empty);
+
+[opheld2,basket_apple_2]
+    ~container_remove_one(cooking_apple, basket_apple_1);
+
+[opheld2,basket_apple_3]
+    ~container_remove_one(cooking_apple, basket_apple_2);
+
+[opheld2,basket_apple_4]
+    ~container_remove_one(cooking_apple, basket_apple_3);
+
+[opheld2,basket_apple_5]
+    ~container_remove_one(cooking_apple, basket_apple_4);
+
+[opheld2,basket_orange_1]
+    ~container_remove_one(orange, basket_empty);
+
+[opheld2,basket_orange_2]
+    ~container_remove_one(orange, basket_orange_1);
+
+[opheld2,basket_orange_3]
+    ~container_remove_one(orange, basket_orange_2);
+
+[opheld2,basket_orange_4]
+    ~container_remove_one(orange, basket_orange_3);
+
+[opheld2,basket_orange_5]
+    ~container_remove_one(orange, basket_orange_4);
+
+[opheld2,basket_strawberry_1]
+    ~container_remove_one(strawberry, basket_empty);
+
+[opheld2,basket_strawberry_2]
+    ~container_remove_one(strawberry, basket_strawberry_1);
+
+[opheld2,basket_strawberry_3]
+    ~container_remove_one(strawberry, basket_strawberry_2);
+
+[opheld2,basket_strawberry_4]
+    ~container_remove_one(strawberry, basket_strawberry_3);
+
+[opheld2,basket_strawberry_5]
+    ~container_remove_one(strawberry, basket_strawberry_4);
+
+[opheld2,basket_banana_1]
+    ~container_remove_one(banana, basket_empty);
+
+[opheld2,basket_banana_2]
+    ~container_remove_one(banana, basket_banana_1);
+
+[opheld2,basket_banana_3]
+    ~container_remove_one(banana, basket_banana_2);
+
+[opheld2,basket_banana_4]
+    ~container_remove_one(banana, basket_banana_3);
+
+[opheld2,basket_banana_5]
+    ~container_remove_one(banana, basket_banana_4);
+
+[opheld2,basket_tomato_1]
+    ~container_remove_one(tomato, basket_empty);
+
+[opheld2,basket_tomato_2]
+    ~container_remove_one(tomato, basket_tomato_1);
+
+[opheld2,basket_tomato_3]
+    ~container_remove_one(tomato, basket_tomato_2);
+
+[opheld2,basket_tomato_4]
+    ~container_remove_one(tomato, basket_tomato_3);
+
+[opheld2,basket_tomato_5]
+    ~container_remove_one(tomato, basket_tomato_4);
+
+[opheld2,sack_potato_1]
+    ~container_remove_one(potato, sack_empty);
+
+[opheld2,sack_potato_2]
+    ~container_remove_one(potato, sack_potato_1);
+
+[opheld2,sack_potato_3]
+    ~container_remove_one(potato, sack_potato_2);
+
+[opheld2,sack_potato_4]
+    ~container_remove_one(potato, sack_potato_3);
+
+[opheld2,sack_potato_5]
+    ~container_remove_one(potato, sack_potato_4);
+
+[opheld2,sack_potato_6]
+    ~container_remove_one(potato, sack_potato_5);
+
+[opheld2,sack_potato_7]
+    ~container_remove_one(potato, sack_potato_6);
+
+[opheld2,sack_potato_8]
+    ~container_remove_one(potato, sack_potato_7);
+
+[opheld2,sack_potato_9]
+    ~container_remove_one(potato, sack_potato_8);
+
+[opheld2,sack_potato_10]
+    ~container_remove_one(potato, sack_potato_9);
+
+[opheld2,sack_onion_1]
+    ~container_remove_one(onion, sack_empty);
+
+[opheld2,sack_onion_2]
+    ~container_remove_one(onion, sack_onion_1);
+
+[opheld2,sack_onion_3]
+    ~container_remove_one(onion, sack_onion_2);
+
+[opheld2,sack_onion_4]
+    ~container_remove_one(onion, sack_onion_3);
+
+[opheld2,sack_onion_5]
+    ~container_remove_one(onion, sack_onion_4);
+
+[opheld2,sack_onion_6]
+    ~container_remove_one(onion, sack_onion_5);
+
+[opheld2,sack_onion_7]
+    ~container_remove_one(onion, sack_onion_6);
+
+[opheld2,sack_onion_8]
+    ~container_remove_one(onion, sack_onion_7);
+
+[opheld2,sack_onion_9]
+    ~container_remove_one(onion, sack_onion_8);
+
+[opheld2,sack_onion_10]
+    ~container_remove_one(onion, sack_onion_9);
+
+[opheld2,sack_cabbage_1]
+    ~container_remove_one(cabbage, sack_empty);
+
+[opheld2,sack_cabbage_2]
+    ~container_remove_one(cabbage, sack_cabbage_1);
+
+[opheld2,sack_cabbage_3]
+    ~container_remove_one(cabbage, sack_cabbage_2);
+
+[opheld2,sack_cabbage_4]
+    ~container_remove_one(cabbage, sack_cabbage_3);
+
+[opheld2,sack_cabbage_5]
+    ~container_remove_one(cabbage, sack_cabbage_4);
+
+[opheld2,sack_cabbage_6]
+    ~container_remove_one(cabbage, sack_cabbage_5);
+
+[opheld2,sack_cabbage_7]
+    ~container_remove_one(cabbage, sack_cabbage_6);
+
+[opheld2,sack_cabbage_8]
+    ~container_remove_one(cabbage, sack_cabbage_7);
+
+[opheld2,sack_cabbage_9]
+    ~container_remove_one(cabbage, sack_cabbage_8);
+
+[opheld2,sack_cabbage_10]
+    ~container_remove_one(cabbage, sack_cabbage_9);
+
+// The produce needs a slot of its own: the container is written back into the slot it came from, so
+// what is wanted is one free slot and not two.
+[proc,container_remove_one](namedobj $contents, namedobj $less)
+if (inv_freespace(inv) = 0) {
+    mes("You don't have enough inventory space to take one out.");
+    return;
+}
+inv_delslot(inv, last_slot);
+inv_setslot(inv, last_slot, $less, 1);
+inv_add(inv, $contents, 1);
