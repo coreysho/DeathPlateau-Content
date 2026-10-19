@@ -50,6 +50,18 @@
 // out onto.
 ^gwd_hole_side = 0_45_58_37_32
 
+// THE ROCKY HANDHOLDS, the Agility way OFF the battlefield: 60 Agility, no experience, and one
+// way only - "the final step of the shortcut is one-way and cannot be used to leave the
+// Wilderness". Old School strings it along the cliff out of six locs (26400, 26401, 26402, 26404,
+// 26405, 26406) and this cache has two of them, both at 2928,3758-9, so there is no ledge to walk
+// between the climbs; one click does the whole descent, which is what the player sees anyway.
+//
+// It lands north-west of the Forgotten Cemetery, which is where Old School puts it, on the
+// westernmost walkable tile the Wilderness has at that latitude. 2948,3768 is wilderness level 32
+// - (3768-3520)/8 + 1 - and that is the level the shortcut is documented at.
+^gwd_handholds_agility = 60
+^gwd_handholds_wilderness = 0_46_58_4_56
+
 // AND THE HOLE DROPS YOU STRAIGHT INTO THE CHAMBER. It used to land on plane 3 of m45_82, on the
 // strength of Old School having a shaft floor between the hole and the rope - but PLANE 3 OF THAT
 // SQUARE HAS NO TERRAIN. The graft brought 2,061 locs across for it and not one tile of floor, so
