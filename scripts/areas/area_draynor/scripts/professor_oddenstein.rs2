@@ -98,7 +98,6 @@ if(inv_total(inv, pressure_gauge) > 0 & inv_total(inv, oil_can) > 0 & inv_total(
     } else {
         $oddenstein_items = append($oddenstein_items, "|A rubber tube.");
     }
-    mes($player_items);
     ~chatplayer("<p,neutral>I have found some of the things you need:<$player_items>");
     ~chatnpc("<p,bored>Well that's a start, you still need to find:<$oddenstein_items>");
     ~chatplayer("<p,neutral>Ok, I'll try and find them.");

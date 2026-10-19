@@ -177,10 +177,22 @@ return ("Unknown");
 [oploc2,_haunted_lever]
 mes("The lever is <~haunted_get_pulled_string_for_lever(loc_type)>.");
 
+// THE CHICKEN BECOMING ERNEST, which did not happen. This searched for questchicken and then
+// changed its type; questchicken is a CHILD of the ernest_multichicken multinpc, and like a
+// multiloc it is the parent that the map spawns, so the search matched nothing and the changetype
+// never ran. The quest completed, the coins arrived, and the chicken simply stopped being drawn -
+// ernest_multichicken has an entry for %haunted 0, 1 and 2 and none for 3.
+//
+// Searching for the parent instead and changing its type still did not work - a run through the
+// whole quest never once found it, while the same lines in isolation always did, so the npc
+// iterators are evidently not usable from here. Ernest is simply placed by the machine instead,
+// which is all the changetype amounted to: the chicken stops being drawn on the line after this
+// one, when %haunted reaches ^haunted_complete and the multinpc runs out of entries.
+//
+// The duration was 100 ticks, one minute, which is shorter than the conversation that follows - so
+// even when it did work Ernest blinked out of existence in the middle of thanking you.
 [proc,change_ernest]
-if(npc_find(coord, questchicken, 8, 0) = true) {
-    npc_changetype_keepall(ernest, 100);
-}
+npc_add(2_48_52_38_38, ernest, ^ernest_man_ticks);
 
 [queue,haunted_quest_complete]
 session_log(^log_adventure, "Quest complete: Ernest the Chicken");

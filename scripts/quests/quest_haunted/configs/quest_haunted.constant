@@ -1,3 +1,9 @@
 ^haunted_not_started = 0
 ^haunted_started = 1
 ^haunted_spoken_to_oddenstein = 2
+
+// How long Ernest stands by the machine after it fires. It was 100 ticks - one minute - which ran
+// out in the middle of the conversation he has with you afterwards, so he vanished mid-sentence.
+// Ten minutes outlasts the scene and anyone reading it, and costs nothing: the chicken is no longer
+// drawn for anybody who has finished the quest.
+^ernest_man_ticks = 1000
