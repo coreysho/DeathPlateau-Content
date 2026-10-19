@@ -63,61 +63,93 @@ if (map_members = ^false) {
     mes(^mes_members_feature);
     return;
 }
-// ALL SEVEN OF THEM. The chooser was ~multiobj4 and glass.struct has had more products than that
-// for as long as this file has existed, so the candle lantern, the oil lamp, the fishbowl and the
-// lantern lens could not be made at all - reported from the game as "cant make candle lantern".
-// It is ~multiobj7 now, which is exactly as many slots as there are glassblowing products, in the
-// order OSRS lists them: 1, 4, 12, 33, 42, 46 and 49 Crafting.
+// 2006'S OWN GLASSBLOWING PANEL, which was in the cache all along and nothing opened.
+// skill_crafting/interfaces/glass_crafting.if lays out all seven products with their models and
+// Make 1 / 5 / 10 / X on each, and it is what this used to be: a ~multiobj4 chooser with four of
+// the seven products in it, so the candle lantern, the oil lamp, the fishbowl and the lantern lens
+// could not be made at all - reported from the game as "cant make candle lantern". The chooser
+// went to ~multiobj7 as the narrow fix for that; this is the round that puts the real panel in.
 //
-// THE LABELS ARE BROKEN BY HAND where they do not fit. multiobj7 puts the name UNDER the picture in
-// a 67px column and the client does not wrap text - it only splits on a literal backslash-n - so a
-// name wider than 66px would spill over its neighbours. Measured in q8_full with tools/ifrender.py:
-// "Beer glass" is 69 and "Candle lantern" 98 and "Lantern lens" 85, so those three are split; the
-// widest half is "lantern" at 47.
+// The seven, in the order OSRS unlocks them, are 1, 4, 12, 33, 42, 46 and 49 Crafting. The panel
+// orders them by its own layout instead, which is why the triggers below read by component and not
+// by level.
 //
-// THE BUTTERFLY JAR CAME OUT, which is the one thing here that is not a correction. It is not an
-// OSRS glassblowing product - a jar comes from a jar generator or a Hunter shop, and this build has
-// both ([opheld3,jar_generator] and the Rellekka, Piscatoris and warlock shops) - and it was
-// holding a slot that a real product needed. Its struct and its param are left where they are, so
-// putting it back is one line if that was deliberate.
-//
-// THE CACHE HAS A BETTER MENU THAN THIS and nobody is using it: skill_crafting/interfaces/
-// glass_crafting.if is 2006's own glassblowing panel, with these same seven products laid out and
-// Make 1 / 5 / 10 / X on each. Wiring it up is a bigger piece of work than this bug - 28 buttons
-// and a count dialogue - so it is left for its own round rather than done badly here.
-def_namedobj $item = ~multiobj7("What would you like to make?",
-    beer_glass, 0, 0, 200, "Beer\\nglass", 0, 0,
-    candle_lantern_empty, 0, 0, 230, "Candle\\nlantern", 0, 0,
-    oil_lamp_empty, 0, 0, 230, "Oil lamp", 0, 0,
-    vial_empty, 0, 0, 180, "Vial", 0, 0,
-    fishbowl_empty, 0, 0, 230, "Fishbowl", 0, 0,
-    stafforb, 0, 0, 200, "Orb", 0, 0,
-    bullseye_lantern_lens, 0, 0, 180, "Lantern\\nlens", 0, 0
-);
-if ($item = null) {
-    ~displaymessage(^dm_default);
-    return;
-}
-@crafting_glass($item);
+// THE BUTTERFLY JAR IS STILL OUT, which is the one thing here that is not a correction. It is not
+// an OSRS glassblowing product - a jar comes from a jar generator or a Hunter shop, and this build
+// has both ([opheld3,jar_generator] and the Rellekka, Piscatoris and warlock shops) - and the panel
+// has no slot for it either. Its struct and its param are left where they are.
+if_openmain(glass_crafting);
 
+// THE PANEL'S TWENTY-EIGHT BUTTONS: seven products, each with Make X, 10, 5 and 1 in that order,
+// which is the order glass_crafting.if numbers them in. ^glass_make_x is the count that means
+// "ask", and cannot collide with a real one.
 
-[label,crafting_glass](namedobj $glass_item)
+[if_button,glass_crafting:com_10] @crafting_glass(vial_empty, ^glass_make_x);
+[if_button,glass_crafting:com_11] @crafting_glass(vial_empty, 10);
+[if_button,glass_crafting:com_12] @crafting_glass(vial_empty, 5);
+[if_button,glass_crafting:com_13] @crafting_glass(vial_empty, 1);
+
+[if_button,glass_crafting:com_14] @crafting_glass(stafforb, ^glass_make_x);
+[if_button,glass_crafting:com_15] @crafting_glass(stafforb, 10);
+[if_button,glass_crafting:com_16] @crafting_glass(stafforb, 5);
+[if_button,glass_crafting:com_17] @crafting_glass(stafforb, 1);
+
+[if_button,glass_crafting:com_18] @crafting_glass(beer_glass, ^glass_make_x);
+[if_button,glass_crafting:com_19] @crafting_glass(beer_glass, 10);
+[if_button,glass_crafting:com_20] @crafting_glass(beer_glass, 5);
+[if_button,glass_crafting:com_21] @crafting_glass(beer_glass, 1);
+
+[if_button,glass_crafting:com_22] @crafting_glass(candle_lantern_empty, ^glass_make_x);
+[if_button,glass_crafting:com_23] @crafting_glass(candle_lantern_empty, 10);
+[if_button,glass_crafting:com_24] @crafting_glass(candle_lantern_empty, 5);
+[if_button,glass_crafting:com_25] @crafting_glass(candle_lantern_empty, 1);
+
+[if_button,glass_crafting:com_26] @crafting_glass(oil_lamp_empty, ^glass_make_x);
+[if_button,glass_crafting:com_27] @crafting_glass(oil_lamp_empty, 10);
+[if_button,glass_crafting:com_28] @crafting_glass(oil_lamp_empty, 5);
+[if_button,glass_crafting:com_29] @crafting_glass(oil_lamp_empty, 1);
+
+[if_button,glass_crafting:com_30] @crafting_glass(bullseye_lantern_lens, ^glass_make_x);
+[if_button,glass_crafting:com_31] @crafting_glass(bullseye_lantern_lens, 10);
+[if_button,glass_crafting:com_32] @crafting_glass(bullseye_lantern_lens, 5);
+[if_button,glass_crafting:com_33] @crafting_glass(bullseye_lantern_lens, 1);
+
+[if_button,glass_crafting:com_34] @crafting_glass(fishbowl_empty, ^glass_make_x);
+[if_button,glass_crafting:com_35] @crafting_glass(fishbowl_empty, 10);
+[if_button,glass_crafting:com_36] @crafting_glass(fishbowl_empty, 5);
+[if_button,glass_crafting:com_37] @crafting_glass(fishbowl_empty, 1);
+[label,crafting_glass](namedobj $glass_item, int $count)
 def_struct $struct = oc_param($glass_item, crafting_glass_struct);
-// check if high enough level
 def_int $level = struct_param($struct, levelrequire);
 def_string $name = struct_param($struct, productmessage);
+// Make X asks before anything else, so a player who wanted a count and is then refused for their
+// level has not been asked for nothing - and so the level message is the last thing on screen.
+if ($count = ^glass_make_x) {
+    p_countdialog;
+    $count = last_int;
+}
+if_close;
+if ($count < 1) {
+    return;
+}
 if (stat(crafting) < $level) {
     mes("You need level <tostring($level)> Crafting to make <$name>.");
     return;
 }
-// EVERY PIECE OF GLASS, not one of them. This made a single item and stopped, so an inventory
-// of molten glass took twenty-six clicks.
+if (inv_total(inv, molten_glass) < 1) {
+    mes("You have no molten glass to work.");
+    return;
+}
+// AS MANY AS WERE ASKED FOR, and no more. This made a single item and stopped, so an inventory of
+// molten glass took twenty-six clicks; the fix for that made every piece in one go, which is right
+// for a chooser with no count on it and wrong for a panel that has four. Make X with a big number
+// is how you do the whole lot now.
 //
 // p_delay is what carries the repeat, the same way smelting spaces its bars out. It yields, so
 // the player can walk away or click something else and the loop ends on its own the next time
 // round - there is no state to clean up and nothing to interrupt explicitly.
 def_int $made = 0;
-while (inv_total(inv, molten_glass) > 0) {
+while ($made < $count & inv_total(inv, molten_glass) > 0) {
     inv_del(inv, molten_glass, 1);
     inv_add(inv, $glass_item, 1);
     anim(human_glassblowing, 0);
@@ -126,7 +158,7 @@ while (inv_total(inv, molten_glass) > 0) {
     $made = add($made, 1);
     // The last one needs no wait after it, and waiting would hold the player still for
     // nothing - which reads as the action not having finished.
-    if (inv_total(inv, molten_glass) > 0) {
+    if ($made < $count & inv_total(inv, molten_glass) > 0) {
         p_delay(2);
     }
 }
