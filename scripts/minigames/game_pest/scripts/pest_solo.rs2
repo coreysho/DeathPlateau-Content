@@ -313,6 +313,10 @@ while ($guard < 64) {
     }
 }
 
+// Logging out on the island is giving up, and frees it - as ~fightcave_logout (2026-10-19).
+[proc,pest_solo_logout]
+~pest_solo_end;
+
 [proc,pest_solo_end]
 if (%pest_solo_instance = null) {
     return;

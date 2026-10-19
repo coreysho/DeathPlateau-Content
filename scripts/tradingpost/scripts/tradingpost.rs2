@@ -42,6 +42,7 @@ def_int $found = tp_browse(tp_view, "", 0);
 // ---- the lists window ----
 
 [proc,tp_lists]
+~tp_barter_return;
 %tp_window = ^tp_window_lists;
 %tp_confirm = ^tp_confirm_none;
 if_openmain_side(tradingpost, tradingpost_side);
@@ -241,6 +242,7 @@ if (tp_listing_open(%tp_listing) = false) {
     ~tp_lists;
     return;
 }
+~tp_barter_return;
 %tp_window = ^tp_window_listing;
 if_openmain_side(tradingpost_listing, tradingpost_side);
 inv_transmit(tp_item, tradingpost_listing:item);
@@ -535,10 +537,16 @@ if ($buyout > 0) {
 }
 if_settext(tradingpost_offer:coins, "Coins: <~tp_gp(%tp_coins)>");
 
-// WHATEVER CLOSES IT - Back, Close Window, the listing window opening over it, logging out - the
-// items go back. tp_makeoffer has already emptied tp_barter when an offer was made, so this finds
-// nothing to move then.
+// WHATEVER CLOSES IT - Close Window, logging out - the items go back. tp_makeoffer has already
+// emptied tp_barter when an offer was made, so this finds nothing to move then.
 [if_close,tradingpost_offer]
+~tp_barter_return;
+
+// (2026-10-19) AND WHATEVER OPENS OVER IT. if_openmain_side swaps the window without running the old
+// one's [if_close] - so Back, which opens the listing over the offer, left the items in tp_barter, an
+// inv that is not saved: gone at logout. Every trading post window that can replace the offer window
+// (tp_lists, tp_listing_show) hands them back first; with nothing in it, this does nothing.
+[proc,tp_barter_return]
 ~moveallinv(tp_barter, inv);
 %tp_coins = 0;
 

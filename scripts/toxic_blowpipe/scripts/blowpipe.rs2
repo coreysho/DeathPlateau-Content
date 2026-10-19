@@ -356,3 +356,6 @@ while ($i < inv_size(inv)) {
 }
 // false with the charged one in the bank: its contents stay where they are
 return($lost);
+
+// (2026-10-19) The empty one is wieldable too, and went on at level 1: the same requirement as charged.
+[opheld2,toxic_blowpipe_empty] @levelrequire_ranged(^blowpipe_level, last_slot);

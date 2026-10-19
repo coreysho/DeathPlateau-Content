@@ -8,6 +8,8 @@
 ~castlewars_logout;
 ~poh_logout;
 ~zulrah_logout; // out of a shrine instance that will not be there on the way back in
+~fightcave_logout; // (2026-10-19) as leaving: pay the waves survived, free the instance
+~pest_solo_logout; // (2026-10-19) as losing: free the instance
 ~hunter_trap_logout;
 %last_logout = map_clock;
 

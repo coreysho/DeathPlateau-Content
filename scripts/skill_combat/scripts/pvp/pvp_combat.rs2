@@ -71,6 +71,16 @@ if ($wilderness_level < $combat_level_diff) {
 return(true);
 
 [proc,pvp_is_attackable]()(boolean)
+// (2026-10-19) ::godmode is for testing against monsters (misc/scripts/godmode.rs2). A player who cannot
+// die cannot fight a player either way round - not in the Wilderness, a duel or Castle Wars.
+if (%godmode = true) {
+    mes("You can't attack other players in godmode. Type ::godmode to turn it off.");
+    return(false);
+}
+if (.%godmode = true) {
+    mes("That player can't be attacked right now.");
+    return(false);
+}
 if (~in_duel_arena(coord) = true) {
     if (~duel_arena_checks = false) {
         return(false);
@@ -99,6 +109,9 @@ if (~player_autocast_enabled = false & ~trident_armed = false & ~inzone_coord_pa
 
 // For magic
 [proc,pvp_is_attackable_opt]()(boolean)
+if (%godmode = true | .%godmode = true) { // as [proc,pvp_is_attackable]
+    return(false);
+}
 if (~in_duel_arena(coord) = true) {
     if (~duel_arena_checks = false) {
         return(false);
