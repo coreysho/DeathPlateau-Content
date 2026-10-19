@@ -143,9 +143,13 @@ TOKEN = re.compile(r'''
   | (?P<op><=|>=|[=!<>&|+\-*/(){},;:])
   | (?P<var>[$%^~@][A-Za-z0-9_.]+(?::[A-Za-z0-9_]+)?)
   | (?P<mod>%)
-  | (?P<id>[A-Za-z0-9_.]+(?::[A-Za-z0-9_]+)?(?:\+\+?(?![\w$(]))?(?:\*(?=\())?)
+  | (?P<id>[A-Za-z_.][A-Za-z0-9_.]*(?:\+\+?[A-Za-z0-9_.]+)*(?::[A-Za-z0-9_]+)?(?:\+\+?(?![\w$(]))?(?:\*(?=\())?
+      | [0-9][A-Za-z0-9_.]*(?::[A-Za-z0-9_]+)?)
 ''', re.X)
 # (the id's tail: obj names like adamant_arrow_p++, and queue*(...) - the strong-queue command)
+# A '+' INSIDE a name - potato_chilli+carne, antidote++4 - is part of the name, so the name swallows
+# it. Only a name that starts with a letter may: a token that starts with a digit is a number, and
+# 5+2 has to stay the arithmetic it looks like.
 
 
 class ParseError(Exception):
