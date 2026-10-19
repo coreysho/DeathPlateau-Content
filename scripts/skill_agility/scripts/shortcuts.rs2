@@ -585,3 +585,61 @@ if (coordx(coord) > coordx($west_exit)) {
     ~agility_exactmove(human_steppingstonejump, 20, 2, coord, $east_exit, 48, 60, ^exact_east, true);
     p_teleport($east_exit);
 }
+
+// ---------------------------------------------------------------- the River Lum stepping stones
+// Reported as a live dead click: four "Stepping stone" locs in the river west of the Champions'
+// Guild, every one of them carrying Jump-onto, and nothing answering any of them. It is a real
+// Old School shortcut - 31 Agility, three experience, and failing it still puts you on the side
+// you were heading for, with damage and one experience.
+//
+// ONE CLICK PER STONE, which is what the era does and what the option says. You stand on them
+// between jumps - Old School's own patch notes have a player logging out mid-crossing and needing
+// to be put back on solid ground - and you walk off the last one onto the bank, because a loc
+// blocks a tile being entered and not a player leaving it. Jagex collapsed the four into one in
+// 2026 to make it quicker, which is a change this build is twenty years early for.
+//
+// The fail rate is the one this file already uses for the Karamja stepping stone, which is the
+// same obstacle: 140/250, so about two in three at the level that unlocks it and near-certain at
+// 99. Old School publishes no chart for either of them. The damage is the Karamja figure too, a
+// tenth of your hitpoints, for the same reason - it is the same fall into the same kind of water.
+[oploc1,loc_9315]
+if (map_members = ^false) {
+    mes(^mes_members_feature);
+    return;
+}
+if (coord = loc_coord) {
+    mes("You can't do that from here.");
+    return;
+}
+if (stat(agility) < ^lum_stones_level) {
+    ~mesbox("You need an Agility level of <tostring(^lum_stones_level)> to cross the stepping stones.");
+    return;
+}
+p_arrivedelay;
+// Which way you are going is read off which side of the stone you are standing on, so the same
+// trigger does both crossings and there is no state to remember.
+def_int $dir = ^exact_east;
+def_coord $bank = ^lum_stones_east_bank;
+def_coord $last = ^lum_stones_east_stone;
+if (coordx(coord) > coordx(loc_coord)) {
+    $dir = ^exact_west;
+    $bank = ^lum_stones_west_bank;
+    $last = ^lum_stones_west_stone;
+}
+mes("You jump onto the stepping stone.");
+sound_synth(jump_no_land, 1, 20);
+~agility_exactmove(human_steppingstonejump, 20, 2, coord, loc_coord, 48, 60, $dir, false);
+if (stat_random(agility, 140, 250) = false) {
+    sound_synth(pool_plop, 1, 0);
+    spotanim_map(watersplash, coord, 0, 1);
+    ~agility_instant_fail($bank, calc(stat(hitpoints) * 10 / 100),
+                          "You lose your footing, and the river carries you to the far bank.");
+    ~agility_xp(^lum_stones_failxp);
+    return;
+}
+// The crossing pays once, on the jump onto the stone beside the bank you are heading for. Read
+// off loc_coord and not off coord, because the move below has not happened yet.
+if (loc_coord = $last) {
+    ~agility_xp(^lum_stones_xp);
+}
+p_teleport(loc_coord);
