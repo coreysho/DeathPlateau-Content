@@ -83384,19 +83384,29 @@ model=romeo_juliet_coffin_upright
 model=romeo_juliet_lecturn_varrock
 active=no
 
-[vm_digsite_finds_saradomin_symbol_old]
+// THE TWO WILD BERRY BUSHES south-east of Varrock, by the mine: two cadava and one redberry,
+// placed on the map, named, examined, given a mapscene so the minimap marks them - and with no
+// option on either, so neither could be picked. Cadava berries were then obtainable only as an imp
+// drop, which left Romeo & Juliet unfinishable for anyone who did not happen to kill one.
+//
+// Old School offers Pick-from and the 377 cache's own Pick-from (the White Pearl bushes in The
+// Grand Tree's cave) is op3, so that is where it goes. The debugnames were wrong as well: these two
+// slots carry a digsite-finds name from a later name map and have nothing to do with the digsite.
+[cadava_bush]
 name=Cadava bush
 desc=A wild cadava berry bush.
 model=bush1
 mapscene=9
 blockrange=no
+op3=Pick-from
 
-[vm_digsite_finds_saradomin_symbol_ancient]
+[redberry_bush]
 name=Bush
 desc=A wild red berry bush.
 model=bush1
 mapscene=9
 blockrange=no
+op3=Pick-from
 
 [vm_digsite_finds_pottery]
 name=Rosebush

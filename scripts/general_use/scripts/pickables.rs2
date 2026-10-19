@@ -72,3 +72,31 @@ if(inv_freespace(inv) = 0) {
     inv_add(inv, flax, 1);
     loc_del(25); // 10t after update
 }
+
+// Wild berry bushes: the two cadava bushes and the redberry bush south-east of Varrock, by the mine.
+// See the note on [cadava_bush] in the 377 unpack - both were placed and named with no option on
+// them at all, so Romeo & Juliet's one item requirement could only be got off an imp.
+//
+// Old School's bush holds two berries and shows a half-picked model between them. The 377 cache has
+// one model for the bush and no bare variant, so a pick takes the bush with it and it is back two
+// minutes later, which is the regrow time Old School gives.
+[label,pick_berry_bush]
+p_arrivedelay;
+def_namedobj $berries = redberries;
+if (loc_type = cadava_bush) {
+    $berries = cadavaberries;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You don't have room for any more berries.");
+    p_teleport(loc_coord);
+    p_delay(0);
+    return;
+}
+~pickup_loc_floor(loc_coord, $berries, 200, false);
+mes("You pick some berries from the bush.");
+
+[oploc3,cadava_bush]
+@pick_berry_bush;
+
+[oploc3,redberry_bush]
+@pick_berry_bush;
