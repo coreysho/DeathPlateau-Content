@@ -1,0 +1,525 @@
+// THE BLAST FURNACE. See configs/blast_furnace.constant for what the cache already said, which is
+// every station, every state and every one of the twenty-four varbits the machine runs on.
+//
+// The loop: pay the Foreman (or have 60 Smithing), put ore on the belt, shovel coke into the stove,
+// work the pump for heat, turn the pedals to carry a potful in - and the bars come out of the
+// dispenser glowing, to be cooled with water or lifted with ice gloves.
+
+// =========================================================================== the ore in the machine
+// Ten counters of eight bits. Keyed on the ore itself, because that is what a player hands over.
+[proc,bf_ore](obj $ore)(int)
+switch_obj ($ore) {
+    case coal : return(%blast_furnace_coal);
+    case tin_ore : return(%blast_furnace_tin_ore);
+    case copper_ore : return(%blast_furnace_copper_ore);
+    case iron_ore : return(%blast_furnace_iron_ore);
+    case mithril_ore : return(%blast_furnace_mithril_ore);
+    case adamantite_ore : return(%blast_furnace_adamantite_ore);
+    case runite_ore : return(%blast_furnace_runite_ore);
+    case gold_ore : return(%blast_furnace_gold_ore);
+    case silver_ore : return(%blast_furnace_silver_ore);
+    case perfect_gold_ore : return(%blast_furnace_perfect_gold_ore);
+}
+return(-1);
+
+[proc,bf_ore_set](obj $ore, int $n)
+switch_obj ($ore) {
+    case coal : %blast_furnace_coal = $n;
+    case tin_ore : %blast_furnace_tin_ore = $n;
+    case copper_ore : %blast_furnace_copper_ore = $n;
+    case iron_ore : %blast_furnace_iron_ore = $n;
+    case mithril_ore : %blast_furnace_mithril_ore = $n;
+    case adamantite_ore : %blast_furnace_adamantite_ore = $n;
+    case runite_ore : %blast_furnace_runite_ore = $n;
+    case gold_ore : %blast_furnace_gold_ore = $n;
+    case silver_ore : %blast_furnace_silver_ore = $n;
+    case perfect_gold_ore : %blast_furnace_perfect_gold_ore = $n;
+}
+
+// =========================================================================== the bars in the dispenser
+[proc,bf_bar](namedobj $bar)(int)
+switch_obj ($bar) {
+    case bronze_bar : return(%blast_furnace_bronze_bars);
+    case iron_bar : return(%blast_furnace_iron_bars);
+    case steel_bar : return(%blast_furnace_steel_bars);
+    case mithril_bar : return(%blast_furnace_mithril_bars);
+    case adamantite_bar : return(%blast_furnace_adamantite_bars);
+    case runite_bar : return(%blast_furnace_runite_bars);
+    case gold_bar : return(%blast_furnace_gold_bars);
+    case silver_bar : return(%blast_furnace_silver_bars);
+    case perfect_gold_bar : return(%blast_furnace_perfect_gold_bars);
+}
+return(0);
+
+[proc,bf_bar_set](namedobj $bar, int $n)
+switch_obj ($bar) {
+    case bronze_bar : %blast_furnace_bronze_bars = $n;
+    case iron_bar : %blast_furnace_iron_bars = $n;
+    case steel_bar : %blast_furnace_steel_bars = $n;
+    case mithril_bar : %blast_furnace_mithril_bars = $n;
+    case adamantite_bar : %blast_furnace_adamantite_bars = $n;
+    case runite_bar : %blast_furnace_runite_bars = $n;
+    case gold_bar : %blast_furnace_gold_bars = $n;
+    case silver_bar : %blast_furnace_silver_bars = $n;
+    case perfect_gold_bar : %blast_furnace_perfect_gold_bars = $n;
+}
+
+// THE ORDER THE POT TRIES THEM IN, and steel comes before iron on purpose: a player who has put
+// iron and coal in wants steel, and reading iron first would make iron bars and leave the coal
+// sitting in the machine. Everything else is the order the cache lists the counters in.
+[proc,bf_recipe](int $i)(struct, namedobj)
+switch_int ($i) {
+    case 0 : return(smelting_bronze_bar, bronze_bar);
+    case 1 : return(smelting_steel_bar, steel_bar);
+    case 2 : return(smelting_iron_bar, iron_bar);
+    case 3 : return(smelting_mithril_bar, mithril_bar);
+    case 4 : return(smelting_adamantite_bar, adamantite_bar);
+    case 5 : return(smelting_runite_bar, runite_bar);
+    case 6 : return(smelting_gold_bar, gold_bar);
+    case 7 : return(smelting_perfect_gold_bar, perfect_gold_bar);
+    case 8 : return(smelting_silver_bar, silver_bar);
+}
+return(null, null);
+
+// HALF THE COAL, which is the whole reason anybody comes here: steel 1 instead of 2, mithril 2
+// instead of 4, adamantite 3 instead of 6, runite 4 instead of 8. The smelting structs carry the
+// furnace's own figures, so this halves theirs rather than restating them.
+[proc,bf_coal_needed](struct $struct)(int)
+if (struct_param($struct, ingredient_secondary) ! coal) {
+    return(0);
+}
+return(max(1, divide(struct_param($struct, ingredient_secondary_count), 2)));
+
+// =========================================================================== the Foreman
+[opnpc1,blast_furnace_instructor] @bf_foreman_talk;
+
+[label,bf_foreman_talk]
+if (stat(smithing) >= ^bf_free_level) {
+    ~chatnpc("<p,happy>You know your way around a furnace. Work it as long as|you like.");
+    return;
+}
+~chatnpc("<p,neutral>The furnace is not free. <tostring(^bf_fee)> coins buys you ten|minutes of it - or come back with 60 Smithing and I will|not ask you for anything.");
+def_int $choice = ~p_choice2("Pay <tostring(^bf_fee)> coins.", 1, "No thanks.", 2);
+if ($choice = 2) {
+    ~chatplayer("<p,neutral>No thanks.");
+    return;
+}
+if (inv_total(inv, coins) < ^bf_fee) {
+    ~chatplayer("<p,sad>I do not have that much on me.");
+    return;
+}
+inv_del(inv, coins, ^bf_fee);
+if (getqueue(bf_paid) > 0) {
+    clearqueue(bf_paid);
+}
+queue(bf_paid, calc(^bf_fee_minutes * 100), 0);
+~chatnpc("<p,happy>Ten minutes of it, then. Mind the gauge.");
+
+// A queue is the clock, the way every other timed pass in this build is: it survives a logout and
+// expires on its own without anything having to tick.
+[queue,bf_paid](int $unused)
+mes("Your time on the blast furnace has run out.");
+
+[proc,bf_may_use]()(boolean)
+if (stat(smithing) >= ^bf_free_level) {
+    return(true);
+}
+if (getqueue(bf_paid) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the conveyor belt
+[oploc1,blast_furnace_conveyer_belt_clickable] @bf_put_ore;
+
+[label,bf_put_ore]
+if (~bf_may_use = false) {
+    mes("The Foreman will not let you load the belt until you have paid him.");
+    return;
+}
+def_int $moved = 0;
+def_int $i = 0;
+def_obj $ore;
+while ($i < 10) {
+    switch_int ($i) {
+        case 0 : $ore = coal;
+        case 1 : $ore = tin_ore;
+        case 2 : $ore = copper_ore;
+        case 3 : $ore = iron_ore;
+        case 4 : $ore = mithril_ore;
+        case 5 : $ore = adamantite_ore;
+        case 6 : $ore = runite_ore;
+        case 7 : $ore = gold_ore;
+        case 8 : $ore = silver_ore;
+        case 9 : $ore = perfect_gold_ore;
+    }
+    def_int $have = inv_total(inv, $ore);
+    if ($have > 0) {
+        // Eight bits a counter, so the machine holds 255 of anything and no more.
+        def_int $room = sub(255, ~bf_ore($ore));
+        def_int $take = min($have, $room);
+        if ($take > 0) {
+            inv_del(inv, $ore, $take);
+            ~bf_ore_set($ore, add(~bf_ore($ore), $take));
+            $moved = add($moved, $take);
+        }
+    }
+    $i = add($i, 1);
+}
+if ($moved = 0) {
+    mes("You have nothing the furnace can smelt.");
+    return;
+}
+anim(blast_furnace_human_conveyer_cycle, 0);
+sound_synth(machinery, 1, 0);
+p_delay(2);
+mes("You load the belt with <tostring($moved)> pieces of ore.");
+~bf_update_coal_required;
+
+// What the gauge reads out: how much coal the ore already in the machine still wants.
+[proc,bf_update_coal_required]
+def_int $need = 0;
+def_int $i = 0;
+while ($i < 9) {
+    def_struct $struct;
+    def_namedobj $bar;
+    $struct, $bar = ~bf_recipe($i);
+    def_int $coal = ~bf_coal_needed($struct);
+    if ($coal > 0) {
+        $need = add($need, multiply(~bf_ore(struct_param($struct, ingredient)), $coal));
+    }
+    $i = add($i, 1);
+}
+%blast_furnace_coal_required = $need;
+
+// =========================================================================== the coke heap
+[oploc1,blast_furnace_coke] @bf_collect_coke;
+
+[label,bf_collect_coke]
+if (inv_total(inv, spade) < 1) {
+    mes("You need a spade to shovel the coke.");
+    return;
+}
+if (inv_total(inv, blast_furnace_coke_spade) > 0) {
+    mes("Your spade is already full of coke.");
+    return;
+}
+anim(human_dig, 0);
+sound_synth(digspade, 1, 0);
+p_delay(3);
+inv_del(inv, spade, 1);
+inv_add(inv, blast_furnace_coke_spade, ^bf_coke_per_collect);
+mes("You shovel up a spadeful of coke.");
+
+// =========================================================================== the stove
+[oploc1,blast_furnace_stove_low] @bf_refuel;
+[oploc1,blast_furnace_stove_medium] @bf_refuel;
+[oploc1,blast_furnace_stove_full] @bf_refuel;
+
+[proc,bf_stove_loc](int $level)(loc)
+if ($level >= ^bf_stove_full) {
+    return(blast_furnace_stove_full);
+}
+if ($level = ^bf_stove_medium) {
+    return(blast_furnace_stove_medium);
+}
+return(blast_furnace_stove_low);
+
+[label,bf_refuel]
+if (inv_total(inv, blast_furnace_coke_spade) < 1) {
+    mes("You need a spadeful of coke. There is a pile of it by the pump.");
+    return;
+}
+def_int $level = ~bf_stove_level;
+if ($level >= ^bf_stove_full) {
+    mes("The stove is as full of coke as it will take.");
+    return;
+}
+anim(human_pickupfloor, 0);
+sound_synth(furnace, 1, 0);
+p_delay(2);
+inv_del(inv, blast_furnace_coke_spade, 1);
+inv_add(inv, spade, 1);
+~bf_stove_set(add($level, 1));
+%blast_furnace_fuel_low_reading = ^bf_off;
+mes("You tip the coke into the stove.");
+
+// =========================================================================== the pump
+[oploc1,blast_furnace_pump] @bf_pump;
+
+[label,bf_pump]
+if (~bf_may_use = false) {
+    mes("The Foreman will not let you touch the machinery until you have paid him.");
+    return;
+}
+if (%blast_furnace_broken_pipe_reading = ^bf_on) {
+    mes("The pipes are broken. Nothing you do at the pump will reach the pot.");
+    return;
+}
+anim(blast_furnace_human_air_pump, 0);
+sound_synth(big_bellows, 1, 0);
+p_delay(3);
+def_int $temp = add(%blast_furnace_temperature_reading, ^bf_temp_per_pump);
+// Too much air and the whole machine goes, which is what the gauge is there to stop.
+if ($temp > ^bf_temp_ceiling) {
+    %blast_furnace_temperature_reading = 0;
+    %blast_furnace_broken_pipe_reading = ^bf_on;
+    ~mesbox("The gauge swings into the red, something gives with a bang, and the pipes split along their seams. Nothing will melt until they are mended.");
+    return;
+}
+%blast_furnace_temperature_reading = $temp;
+stat_advance(strength, ^bf_pump_xp);
+mes("You work the pump. The pot glows a little brighter.");
+
+// =========================================================================== mending it
+[oplocu,blast_furnace_pump] @bf_mend;
+[oplocu,blast_furnace_pedals] @bf_mend;
+
+[label,bf_mend]
+if (last_useitem ! hammer) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%blast_furnace_broken_pipe_reading = ^bf_off) {
+    mes("There is nothing wrong with the machine.");
+    return;
+}
+if (stat(crafting) < ^bf_repair_level) {
+    mes("You need a Crafting level of <tostring(^bf_repair_level)> to mend the pipes.");
+    return;
+}
+anim(human_smithing, 0);
+sound_synth(anvil, 1, 0);
+p_delay(4);
+%blast_furnace_broken_pipe_reading = ^bf_off;
+stat_advance(crafting, ^bf_repair_xp);
+mes("You hammer the split seams flat again.");
+
+// =========================================================================== the pedals
+[oploc1,blast_furnace_pedals] @bf_pedal;
+
+[label,bf_pedal]
+if (~bf_may_use = false) {
+    mes("The Foreman will not let you touch the machinery until you have paid him.");
+    return;
+}
+if (%blast_furnace_broken_pipe_reading = ^bf_on) {
+    mes("The pipes are broken. The belt turns, and nothing melts.");
+    return;
+}
+anim(blast_furnace_human_conveyer_cycle, 0);
+sound_synth(machinery, 1, 0);
+p_delay(3);
+stat_advance(agility, ^bf_pedal_xp);
+if (%blast_furnace_temperature_reading < ^bf_temp_floor) {
+    mes("The belt carries the ore in, but the pot is not hot enough to melt it. Work the pump.");
+    return;
+}
+if (~bf_stove_level <= ^bf_stove_low & %blast_furnace_fuel_low_reading = ^bf_on) {
+    mes("The stove is out of coke.");
+    return;
+}
+@bf_smelt;
+
+// The stove is not where the pedals are, so its level has to be read off the loc standing at its
+// own tile rather than off the active one.
+[proc,bf_stove_level]()(int)
+def_coord $where = ^bf_stove_coord;
+loc_findallzone($where);
+while (loc_findnext = true) {
+    if (loc_coord = $where) {
+        switch_loc (loc_type) {
+            case blast_furnace_stove_full : return(^bf_stove_full);
+            case blast_furnace_stove_medium : return(^bf_stove_medium);
+            case blast_furnace_stove_low : return(^bf_stove_low);
+        }
+    }
+}
+return(^bf_stove_low);
+
+// =========================================================================== one potful
+// A turn of the pedals carries in as much of ONE metal as the ore and the coal allow.
+[label,bf_smelt]
+def_int $i = 0;
+while ($i < 9) {
+    def_struct $struct;
+    def_namedobj $bar;
+    $struct, $bar = ~bf_recipe($i);
+    def_obj $ore = struct_param($struct, ingredient);
+    def_int $per = struct_param($struct, bar_count);
+    def_int $have = divide(~bf_ore($ore), $per);
+    if ($have > 0) {
+        def_namedobj $second = struct_param($struct, ingredient_secondary);
+        def_int $second_per = struct_param($struct, ingredient_secondary_count);
+        if ($second = coal) {
+            $second_per = ~bf_coal_needed($struct);
+        }
+        def_int $can = $have;
+        if ($second ! null) {
+            $can = min($have, divide(~bf_ore($second), $second_per));
+        }
+        if ($can > 0) {
+            if (stat(smithing) < struct_param($struct, levelrequired)) {
+                mes(struct_param($struct, levelfailure));
+                return;
+            }
+            @bf_smelt_batch($struct, $bar, $ore, $per, $second, $second_per, $can);
+        }
+    }
+    $i = add($i, 1);
+}
+mes("There is nothing in the machine the pot can make a bar out of.");
+
+[label,bf_smelt_batch](struct $struct, namedobj $bar, obj $ore, int $per, namedobj $second, int $second_per, int $count)
+// Eight bits in the dispenser too, so a potful cannot overflow it.
+$count = min($count, sub(255, ~bf_bar($bar)));
+if ($count < 1) {
+    mes("The dispenser is full. Take the bars out of it first.");
+    return;
+}
+~bf_ore_set($ore, sub(~bf_ore($ore), multiply($count, $per)));
+if ($second ! null) {
+    ~bf_ore_set($second, sub(~bf_ore($second), multiply($count, $second_per)));
+}
+~bf_bar_set($bar, add(~bf_bar($bar), $count));
+~bf_update_coal_required;
+
+// The heat and the fuel both go into it.
+%blast_furnace_temperature_reading = max(0, sub(%blast_furnace_temperature_reading, ^bf_temp_per_smelt));
+def_int $stove = ~bf_stove_level;
+if ($stove <= ^bf_stove_low) {
+    %blast_furnace_fuel_low_reading = ^bf_on;
+} else {
+    ~bf_stove_set(sub($stove, ^bf_fuel_per_smelt));
+}
+
+// Out they come, glowing: index 2 of the dispenser, which has no Take op at all.
+%blast_furnace_bars_hot = ^bf_bars_hot;
+// Iron never fails here - the coke refines it - which is the one way this furnace is kinder than
+// an ordinary one.
+def_int $per_bar = struct_param($struct, productexp);
+if ($bar = gold_bar & (inv_total(worn, gauntlets_of_goldsmithing) > 0 | ~skillcape_worn(smithing) = true)) {
+    // 2.5x, and truncated on the one bar: 22.5 becomes the 56.2 the tables print, not 56.25.
+    $per_bar = scale(5, 2, $per_bar);
+}
+~smithing_xp(multiply($per_bar, $count));
+mes("The pot pours <tostring($count)> <lowercase(oc_name($bar))>s into the dispenser, glowing hot.");
+
+// Changing the stove from somewhere else in the room, by its own coordinate.
+[proc,bf_stove_set](int $level)
+def_coord $where = ^bf_stove_coord;
+loc_findallzone($where);
+while (loc_findnext = true) {
+    if (loc_coord = $where) {
+        loc_change(~bf_stove_loc($level), ^bf_stove_life);
+        return;
+    }
+}
+
+// =========================================================================== the gauge
+[oploc1,blast_furnace_gauge] @bf_gauge;
+
+[label,bf_gauge]
+mes("The gauge reads <tostring(%blast_furnace_temperature_reading)> out of <tostring(^bf_temp_max)>.");
+if (%blast_furnace_broken_pipe_reading = ^bf_on) {
+    mes("A second needle is hard over: the pipes are split.");
+}
+if (%blast_furnace_fuel_low_reading = ^bf_on) {
+    mes("The fuel light is lit. The stove wants coke.");
+}
+if (%blast_furnace_coal_required > 0) {
+    mes("The ore in the machine still wants <tostring(%blast_furnace_coal_required)> coal.");
+}
+
+// =========================================================================== the sink
+[oploc1,blast_furnace_sink] @bf_sink;
+[oplocu,blast_furnace_sink] @bf_sink;
+
+[label,bf_sink]
+if (inv_total(inv, bucket_empty) < 1) {
+    mes("You need an empty bucket.");
+    return;
+}
+anim(human_pickupfloor, 0);
+sound_synth(farming_fill, 1, 0);
+p_delay(2);
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, bucket_water, 1);
+mes("You fill the bucket from the sink.");
+
+// =========================================================================== the dispenser
+[oploc1,blast_furnace_dispenser] @bf_dispenser;
+[oplocu,blast_furnace_dispenser] @bf_dispenser_use;
+
+[label,bf_dispenser]
+if (%blast_furnace_bars_hot = ^bf_bars_hot) {
+    // Index 2 carries no Take op, so this is only reachable by a player wearing the gloves that
+    // make it reachable.
+    if (inv_total(worn, ice_gloves) > 0) {
+        @bf_take_bars;
+    }
+    mes("The bars are glowing hot. Pour a bucket of water over them, or wear ice gloves.");
+    return;
+}
+if (%blast_furnace_bars_hot = ^bf_bars_cooled) {
+    @bf_take_bars;
+}
+mes("The dispenser is empty. Your bars will come out here.");
+
+[label,bf_dispenser_use]
+if (last_useitem ! bucket_water) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%blast_furnace_bars_hot ! ^bf_bars_hot) {
+    mes("There is nothing in there that needs cooling.");
+    return;
+}
+inv_del(inv, bucket_water, 1);
+inv_add(inv, bucket_empty, 1);
+sound_synth(steam_double, 1, 0);
+%blast_furnace_bars_hot = ^bf_bars_cooled;
+mes("The water hits the bars and goes up as steam. They are safe to handle now.");
+
+[label,bf_take_bars]
+def_int $taken = 0;
+def_int $i = 0;
+while ($i < 9) {
+    def_struct $struct;
+    def_namedobj $bar;
+    $struct, $bar = ~bf_recipe($i);
+    def_int $held = ~bf_bar($bar);
+    if ($held > 0) {
+        def_int $room = inv_freespace(inv);
+        def_int $take = min($held, $room);
+        if ($take > 0) {
+            inv_add(inv, $bar, $take);
+            ~bf_bar_set($bar, sub($held, $take));
+            $taken = add($taken, $take);
+        }
+    }
+    $i = add($i, 1);
+}
+if ($taken = 0) {
+    mes("You have no room for the bars.");
+    return;
+}
+anim(human_pickupfloor, 0);
+p_delay(2);
+mes("You take <tostring($taken)> bars out of the dispenser.");
+// Anything left is still in there and still cool; an empty dispenser goes back to index 0.
+if (~bf_bars_left = 0) {
+    %blast_furnace_bars_hot = ^bf_bars_empty;
+}
+
+[proc,bf_bars_left]()(int)
+def_int $left = 0;
+def_int $i = 0;
+while ($i < 9) {
+    def_struct $struct;
+    def_namedobj $bar;
+    $struct, $bar = ~bf_recipe($i);
+    $left = add($left, ~bf_bar($bar));
+    $i = add($i, 1);
+}
+return($left);

@@ -1,0 +1,115 @@
+// THE BLAST FURNACE, which the 377 cache ships as a finished machine with nobody able to work it.
+// Everything below the line "WHAT THE CACHE SAYS" is read off the config; everything under "WHAT IS
+// A READING" is mine, and marked as such.
+//
+// ---------------------------------------------------------------------------- WHAT THE CACHE SAYS
+//
+// THE MACHINE IS PLACED, station by station, in m30_77 (Keldagrim's west bank, below the city):
+//
+//   blast_furnace_conveyer_belt_clickable  1943,4967  op1=Put-ore-on
+//   blast_furnace_coke                     1950,4964  op1=Collect        forceapproach=south
+//   blast_furnace_stove_low                1948,4963  op1=Refuel         forceapproach=east
+//   blast_furnace_pump                     1950,4961  op1=Operate        forceapproach=north
+//   blast_furnace_pedals                   1947,4966  op1=Pedal
+//   blast_furnace_gauge                    1945,4961  op1=Read
+//   blast_furnace_sink                     1942,4956  op1=Fill-bucket
+//   blast_furnace_dispenser                1940,4963  a multiloc, below
+//   blast_furnace_instructor               1944,4958  "Blast Furnace Foreman", op1=Talk-to
+//
+// and tools/silentops.py has had four of those op labels - Put-ore-on, Refuel, Pedal, Fill-bucket -
+// on lines of their own for months.
+//
+// TWENTY-FOUR VARBITS, and between them they are the whole machine:
+//
+//   ten ore counters, eight bits each: coal, tin, copper, iron, mithril, adamantite, runite, gold,
+//     silver and perfect gold - what is in the machine waiting to be smelted
+//   nine bar counters: bronze, iron, steel, mithril, adamantite, runite, gold, silver, perfect gold
+//     - what is in the dispenser waiting to be taken
+//   and the readings: temperature (eight bits), bars_hot (two), broken_pipe, fuel_low, and
+//     coal_required (eighteen bits)
+//
+// THOSE NINETEEN ARE THE 2006 MACHINE EXACTLY. There is no lead, no nickel, no cupronickel and no
+// smithing catalyst anywhere in these bits, which is how you know this cache predates them - and
+// there is a perfect gold counter, which is the Family Crest goldsmith's ore.
+//
+// THE DISPENSER IS A MULTILOC ON bars_hot, and its four indices are the collection mechanic:
+//
+//   0 blast_furnace_ore_dispenser_empty    "Your bars will come out here."   op1=Search
+//   1 blast_furnace_ore_dispenser_foranim  anim=blast_furnace_ore_dispense
+//   2 blast_furnace_ore_dispenser_full     "The bars are glowing hot!"       no op at all
+//   3 blast_furnace_ore_dispenser_cooled   "Your bars are ready to take."    op1=Take
+//
+// Index 2 has no op BECAUSE YOU CANNOT TAKE A GLOWING BAR. Cool them and it becomes index 3.
+//
+// THE STOVE IS THREE LOCS and its examine text is the fuel gauge: "There's not much coke in the
+// stove" (low, the one the map places), "a fair amount" (medium), "lots of coke" (full).
+//
+// ---------------------------------------------------------------------------- WHAT IS A READING
+//
+// The cache fixes every state and every op. It does not say what a number means, so these do:
+//
+//   PEDALLING IS WHAT SMELTS. "Turning the pedals moves the conveyor belt", so a turn of the pedals
+//   is what carries a batch into the pot - which is also what makes every station matter to a lone
+//   player: ore on the belt, coke in the stove, air from the pump, and then pedal.
+//
+//   THE TEMPERATURE NUMBERS are mine. Eight bits is 0..255; the pot needs heat to melt anything and
+//   too much of it breaks the machine, and those two facts are the wiki's. Where the thresholds sit
+//   inside the 255 is not published anywhere.
+//
+//   A SPADEFUL OF COKE is one stove level, because the stove has exactly three of them.
+
+// =========================================================================== the fee
+// 2,500 coins per ten minutes until 60 Smithing, which is Old School's own arrangement and the only
+// thing the Foreman is for.
+^bf_fee = 2500
+^bf_fee_minutes = 10
+^bf_free_level = 60
+
+// =========================================================================== the stove
+// Three locs, so three levels, and the map places the low one.
+^bf_stove_low = 0
+^bf_stove_medium = 1
+^bf_stove_full = 2
+// What one turn of the pedals burns. A full stove is three turns of ore.
+^bf_fuel_per_smelt = 1
+
+// =========================================================================== the temperature
+// Eight bits of it. The pot melts nothing below the floor, breaks everything above the ceiling, and
+// one go on the pump is worth a third of the working band.
+^bf_temp_max = 255
+^bf_temp_floor = 60
+^bf_temp_ceiling = 240
+^bf_temp_per_pump = 60
+^bf_temp_per_smelt = 25
+
+// =========================================================================== the dispenser
+^bf_bars_empty = 0
+^bf_bars_dispensing = 1
+^bf_bars_hot = 2
+^bf_bars_cooled = 3
+
+// =========================================================================== what it pays
+// The pedals pay Agility, the pump pays Strength and a repair pays Crafting, which is Old School's;
+// the figures are small on purpose, because the Smithing on the bars is the reason anybody is here.
+// Tenths, as every stat_advance in this build takes them: 2.5 Agility a turn of the pedals, 2.5
+// Strength a go on the pump, 40 Crafting for mending the pipes.
+^bf_pedal_xp = 25
+^bf_pump_xp = 25
+^bf_repair_xp = 400
+^bf_repair_level = 30
+
+// =========================================================================== the coke heap
+// "A big pile of refined coal", and a spade to shovel it with.
+^bf_coke_per_collect = 1
+
+^bf_off = 0
+^bf_on = 1
+
+// The stove's own tile, because the pedals are across the room from it and a loc can only be
+// changed where it stands: 1948,4963.
+^bf_stove_coord = 0_30_77_28_35
+
+// How long coke sits in the stove before it has burned away by itself. loc_change needs a duration
+// and will not take 0, and a stove that cools down when nobody is feeding it is right anyway: this
+// reverts to the low stove the map placed.
+^bf_stove_life = 3000
