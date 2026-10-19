@@ -9,3 +9,41 @@ inv_add(inv, $product, 1);
 if($product ! lit_black_candle & $product ! lit_candle) {
     mes("You light the <lowercase(oc_name($product))>.");
 }
+
+// ---------------------------------------------------------------- putting the candle in
+// Reported as the other half of "cant make candle lantern": the glassblowing panel has been handing
+// out empty candle lanterns since it was wired, and nothing in the game would put a candle into one
+// - "cant put candle in lantern/lit or unlit candle".
+//
+// The cache was ready for all of it and had been the whole time. Four candles, four lanterns, and
+// both unlit lanterns already carry category=light_source_unlit and param=product, so the moment
+// one exists the tinderbox above lights it with no further wiring.
+//
+// Four recipes, and the only thing that separates them is whether the candle is already burning: an
+// unlit one goes in at any level, a LIT one wants Firemaking 4, because what you end up holding is
+// a lit light source. The black candle is the same both ways round.
+[opheldu,candle_lantern_empty]
+def_obj $candle = last_useitem;
+def_namedobj $lantern;
+def_int $level = 1;
+switch_obj ($candle) {
+    case unlit_candle : $lantern = candle_lantern_unlit;
+    case unlit_black_candle : $lantern = candle_lantern_black_unlit;
+    case lit_candle :
+        $lantern = candle_lantern_lit;
+        $level = ^candle_lantern_lit_level;
+    case lit_black_candle :
+        $lantern = candle_lantern_black_lit;
+        $level = ^candle_lantern_lit_level;
+    case default :
+        ~displaymessage(^dm_default);
+        return;
+}
+if (stat(firemaking) < $level) {
+    mes("You need a Firemaking level of <tostring($level)> to put a lit candle into a lantern.");
+    return;
+}
+inv_del(inv, candle_lantern_empty, 1);
+inv_del(inv, $candle, 1);
+inv_add(inv, $lantern, 1);
+mes("You put the candle in the lantern.");
