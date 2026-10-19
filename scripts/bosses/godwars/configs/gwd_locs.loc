@@ -1,7 +1,7 @@
 // Imported from the rev 474 cache by tools/models/import474map.py: m44_82, m44_83, m45_83.
 // God Wars Dungeon - three of its four map squares, from the rev 474 cache (27 October 2007), which is the dungeon as it was built.
 // MISSING: m45_82, which holds the rope landing you arrive on and Commander Zilyana's room. The 474 cache has its terrain but no XTEA key for its locs, so it cannot be read from here - see the GWD notes for the two ways round that.
-// Five decorative locs (26853-26857) carry models in the post-377 format and are left out: all nameless, no ops, three placements each.
+// Five locs (26853-26857) were left out of the first import because their models are in 474's newer format and nothing could read it: all nameless, no ops, three placements each. They are the pillars and walls that flank the three faction doors, and without them each door stood in open floor. They are in now - see the ADDED LATER block at the end of this file.
 // The named locs are the ones content has to reference - the three faction doors, the three altars, the Bang door, the ice bridge, the grapple pillar and the crate. Everything else keeps its loc474_<id> name.
 
 [loc474_16399]
@@ -1234,6 +1234,38 @@ blockrange=no
 resizey=256
 ambient=35
 
+// ---------------------------------------------------------------------------- THE THREE BIG DOORS
+// REPORTED FROM THE GAME as "gwd missing walls by doors", and it is true: each of these doors
+// stands in open floor with nothing either side of it. Rendered offline with the real client code
+// (tools/models/renderscene.py, camera in the corridor at 2861,5354 looking east) the door is a
+// grey slab on bare ground and you can see straight past it into the chamber.
+//
+// IT IS COSMETIC ONLY. The invisible wall that shares those tiles - 474 loc 84, which is this
+// build's [00], model=inviswall - imported fine, so the collision is whole: a player cannot step
+// east out of the corridor at 5353, 5354 or 5355, and cannot reach the chamber on foot without
+// opening the door. Only the geometry is absent.
+//
+// WHAT IS MISSING, exactly. Beside each door the 474 cache places five more locs, and the map has
+// none of them:
+//
+//   26853  the pillar on one side of the doorway   (shape 10, model 15550)
+//   26854  the pillar on the other                 (shape 10, model 144)
+//   26855  the wall one tile back                  (shape 0,  model 12736)
+//   26856  the wall one tile back, other side      (shape 0,  model 28866)
+//   26857  a 2x3 piece on the plane above          (shape 10, model 143)
+//
+// The same five at all three 474 doors - Bandos in m44_83, Armadyl in m44_82, Zamorak in m45_83 -
+// one placement each, and the jm2 carries 4691 of the cache's 4696 placements for m44_83. Those
+// five are the five.
+//
+// They were left out because all five models are in 474's NEWER model format, which
+// import474map.py refuses by design ("model 15550 is the newer format") and which osrs2ob2.py
+// cannot read either - its layout() returns None on every one of them, so the OSRS converter is
+// not a way round. Getting them in needs a decoder for that format, which would unblock every
+// future 474 import rather than just these five.
+//
+// The Saradomin door is a different case: it came from the OSRS cache, not 474, and this container
+// has no XTEA key for its square (45_82), so nothing here says whether it is missing the same.
 [gwd_door_bandos]
 // rev 474 loc 26425 (import474map.py)
 name=Big door
@@ -1297,3 +1329,57 @@ resizey=100
 resizez=100
 ambient=25
 op1=Search
+
+// ADDED LATER: the five locs that flank the three faction doors (26853-26857), which the first import left out because their models are in 474's newer format and nothing could read it. tools/models/osrsmodel.py reads it now.
+
+[loc474_26853]
+// rev 474 loc 26853 (import474map.py)
+model=loc474_26853
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26854]
+// rev 474 loc 26854 (import474map.py)
+model=loc474_26854
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26855]
+// rev 474 loc 26855 (import474map.py)
+model=loc474_26855
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26856]
+// rev 474 loc 26856 (import474map.py)
+model=loc474_26856
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26857]
+// rev 474 loc 26857 (import474map.py)
+model=loc474_26857
+width=2
+length=3
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20

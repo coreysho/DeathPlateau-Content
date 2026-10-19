@@ -118,3 +118,9 @@
 [opheld2,studded_body_trim_gold] @levelrequire_ranged_and_defence(20, 20, last_slot);
 [opheld2,studded_chaps_trim_fur] @levelrequire_ranged_lower(20, last_slot);
 [opheld2,studded_chaps_trim_gold] @levelrequire_ranged_lower(20, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,mithril_plateskirt_g] @levelrequire_defence(20, last_slot);
+[opheld2,mithril_plateskirt_t] @levelrequire_defence(20, last_slot);

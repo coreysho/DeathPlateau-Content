@@ -50356,6 +50356,7 @@ iop2=Drink
 iop3=Empty
 members=yes
 weight=2lb
+param=next_obj_stage,bowl_empty
 
 [ectoplasm_puddle]
 name=Puddle of slime
@@ -50381,6 +50382,7 @@ iop2=Drink
 iop3=Empty
 members=yes
 weight=2lb
+param=next_obj_stage,bowl_empty
 
 [bowl_nettletea_milky]
 name=Nettle tea
@@ -50396,6 +50398,7 @@ iop2=Drink
 iop3=Empty
 members=yes
 weight=2lb
+param=next_obj_stage,bowl_empty
 
 [nettles_picked]
 name=Nettles
@@ -50426,6 +50429,7 @@ model=obj_display_tea
 2dxan=156
 members=yes
 weight=150g
+param=next_obj_stage,cup_empty
 
 [cup_of_nettletea_milky]
 name=Cup of tea
@@ -50443,6 +50447,7 @@ model=obj_display_tea
 2dxan=156
 members=yes
 weight=150g
+param=next_obj_stage,cup_empty
 
 [chinacup_empty]
 name=Porcelain cup
@@ -50471,6 +50476,7 @@ model=obj_chinacup_of_nettletea
 2dxan=156
 members=yes
 weight=150g
+param=next_obj_stage,chinacup_empty
 
 [chinacup_of_nettletea_milky]
 name=Cup of tea
@@ -50487,6 +50493,7 @@ model=obj_chinacup_of_nettletea
 2dxan=156
 members=yes
 weight=150g
+param=next_obj_stage,chinacup_empty
 
 [ahoy_robes_of_necrovarus]
 name=Mystical robes
@@ -97548,6 +97555,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_claycup_empty
 
 [poh_claycup_tea_milky]
 name=Cup of tea
@@ -97567,6 +97575,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_claycup_empty
 
 [poh_chinacup_empty]
 name=Porcelain cup
@@ -97609,6 +97618,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_chinacup_empty
 
 [poh_chinacup_tea_milky]
 name=Cup of tea
@@ -97632,6 +97642,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_chinacup_empty
 
 [poh_giltchinacup_empty]
 name=Porcelain cup
@@ -97674,6 +97685,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_giltchinacup_empty
 
 [poh_giltchinacup_tea_milky]
 name=Cup of tea
@@ -97697,6 +97709,7 @@ members=yes
 manwear=obj_poh_claycup_empty_manwear,0
 womanwear=obj_poh_claycup_empty_manwear,6
 weight=150g
+param=next_obj_stage,poh_giltchinacup_empty
 
 [poh_tea_leaves]
 name=Tea leaves

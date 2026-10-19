@@ -66,7 +66,14 @@ if ($want > $have) {
 if ($amount < 1) {
     return;
 }
+// (2026-10-19) Pay for what inv_del actually took, not what was asked: "Redeem one" does not look again
+// after its menu, and a ticket banked or traded in the meantime used to be paid for anyway.
+def_int $before = inv_total(inv, vote_ticket);
 inv_del(inv, vote_ticket, $amount);
+$amount = sub($before, inv_total(inv, vote_ticket));
+if ($amount < 1) {
+    return;
+}
 %vote_points = calc(%vote_points + multiply($amount, ^vote_points_per_ticket));
 if ($amount = 1) {
     mes("You redeem a vote ticket.");

@@ -177,3 +177,11 @@
 ^macro_event_cmb_79 = 4
 ^macro_event_cmb_120 = 5
 ^macro_event_cmb_159 = 6
+
+// The Lost and Found teleportation fault. Named here so macro_event_rooms can list the square it
+// is on, the same way every other room event's landing is named.
+^macro_laf_landing = 0_36_74_34_11
+// Where a player stranded on a set is sent when there is no coord to send them back to - death's
+// own destination (player/scripts/death.rs2), because being stuck on an event set forever is the
+// one outcome worse than waking up in Lumbridge.
+^macro_event_lost_fallback = 0_50_50_21_18

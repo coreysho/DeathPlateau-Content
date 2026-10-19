@@ -66,7 +66,14 @@ if(inv_itemspace(castlewars_trade_tickets, $item, 1, inv_size(castlewars_trade_t
     mes("The shop has run out of space.");
     return;
 }
+// (2026-10-19) Pay only if the item actually went. $item is the unnoted form, so a noted one in the
+// slot moved nothing - and the tickets were paid regardless.
+def_int $held = inv_total(inv, $item);
 inv_moveitem_uncert(inv, castlewars_trade_tickets, $item, 1);
+if (inv_total(inv, $item) >= $held) {
+    mes("You can't sell this item to this shop.");
+    return;
+}
 inv_add(inv, castlewars_ticket, $item_value);
 
 // buy

@@ -218,6 +218,15 @@ p_teleport(^fightcave_outside);
 // collision, which blocks every step they try to take.
 instance_delete($inst);
 
+// Logging out in the cave is leaving it. %fightcave_instance is temp, so without this the instance
+// outlived the player - a slot taken until a restart, and 1024 of them shared with every house, Zulrah
+// shrine and Pest Control island, so doing it over and over closed them all (2026-10-19).
+[proc,fightcave_logout]
+if (%fightcave_instance = null) {
+    return;
+}
+~fightcave_end(max(0, sub(%fightcave_wave, 1)));
+
 [proc,fightcave_finish]
 mes("@red@You have defeated TzTok-Jad!@bla@");
 ~fightcave_reward;

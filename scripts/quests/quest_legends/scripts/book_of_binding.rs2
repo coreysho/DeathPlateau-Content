@@ -51,6 +51,45 @@ switch_int (%book_page) {
 // [if_button,book4:com_2]
 // @book_flip_page(^book_direction_backward, 0, 4, book_of_binding_page);
 
+// ENCHANT-VIALS, the book's own second option, which nothing could reach.
+//
+// ~enchant_vials below has always worked and there was no way into it: the only route written was
+// the [if_button,book4:com_1] block above, commented out along with ~book_activus_page, so the
+// enchanted vials Legends' Quest needs for holy water could not be made. The obj carries
+// iop2=Enchant-Vials and needs no interface at all - and that click fell through to [opheld2,_] in
+// player/scripts/equip.rs2, which tried to WEAR the book and printed ~equip's debug line. (Found
+// by the opheld2 sweep behind "cant extinguish candle lantern - says no wearpos".)
+//
+// The requirements and the choice are the commented block's, kept as they were: 10 Magic and 10
+// Prayer to cast at all, five of each spent per vial, and a choice of how many to do at once that
+// ~enchant_vials clamps to what the player can actually pay for.
+[opheld2,book_of_binding]
+if_close;
+~objbox(book_of_binding, "You prepare an incantation from the page...", 250, 0, 0);
+if (stat(magic) < ^legends_enchant_level) {
+    ~mesbox("You need a Magic level of at least <tostring(^legends_enchant_level)> to cast this enchantment.");
+    return;
+}
+if (stat(prayer) < ^legends_enchant_level) {
+    ~mesbox("You need a Prayer level of at least <tostring(^legends_enchant_level)> to cast this enchantment.");
+    return;
+}
+def_int $vial_count = min(^legends_enchant_max, inv_total(inv, vial_empty));
+if ($vial_count = 0) {
+    ~mesbox("However, you don't have the right components to cast this spell.");
+    return;
+}
+def_int $op = 1;
+if ($vial_count = 2) {
+    $op = ~p_choice2("Enchant 1 Vial", 1, "Enchant 2 Vials", 2);
+} else if ($vial_count = 4) {
+    $op = ~p_choice3("Enchant 1 Vial", 1, "Enchant 2 Vials", 2, "Enchant 4 Vials", 4);
+} else if ($vial_count >= 3) {
+    def_int $count2 = calc(($vial_count / 2) + 1);
+    $op = ~p_choice3("Enchant 1 Vial", 1, "Enchant <tostring($count2)> Vials", $count2, "Enchant <tostring($vial_count)> Vials", $vial_count);
+}
+@enchant_vials($op);
+
 [label,enchant_vials](int $count)
 if_close;
 $count = min($count, min(calc((stat(prayer) - 5) / 5), calc((stat(magic) - 5) / 5)));

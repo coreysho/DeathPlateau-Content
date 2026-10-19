@@ -104,16 +104,73 @@ return(true);
 // answered npc 0, which is hans, and nc_param quietly said false. With default=null it answers null
 // and nc_param throws "An input for a Npc type was not valid to use. Input was -1." on every login.
 // The guard is the fix; the enum was never the bug, it just stopped hiding this one.
+// LOGGING IN AFTER LOGGING OUT IN AN EVENT.
+//
+// There are two kinds of general event and this has to answer for both. The ones that come TO you -
+// a genie, a drunken dwarf, the Mysterious Old Man - carry follow_player_on_logout, and their npc
+// is simply spawned again next to wherever you logged back in. The other kind takes you AWAY: nine
+// map squares' worth of rooms you cannot walk out of, each one storing where it found you in
+// %macro_event_target_coord and each one sending you back there through its own leave proc.
+//
+// Nothing ran that leave proc for a player who logged out on the set, so they came back standing on
+// it: reported as "logging out at a random event keeps you there at next login". There was no way
+// out either, because %macro_event is cleared on the way through here - so the event could not
+// finish and could not start again, and the room has no exit of its own. (The Quiz Master's set is
+// the plainest case: two podiums four tiles apart with blocked ground between them.)
+//
+// So the second kind is sent home here instead. The coord has been saved across the logout the
+// whole time - %macro_event_target_coord is scope=perm - and nothing was reading it.
 [queue,macro_event_login]
 def_int $macro_event = %macro_event;
 %macro_event = 0;
 def_npc $event_npc = ~macro_event_npc($macro_event);
-if ($event_npc = null) {
+if ($event_npc ! null & nc_param($event_npc, follow_player_on_logout) = ^true) {
+    ~macro_event_general_spawn($macro_event);
     return;
 }
-if (nc_param($event_npc, follow_player_on_logout) = ^true) {
-    ~macro_event_general_spawn($macro_event);
+// Everything else: a room event, or no event recorded at all. The second happens when the leave
+// proc got as far as clearing %macro_event and no further, which leaves a player just as stuck, so
+// both go through the same return.
+~macro_event_login_return;
+
+/**
+ * Send a player who logged out on an event set back to where the event found them.
+ *
+ * STANDING ON A SET IS THE TEST, not the varp. %macro_event_target_coord outlives some events - the
+ * pillory never clears it, because its cage is in Varrock and there is nothing to clear - so the
+ * varp alone would teleport players who are perfectly fine. Being inside one of the nine squares in
+ * macro_event_rooms cannot happen any other way: every one of them is in the band above z=4400 that
+ * the game keeps for rooms you can only be put in.
+ *
+ * The teleport trips the square's own [mapzoneexit], which is what clears the event varps and puts
+ * the sidebar back for the two rooms that hide it. ~macro_events_varps_reset is called anyway, so a
+ * square that ever loses its exit trigger does not leave the varps set.
+ */
+[proc,macro_event_login_return]
+if (~macro_event_in_room(coord) = false) {
+    return;
 }
+def_coord $home = %macro_event_target_coord;
+if ($home = null) {
+    // No coord saved, which should not happen and is survivable: anywhere is better than a room
+    // with no exit.
+    $home = ^macro_event_lost_fallback;
+}
+~p_telejump_safe($home);
+~macro_events_varps_reset;
+~initalltabs;
+mes("You are returned to where you were before the event.");
+
+/** Is this coord on one of the nine map squares a random event can put a player on? */
+[proc,macro_event_in_room](coord $at)(boolean)
+def_int $i = 0;
+while ($i < enum_getoutputcount(macro_event_rooms)) {
+    if (~inmap($at, enum(int, coord, macro_event_rooms, $i)) = true) {
+        return(true);
+    }
+    $i = calc($i + 1);
+}
+return(false);
 
 [proc,macro_event_logout]
 if (npc_finduid(%macro_event_uid) = true) {

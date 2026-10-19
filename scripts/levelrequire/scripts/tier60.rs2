@@ -78,3 +78,8 @@
 [opheld2,red_dhide_chaps_t] @levelrequire_ranged_lower(60, last_slot);
 [opheld2,tbwt_dragon_spear_kp] @levelrequire_attack_caps(60, last_slot);
 [opheld2,tzhaar_ket_om_t] @levelrequire_strength(60, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,dragon_plateskirt_g] @levelrequire_defence_caps(60, last_slot);

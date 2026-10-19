@@ -547,6 +547,11 @@ scope=perm
 [tbwt_thanked]
 scope=perm
 
+// The spare slot this record was written over. It is still listed in pack/varp.pack, and the id
+// tool gave tbwt_thanked a new id of its own rather than this one, so renaming it left 326 with a
+// pack entry and no record - which is an error the build refuses.
+[varp_326]
+
 [varp_327]
 
 [regicide_quest]

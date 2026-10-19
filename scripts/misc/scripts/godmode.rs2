@@ -14,6 +14,10 @@
 //
 // The gate is in the engine (ClientCheatHandler), not here: a [debugproc,] is owner-only on a live
 // server, and this was asked for at developer and above. Nothing else can reach these scripts.
+//
+// (2026-10-19) NOT FOR PLAYERS: no attacking a player and no being attacked while it is on
+// ([proc,pvp_is_attackable], skill_combat/scripts/pvp/pvp_combat.rs2) - so no PKing, duelling or Castle
+// Wars that cannot be lost.
 
 [proc,godmode_toggle]
 if (%godmode = true) {

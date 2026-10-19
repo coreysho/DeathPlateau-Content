@@ -1,0 +1,15 @@
+// ::home - the teleport every player has, to Edgeville (engine: ClientCheatHandler).
+//
+// (2026-10-19) The engine used to teleJump the player itself after checking only combat and the
+// Wilderness, so it skipped everything a real teleport refuses: a duel (walk out on a losing stake),
+// Castle Wars (take the enemy's banner home for good), the trawler, a random event, Ana in her barrel,
+// carrying the monkey - and ~p_telejump_safe's rum, plague sample and sled. Now the engine keeps its own
+// checks (combat, Wilderness, instances) and then runs this, which is a teleport like any other.
+[proc,home_teleport]
+if (~pre_tele_checks(coord) = false) {
+    return;
+}
+~p_telejump_safe(0_48_54_14_35);
+if (coord = 0_48_54_14_35) {
+    mes("You teleport home to Edgeville.");
+}

@@ -254,3 +254,31 @@ val=6,macro_rivertrollguardian_6
 // drunken dwarf
 // genie
 // mysterious old man
+
+// THE NINE ROOMS A RANDOM EVENT CAN TAKE YOU TO, one entry per map square, named by the coord the
+// event lands you on so the square can never drift away from the event that uses it. Read by
+// ~macro_event_in_room on login - see [queue,macro_event_login] in macro_events.rs2.
+//
+// Every one of these squares is north of z=4400, which is the band the game keeps for rooms you
+// can only be put in, so standing in one is proof that an event put you there.
+//
+// The pillory is deliberately absent: its cage is in the world (Varrock, 3228,3413) rather than on
+// a square of its own, so a player in it has not been taken anywhere and has nothing to be
+// returned from.
+[macro_event_rooms]
+inputtype=int
+outputtype=coord
+default=null
+val=0,^macro_quiz_landing
+val=1,^macro_mime_landing
+val=2,^macro_prisonpete_landing
+val=3,^macro_frog_landing
+val=4,^macro_evil_bob_landing
+val=5,^macro_forester_landing
+val=6,^macro_drilldemon_landing
+// 0_30_78 twice over: Leo's cemetery at the west end of the square and Pious Pete's chapel at the
+// east, which is why macro_event_square_30_78.rs2 has to serve both with one pair of triggers.
+val=7,^macro_digger_landing
+// The Lost and Found teleport fault, whose target coord is where you were GOING rather than where
+// you were - it intercepts a teleport - so returning a stranded player to it is still right.
+val=8,^macro_laf_landing

@@ -13,3 +13,10 @@
 // the tradeable uncharged one is gated too.
 [opheld2,dragonfire_shield] @levelrequire_dragon_slayer_quest_defence(75, last_slot);
 [opheld2,dragonfire_shield_uncharged] @levelrequire_dragon_slayer_quest_defence(75, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,bandos_godsword_or] @levelrequire_attack(75, last_slot);
+[opheld2,saradomin_godsword_or] @levelrequire_attack(75, last_slot);
+[opheld2,zamorak_godsword_or] @levelrequire_attack(75, last_slot);

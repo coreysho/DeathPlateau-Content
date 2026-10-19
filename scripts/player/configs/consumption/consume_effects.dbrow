@@ -361,3 +361,42 @@ data=stat_change,attack,-2,-10
 data=stat_change,strength,-2,-10
 data=stat_change,magic,-2,-10
 data=stat_change,ranged,-2,-10
+
+// NETTLE TEA AND NETTLE-WATER. The tea's run energy is not here: it only lands when the player is
+// below full hitpoints, which a row cannot say, so it lives in
+// player/scripts/consumption/effects/scripts/nettle_tea.rs2.
+[nettlewater_effect]
+table=consume_table
+data=consumable,bowl_nettlewater
+data=stat_heal,hitpoints,1,0
+
+[nettletea_effect]
+table=consume_table
+data=consumable,bowl_nettletea
+data=consumable,bowl_nettletea_milky
+data=consumable,cup_of_nettletea
+data=consumable,cup_of_nettletea_milky
+data=consumable,chinacup_of_nettletea
+data=consumable,chinacup_of_nettletea_milky
+data=stat_heal,hitpoints,3,0
+
+// PLAYER-OWNED HOUSE TEA, which boosts Construction by the cup it is poured into: clay 1,
+// porcelain 2, trimmed porcelain 3, and milk changes nothing but the picture.
+// https://oldschool.runescape.wiki/w/Cup_of_tea_(Player-owned_house)
+[poh_claycup_tea_effect]
+table=consume_table
+data=consumable,poh_claycup_tea
+data=consumable,poh_claycup_tea_milky
+data=stat_change,construction,1,0
+
+[poh_chinacup_tea_effect]
+table=consume_table
+data=consumable,poh_chinacup_tea
+data=consumable,poh_chinacup_tea_milky
+data=stat_change,construction,2,0
+
+[poh_giltchinacup_tea_effect]
+table=consume_table
+data=consumable,poh_giltchinacup_tea
+data=consumable,poh_giltchinacup_tea_milky
+data=stat_change,construction,3,0
