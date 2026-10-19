@@ -541,7 +541,11 @@ scope=perm
 [tbwt_flags]
 scope=perm
 
-[varp_326]
+// The seventh Tai Bwo Wannai Trio varp, out of the spare slot that sat next to the other six: a
+// bitfield of which of the three sons have paid their reward out, plus one bit that says they owe
+// one at all. See quests/quest_tbwt/configs/quest_tbwt.constant.
+[tbwt_thanked]
+scope=perm
 
 [varp_327]
 
