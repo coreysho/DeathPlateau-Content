@@ -130,3 +130,28 @@
 // How long the grove doors stay out of the way: long enough to walk through, short enough that
 // they are shut again behind you.
 ^tbwcu_grove_open_ticks = 10
+
+// =========================================================================== the villagers
+// Ten of them, each a three-variant multinpc on its own three-bit chat varbit: index 0 draws
+// nothing, index 1 is the villager who has trading sticks for you, and anything above it is the
+// "_nosticks" twin who has already handed his share over.
+^tbwcu_villagers = 10
+^tbwcu_gabooty = 0
+^tbwcu_murcaily = 1
+^tbwcu_rionasta = 2
+^tbwcu_sharimika = 3
+^tbwcu_layleen = 4
+^tbwcu_karaday = 5
+^tbwcu_safta = 6
+^tbwcu_fanellaman = 7
+^tbwcu_jagbakoba = 8
+^tbwcu_mamma = 9
+
+^tbwcu_villager_gone = 0
+^tbwcu_villager_sticks = 1
+^tbwcu_villager_nosticks = 2
+
+// A villager's share: a tenth of full favour, which at one stick per tenth is a hundred sticks -
+// and ten villagers at a hundred each is the whole 1000 that full favour is worth. Old School's
+// "about 100 sticks costs roughly 10% favour" is the same statement from the other end.
+^tbwcu_villager_share = 100

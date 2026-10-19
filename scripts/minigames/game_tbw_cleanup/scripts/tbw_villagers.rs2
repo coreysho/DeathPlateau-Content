@@ -1,0 +1,164 @@
+// THE TEN VILLAGERS OF TAI BWO WANNAI, who are all placed and none of whom has ever been visible.
+//
+// Each one is a multinpc of three:
+//
+//   [tbwcu_gabooty_multinpc]  multivar=chat_gabooty
+//     multinpc=1,tbwcu_gabooty            Talk-to, Trade-Co-op, Trade-Drinks
+//     multinpc=2..7,tbwcu_gabooty_nosticks  the same man, the same ops
+//
+// and index 0 - which is what every chat varbit has always held - draws NOTHING. So the village has
+// been standing empty: ten placements, ten three-bit varbits, and nobody home.
+//
+// THE VARIANT NAMES ARE THE MECHANIC. One of them is "_nosticks", so index 1 is a villager who HAS
+// trading sticks for you and anything above it is one who has already handed his share over. That
+// is the favour payout, and the arithmetic falls out of the cache's own widths:
+//
+//   favour is ten bits, 1000 tenths of a per cent, so full favour is 100.0%
+//   Old School: "about 100 sticks costs roughly 10% favour"  ->  one stick per tenth
+//   ten villagers x 100 sticks each = 1000 sticks = the whole 100%
+//
+// Ten villagers, ten per cent each, one stick per tenth. The ten of them are exactly the favour.
+//
+// WHERE THE VILLAGERS COME FROM. villagers_visible is the cache's own bit for the village having
+// been populated, and it is set on login - not by talking to anybody, because at index 0 a
+// multinpc draws nothing at all and an invisible Murcaily cannot be asked to make himself visible.
+// So every villager starts at index 2, the "_nosticks" twin: standing in the village with nothing
+// to hand over yet. Earning favour is what moves them to index 1.
+//
+// NOT HERE YET: Gabooty's two shops. He carries op3=Trade-Co-op and op4=Trade-Drinks and the cache
+// has the whole co-op catalogue - four colours each of villager hat, robe, armband and sandals,
+// and the three gem-bladed machetes. Old School says villager clothes increase what the villagers
+// pay out; the size of that is not published anywhere, and the clothes cannot be bought until the
+// co-op is open, so neither the shop nor the bonus is guessed at here.
+
+// =========================================================================== who is who
+// The cache's chat varbits are abbreviated where the npc names are not, so this is the only place
+// the two namings meet.
+[proc,tbwcu_villager_state](int $who)(int)
+switch_int ($who) {
+    case ^tbwcu_gabooty : return(%chat_gabooty);
+    case ^tbwcu_murcaily : return(%chat_murc);
+    case ^tbwcu_rionasta : return(%chat_rion);
+    case ^tbwcu_sharimika : return(%chat_sharimika);
+    case ^tbwcu_layleen : return(%chat_layleen);
+    case ^tbwcu_karaday : return(%chat_karaday);
+    case ^tbwcu_safta : return(%chat_safta);
+    case ^tbwcu_fanellaman : return(%chat_fanellaman);
+    case ^tbwcu_jagbakoba : return(%chat_jag);
+}
+return(%chat_mamma);
+
+[proc,tbwcu_villager_set](int $who, int $state)
+switch_int ($who) {
+    case ^tbwcu_gabooty : %chat_gabooty = $state;
+    case ^tbwcu_murcaily : %chat_murc = $state;
+    case ^tbwcu_rionasta : %chat_rion = $state;
+    case ^tbwcu_sharimika : %chat_sharimika = $state;
+    case ^tbwcu_layleen : %chat_layleen = $state;
+    case ^tbwcu_karaday : %chat_karaday = $state;
+    case ^tbwcu_safta : %chat_safta = $state;
+    case ^tbwcu_fanellaman : %chat_fanellaman = $state;
+    case ^tbwcu_jagbakoba : %chat_jag = $state;
+    case ^tbwcu_mamma : %chat_mamma = $state;
+}
+
+// Everybody out, with sticks or without. Called when Murcaily signs the player up and again
+// whenever favour is earned, because a villager with a share to hand over is index 1.
+[proc,tbwcu_villagers_show](int $state)
+def_int $who = 0;
+while ($who < ^tbwcu_villagers) {
+    ~tbwcu_villager_set($who, $state);
+    $who = add($who, 1);
+}
+
+// =========================================================================== joining in
+[opnpc1,tbwcu_murcaily_multinpc] @tbwcu_murcaily_talk;
+
+// Everybody's village is populated the moment they log in, and the bit remembers it so this is one
+// comparison a login and not ten writes.
+[proc,tbwcu_login]
+if (%villagers_visible = ^tbwcu_on) {
+    return;
+}
+%villagers_visible = ^tbwcu_on;
+~tbwcu_villagers_show(^tbwcu_villager_nosticks);
+
+[label,tbwcu_murcaily_talk]
+if (%junglepotion < ^junglepotion_complete_after_spoken) {
+    ~chatnpc("<p,neutral>You are not from here, and the jungle is not kind to|strangers. Help Trufitus with his potion first; he will|vouch for you.");
+    return;
+}
+// He holds a share like the other nine - the cache gives him a _nosticks twin too - so when there
+// is favour standing and he has not paid yet, he pays.
+if (%chat_murc = ^tbwcu_villager_sticks & ~tbwcu_favour > 0) {
+    @tbwcu_villager_talk(^tbwcu_murcaily);
+}
+def_int $favour = ~tbwcu_favour;
+if ($favour = 0) {
+    ~chatnpc("<p,happy>The jungle takes the village back a foot a week and the|fence rots where it stands. Hack it back with a machete|and keep the thatching spars - the fence is made of them.");
+    ~chatnpc("<p,neutral>Do that and any of us will see you right in trading|sticks.");
+    return;
+}
+if ($favour = 0) {
+    ~chatnpc("<p,neutral>The jungle is as thick as it was yesterday. Take a machete|to it.");
+    return;
+}
+~chatnpc("<p,happy>The village is in your debt by <tostring(divide($favour, ^tbwcu_favour_tenths))>%. Ask any of us for|trading sticks and we will settle up.");
+
+// =========================================================================== the payout
+[opnpc1,tbwcu_gabooty_multinpc] @tbwcu_villager_talk(^tbwcu_gabooty);
+[opnpc1,tbwcu_rionasta_multinpc] @tbwcu_villager_talk(^tbwcu_rionasta);
+[opnpc1,tbwcu_sharimika_multinpc] @tbwcu_villager_talk(^tbwcu_sharimika);
+[opnpc1,tbwcu_layleen_multinpc] @tbwcu_villager_talk(^tbwcu_layleen);
+[opnpc1,tbwcu_karaday_multinpc] @tbwcu_villager_talk(^tbwcu_karaday);
+[opnpc1,tbwcu_safta_doc_multinpc] @tbwcu_villager_talk(^tbwcu_safta);
+[opnpc1,tbwcu_fanellaman_multinpc] @tbwcu_villager_talk(^tbwcu_fanellaman);
+[opnpc1,tbwcu_jagbakoba_multinpc] @tbwcu_villager_talk(^tbwcu_jagbakoba);
+[opnpc1,tbwcu_mamma_bufetta_multinpc] @tbwcu_villager_talk(^tbwcu_mamma);
+
+[label,tbwcu_villager_talk](int $who)
+def_int $favour = ~tbwcu_favour;
+if ($favour = 0) {
+    ~chatnpc("<p,neutral>You have done nothing for us yet, and we have nothing|for you.");
+    return;
+}
+if (~tbwcu_villager_state($who) ! ^tbwcu_villager_sticks) {
+    ~chatnpc("<p,neutral>I have given you my share already. Try one of the others.");
+    return;
+}
+// A villager's share is a tenth of full favour - a hundred sticks - and never more than the favour
+// actually standing.
+def_int $tenths = min($favour, ^tbwcu_villager_share);
+def_int $sticks = $tenths;
+if (inv_freespace(inv) < 1 & inv_total(inv, village_trade_sticks) = 0) {
+    ~chatnpc("<p,neutral>You have nowhere to put them.");
+    return;
+}
+~chatnpc("<p,happy>You have earned these. The village does not forget.");
+inv_add(inv, village_trade_sticks, $sticks);
+~tbwcu_favour_take($tenths);
+~tbwcu_villager_set($who, ^tbwcu_villager_nosticks);
+mes("<~tbwcu_villager_name($who)> hands you <tostring($sticks)> trading sticks.");
+
+// The multinpc shells carry no name= of their own, so nc_name on the thing the player clicked gives
+// back a debug name. The name belongs to the child the shell draws.
+[proc,tbwcu_villager_name](int $who)(string)
+switch_int ($who) {
+    case ^tbwcu_gabooty : return(nc_name(tbwcu_gabooty));
+    case ^tbwcu_murcaily : return(nc_name(tbwcu_murcaily));
+    case ^tbwcu_rionasta : return(nc_name(tbwcu_rionasta));
+    case ^tbwcu_sharimika : return(nc_name(tbwcu_sharimika));
+    case ^tbwcu_layleen : return(nc_name(tbwcu_layleen));
+    case ^tbwcu_karaday : return(nc_name(tbwcu_karaday));
+    case ^tbwcu_safta : return(nc_name(tbwcu_safta_doc));
+    case ^tbwcu_fanellaman : return(nc_name(tbwcu_fanellaman));
+    case ^tbwcu_jagbakoba : return(nc_name(tbwcu_jagbakoba));
+}
+return(nc_name(tbwcu_mamma_bufetta));
+
+// Favour spent is favour gone, and the villagers who were holding a share for it go back to having
+// none to hand over.
+[proc,tbwcu_favour_take](int $tenths)
+def_int $now = max(0, sub(%vill_comm_points, $tenths));
+%vill_comm_points = $now;
+%favour_percentage = $now;

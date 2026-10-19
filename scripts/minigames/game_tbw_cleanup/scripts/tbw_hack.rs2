@@ -80,6 +80,11 @@ def_int $was = %vill_comm_points;
 def_int $now = min(^tbwcu_favour_full, add($was, $tenths));
 %vill_comm_points = $now;
 %favour_percentage = $now;
+// Favour earned is a share for every villager to hold, which is what index 1 of each of their
+// multinpcs means - see scripts/tbw_villagers.rs2.
+if (%villagers_visible = ^tbwcu_on & $now > 0) {
+    ~tbwcu_villagers_show(^tbwcu_villager_sticks);
+}
 // There is no overlay interface in this pack, so the only place the number can be said is here.
 // Reported when the whole per cent changes, which for light jungle is one message in three swings.
 if (divide($now, ^tbwcu_favour_tenths) > divide($was, ^tbwcu_favour_tenths)) {
@@ -100,6 +105,13 @@ if ($row = null) {
 }
 if (map_members = ^false) {
     mes(^mes_members_feature);
+    return;
+}
+// Old School puts the whole cleanup behind Jungle Potion, and Murcaily by the grove gate is who
+// signs you up for it.
+if (%junglepotion < ^junglepotion_complete_after_spoken) {
+    anim(null, 0);
+    mes("The villagers would not thank you for hacking at their jungle. Speak to Trufitus first.");
     return;
 }
 def_int $level = db_getfield($row, tbwcu_jungle:levelrequired, 0);

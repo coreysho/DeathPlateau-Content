@@ -104,6 +104,9 @@ if (%tutorial < ^tutorial_complete & ~in_tutorial_island(coord) = true) {
 ~farming_login;
 // The two breweries run on the same clock, and a brew ferments whether or not anyone is here.
 ~brewing_login;
+// Tai Bwo Wannai: the ten villagers are multinpcs whose index 0 draws nobody, so a village nobody
+// has been signed up for is an empty one until this runs.
+~tbwcu_login;
 // Throne of Miscellania: old saves onto the original quest, and the kingdom's missed days paid out
 ~misc_login;
 // Anything that happened on the trading post while they were away.
