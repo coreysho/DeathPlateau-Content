@@ -156,6 +156,56 @@ mes("That is one fewer thing wearing this town away.");
 [oploc1,templewallcorner_8] @mortton_repair(true);
 [oploc1,templewallcorner_9] @mortton_repair(true);
 
+// THE FINISHED SEGMENTS, which carry Reinforce instead of Repair and had nothing behind it.
+// templewall_10 and templewallcorner_10 are what the `case default` above leaves standing, and
+// stage 10 is where %temple_repaired_p stops - so a player who has rebuilt a wall could watch it
+// rot back out again with its own option doing nothing.
+//
+// Reinforcing is one more course of stone on a wall that is already whole: the same hammer, the
+// same plank, brick and five paste, the same Crafting, and the loc_change puts the SAME stage back
+// with a fresh ^mortton_repair_ticks on it. That is the whole of it - the decay is a duration, so
+// resetting the duration is what reinforcing means here.
+[oploc1,templewall_10] @mortton_reinforce(false);
+[oploc1,templewallcorner_10] @mortton_reinforce(true);
+
+[label,mortton_reinforce](boolean $corner)
+p_arrivedelay;
+if (%morttonquest < ^mortton_ulsquire_temple) {
+    ~mesbox("There is no point putting the walls back while the town is still being emptied out.");
+    return;
+}
+if (inv_total(inv, flamtaer_hammer) = 0 & inv_total(inv, hammer) = 0) {
+    mes("You need a hammer to work on the temple. Razmire sells them.");
+    return;
+}
+if (stat(crafting) < ^mortton_req_crafting) {
+    mes("You need a Crafting level of <tostring(^mortton_req_crafting)> to lay these stones.");
+    return;
+}
+if (inv_total(inv, woodplank) = 0 | inv_total(inv, limestonebrick) = 0 | inv_total(inv, swamppaste) < ^mortton_swamppaste_per_repair) {
+    mes("You need a plank, a limestone brick and <tostring(^mortton_swamppaste_per_repair)> swamp paste to reinforce this.");
+    mes("Razmire's builders' store sells all three.");
+    return;
+}
+mes("You set another course of stone into a wall that did not need it yet.");
+sound_synth(anvil, 1, 0);
+if (inv_total(inv, flamtaer_hammer) > 0) {
+    p_delay(1);
+} else {
+    p_delay(3);
+}
+inv_del(inv, woodplank, 1);
+inv_del(inv, limestonebrick, 1);
+inv_del(inv, swamppaste, ^mortton_swamppaste_per_repair);
+stat_advance(crafting, 400);
+if ($corner = true) {
+    loc_change(templewallcorner_10, ^mortton_repair_ticks);
+    mes("That corner will stand a while longer.");
+    return;
+}
+loc_change(templewall_10, ^mortton_repair_ticks);
+mes("That wall will stand a while longer.");
+
 [label,mortton_repair](boolean $corner)
 p_arrivedelay;
 if (%morttonquest < ^mortton_ulsquire_temple) {
