@@ -8,6 +8,9 @@ switch_int (%vampire) {
     case default : ~displaymessage(^dm_default);
 }
 
+// Harlow drinks in the BLUE MOON INN, south of Varrock square, which is where dr_harlow is
+// spawned and where Old School has Morgan send you. This line used to say the Jolly Boar Inn,
+// which is the other side of the city and has a different bartender.
 [label,morgan_before_vampire_slayer]
 ~chatnpc("<p,shock>Please please help us, bold adventurer!");
 ~chatplayer("<p,happy>What's the problem?");
@@ -20,7 +23,7 @@ switch_int (~p_choice3("No, vampires are scary!", 1, "Ok, I'm up for an adventur
     case default : ~displaymessage(^dm_default);
 }
 
-~chatnpc("<p,neutral>I think first you should seek help. I have a friend who is a retired vampire hunter, his name is Dr. Harlow. He may be able to give you some tips. He can normally be found in the Jolly Boar Inn in Varrock, he's a bit of");
+~chatnpc("<p,neutral>I think first you should seek help. I have a friend who is a retired vampire hunter, his name is Dr. Harlow. He may be able to give you some tips. He can normally be found in the Blue Moon Inn in Varrock, he's a bit of");
 ~chatnpc("<p,quiz>an old soak these days. Mention his old friend Morgan, I'm sure he wouldn't want me killed by a vampire.");
 ~quest_vampire_set_progress(^quest_vampire_started);
 ~chatplayer("<p,quiz>I'll look him up then.");
