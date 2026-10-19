@@ -1234,6 +1234,38 @@ blockrange=no
 resizey=256
 ambient=35
 
+// ---------------------------------------------------------------------------- THE THREE BIG DOORS
+// REPORTED FROM THE GAME as "gwd missing walls by doors", and it is true: each of these doors
+// stands in open floor with nothing either side of it. Rendered offline with the real client code
+// (tools/models/renderscene.py, camera in the corridor at 2861,5354 looking east) the door is a
+// grey slab on bare ground and you can see straight past it into the chamber.
+//
+// IT IS COSMETIC ONLY. The invisible wall that shares those tiles - 474 loc 84, which is this
+// build's [00], model=inviswall - imported fine, so the collision is whole: a player cannot step
+// east out of the corridor at 5353, 5354 or 5355, and cannot reach the chamber on foot without
+// opening the door. Only the geometry is absent.
+//
+// WHAT IS MISSING, exactly. Beside each door the 474 cache places five more locs, and the map has
+// none of them:
+//
+//   26853  the pillar on one side of the doorway   (shape 10, model 15550)
+//   26854  the pillar on the other                 (shape 10, model 144)
+//   26855  the wall one tile back                  (shape 0,  model 12736)
+//   26856  the wall one tile back, other side      (shape 0,  model 28866)
+//   26857  a 2x3 piece on the plane above          (shape 10, model 143)
+//
+// The same five at all three 474 doors - Bandos in m44_83, Armadyl in m44_82, Zamorak in m45_83 -
+// one placement each, and the jm2 carries 4691 of the cache's 4696 placements for m44_83. Those
+// five are the five.
+//
+// They were left out because all five models are in 474's NEWER model format, which
+// import474map.py refuses by design ("model 15550 is the newer format") and which osrs2ob2.py
+// cannot read either - its layout() returns None on every one of them, so the OSRS converter is
+// not a way round. Getting them in needs a decoder for that format, which would unblock every
+// future 474 import rather than just these five.
+//
+// The Saradomin door is a different case: it came from the OSRS cache, not 474, and this container
+// has no XTEA key for its square (45_82), so nothing here says whether it is missing the same.
 [gwd_door_bandos]
 // rev 474 loc 26425 (import474map.py)
 name=Big door
