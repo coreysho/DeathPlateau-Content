@@ -440,8 +440,23 @@ if (~inzone_karambwan = false) {
     ~mesbox("There is nowhere here deep enough. Lubufu said to drop it where the water goes dark - off the east coast, where Tiadeche stands.");
     return;
 }
-if (stat(fishing) < 65) {
-    mes("You need a Fishing level of 65 to bring one of these up.");
+@tbwt_karambwan_drop;
+
+// THE DROP ITSELF, which the Fish op on a karambwan spot also arrives at. The spot IS the deep
+// water, so it skips the zone check above and comes straight here - skill_fishing/scripts/
+// fishing_spots/karambwan.rs2 is the other door, and the maps' three spot records could not be
+// clicked at all until it was written.
+//
+// THE NUMBERS ARE NOT HERE. The level is ^karambwan_level and the rate, the experience and the
+// Heron's base all come off the obj's own fishing struct, so this fish is described where the other
+// thirty-one are (skill_fishing/configs/fishing.struct) and not in the middle of a quest script.
+// It is also the one fish that cannot go through ~fish_roll: a karambwan takes the karambwanji
+// whether or not it is caught - the vessel comes back empty either way, which is the swap below -
+// and ~fish_roll deletes bait only on a catch.
+[label,tbwt_karambwan_drop]
+def_struct $struct = oc_param(tbwt_raw_karambwan, fishing_struct);
+if (stat(fishing) < ^karambwan_level) {
+    mes("You need a Fishing level of <tostring(^karambwan_level)> to bring one of these up.");
     return;
 }
 if_close;
@@ -449,13 +464,16 @@ mes("You drop the vessel over the side and pay out the line.");
 p_delay(5);
 inv_del(inv, tbwt_karambwan_vessel_loaded_with_karambwanji, 1);
 inv_add(inv, tbwt_karambwan_vessel, 1);
-if (stat_random(fishing, 25, 60) = false) {
+if (stat_random(fishing, struct_param($struct, success_low), struct_param($struct, success_high)) = false) {
     ~mesbox("It comes up empty, and the karambwanji has gone.");
     return;
 }
 inv_add(inv, tbwt_raw_karambwan, 1);
-stat_advance(fishing, 800);
-~mesbox("Something heavy goes into the vessel and does not come out again. You do not look too closely.");
+// ~fishing_xp and not stat_advance, so the angler's outfit counts here as it does at every other
+// spot, and so the Heron can come up out of the deep water too.
+~fishing_xp(struct_param($struct, productexp));
+~skillpet_roll(skillpet_heron_item, fishing, struct_param($struct, fishing_pet_base));
+~mesbox(struct_param($struct, productmessage));
 
 // The shore Tiadeche fishes from. He is standing on the only place in the game deep enough.
 [proc,inzone_karambwan]()(boolean)

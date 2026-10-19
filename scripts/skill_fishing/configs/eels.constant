@@ -1,0 +1,12 @@
+// The levels and experience the two eel spots work from, and every one of them is Old School's own
+// published figure. skill_fishing/scripts/fishing_spots/slimeyeel.rs2 and cavefish.rs2 use them;
+// configs/fishing.struct carries the catch rates and the per-fish experience.
+^slimey_eel_level = 28
+^cave_eel_level = 38
+^frogspawn_level = 33
+
+// THE SAME EEL IS WORTH MORE UNDERGROUND. A slimy eel pays 80 experience in the Lumbridge Swamp
+// Caves and 65 in Mort Myre, and one obj cannot carry two productexp values - so the struct holds
+// Mort Myre's 65 and the cave handler adds this difference when a slimy eel actually arrives.
+// Tenths of experience, as ~fishing_xp takes them.
+^cave_slimey_eel_bonus_xp = 150

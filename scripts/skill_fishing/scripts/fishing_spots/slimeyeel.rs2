@@ -1,0 +1,88 @@
+// THE MORT MYRE SWAMP FISHING SPOTS - slimy eels, and seventeen spawn points that did nothing.
+//
+// Three spot records in the 377 maps (0_53_51_slimey_eel, 0_53_53_slimey_eel, 0_54_53_slimey_eel)
+// carry one op, Bait, and carried no category at all, so no trigger could reach them: clicking Bait
+// on any of the seventeen printed nothing. tools/silentnpcops.py is what found them, the same report
+// that found the 56 spots of the four built kinds; these three are the kinds that had no handler to
+// be reached by, which is why the earlier fix could not include them.
+//
+// ONE OP, ONE FISH, A ROD AND BAIT. 28 Fishing and 65 experience a catch - 65 and not the caves' 80,
+// which configs/eels.constant explains - and the rates are the wiki's own low=10 high=80 pair.
+//
+// THE SPOT IS NOT A CHUTE: nothing here is cooked, noted or banked for you, which is the point of
+// the swamp. A slimy eel is cooked at 28 Cooking for 95 experience
+// (skill_cooking/configs/cooking_source/cooking_generic.dbrow) and heals as the Hitpoints guide has
+// always said it does, which until now was a promise about an item nothing produced.
+
+// Bait, the only op the record carries.
+[opnpc1,_slimey_eel]
+@attempt_fish_slimey_eel;
+
+// The hidden continuation op. This record's spare ops are 3 and 5 rather than freshfish's 4 and 5,
+// so op3 is the one that is not in the right-click menu and only p_opnpc(3) reaches it.
+[opnpc3,_slimey_eel]
+@fish_slimey_eel;
+
+[opnpcu,_slimey_eel]
+switch_obj(last_useitem) {
+    case fishing_rod : @attempt_fish_slimey_eel;
+    case net, big_net : ~mesbox("The eels here would go straight through a net.");
+    case default : @fishing_wrong_spot_message(last_useitem);
+}
+
+[label,attempt_fish_slimey_eel]
+if (stat(fishing) < ^slimey_eel_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^slimey_eel_level)> Fishing to bait these fish.");
+    return;
+}
+if (~check_fish_equipment(fishing_rod) = false) {
+    return;
+}
+// the cast, then the attempt, on freshfish.rs2's clock exactly - a rod spot is a rod spot
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 4);
+    p_opnpc(1);
+    return;
+}
+if (%action_delay = calc(map_clock + 3)) {
+    anim(human_fishing_casting, 0);
+    mes("You cast out your line...");
+    p_opnpc(1);
+    return;
+}
+if (%action_delay = calc(map_clock + 2)) {
+    sound_synth(fishing_cast, 1, 0);
+    mes("You attempt to catch a fish.");
+}
+p_opnpc(3);
+if (afk_event = ^true & npc_param(is_whirlpool) = ^false) {
+    @macro_event_fishing(fishing_rod);
+}
+
+[label,fish_slimey_eel]
+if (stat(fishing) < ^slimey_eel_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^slimey_eel_level)> Fishing to bait these fish.");
+    return;
+}
+if (~check_fish_equipment(fishing_rod) = false) {
+    return;
+}
+// a spare slot, unless the bait about to be used up is leaving one (freshfish.rs2's own condition)
+if (inv_freespace(inv) = 0 & inv_total(inv, fishing_bait) > 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more fish.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 4);
+} else if (%action_delay = map_clock) {
+    anim(human_fish_onspot, 0);
+    ~fish_roll(mort_slimey_eel, null, fishing_rod, fishing_bait);
+    if (random(5) = 0) { // the rod recast, as pike: https://x.com/JagexAsh/status/1585958606364868608
+        p_opnpc(1);
+        return;
+    }
+}
+p_opnpc(3);

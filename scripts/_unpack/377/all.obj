@@ -36524,6 +36524,7 @@ model=obj_tbwt_raw_karambwan
 2dyan=56
 2dxan=388
 weight=700g
+param=fishing_struct,fishing_struct_tbwt_raw_karambwan
 
 [cert_tbwt_raw_karambwan]
 certlink=tbwt_raw_karambwan
@@ -39463,6 +39464,7 @@ model=obj_mort_slimey_eel
 2dxan=256
 members=yes
 weight=2kg
+param=fishing_struct,fishing_struct_mort_slimey_eel
 
 [cert_mort_slimey_eel]
 certlink=mort_slimey_eel
@@ -53725,6 +53727,7 @@ model=obj_oil_lamp_empty
 cost=25
 members=yes
 weight=1lb
+param=crafting_glass_struct,oil_lamp_empty
 
 [cert_oil_lamp_empty]
 certlink=oil_lamp_empty
@@ -53741,6 +53744,7 @@ model=obj_candle_lantern_empty
 cost=10
 members=yes
 weight=2lb
+param=crafting_glass_struct,candle_lantern_empty
 
 [cert_candle_lantern_empty]
 certlink=candle_lantern_empty
@@ -53890,6 +53894,7 @@ model=obj_bullseye_lantern_lens
 cost=70
 members=yes
 weight=1oz
+param=crafting_glass_struct,bullseye_lantern_lens
 
 [cert_bullseye_lantern_lens]
 certlink=bullseye_lantern_lens
@@ -62643,6 +62648,7 @@ members=yes
 2dxan=296
 cost=15
 weight=500g
+param=fishing_struct,fishing_struct_raw_cave_eel
 
 [burnt_cave_eel]
 name=Burnt cave eel
@@ -62696,6 +62702,7 @@ members=yes
 iop1=Eat
 cost=5
 weight=500g
+param=fishing_struct,fishing_struct_giant_frogspawn
 
 [cert_raw_cave_eel]
 certlink=raw_cave_eel
@@ -84492,6 +84499,7 @@ members=yes
 ambient=40
 contrast=20
 weight=3lb
+param=crafting_glass_struct,fishbowl_empty
 
 [fishbowl_water]
 name=Fishbowl

@@ -81,18 +81,31 @@ if ($dz < 0) {
     }
 }
 
-mes("You jump from one rock to the next.");
-sound_synth(jump_no_land, 1, 20);
-~agility_exactmove(human_steppingstonejump, 20, 2, coord, loc_coord, 48, 60, $dir, false);
-
+// THE ROLL COMES BEFORE THE JUMP, which is the whole of this fix. It used to move the player onto
+// the rock FIRST and then roll, so a failed jump said "you fall into the water", took the damage -
+// and left you standing safely on the rock you were aiming at. A failure that still gets you
+// across is not a failure; the causeway was free, with a toll.
+//
+// "It is possible to slip on the rocks, which results in the player falling into the water, being
+// swept back to shore, and taking up to 10 damage." So a slip goes in the water where the player is
+// STANDING, and then the sea puts them back on the mainland beach. The damage is up to 10, which is
+// also what the quest guide warns about - "a max hit of 10" - where this rolled 3 to 8.
 if ($safe = false & stat_random(agility, 60, 200) = false) {
+    mes("You jump for the next rock.");
+    sound_synth(jump_no_land, 1, 20);
     mes("You slip on the wet rock and fall into the water.");
     sound_synth(pool_plop, 1, 0);
     spotanim_map(watersplash, coord, 0, 1);
-    ~damage_self(calc(random(6) + 3));
+    p_delay(1);
+    ~damage_self(calc(random(^horror_basalt_max_damage) + 1));
+    mes("The sea sweeps you back to the shore.");
+    p_telejump(^horror_basalt_shore);
     stat_advance(agility, 5);
     return;
 }
+mes("You jump from one rock to the next.");
+sound_synth(jump_no_land, 1, 20);
+~agility_exactmove(human_steppingstonejump, 20, 2, coord, loc_coord, 48, 60, $dir, false);
 stat_advance(agility, 20);
 
 [proc,abs_value](int $n)(int)

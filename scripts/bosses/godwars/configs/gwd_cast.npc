@@ -47,6 +47,9 @@ resizeh=110
 resizev=110
 op2=Attack
 vislevel=145
+// A demon leaves ashes, not bones - Old School calls them Malicious ashes now and this
+// cache has the plain ones. Every other demon in all.npc carries the same param.
+param=death_drop,ashes
 param=gwd_god,^gwd_god_zamorak
 // Old School npc 3130: its stats, from the cache that carries them - 474 does not.
 attack=124
@@ -76,6 +79,9 @@ resizeh=86
 resizev=86
 op2=Attack
 vislevel=142
+// A demon leaves ashes, not bones - Old School calls them Malicious ashes now and this
+// cache has the plain ones. Every other demon in all.npc carries the same param.
+param=death_drop,ashes
 param=gwd_god,^gwd_god_zamorak
 // Old School npc 3131: its stats, from the cache that carries them - 474 does not.
 attack=83
@@ -103,6 +109,9 @@ readyanim=gwd_seq_66
 walkanim=gwd_seq_63
 op2=Attack
 vislevel=151
+// A demon leaves ashes, not bones - Old School calls them Malicious ashes now and this
+// cache has the plain ones. Every other demon in all.npc carries the same param.
+param=death_drop,ashes
 param=gwd_god,^gwd_god_zamorak
 // Old School npc 3132: its stats, from the cache that carries them - 474 does not.
 attack=115

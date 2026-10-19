@@ -636,12 +636,20 @@ check('check_conflicting_god_cape' not in GODGEAR
       and 'check_conflicting_god_staff' not in GODGEAR,
       'the two pair-at-a-time conflict procs are gone: they named capes two at a time, which '
       'does not survive a fourth cape per god')
+# TWELVE CAPES, TWO ROUTES TO THE SAME CHECK. The six plain and imbued god capes jump straight to
+# @god_cape_equip; the six god Max cape variants go through @maxvariant_equip, which takes the god
+# as an argument and jumps to @god_cape_equip once it has the 99s - because a variant needs both
+# and a plain god cape needs only the staff test. Counted together here, since what matters is that
+# all twelve reach it.
 _gcape_triggers = re.findall(r'^\[opheld2,(\w+)\] @god_cape_equip\(\^god_(\w+)\);$',
-                             GODGEAR + '\n' + VRS2, re.M)
-check(sorted(_gcape_triggers) == sorted((n, g) for n, g in _wantgod.items()),
+                             GODGEAR, re.M)
+_vgod_triggers = re.findall(r'^\[opheld2,(\w+)\] @maxvariant_equip\(\^god_(\w+)\);$',
+                            VRS2, re.M)
+check(sorted(_gcape_triggers + [t for t in _vgod_triggers if t[1] != 'none'])
+      == sorted((n, g) for n, g in _wantgod.items()),
       'and all twelve god capes have an equip trigger that refuses the staff of another god - the '
-      'six new ones in max_cape_variants.rs2 calling the same label: %d of 12'
-      % len(_gcape_triggers))
+      'six variants reaching it through @maxvariant_equip: %d of 12'
+      % len(_gcape_triggers + [t for t in _vgod_triggers if t[1] != 'none']))
 _gstaff = re.findall(r'^\[opheld2,(\w+)\] @god_staff_equip\(\^god_(\w+)\);$',
                      nocomment(GODGEAR), re.M)
 check(sorted(_gstaff) == [('guthix_staff', 'guthix'), ('saradomin_staff', 'saradomin'),
@@ -649,9 +657,28 @@ check(sorted(_gstaff) == [('guthix_staff', 'guthix'), ('saradomin_staff', 'sarad
       'and all three god staves have the mirror trigger, refusing the cape of another god - the '
       'other half of the conflict, and nothing was checking it until a mutation deleted one: %s'
       % sorted(_gstaff))
-check(len(re.findall(r'^\[opheld2,\w+_max_cape\] @god_cape_equip', VRS2, re.M)) == 6,
-      '...and exactly the six god variants get one, not the fire and infernal ones, which have '
-      'no god to conflict with and fall through to [opheld2,_]')
+# AND EVERY VARIANT IS GATED ON THE NINETY-NINES, which is what "max cape equippable at 1 def"
+# turned out to be: the six god ones went to @god_cape_equip, which only asks about the staff in
+# your hand, and the other four had no trigger at all and fell through to [opheld2,_], which wears
+# anything. A brand new account could wear any of the ten. This is one check per variant rather
+# than a count, so a mutation that drops one trigger is caught by the check that names it.
+_vnames = re.findall(r'^val=(\w+_max_cape),\w+$', VENUM.split('[maxvariant_source]', 1)[1], re.M) \
+    if '[maxvariant_source]' in VENUM else []
+check(len(_vnames) == 10, 'there are ten variants to account for: %d' % len(_vnames))
+for _vn in _vnames:
+    check('[opheld2,%s] @maxvariant_equip(^god_' % _vn in VRS2,
+          '  %s is gated on the Max cape\'s own ninety-nines' % _vn)
+_vgate = VRS2.split('[label,maxvariant_equip](int $god)', 1)[1].split('\n[', 1)[0] \
+    if '[label,maxvariant_equip](int $god)' in VRS2 else ''
+check('~skillcape_count_99s < ~skillcape_stats' in _vgate,
+      '...and the gate is the plain cape\'s own count of 99s, read the same way, so the two '
+      'cannot disagree')
+check('@god_cape_equip($god);' in _vgate and '$god ! ^god_none' in _vgate,
+      '...and a god variant still refuses the staff of another god, through the same label the '
+      'plain god capes use')
+check('~equip(last_slot);' in _vgate, '...and wears it when the skills are there')
+check(not re.search(r'^\[opheld2,\w+_max_hood\]', VRS2, re.M),
+      'the hoods stay ungated, which is what the live game does with a skillcape hood')
 
 # ---- THE COMBINE AND THE KNIFE are exact inverses
 _comb = VRS2.split('[label,maxvariant_combine]', 1)[1].split('\n[', 1)[0] if \

@@ -63,15 +63,36 @@ if (map_members = ^false) {
     mes(^mes_members_feature);
     return;
 }
-// The butterfly jar is the fourth slot. glass.struct has had six products in it for as long as
-// this file has existed and the chooser has only ever offered three of them - the candle lantern,
-// the oil lamp and the fishbowl are still unofferable, which is a gap worth closing separately and
-// not by quietly widening this one call.
-def_namedobj $item = ~multiobj4 ("What would you like to make?", 
-    beer_glass, 0, 5, 200, "Beer Glass", 0, 0,
-    vial_empty, 2, 10, 180, "Vial", 0, 0,
-    stafforb, 2, -10, 200, "Orb", 0, 0,
-    hunter_butterfly_jar, 2, 5, 200, "Butterfly jar", 0, 0
+// ALL SEVEN OF THEM. The chooser was ~multiobj4 and glass.struct has had more products than that
+// for as long as this file has existed, so the candle lantern, the oil lamp, the fishbowl and the
+// lantern lens could not be made at all - reported from the game as "cant make candle lantern".
+// It is ~multiobj7 now, which is exactly as many slots as there are glassblowing products, in the
+// order OSRS lists them: 1, 4, 12, 33, 42, 46 and 49 Crafting.
+//
+// THE LABELS ARE BROKEN BY HAND where they do not fit. multiobj7 puts the name UNDER the picture in
+// a 67px column and the client does not wrap text - it only splits on a literal backslash-n - so a
+// name wider than 66px would spill over its neighbours. Measured in q8_full with tools/ifrender.py:
+// "Beer glass" is 69 and "Candle lantern" 98 and "Lantern lens" 85, so those three are split; the
+// widest half is "lantern" at 47.
+//
+// THE BUTTERFLY JAR CAME OUT, which is the one thing here that is not a correction. It is not an
+// OSRS glassblowing product - a jar comes from a jar generator or a Hunter shop, and this build has
+// both ([opheld3,jar_generator] and the Rellekka, Piscatoris and warlock shops) - and it was
+// holding a slot that a real product needed. Its struct and its param are left where they are, so
+// putting it back is one line if that was deliberate.
+//
+// THE CACHE HAS A BETTER MENU THAN THIS and nobody is using it: skill_crafting/interfaces/
+// glass_crafting.if is 2006's own glassblowing panel, with these same seven products laid out and
+// Make 1 / 5 / 10 / X on each. Wiring it up is a bigger piece of work than this bug - 28 buttons
+// and a count dialogue - so it is left for its own round rather than done badly here.
+def_namedobj $item = ~multiobj7("What would you like to make?",
+    beer_glass, 0, 0, 200, "Beer\\nglass", 0, 0,
+    candle_lantern_empty, 0, 0, 230, "Candle\\nlantern", 0, 0,
+    oil_lamp_empty, 0, 0, 230, "Oil lamp", 0, 0,
+    vial_empty, 0, 0, 180, "Vial", 0, 0,
+    fishbowl_empty, 0, 0, 230, "Fishbowl", 0, 0,
+    stafforb, 0, 0, 200, "Orb", 0, 0,
+    bullseye_lantern_lens, 0, 0, 180, "Lantern\\nlens", 0, 0
 );
 if ($item = null) {
     ~displaymessage(^dm_default);

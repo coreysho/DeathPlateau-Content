@@ -104,3 +104,63 @@ param=productmessage,You catch a sea turtle.
 param=success_low,3
 param=success_high,40
 param=fishing_pet_base,0
+
+// THE TWO EELS AND THE FROG SPAWN, which the maps have had spots for since the 377 import and
+// nothing behind them: three spot types in Mort Myre with Bait and two in the Lumbridge Swamp
+// Caves with Net and Bait, at nineteen spawn points, none of which answered a click.
+// skill_fishing/scripts/fishing_spots/slimeyeel.rs2 and cavefish.rs2 have the two handlers and
+// where each number comes from.
+//
+// THE RATES ARE THE WIKI'S OWN PAIRS, not a guess from a chart. Every fish page carries a
+// {{Skilling success chart}} whose low= and high= are the game's own stat_random arguments, and
+// those are what these are: raw slimy eel and raw cave eel share low=10 high=80 (one chart, two
+// series, cascade=yes - which is the same thing as fish2-then-fish1 in ~fish_roll), and frog spawn
+// is low=16 high=96. The engine's formula is floor(low*(99-L)/98) + floor(high*(L-1)/98) + 1 out
+// of 256, so frog spawn works out at 16.8% a roll at level 33 and 37.9% at 99, which is exactly
+// what the wiki's chart plots.
+[fishing_struct_mort_slimey_eel]
+// 65 and not 80: a slimy eel is worth 80 experience in the Lumbridge Swamp Caves and 65 in Mort
+// Myre, and this obj is caught in both. The struct carries Mort Myre's number - where seventeen of
+// the nineteen spawn points are, and what the obj is named for - and cavefish.rs2 tops up the
+// difference when one comes out of the caves.
+param=productexp,650
+param=productmessage,You catch a slimy eel.
+param=success_low,10
+param=success_high,80
+param=fishing_pet_base,0
+
+[fishing_struct_raw_cave_eel]
+param=productexp,800
+param=productmessage,You catch a cave eel.
+param=success_low,10
+param=success_high,80
+// the one of the three the Heron table does list
+param=fishing_pet_base,257770
+
+[fishing_struct_giant_frogspawn]
+// "Frog spawn" is this obj's own name - the cache calls it giant_frogspawn and the gourmet impling
+// already hands it out (skill_hunter/scripts/hunter_implings_loot.rs2), which is where it came from
+// until now.
+param=productexp,750
+param=productmessage,You catch some frog spawn.
+param=success_low,16
+param=success_high,96
+param=fishing_pet_base,0
+
+// THE KARAMBWAN, whose numbers were mine and are now the wiki's. The catch itself lives in
+// quests/quest_tbwt/scripts/quest_tbwt.rs2 (the vessel dropped by hand) and is reached from
+// skill_fishing/scripts/fishing_spots/karambwan.rs2 (the spot clicked) - two doors, one roll - and
+// it is the one fish here that cannot go through ~fish_roll, because a karambwan takes the
+// karambwanji whether or not it is caught and ~fish_roll deletes bait only on a catch. So the
+// struct holds the numbers and that label reads them out of it.
+//
+// 50 experience and low=5 high=160 at 65, which is Old School's published pair and the same source
+// every other struct in this file is built from. The original 2004 value was 105 and RuneScape 3
+// still pays it; this build has followed Old School everywhere else it had the choice - cooking one
+// thoroughly already pays Old School's 190 - so it follows it here.
+[fishing_struct_tbwt_raw_karambwan]
+param=productexp,500
+param=productmessage,Something heavy goes into the vessel and does not come out again. You do not look too closely.
+param=success_low,5
+param=success_high,160
+param=fishing_pet_base,170874

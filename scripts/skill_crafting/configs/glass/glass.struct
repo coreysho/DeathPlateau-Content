@@ -5,7 +5,8 @@ param=productmessage,a beer glass
 
 [candle_lantern_empty]
 param=levelrequire,4
-param=productexp,195
+// 19 and not 19.5: the wiki's recipe box for the empty candle lantern says skill1exp = 19
+param=productexp,190
 param=product,candle_lantern_empty
 param=productmessage,a candle lantern
 
@@ -23,7 +24,8 @@ param=productmessage,a vial
 
 [fishbowl_empty]
 param=levelrequire,42
-param=productexp,625
+// 42.5, which is the Fishbowl page's own skill1exp - this said 62.5
+param=productexp,425
 param=product,fishbowl_empty
 param=productmessage,a fishbowl
 

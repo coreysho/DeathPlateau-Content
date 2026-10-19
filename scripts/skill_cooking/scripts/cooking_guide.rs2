@@ -43,20 +43,22 @@ switch_int (%skillguide_page) {
 ~skillguide_row(16, $lvl, 20, pike, "Pike");
 ~skillguide_row(17, $lvl, 25, salmon, "Salmon");
 ~skillguide_row(18, $lvl, 25, stew, "Stew");
-~skillguide_row(19, $lvl, 30, apple_pie, "Apple pie");
-~skillguide_row(20, $lvl, 30, tuna, "Tuna");
-~skillguide_row(21, $lvl, 35, plain_pizza, "Plain pizza");
-~skillguide_row(22, $lvl, 40, cake, "Cake");
-~skillguide_row(23, $lvl, 40, lobster, "Lobster");
-~skillguide_row(24, $lvl, 43, bass, "Bass");
-~skillguide_row(25, $lvl, 45, swordfish, "Swordfish");
-~skillguide_row(26, $lvl, 50, cooked_oomlie, "Cooked oomlie wrap");
-~skillguide_row(27, $lvl, 53, lava_eel, "Lava eel");
-~skillguide_row(28, $lvl, 58, pitta_bread, "Pitta bread");
-~skillguide_row(29, $lvl, 60, curry, "Curry");
-~skillguide_row(30, $lvl, 80, shark, "Shark");
-~skillguide_row(31, $lvl, 82, seaturtle, "Sea turtle");
-~skillguide_row(32, $lvl, 91, mantaray, "Manta ray");
+~skillguide_row(19, $lvl, 28, mort_slimey_eel_cooked, "Cooked slimy eel");
+~skillguide_row(20, $lvl, 30, apple_pie, "Apple pie");
+~skillguide_row(21, $lvl, 30, tuna, "Tuna");
+~skillguide_row(22, $lvl, 35, plain_pizza, "Plain pizza");
+~skillguide_row(23, $lvl, 38, cave_eel, "Cave eel");
+~skillguide_row(24, $lvl, 40, cake, "Cake");
+~skillguide_row(25, $lvl, 40, lobster, "Lobster");
+~skillguide_row(26, $lvl, 43, bass, "Bass");
+~skillguide_row(27, $lvl, 45, swordfish, "Swordfish");
+~skillguide_row(28, $lvl, 50, cooked_oomlie, "Cooked oomlie wrap");
+~skillguide_row(29, $lvl, 53, lava_eel, "Lava eel");
+~skillguide_row(30, $lvl, 58, pitta_bread, "Pitta bread");
+~skillguide_row(31, $lvl, 60, curry, "Curry");
+~skillguide_row(32, $lvl, 80, shark, "Shark");
+~skillguide_row(33, $lvl, 82, seaturtle, "Sea turtle");
+~skillguide_row(34, $lvl, 91, mantaray, "Manta ray");
 
 [proc,cooking_guide_drinks](int $lvl)
 ~skillguide_row(1, $lvl, 1, fruit_blast, "Fruit blast");

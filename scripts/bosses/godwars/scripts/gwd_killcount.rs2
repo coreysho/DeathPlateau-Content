@@ -75,15 +75,49 @@ switch_int ($god) {
 return("");
 
 // ---------------------------------------------------------------- the doors
-[oploc1,gwd_door_armadyl] @gwd_open_door(^gwd_god_armadyl, ^gwd_inside_armadyl);
-[oploc1,gwd_door_bandos] @gwd_open_door(^gwd_god_bandos, ^gwd_inside_bandos);
-[oploc1,gwd_door_zamorak] @gwd_open_door(^gwd_god_zamorak, ^gwd_inside_zamorak);
-[oploc1,gwd_door_saradomin] @gwd_open_door(^gwd_god_saradomin, ^gwd_inside_saradomin);
+[oploc1,gwd_door_armadyl] @gwd_open_door(^gwd_god_armadyl, ^gwd_inside_armadyl, ^gwd_outside_armadyl);
+[oploc1,gwd_door_bandos] @gwd_open_door(^gwd_god_bandos, ^gwd_inside_bandos, ^gwd_outside_bandos);
+[oploc1,gwd_door_zamorak] @gwd_open_door(^gwd_god_zamorak, ^gwd_inside_zamorak, ^gwd_outside_zamorak);
+[oploc1,gwd_door_saradomin] @gwd_open_door(^gwd_god_saradomin, ^gwd_inside_saradomin, ^gwd_outside_saradomin);
 
-// $inside is the tile on the room side of this door - gwd.constant says how each was found. The
-// door is not animated open: it is a wall with a room behind it, and what the player wants is to
-// be through it.
-[label,gwd_open_door](int $god, coord $inside)
+// WHICH SIDE OF A DOOR YOU ARE ON, without naming a compass direction. The four doors face four
+// different ways - Armadyl's room is north of its door, Bandos' east, Zamorak's south, Saradomin's
+// west - so a coordinate test per door would be four tests to get right and to keep right if a
+// tile ever moves. The two tiles already in gwd.constant answer it between them: whichever you are
+// nearer to is the side you are on.
+//
+// STRICTLY NEARER, and that is not a detail. A door is a wall on one EDGE of its own tile, so a
+// player walking up to it from the corridor ends up standing ON the door's tile - the same thing
+// the gong in gwd_encampments.rs2 has a paragraph about. From there both tiles are one step away,
+// and a test that accepted a tie read every arrival from the corridor as somebody trying to leave:
+// the door would "open", put the player back where they already stood, and look like nothing had
+// happened at all. A tie is the corridor.
+[proc,gwd_door_steps](coord $c)(int)
+def_int $dx = sub(coordx(coord), coordx($c));
+def_int $dz = sub(coordz(coord), coordz($c));
+if ($dx < 0) {
+    $dx = sub(0, $dx);
+}
+if ($dz < 0) {
+    $dz = sub(0, $dz);
+}
+return(max($dx, $dz));
+
+// $inside is the tile on the room side of this door and $outside the corridor side - gwd.constant
+// says how each was found. The door is not animated open: it is a wall with a room behind it, and
+// what the player wants is to be through it.
+//
+// LEAVING IS FREE AND ALWAYS POSSIBLE, which is what this got wrong. Both sides of the door ran
+// the same code, so a player standing in the boss room was asked for killcount all over again to
+// get out - and reported it from the game as not being able to leave. With forty kills banked it
+// was worse than a refusal: it SPENT them and put the player back inside the room they were
+// already in. Only entering costs anything, and only entering is counted.
+[label,gwd_open_door](int $god, coord $inside, coord $outside)
+if (~gwd_door_steps($inside) < ~gwd_door_steps($outside)) {
+    mes("The door opens, and shuts again behind you.");
+    p_telejump($outside);
+    return;
+}
 def_int $have = ~gwd_killcount($god);
 if ($have < ^gwd_killcount_needed) {
     def_int $short = sub(^gwd_killcount_needed, $have);

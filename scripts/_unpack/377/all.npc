@@ -29321,6 +29321,7 @@ walkanim=fishingspot_walk
 minimap=no
 op1=Fish
 moverestrict=nomove
+category=karambwan
 
 [general_karambwan]
 name=Fishing spot
@@ -29332,6 +29333,7 @@ walkanim=fishingspot_walk
 minimap=no
 op1=Fish
 moverestrict=nomove
+category=karambwan
 
 [lubufu_karambwan]
 name=Fishing spot
@@ -29343,6 +29345,7 @@ walkanim=fishingspot_walk
 minimap=no
 op1=Fish
 moverestrict=nomove
+category=karambwan
 
 [0_45_48_seabird1]
 name=Gull
@@ -30636,6 +30639,8 @@ op1=Bait
 op3=hidden
 op5=hidden
 moverestrict=nomove
+category=slimey_eel
+param=whirlpool,macro_whirlpool_slimey_eel
 
 [0_53_53_slimey_eel]
 name=Fishing spot
@@ -30649,6 +30654,8 @@ op1=Bait
 op3=hidden
 op5=hidden
 moverestrict=nomove
+category=slimey_eel
+param=whirlpool,macro_whirlpool_slimey_eel
 
 [0_53_51_slimey_eel]
 name=Fishing spot
@@ -30662,6 +30669,8 @@ op1=Bait
 op3=hidden
 op5=hidden
 moverestrict=nomove
+category=slimey_eel
+param=whirlpool,macro_whirlpool_slimey_eel
 
 [bedabin_fighter]
 name=Bedabin Nomad Fighter
@@ -46001,6 +46010,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=cavefish
+param=whirlpool,macro_whirlpool_cavefish
 
 [0_50_149_cavefish]
 name=Fishing spot
@@ -46015,6 +46026,8 @@ op3=Bait
 op4=hidden
 op5=hidden
 moverestrict=nomove
+category=cavefish
+param=whirlpool,macro_whirlpool_cavefish
 
 [lost_tribe_sigmund]
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r

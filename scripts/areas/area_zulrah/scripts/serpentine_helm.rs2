@@ -185,8 +185,19 @@ mes("@red@Your helm has run out of scales.");
 // What a charged helm does
 // ---------------------------------------------------------------------------------------------
 // Worn and holding scales. Everything below is gated on this and nothing else.
+//
+// THE FAMILY AND NOT THE NAME. This used to compare the worn hat against serpentine_helm, which
+// meant a tanzanite or a magma helm granted no immunity and envenomed nothing - the two mutated
+// pairs are "purely cosmetic" in Old School and were anything but here. The test is the same one
+// ~serpentine_helm_combat_entry uses to pick a charged family helm out of every hat in the game:
+// a charged one is the one with an uncharged record to fall back to. Guard the empty slot first,
+// because oc_param(null, ...) throws rather than returning null.
 [proc,serpentine_helm_charged]()(boolean)
-if (inv_getobj(worn, ^wearpos_hat) = serpentine_helm & %serpentine_helm_charges > 0) {
+def_obj $hat = inv_getobj(worn, ^wearpos_hat);
+if ($hat = null) {
+    return(false);
+}
+if (oc_param($hat, serpentine_uncharged) ! null & %serpentine_helm_charges > 0) {
     return(true);
 }
 return(false);

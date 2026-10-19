@@ -1,0 +1,179 @@
+// THE LUMBRIDGE SWAMP CAVE FISHING SPOTS - frog spawn with a net, eels with a rod.
+//
+// Two spot records in the 377 maps (0_49_149_cavefish, 0_50_149_cavefish) carry Net and Bait and
+// carried no category, so neither op reached anything. tools/silentnpcops.py found them beside the
+// Mort Myre ones; both kinds needed a handler written rather than a line added.
+//
+// TWO OPS AND THREE FISH, which is exactly what the wiki calls this spot: "Fishing spot (frog
+// spawn, eels)".
+//
+//   Net   small fishing net, no bait   frog spawn   33 Fishing, 75 experience
+//   Bait  fishing rod + fishing bait   cave eel     38 Fishing, 80 experience
+//                                      slimy eel    28 Fishing, 80 experience
+//
+// THE EELS SHARE ONE ROLL. The wiki plots both on one chart with cascade=yes and the same low=10
+// high=80 pair, which is the same arrangement ~fish_roll already has: the better fish goes in as
+// the second argument and is rolled first, and the other is rolled when it misses. So a player at
+// 38 catches cave eels and slimy eels from the same click, and one below 38 catches only slimy eels
+// - which is how rarefish.rs2 gets a swordfish out of a tuna click, and wildyfish.rs2 a manta out
+// of a turtle click.
+//
+// AND THE SWAMP WEED IS NOT HERE. The same net catches swamp weed in Old School for one experience,
+// and the obj does not exist in this cache - it is id 10978, long after 377 - so the Net op gives
+// frog spawn only.
+//
+// A LIGHT SOURCE is the caves' own business and not this file's: the dark is the area's, and these
+// triggers answer wherever the spot is reachable.
+
+// Net, for the frog spawn.
+[opnpc1,_cavefish]
+@attempt_fish_frogspawn;
+
+// Bait, for the eels.
+[opnpc3,_cavefish]
+@attempt_fish_cave_eel;
+
+// The hidden continuation ops, one per visible op, as freshfish.rs2 has them.
+[opnpc4,_cavefish]
+@fish_frogspawn;
+[opnpc5,_cavefish]
+@fish_cave_eel;
+
+[opnpcu,_cavefish]
+switch_obj(last_useitem) {
+    case net : @attempt_fish_frogspawn;
+    case fishing_rod : @attempt_fish_cave_eel;
+    case default : @fishing_wrong_spot_message(last_useitem);
+}
+
+// =========================================================================== frog spawn, with a net
+[label,attempt_fish_frogspawn]
+if (stat(fishing) < ^frogspawn_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^frogspawn_level)> Fishing to net these.");
+    return;
+}
+if (~check_fish_equipment(net) = false) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more.");
+    return;
+}
+// the cast, then the catch, on saltfish.rs2's clock exactly - a small net is a small net
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 4);
+    p_opnpc(1);
+    return;
+}
+if (%action_delay = calc(map_clock + 3)) {
+    mes("You cast out your net...");
+    anim(human_smallnet, 0);
+    sound_synth(net, 1, 0);
+    p_opnpc(4);
+} else if (%action_delay = map_clock) {
+    ~fish_roll(giant_frogspawn, null, net, null);
+}
+if (afk_event = ^true & npc_param(is_whirlpool) = ^false) {
+    @macro_event_fishing(net);
+}
+
+[label,fish_frogspawn]
+if (stat(fishing) < ^frogspawn_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^frogspawn_level)> Fishing to net these.");
+    return;
+}
+if (~check_fish_equipment(net) = false) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 5);
+} else if (%action_delay = map_clock) {
+    anim(human_smallnet, 0);
+    ~fish_roll(giant_frogspawn, null, net, null);
+}
+p_opnpc(4);
+
+// =============================================================================== the eels, on a rod
+[label,attempt_fish_cave_eel]
+if (stat(fishing) < ^slimey_eel_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^slimey_eel_level)> Fishing to bait these fish.");
+    return;
+}
+if (~check_fish_equipment(fishing_rod) = false) {
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 4);
+    p_opnpc(3);
+    return;
+}
+if (%action_delay = calc(map_clock + 3)) {
+    anim(human_fishing_casting, 0);
+    mes("You cast out your line...");
+    p_opnpc(3);
+    return;
+}
+if (%action_delay = calc(map_clock + 2)) {
+    sound_synth(fishing_cast, 1, 0);
+    mes("You attempt to catch a fish.");
+}
+p_opnpc(5);
+if (afk_event = ^true & npc_param(is_whirlpool) = ^false) {
+    @macro_event_fishing(fishing_rod);
+}
+
+[label,fish_cave_eel]
+if (stat(fishing) < ^slimey_eel_level) {
+    anim(null, 0);
+    ~mesbox("You need at least <tostring(^slimey_eel_level)> Fishing to bait these fish.");
+    return;
+}
+if (~check_fish_equipment(fishing_rod) = false) {
+    return;
+}
+if (inv_freespace(inv) = 0 & inv_total(inv, fishing_bait) > 1) {
+    anim(null, 0);
+    ~mesbox("You can't carry any more fish.");
+    return;
+}
+if (%action_delay < map_clock) {
+    %action_delay = calc(map_clock + 4);
+} else if (%action_delay = map_clock) {
+    anim(human_fish_onspot, 0);
+    ~cave_eel_roll;
+    if (random(5) = 0) { // the rod recast, as pike and the swamp
+        p_opnpc(3);
+        return;
+    }
+}
+p_opnpc(5);
+
+// A PROC AND NOT A LABEL, because @ is a jump and not a call: written as [label] and reached with
+// @, the recast roll and the p_opnpc(5) under it never run, the click is never re-queued, and
+// fishing stops dead after one attempt. tools/sim/eelspots.ts caught exactly that - nought fish in
+// six hundred ticks with the cast message printing fine.
+//
+// THE CAVES PAY 80 FOR A SLIMY EEL AND MORT MYRE PAYS 65, and the struct can only hold one of those
+// numbers for one obj. It holds Mort Myre's, where seventeen of the nineteen spawn points are, so
+// the fifteen in the difference are added here - and only when a slimy eel actually arrived, which
+// is what counting them before and after the roll is for. A cave eel's 80 is its own struct's and
+// needs none of this.
+[proc,cave_eel_roll]
+def_int $before = inv_total(inv, mort_slimey_eel);
+if (stat(fishing) >= ^cave_eel_level) {
+    ~fish_roll(mort_slimey_eel, raw_cave_eel, fishing_rod, fishing_bait);
+} else {
+    ~fish_roll(mort_slimey_eel, null, fishing_rod, fishing_bait);
+}
+if (inv_total(inv, mort_slimey_eel) > $before) {
+    ~fishing_xp(^cave_slimey_eel_bonus_xp);
+}
