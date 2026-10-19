@@ -268,10 +268,10 @@ if(stat_random(agility, 140, 250) = false) {
 mes("You manage to make the jump.");
 
 [oploc1,farming_style]
-~climb_stile;
+~climb_stile(human_walk_style);
 
 [oploc1,qip_sheep_shearer_fullstyle]
-~climb_stile;
+~climb_stile(human_walk_style);
 
 [oploc1,loc_9299]
 if(stat(agility) < 29) { 
@@ -279,6 +279,18 @@ if(stat(agility) < 29) {
     return;
 }
 ~climb_fence;
+
+// THE FENCE SOUTH OF VARROCK, which carried op1=Jump-over and nothing answered it - so the click
+// said "Nothing interesting happens", which is how it was reported from the game. It is OSRS's own
+// shortcut (loc 16518 there, at 3240,3334): Agility 13, no experience at all, and a jump rather
+// than a squeeze, so it hurdles over on the stile's geometry rather than crawling through on the
+// broken fence's.
+[oploc1,loc_9300]
+if(stat(agility) < 13) {
+    mes("You need an agility level of 13 to attempt to jump over this fence.");
+    return;
+}
+~climb_stile(human_jump_hurdle);
 
 [oploc1,loc_9309]
 if(stat(agility) < 26) { 
@@ -450,7 +462,11 @@ if (coordx(coord) > coordx($west_exit)) {
 sound_synth(squeeze_through_rocks, 1, 0);
 mes("You squeeze through the crevice.");
 
-[proc,climb_stile]
+// $anim because the same movement has two animations: a stile is stepped over
+// (human_walk_style) and the fence south of Varrock is hurdled (human_jump_hurdle). The
+// geometry is identical - a wall on a tile edge, crossed from whichever side you are on -
+// and that is the part worth sharing.
+[proc,climb_stile](seq $anim)
 def_coord $start_coord = loc_coord;
 def_int $mod = 1;
 def_int $dir = ^exact_north;
@@ -477,7 +493,7 @@ if(loc_angle = ^loc_north | loc_angle = ^loc_south) {
 } 
 p_teleport($start_coord);
 p_delay(0);
-~agility_exactmove(human_walk_style, 30, 2, $start_coord, $end_coord, 30, 94, $dir, true);
+~agility_exactmove($anim, 30, 2, $start_coord, $end_coord, 30, 94, $dir, true);
 p_teleport($walk_coord);
 
 [proc,climb_fence]

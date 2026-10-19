@@ -284,4 +284,4 @@ if (coordz(coord) <= coordz(loc_coord)) {
         return;
     }
 }
-~climb_stile;
+~climb_stile(human_walk_style);
