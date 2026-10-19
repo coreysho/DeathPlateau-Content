@@ -206,12 +206,24 @@ if(inv_total(inv, blurite_ore) >= 1 & inv_total(inv, iron_bar) >= 2) {
     ~chatnpc("<p,neutral>Well, come back when you do. Remember: I need a blurite ore and two iron bars.");
 }
 
+// IS SIR VYVIN STANDING OVER HIS CUPBOARD? Measured from the CUPBOARD, not from the player, and
+// that is not a detail: the cupboard answers from one tile only, 2984,3335, and an npc stops
+// wandering while somebody is standing next to it. Measured from the player this deadlocked - Vyvin
+// parks on a tile beside that one, the search is refused for ever, and he will not move while you
+// are there to ask. Thirty minutes of waiting in a sim never once got the portrait out, which makes
+// The Knight's Sword unfinishable.
+//
+// From the cupboard it is the waiting game it is meant to be: he blocks it while he is beside it,
+// and walking off and coming back finds him somewhere else.
 [proc,vyvin_distracted]()(boolean)
-// check if Vyvin is nearby, if hes standing near of the player
-// they wont be able to search the cupboard
-if (npc_find(coord, sir_vyvin, 1, 0) = true) {
+if (npc_find(loc_coord, sir_vyvin, 1, 0) = true) {
     ~chatnpc("<p,angry>HEY! Just WHAT do you THINK you are DOING??? STAY OUT of MY cupboard!");
     ~mesbox("Maybe you need to get Sir Vyvin further away from his cupboard...");
+    // AND HE STALKS BACK TO HIS POST, which is what stops this being a dead end. An npc stops
+    // wandering while somebody is standing beside it, and the cupboard answers from one tile only -
+    // so a Vyvin who happens to be next to that tile stays there, and telling the player to get him
+    // further away is advice they cannot act on. Sending him back gives them their next go.
+    npc_walk(2_46_52_37_6);
     return(false);
 }
 return(true);
