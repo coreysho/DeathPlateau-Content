@@ -318,11 +318,14 @@ return(false);
 // How many of the two pieces the player does not have anywhere - inventory, bank or worn. A player
 // who lost only the hood gets a hood, and needs one free slot rather than two.
 [proc,maxcape_missing]()(int)
+// (2026-10-19) A variant counts (max_cape_variants.rs2, generated): fusing the Max cape into one is not
+// losing it, and counting only max_cape made Mac hand out a free one - split the variant with a knife
+// and that was a spare Max cape to alch, as often as you liked.
 def_int $missing = 0;
-if (~obj_gettotal(max_cape) = 0) {
+if (calc(~obj_gettotal(max_cape) + ~maxvariant_owned_capes) = 0) {
     $missing = add($missing, 1);
 }
-if (~obj_gettotal(max_hood) = 0) {
+if (calc(~obj_gettotal(max_hood) + ~maxvariant_owned_hoods) = 0) {
     $missing = add($missing, 1);
 }
 return($missing);

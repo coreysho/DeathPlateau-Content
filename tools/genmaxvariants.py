@@ -380,6 +380,18 @@ def build_rs2(spec):
         g = GOD_OF.get(v['key'])
         L.append('[opheld2,%s_max_cape] @maxvariant_equip(^god_%s);'
                  % (v['key'], g if g else 'none'))
+    # (2026-10-19) Mac gives a free Max cape to anyone who has none, and he only ever looked for
+    # max_cape and max_hood - so fusing the cape into a variant read as "lost": a free cape, a knife
+    # to split the variant back apart, and one spare to alch, for ever. A variant IS a Max cape (and
+    # its hood a Max hood), and this is how skillcape_shop.rs2's ~maxcape_missing counts them.
+    L += ['',
+          '// Every variant cape and every variant hood this player owns, anywhere (inventory, bank,',
+          '// worn) - for ~maxcape_missing in skillcape_shop.rs2: a variant is a Max cape, not a lost one.',
+          '[proc,maxvariant_owned_capes]()(int)',
+          'return(calc(' + ' + '.join('~obj_gettotal(%s_max_cape)' % v['key'] for v in V) + '));',
+          '',
+          '[proc,maxvariant_owned_hoods]()(int)',
+          'return(calc(' + ' + '.join('~obj_gettotal(%s_max_hood)' % v['key'] for v in V) + '));']
     L.append('')
     return '\n'.join(L)
 

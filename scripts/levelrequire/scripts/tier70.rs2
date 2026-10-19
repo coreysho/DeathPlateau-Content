@@ -207,3 +207,16 @@
 [opheld2,black_dhide_body_t] @levelrequire_ranged_and_defence(70, 40, last_slot);
 [opheld2,black_dhide_chaps_g] @levelrequire_ranged_lower(70, last_slot);
 [opheld2,black_dhide_chaps_t] @levelrequire_ranged_lower(70, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,abyssal_whip_bloodbark] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_bone] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_frozen] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_gilded] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_gravedigger] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_shadow] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_tempest] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_venom] @levelrequire_attack_caps(70, last_slot);
+[opheld2,abyssal_whip_volcanic] @levelrequire_attack_caps(70, last_slot);

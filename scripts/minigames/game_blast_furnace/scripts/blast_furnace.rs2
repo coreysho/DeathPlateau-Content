@@ -292,7 +292,9 @@ anim(human_smithing, 0);
 sound_synth(anvil, 1, 0);
 p_delay(4);
 %blast_furnace_broken_pipe_reading = ^bf_off;
-stat_advance(crafting, ^bf_repair_xp);
+// (2026-10-19) No Crafting XP for this. The pipes only ever split from pumping past the gauge
+// ([label,bf_pump]) - nothing breaks them at random here - so the XP rewarded breaking them on
+// purpose: pump, burst, mend, repeat, for ever.
 mes("You hammer the split seams flat again.");
 
 // =========================================================================== the pedals
@@ -310,7 +312,8 @@ if (%blast_furnace_broken_pipe_reading = ^bf_on) {
 anim(blast_furnace_human_conveyer_cycle, 0);
 sound_synth(machinery, 1, 0);
 p_delay(3);
-stat_advance(agility, ^bf_pedal_xp);
+// (2026-10-19) No Agility here: it is paid in [label,bf_smelt_batch], when ore actually goes in. Paid
+// here, it was free XP for pedalling an empty, cold machine for ever.
 if (%blast_furnace_temperature_reading < ^bf_temp_floor) {
     mes("The belt carries the ore in, but the pot is not hot enough to melt it. Work the pump.");
     return;
@@ -378,6 +381,7 @@ if ($count < 1) {
     return;
 }
 ~bf_ore_set($ore, sub(~bf_ore($ore), multiply($count, $per)));
+stat_advance(agility, ^bf_pedal_xp); // the pedals' XP, for a turn that carried ore in ([label,bf_pedal])
 if ($second ! null) {
     ~bf_ore_set($second, sub(~bf_ore($second), multiply($count, $second_per)));
 }

@@ -123,3 +123,11 @@ if ($god ! ^god_none) {
 [opheld2,imbued_zamorak_max_cape] @maxvariant_equip(^god_zamorak);
 [opheld2,undertaker_max_cape] @maxvariant_equip(^god_none);
 [opheld2,accumulator_max_cape] @maxvariant_equip(^god_none);
+
+// Every variant cape and every variant hood this player owns, anywhere (inventory, bank,
+// worn) - for ~maxcape_missing in skillcape_shop.rs2: a variant is a Max cape, not a lost one.
+[proc,maxvariant_owned_capes]()(int)
+return(calc(~obj_gettotal(fire_max_cape) + ~obj_gettotal(infernal_max_cape) + ~obj_gettotal(saradomin_max_cape) + ~obj_gettotal(guthix_max_cape) + ~obj_gettotal(zamorak_max_cape) + ~obj_gettotal(imbued_saradomin_max_cape) + ~obj_gettotal(imbued_guthix_max_cape) + ~obj_gettotal(imbued_zamorak_max_cape) + ~obj_gettotal(undertaker_max_cape) + ~obj_gettotal(accumulator_max_cape)));
+
+[proc,maxvariant_owned_hoods]()(int)
+return(calc(~obj_gettotal(fire_max_hood) + ~obj_gettotal(infernal_max_hood) + ~obj_gettotal(saradomin_max_hood) + ~obj_gettotal(guthix_max_hood) + ~obj_gettotal(zamorak_max_hood) + ~obj_gettotal(imbued_saradomin_max_hood) + ~obj_gettotal(imbued_guthix_max_hood) + ~obj_gettotal(imbued_zamorak_max_hood) + ~obj_gettotal(undertaker_max_hood) + ~obj_gettotal(accumulator_max_hood)));

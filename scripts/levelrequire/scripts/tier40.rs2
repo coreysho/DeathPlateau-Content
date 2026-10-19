@@ -191,3 +191,27 @@
 [opheld2,saradomin_kiteshield] @levelrequire_defence(40, last_slot);
 [opheld2,saradomin_platebody] @levelrequire_dragon_slayer_quest_defence(40, last_slot);
 [opheld2,saradomin_platelegs] @levelrequire_defence(40, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,dragonhide_body_trim] @levelrequire_dragon_slayer_quest_ranged_and_defence(40, 40, last_slot);
+[opheld2,dragonhide_body_trim_gold] @levelrequire_dragon_slayer_quest_ranged_and_defence(40, 40, last_slot);
+[opheld2,dragonhide_chaps_trim] @levelrequire_ranged_lower(40, last_slot);
+[opheld2,dragonhide_chaps_trim_gold] @levelrequire_ranged_lower(40, last_slot);
+[opheld2,rune_plateskirt_gold] @levelrequire_defence(40, last_slot);
+[opheld2,rune_plateskirt_goldplate] @levelrequire_defence(40, last_slot);
+[opheld2,rune_plateskirt_guthix] @levelrequire_defence(40, last_slot);
+[opheld2,rune_plateskirt_saradomin] @levelrequire_defence(40, last_slot);
+[opheld2,rune_plateskirt_trim] @levelrequire_defence(40, last_slot);
+[opheld2,rune_plateskirt_zamorak] @levelrequire_defence(40, last_slot);
+[opheld2,rune_helm_h1] @levelrequire_defence(40, last_slot);
+[opheld2,rune_shield_h1] @levelrequire_defence(40, last_slot);
+[opheld2,rune_helm_h2] @levelrequire_defence(40, last_slot);
+[opheld2,rune_shield_h2] @levelrequire_defence(40, last_slot);
+[opheld2,rune_helm_h3] @levelrequire_defence(40, last_slot);
+[opheld2,rune_shield_h3] @levelrequire_defence(40, last_slot);
+[opheld2,rune_helm_h4] @levelrequire_defence(40, last_slot);
+[opheld2,rune_shield_h4] @levelrequire_defence(40, last_slot);
+[opheld2,rune_helm_h5] @levelrequire_defence(40, last_slot);
+[opheld2,rune_shield_h5] @levelrequire_defence(40, last_slot);

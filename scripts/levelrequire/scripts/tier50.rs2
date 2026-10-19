@@ -76,3 +76,11 @@ if(%deserttreasure < ^deserttreasure_complete) {
 [opheld2,light_infinity_bottoms] @levelrequire_magic_and_defence(50, 25, last_slot);
 [opheld2,light_infinity_hat] @levelrequire_magic_and_defence(50, 25, last_slot);
 [opheld2,light_infinity_top] @levelrequire_magic_and_defence(50, 25, last_slot);
+
+// Variants that went on at level 1 because nothing gated them (security review, 2026-10-19):
+// coloured whips, ornament godswords, trimmed/gold/god skirts and hides, heraldic rune.
+// The generic [opheld2,_] equip checks no stats, so every wearable needs its own line.
+[opheld2,blue_dragonhide_body_trim] @levelrequire_ranged_and_defence(50, 40, last_slot);
+[opheld2,blue_dragonhide_body_trim_gold] @levelrequire_ranged_and_defence(50, 40, last_slot);
+[opheld2,blue_dragonhide_chaps_trim] @levelrequire_ranged_lower(50, last_slot);
+[opheld2,blue_dragonhide_chaps_trim_gold] @levelrequire_ranged_lower(50, last_slot);
