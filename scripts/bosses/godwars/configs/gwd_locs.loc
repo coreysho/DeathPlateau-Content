@@ -1,7 +1,7 @@
 // Imported from the rev 474 cache by tools/models/import474map.py: m44_82, m44_83, m45_83.
 // God Wars Dungeon - three of its four map squares, from the rev 474 cache (27 October 2007), which is the dungeon as it was built.
 // MISSING: m45_82, which holds the rope landing you arrive on and Commander Zilyana's room. The 474 cache has its terrain but no XTEA key for its locs, so it cannot be read from here - see the GWD notes for the two ways round that.
-// Five decorative locs (26853-26857) carry models in the post-377 format and are left out: all nameless, no ops, three placements each.
+// Five locs (26853-26857) were left out of the first import because their models are in 474's newer format and nothing could read it: all nameless, no ops, three placements each. They are the pillars and walls that flank the three faction doors, and without them each door stood in open floor. They are in now - see the ADDED LATER block at the end of this file.
 // The named locs are the ones content has to reference - the three faction doors, the three altars, the Bang door, the ice bridge, the grapple pillar and the crate. Everything else keeps its loc474_<id> name.
 
 [loc474_16399]
@@ -1329,3 +1329,57 @@ resizey=100
 resizez=100
 ambient=25
 op1=Search
+
+// ADDED LATER: the five locs that flank the three faction doors (26853-26857), which the first import left out because their models are in 474's newer format and nothing could read it. tools/models/osrsmodel.py reads it now.
+
+[loc474_26853]
+// rev 474 loc 26853 (import474map.py)
+model=loc474_26853
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26854]
+// rev 474 loc 26854 (import474map.py)
+model=loc474_26854
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26855]
+// rev 474 loc 26855 (import474map.py)
+model=loc474_26855
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26856]
+// rev 474 loc 26856 (import474map.py)
+model=loc474_26856
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
+
+[loc474_26857]
+// rev 474 loc 26857 (import474map.py)
+model=loc474_26857
+width=2
+length=3
+active=no
+hillskew=yes
+sharelight=yes
+shadow=no
+ambient=25
+contrast=20
