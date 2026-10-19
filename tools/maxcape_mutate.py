@@ -227,10 +227,17 @@ MUTS += [
  # CAPE triggers, which correctly did not fire. The staff half had no check at all until then.
  (_GGR, '[opheld2,guthix_staff] @god_staff_equip(^god_guthix);', '',
   '13 and all three god staves have the mirror trigger'),
- (_VRS, '[opheld2,imbued_guthix_max_cape] @god_cape_equip(^god_guthix);', '',
+ # A god variant's trigger goes to @maxvariant_equip and not straight to @god_cape_equip: it needs
+ # the ninety-nines AND the staff test, where a plain god cape needs only the staff test.
+ (_VRS, '[opheld2,imbued_guthix_max_cape] @maxvariant_equip(^god_guthix);', '',
   '13 and all twelve god capes have an equip trigger that refuses the staff of another god'),
- (_VRS, '[opheld2,imbued_zamorak_max_cape] @god_cape_equip(^god_zamorak);', '',
-  '13 ...and exactly the six god variants get one'),
+ (_VRS, '[opheld2,imbued_zamorak_max_cape] @maxvariant_equip(^god_zamorak);', '',
+  "13 imbued_zamorak_max_cape is gated on the Max cape's own ninety-nines"),
+ # ...and a variant belonging to no god has nothing but that gate, which is what let a one-defence
+ # account wear the Fire and Accumulator capes: no [opheld2] at all, and the global equip wears
+ # anything. The per-variant check is the only one that catches this.
+ (_VRS, '[opheld2,undertaker_max_cape] @maxvariant_equip(^god_none);', '',
+  "13 undertaker_max_cape is gated on the Max cape's own ninety-nines"),
 
  # --- combine and knife are exact inverses
  (_VRS, 'inv_del(inv, max_hood, 1);', '',
