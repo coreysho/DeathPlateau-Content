@@ -37,6 +37,22 @@ inv_transmit(inv, shop_template_side:inv);
 inv_transmit($shop, shop_template:inv);
 if_openmain_side(shop_template, shop_template_side);
 
+// AND ONE FOR A SHOPKEEPER WITH TWO COUNTERS, which no param can describe: owned_shop names a
+// single inv, so an npc offering both Trade-Co-op and Trade-Drinks - as Gabooty of Tai Bwo Wannai
+// does - can only have one of them on a param and has to open the other itself. Same body as
+// ~openshop, with the currency as an argument instead of coins.
+[proc,openshop_obj](inv $shop, namedobj $currency, int $shop_buy, int $shop_sell, int $shop_haggle, string $title)
+%shop_currency = $currency;
+%shop_wallet = ^shop_wallet_inv;
+%shop = $shop;
+%shop_buy = $shop_buy;
+%shop_sell = $shop_sell;
+%shop_haggle = $shop_haggle;
+if_settext(shop_template:com_76, $title);
+inv_transmit(inv, shop_template_side:inv);
+inv_transmit($shop, shop_template:inv);
+if_openmain_side(shop_template, shop_template_side);
+
 [proc,openshop_activenpc]
 // null rather than coins would make every existing shopkeeper's till empty, so the param's own
 // default is coins and this reads it straight.

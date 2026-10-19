@@ -155,3 +155,28 @@
 // and ten villagers at a hundred each is the whole 1000 that full favour is worth. Old School's
 // "about 100 sticks costs roughly 10% favour" is the same statement from the other end.
 ^tbwcu_villager_share = 100
+
+// =========================================================================== Gabooty's counters
+// BOTH SHOPS WERE ALREADY IN THE PACK AND NOTHING POINTED AT EITHER: inv 305
+// tai_bwo_wannai_cooperative, thirty rows of it, and inv 306 tai_bwo_wannai_drinksies, seven. They
+// come from the 727 unpack with Jagex's own stock counts and restock rates.
+//
+// AND THE PRICES ARE THE CACHE'S OWN COSTS. A shop charges cost x multiplier / 1000, so 1200 and
+// 600 on the co-op reproduce the published list exactly, item for item:
+//
+//   tribal top       cost 300  ->  360 / 180
+//   villager robe    cost 250  ->  300 / 150
+//   villager hat     cost 200  ->  240 / 120
+//   villager armband cost 150  ->  180 /  90
+//   villager sandals cost 100  ->  120 /  60
+//   opal machete     cost 500  ->  600 / 300
+//   jade machete     cost 1000 -> 1200 / 600
+//   red topaz        cost 2000 -> 2400 /1200
+//
+// and the drinks need no multiplier at all: every cocktail costs 30, which at the defaults is the
+// 30 and 18 Jagex published. Nothing had to be invented or tuned to land on either list.
+^tbwcu_coop_sell = 1200
+^tbwcu_coop_buy = 600
+^tbwcu_drinks_sell = 1000
+^tbwcu_drinks_buy = 600
+^tbwcu_shop_haggle = 10

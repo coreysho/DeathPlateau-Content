@@ -25,11 +25,13 @@
 // So every villager starts at index 2, the "_nosticks" twin: standing in the village with nothing
 // to hand over yet. Earning favour is what moves them to index 1.
 //
-// NOT HERE YET: Gabooty's two shops. He carries op3=Trade-Co-op and op4=Trade-Drinks and the cache
-// has the whole co-op catalogue - four colours each of villager hat, robe, armband and sandals,
-// and the three gem-bladed machetes. Old School says villager clothes increase what the villagers
-// pay out; the size of that is not published anywhere, and the clothes cannot be bought until the
-// co-op is open, so neither the shop nor the bonus is guessed at here.
+// GABOOTY'S TWO COUNTERS are at the bottom of this file. Both shelves were already in the pack and
+// nothing pointed at either of them - see configs/tbw_cleanup.constant for the prices, which are
+// the cache's own costs and land on Jagex's published list item for item.
+//
+// What is still NOT here: the villager-clothes bonus. Old School says wearing them raises what the
+// villagers pay out, but not by how much, and a number nobody published is a number this would be
+// inventing.
 
 // =========================================================================== who is who
 // The cache's chat varbits are abbreviated where the npc names are not, so this is the only place
@@ -162,3 +164,13 @@ return(nc_name(tbwcu_mamma_bufetta));
 def_int $now = max(0, sub(%vill_comm_points, $tenths));
 %vill_comm_points = $now;
 %favour_percentage = $now;
+
+// =========================================================================== the two counters
+// Trade-Co-op is Gabooty's param shop and Trade-Drinks is the one he opens himself, because
+// owned_shop can only name a single inv. Both take trading sticks, which is the only currency this
+// village has ever used.
+[opnpc3,tbwcu_gabooty_multinpc] ~openshop_activenpc;
+[opnpc4,tbwcu_gabooty_multinpc] @tbwcu_drinky_store;
+
+[label,tbwcu_drinky_store]
+~openshop_obj(tai_bwo_wannai_drinksies, village_trade_sticks, ^tbwcu_drinks_buy, ^tbwcu_drinks_sell, ^tbwcu_shop_haggle, "Gabooty's Drinky Store");

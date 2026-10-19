@@ -55421,6 +55421,21 @@ multinpc=4,tbwcu_gabooty_nosticks
 multinpc=5,tbwcu_gabooty_nosticks
 multinpc=6,tbwcu_gabooty_nosticks
 multinpc=7,tbwcu_gabooty_nosticks
+// THE CO-OP COUNTER. Both of Gabooty's shelves were already in the pack with nothing pointing at
+// them - inv tai_bwo_wannai_cooperative and inv tai_bwo_wannai_drinksies, out of the 727 unpack
+// with Jagex's own stock counts. owned_shop can only name one of them, so the co-op is here and
+// the Drinky Store is opened by the script (minigames/game_tbw_cleanup/scripts/tbw_villagers.rs2).
+//
+// The params go on the MULTINPC SHELL and not on the two villagers it draws, because that is the
+// type a click resolves to - the same reason the opnpc triggers are on the shell.
+//
+// 1200 and 600 are per mille of the obj's own cost, and they reproduce the published price list
+// item for item: a villager hat at cost 200 sells for 240 and buys for 120.
+param=owned_shop,tai_bwo_wannai_cooperative
+param=shop_currency,village_trade_sticks
+param=shop_sell_multiplier,1200
+param=shop_buy_multiplier,600
+param=shop_title,Gabooty's Tai Bwo Wannai Cooperative
 
 [tbwcu_gabooty]
 name=Gabooty
