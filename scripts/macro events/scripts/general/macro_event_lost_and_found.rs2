@@ -15,7 +15,7 @@
 [proc,macro_laf_start](coord $destination)
 %macro_event_target_coord = $destination;
 ~randomize_appendages;
-def_coord $target = 0_36_74_34_11;
+def_coord $target = ^macro_laf_landing;
 if (coord ! $target) {
     ~player_teleport_normal($target);
 }

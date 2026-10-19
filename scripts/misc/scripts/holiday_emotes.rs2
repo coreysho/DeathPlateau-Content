@@ -1,0 +1,40 @@
+// THE YO-YO AND THE MARIONETTES, which have always had their animations in the cache.
+//
+// Both came out of the opheld2 sweep behind "cant extinguish candle lantern - says no wearpos":
+// every option they carry on op2 fell through to [opheld2,_] in player/scripts/equip.rs2, which
+// tried to WEAR them and printed ~equip's debug line.
+//
+// They are here rather than in general_use/scripts/item_ops_generated.rs2 because they are not
+// stubs. The yo-yo's four options name four sequences the cache ships - yoyo_updown,
+// yoyo_roundworld, yoyo_walkdog, yoyo_advanced, which are Old School's up-and-down, loop-the-loop,
+// walk-the-dog and the advanced trick - and all four of its clicks were dead. The marionettes'
+// four name four more (human_marionette_jump/walk/bow/dance); three of those carried
+// "Nothing interesting happens." stubs from the first opheld audit, and this replaces them with
+// the performance, because the sequence was there the whole time.
+//
+// @emote is the Emotes tab's own label (interface_controls/scripts/emotes.rs2): it closes what is
+// open, drops whatever the player was doing, plays the animation - and lets the Mime, the Ethereal
+// Mimic and Miscellania's court see it, which is the whole reason not to call anim() here.
+
+// ---------------------------------------------------------------- the yo-yo
+[opheld1,xmas_yoyo] @emote(yoyo_updown);
+[opheld2,xmas_yoyo] @emote(yoyo_roundworld);
+[opheld3,xmas_yoyo] @emote(yoyo_walkdog);
+[opheld4,xmas_yoyo] @emote(yoyo_advanced);
+
+// ---------------------------------------------------------------- the marionettes
+// All three colours perform the same four, as they do in the live game.
+[opheld1,win05_marionette_complete_blue_alive] @emote(human_marionette_jump);
+[opheld2,win05_marionette_complete_blue_alive] @emote(human_marionette_walk);
+[opheld3,win05_marionette_complete_blue_alive] @emote(human_marionette_bow);
+[opheld4,win05_marionette_complete_blue_alive] @emote(human_marionette_dance);
+
+[opheld1,win05_marionette_complete_green_alive] @emote(human_marionette_jump);
+[opheld2,win05_marionette_complete_green_alive] @emote(human_marionette_walk);
+[opheld3,win05_marionette_complete_green_alive] @emote(human_marionette_bow);
+[opheld4,win05_marionette_complete_green_alive] @emote(human_marionette_dance);
+
+[opheld1,win05_marionette_complete_red_alive] @emote(human_marionette_jump);
+[opheld2,win05_marionette_complete_red_alive] @emote(human_marionette_walk);
+[opheld3,win05_marionette_complete_red_alive] @emote(human_marionette_bow);
+[opheld4,win05_marionette_complete_red_alive] @emote(human_marionette_dance);

@@ -5,3 +5,8 @@
 ^romeojuliet_spoken_father = 40
 ^romeojuliet_spoken_apothecary = 50
 ^romeojuliet_juliet_crypt = 60
+
+// Drinking the cadava potion yourself: only in the Apothecary's house (read as within sight of
+// the Apothecary himself), and the blackout it causes, which costs time and nothing else.
+^cadava_drink_range = 10
+^cadava_blackout_ticks = 8

@@ -1,0 +1,56 @@
+// A CUP OF TEA FROM YOUR OWN KITCHEN - the Construction boost, and the two options it arrives with.
+//
+// The six cups all carry iop2=Drink and iop3=Empty, and neither had a trigger. Drink fell through
+// to [opheld2,_] in player/scripts/equip.rs2, which tried to WEAR the cup and printed ~equip's
+// debug line because a cup has no wearpos; Empty did nothing at all. Found by the opheld2 sweep
+// behind "cant extinguish candle lantern - says no wearpos", which is the same fault.
+//
+// "There are three different teas available based on the cup the tea is poured into: clay,
+// porcelain, and trimmed porcelain cups which boost Construction by 1, 2, and 3 respectively... A
+// bucket of milk may also be added to any of the teas, but this only changes the image and the
+// drink text and does not affect the stat boosting abilities."
+// (https://oldschool.runescape.wiki/w/Cup_of_tea_(Player-owned_house))
+//
+// The boost itself is three consume_table rows in player/configs/consumption/consume_effects.dbrow
+// and the empty cup each one leaves behind is a next_obj_stage param, so there is nothing here but
+// the triggers. The cache's own descriptions call this nettle tea - it reuses the nettle recolour -
+// but the cups are the POH kitchen's, and what they boost is Construction.
+//
+// Nothing in the game makes one yet: a kitchen can be built but tea cannot be brewed in it. These
+// work the day it can be.
+[opheld2,poh_claycup_tea] @player_consume_item(consume_effect_poh_tea, 2, 3);
+[opheld2,poh_claycup_tea_milky] @player_consume_item(consume_effect_poh_tea, 2, 3);
+[opheld2,poh_chinacup_tea] @player_consume_item(consume_effect_poh_tea, 2, 3);
+[opheld2,poh_chinacup_tea_milky] @player_consume_item(consume_effect_poh_tea, 2, 3);
+[opheld2,poh_giltchinacup_tea] @player_consume_item(consume_effect_poh_tea, 2, 3);
+[opheld2,poh_giltchinacup_tea_milky] @player_consume_item(consume_effect_poh_tea, 2, 3);
+
+// THE CACHE HAS AN ANIMATION PER CUP - human_drink_from_teacup_clay, _china and _giltchina, which
+// exist for nothing else - so this does not go through consume_effect_stat_say, whose animation is
+// human_eat. Everything else about it is that label: the cup becomes its next_obj_stage in the slot
+// it was in, and the boost, the sound and the two lines come from the consume table.
+[label,consume_effect_poh_tea]
+def_obj $consumable = last_item;
+def_seq $anim = human_drink_from_teacup_clay;
+switch_obj ($consumable) {
+    case poh_chinacup_tea, poh_chinacup_tea_milky : $anim = human_drink_from_teacup_china;
+    case poh_giltchinacup_tea, poh_giltchinacup_tea_milky : $anim = human_drink_from_teacup_giltchina;
+}
+inv_delslot(inv, last_slot);
+if (oc_param($consumable, next_obj_stage) ! null) {
+    inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+}
+anim($anim, 0);
+~consume_effect_apply($consumable, true);
+
+[opheld3,poh_claycup_tea] ~poh_tea_empty(poh_claycup_empty);
+[opheld3,poh_claycup_tea_milky] ~poh_tea_empty(poh_claycup_empty);
+[opheld3,poh_chinacup_tea] ~poh_tea_empty(poh_chinacup_empty);
+[opheld3,poh_chinacup_tea_milky] ~poh_tea_empty(poh_chinacup_empty);
+[opheld3,poh_giltchinacup_tea] ~poh_tea_empty(poh_giltchinacup_empty);
+[opheld3,poh_giltchinacup_tea_milky] ~poh_tea_empty(poh_giltchinacup_empty);
+
+[proc,poh_tea_empty](namedobj $empty)
+inv_delslot(inv, last_slot);
+inv_setslot(inv, last_slot, $empty, 1);
+mes("You empty the cup.");

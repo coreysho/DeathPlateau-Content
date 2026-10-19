@@ -1,0 +1,25 @@
+// NETTLE TEA, whose run-energy half is conditional and so cannot live in a consume_table row.
+//
+// "Drinking the tea heals 3 hitpoints. If you are not at full health, the tea will also refresh
+// some run energy (5%), but if you are already at full hitpoints, run energy will not be restored."
+// (https://oldschool.runescape.wiki/w/Nettle_tea)
+//
+// consume_table's healenergy field is unconditional, so the heal and the messages come from the
+// table as they do for every other drink and only the energy is decided here - and it is decided
+// BEFORE the heal, because the heal is what would otherwise put the player on full hitpoints and
+// take the energy away from them.
+[label,consume_effect_nettle_tea]
+def_obj $consumable = last_item;
+def_boolean $hurt = false;
+if (stat(hitpoints) < stat_base(hitpoints)) {
+    $hurt = true;
+}
+inv_delslot(inv, last_slot);
+if (oc_param($consumable, next_obj_stage) ! null) {
+    inv_setslot(inv, last_slot, oc_param($consumable, next_obj_stage), 1);
+}
+anim(human_eat, 0);
+~consume_effect_apply($consumable, false);
+if ($hurt = true) {
+    healenergy(^nettle_tea_energy);
+}

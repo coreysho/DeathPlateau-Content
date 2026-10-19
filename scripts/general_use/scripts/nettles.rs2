@@ -63,3 +63,22 @@ if (last_useitem ! bucket_milk) {
 inv_del(inv, bowl_nettletea, 1);
 inv_add(inv, bowl_nettletea_milky, 1);
 mes("You add milk to the nettle tea.");
+
+// ---------------------------------------------------------------- drinking it
+// All seven vessels carry iop2=Drink and not one of them had a trigger: the click fell through to
+// [opheld2,_] in player/scripts/equip.rs2, which tried to WEAR the bowl and printed ~equip's debug
+// line because a bowl has no wearpos. So the only thing this file could do with nettle tea was
+// pour it away (the op3=Empty stubs in general_use/scripts/containers_generated.rs2) - which is
+// the shape the whole thing started in, and the half that was still missing.
+//
+// The water and the tea are different drinks. Nettle-water "heals 1 Hitpoint when drank" and is
+// what you get for drinking it before boiling; the tea heals 3 and refreshes run energy, and
+// milk and the cup it is poured into change nothing. (https://oldschool.runescape.wiki/w/Nettle-water,
+// https://oldschool.runescape.wiki/w/Nettle_tea)
+[opheld2,bowl_nettlewater] @player_consume_item(consume_effect_stat, 2, 3);
+[opheld2,bowl_nettletea] @player_consume_item(consume_effect_nettle_tea, 2, 3);
+[opheld2,bowl_nettletea_milky] @player_consume_item(consume_effect_nettle_tea, 2, 3);
+[opheld2,cup_of_nettletea] @player_consume_item(consume_effect_nettle_tea, 2, 3);
+[opheld2,cup_of_nettletea_milky] @player_consume_item(consume_effect_nettle_tea, 2, 3);
+[opheld2,chinacup_of_nettletea] @player_consume_item(consume_effect_nettle_tea, 2, 3);
+[opheld2,chinacup_of_nettletea_milky] @player_consume_item(consume_effect_nettle_tea, 2, 3);
