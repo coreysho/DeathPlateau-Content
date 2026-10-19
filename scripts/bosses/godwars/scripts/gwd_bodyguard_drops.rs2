@@ -1,0 +1,256 @@
+// THE TWELVE BODYGUARDS' DROP TABLES. Rates are the OSRS wiki's (October 2026), adapted to what
+// this 377 cache has.
+//
+// Before this they dropped their bones and nothing else: the shared death routine hands out
+// npc_param(death_drop) for everything that dies, and no bodyguard had an [ai_queue3] of its own.
+// Three of them die on every trip into a boss room, so this was the most-killed thing in the
+// dungeon with no loot at all - reported as "gwd minions need drop tables".
+//
+// FOUR TABLES, NOT TWELVE. A general's three bodyguards share one table, which was checked rather
+// than assumed: the wiki's drop lines for Sergeant Strongstack, Steelwill and Grimspike are
+// identical except for one 1-in-6 item each, Starlight/Growler/Bree are identical outright, so are
+// Wingman Skree/Flockleader Geerin/Flight Kilisa, and Balfrug Kreeyath/Tstanon Karlak/Zakl'n
+// Gritch differ only in that Gritch alone drops a champion scroll. So the trigger passes the one
+// thing that differs and the table is shared.
+//
+// THE SHAPE OF EVERY ONE OF THEM is the same, and it is not a flat list - the wiki is explicit:
+//
+//   1 in 127   the unique table - the god's own armour, or coins
+//   1 in 127   the godsword shard table - one of the three shards, or coins
+//   125 in 127 the regular table, "125 slots", every weight below out of 127
+//
+// plus tertiary rolls that are independent of all three: a hard clue at 1/128 ("The bodyguards drop
+// hards at 1/128" - Mod Ash), and the trio's own extra where it has one.
+//
+// ONE ITEM IS MISSING FROM THIS CACHE and its weight is simply left out of the table rather than
+// given to something else, which is how gwd_army_drops.rs2 handles the same problem: Combat
+// potion(3), 2/127 on the Bandos table. Two rolls in 127 there land on nothing.
+//
+// AND TWO ARE STOOD IN FOR BY THEIR 2006 SELVES. Grimspike's 1-in-6 is OSRS's "Right eye patch",
+// which is a later split of the one eye patch this cache has, so it drops that. The Zamorakians'
+// 100% drop is "Malicious ashes" in OSRS and plain ashes here, and that one needs nothing doing:
+// it comes off npc_param(death_drop) with every other death in the game.
+
+// ---------------------------------------------------------------- Bandos: Graardor's sergeants
+// The 1-in-6 is the only line that differs between the three.
+[ai_queue3,gwd_strongstack] @gwd_guard_bandos(kebab);
+[ai_queue3,gwd_steelwill] @gwd_guard_bandos(beer);
+[ai_queue3,gwd_grimspike] @gwd_guard_bandos(eye_patch);
+
+[label,gwd_guard_bandos](namedobj $sixth)
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+if (random(6) = 0) {
+    obj_add(npc_coord, $sixth, 1, ^lootdrop_duration);
+}
+if (random(5000) = 0) {
+    obj_add(npc_coord, champions_challenge_goblin, 1, ^lootdrop_duration);
+}
+def_int $which = random(127);
+if ($which = 0) {                                            // the unique table, 1/127
+    def_int $unique = random(128);
+    if ($unique = 0) {
+        obj_add(npc_coord, bandos_chestplate, 1, ^lootdrop_duration);
+    } else if ($unique = 1) {
+        obj_add(npc_coord, bandos_tassets, 1, ^lootdrop_duration);
+    } else if ($unique = 2) {
+        obj_add(npc_coord, bandos_boots, 1, ^lootdrop_duration);
+    } else {                                                 // 125/128
+        obj_add(npc_coord, coins, calc(random(101) + 1400), ^lootdrop_duration);
+    }
+    return;
+}
+if ($which = 1) {                                            // the shard table, 1/127
+    @gwd_guard_shards(calc(random(101) + 1400));
+}
+def_int $random = random(125);                                // 125/127
+if ($random < 7) {                                           // 7/127
+    obj_add(npc_coord, steel_arrow, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 15) {                                   // 8/127
+    obj_add(npc_coord, steel_dart, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 23) {                                   // 8/127
+    obj_add(npc_coord, naturerune, calc(random(6) + 15), ^lootdrop_duration);
+} else if ($random < 31) {                                   // 8/127
+    obj_add(npc_coord, cosmicrune, calc(random(6) + 25), ^lootdrop_duration);
+} else if ($random < 39) {                                   // 8/127
+    obj_add(npc_coord, shark, 2, ^lootdrop_duration);
+} else if ($random < 47) {                                   // 8/127
+    obj_add(npc_coord, potato_chilli+carne, 3, ^lootdrop_duration);
+} else if ($random < 113) {                                  // 66/127
+    obj_add(npc_coord, coins, calc(random(101) + 1400), ^lootdrop_duration);
+} else if ($random < 121) {                                  // 8/127, noted
+    obj_add(npc_coord, cert_limpwurt_root, 5, ^lootdrop_duration);
+} else if ($random < 123) {                                  // 2/127
+    obj_add(npc_coord, 3dose2strength, 1, ^lootdrop_duration);
+}
+// 123 and 124 are Combat potion(3), 2/127, which this cache has no object for.
+
+// ---------------------------------------------------------------- Saradomin: Zilyana's bodyguards
+// Identical for all three - no 1-in-6, no champion scroll.
+[ai_queue3,gwd_starlight] @gwd_guard_saradomin;
+[ai_queue3,gwd_growler] @gwd_guard_saradomin;
+[ai_queue3,gwd_bree] @gwd_guard_saradomin;
+
+[label,gwd_guard_saradomin]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $which = random(127);
+if ($which = 0) {                                            // the unique table, 1/127
+    if (random(127) < 3) {                                   // 3/127 of it
+        obj_add(npc_coord, saradomin_sword, 1, ^lootdrop_duration);
+    } else {                                                 // 124/127
+        obj_add(npc_coord, coins, calc(random(101) + 1300), ^lootdrop_duration);
+    }
+    return;
+}
+if ($which = 1) {                                            // the shard table, 1/127
+    @gwd_guard_shards(calc(random(101) + 1300));
+}
+def_int $random = random(125);                                // 125/127
+if ($random < 8) {                                           // 8/127
+    obj_add(npc_coord, steel_arrow, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 16) {                                   // 8/127
+    obj_add(npc_coord, steel_dart, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 24) {                                   // 8/127
+    obj_add(npc_coord, lawrune, calc(random(6) + 5), ^lootdrop_duration);
+} else if ($random < 32) {                                   // 8/127
+    obj_add(npc_coord, monkfish, 3, ^lootdrop_duration);
+} else if ($random < 40) {                                   // 8/127
+    obj_add(npc_coord, summer_pie, 1, ^lootdrop_duration);
+} else if ($random < 102) {                                  // 62/127
+    obj_add(npc_coord, coins, calc(random(101) + 1300), ^lootdrop_duration);
+} else if ($random < 110) {                                  // 8/127, noted - "grimy" is
+    obj_add(npc_coord, cert_unidentified_ranarr, 1, ^lootdrop_duration);   // "unidentified" here
+} else if ($random < 117) {                                  // 7/127, noted
+    obj_add(npc_coord, cert_snape_grass, 5, ^lootdrop_duration);
+} else {                                                     // 8/127, noted
+    obj_add(npc_coord, cert_unicorn_horn, 6, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- Armadyl: Kree'arra's bodyguards
+// Identical for all three. These are the ones that also drop feathers, and the arrows and darts
+// come in the same number: "The quantities of arrows and darts dropped is equal to the number of
+// feathers dropped + 90", so the feather count is rolled once and both read it.
+[ai_queue3,gwd_wingman_skree] @gwd_guard_armadyl;
+[ai_queue3,gwd_flockleader_geerin] @gwd_guard_armadyl;
+[ai_queue3,gwd_flight_kilisa] @gwd_guard_armadyl;
+
+[label,gwd_guard_armadyl]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $feathers = calc(random(11) + 1);                     // 1-11, always
+obj_add(npc_coord, feather, $feathers, ^lootdrop_duration);
+def_int $which = random(127);
+if ($which = 0) {                                            // the unique table, 1/127
+    def_int $unique = random(127);
+    if ($unique = 0) {
+        obj_add(npc_coord, armadyl_helmet, 1, ^lootdrop_duration);
+    } else if ($unique = 1) {
+        obj_add(npc_coord, armadyl_chestplate, 1, ^lootdrop_duration);
+    } else if ($unique = 2) {
+        obj_add(npc_coord, armadyl_chainskirt, 1, ^lootdrop_duration);
+    } else {                                                 // 124/127
+        obj_add(npc_coord, coins, calc(random(101) + 1000), ^lootdrop_duration);
+    }
+    return;
+}
+if ($which = 1) {                                            // the shard table, 1/127
+    @gwd_guard_shards(calc(random(101) + 1000));
+}
+def_int $random = random(125);                                // 125/127
+if ($random < 7) {                                           // 7/127
+    obj_add(npc_coord, steel_arrow, calc($feathers + 90), ^lootdrop_duration);
+} else if ($random < 15) {                                   // 8/127
+    obj_add(npc_coord, steel_dart, calc($feathers + 90), ^lootdrop_duration);
+} else if ($random < 23) {                                   // 8/127
+    obj_add(npc_coord, smokerune, calc(random(6) + 10), ^lootdrop_duration);
+} else if ($random < 31) {                                   // 8/127
+    obj_add(npc_coord, mantaray, 2, ^lootdrop_duration);
+} else if ($random < 39) {                                   // 8/127
+    obj_add(npc_coord, potato_mushroom+onion, 3, ^lootdrop_duration);
+} else if ($random < 109) {                                  // 70/127
+    obj_add(npc_coord, coins, calc(random(101) + 1000), ^lootdrop_duration);
+} else if ($random < 117) {                                  // 8/127, noted
+    obj_add(npc_coord, cert_crushed_bird_nest, 2, ^lootdrop_duration);
+} else {                                                     // 8/127, noted
+    obj_add(npc_coord, cert_unidentified_kwuarm, 1, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- Zamorak: K'ril's bodyguards
+// Zakl'n Gritch alone drops the lesser demon champion scroll; the other two differ in nothing.
+[ai_queue3,gwd_balfrug_kreeyath] @gwd_guard_zamorak(null);
+[ai_queue3,gwd_tstanon_karlak] @gwd_guard_zamorak(null);
+[ai_queue3,gwd_zakln_gritch] @gwd_guard_zamorak(champions_challenge_lesserdemon);
+
+[label,gwd_guard_zamorak](namedobj $scroll)
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+if ($scroll ! null & random(5000) = 0) {
+    obj_add(npc_coord, $scroll, 1, ^lootdrop_duration);
+}
+def_int $which = random(127);
+if ($which = 0) {                                            // the unique table, 1/127
+    if (random(127) < 3) {                                   // 3/127 of it
+        obj_add(npc_coord, zamorakian_spear, 1, ^lootdrop_duration);
+    } else {                                                 // 124/127
+        obj_add(npc_coord, coins, calc(random(101) + 1300), ^lootdrop_duration);
+    }
+    return;
+}
+if ($which = 1) {                                            // the shard table, 1/127
+    @gwd_guard_shards(calc(random(101) + 1300));
+}
+def_int $random = random(125);                                // 125/127
+if ($random < 7) {                                           // 7/127
+    obj_add(npc_coord, steel_arrow, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 15) {                                   // 8/127
+    obj_add(npc_coord, steel_dart, calc(random(6) + 95), ^lootdrop_duration);
+} else if ($random < 23) {                                   // 8/127
+    obj_add(npc_coord, deathrune, calc(random(6) + 5), ^lootdrop_duration);
+} else if ($random < 31) {                                   // 8/127
+    obj_add(npc_coord, bloodrune, calc(random(6) + 5), ^lootdrop_duration);
+} else if ($random < 97) {                                   // 66/127
+    obj_add(npc_coord, coins, calc(random(101) + 1300), ^lootdrop_duration);
+} else if ($random < 105) {                                  // 8/127
+    obj_add(npc_coord, shark, 3, ^lootdrop_duration);
+} else if ($random < 113) {                                  // 8/127
+    obj_add(npc_coord, potato_tuna+sweetcorn, 2, ^lootdrop_duration);
+} else if ($random < 121) {                                  // 8/127, noted
+    obj_add(npc_coord, cert_wine_of_zamorak, calc(random(6) + 5), ^lootdrop_duration);
+} else if ($random < 123) {                                  // 2/127
+    obj_add(npc_coord, 3dose2attack, 1, ^lootdrop_duration);
+} else {                                                     // 2/127
+    obj_add(npc_coord, 3dose2strength, 1, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------- the shard table, shared by four
+// "It's 1/508 for any shard, 1/1524 for a specific one of the three" - Mod Ash. 1524 is 127 x 12,
+// so inside the table that this is reached by (1/127) each shard is 1 in 12 and the rest is coins.
+// The coin range differs per god, so it is handed in rather than looked up.
+[label,gwd_guard_shards](int $coins)
+def_int $shard = random(12);
+if ($shard = 0) {
+    obj_add(npc_coord, godsword_shard_1, 1, ^lootdrop_duration);
+    return;
+}
+if ($shard = 1) {
+    obj_add(npc_coord, godsword_shard_2, 1, ^lootdrop_duration);
+    return;
+}
+if ($shard = 2) {
+    obj_add(npc_coord, godsword_shard_3, 1, ^lootdrop_duration);
+    return;
+}
+obj_add(npc_coord, coins, $coins, ^lootdrop_duration);        // 9/12
