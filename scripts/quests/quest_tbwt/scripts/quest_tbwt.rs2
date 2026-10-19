@@ -61,11 +61,14 @@ p_delay(4);
 
 [label,tbwt_finish]
 %tbwt_main = ^tbwt_complete;
-stat_advance(fishing, 50000);
-stat_advance(cooking, 50000);
-stat_advance(fletching, 50000);
+// TIMFRAKU PAYS COINS AND NOTHING ELSE, which is what the live game has him do. The experience
+// used to be handed over here - fishing, cooking and fletching, all three at the table - and that
+// is why his three sons each had a Talk-to with nothing behind it: their half of the reward had
+// been moved to their father. It is theirs again, and this is the write that records they owe it.
+inv_add(inv, coins, ^tbwt_reward_coins);
+%tbwt_thanked = ^tbwt_sons_owe;
 session_log(^log_adventure, "Quest complete: Tai Bwo Wannai Trio");
-~send_quest_complete(questlist:tbwt, tbwt_karambwan_vessel, 200, ^tbwt_questpoints, "You have completed\\nTai Bwo Wannai Trio!", "2 Quest Points|5,000 Fishing XP|5,000 Cooking XP|5,000 Fletching XP|Karambwan fishing");
+~send_quest_complete(questlist:tbwt, tbwt_karambwan_vessel, 200, ^tbwt_questpoints, "You have completed\\nTai Bwo Wannai Trio!", "2 Quest Points|2,000 Coins|Karambwan fishing|Your reward from the sons");
 
 [proc,tbwt_sons_helped]()(int)
 def_int $n = 0;
@@ -513,3 +516,92 @@ if (last_useitem ! knife) {
 inv_del(inv, tbwt_cooked_karambwan, 1);
 inv_add(inv, tbwt_raw_karambwan_paste, 1);
 mes("You work it into a paste.");
+
+// =========================================================================== the three sons, home
+// All three house shells carried op1=Talk-to and nothing answered any of them, because this quest
+// paid its experience out at Timfraku's table instead. The live game pays it here, one son at a
+// time, in his own house along the southern fence - and the note on its own quest page is blunt
+// about it: "You must talk to each of the three brothers in their houses along the southern fence
+// of the village to receive the additional experience rewards."
+//
+// The shells are what carry the trigger, not the npcs behind them: multinpc 6 is the only value
+// where any of the three renders at the house, so reaching one of these AT ALL means the quest is
+// over and there is no stage to test.
+[proc,tbwt_son_owes](int $bit)(boolean)
+// Zero is not "nothing claimed yet". On a finished quest it means the character finished it before
+// the sons had anything to give and was paid at the table, so they are owed nothing and cannot
+// claim any of it twice. Every new completion writes ^tbwt_sons_owe, which is what separates them.
+if (%tbwt_thanked = ^tbwt_thanked_none) {
+    return(false);
+}
+if (and(%tbwt_thanked, $bit) ! 0) {
+    return(false);
+}
+return(true);
+
+[proc,tbwt_thank](int $bit)
+%tbwt_thanked = or(%tbwt_thanked, $bit);
+
+// ---------------------------------------------------------------- Tiadeche: 5,000 Fishing
+[opnpc1,tbwt_tiadeche_multinpc_house]
+if (~tbwt_son_owes(^tbwt_thanked_tiadeche) = false) {
+    ~chatnpc("<p,happy>Sixty-one since I came home. I am still counting.");
+    return;
+}
+~chatnpc("<p,happy>Sixty-one of them since I came home. Sixty-one.");
+~chatplayer("<p,quiz>Who is counting?");
+~chatnpc("<p,happy>I am. My father counted the ones I did not catch, which is a different number and a longer year.");
+~chatnpc("<p,neutral>Sit down. I will show you how I read the water now - it is not what the manual says.");
+~tbwt_thank(^tbwt_thanked_tiadeche);
+stat_advance(fishing, ^tbwt_reward_fishing);
+~mesbox("Tiadeche talks about current and shadow for an hour and you understand about half of it, which is more than you understood before.");
+
+// ---------------------------------------------------------------- Tinsay: 5,000 Cooking, and the cook
+[opnpc1,tbwt_tinsay_multinpc_house]
+if (~tbwt_son_owes(^tbwt_thanked_tinsay) = false) {
+    ~chatnpc("<p,happy>Four seconds. Do not forget the four seconds.");
+    return;
+}
+~chatnpc("<p,happy>You brought me rum with a banana in it. Nobody has ever done that.");
+~chatnpc("<p,neutral>So. The octopus. Cooked badly it is a weapon and cooked properly it is dinner, and the whole difference is about four seconds.");
+~chatplayer("<p,quiz>Four seconds?");
+~chatnpc("<p,happy>Four. Nobody writes it down. I will show you.");
+~tbwt_thank(^tbwt_thanked_tinsay);
+stat_advance(cooking, ^tbwt_reward_cooking);
+~mesbox("Tinsay shows you how to cook a karambwan through. You can tell the difference by the smell now, which is not a thing you wanted to be able to do.");
+
+// ---------------------------------------------------------------- Tamayu: 2,500 Attack and Strength
+[opnpc1,tbwt_tamayu_multinpc_house]
+if (~tbwt_son_owes(^tbwt_thanked_tamayu) = false) {
+    ~chatnpc("<p,neutral>Ten spears. Nine of mine and one of yours, and yours is the one that worked.");
+    return;
+}
+~chatnpc("<p,neutral>Nine spears. I keep going back to that.");
+~chatplayer("<p,neutral>It only took one.");
+~chatnpc("<p,happy>It took one POISONED one, which is the part I was too angry to work out in a year.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,confused>I want to give you something and you have nowhere to put it.");
+    return;
+}
+~chatnpc("<p,neutral>Take this. It is the tenth, it is already pasted, and I am done hunting.");
+~tbwt_thank(^tbwt_thanked_tamayu);
+inv_add(inv, tbwt_rune_spear_kp, 1);
+stat_advance(attack, ^tbwt_reward_attack);
+stat_advance(strength, ^tbwt_reward_strength);
+
+// ---------------------------------------------------------------- and the cook Tinsay teaches
+// skill_cooking/scripts/cooking.rs2 asks this before it offers the thorough cook. Old School gates
+// that on Tinsay teaching it rather than on the quest being over, and the two only differ for a
+// character who finished the quest before he had anything to say - who was paid at the table and
+// never had the conversation, so for them the quest itself is the lesson.
+[proc,tbwt_karambwan_taught]()(boolean)
+if (%tbwt_main ! ^tbwt_complete) {
+    return(false);
+}
+if (%tbwt_thanked = ^tbwt_thanked_none) {
+    return(true);
+}
+if (and(%tbwt_thanked, ^tbwt_thanked_tinsay) ! 0) {
+    return(true);
+}
+return(false);

@@ -53,3 +53,32 @@
 ^tbwt_lubufu = 0_43_49_18_33            // 2770,3169  Brimhaven docks
 ^tbwt_shaikahan = 0_45_48_26_22         // 2906,3094
 ^tbwt_statue = 0_43_48_43_18            // 2795,3090  the village statue
+
+// ---------------------------------------------------------------- what the three sons owe you
+// Old School does not pay this quest out at the chief's table. Timfraku hands over 2,000 coins and
+// that is all; the experience is claimed by going down to the village and TALKING to each son in
+// his own house, which is why all three of them carry a Talk-to that had nothing behind it:
+//
+//   Tiadeche  5,000 Fishing
+//   Tinsay    5,000 Cooking, and he is the one who teaches the thorough karambwan cook
+//   Tamayu    2,500 Attack, 2,500 Strength, and a karambwan-poisoned rune spear
+//
+// (/w/Tai_Bwo_Wannai_Trio, and each son's own page. Fletching was never one of this quest's
+// rewards; it was standing in for Tamayu's two.)
+//
+// %tbwt_thanked is a bitfield rather than three varps because there was one spare slot, not three.
+// ZERO IS NOT "NOTHING CLAIMED" - on a finished quest it means the character finished it before
+// the sons had anything to give and was paid at the hut instead, so nothing is owed and nothing
+// can be claimed twice. Every new completion writes ^tbwt_sons_owe, which is what tells the two
+// apart.
+^tbwt_thanked_none = 0
+^tbwt_sons_owe = 1
+^tbwt_thanked_tiadeche = 2
+^tbwt_thanked_tinsay = 4
+^tbwt_thanked_tamayu = 8
+
+^tbwt_reward_coins = 2000
+^tbwt_reward_fishing = 50000
+^tbwt_reward_cooking = 50000
+^tbwt_reward_attack = 25000
+^tbwt_reward_strength = 25000
