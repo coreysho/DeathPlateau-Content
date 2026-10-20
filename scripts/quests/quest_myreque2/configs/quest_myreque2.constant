@@ -72,6 +72,18 @@
 ^m2_rod_crafting = 20
 ^m2_rod_crafting_xp = 1000
 
+// ---------------------------------------------------------------------------- requirements
+// The wiki lists four skills and the build was checking none of them. Mining is the one that was
+// hardest to account for until the rubble was done properly: it is a pickaxe at the inn wall.
+^m2_agility_needed = 25
+^m2_crafting_needed = 25
+^m2_mining_needed = 15
+^m2_magic_needed = 7
+
+// 2,000 each in Attack, Strength, Defence and Crafting, and stats are kept in tenths. Strength was
+// missing and the quest points were 3; the wiki says two of them.
+^m2_reward_xp = 20000
+
 ^m2_off = 0
 ^m2_on = 1
 
@@ -85,7 +97,11 @@
 ^m2_tithe_myreque = 2
 ^m2_tithe_over = 3
 
-^m2_rubble_loads = 3    // buckets, and there are three bucket-of-rubble objs to carry them in
+// THE RUBBLE. burgh_rubble_bucket_1/2/3 are not three buckets: they are one bucket "partially
+// filled", "almost full" and "totally filled", each with iop4=Empty. So a spadeful fills the bucket
+// a stage at a time and emptying it on the pile credits as many loads as it was holding - which is
+// also why the wiki's item list says one to five buckets and recommends five.
+^m2_rubble_loads = 3
 
 // the repairs, as the wiki has them: 11 planks and 44 steel nails, and a swamp paste for the booth
 ^m2_wall_planks = 3     // the store roof, the store wall and the bank wall
@@ -107,6 +123,16 @@
 ^m2_gadderanks = 0_54_50_58_41
 ^m2_inn_wall = 0_54_50_33_31
 ^m2_inn_trapdoor = 0_54_50_34_32
+^m2_rubble_pile = 0_54_50_33_27         // 3489,3227, the pile south-west of the bar
+
+// Where the tithe turns into a fight. burgh_gadderanks_attackable is level 35 with an Attack op and
+// no statblock, and burgh_gadderanks_wounded is size 2 with a fall-over ready animation and a
+// Talk-to - which is a man who is beaten, lying in the mud, and still has something to say. Neither
+// of them is placed on any map square, because both of them are spawned.
+^m2_gadderanks_spot = 0_54_50_58_39    // 3514,3239, in front of his own barrel
+^m2_juve1_spot = 0_54_50_57_40         // 3513,3240
+^m2_juve2_spot = 0_54_50_59_41         // 3515,3241
+^m2_fight_duration = 1000
 
 // ---------------------------------------------------------------------------- the inn cellar
 ^m2_cellar_ladder = 0_54_150_34_32
@@ -134,7 +160,10 @@
 // Florin watches the gate and will not open it until something to eat has gone in the chest -
 // burgh_quest_food_chest_closed, which is in the cache and placed on no map square, so it is
 // added beside the gate when he asks for it and taken away when he has had it.
-^m2_food_chest_coord = 0_54_50_29_45    // 3485,3245, the swamp-road side of the gate
+// The chest IS placed, open, at 3483,3246, with a table beside it - the pair of them is what the
+// walkthrough's "open chest in front of the gate" means. An earlier pass added a second,
+// closed one at 3485,3245 because nobody had looked.
+^m2_food_chest_coord = 0_54_50_27_46    // 3483,3246, outside the fence
 ^m2_marius_coord = 0_54_50_59_9        // 3515,3209, beside Gabriela, who is placed and he is not
 ^m2_who_florin = 1
 ^m2_who_sorin = 2

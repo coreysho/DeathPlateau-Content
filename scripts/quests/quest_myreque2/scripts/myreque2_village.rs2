@@ -17,6 +17,10 @@
 // are already written, and Razvan is one of the thirty.
 
 // =========================================================================== Florin, and the gate
+// FLORIN IS THREE TILES INSIDE HIS OWN GATE, at 3484,3241, and the gate is a wall on the south edge
+// of 3484,3244 - so from the swamp road there is no tile adjacent to him and his Talk-to could not
+// be reached by anybody who had not already got in. Which is everybody, because getting in is what
+// he is for. So the conversation that matters is on the gate, and his own trigger keeps the rest.
 [opnpc1,burgh_vilager_8]
 if (%myreque_2_quest >= ^m2_arrived) {
     @m2_village_line(^m2_who_florin);
@@ -29,24 +33,19 @@ if (%myreque_2_quest >= ^m2_fed) {
     ~chatnpc("<p,neutral>It is open. Mind the step and do not touch anything that is not yours.");
     return;
 }
+@m2_florin_gate;
+
+[label,m2_florin_gate]
 ~chatplayer("<p,quiz>Can you open the gate?");
 ~chatnpc("<p,angry>No.");
 ~chatplayer("<p,quiz>I have walked through Mort Myre to get here.");
 ~chatnpc("<p,sad>So has everything else that comes down that road. The last one to ask me nicely took Vasile's wife.");
 ~chatnpc("<p,neutral>Put something to eat in the chest. Anything. If you are what you say you are, you can spare it, and if you are not, you cannot touch it.");
-if (~m2_food_chest_here = false) {
-    loc_add(^m2_food_chest_coord, burgh_quest_food_chest_closed, 1, centrepiece_straight, 30000);
-}
-~mesbox("There is a chest on your side of the fence that was not there a moment ago, which means somebody inside has been listening.");
-
-[proc,m2_food_chest_here]()(boolean)
-if (loc_find(^m2_food_chest_coord, burgh_quest_food_chest_closed) = true) {
-    return(true);
-}
-if (loc_find(^m2_food_chest_coord, burgh_quest_food_chest_open) = true) {
-    return(true);
-}
-return(false);
+// THE CHEST IS ALREADY THERE, and an earlier pass added a second one because nobody had looked:
+// burgh_quest_food_chest_open is placed, open, at 3483,3246, with burgh_quest_food_table beside it,
+// and that pair is what the walkthrough's "open chest in front of the gate" is. So Florin points at
+// it rather than conjuring one, and nothing is added or deleted.
+~mesbox("There is a chest and a table on your side of the fence, outside the gate, with a clear view of both from inside it.");
 
 [oploc1,burgh_quest_food_chest_closed]
 p_arrivedelay;
@@ -81,9 +80,6 @@ inv_del(inv, $food, 1);
 %myreque_2_quest = ^m2_fed;
 ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
 ~m2_spawn_marius;
-// the chest is the active loc here, which is what loc_del takes - and a duration of 0 is out of
-// range, so it goes with the shortest one there is
-loc_del(1);
 ~mesbox("A boy you had not seen comes over the fence, takes it out of the chest, and is gone with it before you have straightened up. | Then the gate opens.");
 
 [oploc1,burgh_fencegate_l] @m2_village_gate;
@@ -95,12 +91,22 @@ if (%myreque_2_quest >= ^m2_fed) {
     ~walk_through_door;
     return;
 }
-if (coordz(coord) > coordz(loc_coord)) {
+if (coordz(coord) < coordz(loc_coord)) {
     // on the way out, which nobody inside objects to
     ~walk_through_door;
     return;
 }
-~mesbox("The gate is barred from the inside and there is a man behind it who has not said anything yet.");
+if (%myreque_2_quest < ^m2_sent) {
+    ~mesbox("The gate is barred from the inside and there is a man behind it who has not said anything yet.");
+    return;
+}
+// Florin, through his own gate, which is the only angle anybody out here has on him. A loc
+// trigger has no active npc, so he has to be found before anything can be put in his mouth.
+if (npc_find(coord, burgh_vilager_8, 8, 0) = false) {
+    ~mesbox("The gate is barred and whoever was behind it has walked off.");
+    return;
+}
+@m2_florin_gate;
 
 // =========================================================================== the man in the bed
 // SIX OF THE THIRTY-ONE ARE NOT ON ANY MAP SQUARE: Marius, Vladimir, and the four who were turned.

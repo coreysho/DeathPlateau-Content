@@ -95,10 +95,21 @@ if (~m2_ivan_walking = true) {
     @m2_ivan_walking_talk;
 }
 ~chatnpc("<p,neutral>Veliaf says you are walking me to Paterdomus. I am going to be a priest and the man who would ordain me is on the other side of Mort Myre.");
-if (~m2_ivan_armoured = false | %burgh_ivan_food_give = 0) {
+// THE ARMOUR IS OPTIONAL and this used to refuse to set off without all three pieces. The wiki puts
+// the helm, the body, the legs and the sickle under "optional for Ivan" and only the food under what
+// you need - so he asks for the lot, says what happens if he does not get it, and goes anyway.
+if (%burgh_ivan_food_give = 0) {
     ~chatnpc("<p,sad>I have a gown and a bronze sword and no idea what I am doing. I need <~m2_ivan_wants>and I would not say no to something silver.");
-    ~mesbox("Use what he needs on him: armour for his head, his chest and his legs, food for the walk, and a silver sickle if you have one - silver is the only thing a juvinate is afraid of.");
+    ~mesbox("He will not walk out of here with nothing to eat. Use food on him - and armour for his head, his chest and his legs, and a silver sickle if you have one, all of which he will survive longer with and none of which he will wait for.");
     return;
+}
+if (~m2_ivan_armoured = false) {
+    ~chatnpc("<p,sad>I need <~m2_ivan_wants>and I would not say no to something silver. But I have waited four years and I am not waiting for a helmet.");
+    if (~p_choice2("Then let's go.", 1, "Wait here. I'll fetch some.", 2) = 2) {
+        ~chatnpc("<p,neutral>I will be here. I have been here all my life.");
+        return;
+    }
+    @m2_ivan_setoff;
 }
 if (~p_choice2("Let's go.", 1, "Not yet.", 2) = 2) {
     ~chatnpc("<p,neutral>I will be here. I have been here all my life.");

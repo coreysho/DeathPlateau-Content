@@ -7,6 +7,11 @@ switch_int (%myreque_2_quest) {
         $text = append($text, "@dbl@live next|");
         $text = append($text, "@dbl@Finish @dre@In Search of the Myreque@dbl@ first");
 
+    case ^m2_fed :
+        $text = "@str@Florin has opened the gate. Burgh de Rott is forty people, no|";
+        $text = append($text, "@str@trade, no bank, no shop, and a hole in every roof.|");
+        $text = append($text, "@dbl@Find the @dre@village leader@dbl@ and ask what is wrong with it");
+
     case ^m2_sent :
         $text = "@str@Burgh de Rott is at the bottom of Mort Myre: forty people,|";
         $text = append($text, "@str@no trade, no bank, no shop, and a hole in every roof.|");

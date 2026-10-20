@@ -53,6 +53,9 @@ if (%routequest >= ^route_complete) {
 ~chatnpc("<p,neutral>Keep your voice down and mind the ladder.");
 
 [label,m2_start]
+if (~m2_requirements = false) {
+    return;
+}
 ~chatnpc("<p,neutral>You opened a road and I have spent three weeks looking at it and I have decided I do not want a road. I want a town.");
 ~chatplayer("<p,quiz>There aren't any towns down there.");
 ~chatnpc("<p,neutral>There is one. Burgh de Rott. It is on the coast at the bottom of the swamp and it has about forty people left in it and no trade and no bank and no shop and a hole in the roof of every building.");
@@ -68,6 +71,29 @@ switch_int (~p_choice2("Why hasn't anyone helped them?", 1, "Forty people is not
 %myreque_2_quest = ^m2_sent;
 ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
 ~chatnpc("<p,neutral>Go and look at it. Then come back and tell me whether I am being a fool.");
+
+// The wiki asks for 25 Agility, 25 Crafting, 15 Mining and 7 Magic on top of In Search of the
+// Myreque, and nothing was checking any of the four. Each one is in here for a reason: Agility for
+// the swamp road, Crafting for the repairs, Mining for the pickaxe at the inn wall, and Magic
+// because the sapphire in the rod has to be enchanted before the well will do anything for it.
+[proc,m2_requirements]()(boolean)
+if (stat_base(agility) < ^m2_agility_needed) {
+    ~mesbox("You need an Agility level of <tostring(^m2_agility_needed)> to start this quest.");
+    return(false);
+}
+if (stat_base(crafting) < ^m2_crafting_needed) {
+    ~mesbox("You need a Crafting level of <tostring(^m2_crafting_needed)> to start this quest. There is a town to rebuild.");
+    return(false);
+}
+if (stat_base(mining) < ^m2_mining_needed) {
+    ~mesbox("You need a Mining level of <tostring(^m2_mining_needed)> to start this quest.");
+    return(false);
+}
+if (stat_base(magic) < ^m2_magic_needed) {
+    ~mesbox("You need a Magic level of <tostring(^m2_magic_needed)> to start this quest. Something in it has to be enchanted.");
+    return(false);
+}
+return(true);
 
 [label,m2_veliaf_moved_in]
 ~chatnpc("<p,happy>Six of us, in a dry cellar, in a town that is glad we are here. I have not had a week like this since I was nineteen.");
@@ -141,18 +167,24 @@ p_delay(3);
 inv_add(inv, burgh_rod_command_final_10, 1);
 %myreque_2_quest = ^m2_complete;
 %blood_tithe_visible = ^m2_tithe_over;
-stat_advance(attack, 20000);
-stat_advance(defence, 20000);
-stat_advance(crafting, 20000);
+stat_advance(attack, ^m2_reward_xp);
+stat_advance(strength, ^m2_reward_xp);
+stat_advance(defence, ^m2_reward_xp);
+stat_advance(crafting, ^m2_reward_xp);
 session_log(^log_adventure, "Quest complete: In Aid of the Myreque");
-~send_quest_complete(questlist:myreque_2, burgh_plaster_inscription_ivandis, 200, ^m2_questpoints, "You have completed\\nIn Aid of the Myreque!", "3 Quest Points|2,000 Attack XP|2,000 Defence XP|2,000 Crafting XP|Burgh de Rott|The Myreque have a home");
+~send_quest_complete(questlist:myreque_2, burgh_plaster_inscription_ivandis, 200, ^m2_questpoints, "You have completed\\nIn Aid of the Myreque!", "2 Quest Points|2,000 Attack XP|2,000 Strength XP|2,000 Defence XP|2,000 Crafting XP|Burgh de Rott|The Myreque have a home");
 
 // =========================================================================== the village leader
 [opnpc1,burgh_vilager_leader]
 switch_int (%myreque_2_quest) {
     case ^m2_not_started :
         ~chatnpc("<p,sad>There is nothing here. I am not being modest. There is nothing here.");
+    // ^m2_sent WAS A DEAD CASE. You cannot be standing in front of her at ^m2_sent, because
+    // getting through Florin's gate is what moves the quest to ^m2_fed - so the village leader
+    // never briefed anybody and the three repairs, which are all gated on ^m2_arrived, could not
+    // be started. The quest stopped at its second step.
     case ^m2_sent : @m2_leader_brief;
+    case ^m2_fed : @m2_leader_brief;
     case ^m2_arrived : @m2_leader_check;
     case ^m2_rebuilt :
         ~chatnpc("<p,happy>The shop has stock and the bank has a teller and the furnace is lit, and now we will find out how long we are allowed to keep them.");
@@ -214,6 +246,13 @@ return(true);
 // open until something to eat has gone in the chest, which is the walkthrough's fifth step.
 
 [oploc1,burgh_agility_shortcut_fence]
+// NOT A WAY ROUND FLORIN. It is a low fence on the west side of the village and hopping it got you
+// in without ever feeding him, which is the one thing the walkthrough makes you do to get in at all.
+// Out is always allowed; in needs the gate to have been opened for you once.
+if (%myreque_2_quest < ^m2_fed & coordx(coord) < coordx(loc_coord)) {
+    ~mesbox("There is a fence, and beyond the fence there are forty people watching you look at it. Somebody will be at the gate.");
+    return;
+}
 anim(human_jump_hurdle, 0);
 ~walk_through_door;
 
@@ -226,6 +265,11 @@ anim(human_jump_hurdle, 0);
 if (%myreque_2_quest < ^m2_arrived) {
     ~chatnpc("<p,sad>I have a shop. I have had a shop for thirty years. I have not had any stock for eleven.");
     return;
+}
+// THE GADDERHAMMER, which the walkthrough has him hand over and which nothing in this build was
+// handing over at all. gadderanks_warhammer is in the cache and was reachable from nowhere.
+if (%myreque_2_quest >= ^m2_tithe_broken & ~obj_gettotal(gadderanks_warhammer) = 0) {
+    @m2_aurel_hammer;
 }
 if (%burgh_store_stocked = ^m2_on) {
     ~chatnpc("<p,happy>Tinderboxes, axes and <~m2_food_name>. It is not much of a range and it is the first range this village has had since I was a young man.");
@@ -242,6 +286,16 @@ if (%burgh_store_wall = ^m2_off) {
 }
 // Roof and wall done, and now the stock, which is his own step: scripts/myreque2_crate.rs2.
 @m2_aurel_crate;
+
+[label,m2_aurel_hammer]
+~chatnpc("<p,shock>He had this on him. I am not keeping it in my shop and nobody in this village will touch it.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Come back with a hand free.");
+    return;
+}
+inv_add(inv, gadderanks_warhammer, 1);
+~objbox(gadderanks_warhammer, "Gadderanks' own warhammer, which he used on people who could not pay. It is badly balanced and it hits like a falling wall.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>Take it with you. Use it on one of them.");
 
 // The repairs take what the wiki says they take: 3 planks and 12 steel nails for the roof and for
 // each wall, 2 planks, 8 nails and a swamp paste for the bank booth, and a hammer for all of it -
@@ -488,20 +542,65 @@ if (%blood_tithe_visible ! ^m2_tithe_happening) {
 if_close;
 ~m2_tithe_fight;
 
+// IT WAS A MESBOX. Four lines of narration, twelve points of self-damage and a stage change, for
+// the fight this quest is remembered for - while the cache was holding three npcs for it and using
+// none of them: burgh_gadderanks_attackable (level 35, Attack, no statblock, placed nowhere),
+// burgh_gadderanks_wounded (size 2, a fall-over ready animation, Talk-to) and two Vampyre Juvinates
+// with full statblocks of their own. So he is spawned and fought, he falls over rather than dying,
+// and what he has to say he says lying in the mud.
+//
+// NO SILVER REQUIREMENT. The walkthrough wants Efaritay's aid or a silver weapon, and this build has
+// no vampyre damage rules anywhere - adding them is a combat subsystem and not this quest's job, so
+// the juvinates here can be hurt by anything.
 [proc,m2_tithe_fight]()()
-mes("Gadderanks puts the villager down and comes at you, and the two juvinates behind him do not move, because the arrangement is that Gadderanks handles this sort of thing.");
+mes("Gadderanks puts the villager down and turns round, and the two juvinates behind him stop looking bored.");
 p_delay(4);
-~damage_self(12);
-mes("It is not a long fight and it is not a clean one.");
+npc_add(^m2_gadderanks_spot, burgh_gadderanks_attackable, ^m2_fight_duration);
+npc_setmode(opplayer2);
+npc_add(^m2_juve1_spot, burgh_vampire_juve_1, ^m2_fight_duration);
+npc_setmode(opplayer2);
+npc_add(^m2_juve2_spot, burgh_vampire_juve_2, ^m2_fight_duration);
+npc_setmode(opplayer2);
+~mesbox("Three of them, in a street with forty people watching. | There is a table in the shop behind you and the juvinates are not clever about tables.");
+
+[ai_queue3,burgh_gadderanks_attackable]
+def_coord $at = npc_coord;
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+// He is not dead. He is beaten, and the cache has a body for that.
+npc_add($at, burgh_gadderanks_wounded, ^m2_fight_duration);
+queue(m2_gadderanks_down, 0, 0);
+
+[queue,m2_gadderanks_down]
+if (%myreque_2_quest >= ^m2_tithe_broken) {
+    return;
+}
+~mesbox("He goes down in the mud beside his own barrel and does not get up, and he is still talking.");
+
+// Lying in the mud, with the whole village standing round him.
+[opnpc1,burgh_gadderanks_wounded]
+if (%myreque_2_quest >= ^m2_tithe_broken) {
+    ~chatnpc("<p,sad>Go on then.");
+    return;
+}
+~chatnpc("<p,sad>You have no idea what you have just done.");
+~chatplayer("<p,quiz>Who sends you?");
+~chatnpc("<p,angry>Vanstrom Klause. And he did not send me for blood, he sent me for a count - how many of them are left and which of them is worth taking.");
+~chatnpc("<p,sad>He has known about your lot for twenty years. He has been letting you run.");
+~chatplayer("<p,quiz>Why?");
+~chatnpc("<p,laugh>Because a resistance you can see is worth more than one you cannot.");
+if_close;
+mes("He stops talking.");
 p_delay(4);
-mes("He goes down in the mud beside his own barrel.");
-p_delay(3);
 %blood_tithe_visible = ^m2_tithe_myreque;
 %myreque_2_quest = ^m2_tithe_broken;
 ~send_quest_progress(questlist:myreque_2, %myreque_2_quest, ^m2_complete);
 stat_advance(attack, 8000);
 stat_advance(defence, 8000);
-~mesbox("The two juvinates look at him, and at you, and at forty villagers who have all stopped moving, and they leave. | Somebody who has walked here from the Hollows is standing where the villager was.");
+npc_del;
+~mesbox("The juvinates that are left look at him, and at you, and at forty villagers who have all stopped moving, and they go. | Somebody who has walked here from the Hollows is standing where the villager was. | Aurel is coming up the street with something heavy in both hands.");
 
 [opnpc1,burgh_villager_tithe_multinpc]
 if (%blood_tithe_visible = ^m2_tithe_myreque) {
@@ -521,14 +620,22 @@ if (%blood_tithe_visible = ^m2_tithe_happening) {
 // burgh_inn_rubble_cleared - carry no ops at all, so the trigger could never fire and the inn
 // cellar could not be opened. It comes out a bucket at a time, so the bucket does the asking:
 // [oplocu] needs no op on the loc.
+// THE RUBBLE, which the walkthrough does in three motions and this build was doing in one. The
+// cache has all three: burgh_inn_rubble_rock carries Mine/Prospect, burgh_rubble_bucket_1/2/3 are
+// one bucket at three fill levels with iop4=Empty on each, and burgh_outside_rubble_pile is placed
+// at 3489,3227 with a Search op and - until now - no handler at all, which is the pile the
+// walkthrough says to empty the buckets onto.
+//
+// So: a pickaxe breaks the rubble (which is what the wiki's 15 Mining is for and the only thing in
+// this quest that wants it), a spade fills a bucket a stage at a time, and a bucket emptied on the
+// pile credits as many loads as it was holding. Three loads and the wall is off the trapdoor.
+//
+// burgh_inn_rubble_rock and burgh_rubble_a_1..4 are in the cache and placed on no map square, so
+// the inn's own collapsed wall is the rubble and the pickaxe goes on that.
 [oplocu,burgh_inn_colapsed_wall_multiloc]
 // p_arrivedelay corrupts last_useitem, so it is read before the walk, not after.
 def_obj $used = last_useitem;
 p_arrivedelay;
-if ($used ! bucket_empty) {
-    ~displaymessage(^dm_default);
-    return;
-}
 if (%burgh_inn_colapsed_wall = ^m2_on) {
     ~mesbox("Where the back wall of the inn used to be. There is a trapdoor in the floor.");
     return;
@@ -537,21 +644,108 @@ if (%myreque_2_quest < ^m2_tithe_broken) {
     ~mesbox("The inn's back wall came down at some point and nobody has moved it, because moving it takes four people and there are not four spare people in Burgh de Rott.");
     return;
 }
-if (%burgh_inn_rubble_pile >= ^m2_rubble_loads) {
-    %burgh_inn_colapsed_wall = ^m2_on;
-    ~mesbox("That is the last of it. There is a floor under there, and a trapdoor in the floor.");
+if ($used ! spade & $used ! bucket_empty) {
+    ~displaymessage(^dm_default);
     return;
 }
-anim(human_pickupfloor, 0);
+if (inv_total(inv, spade) = 0) {
+    ~mesbox("It comes out a bucket at a time and you have nothing to shovel it with. A spade.");
+    return;
+}
+if (~m2_pickaxe = false) {
+    ~mesbox("Half of it is one piece. You would want a pickaxe.");
+    return;
+}
+if (stat_base(mining) < ^m2_mining_needed) {
+    ~mesbox("You need a Mining level of <tostring(^m2_mining_needed)> to break this up.");
+    return;
+}
+def_obj $bucket = ~m2_rubble_bucket;
+if ($bucket = null) {
+    ~mesbox("Every bucket you are carrying is full. There is a pile to empty them on south-west of the bar.");
+    return;
+}
+anim(human_mining_bronze_pickaxe, 0);
 p_delay(4);
-%burgh_inn_rubble_pile = add(%burgh_inn_rubble_pile, 1);
+if ($bucket = bucket_empty) {
+    inv_del(inv, bucket_empty, 1);
+    inv_add(inv, burgh_rubble_bucket_1, 1);
+    mes("You break a piece off and shovel it into the bucket.");
+    return;
+}
+if ($bucket = burgh_rubble_bucket_1) {
+    inv_del(inv, burgh_rubble_bucket_1, 1);
+    inv_add(inv, burgh_rubble_bucket_2, 1);
+    mes("The bucket is nearly full.");
+    return;
+}
+inv_del(inv, burgh_rubble_bucket_2, 1);
+inv_add(inv, burgh_rubble_bucket_3, 1);
+mes("The bucket will not take any more. There is a pile south-west of the bar.");
+
+// A pickaxe of any kind, held or wielded.
+[proc,m2_pickaxe]()(boolean)
+if (inv_total(inv, bronze_pickaxe) > 0 | inv_total(inv, iron_pickaxe) > 0 | inv_total(inv, steel_pickaxe) > 0) {
+    return(true);
+}
+if (inv_total(inv, mithril_pickaxe) > 0 | inv_total(inv, adamant_pickaxe) > 0 | inv_total(inv, rune_pickaxe) > 0) {
+    return(true);
+}
+if (inv_total(worn, bronze_pickaxe) > 0 | inv_total(worn, iron_pickaxe) > 0 | inv_total(worn, steel_pickaxe) > 0) {
+    return(true);
+}
+if (inv_total(worn, mithril_pickaxe) > 0 | inv_total(worn, adamant_pickaxe) > 0 | inv_total(worn, rune_pickaxe) > 0) {
+    return(true);
+}
+return(false);
+
+// The emptiest bucket being carried, or null if every one of them is full.
+[proc,m2_rubble_bucket]()(obj)
+if (inv_total(inv, bucket_empty) > 0) { return(bucket_empty); }
+if (inv_total(inv, burgh_rubble_bucket_1) > 0) { return(burgh_rubble_bucket_1); }
+if (inv_total(inv, burgh_rubble_bucket_2) > 0) { return(burgh_rubble_bucket_2); }
+return(null);
+
+// The pile south-west of the bar. A bucket emptied on it credits what it was holding.
+[oplocu,burgh_outside_rubble_pile]
+def_obj $used = last_useitem;
+p_arrivedelay;
+def_int $loads = 0;
+if ($used = burgh_rubble_bucket_1) { $loads = 1; }
+if ($used = burgh_rubble_bucket_2) { $loads = 2; }
+if ($used = burgh_rubble_bucket_3) { $loads = 3; }
+if ($loads = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, $used, 1);
+inv_add(inv, bucket_empty, 1);
+anim(human_pickupfloor, 0);
+p_delay(3);
+if (%burgh_inn_colapsed_wall = ^m2_on) {
+    mes("You tip it onto the pile.");
+    return;
+}
+%burgh_inn_rubble_pile = add(%burgh_inn_rubble_pile, $loads);
 if (%burgh_inn_rubble_pile >= ^m2_rubble_loads) {
     %burgh_inn_colapsed_wall = ^m2_on;
     stat_advance(strength, 4000);
-    ~mesbox("That is the last of it. There is a floor under there, and a trapdoor in the floor.");
+    ~mesbox("That is the last of it. There is a floor under the inn's back wall, and a trapdoor in the floor.");
     return;
 }
-mes("You carry another bucket of it out into the street.");
+mes("You tip it onto the pile. There is more of it in the inn.");
+
+[oploc1,burgh_outside_rubble_pile]
+p_arrivedelay;
+if (%burgh_inn_colapsed_wall = ^m2_on) {
+    ~mesbox("The back wall of the inn, in a heap, in the street, where it is at least not on top of a trapdoor.");
+    return;
+}
+~mesbox("Where the village has been putting rubble for sixty years. There is room for a good deal more of it.");
+
+// iop4=Empty on each of the three fill states tips the bucket out where you stand, and anywhere is
+// not the pile, so it does not count for anything - general_use/scripts/containers_generated.rs2
+// already covers all three of them and does exactly that.
 
 [oploc1,burgh_inn_trapdoor_multiloc]
 p_arrivedelay;
