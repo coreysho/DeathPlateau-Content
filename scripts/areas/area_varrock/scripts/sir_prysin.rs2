@@ -51,10 +51,10 @@ if (inv_total(inv, silverlight_key_3) > 0) {
     ~chatplayer("<p,neutral>I've got the key You dropped down the drain.");
 }
 
-def_int $option = ~p_choice2("Can you remind me where all they keys were again?", 1, "I'm still looking.", 2);
+def_int $option = ~p_choice2("Can you remind me where all the keys were again?", 1, "I'm still looking.", 2);
 
 if ($option = 1) {
-    ~chatplayer("<p,neutral>Can you remind me where all they keys were again?");
+    ~chatplayer("<p,neutral>Can you remind me where all the keys were again?");
     @demon_slayer_sir_prysin_keys;
 } else {
     ~chatplayer("<p,neutral>I'm still looking.");
