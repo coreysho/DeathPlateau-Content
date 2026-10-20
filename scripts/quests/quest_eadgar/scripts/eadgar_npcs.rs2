@@ -44,9 +44,11 @@ if (%eadgar_quest = ^eadgar_not_started) {
     // The quest's own requirements (Druidic Ritual, Troll Stronghold, 31 Herblore) were checked
     // nowhere. Without Troll Stronghold there is no way into the stronghold this whole plan happens
     // in, so the quest would start and then go nowhere.
-    if (%druidquest < ^druid_complete | %troll_quest < ^troll_complete | stat_base(herblore) < 31) {
-        ~chatnpc("<p,neutral>Mind you, you would need to know your way around a herb - Druidic Ritual, and a Herblore level of 31 - and around a troll stronghold. Come back when you do.");
-        ~mesbox("To start Eadgar's Ruse you need to have completed Druidic Ritual and Troll Stronghold, and to have a Herblore level of 31.");
+    // Death Plateau as well, which was the one requirement of the four not being asked for - it
+    // is what gets anybody onto the mountain at all.
+    if (%druidquest < ^druid_complete | %troll_quest < ^troll_complete | %death_equiproom < ^death_complete | stat_base(herblore) < 31) {
+        ~chatnpc("<p,neutral>Mind you, you would need to know your way around a herb - Druidic Ritual, and a Herblore level of 31 - and around a troll stronghold, and up the plateau in the first place. Come back when you do.");
+        ~mesbox("To start Eadgar's Ruse you need Druidic Ritual, Troll Stronghold and Death Plateau finished, and a Herblore level of 31.");
         return;
     }
     %eadgar_quest = ^eadgar_started;

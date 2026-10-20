@@ -52,6 +52,13 @@ queue(arthur_quest_complete, 0, 0);
 
 [label,king_arthur_grailstart]
 ~chatplayer("<p,neutral>Now I am a knight of the round table, do you have any more quests for me?");
+// The Holy Grail wants 20 Attack, which is not boostable and was not being asked for anywhere.
+// Merlin's Crystal is already the gate on reaching this branch at all.
+if (stat_base(attack) < ^grail_attack_needed) {
+    ~chatnpc("<p,neutral>I do, but not for you yet. The knight who takes this one will have to fight something, and you are not ready to.");
+    ~mesbox("The Holy Grail needs an Attack level of <tostring(^grail_attack_needed)>.");
+    return;
+}
 ~chatnpc("<p,neutral>Aha! I'm glad you are here! I am sending out various knights on an important quest. I was wondering if you too would like to take up this quest?");
 switch_int(~p_choice2("Tell me of this quest.", 1, "I am weary of questing for the time being...", 2)) {
     case 1 :
