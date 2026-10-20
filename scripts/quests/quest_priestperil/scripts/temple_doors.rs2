@@ -4,50 +4,49 @@
 [oploc2,priestperiltempledoorl]@knock_temple_doors(^left);
 [oploc2,priestperiltempledoorr]@knock_temple_doors(^right);
 
+// ~check_axis is true only when the player is standing ON the door's own tile, which is where the
+// shared door proc leaves you after one click; a player walking up from outside always reads false.
+// So the lock belongs on the false branch: it was on the true one, which meant the first click from
+// outside fell through to the else and opened a door that is supposed to stay shut until Roald
+// sends you back (^priestperil_return_to_drezel).
 [label,open_temple_doors](int $side)
-def_boolean $entering = ~check_axis(coord, loc_coord, loc_angle);
-if ($entering = true) {
-    if (%priestperil < ^priestperil_return_to_drezel) {
-        mes("This door is securely locked from inside.");
-        return;
-    } else {
-        ~open_and_close_double_door2($entering, $side, door_open);
-    }
-} else {
-    ~open_and_close_double_door2($entering, $side, door_open);
+def_boolean $in_doorway = ~check_axis(coord, loc_coord, loc_angle);
+if ($in_doorway = false & %priestperil < ^priestperil_return_to_drezel) {
+    mes("This door is securely locked from inside.");
+    return;
 }
+~open_and_close_double_door2($in_doorway, $side, door_open);
 
+// AND A KNOCK IS JUST A KNOCK. This was gated the same way round, so a knock from outside - the
+// only knock anybody makes - skipped the conversation and opened the doors instead. The
+// conversation behind them is how the quest starts, so it now runs from either side and opens
+// nothing.
 [label,knock_temple_doors](int $side)
-def_boolean $entering = ~check_axis(coord, loc_coord, loc_angle);
-if ($entering = true) {
-    if (%priestperil = ^priestperil_started) {
-        ~mesbox("You knock at the door...You hear a voice from inside. @dbl@Who are you|@dbl@and what do you want?");
-        ~chatplayer("<p,quiz>Ummmm.....");
-        @multi4("Roald sent me to check on Drezel.", templedoors_drezel, 
-                "Hi, I just moved in next door...", templedoors_moved_in, 
-                "I hear this place is of historic interest.", templedoors_historic, 
-                "The council sent me to check your pipes.", templedoors_pipes);
-    } else if (%priestperil >= ^priestperil_agree_to_kill_dog & %priestperil < ^priestperil_return_to_drezel) {
-        ~mesbox("You knock at the door...You hear a voice from inside.@dbl@You again?|@dbl@What do you want now?");
-        
-        if (%priestperil = ^priestperil_agree_to_kill_dog) {
-            ~chatplayer("<p,quiz>What am I supposed to be doing again?");
-            ~mesbox("@dbl@Ah! I want you to go kill the horrible dog in the mausoleum for me!|@dbl@You can use the entrance out there. You'll do this for good old|@dbl@Delzig, won't ya buddy? @dre@(Drezel!) @dbl@*cough* for good old Drezel, right|@dbl@buddy?");
-        } else if (%priestperil = ^priestperil_killed_dog) {
-            ~chatplayer("<p,happy>I killed that dog for you.");
-            ~mesbox("@dbl@HAHAHAHAHA! Really? Hey, that's great! @dre@Yeah thanks a lot buddy!|@dre@HAHAHAHAHAHA");
-            ~chatplayer("<p,quiz>What's so funny?");
-            ~mesbox("@dbl@HAHAHAHA nothing buddy!|@dbl@We're just so grateful to you! HAHAHA|@dre@Yeah, maybe you should go tell the King|@dre@what a great job you did buddy! HAHAHA"); // https://web.archive.org/web/20070611202228/http://www.runeweb.net:80/index.php?page=rs2-quest-priestinperil
-        }
-    } else {
-        ~mesbox("You knock at the door...You hear a voice from inside. @dbl@Who are you|@dbl@and what do you want?");
-        ~chatplayer("<p,quiz>Ummmm.....");
-        @multi3("Hi, I just moved in next door...", templedoors_moved_in, 
-                "I hear this place is of historic interest.", templedoors_historic, 
-                "The council sent me to check your pipes.", templedoors_pipes);
+if (%priestperil = ^priestperil_started) {
+    ~mesbox("You knock at the door...You hear a voice from inside. @dbl@Who are you|@dbl@and what do you want?");
+    ~chatplayer("<p,quiz>Ummmm.....");
+    @multi4("Roald sent me to check on Drezel.", templedoors_drezel, 
+            "Hi, I just moved in next door...", templedoors_moved_in, 
+            "I hear this place is of historic interest.", templedoors_historic, 
+            "The council sent me to check your pipes.", templedoors_pipes);
+} else if (%priestperil >= ^priestperil_agree_to_kill_dog & %priestperil < ^priestperil_return_to_drezel) {
+    ~mesbox("You knock at the door...You hear a voice from inside.@dbl@You again?|@dbl@What do you want now?");
+    
+    if (%priestperil = ^priestperil_agree_to_kill_dog) {
+        ~chatplayer("<p,quiz>What am I supposed to be doing again?");
+        ~mesbox("@dbl@Ah! I want you to go kill the horrible dog in the mausoleum for me!|@dbl@You can use the entrance out there. You'll do this for good old|@dbl@Delzig, won't ya buddy? @dre@(Drezel!) @dbl@*cough* for good old Drezel, right|@dbl@buddy?");
+    } else if (%priestperil = ^priestperil_killed_dog) {
+        ~chatplayer("<p,happy>I killed that dog for you.");
+        ~mesbox("@dbl@HAHAHAHAHA! Really? Hey, that's great! @dre@Yeah thanks a lot buddy!|@dre@HAHAHAHAHAHA");
+        ~chatplayer("<p,quiz>What's so funny?");
+        ~mesbox("@dbl@HAHAHAHA nothing buddy!|@dbl@We're just so grateful to you! HAHAHA|@dre@Yeah, maybe you should go tell the King|@dre@what a great job you did buddy! HAHAHA"); // https://web.archive.org/web/20070611202228/http://www.runeweb.net:80/index.php?page=rs2-quest-priestinperil
     }
 } else {
-    ~open_and_close_double_door2($entering, $side, door_open);
+    ~mesbox("You knock at the door...You hear a voice from inside. @dbl@Who are you|@dbl@and what do you want?");
+    ~chatplayer("<p,quiz>Ummmm.....");
+    @multi3("Hi, I just moved in next door...", templedoors_moved_in, 
+            "I hear this place is of historic interest.", templedoors_historic, 
+            "The council sent me to check your pipes.", templedoors_pipes);
 }
 
 [label,templedoors_drezel]
