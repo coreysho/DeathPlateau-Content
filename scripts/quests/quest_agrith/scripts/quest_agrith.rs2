@@ -15,6 +15,14 @@ switch_int (%agrith_quest) {
 
 [label,agrith_start]
 ~chatnpc("<p,neutral>You are not from the cult.");
+// The Golem and Demon Slayer, neither of which was checked. Both are more than paperwork here:
+// Demon Slayer is where Silverlight comes from and The Golem is where the mushroom ink does, so
+// the quest was gated by its own items and never said so.
+if (%demonstart < ^demon_complete | %golem_a < ^golem_complete) {
+    ~chatnpc("<p,neutral>And you have never been near a demon or a clay man, which are the two things this needs. Come back when you have.");
+    ~mesbox("Demon Slayer and The Golem.");
+    return;
+}
 switch_int (~p_choice2("What cult?", 1, "No. Should I be?", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>No. Should I be?");
@@ -70,10 +78,12 @@ if_close;
 mes("Father Reen writes the whole of it down, twice, and gives one copy to Badden.");
 p_delay(4);
 %agrith_quest = ^agrith_complete;
-stat_advance(crafting, 20000);
-stat_advance(magic, 10000);
+// THE REWARD IS A CHOICE. "10,000 experience in any combat skill except Prayer" - which it was
+// not: it paid two thousand Crafting and one thousand Magic, neither of which this quest has
+// anything to do with. Experience is stored in tenths, so 10,000 is written as 100,000.
+~agrith_reward_xp;
 session_log(^log_adventure, "Quest complete: Shadow of the Storm");
-~send_quest_complete(questlist:agrith, darklight, 200, ^agrith_questpoints, "You have completed\\nShadow of the Storm!", "1 Quest Point|2,000 Crafting XP|1,000 Magic XP|Darklight");
+~send_quest_complete(questlist:agrith, darklight, 200, ^agrith_questpoints, "You have completed\\nShadow of the Storm!", "1 Quest Point|10,000 XP in a combat skill of your choice|Darklight");
 
 // =========================================================================== Evil Dave
 // agrith_dave is not spawned anywhere, so this runs on the living Dave in the Edgeville cellar,
@@ -217,6 +227,11 @@ if (distance(coord, ^agrith_kiln_coord) > 4) {
     ~mesbox("The mould is cold. The golem said one of its kilns still works.");
     return;
 }
+// 30 Crafting, boostable, which is the quest's one skill requirement and was not asked for.
+if (stat(crafting) < ^agrith_crafting_needed) {
+    ~mesbox("Silver in a mould is a Crafting job and this one wants a level of <tostring(^agrith_crafting_needed)>.");
+    return;
+}
 if_close;
 mes("You put the bar and the mould into the kiln.");
 p_delay(5);
@@ -354,6 +369,13 @@ p_delay(3);
 p_delay(3);
 ~agrith_naar_fight;
 
+// AGRITH-NAAR IS NOT IN THE CACHE. Every other name in this quest is an npc - Reen, Badden,
+// Denath, Eric, Matthew, Jennifer, Tanya, Patrick, Dave in four poses, the sandstorms - and all
+// of them are vislevel=hide scenery. There is no demon of that name or that level anywhere in
+// all.npc; the only thing in the build carrying the name is Recipe for Disaster's Agrith-Na-Na,
+// which is a different creature. So the kill is written rather than fought, and the one thing
+// the walkthrough insists on - that the last blow is Silverlight's - is the condition on
+// getting here at all.
 [proc,agrith_naar_fight]()()
 mes("The sword is black and looks like nothing at all, which is why it gets close enough.");
 p_delay(4);
@@ -368,9 +390,36 @@ inv_del(inv, agrith_silverlight_dyed, 1);
 inv_add(inv, darklight, 1);
 %agrith_quest = ^agrith_darklight;
 ~send_quest_progress(questlist:agrith, %agrith_quest, ^agrith_complete);
-stat_advance(attack, 15000);
-stat_advance(strength, 15000);
+// No experience here: the quest's ten thousand is a choice Father Reen offers at the end, and
+// paying fifteen hundred of Attack and Strength first made the choice partly for the player.
 ~mesbox("The ink comes off the blade in the heat and what is underneath it is not silver any more. | Darklight: Silverlight with the blood of Agrith-Naar in it, which is a permanent arrangement.");
 
 // Eric's rubble (sez_agrith_rubble_wiz) carries no ops, so it is scenery: it appears at stages 90
 // to 110 and says what happened by being there. The line it used to carry is in the summoning.
+
+// =========================================================================== the reward
+// Six skills and a five-option menu, so melee is asked about twice. Prayer is the one the quest
+// will not pay into.
+[proc,agrith_reward_xp]()()
+~chatnpc("<p,neutral>You have a demon's blood in a sword. What do you want to be better at?");
+~mesbox("Father Reen will put the whole of it into one skill. Prayer is not on offer - he was very clear about that.");
+switch_int (~p_choice4("Melee.", 1, "Ranged.", 2, "Magic.", 3, "Hitpoints.", 4)) {
+    case 2 :
+        stat_advance(ranged, ^agrith_reward_amount);
+        return;
+    case 3 :
+        stat_advance(magic, ^agrith_reward_amount);
+        return;
+    case 4 :
+        stat_advance(hitpoints, ^agrith_reward_amount);
+        return;
+}
+switch_int (~p_choice3("Attack.", 1, "Strength.", 2, "Defence.", 3)) {
+    case 2 :
+        stat_advance(strength, ^agrith_reward_amount);
+        return;
+    case 3 :
+        stat_advance(defence, ^agrith_reward_amount);
+        return;
+}
+stat_advance(attack, ^agrith_reward_amount);

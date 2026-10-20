@@ -4,7 +4,8 @@ def_string $text;
 switch_int (%agrith_quest) {
     case ^agrith_not_started :
         $text = "@dbl@There is a @dre@priest@dbl@ standing about in @dre@Al Kharid@dbl@ who is|";
-        $text = append($text, "@dbl@very obviously watching somebody");
+        $text = append($text, "@dbl@very obviously watching somebody||");
+        $text = append($text, "@dbl@I will need @dre@Demon Slayer@dbl@ and @dre@The Golem@dbl@ finished, and|@dbl@@dre@30 Crafting");
 
     case ^agrith_reen :
         $text = "@str@Father Reen and Father Badden have spent four months|";

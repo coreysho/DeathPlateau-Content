@@ -87,3 +87,9 @@
 ^agrith_rubble_coord = 0_42_76_36_33
 ^agrith_circle = 0_54_48_19_28               // a sandstorm stands here, so something can
 ^agrith_dave_cellar = 0_48_154_8_34          // under Edgeville
+
+// 10,000 experience in one combat skill, stored in tenths.
+^agrith_reward_amount = 100000
+
+// 30 Crafting, boostable, to cast the sigil.
+^agrith_crafting_needed = 30
