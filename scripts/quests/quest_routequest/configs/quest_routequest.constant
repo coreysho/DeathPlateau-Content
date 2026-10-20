@@ -1,91 +1,138 @@
 // In Search of the Myreque.
 //
-// Three varps and not one line of script anywhere. What is in the cache:
+// ---------------------------------------------------------------------------- what the cache has
+// This quest was built once from the varbit names alone, before anybody had looked at where the
+// cache puts things, and it came out as a different quest: Veliaf asking three questions about
+// Morytania, a ladder with three rungs out of it, and a boatman who had to be talked round. All
+// three of those pieces are real. Every one of them belongs to somebody else.
 //
+// What is actually on the map is the 2005 quest, complete:
+//
+//   skeleton_hellhound           level 97, with attack/defend/death anims and nothing else - the
+//                                thing Vanstrom summons when he has finished talking
+//   route_vanstrom_klause_*      sitting, normal, vamp_wingsgrow, vamp, vamp_misty: a man in a
+//                                chair, a man standing up, wings coming out of his back, a vampyre,
+//                                and then a cloud of mist leaving the room. That is the cutscene.
+//   canafis_stranger             who is in the chair afterwards
+//   harmless_dead_palm_mid x2    3502,3426 and 3502,3431, Climb up / Climb down
+//   swamp_bridge1 x4             3502,3427..3430, Walk-here / Repair
+//   freedomfighterentrancel/r    3509,3447 and 3510,3447, "These doors seem to lead into the
+//                                underground" - the doors in the earth behind the hollow tree
+//   hollowtree_entrance          3508,3441, the odd-looking tree Cyreg sends you to
+//
+// The four tiles of rope bridge are the only way from the southern swamp to the northern half of
+// the Hollows - 3502,3427..3430 is impassable terrain and the two trees stand on open ground on
+// either side of it. Nothing else crosses. So the bridge is not scenery: it is the quest.
+//
+// ---------------------------------------------------------------------------- the varbits
 //   routequest               the progress varp
-//   routequest_myreque_bits  entirely unused by any varbit - a spare int
-//   routequestmulti          carries everything else:
-//     routequestionscorrect   bits 6-7    0-3
+//   routequest_myreque_bits  unused by any varbit - a spare int, used here as a bit field
+//   routequestmulti          carries the rest:
+//     routequestionscorrect   bits 6-7    0-3   Curpile Fyod asks three questions out of six
 //     routequestionsanswered  bits 8-9    0-3
-//     roomnum                 bits 16-18  0-7
-//     bridgerung1/2/3         bits 20/21/22
-//     thsfm_vanstrom_hide     bit 25
+//     roomnum                 bits 16-18  0-7   which cave floor you last came out on
+//     bridgerung1/2/3         bits 20/21/22     the three missing sections of the rope bridge
+//     thsfm_vanstrom_hide     bit 25            the chair in the tavern: Vanstrom, then a stranger
 //
-// Two of those are the quest on their own. A pair of two-bit counters that top out at three is a
-// three-question test you either pass or fail, and three single-bit rungs are a ladder with three
-// rungs missing.
-//
-// ---------------------------------------------------------------------------- the cast
-// route_cyreg_paddlehorn   "A tall and imposing man who's more than familiar with boating."
-// route_curpile_fyod       "A typical, if overly heavy handed, jobs worth guard."
-// route_veliaf_hurtz       "Looks like the leader of the Myreque."   op3=hidden
-// route_sani_piliu, route_harold_evans, route_radigad_ponfit,
-// route_polmafi_ferdygris, route_ivan_strom
-// route_vanstrom_klause    in five bodies: sitting, normal, vamp, vamp_misty, vamp_wingsgrow
-//
-// Veliaf, Radigad, Polmafi and Ivan are spawned on m54_153 plane 0 AND plane 3. Sani and Harold are
-// spawned on plane 3 only. Four on one floor and six on the other, and the four are exactly the
-// four who are still standing by the time the Myreque get to Burgh de Rott.
-//
-// ---------------------------------------------------------------------------- Vanstrom
 //   [multi_vanstrom_stranger_entity]
 //   multivar=thsfm_vanstrom_hide
 //   multinpc=0,route_vanstrom_klause_sitting
 //   multinpc=1,canafis_stranger
 //
-// He is spawned once, at 3503,3477, which is a chair in the Hair of the Dog in Canifis, and the bit
-// is called "hide" and it means it. At zero - which is where every account starts - the man in that
-// chair is Vanstrom Klause. He has been sitting in the tavern the whole time.
+// He is spawned once, at 3504,3477, which is a chair in the Hair of the Dog in Canifis, and the bit
+// is called "hide" and it means it. At zero - where every account starts - the man in that chair is
+// Vanstrom Klause, and he is the one who sends you to go and find the Myreque.
+//
+// ---------------------------------------------------------------------------- the hideout
+// m54_153 carries the Myreque's chamber FOUR TIMES, once on each plane, tile for tile identical,
+// 3502..3515 x 9829..9846. The npc spawns are not identical:
+//
+//   plane 3   Veliaf, Radigad, Polmafi, Ivan, Sani Piliu, Harold Evans      six
+//   plane 0   Veliaf, Radigad, Polmafi, Ivan                                four
+//
+// Sani Piliu and Harold Evans are the two Vanstrom kills. The cache is not being clever with
+// multinpcs here - it just holds the room twice, before and after, and content picks. So the quest
+// is played on plane 3, and the chamber you are standing in once the hellhound is dead is plane 0,
+// which is also the one In Aid of the Myreque uses.
+//
+// The chamber is a closed pocket of 177 tiles on every plane. Its only way out is the cave mouth at
+// its south-west corner, 3505,9831, which exists on all four planes.
 ^route_not_started = 0
-^route_found = 1        // been down the trapdoor, met Veliaf
-^route_tested = 2       // passed his three questions
-^route_route = 3        // sent to open the southern route
-^route_reported = 4     // told Veliaf it is open
-^route_complete = 5
-
-^route_questions_needed = 3
+^route_weapons = 1      // Vanstrom has asked for five steel weapons
+^route_boat = 2         // Cyreg's boat is mended and he has said where to go
+^route_bridge = 3       // the rope bridge is whole
+^route_hideout = 4      // through Curpile, into the chamber, and Veliaf has asked who you are
+^route_intros = 5       // introduced yourself to the other five
+^route_reveal = 6       // the weapons are handed over and the hellhound is loose
+^route_canifis = 7      // the hellhound is dead and Veliaf has sent you up to the tavern
+^route_complete = 8
 
 ^route_off = 0
 ^route_on = 1
 
+^route_questions_asked = 3
+^route_intros_needed = 5
+
 // routequest_myreque_bits, used as a plain bit field because nothing else uses it at all.
-^route_bit_ladder = 0
-^route_bit_cyreg = 1
-^route_bit_curpile = 2
+^route_bit_pouch = 0        // Cyreg has seen a charged druid pouch
+^route_bit_boat = 1         // three of the six planks are in his boat
+^route_bit_curpile = 2      // Curpile Fyod is satisfied and the doors will open
+^route_bit_hellhound = 3    // the Skeleton Hellhound is dead
+^route_bit_harold = 4
+^route_bit_radigad = 5
+^route_bit_polmafi = 6
+^route_bit_sani = 7
+^route_bit_ivan = 8
+^route_bit_passage = 9      // Veliaf has told you about the way out through the cellar
+
+// ---------------------------------------------------------------------------- requirements
+^route_agility_needed = 25
+^route_pouch_charges = 5
+^route_planks_needed = 6
+^route_planks_boat = 3
+^route_nails_per_section = 75
+^route_boat_toll = 10
+^route_reward_xp = 6000     // 600 each, and stats are kept in tenths
 
 // ---------------------------------------------------------------------------- places
-// m54_153 is the Hollows: four planes, sixteen route_cavewalltunnel mouths, one boarded ladder and
-// one ladder up into a tavern cellar.
-^route_hollows_boatside = 0_54_153_35_29   // by the stalagmite (was 36_30, a blocked tile)
-^route_stalagmite = 0_54_153_36_32
-^route_broken_ladder = 0_54_153_27_49
-^route_tavern_ladder = 0_54_153_21_53      // below the ladder (was 21_54, the ladder's own tile)
-^route_veliaf = 0_54_153_50_46
+^route_canifis_trapdoor = 0_54_54_38_8     // 3494,3464  behind the Hair of the Dog
+^route_tavern_ladder = 0_54_153_21_53      // 3477,9845  below the ladder, not its own tile
 
-// The cellar and the Myreque's hideout are not joined on foot. The cellar's false wall
-// (thrttavernbasementfalsewall, the south edge of 24_45) opens onto the Hollows, and the Hollows
-// reach the hideout through the Myreque's own double door (freedomfighterundergroundentrancel/r,
-// 44_20 and 45_20); the tunnel mouth at the hideout's south edge (49_39) is its way back out.
-// None of the three had a way through before, so Veliaf could not be reached at all.
-^route_hideout_inside = 0_54_153_49_40
-^route_hideout_door_outside = 0_54_153_44_19
+^route_mortton_boat = 0_55_51_3_20         // 3523,3284  3x3, so nobody lands on it
+^route_mortton_landing = 0_55_51_2_21      // 3522,3285  beside the boat, where Cyreg stands
+^route_swamp_boat = 0_54_52_42_49          // 3498,3377  3x3
+^route_swamp_landing = 0_54_52_42_54       // 3498,3382  the south end of the Hollows
 
-^route_canifis_trapdoor = 0_54_54_38_8     // 3494,3464  the Hair of the Dog
-^route_swamp_boat = 0_54_52_42_49          // 3498,3377  3x3, so nobody lands on it
-^route_swamp_landing = 0_54_52_42_54       // 3498,3382  a tile something already stands on
-^route_mortton_boat = 0_55_51_3_20         // 3523,3284  Cyreg is on the next tile along
-^route_mortton_landing = 0_54_51_18_16     // 3474,3280  Mort'ton
-^route_curpile = 0_54_53_52_48             // 3508,3440
+// The rope bridge. The four sections are ground decor and never block anything; what blocks is the
+// terrain under them, which is why the trees on either side are the crossing and not the tiles.
+^route_bridge_south = 0_54_53_46_34        // 3502,3426  the south tree
+^route_bridge_north = 0_54_53_46_39        // 3502,3431  the north tree
 
-^route_boat_toll = 10
+^route_curpile = 0_54_53_48_44             // 3504,3437  beside Curpile, north of the bridge
+^route_earth_doors_outside = 0_54_53_53_54 // 3509,3446  south of the doors in the earth
+^route_cave_landing = 0_54_153_44_18       // 3500,9810  the corridor they drop you into
+
+// The Myreque's own door, and the chamber behind it. The corridor outside it is 220 tiles and runs
+// north-west to the false wall behind the Hair of the Dog's cellar, which is the whole of the
+// secret passage - no other cave floor is involved in this quest.
+^route_hideout_door_outside = 0_54_153_44_19   // 3500,9811
+^route_hideout_inside = 3_54_153_49_40         // 3505,9832 on plane 3, six of them alive
+^route_hideout_after = 0_54_153_49_40          // 3505,9832 on plane 0, four of them left
+
+// Where Vanstrom stands up, two tiles from Veliaf on plane 3.
+^route_vanstrom_spot = 3_54_153_51_45          // 3507,9837
+^route_hellhound_spot = 3_54_153_51_44         // 3507,9836
+^route_vanstrom_ticks = 500
+^route_hellhound_ticks = 2000
 
 // ---------------------------------------------------------------------------- the tunnels
-// Sixteen mouths. Three x/z positions repeat across planes - (49,39) on 0,1,2,3, (11,39) on 1,2,3
-// and (11,9) on 1 and 3 - which is a vertical warren, and the remaining seven sit on plane 0 alone,
-// which is a horizontal one. The horizontal pairings below are inferred from proximity and may not
-// match whatever the original had in mind; nothing is staked on them, because plane 0 also holds
-// the stalagmite and the tavern ladder, so a wrong guess moves you across one cave floor and never
-// traps you on it.
+// Sixteen route_cavewalltunnel mouths. Only one of them matters to this quest - 3505,9831, the
+// chamber's own door - and the other fifteen join cave floors that nothing in either Myreque quest
+// walks through. The pairings below are inferred from proximity; nothing is staked on them, because
+// plane 0 also holds the stalagmite and the tavern ladder, so a wrong guess moves you across one
+// cave floor and never traps you on it.
+^route_hollows_boatside = 0_54_153_35_29   // by the stalagmite (was 36_30, a blocked tile)
+^route_stalagmite = 0_54_153_36_32
 ^route_tunnel_a1 = 0_54_153_22_7
 ^route_tunnel_a2 = 0_54_153_20_14
 ^route_tunnel_b1 = 0_54_153_11_28

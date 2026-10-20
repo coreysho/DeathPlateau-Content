@@ -27,12 +27,9 @@ if (~check_axis_locactive(coord) = false) {
 
 // broken ladder
 [oploc1,ladder_broken]
-// The other ladder_broken in the world is the one in the Hollows with three rungs missing, which
-// In Search of the Myreque has you put back. A trigger can only be declared once, so the branch
-// lives here and the work lives in quests/quest_routequest/scripts/quest_routequest.rs2.
-if (~route_repair_ladder = true) {
-    return;
-}
+// The other ladder_broken in the world is in the cellar under the Hair of the Dog in Canifis. It is
+// broken there too and nothing repairs it - In Search of the Myreque is played over a rope bridge
+// in the Hollows, which is a different loc and a different place.
 mes("The ladder is broken, I can't climb it."); // osrs
 
 // ladder

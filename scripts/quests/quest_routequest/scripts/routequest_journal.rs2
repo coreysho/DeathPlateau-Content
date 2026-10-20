@@ -3,61 +3,100 @@ def_string $text;
 
 switch_int (%routequest) {
     case ^route_not_started :
-        $text = "@dbl@There is a @dre@trapdoor@dbl@ in the @dre@Hair of the Dog@dbl@ tavern in|";
-        $text = append($text, "@dbl@@dre@Canifis@dbl@, and everybody in Canifis knows about it, and|");
-        $text = append($text, "@dbl@nobody has ever gone down it");
+        $text = "@dbl@There is a man who drinks in the @dre@Hair of the Dog@dbl@ in|";
+        $text = append($text, "@dbl@@dre@Canifis@dbl@, in the chair in the north-east corner, and|");
+        $text = append($text, "@dbl@he has friends he cannot help|");
+        $text = append($text, "@dbl@Requires @dre@Nature Spirit@dbl@, @dre@Priest in Peril@dbl@,|");
+        $text = append($text, "@dbl@@dre@The Restless Ghost@dbl@ and @dre@25 Agility");
 
-    case ^route_found :
-        $text = "@str@Under Canifis there is a cave system with six people living|";
-        $text = append($text, "@str@in it. Sixty years ago there were four hundred.|");
-        $text = append($text, "@str@Veliaf Hurtz does not take anybody's word for anything.|");
-        $text = append($text, "@dbl@Answer his @dre@three questions");
+    case ^route_weapons :
+        $text = "@str@The Myreque are a resistance hiding under Mort Myre and|";
+        $text = append($text, "@str@they have no weapons.||");
+        $text = append($text, "@dbl@Carry all five at once: a @dre@steel longsword@dbl@, @dre@two|");
+        $text = append($text, "@dbl@@dre@steel swords@dbl@, a @dre@steel dagger@dbl@, a @dre@steel mace|");
+        $text = append($text, "@dbl@and a @dre@steel warhammer|");
+        $text = append($text, "@dbl@Then find @dre@Cyreg Paddlehorn@dbl@, the boatman on the|");
+        $text = append($text, "@dbl@east side of @dre@Mort'ton");
 
-    case ^route_tested :
-        $text = "@str@Three out of three.|";
-        $text = append($text, "@dbl@Hear him out");
+    case ^route_boat :
+        $text = "@str@Cyreg Paddlehorn has mended his boat and it goes north|";
+        $text = append($text, "@str@to the Hollows.||");
+        $text = append($text, "@dbl@North on foot. Three sections of the @dre@rope bridge@dbl@ are|");
+        $text = append($text, "@dbl@missing: a @dre@plank@dbl@ and @dre@75 steel nails@dbl@ each, with|");
+        $text = append($text, "@dbl@a @dre@hammer");
 
-    case ^route_route :
-        $text = "@str@There is one way out of the Hollows and it comes up in a|";
-        $text = append($text, "@str@pub in a village of werewolves. Every Myreque lost in|");
-        $text = append($text, "@str@twenty years was lost on that ladder.|");
-        $text = append($text, "@str@There is a southern road. It is in three pieces:||");
+    case ^route_bridge :
+        $text = "@str@The rope bridge is whole and the trees at either end are|";
+        $text = append($text, "@str@how you get onto it.||");
+        $text = append($text, "@dbl@North to the tree that is the wrong shape, and the man|");
+        $text = append($text, "@dbl@beside it: @dre@Curpile Fyod|");
+        $text = append($text, "@dbl@He asks @dre@three questions@dbl@ about the Myreque and all|");
+        $text = append($text, "@dbl@three have to be right");
 
-        if (testbit(%routequest_myreque_bits, ^route_bit_ladder) = ^true) {
-            $text = append($text, "@gre@The ladder - three rungs back in|");
+    case ^route_hideout :
+        $text = "@str@Curpile Fyod has opened the doors in the earth, and|";
+        $text = append($text, "@str@Veliaf Hurtz will look at the weapons in a moment.||");
+        $text = append($text, "@dbl@@dre@Introduce yourself@dbl@ to the other five first:|");
+
+        if (testbit(%routequest_myreque_bits, ^route_bit_harold) = ^true) {
+            $text = append($text, "@gre@Harold Evans|");
         } else {
-            $text = append($text, "@dbl@The @dre@broken ladder@dbl@ in the Hollows - three rungs, so|");
-            $text = append($text, "@dbl@@dre@planks@dbl@, a @dre@hammer@dbl@ and @dre@nails|");
+            $text = append($text, "@dbl@@dre@Harold Evans|");
+        }
+        if (testbit(%routequest_myreque_bits, ^route_bit_radigad) = ^true) {
+            $text = append($text, "@gre@Radigad Ponfit|");
+        } else {
+            $text = append($text, "@dbl@@dre@Radigad Ponfit|");
+        }
+        if (testbit(%routequest_myreque_bits, ^route_bit_polmafi) = ^true) {
+            $text = append($text, "@gre@Polmafi Ferdygris|");
+        } else {
+            $text = append($text, "@dbl@@dre@Polmafi Ferdygris|");
+        }
+        if (testbit(%routequest_myreque_bits, ^route_bit_sani) = ^true) {
+            $text = append($text, "@gre@Sani Piliu|");
+        } else {
+            $text = append($text, "@dbl@@dre@Sani Piliu|");
+        }
+        if (testbit(%routequest_myreque_bits, ^route_bit_ivan) = ^true) {
+            $text = append($text, "@gre@Ivan Strom");
+        } else {
+            $text = append($text, "@dbl@@dre@Ivan Strom");
         }
 
-        if (testbit(%routequest_myreque_bits, ^route_bit_cyreg) = ^true) {
-            $text = append($text, "@gre@Cyreg Paddlehorn - the boat is theirs|");
+    case ^route_intros :
+        $text = "@str@All five of the others have seen your face.||";
+        $text = append($text, "@dbl@Give @dre@Veliaf Hurtz@dbl@ the five steel weapons");
+
+    case ^route_reveal :
+        $text = "@str@The man from the tavern was Vanstrom Klause and he is a|";
+        $text = append($text, "@str@vampyre, and he followed me in. Sani Piliu and Harold|");
+        $text = append($text, "@str@Evans are dead.||");
+        if (testbit(%routequest_myreque_bits, ^route_bit_hellhound) = ^true) {
+            $text = append($text, "@dbl@Talk to @dre@Veliaf Hurtz");
         } else {
-            $text = append($text, "@dbl@@dre@Cyreg Paddlehorn@dbl@, at the boat in the @dre@south swamp|");
+            $text = append($text, "@dbl@Kill the @dre@Skeleton Hellhound@dbl@ he left behind");
         }
 
-        if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^true) {
-            $text = append($text, "@gre@Curpile Fyod - the north road is theirs|");
-        } else {
-            $text = append($text, "@dbl@@dre@Curpile Fyod@dbl@, on the @dre@north road|");
-        }
-
-    case ^route_reported :
-        $text = "@str@All three. Sixty years and they have a road.|";
-        $text = append($text, "@dbl@@dre@Veliaf@dbl@ was about to say something about supply lines");
+    case ^route_canifis :
+        $text = "@str@Veliaf wants to know whether Vanstrom is still sitting in|";
+        $text = append($text, "@str@that tavern.||");
+        $text = append($text, "@dbl@Out into the main cave and north to the wall at the end|");
+        $text = append($text, "@dbl@of it. @dre@Search@dbl@ it - it comes up in the cellar of the|");
+        $text = append($text, "@dbl@@dre@Hair of the Dog|");
+        $text = append($text, "@dbl@Then look at the chair in the north-east corner");
 
     case ^route_complete :
-        $text = "@str@There has been a man sitting in the Hair of the Dog for|";
-        $text = append($text, "@str@twenty years, buying nothing, directly above the only way|");
-        $text = append($text, "@str@in and out of the Myreque's hideout.|");
-        $text = append($text, "@str@Vanstrom Klause. He left the day we opened a second road,|");
-        $text = append($text, "@str@which means he is not worried about it.|");
-        $text = append($text, "@str@Curpile Fyod spent eleven years reporting Myreque movements|");
-        $text = append($text, "@str@to him and thought he was reporting smugglers.||");
+        $text = "@str@Vanstrom Klause sat in the Hair of the Dog for twenty|";
+        $text = append($text, "@str@years, directly above the Myreque's only way in and out,|");
+        $text = append($text, "@str@and nobody ever asked who he was.|");
+        $text = append($text, "@str@He used me to find them and he killed two of them, and|");
+        $text = append($text, "@str@then he left - on the day they finally had a second road|");
+        $text = append($text, "@str@out. Which means he is not worried about it.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :
-        $text = "@dbl@There is a @dre@trapdoor@dbl@ in the @dre@Hair of the Dog@dbl@ tavern in|";
+        $text = "@dbl@There is a man who drinks in the @dre@Hair of the Dog@dbl@ in|";
         $text = append($text, "@dbl@@dre@Canifis");
 }
 

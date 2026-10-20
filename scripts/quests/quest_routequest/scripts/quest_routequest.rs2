@@ -1,7 +1,690 @@
-// In Search of the Myreque - a resistance living under a swamp, and a spy sitting in the pub above
-// it who has been there, unscripted and unremarked, the whole time.
+// In Search of the Myreque - a resistance living under a swamp, and the man who sends you to find
+// them, who has been sitting in the pub above their only exit for twenty years.
+//
+// Everything this quest needs is in the cache and has been the whole time: the rope bridge with its
+// four sections and a tree at each end, the doors in the earth behind the hollow tree, Curpile Fyod
+// on the north road, five bodies for Vanstrom Klause to go through, a Skeleton Hellhound, and the
+// Myreque's chamber held twice - six of them on plane 3, four of them on plane 0. See the constant
+// file for what is where.
 
-// =========================================================================== getting in
+// =========================================================================== requirements
+[proc,route_requirements]()(boolean)
+if (%druidspirit < ^druidspirit_complete) {
+    ~mesbox("You need to have completed Nature Spirit before you can start this quest. Without a druid pouch nothing walks through Mort Myre.");
+    return(false);
+}
+if (%priestperil < ^priestperil_complete) {
+    ~mesbox("You need to have completed Priest in Peril before you can start this quest.");
+    return(false);
+}
+if (%prieststart < ^priest_complete) {
+    ~mesbox("You need to have completed The Restless Ghost before you can start this quest.");
+    return(false);
+}
+if (stat_base(agility) < ^route_agility_needed) {
+    ~mesbox("You need an Agility level of <tostring(^route_agility_needed)> to start this quest. There is a rope bridge involved and it is not a good one.");
+    return(false);
+}
+return(true);
+
+// =========================================================================== the man in the chair
+// multi_vanstrom_stranger_entity switches on thsfm_vanstrom_hide: at zero the chair holds Vanstrom
+// Klause, and after he has shown everybody what he is it holds a stranger. Talk-to had no trigger
+// in either form, so the quest could not be started at all.
+[opnpc1,multi_vanstrom_stranger_entity]
+if (%thsfm_vanstrom_hide = ^route_on) {
+    @route_stranger;
+}
+if (%routequest = ^route_not_started) {
+    @route_vanstrom_start;
+}
+@route_vanstrom_idle;
+
+[label,route_vanstrom_start]
+~chatnpc("<p,neutral>You're not from Canifis. I can always tell - you still look at people when they talk to you.");
+~chatplayer("<p,quiz>Who are you?");
+~chatnpc("<p,neutral>Nobody at all. A man who drinks here. But I have friends who need help and I am not in a position to give it to them.");
+switch_int (~p_choice2("What friends?", 1, "Then I can't help you either.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Then I can't help you either.");
+        ~chatnpc("<p,neutral>No. Think about it. I will be here.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>What friends?");
+}
+~chatnpc("<p,neutral>They're a group of rebels fighting against the vampyres that rule over Morytania. They call themselves the Myreque.");
+~chatnpc("<p,neutral>They are hiding somewhere under this swamp and they have been hiding for sixty years, and what they do not have is weapons.");
+if (~route_requirements = false) {
+    return;
+}
+~chatplayer("<p,quiz>What do they need?");
+~chatnpc("<p,neutral>Steel. A longsword, two swords, a dagger, a mace and a warhammer. Carry all five at once and carry them in.");
+~chatplayer("<p,quiz>In where? You said you didn't know where they were.");
+~chatnpc("<p,neutral>I said I was not in a position to help them. There is a boatman in Mort'ton, Cyreg Paddlehorn, who has dealt with the Myreque. He will not tell me anything. He may tell you.");
+%routequest = ^route_weapons;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+~mesbox("Steel longsword, two steel swords, steel dagger, steel mace, steel warhammer. | Cyreg Paddlehorn, in Mort'ton, by the boat on the east side of the town.");
+
+[label,route_vanstrom_idle]
+switch_int (%routequest) {
+    case ^route_weapons :
+        ~chatnpc("<p,neutral>Five steel weapons and a boatman in Mort'ton. I am not going anywhere.");
+    case ^route_boat :
+        ~chatnpc("<p,happy>Paddlehorn talked to you. I knew he would talk to somebody eventually.");
+    case ^route_bridge :
+        ~chatnpc("<p,neutral>You fixed a bridge. In a swamp. For people you have not met.");
+    case default :
+        ~chatnpc("<p,neutral>I prefer to drink alone, if it's all the same to you.");
+}
+
+[label,route_stranger]
+if (%routequest = ^route_canifis) {
+    @route_finish;
+}
+~chatnpc("<p,neutral>Quiet in here. It's always quiet in here.");
+
+// =========================================================================== Cyreg Paddlehorn
+// Four things in order, which is the walkthrough: talk him round, show him a charged druid pouch,
+// hand over six planks, and he mends his own boat with three of them and tells you where to go.
+[opnpc1,route_cyreg_paddlehorn]
+if (%routequest < ^route_weapons) {
+    ~chatnpc("<p,neutral>Ten coins across the water and I do not ask what you are running from.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_boat) = ^true) {
+    ~chatnpc("<p,happy>North as far as the boat goes, then north on foot over the bridge, and look for a tree that is the wrong shape.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_pouch) = ^true) {
+    @route_cyreg_planks;
+}
+@route_cyreg_convince;
+
+// The four replies that get anywhere. Anything else and he closes up, which is the whole of this
+// conversation in the walkthrough.
+[label,route_cyreg_convince]
+~chatplayer("<p,quiz>I'm looking for the Myreque.");
+~chatnpc("<p,shock>I don't know what that is.");
+switch_int (~p_choice3("Oh come on, you can tell me!", 1, "Well, I guess they'll just die without weapons.", 2, "I'll give you some cash if you tell me.", 3)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Oh come on, you can tell me!");
+        ~chatnpc("<p,shock>They're watching us you know... Eyes everywhere!");
+        return;
+    case 3 :
+        ~chatplayer("<p,neutral>I'll give you some cash if you tell me.");
+        ~chatnpc("<p,angry>You keep your money and I'll keep my secrets.");
+        return;
+    case 2 :
+        ~chatplayer("<p,neutral>Well, I guess they'll just die without weapons.");
+}
+~chatnpc("<p,neutral>They won't die. They're resourceful people. Veliaf looks after them.");
+switch_int (~p_choice3("Veliaf?", 1, "Resourceful enough to get their own steel weapons?", 2, "I just want to help them.", 3)) {
+    case 1 :
+        ~chatplayer("<p,quiz>Veliaf?");
+        ~chatnpc("<p,shock>I never said that. I have never said that name in my life.");
+        return;
+    case 3 :
+        ~chatplayer("<p,neutral>I just want to help them, I think they need help.");
+        ~chatnpc("<p,sad>So do I. I will not risk the wrath of the vampyres.");
+        return;
+    case 2 :
+        ~chatplayer("<p,quiz>Resourceful enough to get their own steel weapons?");
+}
+~chatnpc("<p,neutral>...no. No, they are not that.");
+switch_int (~p_choice3("Then tell me where they are.", 1, "Suit yourself.", 2, "If you don't tell me, their deaths are on your head!", 3)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Then tell me where they are.");
+        ~chatnpc("<p,angry>No.");
+        return;
+    case 2 :
+        ~chatplayer("<p,neutral>Suit yourself.");
+        ~chatnpc("<p,neutral>I usually do.");
+        return;
+    case 3 :
+        ~chatplayer("<p,angry>If you don't tell me, their deaths are on your head!");
+}
+~chatnpc("<p,sad>Don't you say that to me. Don't you dare. I have carried people across that water for thirty years and I do not care what happens to any of them.");
+switch_int (~p_choice3("Fine.", 1, "You're lying.", 2, "What kind of man are you to say that you don't care?", 3)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Fine.");
+        ~chatnpc("<p,sad>Yes. Fine.");
+        return;
+    case 2 :
+        ~chatplayer("<p,angry>You're lying.");
+        ~chatnpc("<p,angry>Prove it.");
+        return;
+    case 3 :
+        ~chatplayer("<p,quiz>What kind of man are you to say that you don't care?");
+}
+~chatnpc("<p,sad>...the kind that has been asked once, in thirty years, by somebody who was not a vampyre.");
+~chatnpc("<p,neutral>Mort Myre will kill you before you get there. There are ghasts in that swamp and they go for your food and then they go for you. Show me you can get through it and I will think about the rest.");
+@route_cyreg_pouch;
+
+// A druid pouch with five charges in it. The pouch stacks its charges as the obj itself, so the
+// count in the inventory IS the charge count.
+[label,route_cyreg_pouch]
+if (inv_total(inv, druid_pouch) < ^route_pouch_charges) {
+    ~chatplayer("<p,quiz>How do I get through the swamp?");
+    ~chatnpc("<p,neutral>A druid pouch, filled. Nature Spirit's grotto, south of the Salve. Bring me one with at least <tostring(^route_pouch_charges)> in it and I will know you have been in the swamp and come out again.");
+    return;
+}
+~chatplayer("<p,neutral>I have a druid pouch. It's full.");
+~chatnpc("<p,happy>So you have. Then you have met the nature spirit, and the nature spirit does not talk to vampyres.");
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_pouch);
+@route_cyreg_planks;
+
+[label,route_cyreg_planks]
+if (inv_total(inv, woodplank) < ^route_planks_needed) {
+    ~chatnpc("<p,neutral>Six wooden planks. Three for my boat, which has a hole in it, and three for a rope bridge in the Hollows that has had three sections out of it since before I was born.");
+    ~chatnpc("<p,neutral>Bring a hammer and bring steel nails. Seventy-five to a section and I am not guessing at that number.");
+    return;
+}
+~chatplayer("<p,neutral>Six planks.");
+inv_del(inv, woodplank, ^route_planks_boat);
+~chatnpc("<p,happy>Three for me.");
+if_close;
+mes("Cyreg turns the boat over and spends a while on it with three of your planks and a quantity of tar.");
+p_delay(4);
+~chatnpc("<p,neutral>Right. North as far as the boat goes - that is the Hollows. Then north on foot, over the rope bridge, and look for a tree that is the wrong shape. There will be a man near it who stops people. Tell him what you are carrying.");
+~chatnpc("<p,neutral>Keep the other three planks. You will want them before you reach the tree.");
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_boat);
+%routequest = ^route_boat;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+
+// =========================================================================== the boat
+// Board is free once the boat is the Myreque's; Board ( Pay 10 ) is how everybody else crosses, and
+// a Ring of Charos gets the fare waived because Cyreg cannot say no to it.
+[oploc1,route_rowboat_mortton]
+p_arrivedelay;
+if (testbit(%routequest_myreque_bits, ^route_bit_boat) = ^false) {
+    ~mesbox("Cyreg Paddlehorn runs this boat and he charges for it.");
+    return;
+}
+mes("Cyreg takes you north up the river.");
+p_delay(3);
+p_teleport(^route_swamp_landing);
+
+[oploc2,route_rowboat_mortton]
+p_arrivedelay;
+if (inv_total(inv, ring_of_charos) > 0) {
+    mes("Cyreg looks at the ring, decides he was going that way anyway, and takes you north.");
+    p_delay(3);
+    p_teleport(^route_swamp_landing);
+    return;
+}
+if (inv_total(inv, coins) < ^route_boat_toll) {
+    ~mesbox("Ten coins. He has not moved on the price in thirty years and he is not moving on it now.");
+    return;
+}
+inv_del(inv, coins, ^route_boat_toll);
+mes("You pay Cyreg ten coins and he takes you north.");
+p_delay(3);
+p_teleport(^route_swamp_landing);
+
+[oploc1,route_rowboat_hollows]
+p_arrivedelay;
+mes("You push the boat out and let the current take you back down to Mort'ton.");
+p_delay(3);
+p_teleport(^route_mortton_landing);
+
+// =========================================================================== the rope bridge
+// Four sections of ground decor over four tiles of impassable swamp, with a tree on either side.
+// The sections never block anything and the swamp always does, which has two consequences and both
+// of them decide how this works:
+//
+//   - the trees are the crossing, not the tiles. Climb up on one side is Climb down on the other.
+//   - there is nowhere to stand to click Repair. Shape 22 reaches by rectangle, so the op needs an
+//     adjacent tile, and every tile adjacent to a section is either swamp or a tree tile with
+//     BLOCK_NORTH set towards the gap. So the work is done from the tree, which is also what the
+//     walkthrough says to do with it - "climb it and mend the rope bridge" - and op5 is left wired
+//     to the same label for anybody who finds a tile I have not.
+[oploc1,swamp_bridge1]
+if (~route_bridge_whole = true) {
+    ~mesbox("The bridge is whole. The trees at either end are how you get onto it.");
+    return;
+}
+~mesbox("Three sections of this bridge are missing and what is under them is swamp. | A plank and seventy-five steel nails would put one of them back, with a hammer - from the tree at either end, because there is nowhere down here to stand.");
+
+[oploc5,swamp_bridge1]
+p_arrivedelay;
+@route_bridge_repair;
+
+[label,route_bridge_repair]
+if (%routequest < ^route_boat) {
+    ~mesbox("Somebody else's bridge, somewhere nobody goes. Leave it.");
+    return;
+}
+if (inv_total(inv, hammer) = 0) {
+    ~mesbox("You need a hammer.");
+    return;
+}
+if (inv_total(inv, nails) < ^route_nails_per_section) {
+    ~mesbox("A section takes <tostring(^route_nails_per_section)> steel nails and you do not have that many.");
+    return;
+}
+if (inv_total(inv, woodplank) = 0) {
+    ~mesbox("A section takes a plank as well, and you have nothing to cut a section out of.");
+    return;
+}
+mes("You lean out over the gap and nail a section back.");
+anim(human_hammer_hit, 0);
+sound_synth(hammer_and_build, 1, 0);
+p_delay(4);
+inv_del(inv, woodplank, 1);
+inv_del(inv, nails, ^route_nails_per_section);
+if (%bridgerung1 = ^route_off) {
+    %bridgerung1 = ^route_on;
+    mes("One section.");
+    return;
+}
+if (%bridgerung2 = ^route_off) {
+    %bridgerung2 = ^route_on;
+    mes("Two sections.");
+    return;
+}
+%bridgerung3 = ^route_on;
+%routequest = ^route_bridge;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+~mesbox("Three sections, and a rope bridge that will carry somebody carrying something.");
+
+[proc,route_bridge_whole]()(boolean)
+if (%bridgerung1 = ^route_off) { return(false); }
+if (%bridgerung2 = ^route_off) { return(false); }
+if (%bridgerung3 = ^route_off) { return(false); }
+return(true);
+
+// The two trees. Climbing one of them is how the bridge gets mended and how it gets crossed, in
+// that order, because there is nothing above the bridge to climb to.
+[oploc1,harmless_dead_palm_mid] @route_bridge_tree;
+[oploc2,harmless_dead_palm_mid] @route_bridge_tree;
+
+[label,route_bridge_tree]
+def_coord $tree = loc_coord;
+p_arrivedelay;
+if (~route_bridge_whole = false) {
+    @route_bridge_repair;
+}
+mes("You climb the tree and cross the bridge.");
+p_delay(3);
+if (coordz($tree) <= coordz(^route_bridge_south)) {
+    p_teleport(^route_bridge_north);
+    return;
+}
+p_teleport(^route_bridge_south);
+
+// =========================================================================== Curpile Fyod
+// Three questions out of six, picked at random, and all three have to be right. The two counters on
+// routequestmulti are what they are named: how many he has asked and how many you have got.
+[opnpc1,route_curpile_fyod]
+if (%routequest < ^route_weapons) {
+    ~chatnpc("<p,angry>Road's watched. Move along.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^true) {
+    ~chatnpc("<p,neutral>Doors are behind the tree. Mind how you go.");
+    return;
+}
+~chatplayer("<p,neutral>I've brought weapons for the Myreque.");
+~chatnpc("<p,shock>Have you. Have you indeed.");
+~chatnpc("<p,angry>Then you will not mind three questions, because the last four people who said that to me were not telling the truth and I am still here and they are not.");
+%routequestionsanswered = 0;
+%routequestionscorrect = 0;
+// Six questions, three asked. Rolling a start and taking three in a row off the end of it is the
+// whole of "three at random without repeats" and needs no state to remember which.
+switch_int (random(6)) {
+    case 0 : ~route_question(1); ~route_question(2); ~route_question(3);
+    case 1 : ~route_question(2); ~route_question(3); ~route_question(4);
+    case 2 : ~route_question(3); ~route_question(4); ~route_question(5);
+    case 3 : ~route_question(4); ~route_question(5); ~route_question(6);
+    case 4 : ~route_question(5); ~route_question(6); ~route_question(1);
+    case default : ~route_question(6); ~route_question(1); ~route_question(2);
+}
+if (%routequestionscorrect < ^route_questions_asked) {
+    if_close;
+    ~mesbox("Curpile Fyod hits you with the flat of his sword and you do not see the rest of it. | You wake up in Mort'ton with a headache and all of your teeth.");
+    p_delay(3);
+    p_teleport(^route_mortton_landing);
+    return;
+}
+~chatnpc("<p,neutral>Three out of three. All right.");
+~chatnpc("<p,neutral>Doors in the earth, round the back of the tree. They are not locked to you any more.");
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_curpile);
+
+[proc,route_question](int $n)()
+%routequestionsanswered = add(%routequestionsanswered, 1);
+def_int $a = 0;
+def_int $ok = 0;
+switch_int ($n) {
+    case 1 :
+        ~chatnpc("<p,neutral>Who is the only woman in the Myreque?");
+        $a = ~p_choice3("Sani Piliu.", 1, "Polmafi Ferdygris.", 2, "There isn't one.", 3);
+        if ($a = 1) {
+            ~chatplayer("<p,neutral>Sani Piliu.");
+            $ok = 1;
+        } else if ($a = 2) {
+            ~chatplayer("<p,neutral>Polmafi Ferdygris.");
+        } else {
+            ~chatplayer("<p,neutral>There isn't one.");
+        }
+    case 2 :
+        ~chatnpc("<p,neutral>Who is the youngest of them?");
+        $a = ~p_choice3("Harold Evans.", 1, "Ivan Strom.", 2, "Sani Piliu.", 3);
+        if ($a = 2) {
+            ~chatplayer("<p,neutral>Ivan Strom.");
+            $ok = 1;
+        } else if ($a = 1) {
+            ~chatplayer("<p,neutral>Harold Evans.");
+        } else {
+            ~chatplayer("<p,neutral>Sani Piliu.");
+        }
+    case 3 :
+        ~chatnpc("<p,neutral>Who leads the Myreque in Mort Myre?");
+        $a = ~p_choice3("Radigad Ponfit.", 1, "Harold Evans.", 2, "Veliaf Hurtz.", 3);
+        if ($a = 3) {
+            ~chatplayer("<p,neutral>Veliaf Hurtz.");
+            $ok = 1;
+        } else if ($a = 1) {
+            ~chatplayer("<p,neutral>Radigad Ponfit.");
+        } else {
+            ~chatplayer("<p,neutral>Harold Evans.");
+        }
+    case 4 :
+        ~chatnpc("<p,neutral>Which of them was a scholar before any of this?");
+        $a = ~p_choice3("Polmafi Ferdygris.", 1, "Veliaf Hurtz.", 2, "Harold Evans.", 3);
+        if ($a = 1) {
+            ~chatplayer("<p,neutral>Polmafi Ferdygris.");
+            $ok = 1;
+        } else if ($a = 2) {
+            ~chatplayer("<p,neutral>Veliaf Hurtz.");
+        } else {
+            ~chatplayer("<p,neutral>Harold Evans.");
+        }
+    case 5 :
+        ~chatnpc("<p,neutral>Which boatman helps them?");
+        $a = ~p_choice3("Curpile Fyod.", 1, "Radigad Ponfit.", 2, "Cyreg Paddlehorn.", 3);
+        if ($a = 3) {
+            ~chatplayer("<p,neutral>Cyreg Paddlehorn.");
+            $ok = 1;
+        } else if ($a = 1) {
+            ~chatplayer("<p,neutral>Curpile Fyod.");
+        } else {
+            ~chatplayer("<p,neutral>Radigad Ponfit.");
+        }
+    case default :
+        ~chatnpc("<p,neutral>Which vampyre family rules Morytania?");
+        $a = ~p_choice3("Klause.", 1, "Drakan.", 2, "Fenkenstrain.", 3);
+        if ($a = 2) {
+            ~chatplayer("<p,neutral>Drakan.");
+            $ok = 1;
+        } else if ($a = 1) {
+            ~chatplayer("<p,neutral>Klause.");
+        } else {
+            ~chatplayer("<p,neutral>Fenkenstrain.");
+        }
+}
+if ($ok = 0) {
+    ~chatnpc("<p,angry>No.");
+    return;
+}
+%routequestionscorrect = add(%routequestionscorrect, 1);
+~chatnpc("<p,neutral>Yes.");
+
+// =========================================================================== the doors in the earth
+[oploc1,freedomfighterentrancel] @route_earth_doors;
+[oploc1,freedomfighterentrancer] @route_earth_doors;
+
+[label,route_earth_doors]
+p_arrivedelay;
+if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^false) {
+    ~mesbox("Two doors set flat into the hillside, and no handle on either of them. Somebody opens these from the inside.");
+    return;
+}
+sound_synth(door_open, 1, 0);
+mes("The doors come open and there is a tunnel behind them.");
+p_delay(2);
+p_teleport(^route_cave_landing);
+
+// =========================================================================== the Myreque's own door
+// Behind it is the chamber, held twice: plane 3 while the quest is running, with Sani Piliu and
+// Harold Evans in it, and plane 0 once the hellhound is dead, without them.
+[oploc1,freedomfighterundergroundentrancel] @route_hideout_door;
+[oploc1,freedomfighterundergroundentrancer] @route_hideout_door;
+
+[label,route_hideout_door]
+p_arrivedelay;
+if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^false) {
+    ~mesbox("The doors look very ominous and they do not move.");
+    return;
+}
+sound_synth(door_open, 1, 0);
+mes("You go through the door.");
+p_delay(1);
+if (%routequest < ^route_canifis) {
+    p_teleport(^route_hideout_inside);
+    return;
+}
+p_teleport(^route_hideout_after);
+
+// =========================================================================== Veliaf
+[opnpc1,route_veliaf_hurtz]
+switch_int (%routequest) {
+    case ^route_not_started : @route_veliaf_first;
+    case ^route_weapons : @route_veliaf_first;
+    case ^route_boat : @route_veliaf_first;
+    case ^route_bridge : @route_veliaf_first;
+    case ^route_hideout : @route_veliaf_intros;
+    case ^route_intros : @route_veliaf_weapons;
+    case ^route_reveal : @route_veliaf_after;
+    case ^route_canifis :
+        ~chatnpc("<p,angry>Go and look in that tavern. If he is still sitting in it then he is not finished with us, and if he is gone then he has somewhere better to be, and I would like to know which.");
+        return;
+    case default :
+        // In Aid of the Myreque picks him up from here. A trigger can only be declared once, so the
+        // second quest's Veliaf is a label in quests/quest_myreque2/scripts/quest_myreque2.rs2.
+        @myreque2_veliaf;
+}
+
+[label,route_veliaf_first]
+~chatnpc("<p,angry>Stop there.");
+if_close;
+mes("Six people have stood up. Two of them have crossbows.");
+p_delay(4);
+~chatnpc("<p,angry>Harold didn't kill you though, so I'm guessing you're no enemy. Who are you?");
+~chatplayer("<p,neutral>My name is <displayname()>. A man in Canifis asked me to bring you weapons.");
+~chatnpc("<p,shock>Somebody in Canifis knows we are here.");
+~chatnpc("<p,neutral>...we will come back to that. Thank you. I will look at what you have brought in a moment; there is something I have to finish first.");
+~chatnpc("<p,neutral>Introduce yourself to the others while you wait. All five of them. If you are going to be in and out of this cave then they need to have seen your face.");
+%routequest = ^route_hideout;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+
+[label,route_veliaf_intros]
+~chatnpc("<p,neutral>Not yet. Go and say hello to the others - all five of them - and then we will talk about the weapons.");
+
+[label,route_veliaf_weapons]
+if (inv_total(inv, steel_longsword) < 1 | inv_total(inv, steel_dagger) < 1 | inv_total(inv, steel_mace) < 1) {
+    @route_veliaf_shortlist;
+}
+if (inv_total(inv, steel_warhammer) < 1 | inv_total(inv, steel_sword) < 2) {
+    @route_veliaf_shortlist;
+}
+~chatplayer("<p,neutral>A longsword, two swords, a dagger, a mace and a warhammer. All steel.");
+~chatnpc("<p,happy>These weapons look great! Many thanks.");
+inv_del(inv, steel_longsword, 1);
+inv_del(inv, steel_sword, 2);
+inv_del(inv, steel_dagger, 1);
+inv_del(inv, steel_mace, 1);
+inv_del(inv, steel_warhammer, 1);
+@route_reveal;
+
+[label,route_veliaf_shortlist]
+~chatnpc("<p,neutral>A steel longsword, two steel swords, a steel dagger, a steel mace and a steel warhammer. All of it at once - I am not arming six people in instalments.");
+return;
+
+// =========================================================================== the reveal
+// Vanstrom goes through four of his five bodies here: the man who was standing there, the wings
+// coming out of his back, the vampyre, and the mist that leaves the room. The fifth is the chair
+// upstairs, and the bit that holds it is set here, which is why the chair is empty afterwards.
+[label,route_reveal]
+if_close;
+mes("Harold Evans says \"What the...\" and does not finish it.");
+p_delay(3);
+npc_add(^route_vanstrom_spot, route_vanstrom_klause_normal, ^route_vanstrom_ticks);
+npc_say("Thank you. You led me right to them.");
+p_delay(4);
+mes("Veliaf Hurtz shouts \"Vampyre!\" and Sani Piliu shouts \"It's Vanstrom!\" and neither of them is fast enough.");
+p_delay(3);
+if (npc_find(coord, route_vanstrom_klause_normal, 12, 0) = ^true) {
+    npc_changetype_keepall(route_vanstrom_klause_vamp_wingsgrow, ^route_vanstrom_ticks);
+    npc_say("Twenty years in a chair over your heads.");
+}
+p_delay(4);
+if (npc_find(coord, route_vanstrom_klause_vamp_wingsgrow, 12, 0) = ^true) {
+    npc_changetype_keepall(route_vanstrom_klause_vamp, ^route_vanstrom_ticks);
+}
+~mesbox("Sani Piliu is dead before she has drawn. Harold Evans is dead a moment after her. | Nobody else moves, because there is nothing to move towards - it is over by the time anyone understands that it has started.");
+p_delay(3);
+if (npc_find(coord, route_vanstrom_klause_vamp, 12, 0) = ^true) {
+    npc_say("Finish the rest. I have an appointment.");
+    npc_changetype_keepall(route_vanstrom_klause_vamp_misty, ^route_vanstrom_ticks);
+}
+p_delay(3);
+if (npc_find(coord, route_vanstrom_klause_vamp_misty, 12, 0) = ^true) {
+    npc_del;
+}
+npc_add(^route_hellhound_spot, skeleton_hellhound, ^route_hellhound_ticks);
+%routequest = ^route_reveal;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+// The chair in the Hair of the Dog stops being Vanstrom Klause and becomes a stranger. The bit is
+// named for exactly what it does.
+%thsfm_vanstrom_hide = ^route_on;
+~mesbox("The mist goes out through the roof and what is left behind it is standing up on four legs.");
+
+// The hellhound is summoned by npc_add, so npc_combat arms ai_queue3 on it exactly as it does for
+// anything else that dies.
+[ai_queue3,skeleton_hellhound]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(route_hellhound_dead, 0, 0);
+
+[queue,route_hellhound_dead]
+if (testbit(%routequest_myreque_bits, ^route_bit_hellhound) = ^true) {
+    return;
+}
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_hellhound);
+// Out of the chamber that has six people in it and into the one that has four, which is the same
+// chamber three planes down. This happens BEFORE the mesbox: a mesbox parks the script until the
+// player closes it, and anything after it in a queue happens whenever that turns out to be.
+if (coordy(coord) = 3) {
+    p_teleport(movecoord(coord, 0, -3, 0));
+}
+~mesbox("It comes apart like something that was never put together properly in the first place. | Sani Piliu and Harold Evans are where they fell and nobody has moved yet.");
+
+[label,route_veliaf_after]
+if (testbit(%routequest_myreque_bits, ^route_bit_hellhound) = ^false) {
+    ~chatnpc("<p,angry>Kill it first.");
+    return;
+}
+~chatnpc("<p,sad>Sani was nine years old when a vampyre took her family and I found her in Canifis and I brought her here, and I have just watched the same thing happen to her twice.");
+~chatplayer("<p,sad>I'm sorry. I brought him here.");
+~chatnpc("<p,neutral>You did. You did not know what he was, and that is the whole of what they are good at - they do not all have wings all of the time.");
+~chatnpc("<p,neutral>Vanstrom Klause. I want to know whether he is still in that tavern.");
+switch_int (~p_choice2("How do I get out of here?", 1, "I'll go and look.", 2)) {
+    case 1 :
+        ~chatplayer("<p,quiz>How do I get out of here?");
+    case 2 :
+        ~chatplayer("<p,neutral>I'll go and look.");
+}
+~chatnpc("<p,neutral>Back out into the main cave and north, to the wall at the end of it. Search it. There is a door in it and it comes up in the cellar of the Hair of the Dog, which is the only reason any of us has ever been in that tavern.");
+~chatnpc("<p,neutral>Come back after. There is a conversation to have about whether you are one of us.");
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_passage);
+%routequest = ^route_canifis;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+
+// =========================================================================== the other five
+[opnpc1,route_harold_evans]
+if (%routequest < ^route_hideout) {
+    ~chatnpc("<p,angry>Veliaf. Over there. Now.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_harold) = ^true) {
+    ~chatnpc("<p,neutral>Somebody has to write it down. If we all die down here and nobody wrote it down then nothing happened.");
+    return;
+}
+~chatplayer("<p,neutral>I'm <displayname()>.");
+~chatnpc("<p,neutral>Harold Evans. I did the fighting in a militia for eleven years before this and I do the fighting here, and I will tell you honestly that I do not like new faces.");
+~chatnpc("<p,neutral>Nothing personal. The last new face got three of us killed.");
+~route_introduced(^route_bit_harold);
+
+[opnpc1,route_radigad_ponfit]
+if (%routequest < ^route_hideout) {
+    ~chatnpc("<p,angry>Talk to Veliaf. Everyone talks to Veliaf.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_radigad) = ^true) {
+    ~chatnpc("<p,neutral>I hold the tunnel. That is the whole of my job and I am good at it.");
+    return;
+}
+~chatplayer("<p,neutral>I'm <displayname()>.");
+~chatnpc("<p,neutral>Radigad Ponfit. I was paid to fight for twenty years and now I am not paid and I still fight, which my wife would have found funny.");
+~route_introduced(^route_bit_radigad);
+
+[opnpc1,route_polmafi_ferdygris]
+if (%routequest < ^route_hideout) {
+    ~chatnpc("<p,neutral>You should not be down here and I am not the one who decides that.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_polmafi) = ^true) {
+    ~chatnpc("<p,neutral>Four hundred of us once. I have the list. I read it when I cannot sleep, which is most nights.");
+    return;
+}
+~chatplayer("<p,neutral>I'm <displayname()>.");
+~chatnpc("<p,neutral>Polmafi Ferdygris. I was a scholar and I am still a scholar, and Veliaf keeps me because somebody in a cave has to be able to read.");
+~chatnpc("<p,neutral>I report to Calsidiu, at the Guardians of Armadyl. What I report is mostly that nothing has changed.");
+~route_introduced(^route_bit_polmafi);
+
+[opnpc1,route_sani_piliu]
+if (%routequest < ^route_hideout) {
+    ~chatnpc("<p,neutral>Veliaf first. He gets funny about it.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_sani) = ^true) {
+    ~chatnpc("<p,neutral>I make the bolts. Silver, every one of them, and I have made eleven thousand and we have used forty.");
+    return;
+}
+~chatplayer("<p,neutral>I'm <displayname()>.");
+~chatnpc("<p,neutral>Sani Piliu. I was nine when one of them came through our village. Veliaf found me in Canifis afterwards and he has never once said what he found me doing.");
+~route_introduced(^route_bit_sani);
+
+[opnpc1,route_ivan_strom]
+if (%routequest < ^route_hideout) {
+    ~chatnpc("<p,neutral>Veliaf. Over there. Go.");
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_ivan) = ^true) {
+    ~chatnpc("<p,neutral>I go up for the bread. It is the only errand anybody lets me do and I have started to understand why.");
+    return;
+}
+~chatplayer("<p,neutral>I'm <displayname()>.");
+~chatnpc("<p,neutral>Ivan Strom. I was supposed to be studying at Paterdomus. I am the youngest here by nineteen years and everybody says it like it is a diagnosis.");
+~route_introduced(^route_bit_ivan);
+
+[proc,route_introduced](int $bit)()
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, $bit);
+if (%routequest ! ^route_hideout) {
+    return;
+}
+if (testbit(%routequest_myreque_bits, ^route_bit_harold) = ^false) { return; }
+if (testbit(%routequest_myreque_bits, ^route_bit_radigad) = ^false) { return; }
+if (testbit(%routequest_myreque_bits, ^route_bit_polmafi) = ^false) { return; }
+if (testbit(%routequest_myreque_bits, ^route_bit_sani) = ^false) { return; }
+if (testbit(%routequest_myreque_bits, ^route_bit_ivan) = ^false) { return; }
+%routequest = ^route_intros;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
+~mesbox("That is all <tostring(^route_intros_needed)> of them. Veliaf said he would look at the weapons once they had seen your face.");
+
+// =========================================================================== the way out
 [oploc1,thrt_tavern_trap_door]
 p_arrivedelay;
 mes("You pull the trapdoor open.");
@@ -16,13 +699,7 @@ p_arrivedelay;
 mes("You climb the ladder.");
 p_teleport(^route_canifis_trapdoor);
 
-[oploc1,route_rowboat_hollows]
-p_arrivedelay;
-mes("You push the boat out and let the current take it under the bank.");
-p_delay(3);
-p_teleport(^route_hollows_boatside);
-
-// The false wall at the back of the cellar: Search finds the way through.
+// The false wall at the back of the cellar: Search finds the way through, in either direction.
 [oploc1,thrttavernbasementfalsewall]
 p_arrivedelay;
 if (coordz(coord) >= coordz(loc_coord)) {
@@ -35,17 +712,7 @@ mes("You squeeze back through the gap into the cellar.");
 p_delay(1);
 p_teleport(loc_coord);
 
-// The Myreque's door off the Hollows.
-[oploc1,freedomfighterundergroundentrancel] @route_hideout_door;
-[oploc1,freedomfighterundergroundentrancer] @route_hideout_door;
-
-[label,route_hideout_door]
-p_arrivedelay;
-sound_synth(door_open, 1, 0);
-mes("You go through the door.");
-p_delay(1);
-p_teleport(^route_hideout_inside);
-
+// =========================================================================== the rest of the cave
 [oploc1,route_stalagmite_cave_entrace]
 ~mesbox("Tooth shaped rocks, and a gap between two of them that a person could get through sideways and a horse could not get through at all. That is the entire point of it.");
 
@@ -55,12 +722,14 @@ mes("You squeeze past the stalagmites.");
 p_delay(2);
 p_teleport(^route_swamp_landing);
 
-// =========================================================================== the warren
-// Every mouth goes somewhere and the stalagmite is always behind you, so none of this can strand
-// anyone. The vertical set cycles up through the planes that have a mouth at that tile and wraps.
+// Sixteen mouths across four planes. The one at 3505,9831 is the Myreque's chamber's own door and
+// exists on every plane, so it is matched on x and z and not on the whole coord; the rest join cave
+// floors nothing in either Myreque quest walks through, and the stalagmite is always behind you, so
+// none of them can strand anybody.
 [oploc1,route_cavewalltunnel]
 def_coord $here = loc_coord;
 p_arrivedelay;
+if (coordx($here) = 3505 & coordz($here) = 9831) { @route_crawl(^route_hideout_door_outside); }
 if ($here = ^route_tunnel_a1) { @route_crawl(^route_tunnel_a2); }
 if ($here = ^route_tunnel_a2) { @route_crawl(^route_tunnel_a1); }
 if ($here = ^route_tunnel_b1) { @route_crawl(^route_tunnel_b2); }
@@ -68,22 +737,13 @@ if ($here = ^route_tunnel_b2) { @route_crawl(^route_tunnel_b1); }
 if ($here = ^route_tunnel_c1) { @route_crawl(^route_tunnel_c2); }
 if ($here = ^route_tunnel_c2) { @route_crawl(^route_tunnel_c1); }
 if ($here = ^route_tunnel_d) { @route_crawl(^route_hollows_boatside); }
-// The ground-floor mouth at the hideout's south edge is the hideout's back way out to the Hollows,
-// beside its door. It used to climb to plane 1, which is not joined to anything on foot.
-if ($here = 0_54_153_49_39) { @route_crawl(^route_hideout_door_outside); }
-// The vertical warren. Three x/z positions carry a mouth on more than one plane - (49,39) on all
-// four, (11,39) on 1-3 and (11,9) on 1 and 3 - so each one cycles up through its own set and wraps
-// at the top. movecoord's second argument is the plane.
+// The vertical warren: (11,39) carries a mouth on planes 1-3 and (11,9) on 1 and 3, so each cycles
+// up through its own set and wraps at the top. movecoord's second argument is the plane.
 def_int $plane = coordy($here);
 def_int $step = 1;
-if (coordx($here) = 3505) {
-    // (49,39): planes 0,1,2,3
-    if ($plane >= 3) { $step = -3; }
-} else if (coordz($here) = 9831) {
-    // (11,39): planes 1,2,3
+if (coordz($here) = 9831) {
     if ($plane >= 3) { $step = -2; }
 } else {
-    // (11,9): planes 1 and 3
     if ($plane = 1) { $step = 2; } else { $step = -2; }
 }
 @route_crawl(movecoord($here, 0, $step, 0));
@@ -92,319 +752,26 @@ if (coordx($here) = 3505) {
 mes("You crawl through.");
 p_delay(2);
 p_teleport($to);
-~route_roomnum;
-
-// roomnum is three bits on routequestmulti and the Hollows has eight tunnel mouths on its ground
-// floor. It records which floor you came out on, which is what the Myreque ask you about later.
-[proc,route_roomnum]()()
+// roomnum is three bits on routequestmulti and it records which cave floor you came out on, which
+// is the only thing its name can mean.
 %roomnum = coordy(coord);
 
-// =========================================================================== the Hair of the Dog
-// The man in the chair: Vanstrom Klause until the quest is done, a stranger after. Talk-to had no
-// trigger in either form.
-[opnpc1,multi_vanstrom_stranger_entity]
-if (%thsfm_vanstrom_hide = ^route_on) {
-    ~chatnpc("<p,neutral>I'm just passing through. Don't mind me.");
-    return;
-}
-~chatnpc("<p,neutral>I prefer to drink alone, if it's all the same to you.");
-
-// =========================================================================== Veliaf
-[opnpc1,route_veliaf_hurtz]
-switch_int (%routequest) {
-    case ^route_not_started : @route_start;
-    case ^route_found : @route_quiz;
-    case ^route_tested : @route_brief;
-    case ^route_route : @route_check;
-    case ^route_reported : @route_finish;
-    case default :
-        // In Aid of the Myreque picks him up from here. A trigger can only be declared once, so
-        // the second quest's Veliaf is a label in quests/quest_myreque2/scripts/quest_myreque2.rs2
-        // and this hands him over.
-        @myreque2_veliaf;
-}
-
-[label,route_start]
-~chatnpc("<p,angry>Stop there.");
-if_close;
-mes("Four people have stood up. Two of them have crossbows and one of them has a silver sickle and none of them look pleased to see you.");
-p_delay(4);
-~chatnpc("<p,angry>Nobody finds this place. Nobody has found this place in sixty years. So either you are very good, or somebody told you where to look, and I would like to know which.");
-switch_int (~p_choice2("I found a trapdoor in a pub.", 1, "Who are you?", 2)) {
-    case 2 :
-        ~chatplayer("<p,quiz>Who are you?");
-        ~chatnpc("<p,angry>That is my question, not yours, and you are standing in my answer.");
-    case 1 :
-        ~chatplayer("<p,neutral>I found a trapdoor in a pub.");
-        ~chatnpc("<p,angry>Everybody in Canifis has found that trapdoor. Not one of them has ever come down it.");
-}
-~chatnpc("<p,neutral>We are the Myreque. What is left of it. Sixty years ago there were four hundred of us and now there are six, and the reason there are six is that we do not take anybody's word for anything.");
-~chatnpc("<p,neutral>Three questions. Get them wrong and you go back up the ladder and we move house, which I would rather not do.");
-%routequest = ^route_found;
-~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
-%routequestionsanswered = 0;
-%routequestionscorrect = 0;
-@route_quiz;
-
-// =========================================================================== the three questions
-[label,route_quiz]
-if (%routequestionsanswered >= ^route_questions_needed) {
-    @route_quiz_result;
-}
-switch_int (%routequestionsanswered) {
-    case 0 : @route_q1;
-    case 1 : @route_q2;
-    case 2 : @route_q3;
-}
-
-[label,route_q1]
-~chatnpc("<p,neutral>Who rules Morytania?");
-def_int $a = ~p_choice3("Lord Drakan.", 1, "Nobody. It's a swamp.", 2, "The Myreque do.", 3);
-if ($a = 1) {
-    ~chatplayer("<p,neutral>Lord Drakan.");
-    %routequestionscorrect = add(%routequestionscorrect, 1);
-} else if ($a = 2) {
-    ~chatplayer("<p,neutral>Nobody. It's a swamp.");
-    ~chatnpc("<p,angry>It is a swamp with an owner.");
-} else {
-    ~chatplayer("<p,neutral>The Myreque do.");
-    ~chatnpc("<p,angry>Flattery. From someone who has known us for four minutes.");
-}
-%routequestionsanswered = add(%routequestionsanswered, 1);
-@route_quiz;
-
-[label,route_q2]
-~chatnpc("<p,neutral>What is the river Salve?");
-def_int $a = ~p_choice3("Holy water the vampyres cannot cross.", 1, "The border with Misthalin.", 2, "A trade route.", 3);
-if ($a = 1) {
-    ~chatplayer("<p,neutral>Holy water the vampyres cannot cross.");
-    %routequestionscorrect = add(%routequestionscorrect, 1);
-} else if ($a = 2) {
-    ~chatplayer("<p,neutral>The border with Misthalin.");
-    ~chatnpc("<p,angry>It is that as well, and a border is not what keeps them on this side of it.");
-} else {
-    ~chatplayer("<p,neutral>A trade route.");
-    ~chatnpc("<p,angry>There has been no trade across the Salve in three hundred years.");
-}
-%routequestionsanswered = add(%routequestionsanswered, 1);
-@route_quiz;
-
-[label,route_q3]
-~chatnpc("<p,neutral>Last one. What happened to Mort'ton?");
-def_int $a = ~p_choice3("Something got into it and nobody put it out.", 1, "Drakan burned it.", 2, "Nothing. People still live there.", 3);
-if ($a = 1) {
-    ~chatplayer("<p,neutral>Something got into it and nobody put it out.");
-    %routequestionscorrect = add(%routequestionscorrect, 1);
-} else if ($a = 2) {
-    ~chatplayer("<p,neutral>Drakan burned it.");
-    ~chatnpc("<p,sad>He did not have to. That is the part nobody wants to hear.");
-} else {
-    ~chatplayer("<p,neutral>Nothing. People still live there.");
-    ~chatnpc("<p,sad>Something lives there.");
-}
-%routequestionsanswered = add(%routequestionsanswered, 1);
-@route_quiz;
-
-[label,route_quiz_result]
-if (%routequestionscorrect < ^route_questions_needed) {
-    ~chatnpc("<p,angry>Two out of three would be fine if this were a tavern quiz.");
-    ~chatnpc("<p,neutral>Go away, read something, and come back. I am not moving house over a wrong answer, but I am not telling you anything either.");
-    %routequestionsanswered = 0;
-    %routequestionscorrect = 0;
-    return;
-}
-~chatnpc("<p,neutral>Three out of three. That is either honesty or very good preparation and at this point I will take either.");
-%routequest = ^route_tested;
-~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
-@route_brief;
-
-// =========================================================================== the route
-[label,route_brief]
-~chatnpc("<p,neutral>Here is our problem. There is one way out of these caves and it comes up in the middle of Canifis, in a pub, in a village of werewolves.");
-~chatnpc("<p,neutral>Every person we have lost in twenty years, we lost on that ladder.");
-~chatplayer("<p,quiz>So find another way out.");
-~chatnpc("<p,neutral>There is one. South. It has been there the whole time and it is in three pieces and none of us can leave this cave long enough to fix any of them.");
-~chatnpc("<p,neutral>One: there is a ladder down here with three rungs missing. Bring planks and a hammer and nails and put them back.");
-~chatnpc("<p,neutral>Two: Cyreg Paddlehorn runs a boat out of the south swamp and will not run it for us, because we have never given him a reason to.");
-~chatnpc("<p,neutral>Three: Curpile Fyod stands on the north road and stops everything that walks down it, including us.");
-%routequest = ^route_route;
-~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
-
-[label,route_check]
-if (~route_all_done = false) {
-    ~chatnpc("<p,neutral>The ladder, the boatman and the guard. Come back when all three are done.");
-    @route_nudge;
-}
-~chatplayer("<p,neutral>All three.");
-~chatnpc("<p,shock>In one go.");
-~chatnpc("<p,neutral>Then we have a road. Sixty years and we have a road.");
-%routequest = ^route_reported;
-~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
-@route_finish;
-
-[label,route_nudge]
-if (testbit(%routequest_myreque_bits, ^route_bit_ladder) = ^false) {
-    ~chatnpc("<p,neutral>The ladder. Three rungs, three planks.");
-}
-if (testbit(%routequest_myreque_bits, ^route_bit_cyreg) = ^false) {
-    ~chatnpc("<p,neutral>Cyreg, at the boat in the south swamp.");
-}
-if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^false) {
-    ~chatnpc("<p,neutral>Curpile Fyod, on the north road.");
-}
-return;
-
-[proc,route_all_done]()(boolean)
-if (testbit(%routequest_myreque_bits, ^route_bit_ladder) = ^false) { return(false); }
-if (testbit(%routequest_myreque_bits, ^route_bit_cyreg) = ^false) { return(false); }
-if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^false) { return(false); }
-return(true);
-
+// =========================================================================== the end
 [label,route_finish]
+~chatplayer("<p,angry>You.");
+~chatnpc("<p,quiz>Me? Can I help you with something?");
+~chatplayer("<p,shock>...you're not him.");
+~chatnpc("<p,neutral>I am not anybody. I drink here on Thursdays.");
+~chatnpc("<p,neutral>You look like somebody with a score to settle, though.");
+~chatplayer("<p,angry>I have.");
+~chatnpc("<p,neutral>Then I hope you get it settled. The gentleman who used to sit in that chair left the day before yesterday and the innkeeper says he paid up in full, which he had never done before.");
 if_close;
-mes("Veliaf is halfway through saying something about supply lines when Ivan Strom comes down the tunnel at a run.");
-p_delay(4);
-~mesbox("There is a man in the tavern upstairs. There has been a man in that tavern for as long as any of them can remember, sitting in the same chair, buying nothing. | Ivan went up for bread this morning and the chair was empty, and the innkeeper said the gentleman had left the day the stranger started coming down the ladder.");
-p_delay(3);
-~chatnpc("<p,angry>Vanstrom Klause. He has been sitting over our heads for twenty years listening to us come and go, and he has left on the day we finally have somewhere else to go.");
-~chatnpc("<p,neutral>Which means he is not worried. Which is worse.");
-// The chair in the Hair of the Dog stops being Vanstrom Klause and becomes a stranger. The bit is
-// named for exactly what it does.
-%thsfm_vanstrom_hide = ^route_on;
+~mesbox("He has been sitting over the Myreque's only way out for twenty years and he has left on the day they finally have a second one. | Which means he is not worried about it. Which is worse.");
 %routequest = ^route_complete;
-stat_advance(agility, 6000);
-stat_advance(crafting, 6000);
-stat_advance(attack, 6000);
+stat_advance(attack, ^route_reward_xp);
+stat_advance(defence, ^route_reward_xp);
+stat_advance(strength, ^route_reward_xp);
+stat_advance(hitpoints, ^route_reward_xp);
+stat_advance(crafting, ^route_reward_xp);
 session_log(^log_adventure, "Quest complete: In Search of the Myreque");
-~send_quest_complete(questlist:routequest, silver_sickle, 200, ^route_questpoints, "You have completed\\nIn Search of the Myreque!", "2 Quest Points|600 Agility XP|600 Crafting XP|600 Attack XP|A road out of the Hollows");
-
-// =========================================================================== the ladder
-// [oploc1,ladder_broken] already belongs to Melzar's Maze, so the branch is hooked in there and the
-// work is here. Three rungs, three bits, three planks.
-[proc,route_repair_ladder]()(boolean)
-if (coord ! ^route_broken_ladder & distance(coord, ^route_broken_ladder) > 2) {
-    return(false);
-}
-p_arrivedelay;
-if (%bridgerung1 = ^route_on & %bridgerung2 = ^route_on & %bridgerung3 = ^route_on) {
-    mes("You climb the ladder.");
-    p_delay(2);
-    p_teleport(^route_swamp_landing);
-    return(true);
-}
-if (%routequest < ^route_route) {
-    ~mesbox("Three rungs are missing out of the middle of it. Nobody has climbed this in a long time and nobody is going to.");
-    return(true);
-}
-if (inv_total(inv, hammer) = 0 | inv_total(inv, nails) = 0) {
-    ~mesbox("Three rungs are missing. You would want a hammer and some nails.");
-    return(true);
-}
-if (inv_total(inv, woodplank) = 0) {
-    ~mesbox("Three rungs are missing and you have nothing to cut a rung out of. Planks.");
-    return(true);
-}
-anim(human_pickupfloor, 0);
-p_delay(4);
-inv_del(inv, woodplank, 1);
-inv_del(inv, nails, 1);
-if (%bridgerung1 = ^route_off) {
-    %bridgerung1 = ^route_on;
-    mes("One rung.");
-} else if (%bridgerung2 = ^route_off) {
-    %bridgerung2 = ^route_on;
-    mes("Two rungs.");
-} else {
-    %bridgerung3 = ^route_on;
-    %routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_ladder);
-    stat_advance(crafting, 2000);
-    ~mesbox("Three rungs, and a ladder that comes out in the south swamp a very long way from anybody in Canifis.");
-}
-return(true);
-
-// =========================================================================== Cyreg and the boat
-[opnpc1,route_cyreg_paddlehorn]
-if (%routequest < ^route_route) {
-    ~chatnpc("<p,neutral>Ten coins across the water and I do not ask what you are running from.");
-    return;
-}
-if (testbit(%routequest_myreque_bits, ^route_bit_cyreg) = ^true) {
-    ~chatnpc("<p,happy>Your lot ride free. I have told them. They still offer me the ten coins every time.");
-    return;
-}
-~chatplayer("<p,quiz>There are people under the swamp who need this boat.");
-~chatnpc("<p,neutral>There are people under the swamp who have never once asked me for it.");
-~chatplayer("<p,quiz>Would you have said yes?");
-~chatnpc("<p,neutral>My father ran this boat and his father ran this boat and both of them watched Mort'ton go quiet across the water and neither of them was asked either.");
-~chatnpc("<p,angry>Sixty years of being treated as somebody who would talk. Tell Veliaf Hurtz that the boat has been here the entire time.");
-%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_cyreg);
-~mesbox("He starts coiling a rope that was already coiled, which is what people do instead of saying the rest of it.");
-
-[oploc1,route_rowboat_mortton]
-p_arrivedelay;
-if (testbit(%routequest_myreque_bits, ^route_bit_cyreg) = ^false) {
-    ~mesbox("Cyreg Paddlehorn runs this boat and he charges for it.");
-    return;
-}
-mes("Cyreg takes you across.");
-p_delay(3);
-p_teleport(^route_mortton_landing);
-
-[oploc2,route_rowboat_mortton]
-p_arrivedelay;
-if (inv_total(inv, coins) < ^route_boat_toll) {
-    ~mesbox("Ten coins. He has not moved on the price in thirty years and he is not moving on it now.");
-    return;
-}
-inv_del(inv, coins, ^route_boat_toll);
-mes("You pay Cyreg ten coins and he takes you across.");
-p_delay(3);
-p_teleport(^route_mortton_landing);
-
-// =========================================================================== Curpile Fyod
-[opnpc1,route_curpile_fyod]
-if (%routequest < ^route_route) {
-    ~chatnpc("<p,angry>Road's watched. Move along.");
-    return;
-}
-if (testbit(%routequest_myreque_bits, ^route_bit_curpile) = ^true) {
-    ~chatnpc("<p,neutral>Road's watched. By me. For them.");
-    return;
-}
-~chatplayer("<p,quiz>Who are you watching this road for?");
-~chatnpc("<p,angry>Whoever is paying, which at the moment is nobody, which is why I am standing in a swamp.");
-~chatplayer("<p,quiz>What would it take to have you watch it for the Myreque?");
-~chatnpc("<p,shock>...say that again.");
-~chatplayer("<p,neutral>The Myreque.");
-~chatnpc("<p,angry>I have stood on this road for eleven years stopping everything that walks down it, and I have stopped nine people, and every single one of them was one of yours.");
-~chatnpc("<p,sad>I thought they were smugglers. I have been reporting Myreque movements to a man in a Canifis tavern for eleven years and I thought I was reporting smugglers.");
-%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_curpile);
-~mesbox("He takes his hand off his sword very deliberately, which from a guard is nearly an apology. | \"Tell Hurtz the north road is his. And tell him about the man in the tavern.\"");
-
-// =========================================================================== the rest of them
-[opnpc1,route_radigad_ponfit]
-if (%routequest = ^route_not_started) {
-    ~chatnpc("<p,angry>Talk to Veliaf. Everyone talks to Veliaf.");
-    return;
-}
-~chatnpc("<p,neutral>I hold the tunnel. That is the whole of my job and I am good at it.");
-
-[opnpc1,route_polmafi_ferdygris]
-if (%routequest = ^route_not_started) {
-    ~chatnpc("<p,neutral>You should not be down here and I am not the one who decides that.");
-    return;
-}
-~chatnpc("<p,neutral>Four hundred of us once. I have the list. I read it when I cannot sleep, which is most nights.");
-
-[opnpc1,route_ivan_strom]
-if (%routequest = ^route_not_started) {
-    ~chatnpc("<p,neutral>Veliaf. Over there. Go.");
-    return;
-}
-~chatnpc("<p,neutral>I go up for the bread. It is the only errand anybody lets me do and I have started to understand why.");
-
-[opnpc1,route_sani_piliu]
-~chatnpc("<p,neutral>I make the bolts. Silver, every one of them, and I have made eleven thousand and we have used forty.");
-
-[opnpc1,route_harold_evans]
-~chatnpc("<p,neutral>Somebody has to write it down. If we all die down here and nobody wrote it down then nothing happened.");
+~send_quest_complete(questlist:routequest, steel_longsword, 200, ^route_questpoints, "You have completed\\nIn Search of the Myreque!", "2 Quest Points|600 Attack XP|600 Defence XP|600 Strength XP|600 Hitpoints XP|600 Crafting XP|Access to The Hollows");

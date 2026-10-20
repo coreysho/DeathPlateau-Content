@@ -37773,10 +37773,25 @@ resizeh=256
 resizev=256
 op2=Attack
 vislevel=97
+// The cache gives this one a level, a size and three animations and no statblock at all, which is
+// what every npc that exists only to be spawned by a script looks like in here. Fifty-five
+// hitpoints is the number the quest is written around: it hits hard and it does not last, and the
+// chamber it is summoned into has a corner in it for anybody who cannot take the hits.
+hitpoints=55
+attack=80
+strength=79
+defence=76
+huntmode=aggressive_melee
+huntrange=5
+wanderrange=3
+maxrange=8
+respawnrate=100
 
 param=attack_anim,skeleton_hound_attack
 param=death_anim,skeleton_hound_death
 param=defend_anim,skeleton_hound_block
+param=damagetype,^stab_style
+
 [canafis_stranger]
 name=Stranger
 desc=A typical villager of Canifis.
