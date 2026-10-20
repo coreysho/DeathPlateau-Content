@@ -3,49 +3,112 @@ def_string $text;
 
 switch_int (%ratcatch_var) {
     case ^ratcatch_not_started :
-        $text = "@dbl@I can start this quest by speaking to @dre@Jimmy Dazzler|";
-        $text = append($text, "@dbl@in @dre@East Ardougne");
+        $text = "@dbl@@dre@Gertrude@dbl@, west of Varrock, has had rats in her house|";
+        $text = append($text, "@dbl@longer than she has had the house|");
+        $text = append($text, "@dbl@Bring a @dre@cat@dbl@ - not an overgrown one|");
+        $text = append($text, "@dbl@Requires @dre@Gertrude's Cat@dbl@, @dre@Icthlarin's Little Helper|");
+        $text = append($text, "@dbl@and @dre@The Giant Dwarf@dbl@ started");
+
+    case ^ratcatch_sewers :
+        $text = "@str@There are two men living in the Varrock sewers who have|";
+        $text = append($text, "@str@forgotten how to do anything but catch rats.||");
+        $text = append($text, "@dbl@Down the manhole and east, past the palace:|");
+        $text = append($text, "@dbl@@dre@Phingspet@dbl@ and @dre@Grimesquit|");
+        $text = append($text, "@dbl@Both of them want a smell of the @dre@cat");
+
+    case ^ratcatch_sniffed :
+        $text = "@str@Both of them have smelled the cat and neither of them|";
+        $text = append($text, "@str@said anything about it.||");
+        $text = append($text, "@dbl@@dre@Eight rats@dbl@ off the sewer floor, with the cat|");
+        $text = append($text, append("@gre@So far: ", append(tostring(%ratcatch_ometer), " of eight")));
+
+    case ^ratcatch_eight :
+        $text = "@str@Eight rats and the cat is not even breathing hard.||";
+        $text = append($text, "@dbl@Talk to either of them again");
 
     case ^ratcatch_hired :
-        $text = "@str@Jimmy Dazzler is the rat catcher AND on the guest list, so|";
-        $text = append($text, "@str@he cannot be seen crawling about with a pole. I can.|");
-        $text = append($text, "@dbl@Six rats, on the pole|");
-        $text = append($text, "@dbl@He says to see @dre@Gertrude@dbl@ in @dre@west Varrock@dbl@ first");
-
-    case ^ratcatch_equipped :
-        $text = "@str@You do not chase a rat. You make its hole unpleasant and|";
-        $text = append($text, "@str@have something waiting when it comes out.|");
-        $text = append($text, "@dbl@@dre@Light the pot of weeds@dbl@ with a tinderbox, then put it in|");
-        $text = append($text, "@dbl@each of the @dre@four rat holes@dbl@ upstairs at Gertrude's|");
-        $text = append($text, "@dbl@@dre@<tostring(~ratcatch_holes_done)>@dbl@ of @dre@<tostring(^ratcatch_holes)>@dbl@ done");
-
-    case ^ratcatch_trained :
-        $text = "@str@Four holes, four rats, and I did not have to move once.|";
-        $text = append($text, "@dbl@Jimmy's directions lead out of @dre@East Ardougne@dbl@ and into the|");
-        $text = append($text, "@dbl@@dre@woods@dbl@, to a @dre@manor house");
+        $text = "@str@Phingspet and Grimesquit have handed over a rat pole.||";
+        $text = append($text, "@dbl@@dre@Jimmy Dazzler@dbl@, in Ardougne, by the Flying Horse|");
+        $text = append($text, "@dbl@He has a party with rats in it");
 
     case ^ratcatch_party :
-        $text = "@str@The party has six rats in it and a band loud enough that|";
-        $text = append($text, "@str@nobody has noticed either of us.|");
-        $text = append($text, "@dbl@@dre@<tostring(~ratcatch_rats_caught)>@dbl@ of @dre@<tostring(^ratcatch_party_rats)>@dbl@ on the pole|");
-        $text = append($text, "@dbl@Use the @dre@pole@dbl@ on a rat. The @dre@music@dbl@ is what brings one out|");
-        $text = append($text, "@dbl@from under the furniture");
+        $text = "@str@Jimmy Dazzler is on the guest list and cannot be seen|";
+        $text = append($text, "@str@crawling about with a pole. Nobody knows me.||");
+        $text = append($text, "@dbl@@dre@Six rats@dbl@ on the pole, and nobody sees you do it|");
+        $text = append($text, append("@gre@So far: ", append(tostring(~ratcatch_rats_caught), " of six")));
 
     case ^ratcatch_poled :
-        $text = "@str@Six rats on one pole and the band has not stopped once.|";
-        $text = append($text, "@dbl@@dre@Jimmy Dazzler@dbl@ is waiting");
+        $text = "@str@Six rats on one pole and the band never stopped.||";
+        $text = append($text, "@dbl@Back to @dre@Jimmy Dazzler");
+
+    case ^ratcatch_poison :
+        $text = "@str@There is a man in south-east Varrock called Hooknosed Jack|";
+        $text = append($text, "@str@who runs the pits there and has a problem he will not|");
+        $text = append($text, "@str@admit to.||");
+        $text = append($text, "@dbl@Find @dre@Hooknosed Jack");
+
+    case ^ratcatch_cheesed :
+        $text = "@str@Four holes in the warehouse floor and something coming|";
+        $text = append($text, "@str@out of all four.||");
+        $text = append($text, "@dbl@Poison @dre@four cheeses@dbl@ and put one in each hole, up|");
+        $text = append($text, "@dbl@the ladder in the warehouse south of the pub|");
+        $text = append($text, append("@gre@So far: ", append(tostring(~ratcatch_holes_done), " of four")));
+
+    case ^ratcatch_pox :
+        $text = "@str@Jack's cat Pox has eaten one of the poisoned rats.||";
+        if (~obj_gettotal(ratcatchers_cat_antipoison) > 0) {
+            $text = append($text, "@dbl@Use the @dre@antipoison@dbl@ on @dre@Pox|");
+        } else {
+            $text = append($text, "@dbl@The @dre@Apothecary@dbl@, west Varrock, makes something for|");
+            $text = append($text, "@dbl@cats: @dre@marrentill@dbl@, @dre@unicorn horn dust@dbl@ and a|");
+            $text = append($text, "@dbl@@dre@bucket of milk|");
+        }
+        $text = append($text, "@str@And there is still something upstairs. Jack says to put|");
+        $text = append($text, "@str@the cat to the first hole and tell it to be careful.");
+
+    case ^ratcatch_kingrat :
+        $text = "@str@The thing in the warehouse wall was the King rat and it|";
+        $text = append($text, "@str@is dead.||");
+        $text = append($text, "@dbl@Back to @dre@Hooknosed Jack");
+
+    case ^ratcatch_smoked :
+        $text = "@str@Three of them have signed. Jack says there is a fourth.||";
+        $text = append($text, "@dbl@@dre@Smokin' Joe@dbl@, under Keldagrim. He has had rats in a|");
+        $text = append($text, "@dbl@wall for eleven years|");
+        $text = append($text, "@dbl@A @dre@pot of weeds@dbl@, a @dre@tinderbox@dbl@, a @dre@cat@dbl@ and the|");
+        $text = append($text, "@dbl@@dre@catspeak amulet");
+
+    case ^ratcatch_face :
+        $text = "@str@Eleven years that wall had rats in it. Eleven years, and|";
+        $text = append($text, "@str@a pot of weeds.||");
+        $text = append($text, "@dbl@@dre@The Face@dbl@, Port Sarim, by the fishing shop|");
+
+    case ^ratcatch_charm :
+        $text = "@str@You cannot poison a dock and you cannot smoke one. The|";
+        $text = append($text, "@str@Face says music will move them.||");
+        if (inv_total(inv, ratcatchers_music) > 0) {
+            $text = append($text, "@dbl@Play the tune on the @dre@Port Sarim docks|");
+            $text = append($text, "@dbl@D, G, E, F sharp, high D, B, C sharp, A");
+        } else {
+            $text = append($text, "@dbl@Buy the tune from the @dre@snake charmer@dbl@ in|");
+            $text = append($text, "@dbl@@dre@Pollnivneach@dbl@. He will want @dre@100 coins|");
+        }
+
+    case ^ratcatch_piped :
+        $text = "@str@They came out from under every warehouse on the dock in|";
+        $text = append($text, "@str@one line, off the end of the quay, and kept going.||");
+        $text = append($text, "@dbl@@dre@Felkrash@dbl@, down the manhole in Port Sarim. He keeps|");
+        $text = append($text, "@dbl@the book");
 
     case ^ratcatch_complete :
-        $text = "@str@Jimmy Dazzler was both the rat catcher and a guest at the|";
-        $text = append($text, "@str@party, which is a difficult position to be in when the|");
-        $text = append($text, "@str@party has rats in it.|");
-        $text = append($text, "@str@Gertrude taught me the trade on her own four holes, and I|");
-        $text = append($text, "@str@took six off the ballroom floor without the band stopping.||");
+        $text = "@str@Six names - Phingspet and Grimesquit, Jimmy Dazzler,|";
+        $text = append($text, "@str@Hooknosed Jack, Smokin' Joe and the Face - and every one|");
+        $text = append($text, "@str@of them signed inside a week, which Felkrash says has|");
+        $text = append($text, "@str@never happened before.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :
-        $text = "@dbl@I can start this quest by speaking to @dre@Jimmy Dazzler|";
-        $text = append($text, "@dbl@in @dre@East Ardougne");
+        $text = "@dbl@@dre@Gertrude@dbl@, west of Varrock, knows about rats";
 }
 
 ~quest_journal("Rat Catchers", $text);

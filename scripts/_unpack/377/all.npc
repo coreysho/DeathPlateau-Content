@@ -65766,12 +65766,30 @@ walkanim=mouse_walk
 alwaysontop=yes
 resizeh=180
 resizev=175
-vislevel=hide
-op2=Hidden
+vislevel=57
+op2=Attack
+// THE CACHE HIDES HIM, which is right for a rat in a wall and wrong for the only fight in this
+// quest: vislevel=hide and op2=Hidden, with no statblock, placed on no map square. He is spawned
+// at the first warehouse hole once all four are poisoned, and these are the numbers the walkthrough
+// is written around - he hits hard for his size and he does not last long.
 readyanim=mouse_ready
 walkanim=mouse_walk
 resizeh=140
 resizev=140
+hitpoints=55
+attack=50
+strength=48
+defence=30
+param=damagetype,^stab_style
+param=attack_anim,mouse_attack
+param=defend_anim,mouse_defend
+param=death_anim,mouse_death
+param=death_drop,null
+huntmode=aggressive_melee
+huntrange=4
+wanderrange=3
+maxrange=6
+respawnrate=100
 head1=npc_2982_head
 
 [vc_turbogroomer]

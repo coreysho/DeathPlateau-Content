@@ -1,4 +1,10 @@
 [opnpc1,apothecary]
+// RAT CATCHERS: the antipoison for Hooknosed Jack's cat is his, and he is the only person in the
+// game who makes anything for a cat. @ratcatch_apothecary is in quests/quest_ratcatch/scripts and
+// the hook hands the conversation straight back once he has made it.
+if (~ratcatch_apothecary_wants = true) {
+    @ratcatch_apothecary;
+}
 if(%rjquest = ^romeojuliet_spoken_father) {
     @apothecary_lawrence_sent;
 } else if(%rjquest = ^romeojuliet_spoken_apothecary) {

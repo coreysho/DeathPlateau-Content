@@ -1,23 +1,274 @@
-// Rat Catchers - the holes, the pits and the party.
+// Rat Catchers - ten chapters, five cities, and a cat.
+//
+// See configs/quest_ratcatch.constant for what the cache holds and for the three things that are
+// done differently because this build has no cat-follower npcs and no instrument interface.
+
+// =========================================================================== requirements
+[proc,ratcatch_requirements]()(boolean)
+if (%fluffs < ^fluffs_complete | %ics_little_var < ^icslittle_complete) {
+    ~mesbox("You need to have completed Gertrude's Cat and Icthlarin's Little Helper to start Rat Catchers.");
+    return(false);
+}
+// The wiki's third line. There is a Keldagrim chapter now, so it is a real requirement.
+if (%giantdwarf_quest = 0) {
+    ~mesbox("You need to have started The Giant Dwarf to begin Rat Catchers - one of the people you will have to find lives in Keldagrim.");
+    return(false);
+}
+return(true);
+
+// =========================================================================== a cat
+// Not an overgrown one, which is the walkthrough's own distinction: an overgrown cat will not chase
+// anything. There are six colours of grown cat and any of them will do.
+[proc,ratcatch_cat]()(obj)
+if (inv_total(inv, growncatobject) > 0) { return(growncatobject); }
+if (inv_total(inv, growncatobject_light) > 0) { return(growncatobject_light); }
+if (inv_total(inv, growncatobject_brown) > 0) { return(growncatobject_brown); }
+if (inv_total(inv, growncatobject_black) > 0) { return(growncatobject_black); }
+if (inv_total(inv, growncatobject_browngrey) > 0) { return(growncatobject_browngrey); }
+if (inv_total(inv, growncatobject_bluegrey) > 0) { return(growncatobject_bluegrey); }
+return(null);
+
+[proc,ratcatch_is_cat](obj $item)(boolean)
+if ($item = growncatobject | $item = growncatobject_light | $item = growncatobject_brown) {
+    return(true);
+}
+if ($item = growncatobject_black | $item = growncatobject_browngrey | $item = growncatobject_bluegrey) {
+    return(true);
+}
+return(false);
+
+[proc,ratcatch_overgrown](obj $item)(boolean)
+if ($item = overgrowncatobject | $item = overgrowncatobject_light | $item = overgrowncatobject_brown) {
+    return(true);
+}
+if ($item = overgrowncatobject_black | $item = overgrowncatobject_browngrey | $item = overgrowncatobject_bluegrey) {
+    return(true);
+}
+return(false);
+
+[proc,ratcatch_has_catspeak]()(boolean)
+if (inv_total(inv, ics_little_amulet_of_catspeak) > 0 | inv_total(worn, ics_little_amulet_of_catspeak) > 0) {
+    return(true);
+}
+if (inv_total(inv, twocats_amuletofcatspeak) > 0 | inv_total(worn, twocats_amuletofcatspeak) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== Gertrude
+// She already has [opnpc1,gertrude] in areas/area_varrock/scripts/gertrude.rs2 - a trigger cannot
+// be declared twice - so this hooks in ahead of it and hands it back once she has said her piece.
+[proc,ratcatch_gertrude_wants]()(boolean)
+if (%ratcatch_var = ^ratcatch_not_started) {
+    return(true);
+}
+if (%ratcatch_var = ^ratcatch_sewers) {
+    return(true);
+}
+return(false);
+
+[label,ratcatch_gertrude]
+if (%ratcatch_var = ^ratcatch_sewers) {
+    ~chatnpc("<p,neutral>Down the manhole and east, past the palace. Phingspet and Grimesquit. Take the cat and do not take anything you mind losing.");
+    return;
+}
+~chatplayer("<p,quiz>You know about rats.");
+~chatnpc("<p,laugh>I know about rats the way a sailor knows about water. This house has had them since before it had me.");
+~chatplayer("<p,quiz>Could I learn?");
+~chatnpc("<p,neutral>Not from me. There are two men living in the sewers under this city who have forgotten how to do anything else, and they will teach anybody who turns up with a cat.");
+if (~ratcatch_requirements = false) {
+    return;
+}
+if (~ratcatch_cat = null) {
+    ~chatnpc("<p,neutral>A cat. A proper one - not one of those great fat things that will not get off a cushion.");
+    ~mesbox("You need a cat with you. An overgrown cat will not chase anything.");
+    return;
+}
+~chatnpc("<p,happy>Phingspet and Grimesquit. Down the manhole and east, past the palace. They do not get many visitors and they will be very pleased to see you, which is not the same as pleasant.");
+%ratcatch_var = ^ratcatch_sewers;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+
+// =========================================================================== the sewers
+// Both of them have to smell the cat before either will teach anything, and the cache keeps a bit
+// for each: ratcatch_catknowsdrill and ratcatch_cathas_expressed.
+[opnpc1,vc_phingspet] @ratcatch_sewerman(^ratcatch_on);
+[opnpc1,vc_grimesquit] @ratcatch_sewerman(^ratcatch_off);
+
+[label,ratcatch_sewerman](int $phingspet)
+if (%ratcatch_var < ^ratcatch_sewers) {
+    ~chatnpc("<p,angry>We are not here. Nobody is here.");
+    return;
+}
+if (%ratcatch_var > ^ratcatch_eight) {
+    if ($phingspet = ^ratcatch_on) {
+        ~chatnpc("<p,happy>Eight rats off that floor and not a mark on the cat. You will do.");
+        return;
+    }
+    ~chatnpc("<p,neutral>Mind how you go. And mind the cat.");
+    return;
+}
+if (%ratcatch_var = ^ratcatch_eight) {
+    @ratcatch_sewer_pole;
+}
+if (~ratcatch_sniffed($phingspet) = false) {
+    ~chatnpc("<p,quiz>Is that a cat? Let me have a smell of it.");
+    ~mesbox("Use the cat on him.");
+    return;
+}
+if (%ratcatch_var = ^ratcatch_sniffed) {
+    ~chatnpc("<p,neutral>Eight. Off this floor, with that cat, and we will know whether you have the knack.");
+    ~mesbox("Use the cat on the rats down here. Eight of them. <tostring(%ratcatch_ometer)> so far.");
+    return;
+}
+~chatnpc("<p,neutral>Let me have a smell of that cat first.");
+
+[proc,ratcatch_sniffed](int $phingspet)(boolean)
+if ($phingspet = ^ratcatch_on) {
+    if (%ratcatch_catknowsdrill = ^ratcatch_on) { return(true); }
+    return(false);
+}
+if (%ratcatch_cathas_expressed = ^ratcatch_on) { return(true); }
+return(false);
+
+// The cat, held up to be smelled.
+[opnpcu,vc_phingspet] @ratcatch_sniff(^ratcatch_on);
+[opnpcu,vc_grimesquit] @ratcatch_sniff(^ratcatch_off);
+
+[label,ratcatch_sniff](int $phingspet)
+def_obj $item = last_useitem;
+p_arrivedelay;
+if (~ratcatch_overgrown($item) = true) {
+    ~chatnpc("<p,laugh>That is not a cat, that is a cushion with opinions.");
+    return;
+}
+if (~ratcatch_is_cat($item) = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%ratcatch_var < ^ratcatch_sewers) {
+    ~chatnpc("<p,angry>Why are you showing me a cat.");
+    return;
+}
+if (~ratcatch_sniffed($phingspet) = true) {
+    ~chatnpc("<p,neutral>I have smelled it. It is a cat.");
+    return;
+}
+if ($phingspet = ^ratcatch_on) {
+    %ratcatch_catknowsdrill = ^ratcatch_on;
+    ~chatnpc("<p,happy>Oh, that is a RAT cat. You can tell. Something in the shoulders.");
+} else {
+    %ratcatch_cathas_expressed = ^ratcatch_on;
+    ~chatnpc("<p,happy>It has not been fed today. Good. A fed cat is an ornament.");
+}
+if (%ratcatch_catknowsdrill = ^ratcatch_off | %ratcatch_cathas_expressed = ^ratcatch_off) {
+    ~chatnpc("<p,neutral>The other one will want a smell too. We do not take each other's word for anything down here.");
+    return;
+}
+%ratcatch_var = ^ratcatch_sniffed;
+%ratcatch_ometer = 0;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+~chatnpc("<p,neutral>Right. Eight rats off this floor, with that cat, and we will see.");
+
+// Eight rats, caught by putting the cat on one. [opnpcu,rat] is a trigger on every rat in the
+// world, so everything that is not this quest in this sewer falls through to the default message.
+[opnpcu,rat]
+def_obj $item = last_useitem;
+if (~ratcatch_is_cat($item) = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%ratcatch_var ! ^ratcatch_sniffed) {
+    ~mesbox("The cat looks at the rat, and then at you, and does not move. Nobody has told it this is its job yet.");
+    return;
+}
+p_arrivedelay;
+anim(human_pickupfloor, 0);
+p_delay(2);
+if (stat_random(thieving, 10, 60) = false) {
+    mes("The rat goes under a grating and the cat sits down to think about it.");
+    return;
+}
+npc_del;
+%ratcatch_ometer = add(%ratcatch_ometer, 1);
+stat_advance(thieving, 200);
+if (%ratcatch_ometer < ^ratcatch_sewer_rats) {
+    mes("The cat has it. <tostring(%ratcatch_ometer)> of <tostring(^ratcatch_sewer_rats)>.");
+    return;
+}
+%ratcatch_var = ^ratcatch_eight;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+~mesbox("Eight. Phingspet and Grimesquit have been watching the whole time and neither of them has said a word.");
+
+[label,ratcatch_sewer_pole]
+~chatplayer("<p,happy>Eight.");
+~chatnpc("<p,happy>Eight, and the cat is not even breathing hard.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>I have something for you and you have nowhere to put it.");
+    return;
+}
+inv_add(inv, vc_rat_pole, 1);
+~objbox(vc_rat_pole, "A rat pole. Six hooks, and a man in Ardougne who has been waiting two years for somebody who can use one.", 250, 0, divide(^objbox_height, 2));
+%ratcatch_var = ^ratcatch_hired;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+~chatnpc("<p,neutral>Jimmy Dazzler, in Ardougne, by the Flying Horse. He has a party with rats in it and he cannot be seen dealing with them himself.");
+
+// The manhole behind the warehouse, and the one beside the Face in Port Sarim. Both are the way
+// into a rat pit, and neither had a trigger.
+[oploc1,vc_manhole_open]
+p_arrivedelay;
+if (%ratcatch_var < ^ratcatch_hired) {
+    ~mesbox("An open manhole, and a long way down it somebody is shouting about odds.");
+    return;
+}
+mes("You climb down.");
+p_delay(2);
+if (coordx(loc_coord) > 3100) {
+    p_teleport(^ratcatch_varrock_pits);
+    return;
+}
+p_teleport(^ratcatch_sarim_pits);
 
 // =========================================================================== Jimmy Dazzler
 [opnpc1,vc_jimmy_dazzler]
 switch_int (%ratcatch_var) {
-    case ^ratcatch_not_started : @ratcatch_jimmy_start;
-    case ^ratcatch_poled : @ratcatch_jimmy_finish;
+    case ^ratcatch_hired : @ratcatch_jimmy_start;
+    case ^ratcatch_party : @ratcatch_jimmy_party;
+    case ^ratcatch_poled : @ratcatch_jimmy_done;
     case default :
-        if (%ratcatch_var >= ^ratcatch_complete) {
-            ~chatnpc("<p,happy>Six rats, one pole, and not a single guest any the wiser. Beautiful work.");
+        if (%ratcatch_var < ^ratcatch_hired) {
+            ~chatnpc("<p,neutral>I am between engagements and so, by the look of you, are you.");
             return;
         }
         if (~ratcatch_has_pole = false) {
             @ratcatch_jimmy_new_pole;
         }
-        if (%ratcatch_var >= ^ratcatch_trained) {
-            @ratcatch_jimmy_party;
-        }
-        ~chatnpc("<p,neutral>Six of them, on a pole, and nobody sees you do it. That is the job.");
+        ~chatnpc("<p,happy>Six rats, one pole, and not a single guest any the wiser. Beautiful work.");
 }
+
+[label,ratcatch_jimmy_start]
+~chatnpc("<p,happy>You have the look of somebody between engagements.");
+switch_int (~p_choice2("What's the job?", 1, "I have engagements.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>I have engagements.");
+        ~chatnpc("<p,laugh>Nobody has ever said that and meant it.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>What's the job?");
+}
+~chatnpc("<p,neutral>There is a party. A very good party, in a very good house, and it has rats.");
+~chatnpc("<p,sad>Six of them. Under the tables, behind the band, one of them has been in the trifle.");
+~chatplayer("<p,quiz>So call a rat catcher.");
+~chatnpc("<p,angry>I AM the rat catcher. I am also on the guest list, which means I cannot be seen crawling about with a pole.");
+~chatnpc("<p,neutral>You can. Nobody knows you.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>I am going to hand you something and you have nowhere to put it.");
+    return;
+}
+inv_add(inv, ratcatchers_party_directions, 1);
+%ratcatch_var = ^ratcatch_party;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+~chatnpc("<p,neutral>Directions. Six rats go on that pole. Do not come back with five.");
+@ratcatch_jimmy_party;
 
 // A lost pole lost the rats on it too, and with them the quest: the party rats stay gone once they
 // are caught. A new pole puts every rat back where it was.
@@ -29,7 +280,7 @@ if (inv_freespace(inv) = 0) {
 ~chatnpc("<p,angry>Where is the pole? No - do not tell me. Here. And the rats that were on it are back under the tables, I expect.");
 inv_add(inv, vc_rat_pole, 1);
 ~ratcatch_release_all;
-if (%ratcatch_var = ^ratcatch_poled) {
+if (%ratcatch_var >= ^ratcatch_poled) {
     %ratcatch_var = ^ratcatch_party;
     ~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
 }
@@ -50,6 +301,17 @@ if_close;
 mes("Jimmy leads you through the woods to a manor house you would never have found on your own.");
 p_delay(2);
 p_telejump(^ratcatch_party_arrive);
+
+[label,ratcatch_jimmy_done]
+~chatplayer("<p,happy>Six.");
+if_close;
+mes("Jimmy counts them twice, which is fair.");
+p_delay(3);
+~chatnpc("<p,happy>Six. And the trifle survived, which frankly nobody expected.");
+~chatnpc("<p,neutral>Now. You are better at this than I am, which is awkward for me and useful for you. There is a man in south-east Varrock called Hooknosed Jack who runs the pits there, and he has a problem he will not admit to.");
+~chatnpc("<p,neutral>Keep the pole. You have earned the pole.");
+%ratcatch_var = ^ratcatch_poison;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
 
 [proc,ratcatch_has_pole]()(boolean)
 if (inv_total(inv, vc_rat_pole) > 0 | inv_total(inv, vc_rat_pole_1) > 0 | inv_total(inv, vc_rat_pole_2) > 0 | inv_total(inv, vc_rat_pole_3) > 0 | inv_total(inv, vc_rat_pole_4) > 0 | inv_total(inv, vc_rat_pole_5) > 0 | inv_total(inv, vc_rat_pole_6) > 0) {
@@ -97,228 +359,7 @@ anim(human_pickupfloor, 0);
 p_delay(0);
 p_telejump(movecoord(loc_coord, 0, -1, 1));
 
-// The quest's gate. The OSRS wiki's Ratcatchers page asks for Icthlarin's Little Helper, which in
-// turn asks for Gertrude's Cat; both are named here because this server's Icthlarin's Little Helper
-// does not check Gertrude's Cat itself, so the chain is not transitive the way the wiki's is. The
-// wiki's third line - The Giant Dwarf started, for Keldagrim - is deliberately left out: there is no
-// Keldagrim chapter in this implementation (see configs/quest_ratcatch.constant), so requiring it
-// would gate content that does not exist.
-//
-// AUDIT 2026-09-29: there was no gate at all, and that mattered beyond the ordering. ^ratcatch_hired
-// makes ~ratcatch_gertrude_wants true, which takes Gertrude away from Gertrude's Cat - so a brand
-// new player who talked to Jimmy first could not be told about Fluffs until they had been back to
-// Gertrude once, and could not be told at all while their inventory was too full for the pot.
-[proc,ratcatch_requirements]()(boolean)
-if (%fluffs < ^fluffs_complete | %ics_little_var < ^icslittle_complete) {
-    ~chatnpc("<p,angry>No. You have never taken a rat off a floor in your life and it shows from here.");
-    ~mesbox("You need to have completed Gertrude's Cat and Icthlarin's Little Helper to start Rat Catchers.");
-    return(false);
-}
-return(true);
-
-[label,ratcatch_jimmy_start]
-~chatnpc("<p,happy>You have the look of somebody between engagements.");
-switch_int (~p_choice2("What's the job?", 1, "I have engagements.", 2)) {
-    case 2 :
-        ~chatplayer("<p,neutral>I have engagements.");
-        ~chatnpc("<p,laugh>Nobody has ever said that and meant it.");
-        return;
-    case 1 :
-        ~chatplayer("<p,quiz>What's the job?");
-}
-~chatnpc("<p,neutral>There is a party. A very good party, in a very good house, and it has rats.");
-~chatnpc("<p,sad>Six of them. Under the tables, behind the band, one of them has been in the trifle.");
-~chatplayer("<p,quiz>So call a rat catcher.");
-~chatnpc("<p,angry>I AM the rat catcher. I am also on the guest list, which means I cannot be seen crawling about with a pole.");
-~chatnpc("<p,neutral>You can. Nobody knows you.");
-// Checked here rather than before the pitch so the player hears what the job is before being told
-// they are not up to it, which is how ~animmag_requirements is placed too.
-if (~ratcatch_requirements = false) {
-    return;
-}
-if (inv_freespace(inv) < 2) {
-    ~chatnpc("<p,neutral>I am going to hand you two things and you have nowhere to put either.");
-    return;
-}
-inv_add(inv, ratcatchers_party_directions, 1);
-inv_add(inv, vc_rat_pole, 1);
-%ratcatch_var = ^ratcatch_hired;
-~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
-~chatnpc("<p,neutral>Directions, and a pole. Six rats go on the pole. Do not come back with five.");
-~chatnpc("<p,neutral>And do not go in cold - go and see Gertrude in Varrock first. She has rats and she has a cat and you have never done this before.");
-
-[label,ratcatch_jimmy_finish]
-if (inv_total(inv, vc_rat_pole_6) = 0) {
-    ~chatnpc("<p,neutral>Six. On the pole. Where is it?");
-    return;
-}
-~chatplayer("<p,happy>Six.");
-if_close;
-mes("Jimmy counts them twice, which is fair.");
-p_delay(3);
-inv_del(inv, vc_rat_pole_6, 1);
-~chatnpc("<p,happy>Six. And the trifle survived, which frankly nobody expected.");
-@ratcatch_finish;
-
-[label,ratcatch_finish]
-%ratcatch_var = ^ratcatch_complete;
-stat_advance(thieving, 45000);
-stat_advance(agility, 45000);
-session_log(^log_adventure, "Quest complete: Rat Catchers");
-~send_quest_complete(questlist:ratcatch, vc_rat_pole_6, 200, ^ratcatch_questpoints, "You have completed\\nRat Catchers!", "2 Quest Points|4,500 Thieving XP|4,500 Agility XP|Jimmy Dazzler owes you one");
-
-// Both readables this quest hands over are already written in
-// general_use/scripts/readables_generated.rs2 - ratcatchers_party_directions at :150 and
-// ratcatchers_music at :147 - and the music one describes the charm mechanic in more detail than
-// anything derived from the varbits would have. Both left where they are.
-
-// =========================================================================== Gertrude
-// She already has [opnpc1,gertrude] in areas/area_varrock/scripts/gertrude.rs2 - a trigger cannot
-// be declared twice - so this hooks in ahead of it and hands it back when the quest is done with
-// her. ratcatch_catknowsdrill is the cache's own name for the one thing she is here to provide.
-[proc,ratcatch_gertrude_wants]()(boolean)
-if (%ratcatch_var = ^ratcatch_hired) {
-    return(true);
-}
-// The pot is only ever handed out here; one lost before the four holes were done was the end of it.
-if (%ratcatch_var = ^ratcatch_equipped & inv_total(inv, ratcatchers_weedpot) = 0 & inv_total(inv, ratcatchers_smokey_weedpot) = 0) {
-    return(true);
-}
-return(false);
-
-[label,ratcatch_gertrude]
-~chatplayer("<p,quiz>Jimmy Dazzler says you know about rats.");
-~chatnpc("<p,laugh>Jimmy Dazzler says a great many things. But yes. This house has had rats since before it had me.");
-~chatnpc("<p,neutral>You do not chase a rat. You make its hole unpleasant and you have something waiting when it comes out.");
-if (inv_freespace(inv) < 2) {
-    ~chatnpc("<p,neutral>And you have nowhere to put a pot or a piece of paper.");
-    return;
-}
-inv_add(inv, ratcatchers_weedpot, 1);
-// Nothing else in the quest produces the music scroll, and its own readable describes exactly
-// what it is for: "play it, and the rats will come to you like flies to a bucket of camel dung".
-if (inv_total(inv, ratcatchers_music) = 0) {
-    inv_add(inv, ratcatchers_music, 1);
-}
-%ratcatch_catknowsdrill = ^ratcatch_on;
-%ratcatch_var = ^ratcatch_equipped;
-~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
-~chatnpc("<p,neutral>Garden weeds in a pot. Light it, put it in the hole, and stand still.");
-~chatnpc("<p,neutral>And take the music. Smoke works on a hole. It does not work on a ballroom, and you will need something that does.");
-~chatnpc("<p,neutral>There are four holes upstairs. Do all four and you will know the trade well enough for Jimmy's party.");
-
-// The pot has to be lit before it is any use. Only one side of the combine is declared.
-[opheldu,ratcatchers_weedpot]
-if (last_useitem ! tinderbox) {
-    ~displaymessage(^dm_default);
-    return;
-}
-inv_del(inv, ratcatchers_weedpot, 1);
-inv_add(inv, ratcatchers_smokey_weedpot, 1);
-mes("The weeds catch and start to smoulder. It smells appalling.");
-
-// =========================================================================== the rat holes
-// The four holes are upstairs in a house in east Varrock, and its ladder (vc_ladder/vc_laddertop,
-// Climb-up/Climb-down) had no trigger, so none of them could be reached.
-[oploc1,vc_ladder]
-p_arrivedelay;
-switch_coord (loc_coord) {
-    case 0_51_52_4_51 : ~climb_ladder(1_51_52_4_50, true);
-    case default : mes("The ladder does not seem to lead anywhere you need to go.");
-}
-
-[oploc1,vc_laddertop]
-p_arrivedelay;
-switch_coord (loc_coord) {
-    case 1_51_52_4_51 : ~climb_ladder(0_51_52_4_50, false);
-    case default : mes("The ladder does not seem to lead anywhere you need to go.");
-}
-
-// None of the five rat holes carries an op, so the only way to touch one is to put something in
-// it. The fifth is in a dungeon a long way from the other four and the quest does not use it.
-[oplocu,ratcatchers_rathole1] @ratcatch_smoke_hole(1);
-[oplocu,ratcatchers_rathole2] @ratcatch_smoke_hole(2);
-[oplocu,ratcatchers_rathole3] @ratcatch_smoke_hole(3);
-[oplocu,ratcatchers_rathole4] @ratcatch_smoke_hole(4);
-
-[label,ratcatch_smoke_hole](int $which)
-def_obj $item = last_useitem;
-p_arrivedelay;
-if ($item ! ratcatchers_smokey_weedpot) {
-    if ($item = ratcatchers_weedpot) {
-        mes("The pot has to be lit first.");
-        return;
-    }
-    ~displaymessage(^dm_default);
-    return;
-}
-if (%ratcatch_var < ^ratcatch_equipped) {
-    ~displaymessage(^dm_default);
-    return;
-}
-if (~ratcatch_hole_done($which) = true) {
-    mes("That one is already empty.");
-    return;
-}
-mes("You wedge the smouldering pot into the hole and stand still.");
-p_delay(4);
-// These three were labels, and a jump to a label never comes back: the hole's bit was set and
-// nothing after it ran, so the count never reached four and the stage never moved (and at the
-// party the rat left the floor but the pole never took it). Procs now.
-~ratcatch_set_hole($which);
-stat_advance(thieving, 400);
-if (~ratcatch_holes_done < ^ratcatch_holes) {
-    mes("Something small and furious comes out, and the cat has it before you have moved. <tostring(~ratcatch_holes_done)> of <tostring(^ratcatch_holes)>.");
-    return;
-}
-%ratcatch_var = ^ratcatch_trained;
-~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
-~mesbox("Four holes, four rats, and you did not have to move once. Jimmy's party is going to be considerably harder and considerably better dressed.");
-
-[proc,ratcatch_hole_done](int $which)(boolean)
-switch_int ($which) {
-    case 1 : if (%ratcatch_rathole_1 = ^ratcatch_on) { return(true); }
-    case 2 : if (%ratcatch_rathole_2 = ^ratcatch_on) { return(true); }
-    case 3 : if (%ratcatch_rathole_3 = ^ratcatch_on) { return(true); }
-    case 4 : if (%ratcatch_rathole_4 = ^ratcatch_on) { return(true); }
-}
-return(false);
-
-[proc,ratcatch_set_hole](int $which)()
-switch_int ($which) {
-    case 1 : %ratcatch_rathole_1 = ^ratcatch_on;
-    case 2 : %ratcatch_rathole_2 = ^ratcatch_on;
-    case 3 : %ratcatch_rathole_3 = ^ratcatch_on;
-    case 4 : %ratcatch_rathole_4 = ^ratcatch_on;
-}
-
-[proc,ratcatch_holes_done]()(int)
-def_int $n = 0;
-def_int $i = 1;
-while ($i <= ^ratcatch_holes) {
-    if (~ratcatch_hole_done($i) = true) {
-        $n = calc($n + 1);
-    }
-    $i = calc($i + 1);
-}
-return($n);
-
-// =========================================================================== the rat pits
-// vc_rat_wall1 and vc_rat_wall2 are the only locs in the quest with an op - op1=Spectate - and
-// they are placed a hundred and sixty times between them around the pits.
-[oploc1,vc_rat_wall1] @ratcatch_spectate;
-[oploc1,vc_rat_wall2] @ratcatch_spectate;
-[oploc1,vc_rat_wall1_inactive] @ratcatch_spectate;
-
-[label,ratcatch_spectate]
-p_arrivedelay;
-if (%ratcatch_var < ^ratcatch_hired) {
-    ~mesbox("Men are shouting at something in a pit. You decide not to look.");
-    return;
-}
-~mesbox("The pits. Men bet on how long a dog takes to clear a barrel of rats, and the record is held by a terrier that has been dead for nine years and is still talked about.");
-
-// =========================================================================== the party
+// =========================================================================== the party rats
 // Six rats, six bits, and each shell renders at 0 only - so they are all loose to begin with and
 // setting a bit is what takes one off the floor. vc_party_rat carries op2=Hidden and nothing else,
 // so the pole is the only thing that can touch one.
@@ -336,23 +377,15 @@ if (~ratcatch_is_pole($item) = false) {
     ~displaymessage(^dm_default);
     return;
 }
-if (%ratcatch_var < ^ratcatch_trained) {
-    ~mesbox("You have no idea how to do this yet. Gertrude's four holes first.");
-    return;
-}
-if (%ratcatch_var = ^ratcatch_trained) {
-    %ratcatch_var = ^ratcatch_party;
-    ~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
-}
-if (inv_total(inv, ratcatchers_music) = 0) {
-    ~mesbox("It is under a table and it is not coming out for a pole. Gertrude gave you something for this.");
+if (%ratcatch_var < ^ratcatch_party) {
+    ~mesbox("You have no idea how to do this yet. The two in the Varrock sewers first.");
     return;
 }
 if (stat(thieving) < 30) {
     mes("You need a Thieving level of 30 to get one of these without the room noticing.");
     return;
 }
-mes("You hum the tune from the scroll and get the pole under it.");
+mes("You get the pole under it.");
 p_delay(2);
 if (stat_random(thieving, 45, 90) = false) {
     ~mesbox("It goes under a table and a woman in green says something about the catering.");
@@ -418,8 +451,6 @@ return($n);
 [opheld1,vc_rat_pole_5] @ratcatch_remove_rat(vc_rat_pole_5, vc_rat_pole_4);
 [opheld1,vc_rat_pole_6] @ratcatch_remove_rat(vc_rat_pole_6, vc_rat_pole_5);
 
-// A rat taken off the pole goes back to the party (its bit is cleared), or the six would stay gone
-// with fewer than six on the pole and nothing left to catch.
 [label,ratcatch_remove_rat](namedobj $from, namedobj $to)
 inv_del(inv, $from, 1);
 inv_add(inv, $to, 1);
@@ -438,5 +469,660 @@ if (%vc_raton_off3 = ^ratcatch_rat_caught) { %vc_raton_off3 = ^ratcatch_rat_loos
 if (%vc_raton_off2 = ^ratcatch_rat_caught) { %vc_raton_off2 = ^ratcatch_rat_loose; return; }
 if (%vc_raton_off1 = ^ratcatch_rat_caught) { %vc_raton_off1 = ^ratcatch_rat_loose; return; }
 
-// ratcatchers_music is already readable in general_use/scripts/readables_generated.rs2:147, so it
-// is left there.
+// =========================================================================== Hooknosed Jack
+[opnpc1,vc_hooknosed_jack]
+switch_int (%ratcatch_var) {
+    case ^ratcatch_poison : @ratcatch_jack_poison;
+    case ^ratcatch_cheesed : @ratcatch_jack_pox;
+    case ^ratcatch_pox : @ratcatch_jack_kingrat;
+    case ^ratcatch_kingrat : @ratcatch_jack_done;
+    case default :
+        if (%ratcatch_var < ^ratcatch_poison) {
+            ~chatnpc("<p,angry>Pits are closed. Come back when you are somebody.");
+            return;
+        }
+        ~chatnpc("<p,happy>The pits are yours whenever you want them. And Pox has never been better.");
+}
+
+[label,ratcatch_jack_poison]
+~chatplayer("<p,neutral>Jimmy Dazzler says you have a rat problem you will not admit to.");
+~chatnpc("<p,angry>Jimmy Dazzler has a mouth like an open drain.");
+~chatnpc("<p,sad>...the warehouse. Four holes in the upstairs floor and something coming out of all four of them, and I run a rat pit, so I can hardly put a notice up about it.");
+~chatplayer("<p,quiz>So poison them.");
+~chatnpc("<p,neutral>With what? Cheese, is what. Here - this is rat poison, and the cheese is your problem.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And you have nowhere to put it.");
+    return;
+}
+inv_add(inv, rat_poison, 1);
+~objbox(rat_poison, "Rat poison. The label is a drawing of a rat with a cross through it, which is at least unambiguous.", 250, 0, divide(^objbox_height, 2));
+%ratcatch_var = ^ratcatch_cheesed;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+~chatnpc("<p,neutral>Four cheeses, four holes. Up the ladder in the warehouse south of the pub.");
+
+[label,ratcatch_jack_pox]
+if (~ratcatch_holes_done < ^ratcatch_holes) {
+    ~chatnpc("<p,neutral>Four holes. <tostring(~ratcatch_holes_done)> of them so far.");
+    return;
+}
+~chatplayer("<p,happy>All four.");
+~chatnpc("<p,happy>All four! That is the first good news this month.");
+if_close;
+mes("Something is wrong with the cat on the step. It has not moved since you came up the road.");
+p_delay(3);
+~chatnpc("<p,sad>...Pox. Pox, get up. | He has eaten one of them. He has eaten a poisoned rat.");
+~chatplayer("<p,quiz>Can anything be done?");
+~chatnpc("<p,neutral>The Apothecary, west of here, past the square. He makes something for cats. Marrentill, unicorn horn dust and a bucket of milk, and he will want all three.");
+%ratcatch_var = ^ratcatch_pox;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+
+[label,ratcatch_jack_kingrat]
+if (~obj_gettotal(ratcatchers_cat_antipoison) > 0) {
+    ~chatnpc("<p,angry>Do not tell me about it, give it to the cat.");
+    return;
+}
+~chatnpc("<p,sad>Pox is on his feet and he is not going near that warehouse again, and I do not blame him.");
+~chatnpc("<p,angry>Because there is something up there. Four holes poisoned and there is still something up there, and it is not a rat the size of a rat.");
+~chatplayer("<p,quiz>How big?");
+~chatnpc("<p,sad>Put your cat to the first hole and find out. And if you have any sense you will tell it to be careful.");
+
+[label,ratcatch_jack_done]
+~chatplayer("<p,happy>It is dead.");
+~chatnpc("<p,shock>...you killed the King rat. In my warehouse. With a cat.");
+~chatnpc("<p,happy>The pits are yours. Any time, any night, and nobody takes a penny off you at the door.");
+~chatnpc("<p,neutral>And there is somebody you should meet. Smokin' Joe, in Keldagrim, under the city. He has had rats in a wall for eleven years and he will not be told how to get them out.");
+%ratcatch_var = ^ratcatch_smoked;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+stat_advance(thieving, 8000);
+
+// The poison goes on the cheese, which is the walkthrough's own step and the only thing
+// ratcatchers_poisonedcheese has ever been for.
+[opheldu,rat_poison]
+if (last_useitem ! cheese) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_total(inv, cheese) = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $n = inv_total(inv, cheese);
+if ($n > ^ratcatch_cheeses) {
+    $n = ^ratcatch_cheeses;
+}
+inv_del(inv, cheese, $n);
+inv_add(inv, ratcatchers_poisonedcheese, $n);
+~mesbox("You work the poison into <tostring($n)> of the cheeses. They look exactly as they did, which is rather the point.");
+
+// =========================================================================== the warehouse
+// The ladder had no trigger, so none of the four holes could be reached.
+[oploc1,vc_ladder]
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case 0_51_52_4_51 :
+        mes("You climb up into the loft.");
+        ~climb_ladder(1_51_52_4_50, true);
+    case default : mes(append("This ladder goes nowhere anybody needs to go. ", tostring(coordx(loc_coord))));
+}
+
+[oploc1,vc_laddertop]
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case 1_51_52_4_51 :
+        mes("You climb down.");
+        ~climb_ladder(0_51_52_4_50, false);
+    case default : mes(append("This ladder goes nowhere anybody needs to go. ", tostring(coordx(loc_coord))));
+}
+
+// None of the five rat holes carries an op, so the only way to touch one is to put something in it.
+// The fifth is Smokin' Joe's, in Keldagrim, and takes the pot instead.
+[oplocu,ratcatchers_rathole1] @ratcatch_hole(1);
+[oplocu,ratcatchers_rathole2] @ratcatch_hole(2);
+[oplocu,ratcatchers_rathole3] @ratcatch_hole(3);
+[oplocu,ratcatchers_rathole4] @ratcatch_hole(4);
+
+[label,ratcatch_hole](int $which)
+def_obj $item = last_useitem;
+p_arrivedelay;
+// The cat, at the first hole, once the four are poisoned and Pox is standing up: that is the King
+// rat and not a rat.
+if (~ratcatch_is_cat($item) = true) {
+    @ratcatch_kingrat_start;
+}
+if ($item ! ratcatchers_poisonedcheese) {
+    if ($item = cheese) {
+        mes("Plain cheese would only make them fat.");
+        return;
+    }
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%ratcatch_var < ^ratcatch_cheesed) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (~ratcatch_hole_done($which) = true) {
+    mes("There is a cheese in that one already.");
+    return;
+}
+mes("You push the cheese into the hole and step back.");
+p_delay(3);
+inv_del(inv, ratcatchers_poisonedcheese, 1);
+~ratcatch_set_hole($which);
+stat_advance(thieving, 400);
+if (~ratcatch_holes_done < ^ratcatch_holes) {
+    mes("Something takes it almost at once. <tostring(~ratcatch_holes_done)> of <tostring(^ratcatch_holes)>.");
+    return;
+}
+~mesbox("Four holes, four cheeses, and the floor has gone very quiet. | Jack is downstairs and will want to know.");
+
+[proc,ratcatch_hole_done](int $which)(boolean)
+switch_int ($which) {
+    case 1 : if (%ratcatch_rathole_1 = ^ratcatch_on) { return(true); }
+    case 2 : if (%ratcatch_rathole_2 = ^ratcatch_on) { return(true); }
+    case 3 : if (%ratcatch_rathole_3 = ^ratcatch_on) { return(true); }
+    case 4 : if (%ratcatch_rathole_4 = ^ratcatch_on) { return(true); }
+}
+return(false);
+
+[proc,ratcatch_set_hole](int $which)()
+switch_int ($which) {
+    case 1 : %ratcatch_rathole_1 = ^ratcatch_on;
+    case 2 : %ratcatch_rathole_2 = ^ratcatch_on;
+    case 3 : %ratcatch_rathole_3 = ^ratcatch_on;
+    case 4 : %ratcatch_rathole_4 = ^ratcatch_on;
+}
+
+[proc,ratcatch_holes_done]()(int)
+def_int $n = 0;
+def_int $i = 1;
+while ($i <= ^ratcatch_holes) {
+    if (~ratcatch_hole_done($i) = true) {
+        $n = calc($n + 1);
+    }
+    $i = calc($i + 1);
+}
+return($n);
+
+// =========================================================================== the Apothecary
+// He already has a trigger of his own, so this hooks in ahead of it the way Gertrude's does.
+[proc,ratcatch_apothecary_wants]()(boolean)
+if (%ratcatch_var ! ^ratcatch_pox) {
+    return(false);
+}
+if (~obj_gettotal(ratcatchers_cat_antipoison) > 0) {
+    return(false);
+}
+return(true);
+
+[label,ratcatch_apothecary]
+~chatplayer("<p,sad>There is a cat in south-east Varrock that has eaten a poisoned rat.");
+~chatnpc("<p,neutral>Then it will be dead by this evening unless somebody does something clever, and I am the somebody.");
+~chatnpc("<p,neutral>Marrentill, unicorn horn dust, and a bucket of milk. The milk is the hard part, oddly.");
+if (inv_total(inv, marentill) = 0 | inv_total(inv, unicorn_horn_dust) = 0 | inv_total(inv, bucket_milk) = 0) {
+    ~mesbox("The Apothecary wants a marrentill, some unicorn horn dust and a bucket of milk.");
+    return;
+}
+~chatplayer("<p,neutral>All three.");
+if_close;
+mes("He grinds the horn into the milk and pulls the marrentill through it by the stem, twice.");
+p_delay(4);
+inv_del(inv, marentill, 1);
+inv_del(inv, unicorn_horn_dust, 1);
+inv_del(inv, bucket_milk, 1);
+inv_add(inv, ratcatchers_cat_antipoison, 1);
+~objbox(ratcatchers_cat_antipoison, "Antipoison for Pox. It smells of warm milk and something underneath the warm milk.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>Down its throat, all of it, and do not let it lick its paws for an hour.");
+
+// Pox, on the step, not moving.
+[opnpcu,vc_pox]
+def_obj $item = last_useitem;
+p_arrivedelay;
+if ($item ! ratcatchers_cat_antipoison) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%ratcatch_var ! ^ratcatch_pox) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if_close;
+mes("You get the lot down him, which takes two of you and is not dignified for anybody.");
+p_delay(4);
+inv_del(inv, ratcatchers_cat_antipoison, 1);
+stat_advance(thieving, 1000);
+~mesbox("Pox stands up, walks four steps, sits down again and starts washing, which from a cat is a full recovery. | Jack has not said anything for a while.");
+
+[opnpc1,vc_pox]
+if (%ratcatch_var = ^ratcatch_pox & ~obj_gettotal(ratcatchers_cat_antipoison) > 0) {
+    ~mesbox("He is in no state to be talked to. Use the antipoison on him.");
+    return;
+}
+if (%ratcatch_var = ^ratcatch_pox) {
+    ~mesbox("He is lying on the step with his eyes half open and he has not moved since you came up the road.");
+    return;
+}
+~mesbox("A working cat, asleep in the one patch of sun in south-east Varrock.");
+
+// =========================================================================== the King rat
+// vc_kingrat is Hidden in the cache and placed nowhere, so he is spawned at the hole - and given a
+// statblock in scripts/_unpack/377/all.npc, because he had none.
+[label,ratcatch_kingrat_start]
+if (%ratcatch_var ! ^ratcatch_pox) {
+    ~mesbox("The cat sniffs at the hole and loses interest.");
+    return;
+}
+if (~ratcatch_holes_done < ^ratcatch_holes) {
+    ~mesbox("The cat will not put its head anywhere near a hole with a cheese in it.");
+    return;
+}
+if (npc_find(coord, vc_kingrat, 20, 0) = true) {
+    ~mesbox("It is already out.");
+    return;
+}
+~chatplayer("<p,quiz>Go on then.");
+switch_int (~p_choice2("Be careful!", 1, "Get in there.", 2)) {
+    case 1 :
+        ~chatplayer("<p,neutral>Be careful!");
+        %ratcatch_withdrawfrom_kingrat = ^ratcatch_on;
+    case 2 :
+        ~chatplayer("<p,neutral>Get in there.");
+        %ratcatch_withdrawfrom_kingrat = ^ratcatch_off;
+}
+if_close;
+mes("The cat goes in up to its shoulders and comes out backwards, fast.");
+p_delay(3);
+npc_add(^ratcatch_kingrat_spot, vc_kingrat, ^ratcatch_kingrat_ticks);
+npc_setmode(opplayer2);
+if (%ratcatch_withdrawfrom_kingrat = ^ratcatch_on) {
+    ~mesbox("What comes out after it is the size of a terrier and the cat is behind your legs, which is where you told it to be. | This one is yours.");
+    return;
+}
+~mesbox("What comes out after it is the size of a terrier and the cat has gone straight back at it, which is brave and short-sighted. | You had better help.");
+
+[ai_queue3,vc_kingrat]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(ratcatch_kingrat_dead, 0, 0);
+
+[queue,ratcatch_kingrat_dead]
+if (%ratcatch_var ! ^ratcatch_pox) {
+    return;
+}
+%ratcatch_var = ^ratcatch_kingrat;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+stat_advance(thieving, 2000);
+~mesbox("It stops. | Hooknosed Jack is going to want to see this and is not going to believe it.");
+
+// =========================================================================== Smokin' Joe
+[opnpc1,vc_smokin_joe]
+switch_int (%ratcatch_var) {
+    case ^ratcatch_smoked : @ratcatch_joe_start;
+    case ^ratcatch_face : @ratcatch_joe_done;
+    case default :
+        if (%ratcatch_var < ^ratcatch_smoked) {
+            ~chatnpc("<p,angry>Pits are for people who know rats. You do not.");
+            return;
+        }
+        ~chatnpc("<p,happy>Eleven years that wall had rats in it. Eleven years, and a pot of weeds.");
+}
+
+[label,ratcatch_joe_start]
+~chatplayer("<p,neutral>Hooknosed Jack says you have rats in a wall.");
+~chatnpc("<p,angry>Jack says a great deal from a very long way away.");
+~chatnpc("<p,sad>...eleven years. There is a hole in that wall and there has been something behind it since before the city voted on anything.");
+~chatplayer("<p,quiz>Have you tried smoking them out?");
+~chatnpc("<p,shock>Smoke. In a mine. In a city that is under a mountain.");
+~chatplayer("<p,neutral>In a pot. One pot.");
+~chatnpc("<p,neutral>...go on then. Here. Garden weeds, which cost me a fortune down here, in a pot. Light it and put it in the hole, and if this works I am going to feel every one of those eleven years.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And you have nowhere to put a pot.");
+    return;
+}
+inv_add(inv, ratcatchers_weedpot, 1);
+~objbox(ratcatchers_weedpot, "A pot of garden weeds. Dry, packed down hard, and worth more in Keldagrim than it has any right to be.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>A tinderbox. And wear something that lets you tell a cat what to do, because one of us is going to have to be at the other end of that hole.");
+
+[label,ratcatch_joe_done]
+~chatnpc("<p,happy>Gone. All of them. Eleven years.");
+~chatnpc("<p,neutral>The pits here are yours. And there is one more of us: the Face, in Port Sarim, by the fishing shop. She does not run a pit. She runs everything else.");
+
+// The pot has to be lit before it is any use. Only one side of the combine is declared.
+[opheldu,ratcatchers_weedpot]
+if (last_useitem ! tinderbox) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, ratcatchers_weedpot, 1);
+inv_add(inv, ratcatchers_smokey_weedpot, 1);
+mes("The weeds catch and start to smoulder. It smells appalling.");
+
+// Joe's hole. The pot goes in, then the cat waits at the other end - which is what the catspeak
+// amulet is for and the only thing in this quest that wants one.
+[oplocu,ratcatchers_rathole5]
+def_obj $item = last_useitem;
+p_arrivedelay;
+if (%ratcatch_var ! ^ratcatch_smoked) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if ($item = ratcatchers_weedpot) {
+    mes("The pot has to be lit first.");
+    return;
+}
+if ($item ! ratcatchers_smokey_weedpot) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (~ratcatch_cat = null) {
+    ~mesbox("Smoke will move them. Something has to be waiting at the other end, and there is no other end you can reach.");
+    return;
+}
+if (~ratcatch_has_catspeak = false) {
+    ~mesbox("The cat has to be told where to stand and which way to face, and there is no telling a cat anything without the amulet from Sophanem.");
+    return;
+}
+mes("You put the cat down where the wall is thinnest, wedge the pot into the hole, and wait.");
+p_delay(5);
+inv_del(inv, ratcatchers_smokey_weedpot, 1);
+%ratcatch_var = ^ratcatch_face;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+stat_advance(thieving, 1500);
+~mesbox("They come out of three places at once and not one of them gets past the cat. | Smokin' Joe has sat down on a crate and is looking at the wall.");
+
+// =========================================================================== the Face
+[opnpc1,vc_face]
+switch_int (%ratcatch_var) {
+    case ^ratcatch_face : @ratcatch_face_start;
+    case ^ratcatch_charm : @ratcatch_face_waiting;
+    case ^ratcatch_piped : @ratcatch_face_waiting;
+    case default :
+        if (%ratcatch_var < ^ratcatch_face) {
+            ~chatnpc("<p,neutral>I do not know you and that is how I would like to leave it.");
+            return;
+        }
+        ~chatnpc("<p,happy>Four pits and a harbour with no rats in it. You have had a month.");
+}
+
+[label,ratcatch_face_start]
+~chatplayer("<p,neutral>Smokin' Joe sent me.");
+~chatnpc("<p,neutral>Joe sends everybody. What did he tell you I do?");
+~chatplayer("<p,neutral>Everything except run a pit.");
+~chatnpc("<p,laugh>That is almost accurate.");
+switch_int (~p_choice3("I'm looking for work.", 1, "What's the problem here?", 2, "Who else is there?", 3)) {
+    case 1 : ~chatplayer("<p,neutral>I'm looking for work.");
+    case 2 : ~chatplayer("<p,quiz>What's the problem here?");
+    case 3 : ~chatplayer("<p,quiz>Who else is there?");
+}
+~chatnpc("<p,sad>The docks. There are more rats on the Port Sarim docks than there are in Port Sarim, and you cannot poison a dock and you cannot smoke one.");
+~chatplayer("<p,quiz>So what moves them?");
+~chatnpc("<p,neutral>Music. There is a man in Pollnivneach who charms snakes out of baskets with a pipe, and a rat is not very different from a snake about music.");
+~chatnpc("<p,neutral>Go and buy the tune off him. He will not want to sell it and he will sell it.");
+%ratcatch_var = ^ratcatch_charm;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+
+[label,ratcatch_face_waiting]
+if (%ratcatch_var = ^ratcatch_piped) {
+    ~chatnpc("<p,happy>I watched the whole thing from the fishing shop. Go and see Felkrash, down the manhole. He is the one who decides whether you are one of us.");
+    return;
+}
+if (inv_total(inv, ratcatchers_music) > 0) {
+    ~chatnpc("<p,neutral>Then go and play it. On the docks, not beside a hole in a wall.");
+    return;
+}
+~chatnpc("<p,neutral>Pollnivneach. The snake charmer. Take money.");
+
+// =========================================================================== the snake charmer
+// feud_snakecharmer is already in the world for The Feud, so this hooks in ahead of his own
+// trigger the way Gertrude's and the Apothecary's do.
+[proc,ratcatch_charmer_wants]()(boolean)
+if (%ratcatch_var ! ^ratcatch_charm) {
+    return(false);
+}
+if (inv_total(inv, ratcatchers_music) > 0) {
+    return(false);
+}
+return(true);
+
+[label,ratcatch_charmer]
+~chatplayer("<p,quiz>Does that pipe work on anything besides snakes?");
+~chatnpc("<p,angry>It works on snakes. Snakes are my business.");
+switch_int (~p_choice3("I'll pay for the tune.", 1, "I don't care about snakes.", 2, "Never mind.", 3)) {
+    case 3 :
+        ~chatplayer("<p,neutral>Never mind.");
+        return;
+    case 2 :
+        ~chatplayer("<p,neutral>I don't care about snakes.");
+        ~chatnpc("<p,angry>Then we have nothing to discuss.");
+        ~mesbox("You turn to go, and get four steps.");
+        ~chatnpc("<p,sad>...wait. Wait. How much were you going to offer me?");
+    case 1 :
+        ~chatplayer("<p,neutral>I'll pay for the tune.");
+        ~chatnpc("<p,neutral>...how much.");
+}
+def_int $cost = ^ratcatch_charm_cost;
+if (inv_total(inv, ring_of_charos) > 0 | inv_total(worn, ring_of_charos) > 0) {
+    $cost = ^ratcatch_charm_cost_ring;
+    ~chatnpc("<p,happy>...and for you, half. I do not know why I said that.");
+}
+if (inv_total(inv, coins) < $cost) {
+    ~chatnpc("<p,angry><tostring($cost)> coins. Come back when you have them.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And you have nowhere to put it.");
+    return;
+}
+inv_del(inv, coins, $cost);
+inv_add(inv, ratcatchers_music, 1);
+~objbox(ratcatchers_music, "Eight notes, written out by somebody who has never written music down before and was determined to get it right.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>Eight notes. In that order. And whatever comes when you play it is your business and not mine.");
+
+// =========================================================================== the docks
+// The eight notes, from the scroll: D, G, E, F sharp, high D, B, C sharp, A. vc_note1..8 record
+// what has been played and vc_note_number is which one is next, which is what the cache keeps them
+// for - the instrument interface they were drawn for is not in interface.pack.
+// The scroll has one inventory option - Read - so reading it and playing it are the same click,
+// and which one you get is decided by where you are standing. The op itself lives in
+// general_use/scripts/readables_generated.rs2, which hands it here.
+[label,ratcatch_music_op]
+if (%ratcatch_var ! ^ratcatch_charm) {
+    @ratcatch_read_music;
+}
+if (coordx(coord) < 3008 | coordx(coord) > 3022 | coordz(coord) < 3212 | coordz(coord) > 3228) {
+    @ratcatch_read_music;
+}
+@ratcatch_play_music;
+
+[label,ratcatch_read_music]
+~mesbox("D. G. E. F sharp. D, an octave up. B. C sharp. A. | Underneath, in a different hand: PLAY IT SLOWLY. THEY ARE NOT CLEVER.");
+return;
+
+[label,ratcatch_play_music]
+if (%ratcatch_var < ^ratcatch_charm) {
+    ~mesbox("Eight notes and nothing to play them to.");
+    return;
+}
+if (%ratcatch_var > ^ratcatch_charm) {
+    ~mesbox("The docks are quiet. There is nothing left down there to call.");
+    return;
+}
+if (coordx(coord) < 3008 | coordx(coord) > 3022 | coordz(coord) < 3212 | coordz(coord) > 3228) {
+    ~mesbox("Not here. The rats the Face is worried about are on the Port Sarim docks, and a tune played anywhere else is just a tune.");
+    return;
+}
+// THE COUNTER CANNOT COUNT TO EIGHT. vc_note_number is three bits, so it holds 0 to 7 and the
+// ninth value wraps to nought - which, in a label that jumps back to itself, is a tune that never
+// ends: eight notes played correctly and then a ninth menu, for ever. The loop counts in a local
+// and vc_note_number keeps what it can, which is which note is next, from nought.
+%ratcatch_music_len = ^ratcatch_notes;
+~ratcatch_clear_notes;
+~mesbox("You put the pipe to your mouth. Something under the boards stops moving.");
+def_int $n = 1;
+def_int $played = 0;
+while ($n <= ^ratcatch_notes) {
+    %vc_note_number = calc($n - 1);
+    $played = ~ratcatch_pick_note;
+    if ($played = 0) {
+        ~mesbox("You take the pipe out of your mouth. Whatever was listening goes back to whatever it was doing.");
+        return;
+    }
+    if ($played ! ~ratcatch_note_wanted($n)) {
+        ~mesbox("The note is wrong and everything under the boards knows it. You will have to start again.");
+        ~ratcatch_clear_notes;
+        %vc_note_number = 0;
+        return;
+    }
+    ~ratcatch_set_note($n, $played);
+    mes(append(append("Note ", tostring($n)), append(" of eight: ", ~ratcatch_note_name($played))));
+    $n = calc($n + 1);
+}
+@ratcatch_tune_done;
+
+// A PAGE AND THEN A NOTE, every time. The first version put the four low notes and a "More..."
+// on one menu, so a low note cost one choice and a high note cost two - which works for a player
+// and makes the tune impossible to write down as a list of choices for anything else.
+[proc,ratcatch_pick_note]()(int)
+switch_int (~p_choice3("The low notes.", 1, "The high notes.", 2, "Stop playing.", 3)) {
+    case 1 : return(~ratcatch_pick_low);
+    case 2 : return(~ratcatch_pick_high);
+}
+return(0);
+
+[proc,ratcatch_pick_low]()(int)
+switch_int (~p_choice4("D", 1, "E", 2, "F sharp", 3, "G", 4)) {
+    case 1 : return(^ratcatch_note_d);
+    case 2 : return(^ratcatch_note_e);
+    case 3 : return(^ratcatch_note_fsharp);
+}
+return(^ratcatch_note_g);
+
+[proc,ratcatch_pick_high]()(int)
+switch_int (~p_choice4("A", 1, "B", 2, "C sharp", 3, "D, an octave up", 4)) {
+    case 1 : return(^ratcatch_note_a);
+    case 2 : return(^ratcatch_note_b);
+    case 3 : return(^ratcatch_note_csharp);
+}
+return(^ratcatch_note_high_d);
+
+[proc,ratcatch_note_wanted](int $n)(int)
+switch_int ($n) {
+    case 1 : return(^ratcatch_note_d);
+    case 2 : return(^ratcatch_note_g);
+    case 3 : return(^ratcatch_note_e);
+    case 4 : return(^ratcatch_note_fsharp);
+    case 5 : return(^ratcatch_note_high_d);
+    case 6 : return(^ratcatch_note_b);
+    case 7 : return(^ratcatch_note_csharp);
+}
+return(^ratcatch_note_a);
+
+[proc,ratcatch_note_name](int $note)(string)
+switch_int ($note) {
+    case ^ratcatch_note_d : return("D");
+    case ^ratcatch_note_e : return("E");
+    case ^ratcatch_note_fsharp : return("F sharp");
+    case ^ratcatch_note_g : return("G");
+    case ^ratcatch_note_a : return("A");
+    case ^ratcatch_note_b : return("B");
+    case ^ratcatch_note_csharp : return("C sharp");
+}
+return("D, an octave up");
+
+[proc,ratcatch_clear_notes]()()
+%vc_note1 = 0;
+%vc_note2 = 0;
+%vc_note3 = 0;
+%vc_note4 = 0;
+%vc_note5 = 0;
+%vc_note6 = 0;
+%vc_note7 = 0;
+%vc_note8 = 0;
+
+[proc,ratcatch_set_note](int $n, int $note)()
+switch_int ($n) {
+    case 1 : %vc_note1 = $note;
+    case 2 : %vc_note2 = $note;
+    case 3 : %vc_note3 = $note;
+    case 4 : %vc_note4 = $note;
+    case 5 : %vc_note5 = $note;
+    case 6 : %vc_note6 = $note;
+    case 7 : %vc_note7 = $note;
+    case 8 : %vc_note8 = $note;
+}
+
+[label,ratcatch_tune_done]
+if_close;
+mes("You hold the last note and nothing happens for long enough that you think you have it wrong.");
+p_delay(4);
+~mesbox("Then the boards start moving. | They come out from under every warehouse on the dock and they go past you in one line, down the quay, off the end of it, and into the sea, and they keep going.");
+p_delay(3);
+%ratcatch_var = ^ratcatch_piped;
+~send_quest_progress(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete);
+stat_advance(thieving, 3000);
+~mesbox("The harbourmaster is going to have questions. | The Face is standing in the door of the fishing shop and has not stopped smiling.");
+
+// =========================================================================== Felkrash
+[opnpc1,vc_felkrash_the_bard]
+if (%ratcatch_var >= ^ratcatch_complete) {
+    ~chatnpc("<p,happy>The four of them have never agreed on anything in twenty years and they agreed on you in a week.");
+    return;
+}
+if (%ratcatch_var < ^ratcatch_piped) {
+    ~chatnpc("<p,neutral>I keep the book. When all four of them have put your name in it, come and see me.");
+    return;
+}
+~chatplayer("<p,neutral>The docks are clear.");
+~chatnpc("<p,happy>I know. I can hear it. It is the first quiet night this harbour has had since I was apprenticed.");
+~chatnpc("<p,neutral>Gertrude's two in the sewer, Jimmy Dazzler, Hooknosed Jack, Smokin' Joe and the Face. Six names and every one of them has signed.");
+if_close;
+mes("Felkrash writes your name in the book and turns it round so you can see it.");
+p_delay(4);
+@ratcatch_finish;
+
+[label,ratcatch_finish]
+%ratcatch_var = ^ratcatch_complete;
+stat_advance(thieving, 45000);
+session_log(^log_adventure, "Quest complete: Rat Catchers");
+~send_quest_complete(questlist:ratcatch, vc_rat_pole_6, 200, ^ratcatch_questpoints, "You have completed\\nRat Catchers!", "2 Quest Points|4,500 Thieving XP|The rat pole|Access to the Rat Pits");
+
+// =========================================================================== the pits
+// vc_rat_wall1 and vc_rat_wall2 are the only locs in the quest with an op - op1=Spectate - and they
+// are placed a hundred and sixty times between them around the four pits.
+[oploc1,vc_rat_wall1] @ratcatch_spectate;
+[oploc1,vc_rat_wall2] @ratcatch_spectate;
+[oploc1,vc_rat_wall1_inactive] @ratcatch_spectate;
+[oploc1,vc_rat_wall2_inactive] @ratcatch_spectate;
+[oploc1,vc_dwarfrat_wall1] @ratcatch_spectate;
+[oploc1,vc_dwarfrat_wall2] @ratcatch_spectate;
+[oploc1,vc_dwarfrat_wall1_inactive] @ratcatch_spectate;
+[oploc1,vc_dwarfrat_wall2_inactive] @ratcatch_spectate;
+
+[label,ratcatch_spectate]
+p_arrivedelay;
+if (%ratcatch_var < ^ratcatch_hired) {
+    ~mesbox("Men are shouting at something in a pit. You decide not to look.");
+    return;
+}
+~mesbox("The pits. Men bet on how long a cat takes to clear a barrel of rats, and the record is held by a tom that has been dead for nine years and is still talked about.");
+
+// The ladder down beside Jimmy, and the stairs between Keldagrim and its own pit.
+[oploc1,vc_ladder_down]
+p_arrivedelay;
+if (%ratcatch_var < ^ratcatch_hired) {
+    ~mesbox("A ladder down into somewhere Jimmy Dazzler has not mentioned.");
+    return;
+}
+mes("You climb down.");
+p_delay(2);
+p_teleport(^ratcatch_varrock_pits);
+
+// The Keldagrim stairs down to the pit there belong to ladders+stairs/scripts/stairs.rs2, which
+// declares both ends and had neither of them wired; the two cases are added there.
+
+// Both readables this quest hands over are already written in
+// general_use/scripts/readables_generated.rs2 - ratcatchers_party_directions at :150 and
+// ratcatchers_music at :147 - and ratcatchers_music's Read op is claimed above, because the tune
+// has to be playable as well as readable.

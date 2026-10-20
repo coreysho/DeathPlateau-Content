@@ -1115,15 +1115,19 @@ switch_coord (loc_coord) {
     case default : @unhandled_stairs(loc_coord);
 }
 
+// The two ends of the stairs between Keldagrim's own rat pit and the city above it, which Rat
+// Catchers is the reason anybody goes down. Both were unhandled.
 [oploc1,vc_keldagrim_stairs_lower]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_30_73_23_31 : p_telejump(0_45_159_34_13);
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,vc_keldagrim_stairs_upper]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_45_159_34_12 : p_telejump(1_30_73_23_30);
     case default : @unhandled_stairs(loc_coord);
 }
 

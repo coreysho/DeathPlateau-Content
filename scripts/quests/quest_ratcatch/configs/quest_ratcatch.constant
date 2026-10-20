@@ -1,73 +1,147 @@
 // Rat Catchers.
 //
-// Four varps. main_ratcatch_var, ratcatch_var_multi, ratcatch_var_temp1 and ratcatch_var_temp2 all
-// ship with transmit=yes and none of them had scope=perm.
+// ---------------------------------------------------------------------------- what this was
+// Built once as three chapters - Jimmy Dazzler, four rat holes in a Varrock warehouse, and six
+// rats at a party - which is the right shape for about a third of the quest. The walkthrough has
+// ten chapters across five cities, and the cache has every one of them:
 //
-// ---------------------------------------------------------------------------- the six rats
-// The only multis in the whole quest are these, and they are the shape of the end of it:
+//   vc_grimesquit, vc_phingspet      the Varrock sewers, placed at 3239,9867 and 3249,9868
+//   vc_jimmy_dazzler, vc_bones       Ardougne, 2564,3321
+//   vc_hooknosed_jack, vc_pox        south-east Varrock, 3270,3401 and 3265,3400
+//   vc_pox_inwarehouse               the same cat, hidden, placed nowhere - a script spawns it
+//   vc_kingrat                       Hidden, no statblock, placed nowhere
+//   vc_smokin_joe                    Keldagrim, 2928,10213
+//   vc_face, vc_bellemorde           Port Sarim, 3020,3233 and 3020,3234
+//   vc_felkrash_the_bard             the Port Sarim rat pits, 2981,9643
+//   apothecary, feud_snakecharmer    already in the world for other reasons
+//   twelve ratcatcher_guard_*        the mansion sneak, placed around m44_79
 //
-//   [vc_partyrat_multi1] multivar=vc_raton_off1  multinpc=0,vc_party_rat
-//   ... six of them, one per bit ...
-//   [vc_partyrat_multi6] multivar=vc_raton_off6  multinpc=0,vc_party_rat
+// And the items: ratcatchers_poisonedcheese, ratcatchers_cat_antipoison, ratcatchers_weedpot,
+// ratcatchers_smokey_weedpot, ratcatchers_music, ratcatchers_party_directions, and the rat pole in
+// its seven states. The two the old constant file called unused - the antipoison and the poisoned
+// cheese - are two whole chapters.
 //
-// Index 0 ONLY, so a party rat is present while its bit is clear and gone once it is set. A fresh
-// account therefore finds all six already loose at the party, and setting a bit is what takes one
-// away - which is the quest, not the setup.
+// ---------------------------------------------------------------------------- the varbits
+// Every one of these turns out to be exactly what a chapter needs:
 //
-// And the rat pole runs vc_rat_pole, then vc_rat_pole_1 through vc_rat_pole_6. Six rats, six pole
-// states. The two line up exactly and nothing had to be decided about either.
+//   ratcatch_var                 0-7    the stage
+//   ratcatch_rathole_1..4        8-11   the four holes in the warehouse
+//   ratcatch_ratholes            8-11   the four of them read as one number
+//   ratcatch_catknowsdrill       12     Phingspet has smelled the cat
+//   ratcatch_cathas_expressed    28     Grimesquit has
+//   ratcatch_ometer              0-6    a seven-bit counter: the eight rats in the sewers
+//   vc_raton_off1..6             7-12   the six party rats, index 0 only, so a set bit is a rat
+//                                       that is no longer on the floor
+//   vc_note1..8                  the eight notes of the tune, as played
+//   vc_note_number               which note is next
+//   ratcatch_music_len           how long the tune is
+//   ratcatch_withdrawfrom_kingrat        "Be careful!" - the one that keeps the cat alive
 //
-// ---------------------------------------------------------------------------- ops, checked first
-// Almost nothing here is clickable, which decides how every chapter works:
-//   ratcatchers_rathole1..5   NO OPS  -> smoked out with an oplocu
-//   vc_rat_valve, vc_rat_house, vc_rat_barrel  NO OPS -> scenery around the pits
-//   vc_rat_wall1, vc_rat_wall2  op1=Spectate  <- the only clickable locs in the quest
-//   vc_party_rat  op2=Hidden, so the rats cannot be attacked or talked to; the pole is the only
-//                 way to interact with one at all
-//   vc_rat_pole_1 iop1=Remove-rat, iop2=Wield
-
+// ---------------------------------------------------------------------------- what is substituted
+// Three things the walkthrough does need a subsystem this build has not got, and each one is done
+// with what there is rather than skipped:
+//
+//   A CAT IS AN INVENTORY OBJECT HERE, not a follower npc - growncatobject and its five colours.
+//   So "have them sniff your cat" and "place your cat" are the cat obj used on the npc or the hole,
+//   and the eight rats in the sewers are caught by using the cat on a rat.
+//
+//   THE KING RAT IS FOUGHT BY THE PLAYER. In the walkthrough your cat fights it and you heal the
+//   cat with fish through the hole; with no cat npc there is nothing to heal. The cache's own
+//   ratcatch_withdrawfrom_kingrat bit still records the careful answer, and taking it is what stops
+//   the cat going in at all.
+//
+//   THE PIPE IS A CONVERSATION. vc_note1..8, vc_note_current and vc_fingers_current are an
+//   instrument interface and interface.pack has nothing to render it with, so the eight notes are
+//   played from a menu in the order the scroll gives them - which is the same puzzle with worse
+//   staging.
 ^ratcatch_not_started = 0
-^ratcatch_hired = 10       // Jimmy Dazzler has explained the job
-^ratcatch_equipped = 20    // cat, pot and pole in hand
-^ratcatch_trained = 30     // all four Varrock rat holes smoked out
-^ratcatch_party = 40       // at the party, poling rats
-^ratcatch_poled = 50       // all six on the pole
+^ratcatch_sewers = 4        // Gertrude has sent you down to Phingspet and Grimesquit
+^ratcatch_sniffed = 6       // both of them have smelled the cat
+^ratcatch_eight = 8         // eight rats off the sewer floor
+^ratcatch_hired = 10        // the rat pole, and Jimmy Dazzler's name
+^ratcatch_party = 15        // Jimmy has walked you to the mansion
+^ratcatch_poled = 20        // six rats on one pole, and Hooknosed Jack's name
+^ratcatch_poison = 25       // Jack's rat poison
+^ratcatch_cheesed = 30      // four poisoned cheeses in four holes, and a cat called Pox
+^ratcatch_pox = 35          // Pox is on his feet
+^ratcatch_kingrat = 40      // the King rat is dead, and Smokin' Joe's name
+^ratcatch_smoked = 45       // Joe's hole is empty, and the Face's name
+^ratcatch_face = 50         // the Face wants a snake charmer found
+^ratcatch_charm = 55        // the tune is bought
+^ratcatch_piped = 58        // the rats are in the sea
 ^ratcatch_complete = 60
 
-^ratcatch_rat_loose = 0    // vc_raton_offN: the rat is there
-^ratcatch_rat_caught = 1   // ...and gone
+^ratcatch_rat_loose = 0     // vc_raton_offN: the rat is there
+^ratcatch_rat_caught = 1    // ...and gone
 
-^ratcatch_holes = 4        // the four in Varrock; the fifth is in a dungeon and is not used
+^ratcatch_holes = 4         // the four in the warehouse
 ^ratcatch_party_rats = 6
+^ratcatch_sewer_rats = 8    // what Phingspet and Grimesquit want to see
+^ratcatch_cheeses = 4
+^ratcatch_charm_cost = 100
+^ratcatch_charm_cost_ring = 50
+^ratcatch_notes = 8
 
 ^ratcatch_off = 0
 ^ratcatch_on = 1
 
-// ---------------------------------------------------------------------------- what is not used
-// ratcatchers_cat_antipoison ("Antipoison for Pox") and ratcatchers_poisonedcheese belong to a
-// strand about poisoning a cat that the cache has the two items for and nothing else - no Pox npc
-// exists anywhere in npc.pack. Left alone.
-//
-// The eight-note, six-finger pipe puzzle in ratcatch_var_temp1 and _temp2 - vc_note1..8,
-// vc_note_current, vc_fingers_current, vc_note_number and ratcatch_music_len - is a playable
-// instrument interface this build has nothing to render it with. ratcatchers_music carries the
-// tune instead, and its own readable says what it does.
-//
-// ratcatch_ometer (7 bits) and the fifth rat hole, which is in a dungeon at 2932,10207 a long way
-// from the other four, are likewise unused.
+// The tune, as the scroll gives it: D, G, E, F sharp, high D, B, C sharp, A. One to eight is the
+// order the notes have to be played in; the numbers below are which note each one is, and
+// ~ratcatch_note_name turns one back into its name.
+^ratcatch_note_d = 1
+^ratcatch_note_e = 2
+^ratcatch_note_fsharp = 3
+^ratcatch_note_g = 4
+^ratcatch_note_a = 5
+^ratcatch_note_b = 6
+^ratcatch_note_csharp = 7
+^ratcatch_note_high_d = 8
 
 // ---------------------------------------------------------------------------- places
-^ratcatch_jimmy = 0_40_51_2_56          // 2562,3320  Ardougne
 ^ratcatch_gertrude = 0_49_53_15_18      // 3151,3410  west Varrock
-// The four rat holes, all on plane 1 of m51_52.
+^ratcatch_jimmy = 0_40_51_2_56          // 2562,3320  Ardougne
+
+// The Varrock sewers, where the two of them live. The ordinary sewer entrance north of the palace
+// is already wired, so this is only where they stand.
+^ratcatch_phingspet = 0_50_154_49_44    // 3249,9868
+^ratcatch_grimesquit = 0_50_154_39_43   // 3239,9867
+
+// The warehouse in south-east Varrock: Jack and his cat outside it, a ladder in, and four holes
+// upstairs.
+^ratcatch_jack = 0_51_53_14_21          // 3270,3401
+^ratcatch_warehouse_ladder = 0_51_52_4_51   // 3268,3379
 ^ratcatch_hole_1 = 1_51_52_0_50         // 3264,3378
 ^ratcatch_hole_2 = 1_51_52_9_49         // 3273,3377
 ^ratcatch_hole_3 = 1_51_52_10_53        // 3274,3381
 ^ratcatch_hole_4 = 1_51_52_7_56         // 3271,3384
-// The rat pits and the party.
-^ratcatch_pits = 0_46_150_36_30         // 2980,9630
+// Where the King rat comes out, which is the first hole, and where he goes.
+// 3267,3378, which is on the walk between the ladder and the first hole and is therefore a tile
+// the player has already stood on. 3265,3378 was tried first and nothing ever came out of it.
+^ratcatch_kingrat_spot = 1_51_52_3_50   // 3267,3378
+^ratcatch_kingrat_ticks = 2000
+
+// Keldagrim. Joe is above the rat pits and his hole is five tiles east of him.
+^ratcatch_joe = 0_45_159_48_45          // 2928,10213
+^ratcatch_hole_5 = 0_45_159_53_44       // 2933,10212
+
+// Port Sarim: the Face by the fishing shop, a manhole beside her, and Felkrash in the pits below.
+^ratcatch_face_coord = 0_47_50_52_33    // 3020,3233
+^ratcatch_sarim_manhole = 0_47_50_50_32 // 3018,3232
+^ratcatch_sarim_pits = 0_46_150_38_45   // 2982,9645
+^ratcatch_felkrash = 0_46_150_37_43     // 2981,9643
+// The docks, where the tune is played. The rats go into the sea off the end of them.
+^ratcatch_docks = 0_47_50_38_19         // 3014,3219
+
+// Keldagrim's own pit, down the stairs at 2914,10188 and back up from 1943,4703.
+^ratcatch_keldagrim_pits = 1_30_73_23_30    // 1943,4702, below the stairs
+^ratcatch_keldagrim_top = 0_45_159_34_13    // 2914,10189, beside them
+
+// The Varrock manhole behind the warehouse, which is the quest's other way into the pits.
+^ratcatch_varrock_manhole = 0_51_53_11_20   // 3267,3400
+^ratcatch_varrock_pits = 0_46_150_18_34     // 2962,9634
+
+// The rat pits and the party. The mansion is a map square of its own with no way in on foot, so
+// Jimmy takes the player there and the front gate (vc_ornaterailing, op1=Open) lets them out again.
 ^ratcatch_party_hall = 0_44_79_41_35    // 2857,5091
-// The mansion is a map square of its own with no way in on foot, so Jimmy takes the player there
-// and the front gate (vc_ornaterailing, op1=Open) lets them out again.
 ^ratcatch_party_arrive = 0_44_79_31_10  // inside the front gate
 ^ratcatch_party_leave = 0_40_51_3_55    // beside Jimmy in Ardougne

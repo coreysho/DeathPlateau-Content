@@ -141,8 +141,10 @@
 [opheld1,ratpits_manual]
     ~mesbox("The Book of Rats | Pit fighting is dangerous. The management accepts no responsibility for whatever becomes of your cat.");
 
-[opheld1,ratcatchers_music]
-    ~mesbox("A sheet of hand-drawn music for the snake charm. | A short run of notes is marked out, rising and falling in a pattern you will have to follow exactly. | Play it, and the rats will come to you like flies to a bucket of camel dung.");
+// ratcatchers_music carries iop1=Read and iop5=Destroy and nothing else, so Read is also the only
+// place a tune can be played from. Rat Catchers takes it over on the Port Sarim docks and hands it
+// straight back everywhere else: @ratcatch_music_op is in quests/quest_ratcatch/scripts.
+[opheld1,ratcatchers_music] @ratcatch_music_op;
 
 [opheld1,ratcatchers_party_directions]
     ~mesbox("Jimmy Dazzler's directions: | Out of East Ardougne and into the woods. Keep going where the trees close in, and you will come upon a manor house. | You can't miss it. Don't be late, and don't mention my name.");

@@ -326,6 +326,11 @@ p_delay(2);
 ~chatnpc_specific("Ali the Snake Charmer", feud_snakecharmer, "<p,happy>A customer! Nobody pays. Take the charm and the basket - the snake is the easy part, the basket is the part people forget.");
 
 [opnpc1,feud_snakecharmer]
+// RAT CATCHERS: the tune the Face wants is his, and he will not want to sell it. @ratcatch_charmer
+// is in quests/quest_ratcatch/scripts; the hook hands the conversation back once it is sold.
+if (~ratcatch_charmer_wants = true) {
+    @ratcatch_charmer;
+}
 if (%feud_ali_money = ^feud_off) {
     ~chatnpc("<p,neutral>I charm snakes. There is a pot. The pot is how this works.");
     return;
