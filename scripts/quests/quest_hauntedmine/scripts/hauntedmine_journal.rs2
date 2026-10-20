@@ -5,47 +5,54 @@ switch_int (%hauntedmine) {
     case ^hm_not_started :
         $text = "@dbl@There is a @dre@zealot@dbl@ standing in the swamp @dre@south of|";
         $text = append($text, "@dbl@@dre@Mort'ton@dbl@, in full robes, guarding a mine that he says|");
-        $text = append($text, "@dbl@is not there");
+        $text = append($text, "@dbl@is not there||");
+        $text = append($text, "@dbl@I need to have finished @dre@Priest in Peril");
 
     case ^hm_refused :
         $text = "@str@Three ways into the hillside and he says all of them are|";
-        $text = append($text, "@str@closed. Nothing has come out of that mine in eighty years|");
-        $text = append($text, "@str@except the men who went into it, and not all of those.|");
-        $text = append($text, "@str@There is a key on his belt.|");
-        $text = append($text, "@dbl@@dre@Pickpocket@dbl@ him - level @dre@10 Thieving");
+        $text = append($text, "@str@closed. Eighty years ago the men in that mine killed one|");
+        $text = append($text, "@str@another over a key, all of them, in one night.|");
+        $text = append($text, "@str@His hand went to his belt while he told me about it.|");
+        $text = append($text, "@dbl@@dre@Pickpocket@dbl@ him");
 
     case ^hm_key :
         $text = "@str@A heavy iron key, far too new for a mine that closed eighty|";
         $text = append($text, "@str@years ago.|");
-        $text = append($text, "@dbl@@dre@Crawl in@dbl@, and find the @dre@points@dbl@ and the @dre@lift|");
-        $text = append($text, "@dbl@The @dre@points diagram@dbl@ is on a wall down there");
+        $text = append($text, "@dbl@@dre@Crawl in@dbl@. Pick a @dre@glowing fungus@dbl@ by the pool - it is the|");
+        $text = append($text, "@dbl@only light that works at the bottom, and it burns to ash|");
+        $text = append($text, "@dbl@outside the cave, so it has to go by @dre@ore cart|");
+        $text = append($text, "@dbl@Put it in the cart, set the @dre@points@dbl@, and throw the start|");
+        $text = append($text, "@dbl@lever on the @dre@points board");
 
     case ^hm_points :
         $text = "@str@Eleven points, and 9, 10 and 11 are under water and cannot|";
         $text = append($text, "@str@be thrown. The route has to be made out of the other eight,|");
         $text = append($text, "@str@and it is: throw 1, 3, 4, 6 and 8.|");
-        $text = append($text, "@str@Somewhere a long way off, a very heavy thing rolled thirty|");
-        $text = append($text, "@str@feet and stopped.|");
-        $text = append($text, "@dbl@@dre@Turn the valve");
+        $text = append($text, "@str@The cart ran the top corner and stopped at the far side with|");
+        $text = append($text, "@str@the fungus still in it.|");
+        $text = append($text, "@dbl@Take the fungus back out of the cart, @dre@use the key on the|");
+        $text = append($text, "@dbl@@dre@valve@dbl@, and get to the @dre@lift@dbl@ before something shuts it again");
 
     case ^hm_bottom :
-        $text = "@str@The bottom of the mine. Nothing has been down here in|";
-        $text = append($text, "@str@eighty years and the air says so.|");
+        $text = "@str@The bottom of the mine, waist deep, and the only light in|";
+        $text = append($text, "@str@it is in my hand.|");
         $text = append($text, "@dbl@East along the track and down the @dre@stairs@dbl@: there is a @dre@key|");
-        $text = append($text, "@dbl@lying on a rock in an empty chamber behind the door");
+        $text = append($text, "@dbl@lying on a rock in an empty chamber behind the door, and|");
+        $text = append($text, "@dbl@it is not as alone as it looks");
 
     case ^hm_treus :
         $text = "@str@Treus Dayth was the mine's last foreman and he was still|";
-        $text = append($text, "@str@doing the job.|");
+        $text = append($text, "@str@doing the job. The key came off the rock without a fight|");
         $text = append($text, "@dbl@Back up the stairs, west along the track and down the other|");
-        $text = append($text, "@dbl@@dre@stairs@dbl@: the @dre@key@dbl@ opens the large doors there");
+        $text = append($text, "@dbl@@dre@stairs@dbl@: the @dre@key@dbl@ opens the large doors there, and a @dre@chisel|");
+        $text = append($text, "@dbl@cuts a shard off the @dre@crystal outcrop@dbl@ - @dre@35 Crafting");
 
     case ^hm_complete :
         $text = "@str@The whole of the back of that mine is one crystal and it is|";
         $text = append($text, "@str@lit from the inside, and that is why a Saradominist has been|");
         $text = append($text, "@str@standing in a swamp for eighty years telling everyone there|");
         $text = append($text, "@str@is no mine.|");
-        $text = append($text, "@str@A chisel and a ball of wool make the shard into an amulet.||");
+        $text = append($text, "@str@A ball of wool strings a shard into the amulet.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :

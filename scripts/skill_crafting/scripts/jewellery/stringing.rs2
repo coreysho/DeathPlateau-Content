@@ -2,6 +2,9 @@
 switch_obj (last_useitem)
 {
     case unstrung_gold_amulet, unstrung_sapphire_amulet, unstrung_emerald_amulet, unstrung_ruby_amulet, unstrung_diamond_amulet, nostringstar : @string_amulet(last_useslot);
+    // Haunted Mine's Salve shard. Wool is the only thing that will hold it; the label and the
+    // shard's own [opheldu] live in quests/quest_hauntedmine.
+    case crystalshard_necklace_unstrung : @hm_string_shard;
     // Jade and red topaz (2026-10-12). Members, like the dragonstone and onyx amulets below.
     case unstrung_jade_amulet, unstrung_topaz_amulet :
         if (map_members = ^false) {

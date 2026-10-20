@@ -37269,6 +37269,15 @@ readyanim=ghost_ready
 op2=Attack
 alwaysontop=yes
 vislevel=95
+hitpoints=90
+attack=80
+strength=80
+defence=70
+ranged=80
+magic=1
+maxrange=20
+huntrange=12
+huntmode=aggressive_melee
 head1=npc_1540_head
 head2=npc_macro_geni_headi2
 
@@ -37278,6 +37287,18 @@ param=death_anim,ghost_death
 param=death_sound,ghost_death
 param=defend_anim,ghost_block
 param=defend_sound,ghost_hit
+param=attackrate,4
+param=attackbonus,60
+param=strengthbonus,55
+param=stabdefence,35
+param=slashdefence,35
+param=crushdefence,35
+param=magicdefence,30
+param=rangedefence,35
+param=damagetype,^crush_style
+param=undead,^true
+param=death_drop,null
+
 [hauntedmine_boss_ghost_faded]
 name=Ghost
 desc=Eeek! A ghost!
@@ -37295,10 +37316,36 @@ recol4d=0
 walkanim=bossghost_run
 readyanim=bossghost_run
 vislevel=99
+hitpoints=90
+attack=80
+strength=80
+defence=70
+ranged=80
+magic=1
+maxrange=20
+huntrange=12
+huntmode=aggressive_melee
 head1=npc_1540_head
 head2=npc_macro_geni_headi2
 
+param=attack_anim,ghost_attack
+param=attack_sound,ghost_attack
+param=defend_anim,ghost_block
+param=defend_sound,ghost_hit
+param=attackrate,4
+param=attackbonus,60
+param=strengthbonus,55
+param=stabdefence,35
+param=slashdefence,35
+param=crushdefence,35
+param=magicdefence,30
+param=rangedefence,35
+param=damagetype,^crush_style
+param=undead,^true
+param=death_drop,null
+
 [crane_posessed_mine]
+blockwalk=none
 name=Loading crane
 desc=Those are some of the biggest teeth I've ever seen.
 model1=npc_1542
@@ -37306,7 +37353,13 @@ size=3
 vislevel=hide
 minimap=no
 
+// blockwalk=none: these are the mine's furniture, not its walls. Twelve of them stand on the
+// floor of Treus Dayth's chamber - seven carts, four three-tile cranes and the key on its rock -
+// and as blocking npcs they cut that floor into pockets: findPath could not get a player from
+// 2791,4457 to 2789,4457, three tiles away, so the fight could never be joined. The chamber's
+// real obstacles are locs and are unaffected.
 [hauntedmine_boss_key]
+blockwalk=none
 name=Innocent looking key
 desc=A shiny key sitting quietly on a crate.
 model1=npc_1543
@@ -37319,6 +37372,7 @@ walkanim=possessed_key_drifting
 moverestrict=nomove
 
 [hauntedmine_boss_cart]
+blockwalk=none
 name=Mine cart
 desc=Big, metal, and wheeled.
 model1=npc_1527
@@ -37328,6 +37382,7 @@ alwaysontop=yes
 turnspeed=1024
 
 [hauntedmine_cart1]
+blockwalk=none
 name=Mine cart
 desc=Big, metal, and wheeled.
 model1=npc_1527
@@ -37336,6 +37391,7 @@ alwaysontop=yes
 turnspeed=1024
 
 [hauntedmine_cart2]
+blockwalk=none
 name=Mine cart
 desc=Big, metal, and wheeled.
 model1=npc_1527
@@ -37344,6 +37400,7 @@ alwaysontop=yes
 turnspeed=1024
 
 [hauntedmine_cart3]
+blockwalk=none
 name=Mine cart
 desc=Big, metal, and wheeled.
 model1=npc_1527
@@ -37352,6 +37409,7 @@ alwaysontop=yes
 turnspeed=1024
 
 [hauntedmine_cart4]
+blockwalk=none
 name=Mine cart
 desc=Big, metal, and wheeled.
 model1=npc_1527
@@ -37369,6 +37427,15 @@ walkanim=ghost_walk
 readyanim=ghost_ready
 op2=Attack
 vislevel=29
+hitpoints=30
+attack=28
+strength=28
+defence=28
+magic=1
+ranged=1
+maxrange=10
+huntrange=5
+huntmode=aggressive_melee
 
 param=attack_anim,ghost_attack
 param=attack_sound,ghost_attack
@@ -37376,6 +37443,18 @@ param=death_anim,ghost_death
 param=death_sound,ghost_death
 param=defend_anim,ghost_block
 param=defend_sound,ghost_hit
+param=attackrate,5
+param=attackbonus,25
+param=strengthbonus,22
+param=stabdefence,8
+param=slashdefence,8
+param=crushdefence,8
+param=magicdefence,-5
+param=rangedefence,8
+param=damagetype,^crush_style
+param=undead,^true
+param=death_drop,null
+
 [hauntedmine_suprise_ghost_hidden]
 name=Haze
 desc=A strange disturbance in the air.

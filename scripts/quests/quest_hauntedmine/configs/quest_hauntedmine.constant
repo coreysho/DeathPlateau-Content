@@ -49,6 +49,55 @@
 ^hm_bit_treus = 8
 ^hm_bit_crystal = 9
 
+// Three more flags, because the quest has three things to remember besides the levers: whether a
+// glowing fungus is riding in the loading cart, whether the cart has carried one to the far side,
+// and whether the water is running. The valve is the one that can go back to nought on its own -
+// a mischievous ghost shuts it again if the lift is not ridden.
+^hm_bit_fungus_in_cart = 10
+^hm_bit_cart_arrived = 11
+^hm_bit_valve = 12
+
+// Treus Dayth goes out of reach and comes back somewhere else. The faded shell carries no Attack
+// option, which is the half of this the walkthrough means by "you cannot attack him while he is
+// invisible", and it keeps his hitpoints: npc_changetype_keepall passes reset=false, and
+// Npc.changeType only re-reads the stats when that flag is true.
+//
+// Two minutes in reach, six seconds out of it. A short window does not work: losing the Attack
+// option drops whatever interaction the player had, so a fade in the middle of the walk across
+// the chamber cancels the walk - with twenty-five ticks he could be chased for six thousand ticks
+// without ever landing a blow, which is what the first run of this did.
+^hm_treus_visible_ticks = 200
+^hm_treus_faded_ticks = 10
+^hm_treus_lifetime = 2000
+
+// How many times he goes and comes back before the cycle lets go of the player's queue. Ten
+// turns at two hundred ticks apiece outlast the two thousand he is alive for.
+^hm_treus_turns = 10
+
+// Where he comes back, and where he starts. Four tiles a player can stand on AND reach from the
+// door, which in this chamber is a short list: the floor is cut into cells by crates, barrels,
+// stalagmites and two-by-two rockslides, and the key's own crate (2788,4455) seals the pocket
+// north of it - 2788,4456..4459 can be stood on and cannot be walked into from anywhere. He was
+// being put in exactly that pocket, which is why the fight reported him as unreachable.
+^hm_treus_spot1 = 0_43_69_37_38          // 2789,4454, beside the crate
+^hm_treus_spot2 = 0_43_69_33_38          // 2785,4454, the west end of the same corridor
+^hm_treus_spot3 = 0_43_69_39_37          // 2791,4453
+^hm_treus_spot4 = 0_43_69_32_46          // 2784,4462, the long north gallery
+
+// How long the water stays on before the mischievous ghost shuts the valve again. The
+// walkthrough has you running for the lift, but this map puts the valve three tiles from it, so
+// a short fuse would only be a trap: six minutes punishes somebody who wanders off and nobody
+// who is doing the quest.
+^hm_valve_ticks = 200
+
+// 35 Crafting cuts a shard off the outcrop, and 22,000 Strength is the reward for the quest.
+^hm_crafting_needed = 35
+// Experience is stored in tenths - Player.addXp keeps stats scaled by ten so the client can show
+// a decimal point - so 22,000 experience is written as 220,000. The old reward was
+// stat_advance(mining, 22000): the wrong skill AND a tenth of the right number.
+^hm_strength_reward = 220000
+
+
 // Levers 1, 3, 4, 6 and 8 thrown; 2, 5 and 7 left alone. That is bits 0, 2, 3, 5 and 7, and it is
 // written on hauntedmine_points_info, which carries op1=Check and had nothing behind it.
 ^hm_points_answer = 173
