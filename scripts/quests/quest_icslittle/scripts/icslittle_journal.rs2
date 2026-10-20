@@ -3,8 +3,8 @@ def_string $text;
 
 switch_int (%ics_little_var) {
     case ^icslittle_not_started :
-        $text = "@dbl@I can start this quest by speaking to the @dre@High Priest|@dbl@in @dre@Sophanem@dbl@. The way in is through the @dre@rocks|@dbl@beside the @dre@Wanderer's tent@dbl@, north-east of the town|";
-        $text = append($text, "@dbl@I will need @dre@level 30 Agility");
+        $text = "@dbl@I can start this quest by speaking to the @dre@High Priest|@dbl@in @dre@Sophanem@dbl@. The gates are shut; the @dre@Wanderer|@dbl@camped north-east of the town knows the way through the|@dbl@@dre@rocks@dbl@, and she wants a @dre@tinderbox@dbl@ and a @dre@waterskin(4)|";
+        $text = append($text, "@dbl@I will need @dre@Gertrude's Cat@dbl@, a @dre@cat@dbl@ with me, and|@dbl@@dre@level 30 Agility");
 
     case ^icslittle_asked :
         $text = "@str@Sophanem has been shut up with plague, flies, locusts and|";
@@ -16,7 +16,8 @@ switch_int (%ics_little_var) {
         $text = "@str@The embalmer needs three things: salt to dry Klenter, sap|";
         $text = append($text, "@str@to seal him, and linen to wrap him. He has given me the|");
         $text = append($text, "@str@salt and the sap.|");
-        $text = append($text, "@dbl@I should get a sheet of @dre@linen@dbl@ from @dre@Siamun");
+        $text = append($text, "@dbl@I should get a sheet of @dre@linen@dbl@ from @dre@Siamun|");
+        $text = append($text, "@dbl@(A bucket of pond water poured into the @dre@suntrap@dbl@ makes|@dbl@salt, and a @dre@knife@dbl@ on a tree with a bucket makes sap)");
 
     case ^icslittle_has_ingredients :
         $text = "@str@I have the salt, the sap and the linen.|";
@@ -26,12 +27,14 @@ switch_int (%ics_little_var) {
         $text = "@str@Klenter has been embalmed properly, and his ghost has|";
         $text = append($text, "@str@rather a lot to say about it.|");
         $text = append($text, "@dbl@I should bring up all @dre@four canopic jars@dbl@ from the @dre@tomb|");
-        $text = append($text, "@dbl@below the city - through the @dre@temple door@dbl@, over the pit and|@dbl@through the @dre@western doorway");
+        $text = append($text, "@dbl@below the city - through the @dre@temple door@dbl@, over the pit and|@dbl@through the @dre@western doorway|");
+        $text = append($text, "@dbl@Something is guarding the shelves|");
+        $text = append($text, "@dbl@The rite also needs a @dre@holy symbol@dbl@, which the @dre@carpenter|@dbl@cuts out of @dre@willow logs");
 
     case ^icslittle_ceremony :
         $text = "@str@I have the four canopic jars - a man, an ape, a bug and a|";
         $text = append($text, "@str@crocodile - and the burial party has assembled below.|");
-        $text = append($text, "@dbl@I should take the jars to the @dre@High Priest@dbl@ at the ceremony");
+        $text = append($text, "@dbl@I should take the jars and the @dre@holy symbol@dbl@ to the|@dbl@@dre@High Priest@dbl@ at the ceremony");
 
     case ^icslittle_jars_placed :
         $text = "@str@The jars are placed and the ceremony has begun.|";

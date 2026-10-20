@@ -1,0 +1,247 @@
+// Icthlarin's Little Helper - the Wanderer, the Sphinx, the Carpenter and the suntrap.
+//
+// Four things the walkthrough spends four of its steps on, all four of them already standing on
+// the map with op1=Talk-to or op1=Search and nothing at all behind them:
+//
+//   ics_little_multi_wanderer      3316,2849   north-east of Sophanem, beside her tent
+//   ics_little_sphinx              3297,2783   in the city
+//   ics_little_carpenter           3311,2767   east of the embalmer
+//   icthalarins_suntrap_centre     3305,2756   east of the embalmer
+//
+// The varbits they use are the cache's own - ics_ent_open, ics_metsphinx, ics_metcarpenter,
+// ics_suntrapgotsalt - which is as good a statement as any of what they were meant to do.
+
+// =========================================================================== the Wanderer
+// "Talk to the Wanderer north-east of Sophanem. Ask why she has a problem with your cat. Talk to
+// her again and give her the tinderbox and waterskin(4)." She is the way in: Sophanem's gates are
+// shut and have been for eleven years, and she knows the hole in the rocks.
+[opnpc1,ics_little_multi_wanderer] @icslittle_wanderer;
+[opnpc1,ics_little_multi_wanderer1] @icslittle_wanderer;
+[opnpc1,ics_little_multi_wanderer2] @icslittle_wanderer;
+[opnpc1,ics_little_redheadlady] @icslittle_wanderer;
+[opnpc1,ics_little_redheadlady_normeyes] @icslittle_wanderer;
+
+[label,icslittle_wanderer]
+if (%ics_ent_open = 1) {
+    ~chatnpc("<p,neutral>The way in is where I showed you. Mind the rocks.");
+    return;
+}
+if (%fluffs < ^fluffs_complete) {
+    ~chatnpc("<p,neutral>You have the look of somebody who has never been responsible for an animal in their life.");
+    ~mesbox("Gertrude in Varrock lost a cat once, and whoever found it for her learned something about cats.");
+    return;
+}
+if (~icslittle_has_cat = false) {
+    ~chatnpc("<p,quiz>Where is your cat?");
+    ~chatplayer("<p,quiz>What cat?");
+    ~chatnpc("<p,angry>Exactly. Come back with one.");
+    return;
+}
+~chatnpc("<p,angry>Keep that animal away from me.");
+switch_int (~p_choice2("Why do you have a problem with my cat?", 1, "It's only a cat.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>It's only a cat.");
+        ~chatnpc("<p,angry>Nothing in this desert is only anything.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>Why do you have a problem with my cat?");
+}
+~chatnpc("<p,sad>Because the last cat that walked past me took a message to somebody I have spent four hundred years avoiding.");
+~chatplayer("<p,quiz>Four hundred -");
+~chatnpc("<p,neutral>I am going that way. South. Sophanem, where the gates are shut and the priests are down to one.");
+~chatnpc("<p,neutral>I will show you the way through the rocks. For a tinderbox and a full waterskin, because I am not walking it dry again.");
+if (inv_total(inv, tinderbox) = 0 | inv_total(inv, water_skin4) = 0) {
+    ~mesbox("A tinderbox and a waterskin(4).");
+    return;
+}
+inv_del(inv, tinderbox, 1);
+inv_del(inv, water_skin4, 1);
+%ics_ent_open = 1;
+~chatnpc("<p,happy>Through the rocks behind the tent, then. The city is not expecting you and it is not going to pretend to be.");
+~mesbox("You can get into Sophanem through the rocks now.");
+
+// Any cat, which is what the walkthrough means by "regular or overgrown cat, hellcat, or kitten":
+// they are five colours of three sizes in the cache and the categories are the only sane handle on
+// them. area_ardougne_west/scripts/civilian.rs2 tests the same two.
+[proc,icslittle_has_cat]()(boolean)
+if (inv_totalcat(inv, cat) > 0 | inv_totalcat(inv, overgrown) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the Sphinx
+// "Drop your cat and ask the Sphinx for help. Answer the riddle with 9. A wrong answer makes your
+// cat disappear." She is two tiles across, vislevel=hide, and she has been sitting there with a
+// Talk-to option and no conversation.
+[opnpc1,ics_little_sphinx]
+if (%ics_little_var >= ^icslittle_complete) {
+    ~chatnpc("<p,happy>Your cat remembers me. Cats remember everything and tell nobody.");
+    return;
+}
+if (%ics_metsphinx = 0) {
+    ~chatnpc("<p,neutral>You are a long way from anywhere you are allowed to be.");
+    ~chatplayer("<p,quiz>You can talk?");
+    ~chatnpc("<p,happy>I can do rather more than that. The cat you brought in with you has been telling me about you.");
+    %ics_metsphinx = 1;
+    ~send_quest_progress(questlist:ics_little, %ics_little_var, ^icslittle_complete);
+}
+switch_int (~p_choice2("Can you help me with the burial?", 1, "Just passing.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Just passing.");
+        ~chatnpc("<p,neutral>Nobody is just passing through Sophanem. The gates have been shut for eleven years.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>Can you help me with the burial?");
+}
+~chatnpc("<p,neutral>I can tell you what the priests will not. But you will answer something first, because that is what I am for.");
+@icslittle_sphinx_riddle;
+
+// The walkthrough says a wrong answer makes your cat disappear. That is not reproduced: there is
+// no inv_delcat in this engine and a cat is five colours of three sizes, so taking "the" cat off a
+// player would mean naming fifteen objs and still getting it wrong for a hellcat. She simply says
+// no, and the riddle can be asked again - which is what happens to anybody who answers it right on
+// the second go in any case.
+[label,icslittle_sphinx_riddle]
+~mesbox("\"Four gods had this city once. Two of them kept a shrine in it, one of them kept a season, and one of them kept nothing at all.\" | \"Count the paws, the wings and the fins the four of them stand on, and tell me the number.\"");
+def_int $answer = ~p_choice4("Four.", 4, "Seven.", 7, "Nine.", 9, "Twelve.", 12);
+if ($answer ! 9) {
+    ~chatnpc("<p,angry>No. Count again, and this time count the ones that are not standing.");
+    return;
+}
+~chatplayer("<p,happy>Nine.");
+~chatnpc("<p,happy>Nine. Het, Apmeken, Scabaras and Crondis, and not one of them standing on the same number of feet.");
+~chatnpc("<p,neutral>The priest you want is the one still standing. He will tell you Klenter is unprepared; what he will not tell you is that the embalmer wrote a book about it and nobody read it.");
+~mesbox("The book of embalming. The embalmer has a copy and will be delighted to be asked.");
+
+[opnpc1,ics_little_cat]
+~chatnpc("<p,neutral>Mrrp.");
+~mesbox("Neite, apparently, and not yours. She lives here.");
+
+// =========================================================================== the Carpenter
+// "Go east and talk to the Carpenter. Give him your willow logs to receive a holy symbol." Willow,
+// specifically - and the quest's 4,000 Woodcutting is the reason the walkthrough says to bring it.
+[opnpc1,ics_little_carpenter]
+if (%ics_little_var < ^icslittle_asked) {
+    ~chatnpc("<p,neutral>Nobody has ordered anything from me since the gates shut. I make coffins. There is demand and no orders, which is Sophanem.");
+    return;
+}
+if (inv_total(inv, ics_little_holy_symbol) > 0 | %ics_metcarpenter = 1) {
+    if (inv_total(inv, ics_little_holy_symbol) = 0 & inv_total(inv, ics_little_unholy_symbol) = 0 & inv_freespace(inv) > 0 & %ics_little_var < ^icslittle_jars_placed) {
+        ~chatnpc("<p,sad>You have lost it. Of course you have. Here.");
+        inv_add(inv, ics_little_holy_symbol, 1);
+        mes("The carpenter cuts you another symbol.");
+        return;
+    }
+    ~chatnpc("<p,neutral>One symbol per burial. That is the rule and I am the one who made it up.");
+    return;
+}
+~chatplayer("<p,neutral>The High Priest is burying Klenter.");
+~chatnpc("<p,shock>Properly? Then he will want a symbol cut for the rite, and he will want it cut from willow, because that is what the rite says.");
+~chatnpc("<p,neutral>Bring me willow logs. I will not ask where from; there is not a willow within sixty miles of here.");
+if (inv_total(inv, willow_logs) = 0) {
+    ~mesbox("Willow logs.");
+    return;
+}
+inv_del(inv, willow_logs, 1);
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,angry>And nowhere to put it. Come back with a hand free.");
+    inv_add(inv, willow_logs, 1);
+    return;
+}
+%ics_metcarpenter = 1;
+inv_add(inv, ics_little_holy_symbol, 1);
+stat_advance(woodcutting, 2000);
+~chatnpc("<p,happy>There. The first thing I have made in eleven years that is going to be used.");
+mes("The carpenter cuts a holy symbol out of the willow.");
+
+[opheld1,ics_little_holy_symbol]
+~mesbox("A symbol of Icthlarin, cut out of willow by a man who makes coffins for a living.");
+
+[opheld1,ics_little_unholy_symbol]
+~mesbox("The same symbol, cut the other way up. The carpenter would want it back.");
+
+// =========================================================================== salt, sap and the book
+// "No salt? Use an empty bucket on the pond north of Sophanem, then use the full bucket on the
+// suntrap east of the Embalmer." The pond, the suntrap and a bucket of salty water are all in the
+// cache; none of the three had a trigger.
+[oplocu,icthalarins_waters_edge]
+if (last_useitem ! bucket_empty) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, ics_little_saltwaterbucket, 1);
+mes("You fill the bucket. The water in this pond is salt, which is what the suntrap is for.");
+
+[oploc1,icthalarins_suntrap_centre]
+p_arrivedelay;
+if (inv_total(inv, ics_little_saltwaterbucket) > 0) {
+    @icslittle_suntrap;
+}
+~mesbox("A ring of polished stone with a font at the middle of it, pointed at the sun. Salt water goes in and comes out as salt, which in a city under siege is the difference between a body you can bury and a body you cannot.");
+
+[oplocu,icthalarins_suntrap_centre]
+if (last_useitem ! ics_little_saltwaterbucket) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+@icslittle_suntrap;
+
+[label,icslittle_suntrap]
+if_close;
+mes("You pour the salt water into the font.");
+p_delay(4);
+inv_del(inv, ics_little_saltwaterbucket, 1);
+inv_add(inv, bucket_empty, 1);
+if (inv_freespace(inv) = 0) {
+    obj_add(coord, ics_little_pileofsalt, 1, ^lootdrop_duration);
+} else {
+    inv_add(inv, ics_little_pileofsalt, 1);
+}
+%ics_suntrapgotsalt = 1;
+%ics_gotsalt = 1;
+~icslittle_check_ingredients;
+~mesbox("The water goes in the shallow end and the sun does the rest. What is left is a pile of salt.");
+
+// "Bucket of sap (use a knife on a suitable tree while holding a bucket)." The only trees inside
+// the walls are the twenty-three banana trees, and they are what the embalmer means.
+[oplocu,icthalarins_bananatreeempty]
+if (last_useitem ! knife) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (inv_total(inv, bucket_empty) = 0) {
+    ~mesbox("You would need an empty bucket under it.");
+    return;
+}
+anim(human_knife_chop, 0);
+p_delay(4);
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, ics_little_sap_bucket, 1);
+%ics_gotsap = 1;
+~icslittle_check_ingredients;
+mes("You cut the bark and the tree gives up about a bucket of sap.");
+
+// The embalming is held up until all three are in hand, wherever they came from - the embalmer's
+// back room or the suntrap and a knife.
+[proc,icslittle_check_ingredients]()()
+if (%ics_little_var ! ^icslittle_has_method) {
+    return;
+}
+if (%ics_gotsalt = 0 | %ics_gotsap = 0 | %ics_gotlinen = 0) {
+    return;
+}
+%ics_little_var = ^icslittle_has_ingredients;
+~send_quest_progress(questlist:ics_little, %ics_little_var, ^icslittle_complete);
+
+[opheld1,ics_little_pileofsalt]
+~mesbox("A pile of salt, dried out of the pond by the suntrap. It is for drying Klenter out.");
+
+[opheld1,ics_little_sap_bucket]
+~mesbox("A bucket of tree sap, for sealing the wrappings.");
+
+[opheld1,ics_little_linen]
+~mesbox("A sheet of linen, kept clean for eleven years against the day somebody would be buried properly.");

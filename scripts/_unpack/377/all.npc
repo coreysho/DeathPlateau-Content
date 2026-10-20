@@ -44215,6 +44215,8 @@ vislevel=hide
 alwaysontop=yes
 head1=obj_roguetrader_menaphite_hat_manhead
 
+// Level 91 with op2=Attack and nothing behind it either. He is what the walkthrough calls
+// "the level 91 Possessed Priest", and he is the one fight this quest has.
 [ics_little_possessedpriest]
 name=Possessed Priest
 desc=He has a dangerous glint in his eye.
@@ -44242,10 +44244,29 @@ readyanim=human_ready
 op2=Attack
 alwaysontop=yes
 vislevel=91
+hitpoints=95
+attack=80
+strength=80
+defence=75
+magic=1
+ranged=1
+maxrange=14
+huntrange=8
+huntmode=aggressive_melee
 head1=npc_1991_head
 head2=idk_man_jaw_short_head
 head3=obj_roguetrader_menaphite_hat_manhead
 head4=npc_1978_headi2
+param=attackrate,4
+param=attackbonus,75
+param=strengthbonus,70
+param=stabdefence,35
+param=slashdefence,35
+param=crushdefence,35
+param=magicdefence,25
+param=rangedefence,35
+param=damagetype,^crush_style
+param=death_drop,null
 
 [ics_little_cat]
 name=Neite
@@ -44670,6 +44691,9 @@ readyanim=ghost_ready
 vislevel=hide
 head1=npc_thrantax_head
 
+// The five mummies in Klenter's tomb carry op2=Attack and vislevel=84 and had no stats at all,
+// so they could neither hit nor be hurt - eighty-four-level scenery standing in the one room
+// the quest spends its time in. Statted as level-84 undead; death_drop was already ashes.
 [ics_little_mummy_1]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -44686,11 +44710,31 @@ walkanim=deserttreasure_mummy_walk
 readyanim=deserttreasure_mummy_ready
 op2=Attack
 vislevel=84
+hitpoints=90
+attack=75
+strength=75
+defence=75
+magic=1
+ranged=1
+maxrange=12
+huntrange=6
+huntmode=aggressive_melee
 param=death_drop,ashes
 
 param=attack_anim,deserttreasure_mummy_attack
 param=death_anim,deserttreasure_mummy_death
 param=defend_anim,deserttreasure_mummy_block
+param=attackrate,5
+param=attackbonus,70
+param=strengthbonus,65
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,20
+param=rangedefence,30
+param=damagetype,^crush_style
+param=undead,^true
+
 [ics_little_mummy_2]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -44709,11 +44753,31 @@ walkanim=deserttreasure_mummy_walk
 readyanim=deserttreasure_mummy_ready
 op2=Attack
 vislevel=84
+hitpoints=90
+attack=75
+strength=75
+defence=75
+magic=1
+ranged=1
+maxrange=12
+huntrange=6
+huntmode=aggressive_melee
 param=death_drop,ashes
 
 param=attack_anim,deserttreasure_mummy_attack
 param=death_anim,deserttreasure_mummy_death
 param=defend_anim,deserttreasure_mummy_block
+param=attackrate,5
+param=attackbonus,70
+param=strengthbonus,65
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,20
+param=rangedefence,30
+param=damagetype,^crush_style
+param=undead,^true
+
 [ics_little_mummy_3]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -44732,11 +44796,31 @@ walkanim=deserttreasure_mummy_walk
 readyanim=deserttreasure_mummy_ready
 op2=Attack
 vislevel=84
+hitpoints=90
+attack=75
+strength=75
+defence=75
+magic=1
+ranged=1
+maxrange=12
+huntrange=6
+huntmode=aggressive_melee
 param=death_drop,ashes
 
 param=attack_anim,deserttreasure_mummy_attack
 param=death_anim,deserttreasure_mummy_death
 param=defend_anim,deserttreasure_mummy_block
+param=attackrate,5
+param=attackbonus,70
+param=strengthbonus,65
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,20
+param=rangedefence,30
+param=damagetype,^crush_style
+param=undead,^true
+
 [ics_little_mummy_4]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -44755,11 +44839,31 @@ walkanim=deserttreasure_mummy_walk
 readyanim=deserttreasure_mummy_ready
 op2=Attack
 vislevel=84
+hitpoints=90
+attack=75
+strength=75
+defence=75
+magic=1
+ranged=1
+maxrange=12
+huntrange=6
+huntmode=aggressive_melee
 param=death_drop,ashes
 
 param=attack_anim,deserttreasure_mummy_attack
 param=death_anim,deserttreasure_mummy_death
 param=defend_anim,deserttreasure_mummy_block
+param=attackrate,5
+param=attackbonus,70
+param=strengthbonus,65
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,20
+param=rangedefence,30
+param=damagetype,^crush_style
+param=undead,^true
+
 [ics_little_mummy_5]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -44778,11 +44882,31 @@ walkanim=deserttreasure_mummy_walk
 readyanim=deserttreasure_mummy_ready
 op2=Attack
 vislevel=84
+hitpoints=90
+attack=75
+strength=75
+defence=75
+magic=1
+ranged=1
+maxrange=12
+huntrange=6
+huntmode=aggressive_melee
 param=death_drop,ashes
 
 param=attack_anim,deserttreasure_mummy_attack
 param=death_anim,deserttreasure_mummy_death
 param=defend_anim,deserttreasure_mummy_block
+param=attackrate,5
+param=attackbonus,70
+param=strengthbonus,65
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,20
+param=rangedefence,30
+param=damagetype,^crush_style
+param=undead,^true
+
 [multi_vanstrom_stranger_entity]
 turnspeed=0
 vislevel=1

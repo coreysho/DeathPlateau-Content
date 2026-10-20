@@ -21,6 +21,13 @@ switch_int (%ics_little_var) {
 
 [label,icslittle_priest_start]
 ~chatnpc("<p,sad>Another outsider. You will not like it here and you will not be here long.");
+// Gertrude's Cat is the requirement, and it was not checked. It is not an arbitrary gate either:
+// everything in this quest that will talk to you talks to the cat first.
+if (%fluffs < ^fluffs_complete) {
+    ~chatnpc("<p,neutral>And you came in here without so much as a cat. In Sophanem. In the eleventh year of the plague.");
+    ~mesbox("Gertrude in Varrock has kittens, and whoever finds her cat for her gets one.");
+    return;
+}
 switch_int (~p_choice2("What's happened to this place?", 1, "Charming.", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>Charming.");
@@ -164,12 +171,20 @@ if (%ics_little_var = ^icslittle_ceremony) {
         ~icslittle_check_jars; // puts any lost jar back on its shelf
         return;
     }
+    // And the symbol. The carpenter cuts it out of willow because the rite says willow, and until
+    // now nothing in the game asked anybody for it - which left the carpenter standing in his shop
+    // with a Talk-to option and no reason to use it.
+    if (inv_total(inv, ics_little_holy_symbol) = 0) {
+        ~chatnpc("<p,quiz>And a symbol cut for the rite. The carpenter east of the embalmer does that, out of willow.");
+        return;
+    }
     ~chatplayer("<p,happy>All four.");
     mes("You set the jars around Klenter: the man, the ape, the bug and the crocodile.");
     inv_del(inv, ics_little_canopic_jar_liver, 1);
     inv_del(inv, ics_little_canopic_jar_lungs, 1);
     inv_del(inv, ics_little_canopic_jar_stomach, 1);
     inv_del(inv, ics_little_canopic_jar_intestines, 1);
+    inv_del(inv, ics_little_holy_symbol, 1);
     %ics_little_var = ^icslittle_jars_placed;
     ~send_quest_progress(questlist:ics_little, %ics_little_var, ^icslittle_complete);
     ~chatnpc("<p,happy>Stand back, outsider. You have earned the right to watch this.");

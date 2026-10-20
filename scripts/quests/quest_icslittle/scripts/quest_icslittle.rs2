@@ -18,6 +18,25 @@ if (%ics_little_var < ^icslittle_embalmed) {
     ~mesbox("A sealed canopic jar. Klenter's organs are in these, and until he is properly prepared they stay where they are.");
     return;
 }
+// THE GUARDIAN. "Take the canopic jar. Kill the level 91 guardian that appears, then take the
+// jar." ics_little_possessedpriest is in the cache at vislevel 91 with op2=Attack, and he was
+// never placed and never spawned - the one fight this quest has was not in it. He comes up the
+// first time a hand goes near a jar, and the jars do not move until he is down.
+// ics_sarcophigi_gotstuffcounter is the cache's own name for how much of this tomb you have been
+// allowed to take; 1 is "the guardian has been beaten".
+if (%ics_sarcophigi_gotstuffcounter = 0) {
+    if (npc_find(coord, ics_little_possessedpriest, 24, 0) = ^true) {
+        mes("The priest between you and the shelf is still standing.");
+        return;
+    }
+    if_close;
+    mes("You reach for the jar.");
+    p_delay(2);
+    ~mesbox("One of the priests who carried Klenter down here turns round, and whatever is looking out of his face has not been a priest for a long time. | \"NOT YOURS.\"");
+    npc_add(coord, ics_little_possessedpriest, ^icslittle_guardian_lifetime);
+    npc_say("Not yours!");
+    return;
+}
 if (inv_freespace(inv) = 0) {
     mes("You have no room for the jar.");
     return;
@@ -86,6 +105,17 @@ mes("You jump the pit.");
 // step of this quest happens - could be reached at all.
 [oploc1,ics_little_entrance_multi]
 p_arrivedelay;
+// Sophanem's gates have been shut for eleven years and the Wanderer is the one who knows the hole
+// in the rocks - which is what ics_ent_open is for. Anybody already inside, or already past the
+// first word with the High Priest, keeps their way in.
+if (%ics_ent_open = 0) {
+    if (%ics_little_var > ^icslittle_not_started) {
+        %ics_ent_open = 1;
+    } else {
+        ~mesbox("There is a way through the rocks here and it is not obvious which one it is. The woman camped north-east of the city walked it last; she would know.");
+        return;
+    }
+}
 mes("You squeeze between the rocks and follow the tunnel under the wall into Sophanem.");
 p_teleport(0_51_43_56_44);
 
@@ -132,8 +162,12 @@ if (%ics_little_var >= ^icslittle_devoured) {
 [queue,icslittle_quest_complete]
 %ics_little_var = ^icslittle_complete;
 %ics_specvis = ^icslittle_spectre_hidden;
-stat_advance(thieving, 40000);
+// 4,500 Thieving, 4,000 Agility and 4,000 Woodcutting, which is what the quest pays. Experience
+// is stored in tenths, so these are ten times the numbers on the scroll - and the Woodcutting was
+// missing entirely, which is the only reason anybody carries willow logs into a desert.
+stat_advance(thieving, 45000);
 stat_advance(agility, 40000);
+stat_advance(woodcutting, 40000);
 session_log(^log_adventure, "Quest complete: Icthlarin's Little Helper");
 // FIXED: the reward scroll advertised the catspeak amulet and nothing ever handed it over.
 // ~send_quest_complete only draws the obj on the scroll (if_setobject) - every quest that gives an
@@ -144,4 +178,22 @@ if (inv_freespace(inv) > 0) {
 } else {
     obj_add(coord, ics_little_amulet_of_catspeak, 1, ^lootdrop_duration);
 }
-~send_quest_complete(questlist:ics_little, ics_little_amulet_of_catspeak, 250, ^icslittle_questpoints, "You have completed\\nIcthlarin's Little Helper!", "2 Quest Points|4,000 Thieving XP|4,000 Agility XP|The catspeak amulet");
+~send_quest_complete(questlist:ics_little, ics_little_amulet_of_catspeak, 250, ^icslittle_questpoints, "You have completed\\nIcthlarin's Little Helper!", "2 Quest Points|4,500 Thieving XP|4,000 Agility XP|4,000 Woodcutting XP|The catspeak amulet");
+
+// =========================================================================== the guardian
+[ai_queue3,ics_little_possessedpriest]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(icslittle_guardian_beaten, 0, 0);
+
+[queue,icslittle_guardian_beaten]
+if (%ics_sarcophigi_gotstuffcounter > 0) {
+    return;
+}
+%ics_sarcophigi_gotstuffcounter = 1;
+~mesbox("Whatever it was goes out of him, and what is left on the floor is a priest who has been dead for years and did not know it. | The shelves are not guarded any more.");
+
+// The mummies in here now have statblocks (see all.npc) and will come for anybody who walks past
+// them, which is what vislevel=84 and op2=Attack were always promising.

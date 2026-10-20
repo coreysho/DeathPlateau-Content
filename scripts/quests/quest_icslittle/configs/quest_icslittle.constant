@@ -34,3 +34,8 @@
 ^icslittle_jar_lungs = 0_51_143_22_43
 ^icslittle_jar_stomach = 0_51_143_22_44
 ^icslittle_jar_intestines = 0_51_143_22_41
+
+// The possessed priest who guards the shelves. He is in the cache at vislevel 91 with
+// op2=Attack and no stats and no placement at all; the stats are in all.npc now and he is
+// spawned the first time somebody reaches for a jar.
+^icslittle_guardian_lifetime = 2000
