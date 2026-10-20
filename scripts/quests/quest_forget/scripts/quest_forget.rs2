@@ -9,6 +9,11 @@ switch_int (%forget_quest) {
         if (%giantdwarf_quest < ^gd_complete) {
             return(false);
         }
+        // Fishing Contest as well, which was not checked - it is what gets a human through the
+        // White Wolf Mountain pass, and it is on the quest's requirement list for that reason.
+        if (%fishingcompo < ^fishingcompo_complete) {
+            return(false);
+        }
         if (%forget_veldaban_exposition = ^forget_off) {
             ~forget_start;
             return(true);
@@ -352,12 +357,25 @@ if (%forget_if8 = ^forget_off) { %forget_if8 = ^forget_mural_read; ~forget_mural
 if (%forget_if9 = ^forget_off) { %forget_if9 = ^forget_mural_read; ~forget_mural_text(9); return; }
 if (%forget_if10 = ^forget_off) { %forget_if10 = ^forget_mural_read; ~forget_mural_text(10); return; }
 if (%forget_if11 = ^forget_off) { %forget_if11 = ^forget_mural_read; ~forget_mural_text(11); return; }
-if (%forget_if12 = ^forget_off) { %forget_if12 = ^forget_mural_read; ~forget_mural_text(12); return; }
-if (%forget_quest = ^forget_papers) {
-    %forget_quest = ^forget_story;
-    ~send_quest_progress(questlist:forget, %forget_quest, ^forget_complete);
-    ~mesbox("That is the whole of it, from the first panel to the last, and none of it is on a wall in Keldagrim.");
+if (%forget_if12 = ^forget_off) { %forget_if12 = ^forget_mural_read; ~forget_mural_text(12); ~forget_murals_done; return; }
+~forget_murals_done;
+
+// READING THE TWELFTH PANEL IS WHAT FINISHES THIS, and it was not: every branch above returns as
+// soon as it has read one, so the block that moved the quest on was only reached by a THIRTEENTH
+// walk through a cave mouth. A player who had read all twelve stood at forty with nothing left to
+// read and no reason to click anything again - and the way out of the second chamber is gated on
+// this same stage, so they were shut in with twelve panels they had finished.
+// The panels are read strictly in order, so the twelfth being read means all twelve are.
+[proc,forget_murals_done]()()
+if (%forget_if12 = ^forget_off) {
+    return;
 }
+if (%forget_quest ! ^forget_papers) {
+    return;
+}
+%forget_quest = ^forget_story;
+~send_quest_progress(questlist:forget, %forget_quest, ^forget_complete);
+~mesbox("That is the whole of it, from the first panel to the last, and none of it is on a wall in Keldagrim.");
 
 [proc,forget_mural_text](int $n)()
 switch_int ($n) {
@@ -388,7 +406,16 @@ p_delay(3);
 %forget_boarding_removed = ^forget_on;
 %forget_brothers_toldsuccess = ^forget_on;
 %forget_region_status = 1;
-stat_advance(mining, 50000);
+// COOKING, not Mining: the quest's work is brewing a stout, and it pays 5,000 Cooking and 5,000
+// Farming. Experience is stored in tenths. And two matured dwarven stouts, which the scroll
+// advertised by drawing the obj and which nothing ever handed over - ~send_quest_complete only
+// draws the picture.
+stat_advance(cooking, 50000);
 stat_advance(farming, 50000);
+if (inv_freespace(inv) > 1) {
+    inv_add(inv, mature_dwarven_stout, 2);
+} else {
+    obj_add(coord, mature_dwarven_stout, 2, ^lootdrop_duration);
+}
 session_log(^log_adventure, "Quest complete: Forgettable Tale");
-~send_quest_complete(questlist:forget, dwarven_stout, 200, ^forget_questpoints, "You have completed\\nForgettable Tale of a Drunken Dwarf!", "2 Quest Points|5,000 Mining XP|5,000 Farming XP|Nobody believes any of it");
+~send_quest_complete(questlist:forget, mature_dwarven_stout, 200, ^forget_questpoints, "You have completed\\nForgettable Tale of a Drunken Dwarf!", "2 Quest Points|5,000 Cooking XP|5,000 Farming XP|2 mature dwarven stout|Nobody believes any of it");
