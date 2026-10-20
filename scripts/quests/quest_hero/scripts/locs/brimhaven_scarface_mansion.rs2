@@ -96,7 +96,13 @@ if (~obj_gettotal(petecandlestick) > 0) {
 } else {
   ~mesbox("You find two candlesticks in the chest. So that will be one for you, and one for the person who killed Grip for you.");
   inv_add(inv, petecandlestick, 2);
-  if (%heroquest < ^hero_blackarm_looted_chest) {
+  // ONLY THE BLACK ARM DEPUTY IS DOING THE ROBBERY. Both players are standing in this room by the
+  // time the chest is open, and the Phoenix member is welcome to a candlestick out of it - but
+  // bumping HIS progress to ^hero_blackarm_looted_chest took him off his own track, and Straven
+  // then refuses the hand-in ("you didn't actually retrieve it yourself, did you?") while Katrine
+  // will not deal with a Phoenix member at all. One click on the chest and that player could not
+  // finish the quest by any route.
+  if (%heroquest >= ^hero_blackarm_gangmember_spoken & %heroquest < ^hero_blackarm_looted_chest) {
     %heroquest = ^hero_blackarm_looted_chest;
   }
 }
