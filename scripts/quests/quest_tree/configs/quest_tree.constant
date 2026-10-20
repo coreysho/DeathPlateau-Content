@@ -9,4 +9,10 @@
 ^tree_defeated_warlord = 8
 
 ^elkoy_entrance_coord = 0_39_49_8_56
-^elkoy_maze_coord = 0_39_49_19_23
+// Where Elkoy leaves you when he guides you INTO the village, paired with ^elkoy_entrance_coord
+// for the way out. It was 0_39_49_19_23 - 2515,3159 - which is outside the maze proper, in the
+// little pocket south of the loose railing: from there the village is still 34 tiles of maze away
+// behind a squeeze-through, so "I'll show you through the maze" left you to find your own way in.
+// Now it is the village centre beside King Bolren, which is where the ceremony at the end puts
+// you as well (p_walk(0_39_49_46_34) in king_bolren.rs2).
+^elkoy_maze_coord = 0_39_49_44_34
