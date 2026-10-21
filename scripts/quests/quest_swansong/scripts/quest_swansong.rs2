@@ -487,37 +487,63 @@ if (%swansong = ^swan_coma) {
 // could not be started. Herman starts it; he is the one counting the palisade.
 
 [label,swan_battle_scene]
+if (%swansong = ^swan_queen) {
+    @swan_queen_beaten;
+}
+if (%swansong = ^swan_battle) {
+    ~chatnpc("<p,scared>She is still out there, and there is nobody else left standing. Finish it.");
+    ~swan_queen_send;
+    return;
+}
 if_close;
 mes("The skeletal magi form up along the palisade without being told to, which is the most unsettling part of the whole thing.");
 p_delay(5);
 %swansong = ^swan_battle;
+%swansong_trolls = 3;
 ~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
 ~mesbox("The sea trolls come up out of the fishing grounds for the twelfth day running and for the first time something is standing there waiting for them.");
 p_delay(4);
 ~swan_battle_hit(14);
-mes("It is not a clean fight and the palisade is not the point of it any more.");
+mes("The magi go through the small ones a rank at a time and none of them stop.");
 p_delay(4);
-~mesbox("And then the water goes quiet, and something comes out of it that the small ones were in front of.");
+~mesbox("The Wise Old Man puts the Sea Troll General down himself. Then the water hits him, all of it at once, and he does not get up.");
 p_delay(3);
-~swan_queen_fight;
+~swan_queen_send;
 
-[proc,swan_queen_fight]()()
-mes("The Sea Troll Queen is the reason the Wise Old Man is asleep on a floor.");
-p_delay(4);
-~swan_battle_hit(22);
-mes("The magi go through her a rank at a time and none of them stop.");
-p_delay(4);
-~swan_battle_hit(12);
-mes("She goes back into the water and does not come up.");
-p_delay(4);
-%swansong_trolls = 3;
+// THE SEA TROLL QUEEN IS A FIGHT, NOT A PARAGRAPH. She is level 170 with an Attack op and had no
+// statblock at all - the seventh npc in this pass with a level, an op and nothing behind it - and
+// this label used to narrate her death with two mesboxes and thirty-four points of ~damage_self.
+// In OSRS the Wise Old Man is taken out by a 254 before she is even up and you kill her on your
+// own: 200 hitpoints, Water Wave for 37, a crush for 16, and she does not move.
+[proc,swan_queen_send]()()
+if (npc_find(^swan_queen_spawn, swan_seatroll_queen, 16, ^false) = true) {
+    return;
+}
+npc_add(^swan_queen_spawn, swan_seatroll_queen, ^swan_queen_despawn);
+npc_setmode(opplayer2);
+~mesbox("Something comes out of the water that the small ones were in front of. | It is the reason the Wise Old Man is asleep on a floor, and there is nobody else left to do this.");
+
+[ai_queue3,swan_seatroll_queen]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(swan_queen_down, 0, 0);
+
+[queue,swan_queen_down]
+if (%swansong ! ^swan_battle) {
+    return;
+}
 %swansong = ^swan_queen;
 ~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
-stat_advance(magic, 20000);
-stat_advance(defence, 20000);
+~mesbox("She goes back into the water and does not come up. | Seventy-one people come out of the buildings very slowly.");
+
+[label,swan_queen_beaten]
+~chatplayer("<p,neutral>She is dead.");
+~chatnpc("<p,happy>I watched the whole of it from the gate. I have never been so pleased to be useless.");
 %swansong = ^swan_told;
 ~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
-~mesbox("Seventy-one people come out of the buildings very slowly. | Herman counts them twice.");
+
 
 // 48 damage across the scene, and nothing requires the Hitpoints to take it: a player who died
 // part-way through was left at ^swan_battle, which nobody's dialogue picks up again. The battle
@@ -536,7 +562,16 @@ if_close;
 mes("Herman Caranos sits down on the ground outside his own colony for the first time in twelve days.");
 p_delay(5);
 %swansong = ^swan_complete;
+// The Prayer experience and the twenty-five thousand coins were both missing. The Fishing stays
+// at the 10,000 the quest paid when it was written - the 50,000 on the wiki is a November 2022
+// rebalance of a modern economy, and this server is 2006.
 stat_advance(fishing, 100000);
-stat_advance(magic, 100000);
+stat_advance(magic, 150000);
+stat_advance(prayer, 100000);
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, coins, 25000);
+} else {
+    obj_add(coord, coins, 25000, ^lootdrop_duration);
+}
 session_log(^log_adventure, "Quest complete: Swan Song");
-~send_quest_complete(questlist:swansong, swan_monkfish, 200, ^swan_questpoints, "You have completed\\nSwan Song!", "2 Quest Points|10,000 Fishing XP|10,000 Magic XP|Monkfish|Seventy-one people");
+~send_quest_complete(questlist:swansong, swan_monkfish, 200, ^swan_questpoints, "You have completed\\nSwan Song!", "2 Quest Points|15,000 Magic XP|10,000 Prayer XP|10,000 Fishing XP|25,000 coins");

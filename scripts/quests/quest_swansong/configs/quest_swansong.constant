@@ -47,7 +47,8 @@
 
 ^swan_walls_needed = 5
 ^swan_fish_needed = 5
-^swan_bones_needed = 5
+// Seven, as the wiki says. This was five; swansong_bones is three bits, so it holds seven.
+^swan_bones_needed = 7
 
 // swansong_franklin - Franklin's metal press, which the press and firebox multilocs both read
 ^swan_press_cold = 0     // Franklin has not asked yet
@@ -82,3 +83,9 @@
 // no trigger at either end. Each landing is a free tile beside her.
 ^swan_boat_south = 0_37_54_0_29         // 2368,3485
 ^swan_boat_north = 0_36_56_53_55        // 2357,3639
+
+// Where the Sea Troll Queen comes out of the water: 2344,3646, on the shore south of the
+// palisade and four tiles from where Herman stands at the gate. She is size 5 and that is one of
+// the few 5x5 footprints that fits down there (tools/sim/blockfit.ts).
+^swan_queen_spawn = 0_36_56_40_62       // 2344,3646
+^swan_queen_despawn = 2000
