@@ -11,24 +11,26 @@
 //   makinghistory_objloc        bit 20
 //   makinghistory_locstatus     bits 21-31
 //
-// Trader, warrior, ghost. Three investigations, and the two ghosts each have a presence bit of
-// their own, which is what happens to them at the end.
+// ---------------------------------------------------------------------------- the items decide it
+// THE FIRST BUILD OF THIS QUEST GOT THE FOUR DOCUMENTS THE WRONG WAY ROUND, and the cache says so
+// in their own descriptions:
 //
-// ---------------------------------------------------------------------------- the spec
-// The two readables were already in the cache and between them they are the entire plot:
+//   makinghistory_journal   "Somebody's private journal."     -> out of a buried chest
+//   makinghistory_scroll1   "A timeline of the outpost."      -> out of a ghost
+//   makinghistory_letter1   "A sealed letter to the king."    -> Jorral to King Lathas
+//   makinghistory_letter2   "A sealed letter to Jorral."      -> King Lathas back to Jorral
+//   makinghistory_chest     "A dirty chest."                  -> what you dig up
+//   makinghistory_key       "It seems to change temperature as I walk."
 //
-//   Journal  "1st Bennath | I have thrown in my lot with the Zamorakians and moved out to the
-//             outpost north of Ardougne."
-//   Scroll   "Timeline of the outpost | Start of the Fifth Age - Outpost built | + 65 years - The
-//             Dreaded Years of Tragedy | + 68 years - The Great Battle | + 71 years - Survivors of
-//             the battle start a new line of kings of Ardougne, and the Equal Trade Market"
+// Two letters whose seals name the two men at either end of the last chapter, a chest, and a key
+// that gets warm. The first version handed the timeline out at the start, made the journal a ghost's
+// keepsake and turned both letters into family heirlooms in Rellekka - which is a coherent quest and
+// is not this one. The walkthrough's three strands are: a silver merchant and a buried chest, a
+// ghost and his wife, and a Fremennik who asks fourteen questions.
 //
-// Four dated lines with nothing between them, a Zamorakian who went out there and wrote it down,
-// and two institutions that came out the other side: the Ardougne royal line and the Equal Trade
-// Market. The letters are addressed accordingly - letter1 is sealed to the king, letter2 is sealed
-// to Jorral, by someone who knew a historian would eventually come asking.
-//
-// The three mjolnirs are Guthix, Saradomin and Zamorak, which is the Great Battle.
+// The three mjolnirs are not part of any of that: the enchanted key stays warm after the quest and
+// leads to three graves, which is what the Guthix, Saradomin and Zamorak mjolnirs are for and the
+// only thing in the cache they can be for.
 //
 // ---------------------------------------------------------------------------- the inverted ghosts
 //   [makinghistory_melina_multi]  multivar=makinghistory_melina_pres  multinpc=0,makinghistory_melina
@@ -48,28 +50,30 @@
 //   crates       -> Bookcase         "A collection of rare books."  op1=Study
 //   large_crates -> Catapult         "Looks like it's been out of use for some time."
 //
-// A storeroom turns into a museum. That is the reward, and it is a better one than the staves.
+// A storeroom turns into a museum. That is the reward, and it is a better one than the mjolnirs.
 ^mh_not_started = 0
 ^mh_investigating = 1
-^mh_reporting = 2        // all three strands answered
-^mh_complete = 3
+^mh_reporting = 2        // all three strands answered, and a letter for the king
+^mh_lathas = 3           // the king has read it and written back
+^mh_complete = 4
 
-// Each strand runs 0 -> done, and the strand is "delivered" at its last value.
+// Each strand runs 0 -> done.
 ^mh_strand_none = 0
 ^mh_strand_asked = 1
-^mh_strand_told = 2
-^mh_strand_refused = 3
-^mh_strand_held = 4      // you are carrying the thing
-^mh_strand_done = 5      // Jorral has it
+^mh_strand_told = 2     // you know who to ask next
+^mh_strand_refused = 3  // Dron has said no once, which is a necessary step
+^mh_strand_held = 4     // you are carrying the thing, or carrying the account
+^mh_strand_done = 5     // Jorral has it
 
 // The ghost strand has four bits because it is a marriage.
 ^mh_ghost_none = 0
 ^mh_ghost_droalak = 1    // Droalak has explained himself
 ^mh_ghost_melina = 2     // Melina has refused to hear it
 ^mh_ghost_proof = 3      // Droalak has told you the thing only he could know
-^mh_ghost_forgiven = 4   // Melina believes you
-^mh_ghost_held = 5       // the journal
-^mh_ghost_done = 6
+^mh_ghost_amulet = 4     // Melina has the amulet she was never given
+^mh_ghost_forgiven = 5   // and she believes you
+^mh_ghost_held = 6       // the scroll
+^mh_ghost_done = 7
 
 ^mh_present = 0          // NOT a typo - see the note on the inverted multis above
 ^mh_gone = 1
@@ -77,26 +81,36 @@
 ^mh_museum_closed = 0
 ^mh_museum_open = 1
 
+^mh_quiz_questions = 14
+^mh_reward_xp = 10000    // 1,000 each, and stats are kept in tenths
+^mh_reward_coins = 750
+
 // ---------------------------------------------------------------------------- people
-^mh_jorral = 0_38_52_5_19        // 2437,3347  the Outpost, north of Ardougne
-^mh_melina = 0_57_54_26_28       // 3674,3484  Port Phasmatys
-^mh_droalak = 0_57_54_9_13       // 3657,3469  Port Phasmatys
-^mh_dron = 0_41_57_34_52         // 2658,3700  Rellekka
-^mh_blanin = 0_41_57_51_23       // 2675,3671  Rellekka
+^mh_jorral = 0_38_52_3_20        // 2435,3348  the Outpost, north of Ardougne
+^mh_erin = 0_41_51_34_52         // 2658,3316  the East Ardougne market
+^mh_lathas_coord = 1_40_51_17_28 // 2577,3292  upstairs in Ardougne castle
+^mh_melina = 0_57_54_23_25       // 3671,3481  Port Phasmatys
+^mh_droalak = 0_57_54_5_14       // 3653,3470  Port Phasmatys
+^mh_dron = 0_41_57_37_54         // 2661,3702  Rellekka
+^mh_blanin = 0_41_57_52_25       // 2676,3673  Rellekka
+^mh_furmonger = 0_41_57_21_29    // 2645,3677  Rellekka
 
 // ---------------------------------------------------------------------------- the enchanted key
 // "Enchanted key. It seems to change temperature as I walk." iop1=Feel, and the generated stub for
 // it said "The key is warm." and nothing else, forever, wherever you stood. It is a hot-and-cold
 // hunt and it was one line of placeholder.
 //
-// Three graves, one per person Jorral could not account for, each on a tile something already
-// stands or walks on. Dig them in any order; the key points at whichever you have not found.
+// Erin lends it for the chest; Jorral keeps lending it afterwards for the three graves, each on a
+// tile something already stands or walks on. Dig them in any order; the key points at whichever you
+// have not found.
 ^mh_key_none = 0
-^mh_grave_trader = 1
-^mh_grave_warrior = 2
-^mh_grave_ghost = 3
-^mh_grave_done = 4
+^mh_grave_chest = 1      // the chest, which is the quest
+^mh_grave_trader = 2
+^mh_grave_warrior = 3
+^mh_grave_ghost = 4
+^mh_grave_done = 5
 
-^mh_dig_trader = 0_38_52_5_8     // 2437,3336  the woods below the Outpost
+^mh_dig_chest = 0_38_48_28_43    // 2460,3115  north of the Castle Wars bridges
+^mh_dig_trader = 0_38_52_3_9     // 2435,3337  the woods below the Outpost
 ^mh_dig_warrior = 0_41_57_1_16   // 2625,3664  Rellekka
 ^mh_dig_ghost = 0_57_54_20_18    // 3668,3474  Port Phasmatys

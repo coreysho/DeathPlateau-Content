@@ -1,4 +1,9 @@
 [opnpc1,kinglathas]
+// MAKING HISTORY: Jorral has written to him four times and never had a reply, because Jorral is a
+// historian and this is a king. @mh_lathas is in quests/quest_makinghistory/scripts.
+if (~mh_lathas_wants = true) {
+    @mh_lathas;
+}
 if(%biohazard = ^biohazard_reported_elena) {
     ~chatplayer("<p,quiz>I assume that you are the King of East Ardougne?");
     ~chatnpc("<p,angry>You assume correctly, but where do you get such impertinence.");

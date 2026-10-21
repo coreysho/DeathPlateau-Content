@@ -1,4 +1,11 @@
 [opnpc1,silver_merchant]
+// MAKING HISTORY: the trader's thread is the Equal Trade Market, and the Market came out of the
+// outpost. She has the key her family has been handed and told was important for four hundred
+// years. @mh_erin is in quests/quest_makinghistory/scripts, and the hook hands the stall back once
+// the key is lent.
+if (~mh_erin_wants = true) {
+    @mh_erin;
+}
 if (getqueue(stolen_from_stall_silver) > 0) {
     npc_say("You stole from me. Talk to me when you've considered your actions!");
     return;

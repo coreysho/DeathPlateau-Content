@@ -14,60 +14,84 @@ switch_int (%makinghistory_prog) {
         $text = append($text, "@str@and three years after that the survivors founded the royal|");
         $text = append($text, "@str@line of Ardougne and the Equal Trade Market.|");
         $text = append($text, "@str@Jorral has the four dates and nothing in between them.|");
-        $text = append($text, "@str@Three people left records:||");
+        $text = append($text, "@str@Three threads:||");
 
         if (%makinghistory_trader_prog >= ^mh_strand_done) {
             $text = append($text, "@gre@The trader - done|");
         } else if (%makinghistory_trader_prog = ^mh_strand_held) {
-            $text = append($text, "@dbl@The @dre@trader@dbl@ - take the sealed letter to Jorral|");
+            $text = append($text, "@dbl@The @dre@trader@dbl@ - take the journal to Jorral|");
+        } else if (~obj_gettotal(makinghistory_chest) > 0) {
+            $text = append($text, "@dbl@The @dre@trader@dbl@ - use the @dre@key@dbl@ on the @dre@chest|");
+        } else if (%makinghistory_trader_prog = ^mh_strand_asked) {
+            $text = append($text, "@dbl@The @dre@trader@dbl@ - @dre@Feel@dbl@ Erin's key as you walk, and|");
+            $text = append($text, "@dbl@@dre@dig@dbl@ where it is too hot to hold|");
         } else {
-            $text = append($text, "@dbl@The @dre@trader@dbl@ - the @dre@fur trader@dbl@ in @dre@Rellekka@dbl@, and show|");
-            $text = append($text, "@dbl@him the timeline|");
+            $text = append($text, "@dbl@The @dre@trader@dbl@ - @dre@Erin@dbl@, the silver stall in the|");
+            $text = append($text, "@dbl@@dre@Ardougne market|");
         }
 
         if (%makinghistory_warr_prog >= ^mh_strand_done) {
             $text = append($text, "@gre@The warrior - done|");
         } else if (%makinghistory_warr_prog = ^mh_strand_held) {
-            $text = append($text, "@dbl@The @dre@warrior@dbl@ - take the letter to the king to Jorral|");
+            $text = append($text, "@dbl@The @dre@warrior@dbl@ - tell Jorral what Dron told you|");
         } else if (%makinghistory_warr_prog = ^mh_strand_refused) {
-            $text = append($text, "@dbl@The @dre@warrior@dbl@ - Dron said no. Tell @dre@Blanin@dbl@ that he did|");
+            $text = append($text, "@dbl@The @dre@warrior@dbl@ - ask @dre@Dron@dbl@ again. He asks|");
+            $text = append($text, "@dbl@@dre@fourteen questions@dbl@ and one wrong answer ends it|");
         } else if (%makinghistory_warr_prog = ^mh_strand_told) {
-            $text = append($text, "@dbl@The @dre@warrior@dbl@ - ask @dre@Dron@dbl@, who will refuse|");
+            $text = append($text, "@dbl@The @dre@warrior@dbl@ - @dre@Dron@dbl@, by the northern dock in|");
+            $text = append($text, "@dbl@@dre@Rellekka@dbl@. He will say no first|");
         } else {
-            $text = append($text, "@dbl@The @dre@warrior@dbl@ - @dre@Blanin@dbl@ in @dre@Rellekka|");
+            $text = append($text, "@dbl@The @dre@warrior@dbl@ - @dre@Blanin@dbl@, in @dre@Rellekka|");
         }
 
         if (%makinghistory_ghost_prog >= ^mh_ghost_done) {
-            $text = append($text, "@gre@The ghost - done|");
+            $text = append($text, "@gre@The ghost - done");
         } else if (%makinghistory_ghost_prog = ^mh_ghost_held) {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - take Bennath's journal to Jorral|");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - take the timeline to Jorral");
         } else if (%makinghistory_ghost_prog = ^mh_ghost_forgiven) {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - tell @dre@Droalak@dbl@ she will speak to him|");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - tell @dre@Droalak@dbl@ she will speak to him");
+        } else if (%makinghistory_ghost_prog = ^mh_ghost_amulet) {
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - talk to @dre@Melina@dbl@ again");
         } else if (%makinghistory_ghost_prog = ^mh_ghost_proof) {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - tell @dre@Melina@dbl@ about the garden|");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - tell @dre@Melina@dbl@ about the garden, and|");
+            $text = append($text, "@dbl@give her a @dre@sapphire amulet@dbl@ - a strung one");
         } else if (%makinghistory_ghost_prog = ^mh_ghost_melina) {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - she wants something only he could know.|");
-            $text = append($text, "@dbl@Go back to @dre@Droalak|");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - ask @dre@Droalak@dbl@ for something only he|");
+            $text = append($text, "@dbl@could know");
         } else if (%makinghistory_ghost_prog = ^mh_ghost_droalak) {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - speak to @dre@Melina@dbl@, his wife|");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - @dre@Melina@dbl@, east of the general store");
         } else {
-            $text = append($text, "@dbl@The @dre@ghost@dbl@ - @dre@Droalak@dbl@ in @dre@Port Phasmatys@dbl@. An|");
-            $text = append($text, "@dbl@@dre@amulet of ghostspeak@dbl@ is needed to hear anyone there");
+            $text = append($text, "@dbl@The @dre@ghost@dbl@ - @dre@Droalak@dbl@, in @dre@Port Phasmatys|");
+            $text = append($text, "@dbl@Wear an @dre@amulet of ghostspeak");
         }
 
     case ^mh_reporting :
-        $text = "@str@Three records and one timeline, all on Jorral's table.|";
-        $text = append($text, "@dbl@Let him read");
+        $text = "@str@A famine, a battle three faiths could not keep a road open|";
+        $text = append($text, "@str@through, and two friends who fought each other over this|");
+        $text = append($text, "@str@outpost and then both went Guthixian.|");
+        $text = append($text, "@str@And the outpost has been marked for demolition for six|");
+        $text = append($text, "@str@years, because Jorral is a historian and Lathas is a king.||");
+        $text = append($text, "@dbl@Take Jorral's @dre@letter@dbl@ to @dre@King Lathas@dbl@, upstairs in|");
+        $text = append($text, "@dbl@the castle in @dre@Ardougne");
+
+    case ^mh_lathas :
+        $text = "@str@The king read it twice, which kings are not in the habit|";
+        $text = append($text, "@str@of doing, and wrote back.||");
+        $text = append($text, "@dbl@Take his @dre@letter@dbl@ back to @dre@Jorral");
 
     case ^mh_complete :
-        $text = "@str@The Dreaded Years of Tragedy were a famine. The Great Battle|";
-        $text = append($text, "@str@was three faiths who had kept one road open for sixty-eight|");
-        $text = append($text, "@str@years finding out that they could not keep it open through a|");
-        $text = append($text, "@str@famine.|");
-        $text = append($text, "@str@The letter to the king was a request for grain. It was never|");
-        $text = append($text, "@str@delivered.|");
+        $text = "@str@Four dated lines with a famine, a battle and two friends|";
+        $text = append($text, "@str@between them, and a storeroom full of crates that is now a|");
+        $text = append($text, "@str@museum, because the King of Ardougne agreed in writing that|");
+        $text = append($text, "@str@the road could go round.|");
         $text = append($text, "@str@Droalak walked four minutes down a road it took him two|");
         $text = append($text, "@str@hundred years to start.||");
+        if (%makinghistory_locstatus >= ^mh_grave_done) {
+            $text = append($text, "@gre@All three mjolnirs are out of the ground|");
+        } else {
+            $text = append($text, "@dbl@The @dre@enchanted key@dbl@ is still warm. @dre@Feel@dbl@ it and|");
+            $text = append($text, "@dbl@@dre@dig@dbl@ - there are three graves nobody marked|");
+        }
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :
