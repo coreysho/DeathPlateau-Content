@@ -117,7 +117,7 @@ if(last_useitem = softclay) {
     mes("The clay is not soft enough to stick to the golem.");
 } else if(last_useitem = golem_program) {
     if (%golem_head_open = 0) {
-        mes("You can't see a way to put the instructions in the golem's skkull.");
+        mes("You can't see a way to put the instructions into the golem's skull.");
         return;
     }
     // The program was never consumed and the stage was never checked, so a finished player still
@@ -133,12 +133,16 @@ if(last_useitem = softclay) {
     ~chatnpc_specific($golem_name, $golem_npc, "<p,confused>New instructions...|Updating program....");
     ~chatnpc_specific($golem_name, $golem_npc, "<p,happy>Task complete!");
     ~chatnpc_specific($golem_name, $golem_npc, "<p,happy>Thank you. Now my mind is at rest.");
+    %golem_head_open = 0;
     inv_del(inv, golem_program, 1);
     queue(golem_complete, 0, 0);
 } else if(last_useitem = golem_golemkey) {
     if(%golem_head_open = 0) {
         mes("You insert the key and the golem's skull hinges open.");
-        queue(golem_head_queue, 10, 0);
+        // THE SKULL NO LONGER SHUTS ON A TIMER. It used to shut itself ten ticks after the
+        // implement opened it, which is six seconds to find the program in your inventory and
+        // click it, and the auto-close is this implementation's own idea rather than anything the
+        // quest asks for. It shuts when the instructions go in, below.
         %golem_head_open = 1;
     } else {
         mes("The golem's head is already open.");
@@ -147,6 +151,3 @@ if(last_useitem = softclay) {
     ~displaymessage(^dm_default);
 }
 
-[queue,golem_head_queue]
-%golem_head_open = 0;
-mes("The golem's skull shuts automatically.");
