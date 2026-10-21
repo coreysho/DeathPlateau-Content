@@ -70192,7 +70192,14 @@ recol3s=11656
 recol3d=14728
 op1=Climb-down
 sharelight=yes
-forceapproach=west
+// FORCEAPPROACH REMOVED. This said forceapproach=west, which the packer turns into "the west
+// side is the only one you may approach from" - and the engine rotates that by the placement
+// angle. The Lunar Isle mine entrance at 2142,3944 is placed at angle 2, so the one legal side
+// became the east, and the ladder sits in a recess with walls on its east, south and north: it
+// could not be clicked from anywhere on the map, which is how Dream Mentor could not be
+// started. The two placements in m31_69 are at angles 0 and 2 as well, so no single named
+// direction is right for all three. With no mask the engine falls back to the walls, and the
+// recess already allows exactly one side.
 mapscene=7
 
 [loc_10709]

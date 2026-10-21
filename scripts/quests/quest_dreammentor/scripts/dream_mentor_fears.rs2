@@ -109,14 +109,13 @@ if (%dreammentor ! ^dm_in_dream) {
 }
 switch_int (%dm_boss) {
     case 1 :
-        ~dm_cyrisus_says("<p,shock>That was the one I could never look at. You just... hit it.");
+        ~dm_cyrisus_says("That was the one I could never look at. You just... hit it.");
     case 2 :
-        ~dm_cyrisus_says("<p,neutral>It would not stop. It never stops. And you kept going anyway.");
+        ~dm_cyrisus_says("It would not stop. It never stops. And you kept going anyway.");
     case 3 :
-        ~dm_cyrisus_says("<p,happy>I have been telling myself for thirty years that some things cannot be hurt.");
+        ~dm_cyrisus_says("Thirty years I told myself some things cannot be hurt!");
     case 4 :
-        ~dm_cyrisus_says("<p,happy>No. Leave that one. That one is mine.");
-        ~dm_cyrisus_says("<p,happy>I have watched you do this four times. I think I can manage a shadow.");
+        ~dm_cyrisus_says("No! Leave that one. That one is mine.");
         %dm_boss = 5;
         %dreammentor = ^dm_dream_done;
         ~send_quest_progress(questlist:dreammentor, %dreammentor, ^dm_complete);
@@ -127,11 +126,16 @@ switch_int (%dm_boss) {
 ~dm_send_fear;
 mes("Something else is getting up.");
 
+// CYRISUS SHOUTS, HE DOES NOT OPEN A DIALOGUE BOX. This was ~chatnpc, which suspends the script
+// that called it until the player clicks Continue - and the script that calls it is the one that
+// counts the fear off and spawns the next one. So the second fear did not appear until the player
+// had read a chat window, in the middle of a fight with a level 343 monster. In OSRS he calls out
+// over his head, which is what npc_say does and what the rest of this quest already uses.
 [proc,dm_cyrisus_says](string $line)
 if (npc_find(coord, cyrisus_dream, 20, ^false) = false) {
     return;
 }
-~chatnpc($line);
+npc_say($line);
 
 // =========================================================================== waking up
 //

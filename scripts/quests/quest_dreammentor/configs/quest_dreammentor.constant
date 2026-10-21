@@ -57,7 +57,12 @@
 ^dm_mine_bottom = 2_36_161_24_48
 // his dream: the round arena on 474's m28_80, with the book "Our lives" at its north end
 ^dm_arena = 2_28_80_32_33
-^dm_arena_boss = 2_28_80_32_42
+// THE INADEQUACY IS SIZE 5 AND THIS DID NOT FIT IT. The spawn was 2_28_80_32_42 - 1824,5162 -
+// nine tiles north of the landing and right under the lectern alcove, where the arena has already
+// narrowed: a 5x5 footprint does not fit north of z5161 anywhere on that map square
+// (tools/sim/blockfit.ts). npc_add put it there, the engine took it away on the next tick, and the
+// quest's first fight was against an empty arena with nothing in the log to say so.
+^dm_arena_boss = 2_28_80_32_37
 ^dm_arena_cyrisus = 2_28_80_28_33
 
 // =============================================================================== the reward
