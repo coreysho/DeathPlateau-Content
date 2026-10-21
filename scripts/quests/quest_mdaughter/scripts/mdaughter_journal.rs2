@@ -3,61 +3,82 @@ def_string $text;
 
 switch_int (%mdaughter_quest_var) {
     case ^mdaughter_not_started :
-        $text = "@dbl@I can start this quest by speaking to @dre@Hamal the|@dre@Chieftain@dbl@ at the @dre@Mountain Camp@dbl@, north of Rellekka|";
-        $text = append($text, "@dbl@I will need @dre@level 20 Agility@dbl@ and a way to defeat a|");
-        $text = append($text, "@dre@dangerous opponent");
+        $text = "@dbl@I can start this quest by speaking to @dre@Hamal the|@dre@Chieftain@dbl@ at the @dre@Mountain Camp@dbl@, east of Rellekka.|";
+        $text = append($text, "@dbl@The camp will not let me over the rockslide, so I will|");
+        $text = append($text, "@dbl@need a @dre@rope@dbl@ for the boulder on the ledge above it.||");
+        $text = append($text, "@dbl@Requirements:|");
+        if (stat_base(agility) < 20) {
+            $text = append($text, "@dre@Level 20 Agility|");
+        } else {
+            $text = append($text, "@str@Level 20 Agility|");
+        }
+        $text = append($text, "@dbl@Must be able to defeat a @dre@level 70 opponent");
 
     case ^mdaughter_started :
-        $text = "@str@Hamal, chieftain of the mountain camp, will not treat me|";
-        $text = append($text, "@str@as anything but a trespasser until I make myself useful.|");
-        $text = append($text, "@dbl@I should bring him @dre@three white pearls@dbl@ from the thorny|");
-        $text = append($text, "@dbl@bushes");
+        $text = "@str@Hamal's daughter Asleif went out to the lake ten years|";
+        $text = append($text, "@str@ago and never came back. He has let me look for her.|");
+        $text = append($text, "@dbl@I should follow the shore @dre@west@dbl@ of the camp. The @dre@tall tree|");
+        $text = append($text, "@dbl@@dre@@dbl@by the geysers needs @dre@mud@dbl@ on it before it can be climbed,|");
+        $text = append($text, "@dbl@and the water past it needs a @dre@pole@dbl@ and a @dre@plank@dbl@");
 
-    case ^mdaughter_found_svidi :
-        $text = "@str@Hamal's daughter Svidi left the camp a year ago and is|";
-        $text = append($text, "@str@living rough to the west. She will not cross Fremennik|");
-        $text = append($text, "@str@land without a guarantee of safe passage.|");
-        $text = append($text, "@dbl@I should ask @dre@Brundt@dbl@ in @dre@Rellekka@dbl@ for one");
+    case ^mdaughter_heard_asleif :
+        $text = "@str@Asleif is dead, and her voice comes out of the Shining|";
+        $text = append($text, "@str@pool. She will not ask me the thing that matters until|");
+        $text = append($text, "@str@the camp can live without her.|");
+        if (%mdaughter_relations_var >= ^mdaughter_peace_done) {
+            $text = append($text, "@str@Svidi is going to Rellekka.|");
+        } else if (%mdaughter_relations_var = ^mdaughter_peace_has_guarantee) {
+            $text = append($text, "@dbl@I should take the @dre@safety guarantee@dbl@ to @dre@Svidi@dbl@, west of the|@dbl@camp|");
+        } else if (%mdaughter_relations_var = ^mdaughter_peace_brundt_wants_rock) {
+            $text = append($text, "@dbl@@dre@Brundt@dbl@ wants Rellekka's @dre@Ancient Rock@dbl@ back. A @dre@pickaxe|@dbl@would split it|");
+        } else if (%mdaughter_relations_var = ^mdaughter_peace_found_svidi) {
+            $text = append($text, "@dbl@@dre@Svidi@dbl@ will not cross Fremennik land without it in|@dbl@writing. I should ask @dre@Brundt@dbl@ in @dre@Rellekka|");
+        } else {
+            $text = append($text, "@dbl@I should find @dre@Svidi@dbl@, who was sent to @dre@Rellekka@dbl@ to open a|@dbl@trade and never arrived|");
+        }
+        if (%mdaughter_food_var >= ^mdaughter_food_done) {
+            $text = append($text, "@str@Hamal has a seed that will grow up here.");
+        } else if (%mdaughter_food_var = ^mdaughter_food_has_seed) {
+            $text = append($text, "@dbl@I should give the @dre@white pearl seed@dbl@ to @dre@Hamal");
+        } else if (%mdaughter_food_var = ^mdaughter_food_jokul) {
+            $text = append($text, "@dbl@@dre@White Pearls@dbl@ grow on thorn bushes on @dre@White Wolf|@dbl@@dre@Mountain@dbl@. I will want @dre@gloves@dbl@, and the seed is inside|@dbl@the fruit");
+        } else {
+            $text = append($text, "@dbl@I should ask @dre@Jokul@dbl@ what grows this high up");
+        }
 
-    case ^mdaughter_has_guarantee :
-        $text = "@str@Brundt has put Svidi's safe passage in writing.|";
-        $text = append($text, "@dbl@I should take the @dre@safety guarantee@dbl@ back to @dre@Svidi");
-
-    case ^mdaughter_has_necklace :
-        $text = "@str@Svidi left because her mother Asleif was never found and|";
-        $text = append($text, "@str@never buried. She gave me Asleif's necklace.|");
-        $text = append($text, "@dbl@I should show the @dre@necklace@dbl@ to @dre@Hamal");
-
-    case ^mdaughter_told_hamal :
-        $text = "@str@Asleif drowned and was never recovered. Hamal has asked|";
-        $text = append($text, "@str@me to find her and bury her properly.|");
-        $text = append($text, "@dbl@I should @dre@dig below the roots@dbl@ where the water has|");
-        $text = append($text, "@dbl@pulled them up, with a @dre@spade");
-
-    case ^mdaughter_has_corpse :
-        $text = "@str@I have found Asleif.|";
-        $text = append($text, "@dbl@I should bury her at the @dre@burial ground@dbl@, and cap the|");
-        $text = append($text, "@dbl@mound with @dre@half of the Ancient Rock");
-
-    case ^mdaughter_buried :
-        $text = "@str@Asleif lies under a cairn with a stone off the Ancient|";
-        $text = append($text, "@str@Rock on top of her. Whatever killed her was not the|");
-        $text = append($text, "@str@water - it was the thing the camp calls the Kendal.|");
-        $text = append($text, "@dbl@I should go to the @dre@cave@dbl@ south of the camp");
+    case ^mdaughter_asked_of_death :
+        $text = "@str@Asleif wants her father to believe she is dead, and the|";
+        $text = append($text, "@str@thing that took her still has her.|");
+        $text = append($text, "@dbl@The @dre@Kendal@dbl@ is in a cave @dre@south-east@dbl@ of the camp, behind|");
+        $text = append($text, "@dbl@dead trees. I will need an @dre@axe@dbl@ to cut through and|");
+        $text = append($text, "@dbl@something to fight with");
 
     case ^mdaughter_kendal_dead :
-        $text = "@str@The Kendal was a man in a bearskin who had been living|";
-        $text = append($text, "@str@off the camp's offerings for thirty years.|");
-        $text = append($text, "@dbl@I should take the @dre@bearhead@dbl@ back to @dre@Hamal");
+        $text = "@str@The Kendal was a man in a bear skin, and he admitted|";
+        $text = append($text, "@str@what he did to Asleif before he came at me.|");
+        $text = append($text, "@dbl@I should show @dre@Hamal@dbl@ what I carried out of the cave");
 
-    case ^mdaughter_complete :
-        $text = "@str@Hamal's daughter Svidi had left the mountain camp|";
-        $text = append($text, "@str@because her mother Asleif was never found after she|");
-        $text = append($text, "@str@drowned, and the camp carried on as though she had never|");
-        $text = append($text, "@str@existed.|");
-        $text = append($text, "@str@I found Asleif under the roots by the water and buried|");
-        $text = append($text, "@str@her under a cairn, and I killed the thing that had been|");
-        $text = append($text, "@str@taking from the camp for thirty years. It was a man.||");
+    case ^mdaughter_told_hamal :
+        $text = "@str@Hamal has seen his daughter's body.|";
+        $text = append($text, "@dbl@@dre@Ragnar@dbl@ has kept her @dre@necklace@dbl@ for ten years. She should|");
+        $text = append($text, "@dbl@be buried with it");
+
+    case ^mdaughter_has_necklace :
+        $text = "@str@Ragnar has given me Asleif's necklace.|";
+        $text = append($text, "@dbl@I should @dre@bury@dbl@ her on the @dre@island@dbl@ in the lake, and build a|");
+        $text = append($text, "@dbl@cairn over her with @dre@five rocks@dbl@ off the @dre@goat pen");
+
+    case ^mdaughter_buried :
+        $text = "@str@Asleif is in the ground on the island, with her|";
+        $text = append($text, "@str@necklace on.|");
+        $text = append($text, "@dbl@The mountain people mark their dead with stone. I need|");
+        $text = append($text, "@dbl@@dre@five rocks@dbl@ from the @dre@goat pen@dbl@ for the cairn");
+
+    case default :
+        $text = "@str@Asleif Hamalsdotter is under a cairn on the island where|";
+        $text = append($text, "@str@her father can see it, the camp is trading with Rellekka,|");
+        $text = append($text, "@str@and there is something in the ground that will come up|");
+        $text = append($text, "@str@next spring.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 }
 

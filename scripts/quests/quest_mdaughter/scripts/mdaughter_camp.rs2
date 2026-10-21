@@ -1,37 +1,49 @@
-// Svidi, Brundt's safe-conduct, and the three camp npcs who have something to say.
+// Svidi, Brundt's safe-conduct, Ragnar, Jokul, and the camp npcs who have something to say.
 
 // =========================================================================== Svidi
 
-// Svidi is at m42_57 local(26,24), west of the camp on the Fremennik side of the mountain. She
-// will not go back without a guarantee that Rellekka will let her pass, which is what sends the
-// player to Brundt.
+// Svidi is at m42_57 local(26,24), in the forest west of the camp above the dwarves' road. Hamal
+// sent him down to Rellekka a year ago to open a trade and he has been hiding between the two of
+// them ever since, because he is sure the Fremennik hang mountain folk who cross their land. The
+// cache's own obj says so: mdaughter_safety_guarantee "supposedly grant Svidi safe passage into
+// Rellekka".
 [opnpc1,mdaughter_svidi]
-switch_int (%mdaughter_quest_var) {
-    case ^mdaughter_started : @svidi_first;
-    case ^mdaughter_found_svidi : @svidi_wants_guarantee;
-    case ^mdaughter_has_guarantee : @svidi_guarantee;
+if (%mdaughter_relations_var = ^mdaughter_peace_none) {
+    ~chatnpc("<p,scared>I'm not here. You haven't seen me.");
+    ~chatplayer("<p,confused>Right.");
+    return;
+}
+switch_int (%mdaughter_relations_var) {
+    case ^mdaughter_peace_asked : @svidi_first;
+    case ^mdaughter_peace_found_svidi : @svidi_wants_guarantee;
+    case ^mdaughter_peace_brundt_wants_rock : @svidi_wants_guarantee;
+    case ^mdaughter_peace_has_guarantee : @svidi_guarantee;
     case default : @svidi_after;
 }
 
 [label,svidi_first]
-if (%mdaughter_relations_var < 1) {
-    ~chatnpc("<p,angry>I don't know you. Go away.");
-    return;
-}
 ~chatplayer("<p,quiz>Are you Svidi?");
-~chatnpc("<p,shock>Who's asking?");
-~chatplayer("<p,neutral>Your father.");
-~chatnpc("<p,angry>Then you can go back up and tell him I'm not coming.");
-%mdaughter_quest_var = ^mdaughter_found_svidi;
-~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
+~chatnpc("<p,scared>Who's asking? Did he send you? He sent you.");
+~chatplayer("<p,neutral>Hamal thinks you're in Rellekka opening a trade.");
+~chatnpc("<p,sad>Hamal thinks a lot of things.");
+%mdaughter_relations_var = ^mdaughter_peace_found_svidi;
 @svidi_wants_guarantee;
 
 [label,svidi_wants_guarantee]
-~chatplayer("<p,quiz>Why won't you go back?");
-~chatnpc("<p,sad>Because to get there I have to cross Fremennik land, and the Fremennik hang mountain folk who cross it.");
-~chatnpc("<p,neutral>Get me something in writing from whoever speaks for Rellekka and I'll think about it.");
+~chatplayer("<p,quiz>Why haven't you gone in?");
+~chatnpc("<p,scared>Because they hang mountain folk who walk onto Fremennik land. My grandfather told me so and he had it off his.");
+switch_int (~p_choice2("Can't I persuade you to go in there somehow?", 1, "Then I'll go instead.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Then I'll go instead.");
+        ~chatnpc("<p,angry>You'll go and tell him where I am, is what you'll do.");
+        mes("Svidi backs off into the trees.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Can't I persuade you to go in there somehow?");
+}
+~chatnpc("<p,neutral>...get it from whoever speaks for Rellekka, in writing, that I may cross. Then I'll go.");
 ~chatplayer("<p,neutral>That would be Brundt.");
-~chatnpc("<p,neutral>Then go and see Brundt.");
+~chatnpc("<p,neutral>Then go and see Brundt, and don't come back without it.");
 
 [label,svidi_guarantee]
 if (inv_total(inv, mdaughter_safety_guarantee) = 0) {
@@ -42,89 +54,180 @@ if (inv_total(inv, mdaughter_safety_guarantee) = 0) {
 ~chatplayer("<p,happy>Signed by Brundt himself.");
 mes("You hand Svidi the safety guarantee.");
 inv_del(inv, mdaughter_safety_guarantee, 1);
-~chatnpc("<p,neutral>...he actually did it.");
-~chatnpc("<p,sad>I'll go up. Not today. But I'll go up.");
-~chatplayer("<p,quiz>Why did you really leave?");
-~chatnpc("<p,sad>Because they never found my mother, and they went on as though that was a thing you could live with.");
-~chatnpc("<p,sad>Give him this. He'll know it. Tell him I want her put in the ground like anyone else.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>...when you've a hand free for it. Come back.");
-    return;
-}
-%mdaughter_quest_var = ^mdaughter_has_necklace;
-~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
-inv_add(inv, mdaughter_necklace, 1);
-mes("Svidi gives you a necklace.");
+%mdaughter_relations_var = ^mdaughter_peace_done;
+~chatnpc("<p,shock>...he actually put his name to it.");
+~chatnpc("<p,neutral>Then I'll go down tomorrow, and the camp can eat something that isn't goat.");
+~chatplayer("<p,quiz>Why did you really stay out here a year?");
+~chatnpc("<p,sad>Because the last thing Hamal said to me was not to come back without a trade, and I believed him.");
 
 [label,svidi_after]
 if (%mdaughter_quest_var >= ^mdaughter_buried) {
-    ~chatnpc("<p,happy>She's buried, then. Properly.");
-    ~chatplayer("<p,happy>Under a cairn, with a stone off the Ancient Rock.");
-    ~chatnpc("<p,sad>Good. That's all I ever wanted out of him.");
+    ~chatnpc("<p,sad>They tell me Asleif is under a cairn on the island.");
+    ~chatplayer("<p,neutral>She is.");
+    ~chatnpc("<p,neutral>Good. There was no living with that camp while she was still out in the water somewhere.");
     return;
 }
-~chatnpc("<p,neutral>I've said what I've got to say.");
+~chatnpc("<p,neutral>I'm going down to Rellekka. Don't rush me.");
 
 // =========================================================================== Brundt
 
 // Brundt has only op1=Talk-to in the cache, so there is no second option to hang this on - it has
 // to go inside [opnpc1,viking_brundt] in quest_viking.rs2, which calls this proc before anything
 // else and stops there if it handled the turn.
+// He wants the stone back before he puts anything in writing. The camp took it three generations
+// ago and will not give it up whole, which is what the pickaxe is for.
 [proc,mdaughter_brundt]()(boolean)
-if (%mdaughter_quest_var ! ^mdaughter_found_svidi) {
-    return (false);
-}
-~chatplayer("<p,neutral>There's a woman from the mountain camp living rough west of here. She wants to go home and she won't cross your land to do it.");
-~chatnpc("<p,quiz>And why would that be my concern?");
-~chatplayer("<p,neutral>Because she thinks you'd hang her for it.");
-~chatnpc("<p,neutral>...we have not hanged anyone for that in my lifetime. Her grandmother's, perhaps.");
-~chatnpc("<p,neutral>Very well. She may cross. I will put it in writing, since apparently my word travels badly.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>When you have a hand free to carry it.");
+if (%mdaughter_relations_var = ^mdaughter_peace_found_svidi) {
+    ~chatplayer("<p,neutral>There's a man from the mountain camp living rough in the forest east of here. He was sent to open a trade with you a year ago and he's too frightened to walk in.");
+    ~chatnpc("<p,quiz>Frightened of what?");
+    ~chatplayer("<p,neutral>Of being hanged for crossing your land.");
+    ~chatnpc("<p,neutral>We have not hanged anyone for that in my lifetime. His grandmother's, perhaps.");
+    ~chatnpc("<p,angry>And before I write anything down for that camp, they can give back what they took off this one. The Ancient Rock of Rellekka has sat in a tent up that mountain for three generations.");
+    ~chatplayer("<p,quiz>And if they won't give it up?");
+    ~chatnpc("<p,neutral>Then bring me enough of it that I can show my people we have it back.");
+    %mdaughter_relations_var = ^mdaughter_peace_brundt_wants_rock;
     return (true);
 }
-%mdaughter_quest_var = ^mdaughter_has_guarantee;
-~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
-inv_add(inv, mdaughter_safety_guarantee, 1);
-mes("Brundt marks a strip of hide and hands it to you.");
-return (true);
+if (%mdaughter_relations_var = ^mdaughter_peace_brundt_wants_rock) {
+    if (inv_total(inv, mdaughter_half_rock) = 0) {
+        ~chatnpc("<p,quiz>The Rock. Have you got it?");
+        ~chatplayer("<p,sad>Not yet.");
+        ~chatnpc("<p,neutral>Then we have nothing to discuss.");
+        return (true);
+    }
+    mes("You put half of the Ancient Rock on the table in front of Brundt.");
+    ~chatnpc("<p,shock>...this is half a rock.");
+    ~chatplayer("<p,neutral>It's half their rock. It was going to be none of it.");
+    ~chatnpc("<p,neutral>Hah! Half each. That is more Fremennik than anything that camp has done in a hundred years.");
+    if (inv_freespace(inv) = 0) {
+        ~chatnpc("<p,neutral>I will write it when you have a hand free to carry it.");
+        return (true);
+    }
+    inv_del(inv, mdaughter_half_rock, 1);
+    %mdaughter_relations_var = ^mdaughter_peace_has_guarantee;
+    %mdaughter_brundt_done = ^true;
+    inv_add(inv, mdaughter_safety_guarantee, 1);
+    ~chatnpc("<p,happy>Tell him he may cross. Tell him the hall is open to him, and that I will have the other half off him in trade.");
+    mes("Brundt marks a strip of hide and hands it to you.");
+    return (true);
+}
+return (false);
 
 // =========================================================================== the camp
 
 [opnpc1,mdaughter_rockslide_guard]
-if (%mdaughter_relations_var >= 1) {
-    ~chatnpc("<p,happy>Hamal's errand-runner. Go on through.");
+if (%mdaughter_quest_var >= ^mdaughter_started) {
+    ~chatnpc("<p,neutral>Hamal says you may come and go. I still do not like it.");
     return;
 }
-~chatnpc("<p,angry>Outsider. The chieftain is at the far end of the camp, and he will not thank you for the interruption.");
-~chatplayer("<p,neutral>I'll risk it.");
-~chatnpc("<p,neutral>Everyone does.");
+~chatnpc("<p,angry>Outsider. You came over that boulder, which means you are either determined or stupid.");
+~chatplayer("<p,neutral>Determined.");
+~chatnpc("<p,neutral>The chieftain is at the east end of the camp. He will not thank you for the interruption, and he will not thank me for letting you past, so go and be quick about it.");
 
 [opnpc1,mdaughter_ragnar]
 if (%mdaughter_quest_var >= ^mdaughter_has_necklace) {
-    ~chatnpc("<p,sad>Svidi gave you that necklace, did she. She showed it to me once and would not say where she had it.");
-    ~chatplayer("<p,neutral>It was her mother's.");
-    ~chatnpc("<p,sad>Ah. That would be why.");
-    return;
+    @ragnar_after;
 }
-~chatnpc("<p,neutral>Svidi used to sit where you're standing. Before she went.");
-~chatplayer("<p,quiz>Where did she go?");
-~chatnpc("<p,neutral>Down. That's all anyone here will tell you, and it's all any of us know.");
+if (%mdaughter_quest_var = ^mdaughter_told_hamal) {
+    @ragnar_necklace;
+}
+~chatnpc("<p,neutral>I'm waiting. Don't let me keep you.");
+switch_int (~p_choice2("Waiting for what?", 1, "Fair enough.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Fair enough.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>Waiting for what?");
+}
+~chatnpc("<p,sad>Asleif. We were to be married the spring she went out to the water.");
+~chatplayer("<p,quiz>That was ten years ago.");
+~chatnpc("<p,angry>It was. And every man in this camp has told me so, and her father has not, and he is the only one of them I will listen to.");
 
-[opnpc1,mdaughter_jokul]
-if (%mdaughter_quest_var >= ^mdaughter_buried) {
-    ~chatnpc("<p,angry>You put a stone off the Ancient Rock on a grave. For an outsider you have a nerve.");
-    ~chatplayer("<p,neutral>Hamal asked me to.");
-    ~chatnpc("<p,neutral>...then he has more sense than I credited him with. Hmph.");
+[label,ragnar_necklace]
+~chatnpc("<p,sad>Hamal came out of his tent. He has not come out of his tent in ten years.");
+~chatplayer("<p,sad>I found her. She was in the Kendal's cave.");
+~chatnpc("<p,shock>...");
+~chatnpc("<p,sad>Then I have been standing by this water being a fool for ten years.");
+~chatplayer("<p,neutral>You've been the only one here who never gave up on her. Hamal says you have her necklace.");
+~chatnpc("<p,angry>I was going to give it back to her.");
+~chatplayer("<p,neutral>You still can.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,sad>...when you have a hand free for it. It is not going anywhere.");
     return;
 }
-~chatnpc("<p,angry>We leave food out for the Kendal and the Kendal leaves us alone. That is the arrangement, and I will thank you not to meddle in it.");
+~chatnpc("<p,sad>...put it on her. I will not watch.");
+mes("Ragnar gives you Asleif's necklace.");
+inv_add(inv, mdaughter_necklace, 1);
+%mdaughter_quest_var = ^mdaughter_has_necklace;
+~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
+
+[label,ragnar_after]
+if (%mdaughter_quest_var >= ^mdaughter_buried) {
+    ~chatnpc("<p,sad>I can see the cairn from here. That is not nothing.");
+    return;
+}
+~chatnpc("<p,sad>Put it on her before you cover her up.");
+
+// Jokul keeps the goats and has been thinking about what grows at this height for ten years. He is
+// also where the pole comes from - "if you didn't bring a staff or pole, get a pole from Jokul" -
+// and the goat pen is full of the things.
+[opnpc1,mdaughter_jokul]
+if (%mdaughter_quest_var >= ^mdaughter_started & inv_total(inv, mdaughter_stick) = 0 & inv_total(inv, mdaughter_polevault) = 0) {
+    switch_int (~p_choice2("Have you got a pole I could borrow?", 1, "Never mind.", 2)) {
+        case 1 : @jokul_pole;
+    }
+}
+@jokul_quest;
+
+[label,jokul_pole]
+~chatplayer("<p,quiz>Have you got a pole I could borrow?");
+~chatnpc("<p,angry>A pole. You want a pole off a goatherd.");
+~chatplayer("<p,neutral>There's a gap out on the water I can't jump.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,angry>And nowhere to put it. Come back with a hand free.");
+    return;
+}
+~chatnpc("<p,neutral>...take one off the pen. Bring it back or don't; the goats will chew through another.");
+inv_add(inv, mdaughter_stick, 1);
+mes("Jokul pulls a rail off the goat pen and hands it to you.");
+
+[label,jokul_quest]
+if (%mdaughter_food_var >= ^mdaughter_food_done) {
+    ~chatnpc("<p,happy>Hamal gave me a seed and told me to be quiet. I am planting it where the goats cannot reach.");
+    return;
+}
+if (%mdaughter_food_var = ^mdaughter_food_none) {
+    ~chatnpc("<p,angry>We leave food out for the Kendal and the Kendal leaves us alone. That is the arrangement, and I will thank you not to meddle in it.");
+    return;
+}
+if (%mdaughter_food_var >= ^mdaughter_food_jokul) {
+    ~chatnpc("<p,quiz>Have you found a White Pearl bush yet?");
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>The high ground west of here, where the wolves are. Wear something on your hands.");
+    return;
+}
+~chatplayer("<p,quiz>Does anything grow up here?");
+~chatnpc("<p,angry>Goats eat. That is what grows up here.");
+~chatplayer("<p,neutral>The camp is starving on goats.");
+~chatnpc("<p,sad>...it is.");
+~chatnpc("<p,neutral>There is a fruit the old ones called the White Pearl. It grows on thorn bushes on the high ground, where it has no business growing at all, which is exactly why it would grow here.");
+~chatplayer("<p,quiz>So we plant the fruit?");
+~chatnpc("<p,angry>You plant the SEED, and the seed is in the middle of the fruit, and there is only one way to get it out of there.");
+~chatplayer("<p,neutral>...I eat it.");
+~chatnpc("<p,happy>You eat it. Mind the thorns on the way in - wear gloves, or you will come back with nothing but holes.");
+%mdaughter_food_var = ^mdaughter_food_jokul;
 
 // The guard at the Ancient Rock's tent, and the five camp dwellers, all had Talk-to and nothing
 // behind it.
 [opnpc1,mdaughter_ancientrock_guard]
-if (%mdaughter_quest_var >= ^mdaughter_told_hamal & %mdaughter_quest_var < ^mdaughter_buried) {
-    ~chatnpc("<p,neutral>Hamal says you may take a piece of the Rock. Go on in.");
+if (%mdaughter_relations_var = ^mdaughter_peace_brundt_wants_rock) {
+    ~chatnpc("<p,angry>Hamal says Rellekka wants its stone back and that you are to try. I think he has lost his mind.");
+    ~chatplayer("<p,neutral>Probably. Can I go in?");
+    ~chatnpc("<p,angry>Go in. Take a pickaxe. It will not come apart for pulling.");
+    return;
+}
+if (%mdaughter_relations_var > ^mdaughter_peace_brundt_wants_rock) {
+    ~chatnpc("<p,sad>Half a rock. Three generations and we are down to half a rock.");
     return;
 }
 ~chatnpc("<p,neutral>The Ancient Rock. It is not for outsiders to touch.");
@@ -137,7 +240,11 @@ if (%mdaughter_quest_var >= ^mdaughter_told_hamal & %mdaughter_quest_var < ^mdau
 
 [label,mdaughter_camp_dweller]
 if (%mdaughter_quest_var >= ^mdaughter_complete) {
-    ~chatnpc("<p,happy>You are the one who went into the Kendal's cave. Welcome, friend.");
+    ~chatnpc("<p,happy>You are the one who went into the Kendal's cave and came back out. Welcome, friend.");
+    return;
+}
+if (%mdaughter_quest_var >= ^mdaughter_started) {
+    ~chatnpc("<p,neutral>Hamal has you looking for Asleif. Everyone here has looked for Asleif.");
     return;
 }
 ~chatnpc("<p,neutral>Talk to Hamal, outsider. He speaks for all of us.");

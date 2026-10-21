@@ -1,129 +1,155 @@
 // Hamal the Chieftain, at the east end of the Mountain Camp (npc 1807, m43_57 local 59_25).
 //
-// He carries the whole quest. %mdaughter_relations_var is the one thing tracked outside the main
-// stage: it records that he has accepted the white pearls, which is what turns the player from an
-// outsider into someone he will speak plainly to. It is deliberately not folded into the stage
-// var, because the camp's opinion of the player and the progress of the quest are two different
-// things - the cache keeps them apart too.
+// He is Asleif's father. He has had men out looking for her for ten years and the camp has stopped
+// telling him to stop, and he will not hear a word about her being dead until somebody puts her in
+// front of him. That is the quest.
+//
+// He also takes delivery of the two things the pool asks for, which are tracked apart from the
+// stage var: %mdaughter_relations_var for the peace with Rellekka and %mdaughter_food_var for
+// something that will grow up here. %mdaughter_hamal_relations_done and %mdaughter_hamal_heardofbear
+// are the two "he has been told" flags the cache keeps for him.
 
 [opnpc1,mdaughter_hamal]
 switch_int (%mdaughter_quest_var) {
     case ^mdaughter_not_started : @hamal_outsider;
-    case ^mdaughter_started : @hamal_pearls;
-    case ^mdaughter_found_svidi : @hamal_waiting_on_svidi;
-    case ^mdaughter_has_guarantee : @hamal_waiting_on_svidi;
-    case ^mdaughter_has_necklace : @hamal_necklace;
-    case ^mdaughter_told_hamal : @hamal_burial_pending;
-    case ^mdaughter_has_corpse : @hamal_burial_pending;
-    case ^mdaughter_buried : @hamal_the_kendal;
-    case ^mdaughter_kendal_dead : @hamal_finish;
+    case ^mdaughter_started : @hamal_looking;
+    case ^mdaughter_heard_asleif : @hamal_errands;
+    case ^mdaughter_asked_of_death : @hamal_will_not_hear_it;
+    case ^mdaughter_kendal_dead : @hamal_the_body;
+    case ^mdaughter_told_hamal : @hamal_necklace;
+    case ^mdaughter_has_necklace : @hamal_burial;
+    case ^mdaughter_buried : @hamal_burial;
     // Never fall off the end and leave him silent.
     case default : @hamal_after;
 }
 
+// --------------------------------------------------------------------------- starting it
 [label,hamal_outsider]
 ~chatnpc("<p,angry>Outsider. You are a long way up the mountain.");
-switch_int (~p_choice2("I mean no harm.", 1, "I'll go where I like.", 2)) {
-    case 2 :
+switch_int (~p_choice3("Why is everyone so hostile?", 1, "I mean no harm.", 2, "I'll go where I like.", 3)) {
+    case 3 :
         ~chatplayer("<p,neutral>I'll go where I like.");
         ~chatnpc("<p,angry>Then go somewhere else.");
         return;
-    case 1 :
+    case 2 :
         ~chatplayer("<p,neutral>I mean no harm.");
+        ~chatnpc("<p,neutral>Everyone means no harm. The last outsiders up here meant no harm too, and we are fewer than we were.");
+        ~chatplayer("<p,quiz>Why is everyone so hostile?");
+    case 1 :
+        ~chatplayer("<p,quiz>Why is everyone so hostile?");
 }
-~chatnpc("<p,neutral>Everyone means no harm. The last outsiders up here meant no harm either, and we are fewer than we were.");
-~chatnpc("<p,neutral>If you want me to speak to you as a man and not as a trespasser, do something useful. The thorn bushes are heavy with white pearls and my people are hungry.");
-~chatnpc("<p,neutral>Bring me three, and I will know you can be sent for something.");
+~chatnpc("<p,angry>Because the last time this camp trusted anyone from below, we came back up it with half the number we went down with.");
+~chatnpc("<p,sad>And because ten years ago my daughter went out to the water and did not come back, and I have had men looking for her ever since, and there is nothing left in this camp but looking.");
+switch_int (~p_choice2("I could look for her.", 1, "That's your problem, not mine.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>That's your problem, not mine.");
+        ~chatnpc("<p,angry>It is. Get off my mountain.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>I could look for her.");
+}
+~chatnpc("<p,quiz>You. An outsider, who has been here the length of one conversation.");
+~chatplayer("<p,neutral>Nobody here will tell you anything you want to hear. I've no reason not to.");
+~chatnpc("<p,neutral>...no. You have not.");
+~chatnpc("<p,neutral>Her name is Asleif. She went west along the shore of the lake and that is the last of it anyone knows.");
+~chatnpc("<p,neutral>I will tell the slide you may come and go. Do not make me regret it.");
 %mdaughter_quest_var = ^mdaughter_started;
 ~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
 
-[label,hamal_pearls]
-// He only has to be won over once. Without this, every later conversation at this stage took
-// another three pearls off the player and replayed the whole speech.
-if (%mdaughter_relations_var >= 1) {
-    ~chatnpc("<p,quiz>Well? Have you found Svidi?");
-    ~chatplayer("<p,sad>Not yet.");
-    ~chatnpc("<p,neutral>West of here, between us and the Fremennik. She will not want to be found.");
-    return;
-}
-if (inv_total(inv, mdaughter_white_pearl_fruit) < ^mdaughter_pearls_wanted) {
-    ~chatnpc("<p,quiz>Three white pearls, outsider. Have you them?");
-    ~chatplayer("<p,sad>Not yet.");
-    ~chatnpc("<p,neutral>The bushes are thorny. So is the mountain. Keep picking.");
-    return;
-}
-~chatplayer("<p,happy>Three white pearls, as you asked.");
-inv_del(inv, mdaughter_white_pearl_fruit, ^mdaughter_pearls_wanted);
-%mdaughter_relations_var = 1;
-~chatnpc("<p,happy>So you can be sent for something after all.");
-~chatnpc("<p,sad>Then I will ask you for something I cannot ask my own people, because they would not come back.");
-~chatnpc("<p,sad>My daughter. Svidi. She went down the mountain a year ago and she has not been up it since.");
-~chatplayer("<p,quiz>Why did she go?");
-~chatnpc("<p,angry>Because I told her to, and I have regretted it every day since. Find her. Tell her the camp is still here.");
-~chatnpc("<p,neutral>She will be somewhere west of here, between us and the Fremennik. She will not want to be found.");
+[label,hamal_looking]
+~chatnpc("<p,quiz>Well? The lake shore. West.");
+~chatplayer("<p,neutral>I'm still looking.");
+~chatnpc("<p,neutral>So is everyone. Look harder than they do.");
 
-[label,hamal_waiting_on_svidi]
-if (%mdaughter_relations_var < 1) {
-    @hamal_outsider;
+// --------------------------------------------------------------------------- the two errands
+[label,hamal_errands]
+if (%mdaughter_food_var = ^mdaughter_food_has_seed & inv_total(inv, mdaughter_white_pearl_seed) > 0) {
+    @hamal_takes_seed;
 }
-~chatnpc("<p,quiz>Have you found her?");
-if (%mdaughter_quest_var = ^mdaughter_has_guarantee) {
-    ~chatplayer("<p,neutral>I have. She won't cross Fremennik land without a guarantee of safe passage - and I've got her one.");
-    ~chatnpc("<p,neutral>Then take it to her, and stop telling me about it.");
-    return;
+if (%mdaughter_relations_var = ^mdaughter_peace_done & %mdaughter_hamal_relations_done = ^false) {
+    @hamal_hears_of_peace;
 }
-~chatplayer("<p,neutral>I've found her. She won't come, and she won't say why.");
-~chatnpc("<p,sad>No. She would not.");
+~chatnpc("<p,quiz>You have been out to the water, then. You have the look.");
+~chatplayer("<p,neutral>Something out there wants two things done for this camp before it will talk to me again.");
+~chatnpc("<p,angry>Something out there. Do not play games with me, outsider.");
+~chatplayer("<p,neutral>Peace with Rellekka, and something that will grow up here.");
+~chatnpc("<p,neutral>...then it knows this camp better than most of this camp does.");
+if (%mdaughter_relations_var < ^mdaughter_peace_done) {
+    ~chatnpc("<p,neutral>I sent Svidi down to Rellekka to open a trade a year ago and he has not come back and he has not gone in. He is in the forest west of here, hiding from both of us.");
+}
+if (%mdaughter_food_var < ^mdaughter_food_done) {
+    ~chatnpc("<p,neutral>And if anything grows this high up, Jokul knows what it is. He is with the goats, north of my tent.");
+}
 
-[label,hamal_necklace]
-if (inv_total(inv, mdaughter_necklace) = 0) {
-    ~chatnpc("<p,quiz>You have the look of someone carrying bad news. Out with it.");
-    ~chatplayer("<p,neutral>Not until I have it in my hand.");
+[label,hamal_takes_seed]
+~chatplayer("<p,happy>Jokul was right about the White Pearl. There's a seed in it.");
+mes("You hand Hamal the white pearl seed.");
+inv_del(inv, mdaughter_white_pearl_seed, 1);
+%mdaughter_food_var = ^mdaughter_food_done;
+~chatnpc("<p,happy>It will grow in frost? Up here?");
+~chatplayer("<p,neutral>That's what the bush it came off was doing.");
+~chatnpc("<p,happy>Then the camp eats next year, and the year after. Jokul can put it in the ground himself; it will keep him quiet.");
+
+[label,hamal_hears_of_peace]
+%mdaughter_hamal_relations_done = ^true;
+~chatplayer("<p,happy>Svidi's going to Rellekka. Brundt has put his safe passage in writing.");
+~chatnpc("<p,shock>Brundt put his name to something for us.");
+~chatplayer("<p,neutral>He wanted the stone back first. He's got half of it.");
+~chatnpc("<p,angry>Half of the Ancient Ro-");
+~chatnpc("<p,neutral>...half. Which is more than we had a right to keep whole. Yes. Let him have it.");
+
+// --------------------------------------------------------------------------- the death
+[label,hamal_will_not_hear_it]
+~chatnpc("<p,quiz>You have that look again.");
+switch_int (~p_choice2("Your daughter is dead.", 1, "Nothing. Never mind.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Nothing. Never mind.");
+        ~chatnpc("<p,neutral>Hm.");
+        return;
+    case 1 :
+        ~chatplayer("<p,sad>Your daughter is dead.");
+}
+~chatnpc("<p,angry>No.");
+~chatplayer("<p,neutral>Ten years.");
+~chatnpc("<p,angry>NO. Not on an outsider's word, not on anybody's word. Bring her to me or do not say it to me again.");
+
+[label,hamal_the_body]
+if (inv_total(inv, mdaughter_daughter_corpse) = 0) {
+    ~chatnpc("<p,quiz>You went into that cave and you came out of it. Where is she?");
+    ~chatplayer("<p,sad>Not on me.");
+    ~chatnpc("<p,neutral>Then go back for her.");
     return;
 }
-~chatplayer("<p,sad>Svidi gave me this. She said you would know it.");
-mes("You show Hamal the necklace.");
+mes("You lay what you brought out of the cave in front of Hamal.");
 ~chatnpc("<p,shock>...");
-~chatnpc("<p,sad>That is Asleif's. My wife's.");
-~chatplayer("<p,quiz>Svidi said she was never buried.");
-~chatnpc("<p,angry>She was never FOUND. She went out to the water and she did not come back, and we searched until the snow came, and we did not find her.");
-~chatnpc("<p,sad>That is why Svidi left. She could not stand the camp going on as if her mother had never been.");
-~chatnpc("<p,neutral>If you would do one more thing for me, outsider - find her, and put her in the ground properly. A mound, and a stone off the Ancient Rock on top of it. That is how it is done here.");
-~chatnpc("<p,neutral>Look where the water has pulled the roots up. That is where anything the lake takes ends up.");
+~chatnpc("<p,sad>Ten years I have had men on that shore.");
+if (inv_total(inv, mdaughter_bear_helmet) > 0) {
+    %mdaughter_hamal_heardofbear = ^true;
+    ~chatplayer("<p,neutral>The thing your camp has been leaving food out for was a man in a bear skin. This is the skin.");
+    ~chatnpc("<p,angry>A man. All these years a man, eating what we left at the mouth of that cave and taking what he liked besides.");
+    ~chatnpc("<p,angry>...and my daughter.");
+    ~chatnpc("<p,neutral>Keep it. I want nothing of his in this camp.");
+} else {
+    ~chatplayer("<p,neutral>The Kendal was a man in a bear skin. He's dead.");
+    ~chatnpc("<p,angry>A man. All these years.");
+}
+~chatnpc("<p,sad>Put her in the ground on the island, where the camp can see it. Ragnar has her necklace - he has carried it for ten years waiting to give it back to her. He can give it to you instead.");
 %mdaughter_quest_var = ^mdaughter_told_hamal;
+%mdaughter_hamal_heardofdeath = ^true;
 ~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
 
-[label,hamal_burial_pending]
-if (inv_total(inv, mdaughter_daughter_corpse) > 0) {
-    ~chatnpc("<p,sad>You have her. Do not bring her to me - take her to the burial ground, and do it properly.");
+[label,hamal_necklace]
+~chatnpc("<p,sad>Ragnar. By the water, where he always is. He will not want to hand it over.");
+
+[label,hamal_burial]
+if (%mdaughter_burial_state = ^mdaughter_burial_mound) {
+    ~chatnpc("<p,neutral>Earth is not enough. Stone on top of it, or the winter will have her up again.");
     return;
 }
-~chatnpc("<p,neutral>Dig below the roots where the water has pulled them up. Take a spade.");
-
-[label,hamal_the_kendal]
-~chatnpc("<p,sad>It is done, then. Thank you.");
-~chatplayer("<p,neutral>There's something else. Whatever took her out of the water didn't drown her.");
-~chatnpc("<p,angry>No. It did not.");
-~chatnpc("<p,angry>There is a thing in the cave to the south that my people call the Kendal, and treat as a spirit of the mountain, and leave food for.");
-~chatnpc("<p,angry>I have never believed in it. I have believed in what it has taken from me.");
-~chatplayer("<p,neutral>Then I'll go and look at it.");
-~chatnpc("<p,neutral>Go carefully. If it is a spirit, you will not come back. If it is not, bring me its head.");
-
-[label,hamal_finish]
-if (inv_total(inv, mdaughter_bear_helmet) = 0) {
-    ~chatnpc("<p,quiz>You killed it. Where is its head?");
-    ~chatplayer("<p,sad>I don't have it on me.");
-    ~chatnpc("<p,neutral>Then fetch it. I want my people to see what they have been feeding.");
-    return;
-}
-~chatplayer("<p,neutral>It was a man in a bearskin.");
-mes("You show Hamal the bearhead.");
-~chatnpc("<p,angry>A man. All these years, a man, eating what we left out for him and taking what he liked besides.");
-~chatnpc("<p,sad>...and my wife.");
-~chatnpc("<p,neutral>Keep it. I want nothing of his in this camp, and you have earned the right to walk into it.");
-~chatnpc("<p,happy>You are no outsider now. Tell Svidi that, when you see her.");
-queue(mdaughter_quest_complete, 0, 0);
+~chatnpc("<p,sad>The island. The necklace on her. Five stones on top. Go on.");
 
 [label,hamal_after]
-~chatnpc("<p,happy>The cairn is still standing. So is the camp.");
-~chatplayer("<p,happy>Glad to hear it.");
+~chatnpc("<p,sad>I can see the cairn from the door of my tent.");
+~chatplayer("<p,neutral>Is that better or worse?");
+~chatnpc("<p,neutral>Better. I had ten years of the water and nothing to look at.");
+~chatnpc("<p,happy>You are no outsider now. Walk where you like.");

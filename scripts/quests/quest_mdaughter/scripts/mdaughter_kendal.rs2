@@ -1,4 +1,7 @@
-// The Kendal, in the cave south of the camp (npc 1811 at m43_157 local 34_33).
+// The Kendal, in the cave south-east of the camp (npc 1811 at m43_157 local 34_33).
+//
+// He is a man in a bear skin who has been eating the camp's offerings for thirty years, and ten
+// years ago he took Asleif out of the lake. The camp thinks he is the mountain.
 //
 // mdaughter_multi_bear is a multi shell keyed on mdaughter_bear_multi_state, and multinpc=0 is its
 // only entry - mdaughter_bearman, which carries both Talk-to and Attack. At any other value the
@@ -8,29 +11,72 @@
 //
 // The triggers go on the shell for the same reason the Recruitment Drive door's do: the handler is
 // looked up against the placed type, not against whatever the multi currently resolves to.
+//
+// %mdaughter_bear_discovery is the cache's own flag for having got him to drop the act, and
+// %mdaughter_bear_mayattack for having pushed him far enough to swing. Both are the quest's, not
+// ours - they are in all.varbit beside the rest of it.
 
 [opnpc1,mdaughter_multi_bear]
-if (%mdaughter_bear_multi_state ! ^mdaughter_kendal_talking) {
-    ~chatnpc("<p,angry>The bearskin has stopped pretending. It comes at you again.");
+if (%mdaughter_bear_mayattack = ^true) {
+    ~chatnpc("<p,angry>The bear skin does not talk any more. It comes at you again.");
     return;
 }
-if (%mdaughter_quest_var < ^mdaughter_buried) {
+if (%mdaughter_quest_var < ^mdaughter_asked_of_death) {
     ~chatnpc("<p,neutral>LEAVE FOOD AND GO.");
     return;
 }
-~chatnpc("<p,neutral>I AM THE KENDAL. I AM THE MOUNTAIN. LEAVE FOOD AND GO.");
-switch_int (~p_choice2("You're a man in a bear skin.", 1, "Sorry to disturb you.", 2)) {
+if (%mdaughter_bear_discovery = ^true) {
+    @kendal_remains;
+}
+~chatnpc("<p,neutral>WHO COMES INTO THE MOUNTAIN?");
+switch_int (~p_choice2("It's just me, no one special.", 1, "Someone who isn't frightened of a voice.", 2)) {
     case 2 :
-        ~chatplayer("<p,sad>Sorry to disturb you.");
-        ~chatnpc("<p,neutral>GO.");
+        ~chatplayer("<p,neutral>Someone who isn't frightened of a voice.");
+        ~chatnpc("<p,angry>THEN THE MOUNTAIN WILL TEACH YOU TO BE. GO.");
         return;
     case 1 :
-        ~chatplayer("<p,neutral>You're a man in a bear skin.");
+        ~chatplayer("<p,neutral>It's just me, no one special.");
 }
+~chatnpc("<p,neutral>NO ONE SPECIAL. GOOD. THE MOUNTAIN IS OWED SOMETHING AND IT IS NOT PARTICULAR.");
+switch_int (~p_choice2("You mean a sacrifice?", 1, "I'll come back another time.", 2)) {
+    case 2 :
+        ~chatplayer("<p,scared>I'll come back another time.");
+        ~chatnpc("<p,neutral>THEY ALL SAY SO.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>You mean a sacrifice?");
+}
+~chatnpc("<p,neutral>THE MOUNTAIN MEANS WHAT IT MEANS.");
+~chatplayer("<p,neutral>The mountain has a seam up the back of its head. You look like a man in a bear suit.");
 ~chatnpc("<p,shock>...");
-~chatnpc("<p,neutral>Thirty years they've left food at that cave mouth and not one of them ever looked.");
+%mdaughter_bear_discovery = ^true;
+~chatnpc("<p,neutral>Thirty years they've left food at that cave mouth and not one of them has ever walked in and looked at me.");
 ~chatplayer("<p,angry>One of them did. Her name was Asleif.");
-~chatnpc("<p,angry>Then she should have gone home when I told her to.");
+~chatnpc("<p,neutral>The girl. Ten years back, maybe more.");
+~chatnpc("<p,angry>She came along the shore and she saw the seam too, and she was going to go back and tell them. So she didn't go back.");
+@kendal_remains;
+
+// Asking for her is where it turns: he is not giving up the one thing that proves what he is.
+[label,kendal_remains]
+switch_int (~p_choice2("Give me her remains.", 1, "I need to think about this.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>I need to think about this.");
+        ~chatnpc("<p,neutral>Think outside.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Give me her remains.");
+}
+~chatnpc("<p,angry>She's at the foot of the pillars with the rest of what the mountain is owed, and she's staying there.");
+~chatnpc("<p,neutral>Nobody carries anything out of this cave.");
+switch_int (~p_choice2("Then I'll take her off your body.", 1, "...fine.", 2)) {
+    case 2 :
+        ~chatplayer("<p,sad>...fine.");
+        ~chatnpc("<p,neutral>Wise. Leave food on the way out.");
+        return;
+    case 1 :
+        ~chatplayer("<p,angry>Then I'll take her off your body.");
+}
+%mdaughter_bear_mayattack = ^true;
 if_close;
 mes("The Kendal drops onto all fours and charges.");
 ~npc_retaliate(0);
@@ -40,14 +86,14 @@ mes("The Kendal drops onto all fours and charges.");
 // [opnpc2] of its own replaces the player's attack, so a melee player just stood there. It now
 // falls through to the ordinary attack, and the multi stays on the Kendal you can see.
 [opnpc2,mdaughter_multi_bear]
-if (%mdaughter_quest_var < ^mdaughter_buried) {
+if (%mdaughter_bear_mayattack = ^false) {
     ~chatnpc("<p,neutral>LEAVE FOOD AND GO.");
     return;
 }
 @player_combat_start;
 
 [apnpc2,mdaughter_multi_bear]
-if (%mdaughter_quest_var < ^mdaughter_buried) {
+if (%mdaughter_bear_mayattack = ^false) {
     p_aprange(1);
     return;
 }
@@ -70,9 +116,16 @@ if (p_finduid(uid) = false) {
 
 [queue,mdaughter_kendal_killed] @mdaughter_kendal_killed;
 
+// She has been at the foot of the pillars for ten years and nothing in the map puts her there, so
+// she goes on the floor when the thing that carried her off is dead. If the body is lost, the
+// Kendal respawns and so does she.
 [label,mdaughter_kendal_killed]
-if (%mdaughter_quest_var = ^mdaughter_buried) {
-    %mdaughter_quest_var = ^mdaughter_kendal_dead;
-    ~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
-    mes("Whatever that was, it was not a spirit.");
+%mdaughter_bear_mayattack = ^false;
+%mdaughter_bear_discovery = ^true;
+if (%mdaughter_quest_var ! ^mdaughter_asked_of_death) {
+    return;
 }
+%mdaughter_quest_var = ^mdaughter_kendal_dead;
+~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
+obj_add(^mdaughter_corpse_pile, mdaughter_daughter_corpse, 1, ^lootdrop_duration);
+~mesbox("Whatever that was, it was not a spirit. There is a heap of bones at the foot of the pillars, and one of them is wearing what is left of a dress.");

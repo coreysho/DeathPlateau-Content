@@ -1,0 +1,90 @@
+// Asleif Hamalsdotter, who has been dead for ten years and talks anyway.
+//
+// She is a voice in the Shining pool and nothing else: the 377 cache has no npc for her, which is
+// why this is message boxes and the player's own chathead rather than a chatnpc. The 38 bubble locs
+// on the lake all carry op1=Listen-to and the same "faint singing" description; only the ones out
+// by the island are close enough to make words out of, and quest_mdaughter.rs2 measures that.
+//
+// She asks for two things and will not ask for the third until both are done. That is why the two
+// tasks have a varbit each - %mdaughter_relations_var and %mdaughter_food_var - instead of being
+// steps on the stage var: they can be done in either order, or half each.
+
+[label,mdaughter_asleif_speaks]
+if (%mdaughter_quest_var < ^mdaughter_started) {
+    ~mesbox("The singing stops when you get close enough to hear it properly, and does not start again while you are standing there.");
+    return;
+}
+if (%mdaughter_quest_var = ^mdaughter_started) {
+    @mdaughter_asleif_first;
+}
+if (%mdaughter_quest_var = ^mdaughter_heard_asleif) {
+    @mdaughter_asleif_tasks;
+}
+if (%mdaughter_quest_var < ^mdaughter_buried) {
+    @mdaughter_asleif_waiting;
+}
+~mesbox("'There is a cairn over me and my father has stopped looking at the water. Thank you.'");
+~mesbox("The singing goes on, and it is not a sad song any more.");
+
+// --------------------------------------------------------------------------- the first meeting
+[label,mdaughter_asleif_first]
+~mesbox("The singing is coming out of the pool itself, and it is a woman's voice, and it is saying your name.");
+~chatplayer("<p,shock>Who's there?");
+~mesbox("'Asleif. Asleif Hamalsdotter, and before you ask - yes. I am dead. Ten years this winter.'");
+switch_int (~p_choice2("Your father has people looking for you.", 1, "I'm talking to a pool.", 2)) {
+    case 2 :
+        ~chatplayer("<p,confused>I'm talking to a pool.");
+        ~mesbox("'You are talking to me. The pool is where what is left of me ended up.'");
+    case 1 :
+        ~chatplayer("<p,neutral>Your father has people looking for you.");
+        ~mesbox("'My father has been looking for me himself for ten years, which is why there is nobody left in that camp with the heart to tell him to stop.'");
+}
+~mesbox("'I will ask you for two things, and then I will ask you for a third, and the third is the one that matters.'");
+~chatplayer("<p,quiz>Go on.");
+~mesbox("'The camp is starving and it is too proud to trade. Make peace with Rellekka - my father has a man called Svidi who was supposed to do it and never got there.'");
+~mesbox("'And find them something that will grow up here. Jokul keeps the goats; ask him what the mountain has in it.'");
+~chatplayer("<p,quiz>And the third thing?");
+~mesbox("'When those are done. Not before. They will need to be able to live without me first.'");
+%mdaughter_quest_var = ^mdaughter_heard_asleif;
+%mdaughter_relations_var = ^mdaughter_peace_asked;
+%mdaughter_food_var = ^mdaughter_food_asked;
+~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
+
+// --------------------------------------------------------------------------- the two tasks
+[label,mdaughter_asleif_tasks]
+if (%mdaughter_relations_var < ^mdaughter_peace_done | %mdaughter_food_var < ^mdaughter_food_done) {
+    ~mesbox("'Not yet.'");
+    if (%mdaughter_relations_var < ^mdaughter_peace_done) {
+        ~mesbox("'Svidi is west of the camp, in the forest above the dwarves' road, and he will not cross Fremennik land on anybody's word alone.'");
+    }
+    if (%mdaughter_food_var < ^mdaughter_food_done) {
+        ~mesbox("'And Jokul still has nothing to plant. Ask him. He has been thinking about it for ten years.'");
+    }
+    return;
+}
+~mesbox("'It is done, then. They are talking to Rellekka and there is something in the ground that will come up next spring.'");
+~chatplayer("<p,neutral>That was the two. What's the third?");
+~mesbox("'Make my father believe I am dead.'");
+~chatplayer("<p,shock>He'd never take my word for it.");
+~mesbox("'No. He will take my body, and the thing that has it still thinks it is a god.'");
+~mesbox("'There is a cave south-east of the camp with dead trees across the mouth of it. They leave food out for what lives in there and call it the Kendal. It took me out of this water.'");
+~chatplayer("<p,neutral>Then I'll go and look at it.");
+~mesbox("'Bring me back. Bury me where the camp can see the cairn, and put my necklace on me - Ragnar has kept it all this time, and he is the last one here who still thinks I am coming back.'");
+%mdaughter_quest_var = ^mdaughter_asked_of_death;
+~send_quest_progress(questlist:mdaughter, %mdaughter_quest_var, ^mdaughter_complete);
+
+// --------------------------------------------------------------------------- after
+[label,mdaughter_asleif_waiting]
+if (%mdaughter_quest_var = ^mdaughter_asked_of_death) {
+    ~mesbox("'The cave is south-east, behind the dead trees. Take something to cut them with.'");
+    return;
+}
+if (%mdaughter_quest_var = ^mdaughter_kendal_dead) {
+    ~mesbox("'You have me, and you have his head. Show my father both.'");
+    return;
+}
+if (%mdaughter_quest_var = ^mdaughter_told_hamal) {
+    ~mesbox("'He knows. Now get my necklace off Ragnar and put me in the ground.'");
+    return;
+}
+~mesbox("'The ground, and the necklace, and five stones on top. That is all that is left.'");

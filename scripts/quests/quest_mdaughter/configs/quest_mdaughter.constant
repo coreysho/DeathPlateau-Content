@@ -1,26 +1,75 @@
 // Mountain Daughter.
 //
-// Unlike The Lost Tribe, nothing in the cache switches on the main stage var - the only two multis
-// in the quest key off their own varbits:
+// REBUILT 2026-10-21 (quest audit). What stood here before was a quest of its own invention: Svidi
+// was Hamal's daughter, Asleif was his dead wife, the quest began by fetching three white pearls as
+// a favour, Asleif's body was dug out of the roots by the mud pond with a spade, the Kendal was
+// gated behind the burial, the half of the Ancient Rock was set on the cairn, and the Shining pool
+// only ever bubbled and smelled of eggs. None of that is the quest.
 //
+// The cache says what the quest is, and says it plainly:
+//
+//   mdaughter_necklace    "This used to belong to Asleif, DAUGHTER of the mountain camp chieftain."
+//   mdaughter_sulphar_gas name="Shining pool", "You can also hear faint singing coming from it",
+//                         op1=Listen-to - placed 38 times across the lake, including on the island.
+//   mdaughter_swampbubbles1 name="Mud", op1=Dig-up, beside six mdaughter_roots_1 "Dig-below"
+//   mdaughter_white_pearl_fruit  iop3=Eat, param=next_obj_stage,mdaughter_white_pearl_seed
+//   mdaughter_safety_guarantee   "supposedly grant Svidi safe passage into Rellekka"
+//   mdaughter_short_plank_stone1/2 "Someone put a plank on top of the stone! Clever..."
+//   mdaughter_cliff_boulder_withrope, mdaughter_absail_rope - the way down into the camp
+//   mdaughter_rock "A rock" (1kg) - the muddy rocks the cairn is built from
+//
+// and so do the varbits, which are a skeleton of the real quest: mdaughter_mud_var,
+// mdaughter_relations_var (6 bits), mdaughter_food_var (5 bits), mdaughter_hamal_heardofdeath,
+// mdaughter_brundt_done, mdaughter_hamal_relations_done, mdaughter_bear_discovery,
+// mdaughter_bear_mayattack, mdaughter_hamal_heardofbear.
+//
+// So: Asleif is the chieftain's daughter and she is dead. Her voice comes out of the Shining pool
+// and asks for two things - peace with Rellekka and a food source - and only when both are done
+// will she ask the last thing, which is that somebody make her father believe she is gone. The two
+// tasks run in parallel and have a varbit each, which is why they are not stages.
+//
+// The two multis in the cache key off their own varbits and not off the stage:
 //   [mdaughter_multimound]  multivar=mdaughter_burial_state  1 -> burial mound, 2 -> burial cairn
 //   [mdaughter_multi_bear]  multivar=mdaughter_bear_multi_state  0 -> mdaughter_bearman
 //     (the talking Kendal). Any other value leaves the shell itself, which carries op2=Attack and
 //     size=2 - so the shell IS the fighting form, and mdaughter_bearman_fighter is unused.
-//
-// So %mdaughter_quest_var is free, and is numbered in tens the way %death_equiproom is, leaving
-// room to slot a step in without renumbering everything after it.
-^mdaughter_not_started = 0
-^mdaughter_started = 10
-^mdaughter_found_svidi = 20
-^mdaughter_has_guarantee = 30
-^mdaughter_has_necklace = 40
-^mdaughter_told_hamal = 50
-^mdaughter_has_corpse = 60
-^mdaughter_buried = 70
-^mdaughter_kendal_dead = 80
 
-// The two burial states the loc itself defines. Named here so nothing writes a bare 1 or 2.
+// ---------------------------------------------------------------------------- the spine
+// Numbered in tens so a step can be slotted in without renumbering. ^mdaughter_complete is 90 and
+// lives in general/configs/quest.constant with every other quest's.
+^mdaughter_not_started = 0
+^mdaughter_started = 10            // Hamal has let an outsider ask after his daughter
+^mdaughter_heard_asleif = 20       // the pool has asked for peace and for food
+^mdaughter_asked_of_death = 30     // both done, and she has asked you to convince her father
+^mdaughter_kendal_dead = 40        // the man in the bearskin is dead and his head is yours
+^mdaughter_told_hamal = 50         // Hamal has seen his daughter's body
+^mdaughter_has_necklace = 60       // Ragnar has given up her necklace
+^mdaughter_buried = 70             // she is in the ground; the cairn still wants its stones
+
+// ---------------------------------------------------------------------------- peace with Rellekka
+// %mdaughter_relations_var. Hamal's man Svidi will not cross Fremennik land without something in
+// writing, and Brundt will not write it until the stone the camp took off Rellekka comes back.
+^mdaughter_peace_none = 0
+^mdaughter_peace_asked = 1         // the pool asked for it
+^mdaughter_peace_found_svidi = 2   // found him in the forest; he wants a guarantee
+^mdaughter_peace_brundt_wants_rock = 3
+^mdaughter_peace_has_guarantee = 4
+^mdaughter_peace_done = 5          // Svidi has it and will go
+
+// ---------------------------------------------------------------------------- a food source
+// %mdaughter_food_var. Jokul the goatherd knows what grows up here; the fruit is on White Wolf
+// Mountain and the seed is inside it.
+^mdaughter_food_none = 0
+^mdaughter_food_asked = 1          // the pool asked for it
+^mdaughter_food_jokul = 2          // Jokul has named the White Pearl
+^mdaughter_food_has_seed = 3       // eaten one and spat the seed out
+^mdaughter_food_done = 4           // Hamal has the seed
+
+// ---------------------------------------------------------------------------- the two flag values
+^mdaughter_mud_none = 0
+^mdaughter_mud_on_tree = 1
+
+// The burial states the multiloc itself defines. Named so nothing writes a bare 1 or 2.
 ^mdaughter_burial_none = 0
 ^mdaughter_burial_mound = 1
 ^mdaughter_burial_cairn = 2
@@ -29,9 +78,10 @@
 ^mdaughter_kendal_talking = 0
 ^mdaughter_kendal_fighting = 1
 
-// How many white pearls Hamal wants before he will treat an outsider as anything else.
-^mdaughter_pearls_wanted = 3
+// Stones for the cairn, off the goat pen's churned ground.
+^mdaughter_cairn_rocks = 5
 
+// ---------------------------------------------------------------------------- places
 // The rockslide at the camp's southern edge, local(8,10) of m43_57, 2x2. The guard stands north of
 // it at local(8,12), which is the inside - and every named camp npc (Ragnar 13_28, Hamal 59_25,
 // Jokul 59_33) and the burial ground (31_46) is further north still. The climb used to move the
@@ -39,6 +89,11 @@
 // the free tiles either side of it, checked against the collision map.
 ^mdaughter_rockslide_north = 0_43_57_9_12
 ^mdaughter_rockslide_south = 0_43_57_9_9
+
+// The boulder on the ledge above the path, local(13,18), 2x2 - the way in before Hamal has agreed
+// to anything. A rope goes round it and you climb down past the guard into the camp.
+^mdaughter_boulder_top = 0_43_57_13_17
+^mdaughter_boulder_bottom = 0_43_57_14_15
 
 // The way to the burial island. The tall tree stands on the lake shore (local 20,31) and the clump
 // of rocks (21,40) is out in the water with no dry tile beside it - climbing the tree drops you on
@@ -58,9 +113,17 @@
 ^mdaughter_cave_inside = 0_43_157_55_56
 ^mdaughter_cave_outside = 0_43_57_56_55
 
+// Where she has lain since the Kendal took her: the corpse pile at the foot of the pillars, south
+// east of the one he stands by. Nothing is placed there in the map, so her body is put on the floor
+// when he admits what he did.
+^mdaughter_corpse_pile = 0_43_157_36_30
+
 // The burial ground. mdaughter_multimound is placed once, at local(31,46) of m43_57, and its
 // multiloc only has entries for states 1 and 2 - so before Asleif is in the ground there is no loc
 // there at all to use her on. That is what iop3=Bury on mdaughter_daughter_corpse is for: the
 // burial is an inventory option, and this coord is what it checks the player is standing near.
+// It is also what the Shining pool is measured against: the lake carries 38 bubbles and only the
+// ones out here by the island carry her voice.
 ^mdaughter_burial_ground = 0_43_57_31_46
 ^mdaughter_burial_range = 4
+^mdaughter_pool_range = 12
