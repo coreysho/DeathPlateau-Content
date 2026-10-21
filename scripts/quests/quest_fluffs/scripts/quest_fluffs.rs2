@@ -44,7 +44,13 @@ if(.npc_find(npc_coord, $other_boy, 3, ^vis_lineofsight) = true) {
     ~chatnpc("<p,neutral>Ohh...well, in that case I might be able to help.|Fluffs followed me to my secret play area,|I haven't seen her since.");
     ~chatplayer("<p,quiz>Where is this play area?");
     ~chatnpc("<p,neutral>If I told you that, it wouldn't be a secret.");
+    @fluffs_boy_single;
 }
+// FLUFFS_BOY_SINGLE WAS DEAD CODE. Nothing in the tree jumped to it: the two-boy branch below
+// ends in @fluffs_boy_secondary and this one ended on "it wouldn't be a secret" and stopped, so
+// a player who found Shilop and Wilough more than three tiles apart - which is most of the time,
+// because they wander Varrock square separately - got no menu, could not offer the 100 coins, and
+// the quest stuck at ^fluffs_started with nothing to do about it.
 
 [label,fluffs_boy_single]
 def_int $option = ~p_choice3("Tell me sonny, or I will hurt you.", 1, "What will make you tell me?", 2, "Well never mind, it's Fluffs' loss.", 3);
@@ -60,7 +66,11 @@ switch_int ($option) {
         ~chatnpc("<p,happy>100 coins should cover it.");
         ~chatplayer("<p,angry>100 coins!|Why should I pay you?");
         ~chatnpc("<p,neutral>You shouldn't,|but I won't help otherwise.|I never liked that cat anyway,|so what do you say?");
-        @fluffs_pay(false);
+        if (~fluffs_take_money = false) {
+            return;
+        }
+        ~chatnpc("<p,neutral>I play at an abandoned lumber mill to the north east.|Just beyond the Jolly Boar Inn.|I saw Fluffs running around in there.");
+        @fluffs_told_where;
     case 3 :
         ~chatplayer("<p,bored>Well, never mind, it's Fluffs' loss.");
         ~chatnpc("<p,bored>I'm sure my mum will get over it.");
@@ -84,34 +94,42 @@ switch_int ($option) {
         ~chatnpc("<p,happy>100 coins should cover it.");
         ~chatplayer("<p,angry>100 coins!|Why should I pay you?");
         ~chatnpc("<p,neutral>You shouldn't,|but we won't help otherwise.|We never liked that cat anyway,|so what do you say?");
-        @fluffs_pay(true);
+        if (~fluffs_take_money = false) {
+            return;
+        }
+        ~.chatnpc("<p,neutral>We play at an abandoned lumber mill to the north east.|Just beyond the Jolly Boar Inn.|I saw Fluffs running around in there.");
+        @fluffs_told_where;
     case 3 :
         ~chatplayer("<p,bored>Well, never mind, it's Fluffs' loss.");
         ~.chatnpc("<p,bored>I'm sure my mum will get over it.");
 }
 
-[label,fluffs_pay](boolean $secondary)
+// The money half of the haggle, which is the same whichever boy is doing the talking. It was one
+// label taking a boolean and branching to ~.chatnpc on it, and that is why @fluffs_boy_single could
+// not simply be hooked up: the compiler cannot prove the flag is false, so every caller inherited a
+// read of .active_npc and the lone-boy path had never set one. Each caller now says its own line.
+[proc,fluffs_take_money]()(boolean)
 def_int $option = ~p_choice2("I'm not paying you a penny.", 1, "Okay then, I'll pay.", 2); //imgur.com/PU4c51N
-switch_int ($option) {
-    case 1 :
-        ~chatplayer("<p,angry>I'm not paying you a penny.");
-        ~chatnpc("<p,neutral>Okay then, I'll find another way to make money.");
-    case 2 :
-        ~chatplayer("<p,neutral>Okay then, I'll pay.");
-        if (inv_total(inv, coins) < 100) {
-            ~chatplayer("<p,neutral>But I'll have to get some money first.");
-            ~chatnpc("<p,neutral>I'll be waiting.");
-            return;
-        }
-        inv_del(inv, coins, 100);
-        ~objbox(coins_25, "You give the lad 100 coins.", 250, 0, divide(^objbox_height, 2)); //imgur.com/jhDCIvP
-        ~chatplayer("<p,neutral>There you go, now where did you see Fluffs ?"); //intentional
-        if($secondary = true) ~.chatnpc("<p,neutral>We play at an abandoned lumber mill to the north east.|Just beyond the Jolly Boar Inn.|I saw Fluffs running around in there.");
-        else ~chatnpc("<p,neutral>I play at an abandoned lumber mill to the north east.|Just beyond the Jolly Boar Inn.|I saw Fluffs running around in there.");
-        ~chatplayer("<p,neutral>Anything else?");
-        ~chatnpc("<p,neutral>Well, you'll have to find the broken fence to get in.|I'm sure you can manage that.");
-        %fluffs = ^fluffs_paid_boy;
+if ($option = 1) {
+    ~chatplayer("<p,angry>I'm not paying you a penny.");
+    ~chatnpc("<p,neutral>Okay then, I'll find another way to make money.");
+    return(false);
 }
+~chatplayer("<p,neutral>Okay then, I'll pay.");
+if (inv_total(inv, coins) < 100) {
+    ~chatplayer("<p,neutral>But I'll have to get some money first.");
+    ~chatnpc("<p,neutral>I'll be waiting.");
+    return(false);
+}
+inv_del(inv, coins, 100);
+~objbox(coins_25, "You give the lad 100 coins.", 250, 0, divide(^objbox_height, 2)); //imgur.com/jhDCIvP
+~chatplayer("<p,neutral>There you go, now where did you see Fluffs ?"); //intentional
+return(true);
+
+[label,fluffs_told_where]
+~chatplayer("<p,neutral>Anything else?");
+~chatnpc("<p,neutral>Well, you'll have to find the broken fence to get in.|I'm sure you can manage that.");
+%fluffs = ^fluffs_paid_boy;
 
 [oploc1,gertrudefence]
 if(coordz(coord) < coordz(loc_coord) & map_members = ^false) {

@@ -58,11 +58,17 @@ return(false);
 // =========================================================================== Gertrude
 // She already has [opnpc1,gertrude] in areas/area_varrock/scripts/gertrude.rs2 - a trigger cannot
 // be declared twice - so this hooks in ahead of it and hands it back once she has said her piece.
+// GERTRUDE'S CAT COMES FIRST. This returned true whenever Rat Catchers had not been started -
+// which is the state of every player who has never done it - so Gertrude answered every single
+// conversation with "I know about rats the way a sailor knows about water" and Gertrude's Cat
+// could not be started at all. She is also in no state to discuss rat-catching while her own cat
+// is missing, and Rat Catchers wants a cat with you before it will go anywhere, which only that
+// quest provides. The mid-quest reminder keeps priority either way so nobody can be stranded.
 [proc,ratcatch_gertrude_wants]()(boolean)
-if (%ratcatch_var = ^ratcatch_not_started) {
+if (%ratcatch_var = ^ratcatch_sewers) {
     return(true);
 }
-if (%ratcatch_var = ^ratcatch_sewers) {
+if (%ratcatch_var = ^ratcatch_not_started & %fluffs >= ^fluffs_complete) {
     return(true);
 }
 return(false);
