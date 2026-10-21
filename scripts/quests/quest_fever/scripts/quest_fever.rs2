@@ -17,6 +17,15 @@ switch_int (%fever_quest) {
 }
 
 [label,fever_start]
+// THE REQUIREMENTS. Rum Deal was the only one checked. The scroll also wants Pirate's Treasure and
+// four levels - Agility 42, Crafting 45, Smithing 50 and Ranged 40 - and OSRS gates only the last
+// two at the start. All four are gated here, because the quest cannot be finished without any of
+// them: the net wants the Agility, the hull wants the Crafting, and a player who got aboard and
+// then found out would be stuck at sea.
+if (%hunt < ^hunt_complete) {
+    ~chatnpc("<p,neutral>Ye've never even dug up a dead pirate's chest. Go and do that first and come back smelling of rum.");
+    return;
+}
 if (%deal_quest < ^deal_complete) {
     ~chatnpc("<p,neutral>I don't take on crew who've never been to sea. Go and do something disreputable first.");
     ~chatnpc("<p,neutral>Braindeath Island'd do it.");
@@ -33,6 +42,11 @@ switch_int (~p_choice2("What's the catch?", 1, "I'll sail.", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>I'll sail.");
         ~chatnpc("<p,neutral>Ye didn't ask what the catch was. I like that and it's going to go badly for ye.");
+}
+if (stat_base(smithing) < ^fever_req_smithing | stat_base(ranged) < ^fever_req_ranged | stat_base(agility) < ^fever_req_agility | stat_base(crafting) < ^fever_req_crafting) {
+    ~chatnpc("<p,neutral>Ye'll be mending a carriage, patching a hull, going up a net and firing a gun. Come back when ye can do all four.");
+    ~mesbox("Cabin Fever wants Agility <tostring(^fever_req_agility)>, Crafting <tostring(^fever_req_crafting)>, Smithing <tostring(^fever_req_smithing)> and Ranged <tostring(^fever_req_ranged)>.");
+    return;
 }
 %fever_quest = ^fever_asked;
 ~send_quest_progress(questlist:fever, %fever_quest, ^fever_complete);
@@ -215,14 +229,22 @@ p_delay(4);
 %fever_quest = ^fever_complete;
 stat_advance(smithing, 70000);
 stat_advance(crafting, 70000);
-stat_advance(fishing, 70000);
+// AGILITY, NOT FISHING. There is no fishing anywhere in this quest; the third 7,000 is Agility,
+// and the ten thousand coins were missing altogether.
+stat_advance(agility, 70000);
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, coins, 10000);
+} else {
+    obj_add(coord, coins, 10000, ^lootdrop_duration);
+}
 session_log(^log_adventure, "Quest complete: Cabin Fever");
-~send_quest_complete(questlist:fever, fever_piracy_book, 200, ^fever_questpoints, "You have completed\\nCabin Fever!", "2 Quest Points|7,000 Smithing XP|7,000 Crafting XP|7,000 Fishing XP|Mos Le'Harmless");
+~send_quest_complete(questlist:fever, fever_piracy_book, 200, ^fever_questpoints, "You have completed\\nCabin Fever!", "2 Quest Points|7,000 Smithing XP|7,000 Crafting XP|7,000 Agility XP|10,000 coins|Mos Le'Harmless");
 
 // =========================================================================== the lockers
 [oploc1,fever_repair_locker]
 p_arrivedelay;
 mes("You open the locker.");
+loc_change(fever_repair_locker_open, 100);
 p_delay(2);
 @fever_repair_stock;
 
@@ -252,11 +274,14 @@ if ($took = false) {
 }
 ~mesbox("Repair planks, swamp paste and a hammer. Somebody keeps this locker properly, which on this ship is unexpected.");
 
-[oploc2,fever_repair_locker_open] mes("You close the locker.");
+[oploc2,fever_repair_locker_open]
+mes("You close the locker.");
+loc_change(fever_repair_locker, 100);
 
 [oploc1,fever_weapons_locker]
 p_arrivedelay;
 mes("You open the locker.");
+loc_change(fever_weapons_locker_open, 100);
 p_delay(2);
 @fever_weapons_stock;
 
@@ -279,7 +304,9 @@ if ($took = false) {
 }
 ~mesbox("A ramrod, three fuses, five balls, three cannisters and a tinderbox.");
 
-[oploc2,fever_weapons_locker_open] mes("You close the locker.");
+[oploc2,fever_weapons_locker_open]
+mes("You close the locker.");
+loc_change(fever_weapons_locker, 100);
 
 // fever_multi_gunpowder_barrel stands on the ENEMY ship alongside, which nobody can walk to. Your
 // own ship's barrel, next to the gun, is fever_your_gunpowder_barrel ("Take-Powder"), and it had no
