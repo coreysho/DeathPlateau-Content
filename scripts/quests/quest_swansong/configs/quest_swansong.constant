@@ -50,6 +50,9 @@
 // Seven, as the wiki says. This was five; swansong_bones is three bits, so it holds seven.
 ^swan_bones_needed = 7
 
+// What OSRS asks for before Herman will take you on.
+^swan_req_questpoints = 100
+
 // swansong_franklin - Franklin's metal press, which the press and firebox multilocs both read
 ^swan_press_cold = 0     // Franklin has not asked yet
 ^swan_press_asked = 1    // five iron sheets for the west wall
@@ -60,7 +63,13 @@
 // ---------------------------------------------------------------------------- places
 // m36_57 is the Piscatoris Fishing Colony.
 ^swan_outside = 0_36_57_41_3        // 2345,3651  swan_multioutside
-^swan_herman_desk = 0_36_57_50_35   // 2354,3683
+// HERMAN WAS UNREACHABLE. He was spawned on 2354,3683, which is a blocked tile inside the office,
+// and the engine refused the op from every clear tile around the building - so the three
+// conversations that start the battle, report the queen and finish the quest could not happen at
+// all. His spawn in maps/m36_57.jm2 is now 2354,3684, the clear tile at the building's north
+// face. swan_wom_office next door stays where it is: that one is a one-tile pocket on purpose,
+// because the Wise Old Man is on the floor and is not supposed to be talked to.
+^swan_herman_desk = 0_36_57_50_36   // 2354,3684
 ^swan_office = 0_36_57_49_35        // 2353,3683  swan_wom_office
 ^swan_franklin = 0_36_57_40_19
 ^swan_press = 0_36_57_37_27        // 2341,3675  loc_14954, the press

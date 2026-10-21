@@ -51,6 +51,23 @@ switch_int (%swansong) {
 }
 
 [label,swan_start]
+// THE REQUIREMENTS WERE NOT CHECKED. OSRS wants 100 quest points, One Small Favour and Garden of
+// Tranquillity before Herman will take you on, and this took anybody who said the right thing.
+// The six skill levels are not start requirements and are checked where they are spent - Fishing
+// 62 at the spots, and the rest in the press and the pottery that this cache cannot build.
+if (%qp < ^swan_req_questpoints) {
+    ~chatnpc("<p,angry>You have done nothing anybody has heard of. Come back when somebody somewhere owes you a favour.");
+    ~mesbox("You need <tostring(^swan_req_questpoints)> quest points to start Swan Song. You have <tostring(%qp)>.");
+    return;
+}
+if (%onesmallfavour < ^osf_complete) {
+    ~chatnpc("<p,angry>You have never done one small favour for anybody in your life, have you.");
+    return;
+}
+if (%garden_quest < ^garden_complete) {
+    ~chatnpc("<p,neutral>The old man in Draynor will not come for a stranger. Do something for his neighbours first.");
+    return;
+}
 ~chatnpc("<p,angry>If you are here to fish, turn round. If you are here to help, say so quickly.");
 switch_int (~p_choice2("What's happening here?", 1, "I'm here to fish.", 2)) {
     case 2 :
