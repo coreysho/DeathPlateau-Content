@@ -66654,6 +66654,23 @@ vislevel=75
 
 param=attack_anim,clay_golem_attack
 param=death_anim,clay_golem_death
+// A level with an Attack op and no statblock, which in this file means an npc that was only
+// ever going to be spawned by a script - and the three of them are spawned by their own
+// doors. The walkthrough says each one has to be killed with a particular style (crush,
+// here); this build has no per-style damage rules anywhere, so the style is recorded as the
+// golem's own damagetype and not enforced.
+param=defend_anim,clay_golem_defend
+param=damagetype,^crush_style
+param=death_drop,null
+hitpoints=70
+attack=60
+strength=60
+defence=55
+huntmode=aggressive_melee
+huntrange=4
+wanderrange=2
+maxrange=6
+respawnrate=100
 [elid_golem_white]
 name=White golem
 desc=An animated clay statue.
@@ -66683,6 +66700,23 @@ vislevel=75
 
 param=attack_anim,clay_golem_attack
 param=death_anim,clay_golem_death
+// A level with an Attack op and no statblock, which in this file means an npc that was only
+// ever going to be spawned by a script - and the three of them are spawned by their own
+// doors. The walkthrough says each one has to be killed with a particular style (stab,
+// here); this build has no per-style damage rules anywhere, so the style is recorded as the
+// golem's own damagetype and not enforced.
+param=defend_anim,clay_golem_defend
+param=damagetype,^stab_style
+param=death_drop,null
+hitpoints=70
+attack=60
+strength=60
+defence=55
+huntmode=aggressive_melee
+huntrange=4
+wanderrange=2
+maxrange=6
+respawnrate=100
 [elid_golem_grey]
 name=Grey golem
 desc=An animated clay statue.
@@ -66712,6 +66746,23 @@ vislevel=75
 
 param=attack_anim,clay_golem_attack
 param=death_anim,clay_golem_death
+// A level with an Attack op and no statblock, which in this file means an npc that was only
+// ever going to be spawned by a script - and the three of them are spawned by their own
+// doors. The walkthrough says each one has to be killed with a particular style (slash,
+// here); this build has no per-style damage rules anywhere, so the style is recorded as the
+// golem's own damagetype and not enforced.
+param=defend_anim,clay_golem_defend
+param=damagetype,^slash_style
+param=death_drop,null
+hitpoints=70
+attack=60
+strength=60
+defence=55
+huntmode=aggressive_melee
+huntrange=4
+wanderrange=2
+maxrange=6
+respawnrate=100
 [elid_ghaslor]
 name=Ghaslor the Elder
 desc=The oldest man in Nardah.

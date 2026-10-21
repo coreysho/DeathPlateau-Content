@@ -52,6 +52,31 @@
 
 // Inside each golem's room. The white golem's used to be local(38,6), which is a blocked tile; its
 // room is south of the door, and (38,4) is in it.
-^elid_golem_black_spawn = 0_52_149_45_20
-^elid_golem_white_spawn = 0_52_149_38_4
-^elid_golem_grey_spawn = 0_52_149_47_11
+// ---------------------------------------------------------------------------- what was unused
+// Five objs in this quest's own block were referenced by nothing, and four of them are walkthrough
+// steps:
+//
+//   elid_robetop_torn, elid_robebottoms_torn  "This robe is too torn to wear."
+//   elid_ballad                               "The Ballad of Jareesh."
+//   elid_shoes                                "Awusah's Shoes."
+//   elid_sole                                 "Awusah's Sole."
+//
+// The cupboard used to hand over two wearable robes; what is in it is two torn ones, and a needle
+// and thread make them wearable. Ghaslor's ballad is what the shrine door listens for as well as
+// the robes. And the genie does not hand the statuette over for a kind word - he wants the soles off
+// the mayor's shoes, which is the one joke in this quest.
+//
+// elid_key_outline is an obj with no name and no fields at all, so the walkthrough's telekinetic
+// grab through a walled pocket has nothing in the cache to grab: Shiratti keeps the key, which is
+// the only other thing she can be for. That is the one step of this quest that is not the
+// walkthrough's.
+^elid_shoes_spot = 0_53_45_50_31    // 3442,2911, beside Awusah, who does not look round
+
+// NEVER THE TILE THE DOOR PUTS YOU ON. The grey and black golems used to be at (47,11) and
+// (45,20), which are exactly the tiles their own doors walk the player onto - so npc_add was
+// putting a golem under somebody's feet and there was no golem in the world afterwards. One tile
+// further into each room. The white one's room is entered from the north and (38,4) is already
+// clear of the landing tile.
+^elid_golem_black_spawn = 0_52_149_46_20   // 3374,9556
+^elid_golem_white_spawn = 0_52_149_38_4    // 3366,9540
+^elid_golem_grey_spawn = 0_52_149_48_11    // 3376,9547

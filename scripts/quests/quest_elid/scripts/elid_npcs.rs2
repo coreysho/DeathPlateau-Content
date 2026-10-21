@@ -8,6 +8,7 @@ switch_int (%elidquest) {
     case ^elid_shown_ghaslor : @elid_mayor_permission;
     case ^elid_told_mayor :
         ~chatnpc("<p,neutral>Then put it back where it belongs, and let us all get some sleep.");
+    case ^elid_channels_done : @elid_mayor_shoes;
     case default :
         if (%elidquest >= ^elid_complete) {
             ~chatnpc("<p,happy>The fountain has not stopped since. Nardah is in your debt.");
@@ -15,6 +16,26 @@ switch_int (%elidquest) {
         }
         ~chatnpc("<p,quiz>Any progress? The wells are down to mud.");
 }
+
+// AWUSAH'S SHOES. elid_shoes and elid_sole are in this quest's own obj block and were referenced
+// by nothing; the genie wants the soles off them, which is the one joke in the quest, and the
+// walkthrough has you take the shoes from beside his door while he is looking at the fountain.
+[label,elid_mayor_shoes]
+~chatplayer("<p,happy>The river is running.");
+~chatnpc("<p,shock>I can hear it. I have been listening to it for an hour and I have not moved.");
+~chatplayer("<p,quiz>The statuette is still missing.");
+~chatnpc("<p,neutral>Then find it. I will be here, looking at my own fountain, in my socks, like a man who has been up all night.");
+if (~obj_gettotal(elid_shoes) > 0 | ~obj_gettotal(elid_sole) > 0) {
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    return;
+}
+if_close;
+mes("His shoes are by the door where he stepped out of them, and he does not look round.");
+p_delay(3);
+inv_add(inv, elid_shoes, 1);
+~objbox(elid_shoes, "Awusah's shoes. Good ones, and the soles are better than the rest of them.", 250, 0, divide(^objbox_height, 2));
 
 [label,elid_mayor_start]
 ~chatnpc("<p,sad>You have come a long way to look at a dry fountain.");
@@ -64,6 +85,15 @@ switch_int (%elidquest) {
 ~chatnpc("<p,neutral>The way down is a crevice west of the town. The shrine will not let you in unless you are dressed for it - there are robes of Elidinis in the cupboard here. Wear them. Both pieces.");
 ~chatplayer("<p,neutral>And once I'm down there?");
 ~chatnpc("<p,neutral>Ask the spirits. They are still there. They are simply not speaking to anyone who arrives in armour.");
+// THE BALLAD OF JAREESH, which the walkthrough has him hand over and which nothing in this build
+// handed over at all. The shrine door listens for it as well as the robes.
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And there is something you will need to be carrying, and you have nowhere to put it. Come back.");
+    return;
+}
+inv_add(inv, elid_ballad, 1);
+~objbox(elid_ballad, "The Ballad of Jareesh. Jareesh went north out of Nardah, down to where the river is born, and three stone guardians barred his way.", 250, 0, divide(^objbox_height, 2));
+~chatnpc("<p,neutral>And take this and keep it on you. The shrine does not open for a costume. It opens for somebody who knows what the place is.");
 %elidquest = ^elid_spoke_ghaslor;
 ~send_quest_progress(questlist:elid, %elidquest, ^elid_complete);
 
@@ -140,6 +170,50 @@ if (%elidquest = ^elid_channels_done) {
 }
 ~chatnpc("<p,happy>The water is running and she is back on her plinth. Thank you.");
 
+// =========================================================================== the soles
+
+// A knife, and the shoe keeps its uppers, which is what makes it funny when he gets them back.
+[opheldu,elid_shoes]
+if (last_useitem ! knife) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (~obj_gettotal(elid_sole) > 0) {
+    ~mesbox("You have the soles already.");
+    return;
+}
+anim(human_knife_chop, 0);
+p_delay(3);
+inv_del(inv, elid_shoes, 1);
+inv_add(inv, elid_sole, 1);
+~objbox(elid_sole, "Awusah's soles, off Awusah's shoes, which are now a pair of uppers.", 250, 0, divide(^objbox_height, 2));
+
+// And the trade.
+[opnpcu,elid_genie]
+def_obj $item = last_useitem;
+p_arrivedelay;
+if ($item ! elid_sole) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%elidquest ! ^elid_channels_done) {
+    ~chatnpc("<p,quiz>...why.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>And nowhere to put her. When you have a hand free.");
+    return;
+}
+if_close;
+mes("The genie takes the soles in both hands and holds them up to the light.");
+p_delay(4);
+inv_del(inv, elid_sole, 1);
+%elidquest = ^elid_has_statuette;
+~send_quest_progress(questlist:elid, %elidquest, ^elid_complete);
+inv_add(inv, elid_statuette, 1);
+~chatnpc("<p,happy>Sixty years. Take her, take her, go away, I am busy.");
+mes("The genie gives you the statuette of Elidinis.");
+
 // =========================================================================== the genie
 
 [opnpc1,elid_genie]
@@ -174,12 +248,7 @@ switch_int (~p_choice2("The town is out of water.", 1, "Hand it over.", 2)) {
         ~chatplayer("<p,neutral>The town is out of water.");
 }
 ~chatnpc("<p,sad>...yes. I had noticed the river coming back and I had not thought about why.");
-~chatnpc("<p,neutral>Take her. She was never mine, I only liked looking at her.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>When you have a hand free. I shall be here. I am always here.");
-    return;
-}
-%elidquest = ^elid_has_statuette;
-~send_quest_progress(questlist:elid, %elidquest, ^elid_complete);
-inv_add(inv, elid_statuette, 1);
-mes("The genie gives you the statuette of Elidinis.");
+~chatnpc("<p,neutral>Very well. A trade, because I am a genie and we do not simply hand things over.");
+~chatplayer("<p,quiz>What do you want?");
+~chatnpc("<p,happy>Soles. Not souls - soles. Off a pair of shoes. Off the mayor's pair of shoes, specifically, because I have been looking up at the bottom of that man's feet through a crack in a rock for sixty years and I would like them in my hand.");
+~mesbox("Awusah is standing by his own fountain in his socks, having stepped out of his shoes an hour ago. | A knife would take the soles off a shoe.");

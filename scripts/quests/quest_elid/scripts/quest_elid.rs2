@@ -13,25 +13,63 @@ if (%elidquest < ^elid_spoke_ghaslor) {
     mes("Folded robes, and nothing else.");
     return;
 }
-if (~obj_gettotal(elid_robetop) > 0 & ~obj_gettotal(elid_robebottoms) > 0) {
+// WHAT IS IN THE CUPBOARD IS TWO TORN ROBES. elid_robetop_torn and elid_robebottoms_torn say
+// "This robe is too torn to wear." in the cache and were referenced by nothing; the finished
+// robes were being handed out instead, which skips the needle and thread the walkthrough asks
+// for and makes two of this quest's own items dead.
+if (~elid_has_robe(elid_robetop, elid_robetop_torn) = true & ~elid_has_robe(elid_robebottoms, elid_robebottoms_torn) = true) {
     mes("You have taken the robes already.");
     return;
 }
 if (inv_freespace(inv) < 2) {
-    mes("The robes of Elidinis are folded in here, and you have no room for them.");
+    mes("Two folded robes are in here, and you have no room for them.");
     return;
 }
-if (~obj_gettotal(elid_robetop) = 0) {
-    inv_add(inv, elid_robetop, 1);
+if (~elid_has_robe(elid_robetop, elid_robetop_torn) = false) {
+    inv_add(inv, elid_robetop_torn, 1);
 }
-if (~obj_gettotal(elid_robebottoms) = 0) {
-    inv_add(inv, elid_robebottoms, 1);
+if (~elid_has_robe(elid_robebottoms, elid_robebottoms_torn) = false) {
+    inv_add(inv, elid_robebottoms_torn, 1);
 }
-if (%elidquest = ^elid_spoke_ghaslor) {
-    %elidquest = ^elid_has_robes;
-    ~send_quest_progress(questlist:elid, %elidquest, ^elid_complete);
+~mesbox("You take the robes of Elidinis out of the cupboard. They are old, lighter than they look, and both of them are torn badly enough that nobody could wear either.");
+
+[proc,elid_has_robe](obj $whole, obj $torn)(boolean)
+if (~obj_gettotal($whole) > 0 | ~obj_gettotal($torn) > 0) {
+    return(true);
 }
-~mesbox("You take the robes of Elidinis. They are old, and lighter than they look.");
+return(false);
+
+// A needle and thread, which is the walkthrough's own step. Only one side of each combine is
+// declared: [opheldu,needle] belongs to crafting, so the torn robes do the asking.
+[opheldu,elid_robetop_torn] @elid_sew(elid_robetop_torn, elid_robetop);
+[opheldu,elid_robebottoms_torn] @elid_sew(elid_robebottoms_torn, elid_robebottoms);
+
+[label,elid_sew](namedobj $torn, namedobj $whole)
+if (last_useitem ! needle) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_total(inv, thread) = 0) {
+    ~mesbox("You need thread as well as a needle.");
+    return;
+}
+anim(human_leather_crafting, 0);
+p_delay(3);
+inv_del(inv, $torn, 1);
+inv_del(inv, thread, 1);
+inv_add(inv, $whole, 1);
+stat_advance(crafting, 1500);
+mes("You sew the robe back together.");
+// Both pieces whole is what the shrine is waiting for.
+if (~obj_gettotal(elid_robetop) = 0 | ~obj_gettotal(elid_robebottoms) = 0) {
+    return;
+}
+if (%elidquest ! ^elid_spoke_ghaslor) {
+    return;
+}
+%elidquest = ^elid_has_robes;
+~send_quest_progress(questlist:elid, %elidquest, ^elid_complete);
+~mesbox("Both pieces are whole. They are not handsome and they are unmistakably the robes of Elidinis.");
 
 [oploc1,elid_cupboard_closed] loc_change(elid_cupboard_open, 200);
 
@@ -95,6 +133,13 @@ if (inv_total(worn, elid_robetop) = 0 | inv_total(worn, elid_robebottoms) = 0) {
     ~mesbox("The door will not open for you. Whatever is beyond it expects you to be dressed for the shrine.");
     return;
 }
+// AND THE BALLAD. Ghaslor hands over the Ballad of Jareesh, which was an obj in this quest's own
+// block that nothing gave out and nothing asked for; the walkthrough is explicit that the door
+// wants the robes AND the ballad, and that you should not bank it.
+if (inv_total(inv, elid_ballad) = 0) {
+    ~mesbox("The door will not open for you. You are dressed for the shrine and you do not know a word anybody down here would recognise.");
+    return;
+}
 @elid_through_door;
 
 [oploc1,elid_underground_lake_door] @elid_through_door;
@@ -102,8 +147,13 @@ if (inv_total(worn, elid_robetop) = 0 | inv_total(worn, elid_robebottoms) = 0) {
 [oploc1,elid_genie_door] @elid_through_door;
 
 // Every door down here is a straight wall on the west (angle 0) or north (angle 1) edge of its tile.
+// A label is a jump and never comes back, and the golem doors have to step you through and then keep
+// going, so the work is a proc and the label is a one-line wrapper.
 [label,elid_through_door]
 p_arrivedelay;
+~elid_step_through;
+
+[proc,elid_step_through]()()
 sound_synth(door_open, 1, 0);
 if (loc_angle = 0) {
     if (coordx(coord) < coordx(loc_coord)) {
@@ -128,20 +178,87 @@ if (coordz(coord) > coordz(loc_coord)) {
 // The golems are the one thing in this quest that the maps do not place, and they are not multinpc
 // children either - nothing in the cache would ever bring them into the world. So opening a door
 // is what puts its guardian there.
+// $where is the cache's own idea of where each guardian stands, kept for the record; the golem is
+// spawned beside whoever opened the door, because that is the only place the two of them can meet.
 [label,elid_golem_door](coord $where, npc $golem)
 p_arrivedelay;
 if (inv_total(inv, elid_key) = 0) {
     mes("The door is sealed, and the keyhole is a very old shape.");
     return;
 }
-// The door now lets you through as well; the guardian only wakes the first time.
-if (npc_find($where, $golem, 10, 0) = true) {
+// AND THE GUARDIAN HAS TO BE DEALT WITH. This used to walk you straight past a golem that was
+// still standing, which is the one thing the walkthrough is firm about: the door does not open
+// until its guardian is down.
+//
+// AND YOU GO IN WITH IT. The first version spawned the golem on its own tile inside the room and
+// left the player outside a shut door, so the fight was a maxed player swinging at something it
+// could not reach for four hundred and eighty ticks until the spawn ran out - which the runner
+// reported as a kill, because an npc that despawns stops being valid in exactly the same way as one
+// that dies. Spawning it beside the player instead worked for one door and found no free tile for
+// the next, because two of the three are reached down a corridor one tile wide. So the door opens,
+// you step through, and it closes behind you until its guardian is down.
+if (npc_find(coord, $golem, 12, 0) = true) {
+    ~mesbox("It has not finished with you.");
+    return;
+}
+if (~elid_golem_beaten($golem) = true) {
     @elid_through_door;
 }
 sound_synth(unlock, 1, 0);
-mes("The ancestral key turns, and the door grinds open.");
+mes("The key turns and the door shifts half an inch, and something on the other side of it stops being a statue.");
+// THROUGH FIRST, THEN THE GOLEM, AND ON ITS OWN TILE. Three things had to be wrong before this
+// read right. Spawning it on its own tile while the player was still outside a shut door gave a
+// maxed player four hundred and eighty ticks of swinging at something it could not reach, which the
+// runner reported as a kill because a despawn invalidates an npc exactly as a death does. Walking
+// the player through first and then spawning it on the same tile put a golem under their feet and
+// left no golem in the world. And map_findsquare instead of a fixed tile made it come down to a
+// die roll: it found a tile one run and nothing the next.
+~elid_step_through;
 npc_add($where, $golem, ^elid_golem_despawn);
-@elid_through_door;
+npc_setmode(opplayer2);
+~mesbox("The door swings to behind you, and the thing in here is between you and it.");
+
+// One bit per golem, and the cache already has all three: elid_blackgolem, elid_whitegolem and
+// elid_greygolem on elid_main, bits 11 to 13, referenced by nothing. The bit is set by the golem's
+// own death and not by the door, because npc_find cannot tell "killed" from "despawned twenty
+// minutes later" and only one of those is progress.
+[ai_queue3,elid_golem_black] @elid_golem_dead;
+[ai_queue3,elid_golem_white] @elid_golem_dead;
+[ai_queue3,elid_golem_grey] @elid_golem_dead;
+
+[label,elid_golem_dead]
+def_npc $which = npc_type;
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+if ($which = elid_golem_black) {
+    queue(elid_golem_down, 0, 1);
+    return;
+}
+if ($which = elid_golem_white) {
+    queue(elid_golem_down, 0, 2);
+    return;
+}
+queue(elid_golem_down, 0, 3);
+
+[queue,elid_golem_down](int $which)
+if ($which = 1) { %elid_blackgolem = 1; }
+if ($which = 2) { %elid_whitegolem = 1; }
+if ($which = 3) { %elid_greygolem = 1; }
+~mesbox("The golem comes apart into the clay it was made of, and the door behind it stands open.");
+
+[proc,elid_golem_beaten](npc $golem)(boolean)
+if ($golem = elid_golem_black) {
+    if (%elid_blackgolem = 1) { return(true); }
+    return(false);
+}
+if ($golem = elid_golem_white) {
+    if (%elid_whitegolem = 1) { return(true); }
+    return(false);
+}
+if (%elid_greygolem = 1) { return(true); }
+return(false);
 
 // =========================================================================== the three channels
 
@@ -264,5 +381,6 @@ mes("An empty plinth, cut for something about the size of your two hands.");
 %elidquest = ^elid_complete;
 stat_advance(prayer, 80000);
 stat_advance(thieving, 10000);
+stat_advance(magic, 10000);
 session_log(^log_adventure, "Quest complete: Spirits of the Elid");
-~send_quest_complete(questlist:elid, elid_statuette, 250, ^elid_questpoints, "You have completed the\\nSpirits of the Elid Quest!", "2 Quest Points|8,000 Prayer XP|1,000 Thieving XP");
+~send_quest_complete(questlist:elid, elid_statuette, 250, ^elid_questpoints, "You have completed the\\nSpirits of the Elid Quest!", "2 Quest Points|8,000 Prayer XP|1,000 Thieving XP|1,000 Magic XP|The robes of Elidinis");
