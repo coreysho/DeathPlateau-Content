@@ -115,9 +115,11 @@ p_delay(5);
 %swansong = ^swan_letter;
 ~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
 p_delay(3);
-%swansong = ^swan_wom;
-~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
-~mesbox("The boat comes back the next morning with one passenger on it, and he is extremely old and he is carrying nothing at all.");
+// THE LETTER IS NOT THE END OF THIS STEP ANY MORE. It used to set ^swan_wom in the same breath,
+// because the man it is addressed to was placed nowhere on the map - he is npc 2253 and Draynor
+// had no Wise Old Man at all. He is at 3088,3251 now, so the quest does what Herman says it does:
+// the letter goes out, and you go and fetch him.
+~mesbox("The letter goes out on the tide. | Herman has written the name of the man on it twice, which is not a thing a man does if he thinks the letter will be read.");
 
 // =========================================================================== getting in
 // The crawl-hole through the palisade. Herman stands outside it and does not let strangers past.
@@ -592,3 +594,36 @@ if (inv_freespace(inv) > 0) {
 }
 session_log(^log_adventure, "Quest complete: Swan Song");
 ~send_quest_complete(questlist:swansong, swan_monkfish, 200, ^swan_questpoints, "You have completed\\nSwan Song!", "2 Quest Points|15,000 Magic XP|10,000 Prayer XP|10,000 Fishing XP|25,000 coins");
+
+// =========================================================================== Draynor
+//
+// Herman's letter goes to "a man in Draynor who is supposed to be the best magician alive and who
+// has spent thirty years pretending to be a pensioner", and until the Wise Old Man was placed at
+// 3088,3251 there was nobody there to read it. areas/area_draynor/scripts/wise_old_man.rs2 owns
+// [opnpc1] on him and calls this. He wants the runes the wiki's version wants - ten mist, ten lava,
+// five blood - and then he takes the morning boat himself.
+[proc,swan_wom_wants]()(boolean)
+if (%swansong = ^swan_letter) {
+    return(true);
+}
+return(false);
+
+[label,swan_wom_draynor_talk]
+~chatplayer("<p,neutral>Herman Caranos of the Piscatoris fishing colony has written to you five times.");
+~chatnpc("<p,neutral>Four times. The fifth one had somebody else's handwriting on the envelope, which is why I opened it.");
+~chatplayer("<p,quiz>Will you come?");
+~chatnpc("<p,happy>Almost certainly. I have never seen a sea troll and I am eighty-one.");
+~chatnpc("<p,neutral>I shall want runes, though. Ten mist, ten lava and five blood. I am not walking into a siege on a hunch and a walking stick.");
+if (inv_total(inv, mistrune) < 10 | inv_total(inv, lavarune) < 10 | inv_total(inv, bloodrune) < 5) {
+    ~mesbox("He wants ten mist runes, ten lava runes and five blood runes. | You have <tostring(inv_total(inv, mistrune))> mist, <tostring(inv_total(inv, lavarune))> lava and <tostring(inv_total(inv, bloodrune))> blood.");
+    return;
+}
+inv_del(inv, mistrune, 10);
+inv_del(inv, lavarune, 10);
+inv_del(inv, bloodrune, 5);
+if_close;
+mes("The Wise Old Man counts the runes into a pocket of his dressing gown and gets up without using the stick.");
+p_delay(4);
+%swansong = ^swan_wom;
+~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
+~mesbox("The boat comes back the next morning with one passenger on it, and he is extremely old and he is carrying nothing at all.");

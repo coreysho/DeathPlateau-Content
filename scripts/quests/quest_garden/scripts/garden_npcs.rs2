@@ -266,3 +266,103 @@ if (%garden_bernald_varbit < 5) { return; }
 %garden_quest = ^garden_seeds;
 ~send_quest_progress(questlist:garden, %garden_quest, ^garden_complete);
 ~mesbox("That is everything on the list. Now there are nine beds of weeds between you and a garden.");
+
+// =========================================================================== the Wise Old Man
+//
+// He enchants the Ring of Charos, which is the one part of the wiki's version of this quest that
+// could not be built until he was placed: he is npc 2253 and he was spawned nowhere at all. He is
+// at 3088,3251 in Draynor now (areas/area_draynor/scripts/wise_old_man.rs2 owns [opnpc1] on him and
+// calls this first).
+//
+// Seven questions, six right. The scenarios are the ones the wiki's transcript gives - the goblins
+// and their armour, the dwarf with the kebab, Farming, the dwarf with the cannon, PKMaster0036,
+// Ellamaria's pointless errand and the bank guard - and the diplomatic answer is the conciliatory
+// one every time, which is the whole joke of the ring.
+[proc,garden_wom_wants]()(boolean)
+if (%garden_quest < ^garden_started) {
+    return(false);
+}
+if (%garden_quest >= ^garden_complete) {
+    return(false);
+}
+if (inv_total(inv, ring_of_charos_unlocked) > 0) {
+    return(false);
+}
+if (inv_total(inv, ring_of_charos) = 0) {
+    return(false);
+}
+return(true);
+
+[label,garden_wom]
+~chatplayer("<p,quiz>The King says you can do something with this ring.");
+~chatnpc("<p,happy>I can. It is a charming little thing and it will make you one as well, which is not the same as making you likeable.");
+~chatnpc("<p,neutral>Seven questions. Six of them right and I will unlock it. Fewer and you may come back when you have thought about other people for a while.");
+def_int $score = 0;
+
+~chatnpc("<p,quiz>Two goblins are arguing about whether armour should be red or green. What do you tell them?");
+if (~p_choice3("Red, obviously.", 1, "Green, obviously.", 2, "Why not have a range?", 3) = 3) {
+    ~chatplayer("<p,happy>Why not have a range?");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>One of those, then.");
+}
+
+~chatnpc("<p,quiz>A drunken dwarf offers you half a kebab he has been carrying all day. What do you do?");
+if (~p_choice3("Take it and thank him.", 1, "Tell him what is in it.", 2, "Walk off.", 3) = 1) {
+    ~chatplayer("<p,happy>Take it and thank him.");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>I would rather not.");
+}
+
+~chatnpc("<p,quiz>Somebody asks whether you are enjoying your Farming. Are you?");
+if (~p_choice3("It is an enormous waste of time.", 1, "It is all right.", 2, "I love every minute of it.", 3) = 3) {
+    ~chatplayer("<p,happy>I love every minute of it.");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>Not especially.");
+}
+
+~chatnpc("<p,quiz>A dwarf wants you to put on a golden helmet and be fired out of a cannon. Well?");
+if (~p_choice3("Absolutely not.", 1, "Go on then.", 2, "Fire the dwarf instead.", 3) = 2) {
+    ~chatplayer("<p,happy>Go on then.");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>I think not.");
+}
+
+~chatnpc("<p,quiz>Somebody asks who the greatest fighter alive is, and PKMaster0036 is standing beside you. Who is it?");
+if (~p_choice3("Me.", 1, "PKMaster0036, obviously.", 2, "Nobody here.", 3) = 2) {
+    ~chatplayer("<p,happy>PKMaster0036, obviously.");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>Somebody else.");
+}
+
+~chatnpc("<p,quiz>Queen Ellamaria orders you to fetch something pointless and offers nothing for it. What do you say?");
+if (~p_choice3("Fetch it yourself.", 1, "Could I ask you something in return?", 2, "Yes, your majesty.", 3) = 2) {
+    ~chatplayer("<p,happy>Could I ask you something in return?");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>As you wish.");
+}
+
+~chatnpc("<p,quiz>The guard outside the Draynor bank asks whether you have seen anybody suspicious. Have you?");
+if (~p_choice3("Everybody in this village.", 1, "No, but I will keep an eye out.", 2, "You, mostly.", 3) = 2) {
+    ~chatplayer("<p,happy>No, but I will keep an eye out.");
+    $score = add($score, 1);
+} else {
+    ~chatplayer("<p,neutral>Possibly.");
+}
+
+if ($score < 6) {
+    ~chatnpc("<p,sad><tostring($score)> of seven. The ring would make you charming and you would still be wrong. Come back when you have thought about it.");
+    return;
+}
+~chatnpc("<p,happy><tostring($score)> of seven. Give it here.");
+if_close;
+mes("The Wise Old Man turns the ring over twice, says nothing at all, and hands it back warm.");
+p_delay(4);
+inv_del(inv, ring_of_charos, 1);
+inv_add(inv, ring_of_charos_unlocked, 1);
+~objbox(ring_of_charos_unlocked, "The ring is unlocked. People are going to find you unaccountably reasonable.", 250, 0, divide(^objbox_height, 2));

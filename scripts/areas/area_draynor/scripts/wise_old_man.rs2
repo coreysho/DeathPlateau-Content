@@ -1,0 +1,40 @@
+// The Wise Old Man, Draynor Village.
+//
+// He is npc 2253 in the cache, with a full model set, a walking stick and op1=Talk-to, and he was
+// placed nowhere at all - which two quests ran into from opposite ends. Garden of Tranquillity needs
+// him to enchant the Ring of Charos, and Swan Song needs him because Herman Caranos writes to "a
+// man in Draynor who is supposed to be the best magician alive and who has spent thirty years
+// pretending to be a pensioner". Both had been written round the gap. He is spawned at 3088,3251
+// (maps/m48_50.jm2), just north of the market.
+//
+// The two quest hooks go first and each one answers only at the step that wants him, which is the
+// rule the Rat Catchers hook on Gertrude broke: a ~x_wants that keys on "my quest has not started"
+// takes the npc away from everybody for ever.
+
+[opnpc1,wise_old_man]
+if (~garden_wom_wants = true) {
+    @garden_wom;
+}
+if (~swan_wom_wants = true) {
+    @swan_wom_draynor_talk;
+}
+@wise_old_man_talk;
+
+[label,wise_old_man_talk]
+~chatplayer("<p,neutral>Hello.");
+switch_int (random(4)) {
+    case 0 :
+        ~chatnpc("<p,happy>Good afternoon. I am retired, you know. Thirty-one years.");
+        ~chatplayer("<p,quiz>Retired from what?");
+        ~chatnpc("<p,happy>Oh, this and that.");
+    case 1 :
+        ~chatnpc("<p,neutral>I am told the bank down the road is the least secure building in Misthalin.");
+        ~chatplayer("<p,quiz>Are you going to do anything about that?");
+        ~chatnpc("<p,happy>I am eighty-one. I am going to sit here and be right about it.");
+    case 2 :
+        ~chatnpc("<p,happy>You are the third person today to ask an old man in a dressing gown for advice.");
+        ~chatplayer("<p,quiz>And the other two?");
+        ~chatnpc("<p,neutral>Took it, in one case.");
+    case default :
+        ~chatnpc("<p,neutral>I do very little these days, and I do it extremely well.");
+}
