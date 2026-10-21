@@ -1,5 +1,13 @@
 // Rum Deal - a brewery on an island full of people who are technically dead and entirely
 // unbothered about it.
+//
+// Rebuilt against the walkthrough and the cache. What the configs file says about the three
+// multilocs is the whole argument: the holy wrench exorcises the CONTROLS and the Evil Spirit comes
+// out of them, the pressure barrel takes five sea creatures and the lever is dead until it has
+// them, and the hopper takes the other three ingredients. The version this replaces fixed the tap
+// with the wrench, faked the Evil Spirit with two mesboxes, bought sluglings off Captain Donnie,
+// never drew a bucket off the tap at all, and never let Donnie drink anything - which is the whole
+// point of the rum.
 
 // =========================================================================== the crossing
 [opnpc1,deal_pete]
@@ -17,17 +25,14 @@ if (%deal_quest = ^deal_not_started) {
 [opnpc1,deal_island_pete]
 if (%deal_quest >= ^deal_complete) {
     ~chatnpc("<p,happy>Eight months and then one afternoon. I'd be annoyed if I could still feel things properly.");
-    // FIXED: this returned here, and he is the only way off the island - finishing the quest
-    // stranded you on it.
     ~deal_cross;
     return;
 }
 ~chatplayer("<p,quiz>Can you row me back?");
 ~deal_cross;
 
-// FIXED: this was [oploc1,deal_boat], and deal_boat is "Row boat" with no ops at all - the trigger
-// could never fire and the island was unreachable. Pirate Pete is standing beside the boat at each
-// end and already owns a handler, so he rows.
+// deal_boat is "Row boat" with no ops at all, so the boat cannot be the trigger. Pirate Pete stands
+// beside each of the two placements and already owns a handler, so he rows.
 [proc,deal_cross]()()
 if_close;
 if (coordz(coord) > 5000) {
@@ -40,27 +45,26 @@ mes("Pete rows you out past the harbour.");
 p_delay(4);
 p_teleport(^deal_island_landing);
 if (%deal_quest = ^deal_not_started) {
-    %deal_quest = ^deal_island;
-    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
     ~mesbox("Braindeath Island. It smells of a brewery that has not brewed anything in eight months, which is a worse smell than a brewery.");
 }
 
 // =========================================================================== Captain Braindeath
+// He is the whole spine: every ingredient is reported to him and he hands over the tool for the
+// next one. The quest does not start until he has given the brief, which is what the Slayer
+// requirement gates - the other four levels are spent later and are not needed to begin.
 [opnpc1,deal_captian_braindeath]
 switch_int (%deal_quest) {
-    case ^deal_island : @deal_brief;
-    case ^deal_crew :
-        ~chatnpc("<p,neutral>Crew's working. Vat's still eaten through at the tap. Holy wrench - Davey does the blessing, the wrench is in the cupboard.");
-    case ^deal_vat : @deal_recipe;
-    case ^deal_brewing :
-        ~chatnpc("<p,neutral>Five pulls on the pressure lever and we'll see what we've got.");
-    case ^deal_spirit : @deal_finish;
+    case ^deal_not_started : @deal_brief;
+    case ^deal_island : @deal_wants_weed;
+    case ^deal_weed_in : @deal_wants_water;
+    case ^deal_water_in : @deal_wants_creatures;
+    case ^deal_brewing : @deal_wants_wrench;
+    case ^deal_spirit : @deal_wants_spider;
+    case ^deal_spider_in : @deal_wants_tap;
+    case ^deal_swill : @deal_wants_donnie;
+    case ^deal_donnie_drunk : @deal_finish;
     case default :
-        if (%deal_quest >= ^deal_complete) {
-            ~chatnpc("<p,happy>Braindeath rum. Nobody has ever asked what's in it and I'd like to keep it that way.");
-            return;
-        }
-        ~chatnpc("<p,neutral>Talk to Pete.");
+        ~chatnpc("<p,happy>Braindeath rum. Nobody has ever asked what's in it and I'd like to keep it that way.");
 }
 
 [label,deal_brief]
@@ -72,45 +76,602 @@ switch_int (~p_choice2("What's stopping you?", 1, "Everyone here is dead.", 2)) 
     case 1 :
         ~chatplayer("<p,quiz>What's stopping you?");
 }
-~chatnpc("<p,angry>Three things. The crew won't work, the vat's eaten through at the tap, and the ingredients have all gone to seed or swum off.");
-~chatnpc("<p,neutral>Six Zombie Swabs out the front. They'll do as they're told if somebody tells them properly. I've tried asking.");
-~chatplayer("<p,quiz>Properly?");
-~chatnpc("<p,happy>Intimidate 'em. They're dead, not deaf.");
+~chatnpc("<p,angry>Ingredients. Five of them, and every one of them has gone to seed or swum off or died in the cellar.");
+if (%zogre < ^zogre_complete) {
+    ~chatnpc("<p,neutral>You've the look of somebody who's never put a whole spider in anything. Come back when you have.");
+    return;
+}
+if (stat_base(slayer) < ^deal_req_slayer) {
+    ~chatnpc("<p,neutral>One of the five is a fever spider and you'd not last a minute in the cellar. Level <tostring(^deal_req_slayer)> Slayer, then we'll talk.");
+    return;
+}
+~chatnpc("<p,happy>Right. Blindweed first. There's a patch out the back under eight months of weeds, and the farming kit is in the cupboard down in the cellar.");
+~deal_handover(deal_blindweed_seed, "Captain Braindeath hands you a blindweed seed.");
+%deal_quest = ^deal_island;
+~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
 
-[label,deal_recipe]
-~chatnpc("<p,happy>Vat holds. Now then. Five things go in the hopper and I'll not be taking questions about any of them.");
-~chatnpc("<p,neutral>Blindweed off the patch - it's overgrown, there's a kit in the cupboard.");
-~chatnpc("<p,neutral>A bucket of water out of the stagnant lake. Not the sea. The lake.");
-~chatnpc("<p,neutral>A fever spider. A whole one.");
-~chatnpc("<p,neutral>A karamthulhu. There's fishing spots round the shore and it's the only thing in them.");
-~chatnpc("<p,neutral>And sluglings.");
-~chatplayer("<p,quiz>Sluglings.");
-~chatnpc("<p,happy>Sluglings.");
+[label,deal_wants_weed]
+~chatnpc("<p,neutral>Blindweed. Rake the patch, dib the seed in, wait for it, pick it, put it in the hopper upstairs.");
+if (inv_total(inv, deal_blindweed_seed) = 0 & inv_total(inv, deal_blindweed) = 0 & %deal_farming < ^deal_seeded) {
+    ~chatnpc("<p,angry>And here's another seed, since you've lost the first one.");
+    ~deal_handover(deal_blindweed_seed, "Captain Braindeath hands you another blindweed seed.");
+}
 
-[label,deal_finish]
-~chatplayer("<p,neutral>Something came out of the vat.");
+[label,deal_wants_water]
+~chatplayer("<p,neutral>The blindweed's in.");
+~chatnpc("<p,happy>Water next. Not the sea - the stagnant lake, past 50% Luke's gate and up over the rock.");
+~deal_handover(bucket_empty, "Captain Braindeath hands you a bucket.");
+
+[label,deal_wants_creatures]
+~chatplayer("<p,neutral>There's a bucket of the lake in the hopper.");
+~chatnpc("<p,neutral>Now the sea creatures. Five of them, in the pressure barrel next to the hopper - not the hopper, the barrel - and then the lever.");
+~chatplayer("<p,quiz>What sort of sea creatures?");
+~chatnpc("<p,happy>Sluglings. Karamthulhu. Whatever comes up. The fishing spots round the shore have nothing else in them.");
+~deal_handover(fishbowl_net, "Captain Braindeath hands you a fishbowl with a net round it.");
+
+[label,deal_wants_wrench]
+~chatplayer("<p,neutral>I pulled the lever.");
+~chatnpc("<p,angry>Aye, and now the controls are spinning on their own and frothing, which they do about once a decade and I've never liked it.");
+~chatnpc("<p,neutral>Wrench. Davey blesses it - he's out on the west side and he'll want you in a state of grace, so bring your prayers with you.");
+~deal_handover(deal_wrench, "Captain Braindeath hands you a heavy metal wrench.");
+
+[label,deal_wants_spider]
+~chatplayer("<p,neutral>Something came out of the controls.");
 ~chatnpc("<p,neutral>Aye, that happens. Did you put it back?");
 ~chatplayer("<p,neutral>Not exactly.");
-~chatnpc("<p,happy>Good enough.");
+~chatnpc("<p,happy>Good enough. Last ingredient: a fever spider. A whole one, down in the cellar, and mind the disease.");
+
+[label,deal_wants_tap]
+~chatnpc("<p,happy>That's the five. Draw a bucket off the output tap and don't smell it.");
+
+[label,deal_wants_donnie]
+~chatnpc("<p,neutral>Captain Donnie. Out by the patches with his placard. Get that into him and he'll tell you whose idea the protest was.");
+
+[label,deal_finish]
+~chatplayer("<p,neutral>Donnie says the protest was Rabid Jack's idea.");
+~chatnpc("<p,angry>Rabid Jack. Of course it was.");
 if_close;
 mes("Captain Braindeath draws a bucket off the tap and looks at it for a long time.");
 p_delay(4);
 %deal_quest = ^deal_complete;
-stat_advance(cooking, 70000);
+stat_advance(fishing, 70000);
+stat_advance(prayer, 70000);
 stat_advance(farming, 70000);
-stat_advance(slayer, 70000);
-// the scroll has always promised Slayer gloves and nothing ever handed them over
-if (inv_freespace(inv) > 0) {
-    inv_add(inv, deal_slayer_gloves, 1);
-} else {
-    obj_add(coord, deal_slayer_gloves, 1, ^lootdrop_duration);
-}
 session_log(^log_adventure, "Quest complete: Rum Deal");
-~send_quest_complete(questlist:deal, deal_slayer_gloves, 200, ^deal_questpoints, "You have completed\\nRum Deal!", "2 Quest Points|7,000 Cooking XP|7,000 Farming XP|7,000 Slayer XP|Slayer gloves");
+~send_quest_complete(questlist:deal, deal_wrench_blessed, 200, ^deal_questpoints, "You have completed\\nRum Deal!", "2 Quest Points|7,000 Fishing XP|7,000 Prayer XP|7,000 Farming XP|The holy wrench");
 
-// =========================================================================== the crew
-// Six Zombie Swabs, six bits, and every one of them carries op3=Intimidate and had no handler.
-// A varbit cannot be passed to a label, so each swab writes its own and then calls the count.
+// Braindeath's handouts, which all have the same two ways of going wrong.
+[proc,deal_handover](namedobj $obj, string $mes)()
+if (inv_total(inv, $obj) > 0) {
+    return;
+}
+if_close;
+if (inv_freespace(inv) = 0) {
+    mes("You have no room to take it.");
+    return;
+}
+inv_add(inv, $obj, 1);
+mes($mes);
+
+// =========================================================================== the cellar cupboard
+// "Probably where the farming kit is stored." - the cache's own description, and that is the rake
+// and the dibber, not the wrench. The wrench comes from Captain Braindeath.
+[oploc1,deal_broomcupboard]
+p_arrivedelay;
+loc_change(deal_broomcupboard_open, 100);
+sound_synth(cupboard_open, 1, 0);
+mes("You open the cupboard.");
+
+[oploc3,deal_broomcupboard_open]
+p_arrivedelay;
+loc_change(deal_broomcupboard, 100);
+sound_synth(cupboard_close, 1, 0);
+
+[oploc2,deal_broomcupboard_open]
+p_arrivedelay;
+if (%deal_quest < ^deal_island) {
+    ~mesbox("Somebody else's cupboard.");
+    return;
+}
+def_int $want = 0;
+if (inv_total(inv, rake) = 0) {
+    $want = add($want, 1);
+}
+if (inv_total(inv, dibber) = 0) {
+    $want = add($want, 1);
+}
+if ($want = 0) {
+    ~mesbox("A mop, a bucket with no bottom, and about eight months of mildew.");
+    return;
+}
+if (inv_freespace(inv) < $want) {
+    mes("You have no room for what is in it.");
+    return;
+}
+if (inv_total(inv, rake) = 0) {
+    inv_add(inv, rake, 1);
+}
+if (inv_total(inv, dibber) = 0) {
+    inv_add(inv, dibber, 1);
+}
+~mesbox("A rake, a seed dibber and about eight months of mildew.");
+
+// =========================================================================== the blindweed patch
+// deal_blindweed is a multiloc on deal_farming and the table is the whole mechanic:
+// weeds3 -> weeds2 -> weeds1 -> empty -> seed -> fullygrown. Every state carries op2=Inspect and
+// only fullygrown carries op1=Pick, so the raking and the planting are both oplocu.
+[oploc1,deal_blindweed]
+p_arrivedelay;
+if (%deal_farming ! ^deal_grown) {
+    ~mesbox("There is nothing on it to pick.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You have no room.");
+    return;
+}
+anim(human_pickupfloor, 0);
+p_delay(3);
+inv_add(inv, deal_blindweed, 1);
+%deal_farming = ^deal_empty;
+stat_advance(farming, 1800);
+~mesbox("Blindweed. An inedible, foul smelling herb, and it is going into something people will drink.");
+
+[oploc2,deal_blindweed]
+switch_int (%deal_farming) {
+    case ^deal_weeds3 : ~mesbox("Weedy.");
+    case ^deal_weeds2 : ~mesbox("Less weedy.");
+    case ^deal_weeds1 : ~mesbox("Almost clear.");
+    case ^deal_empty : ~mesbox("Free from weeds, and nothing in it.");
+    case ^deal_seeded : ~mesbox("Something is growing here.");
+    case ^deal_grown : ~mesbox("Fully grown blindweed.");
+}
+
+[oplocu,deal_blindweed]
+def_obj $used = last_useitem;
+p_arrivedelay;
+if (%deal_quest < ^deal_island) {
+    ~mesbox("A blindweed patch, under eight months of everything else, and no reason to touch it.");
+    return;
+}
+if ($used = rake) {
+    if (%deal_farming >= ^deal_empty) {
+        ~mesbox("There are no weeds left on it.");
+        return;
+    }
+    if (stat(farming) < ^deal_req_farming) {
+        ~mesbox("You need a Farming level of <tostring(^deal_req_farming)> to make anything of this patch.");
+        return;
+    }
+    anim(farming_raking, 0);
+    p_delay(4);
+    %deal_farming = add(%deal_farming, 1);
+    stat_advance(farming, 300);
+    if (%deal_farming = ^deal_empty) {
+        mes("That is the last of the weeds.");
+        return;
+    }
+    mes("You clear some of the weeds.");
+    return;
+}
+if ($used = deal_blindweed_seed) {
+    if (%deal_farming < ^deal_empty) {
+        ~mesbox("The weeds would choke it. Rake the patch first.");
+        return;
+    }
+    if (%deal_farming > ^deal_empty) {
+        ~mesbox("There is already something in it.");
+        return;
+    }
+    if (inv_total(inv, dibber) = 0) {
+        ~mesbox("You need a seed dibber. There is one in the cellar cupboard.");
+        return;
+    }
+    if (stat(farming) < ^deal_req_farming) {
+        ~mesbox("You need a Farming level of <tostring(^deal_req_farming)> to make anything of this patch.");
+        return;
+    }
+    anim(farming_seed_dibbing, 0);
+    p_delay(4);
+    inv_del(inv, deal_blindweed_seed, 1);
+    %deal_farming = ^deal_seeded;
+    stat_advance(farming, 600);
+    mes("You dib the seed into the patch.");
+    queue(deal_blindweed_grown, ^deal_grow_ticks, 0);
+    return;
+}
+~displaymessage(^dm_default);
+
+// Nothing on this island is in a hurry and the blindweed least of all, but it does come up on its
+// own and tell you so, which is what the walkthrough means by "wait for the notification".
+[queue,deal_blindweed_grown]
+if (%deal_farming ! ^deal_seeded) {
+    return;
+}
+%deal_farming = ^deal_grown;
+~mesbox("Something at the back of your mind says the blindweed has come up. It is probably the blindweed.");
+
+// The eleven other patches on the island, every one of them Inspect and nothing else.
+[oploc2,deal_overgrown_patch]
+~mesbox("Weedy, wrecked and infertile. The one in the south-east corner is the only patch on this island that would grow anything.");
+
+// =========================================================================== the lake
+[oplocu,deal_stagnant]
+if (last_useitem ! bucket_empty) {
+    ~displaymessage(^dm_default);
+    return;
+}
+p_arrivedelay;
+if (inv_total(inv, deal_stagnant_bucket) > 0) {
+    ~mesbox("You have a bucket of it and one is more than enough.");
+    return;
+}
+anim(deal_fillbucket_stagnent, 0);
+p_delay(3);
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, deal_stagnant_bucket, 1);
+mes("You fill the bucket from the lake.");
+~mesbox("It's a bucket of... water?");
+
+// 50% Luke stands on his own gate, and the gate is the only way from his yard to the lake.
+[oploc1,deal_gate_closed]
+p_arrivedelay;
+if (%deal_quest < ^deal_island) {
+    ~mesbox("The gate is shut and 50% Luke is on the other side of it doing half of his job, which is the half where the gate stays shut.");
+    return;
+}
+if (coordz(coord) > coordz(loc_coord)) {
+    p_teleport(loc_coord);
+} else {
+    p_teleport(movecoord(loc_coord, 0, 0, 1));
+}
+mes("You go through the gate.");
+
+// =========================================================================== the fishing spots
+[opnpc1,deal_squid]
+p_arrivedelay;
+if (%deal_quest < ^deal_water_in) {
+    ~mesbox("Something is moving down there and it is not a fish.");
+    return;
+}
+if (inv_total(inv, net) = 0 & inv_total(inv, big_net) = 0 & inv_total(inv, fishbowl_net) = 0) {
+    ~mesbox("You would need a net. Captain Braindeath has one, wrapped round a fishbowl.");
+    return;
+}
+if (inv_total(inv, net) = 0 & inv_total(inv, big_net) = 0) {
+    ~mesbox("The net is still tangled round the fishbowl. Untangle it first.");
+    return;
+}
+if (stat(fishing) < ^deal_req_fishing) {
+    ~mesbox("You need a Fishing level of <tostring(^deal_req_fishing)> to land whatever that is. The Zombie Swabs have been known to carry one.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("You have no room.");
+    return;
+}
+anim(deal_bowl_fish, 0);
+p_delay(5);
+// "catch five sluglings or Karamthulhu" - the spot gives whichever it feels like, and the barrel
+// does not care which five it gets.
+if (random(2) = 0) {
+    inv_add(inv, deal_karamthulhu, 1);
+    stat_advance(fishing, 1500);
+    ~mesbox("A karamthulhu. A sinister looking squid, and it is looking.");
+    return;
+}
+inv_add(inv, deal_slugling, 1);
+stat_advance(fishing, 1500);
+~mesbox("Sluglings. They look at you balefully.");
+
+[opheld1,deal_slugling]
+~mesbox("They look at you balefully. | 'Feed us...'");
+
+// =========================================================================== the hopper
+// Three of the five go in here. The other two are sea creatures and they go in the barrel, which is
+// what deal_multi_lever's table says: the lever is dead until deal_barrel reaches five.
+[oplocu,deal_hopper]
+def_obj $in = last_useitem;
+p_arrivedelay;
+if ($in = deal_karamthulhu | $in = deal_slugling) {
+    ~mesbox("Not the hopper. Braindeath was specific about that: the sea creatures go in the pressure barrel.");
+    return;
+}
+if ($in = deal_blindweed) {
+    if (%deal_quest ! ^deal_island) {
+        ~mesbox("There is already blindweed in it.");
+        return;
+    }
+    inv_del(inv, deal_blindweed, 1);
+    mes("In it goes.");
+    %deal_quest = ^deal_weed_in;
+    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+    ~mesbox("The blindweed goes down the hopper and something at the bottom of the vat accepts it.");
+    return;
+}
+if ($in = deal_stagnant_bucket) {
+    if (%deal_quest < ^deal_weed_in) {
+        ~mesbox("The blindweed goes in first. Braindeath was specific.");
+        return;
+    }
+    if (%deal_quest ! ^deal_weed_in) {
+        ~mesbox("There is already a bucket of the lake in it.");
+        return;
+    }
+    inv_del(inv, deal_stagnant_bucket, 1);
+    inv_add(inv, bucket_empty, 1);
+    mes("In it goes.");
+    %deal_quest = ^deal_water_in;
+    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+    ~mesbox("The lake water goes in and the smell of the brewery changes, which you would not have thought possible.");
+    return;
+}
+if ($in = deal_spider_body) {
+    if (%deal_quest < ^deal_spirit) {
+        ~mesbox("The spider goes in last, and there is something in these controls that would have to come out first.");
+        return;
+    }
+    if (%deal_quest ! ^deal_spirit) {
+        ~mesbox("There is already a whole fever spider in it.");
+        return;
+    }
+    inv_del(inv, deal_spider_body, 1);
+    mes("In it goes, legs and all.");
+    %deal_quest = ^deal_spider_in;
+    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+    ~mesbox("That is the five. The vat makes a noise it has not made in eight months and the output tap starts to drip.");
+    return;
+}
+~mesbox("Braindeath was specific, which is not like him, so stick to the five.");
+
+// =========================================================================== the pressure barrel
+[oplocu,deal_pressure]
+def_obj $in = last_useitem;
+p_arrivedelay;
+if ($in ! deal_karamthulhu & $in ! deal_slugling) {
+    ~mesbox("The barrel takes sea creatures and Braindeath would rather you did not improvise.");
+    return;
+}
+if (%deal_quest < ^deal_water_in) {
+    ~mesbox("The blindweed and the water go in the hopper before anything goes in here.");
+    return;
+}
+if (%deal_barrel >= ^deal_pressure_full) {
+    ~mesbox("The barrel is full. Five was the number.");
+    return;
+}
+inv_del(inv, $in, 1);
+%deal_barrel = add(%deal_barrel, 1);
+if ($in = deal_karamthulhu) {
+    %deal_thulhu = add(%deal_thulhu, 1);
+} else {
+    %deal_slug = add(%deal_slug, 1);
+}
+mes("In it goes. <tostring(%deal_barrel)> of <tostring(^deal_pressure_full)>.");
+if (%deal_barrel = ^deal_pressure_full) {
+    ~mesbox("The barrel is full and the lever beside it has come up on its own.");
+}
+
+[oploc2,deal_pressure]
+~mesbox("The pressure barrel is at <tostring(%deal_barrel)> of <tostring(^deal_pressure_full)>.");
+
+// deal_multi_lever reads deal_barrel: deal_lever_down at 0-4 with "This lever can't be operated
+// right now." and deal_lever_up at 5. One pull, once the barrel has its five.
+[oploc1,deal_multi_lever]
+p_arrivedelay;
+if (%deal_barrel < ^deal_pressure_full) {
+    ~mesbox("This lever can't be operated right now. The pressure barrel is at <tostring(%deal_barrel)> of <tostring(^deal_pressure_full)>.");
+    return;
+}
+if (%deal_quest ! ^deal_water_in) {
+    ~mesbox("The brewery has already had its pull on this lever.");
+    return;
+}
+anim(human_leverdown, 0);
+p_delay(2);
+if_close;
+mes("The lever goes over and the whole brewery starts working at once.");
+p_delay(5);
+%deal_multi_hopper = ^deal_control_possessed;
+%deal_quest = ^deal_brewing;
+~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+sound_synth(deal_spirit_attack, 1, 0);
+~mesbox("Then it stops. The brewing controls downstairs are spinning on their own and frothing, and whatever is doing that is not pressure.");
+
+// =========================================================================== Davey and the wrench
+[opnpc1,deal_davey]
+if (%deal_quest < ^deal_island) {
+    ~chatnpc("<p,neutral>I do the blessing. Somebody has to and I lost.");
+    return;
+}
+if (inv_total(inv, deal_wrench) = 0) {
+    if (inv_total(inv, deal_wrench_blessed) > 0) {
+        ~chatnpc("<p,happy>It's about as holy as anything on this island gets.");
+        return;
+    }
+    ~chatnpc("<p,neutral>Captain Braindeath keeps the wrench. Bring it when he gives it to you.");
+    return;
+}
+~chatplayer("<p,quiz>Braindeath says you can bless this.");
+~chatnpc("<p,neutral>I can bless anything. Whether it takes is between the thing and whoever's listening.");
+// "You need 47 or more available prayer points, which are not drained."
+if (stat(prayer) < ^deal_req_prayer) {
+    ~chatnpc("<p,sad>And you've not got the prayer in you to make it stick. Come back with <tostring(^deal_req_prayer)> points about you.");
+    return;
+}
+if_close;
+anim(deal_wrench_flourish, 0);
+mes("Davey holds the wrench up, says something that is mostly vowels, and hands it back considerably shinier.");
+p_delay(4);
+inv_del(inv, deal_wrench, 1);
+inv_add(inv, deal_wrench_blessed, 1);
+~mesbox("A shining paragon of wrenchly virtue.");
+
+// =========================================================================== the brewing controls
+// deal_multicontrol carries no op in any of its three states, so it is used WITH an item, and the
+// item is the holy wrench. This is the exorcism, and it is where the Evil Spirit comes from.
+[oplocu,deal_multicontrol]
+// last_useitem does not survive p_arrivedelay - the suspend corrupts the pointer - so it is read
+// first, which is the same reason the hopper and the barrel below read theirs first.
+def_obj $used = last_useitem;
+p_arrivedelay;
+if ($used = deal_wrench) {
+    ~mesbox("A plain wrench is just a wrench, and whatever is in these controls is not impressed by ironmongery. Davey does the blessing.");
+    return;
+}
+if ($used ! deal_wrench_blessed) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%deal_multi_hopper = ^deal_control_working) {
+    ~mesbox("Chugging away nicely, and nothing in it that needs hitting.");
+    return;
+}
+if (%deal_multi_hopper ! ^deal_control_possessed) {
+    ~mesbox("The controls are not doing anything that wants a holy wrench.");
+    return;
+}
+anim(deal_smite_control, 0);
+p_delay(4);
+~mesbox("The wrench comes down on the control panel, the frothing stops, and what was doing the frothing comes out to see who did that.");
+npc_add(^deal_spirit_spawn, deal_evil_spirit, ^deal_spirit_despawn);
+npc_setmode(opplayer2);
+sound_synth(deal_spirit_attack, 1, 0);
+
+// The Evil Spirit is level 150 and had an Attack op, a combat level and no statblock at all, which
+// in this content means an npc a script is supposed to spawn and nothing ever did.
+[ai_queue3,deal_evil_spirit]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+queue(deal_spirit_down, 0, 0);
+
+[queue,deal_spirit_down]
+if (%deal_quest ! ^deal_brewing) {
+    return;
+}
+%deal_multi_hopper = ^deal_control_working;
+%deal_quest = ^deal_spirit;
+~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+sound_synth(rumdeal_spirit_depart, 1, 0);
+~mesbox("The spirit goes back down the pipe in pieces and the controls settle into chugging away nicely.");
+
+// =========================================================================== the output tap
+[oploc1,deal_brewvat_tap]
+p_arrivedelay;
+if (%deal_quest < ^deal_spider_in) {
+    ~mesbox("The brass is eaten away round the edge and nothing comes out of it yet.");
+    return;
+}
+if (inv_total(inv, bucket_empty) = 0) {
+    ~mesbox("Whatever is behind this tap wants collecting in a bucket.");
+    return;
+}
+anim(human_pickupfloor, 0);
+p_delay(3);
+inv_del(inv, bucket_empty, 1);
+inv_add(inv, deal_bucket_swill, 1);
+mes("You draw a bucketful off the tap.");
+if (%deal_quest = ^deal_spider_in) {
+    %deal_quest = ^deal_swill;
+    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+}
+~mesbox("It is brown, it moves slowly, and Captain Braindeath is going to sell it.");
+
+[opheld1,deal_bucket_swill]
+~mesbox("Sorry, I mean a bucket of 'rum'.");
+
+// =========================================================================== Captain Donnie
+// The protest leader, out by the patches with the Zombie Protesters behind him - not a bait
+// merchant, which is what the version this replaces made of him.
+[opnpc1,deal_captian_donnie]
+if (%deal_quest < ^deal_island) {
+    ~chatnpc("<p,angry>NO MORE RUM! ...Well. No more rum THIS way.");
+    return;
+}
+if (%deal_quest >= ^deal_donnie_drunk) {
+    ~chatnpc("<p,happy>Rabid Jack can organise his own protest.");
+    return;
+}
+if (%deal_quest < ^deal_swill) {
+    ~chatplayer("<p,quiz>What's the protest about?");
+    ~chatnpc("<p,angry>Braindeath's rum. Eight months of nothing and he still calls himself a brewer.");
+    ~chatplayer("<p,quiz>And if there were some?");
+    ~chatnpc("<p,neutral>Then I'd be a man with a drink in his hand and no placard. Try me.");
+    return;
+}
+~chatplayer("<p,happy>There's some rum.");
+~chatnpc("<p,quiz>Is there now.");
+~chatplayer("<p,neutral>Here.");
+@deal_donnie_drinks;
+
+[opnpcu,deal_captian_donnie]
+if (last_useitem ! deal_bucket_swill) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%deal_quest >= ^deal_donnie_drunk) {
+    ~chatnpc("<p,happy>I've had mine.");
+    return;
+}
+@deal_donnie_drinks;
+
+[label,deal_donnie_drinks]
+if (inv_total(inv, deal_bucket_swill) = 0) {
+    ~chatnpc("<p,sad>In what?");
+    return;
+}
+inv_del(inv, deal_bucket_swill, 1);
+inv_add(inv, bucket_empty, 1);
+~chatnpc("<p,happy>...That is the worst thing I have ever drunk and I would like another.");
+~chatplayer("<p,quiz>Whose idea was the protest?");
+~chatnpc("<p,neutral>Rabid Jack's. He has ideas and I have a placard, and that's the arrangement.");
+~chatplayer("<p,quiz>Rabid Jack?");
+~chatnpc("<p,sad>You'll meet him. Everyone does.");
+if (%deal_quest = ^deal_swill) {
+    %deal_quest = ^deal_donnie_drunk;
+    ~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
+}
+
+[opnpc1,deal_zombie_protester_1] ~deal_protest;
+[opnpc1,deal_zombie_protester_2] ~deal_protest;
+[opnpc1,deal_zombie_protester_3] ~deal_protest;
+[opnpc1,deal_zombie_protester_4] ~deal_protest;
+[opnpc1,deal_zombie_protester_5] ~deal_protest;
+[opnpc1,deal_zombie_protester_6] ~deal_protest;
+
+[proc,deal_protest]()()
+if (%deal_quest >= ^deal_donnie_drunk) {
+    ~chatnpc("<p,happy>Donnie's put the placard down, so I suppose we're off shift.");
+    return;
+}
+switch_int (random(3)) {
+    case 0 : ~chatnpc("<p,angry>NO MORE RUM!");
+    case 1 : ~chatnpc("<p,neutral>I'm not sure what we're protesting about. Donnie knows.");
+    case default : ~chatnpc("<p,sad>Eleven years dead and I'm still standing in a queue.");
+}
+
+[opnpc1,deal_brewer_1] ~deal_brewer_talk;
+[opnpc1,deal_brewer_2] ~deal_brewer_talk;
+[opnpc1,deal_brewer_3] ~deal_brewer_talk;
+[opnpc1,deal_brewer_4] ~deal_brewer_talk;
+[opnpc1,deal_brewer_5] ~deal_brewer_talk;
+[opnpc1,deal_brewer_6] ~deal_brewer_talk;
+[opnpc1,deal_brewer_7] ~deal_brewer_talk;
+[opnpc1,deal_brewer_8] ~deal_brewer_talk;
+
+[proc,deal_brewer_talk]()()
+if (%deal_quest >= ^deal_complete) {
+    ~chatnpc("<p,happy>Eight months and then one afternoon. I've got a job again.");
+    return;
+}
+~chatnpc("<p,neutral>I brew. There's nothing to brew with, so mostly I stand here.");
+
+// =========================================================================== the Zombie Swabs
+// Six of them, one varbit each, and every one carries op1=Talk-to, op2=Attack and op3=Intimidate.
+// Intimidating one gets it off you - which is what the walkthrough uses it for - and it is not a
+// stage of the quest, which is what the version this replaces made it.
 [opnpc3,deal_pirate_a]
 if (~deal_can_intimidate(%deal_multi_pirate_a) = false) { return; }
 %deal_multi_pirate_a = ^deal_on;
@@ -155,6 +716,20 @@ if ($done = ^deal_on) {
 ~chatnpc("<p,sad>...I'll get the mop.");
 return(true);
 
+[proc,deal_intimidated]()()
+npc_setmode(none);
+def_int $n = 0;
+if (%deal_multi_pirate_a = ^deal_on) { $n = add($n, 1); }
+if (%deal_multi_pirate_b = ^deal_on) { $n = add($n, 1); }
+if (%deal_multi_pirate_c = ^deal_on) { $n = add($n, 1); }
+if (%deal_multi_pirate_d = ^deal_on) { $n = add($n, 1); }
+if (%deal_multi_pirate_e = ^deal_on) { $n = add($n, 1); }
+if (%deal_multi_pirate_f = ^deal_on) { $n = add($n, 1); }
+if ($n < 6) {
+    return;
+}
+~mesbox("All six of them are working, badly, which is the most that has happened on this island in eight months.");
+
 [opnpc1,deal_pirate_a] ~deal_swab_talk;
 [opnpc1,deal_pirate_b] ~deal_swab_talk;
 [opnpc1,deal_pirate_c] ~deal_swab_talk;
@@ -165,302 +740,7 @@ return(true);
 [proc,deal_swab_talk]()()
 ~chatnpc("<p,neutral>Been dead eleven years. Still on the same watch.");
 
-[proc,deal_intimidated]()()
-def_int $n = 0;
-if (%deal_multi_pirate_a = ^deal_on) { $n = add($n, 1); }
-if (%deal_multi_pirate_b = ^deal_on) { $n = add($n, 1); }
-if (%deal_multi_pirate_c = ^deal_on) { $n = add($n, 1); }
-if (%deal_multi_pirate_d = ^deal_on) { $n = add($n, 1); }
-if (%deal_multi_pirate_e = ^deal_on) { $n = add($n, 1); }
-if (%deal_multi_pirate_f = ^deal_on) { $n = add($n, 1); }
-if ($n < 6) {
-    ~mesbox("<tostring($n)> of 6 swabs are working.");
-    return;
-}
-if (%deal_quest ! ^deal_island) {
-    return;
-}
-%deal_quest = ^deal_crew;
-~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
-~mesbox("All six of them are working, badly, which is the most that has happened on this island in eight months.");
-
-// =========================================================================== the wrench
-[oploc1,deal_broomcupboard]
-p_arrivedelay;
-if (%deal_quest < ^deal_island) {
-    ~mesbox("Somebody else's cupboard.");
-    return;
-}
-if (inv_freespace(inv) < 2) {
-    mes("You have no room for what is in it.");
-    return;
-}
-mes("You open the cupboard.");
-p_delay(2);
-def_boolean $took = false;
-if (inv_total(inv, deal_wrench) = 0 & inv_total(inv, deal_wrench_blessed) = 0) {
-    inv_add(inv, deal_wrench, 1);
-    $took = true;
-}
-if (inv_total(inv, deal_blindweed_seed) = 0 & inv_total(inv, deal_blindweed) = 0 & %deal_farming < ^deal_seeded) {
-    inv_add(inv, deal_blindweed_seed, 1);
-    $took = true;
-}
-if ($took = false) {
-    ~mesbox("A mop, a rake, and a great deal of mildew.");
-    return;
-}
-~mesbox("A wrench, a blindweed seed and about eight months of mildew.");
-
-[opnpc1,deal_davey]
-if (%deal_quest < ^deal_crew) {
-    ~chatnpc("<p,neutral>I do the blessing. Somebody has to and I lost.");
-    return;
-}
-if (inv_total(inv, deal_wrench) = 0) {
-    if (inv_total(inv, deal_wrench_blessed) > 0) {
-        ~chatnpc("<p,happy>It's about as holy as anything on this island gets.");
-        return;
-    }
-    ~chatnpc("<p,neutral>There's a wrench in the broom cupboard. Bring it.");
-    return;
-}
-~chatplayer("<p,quiz>Braindeath says you can bless this.");
-~chatnpc("<p,neutral>I can bless anything. Whether it takes is between the thing and whoever's listening.");
-if_close;
-mes("Davey holds the wrench up, says something that is mostly vowels, and hands it back considerably shinier.");
-p_delay(4);
-inv_del(inv, deal_wrench, 1);
-inv_add(inv, deal_wrench_blessed, 1);
-~mesbox("A shining paragon of wrenchly virtue.");
-
-[oploc1,deal_brewvat_tap]
-p_arrivedelay;
-if (%deal_quest >= ^deal_vat) {
-    if (%deal_quest < ^deal_spirit) {
-        ~mesbox("Nothing comes out of it yet.");
-        return;
-    }
-    ~mesbox("The tap works, which after eight months is the whole of the news on this island.");
-    return;
-}
-if (inv_total(inv, deal_wrench_blessed) = 0) {
-    ~mesbox("The brass is eaten away all round the tap and a plain wrench would take the whole fitting off with it.");
-    return;
-}
-anim(human_pickupfloor, 0);
-p_delay(5);
-%deal_quest = ^deal_vat;
-~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
-stat_advance(crafting, 5000);
-~mesbox("The holy wrench goes round without tearing anything, which a plain one would not have done. Davey is going to be insufferable about this.");
-
-// =========================================================================== the blindweed patch
-// deal_blindweed is a multiloc on deal_farming and the table is the whole mechanic:
-// weeds3 -> weeds2 -> weeds1 -> empty -> seed -> fullygrown, and only fullygrown carries op1=Pick.
-[oploc1,deal_blindweed]
-p_arrivedelay;
-if (%deal_farming ! ^deal_grown) {
-    @deal_patch_work;
-}
-if (inv_freespace(inv) = 0) {
-    mes("You have no room.");
-    return;
-}
-anim(human_pickupfloor, 0);
-p_delay(3);
-inv_add(inv, deal_blindweed, 1);
-%deal_farming = ^deal_empty;
-stat_advance(farming, 3000);
-~mesbox("Blindweed. An inedible, foul smelling herb, and it is going into something people will drink.");
-
-[oploc2,deal_blindweed] @deal_patch_work;
-
-[label,deal_patch_work]
-p_arrivedelay;
-if (%deal_quest < ^deal_vat) {
-    ~mesbox("A blindweed patch, under eight months of everything else.");
-    return;
-}
-switch_int (%deal_farming) {
-    // FIXED: these were three stacked case labels, and a RuneScript case does not fall through - the
-    // first two were empty, so a fresh patch (weeds3) could never be weeded at all.
-    case ^deal_weeds3, ^deal_weeds2, ^deal_weeds1 :
-        anim(human_pickupfloor, 0);
-        p_delay(3);
-        %deal_farming = add(%deal_farming, 1);
-        stat_advance(farming, 500);
-        if (%deal_farming = ^deal_empty) {
-            mes("That is the last of the weeds.");
-        } else {
-            mes("You clear some of the weeds.");
-        }
-    case ^deal_empty :
-        if (inv_total(inv, deal_blindweed_seed) = 0) {
-            ~mesbox("Bare soil and nothing to put in it. There is a seed in the broom cupboard.");
-            return;
-        }
-        inv_del(inv, deal_blindweed_seed, 1);
-        %deal_farming = ^deal_seeded;
-        stat_advance(farming, 1000);
-        mes("You plant the seed.");
-    case ^deal_seeded :
-        // Nothing on this island is in a hurry and the blindweed least of all.
-        %deal_farming = ^deal_grown;
-        ~mesbox("It has come up already. Nothing on this island behaves the way it is supposed to.");
-    case default :
-        ~mesbox("A grown blindweed patch.");
-}
-
-// =========================================================================== the lake
-[oplocu,deal_stagnant]
-if (last_useitem ! bucket_empty) {
-    ~displaymessage(^dm_default);
-    return;
-}
-p_arrivedelay;
-if (inv_total(inv, deal_stagnant_bucket) > 0) {
-    ~mesbox("You have a bucket of it and one is more than enough.");
-    return;
-}
-inv_del(inv, bucket_empty, 1);
-inv_add(inv, deal_stagnant_bucket, 1);
-mes("You fill the bucket from the lake.");
-~mesbox("It's a bucket of... water?");
-
-// =========================================================================== the squid
-[opnpc1,deal_squid]
-p_arrivedelay;
-if (%deal_quest < ^deal_vat) {
-    ~mesbox("Something is moving down there and it is not a fish.");
-    return;
-}
-if (inv_total(inv, deal_karamthulhu) > 0) {
-    ~mesbox("There is only ever one of them in a spot and you have this one.");
-    return;
-}
-if (inv_total(inv, big_net) = 0 & inv_total(inv, net) = 0) {
-    ~mesbox("You would need a net, and a big one would be better.");
-    return;
-}
-if (inv_freespace(inv) = 0) {
-    mes("You have no room.");
-    return;
-}
-anim(human_smallnet, 0);
-p_delay(5);
-if (stat(fishing) < 30) {
-    ~mesbox("You need a Fishing level of 30 to land whatever that is.");
-    return;
-}
-inv_add(inv, deal_karamthulhu, 1);
-%deal_squidfish = add(%deal_squidfish, 1);
-stat_advance(fishing, 5000);
-~mesbox("A karamthulhu. A sinister looking squid, and it is looking.");
-
-// =========================================================================== sluglings
-// deal_slugling: "They look at you balefully. 'Feed us...'"
-[opnpc1,deal_captian_donnie]
-if (%deal_quest < ^deal_vat) {
-    ~chatnpc("<p,neutral>Donnie. I keep the bait.");
-    return;
-}
-if (inv_total(inv, deal_slugling) > 0 | %deal_slug > 0) {
-    ~chatnpc("<p,neutral>Don't feed them. Whatever you do.");
-    return;
-}
-~chatplayer("<p,quiz>Braindeath says you have sluglings.");
-~chatnpc("<p,angry>He says that like it's a thing a man should be pleased about.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>In what?");
-    return;
-}
-inv_add(inv, deal_slugling, 1);
-%deal_slug = 1;
-~chatnpc("<p,sad>Take the lot. And don't feed them, because they ask.");
-
-[opheld1,deal_slugling]
-~mesbox("They look at you balefully. | 'Feed us...'");
-
-// The fever spiders carry op2=Attack and nothing else, so there is no Talk-to handler here to
-// write - you kill one and take the body off the drop table.
-
-// =========================================================================== the hopper
-[oplocu,deal_hopper]
-def_obj $in = last_useitem;
-p_arrivedelay;
-if (%deal_quest < ^deal_vat) {
-    ~mesbox("The vat leaks at the tap. There is no point putting anything in the top of it yet.");
-    return;
-}
-if ($in = deal_blindweed | $in = deal_stagnant_bucket | $in = deal_spider_body | $in = deal_karamthulhu | $in = deal_slugling) {
-    inv_del(inv, $in, 1);
-    mes("In it goes.");
-    ~deal_hopper_check;
-    return;
-}
-~mesbox("Braindeath was specific, which is not like him, so stick to the five.");
-
-[proc,deal_hopper_check]()()
-if (inv_total(inv, deal_blindweed) > 0) { return; }
-if (inv_total(inv, deal_stagnant_bucket) > 0) { return; }
-if (inv_total(inv, deal_spider_body) > 0) { return; }
-if (inv_total(inv, deal_karamthulhu) > 0) { return; }
-if (inv_total(inv, deal_slugling) > 0) { return; }
-if (%deal_quest ! ^deal_vat) { return; }
-if (%deal_multi_hopper = 0) {
-    %deal_multi_hopper = 1;
-}
-%deal_quest = ^deal_brewing;
-~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
-~mesbox("All five of them are in the hopper and the hopper has started to turn on its own, which nobody asked it to do.");
-
-// =========================================================================== the pressure lever
-// deal_multi_lever reads deal_barrel: down at 0-4 and up at 5. Five pulls.
-[oploc1,deal_multi_lever]
-p_arrivedelay;
-if (%deal_quest < ^deal_brewing) {
-    ~mesbox("The lever moves and nothing anywhere responds to it.");
-    return;
-}
-if (%deal_quest > ^deal_brewing) {
-    ~mesbox("The barrel is at pressure and has been since.");
-    return;
-}
-anim(human_leverdown, 0);
-p_delay(2);
-if (%deal_barrel < ^deal_pressure_full) {
-    %deal_barrel = add(%deal_barrel, 1);
-}
-if (%deal_barrel < ^deal_pressure_full) {
-    mes("The pressure barrel takes it. <tostring(%deal_barrel)> of <tostring(^deal_pressure_full)>.");
-    return;
-}
-%deal_multi_hopper = 2;
-if_close;
-mes("The fifth pull takes and the whole brewery starts working at once.");
-p_delay(5);
-~deal_spirit_fight;
-
-[oploc2,deal_pressure]
-~mesbox("The pressure barrel is at <tostring(%deal_barrel)> of <tostring(^deal_pressure_full)>.");
-
-[proc,deal_spirit_fight]()()
-~mesbox("Something comes up the pipe that is not rum, and it has been in that vat for a long time, and it is extremely annoyed about the five things you have just put in on top of it.");
-p_delay(3);
-~damage_self(14);
-mes("The Evil Spirit is made largely of last year's brewing.");
-p_delay(4);
-~damage_self(8);
-mes("It goes back down the pipe in pieces.");
-p_delay(3);
-%deal_thulhu = 1;
-%deal_quest = ^deal_spirit;
-~send_quest_progress(questlist:deal, %deal_quest, ^deal_complete);
-stat_advance(attack, 10000);
-~mesbox("The tap runs. What comes out of it is brown and moves slowly and Captain Braindeath is going to sell it.");
-
-// =========================================================================== odds
+// =========================================================================== 50% Luke
 [opnpc1,deal_50luke]
 if (%deal_quest < ^deal_island) {
     ~chatnpc("<p,neutral>Fifty percent.");
@@ -470,21 +750,3 @@ if (%deal_quest < ^deal_island) {
 ~chatnpc("<p,neutral>Because I do half of everything.");
 ~chatplayer("<p,quiz>Half of what?");
 ~chatnpc("<p,neutral>Exactly.");
-
-// FIXED: this gate is the only way from 50% Luke's yard to the stagnant lake, and it only ever said
-// no - so the bucket of stagnant water could never be filled. It opens, as it does in OSRS.
-[oploc1,deal_gate_closed]
-p_arrivedelay;
-if (%deal_quest < ^deal_island) {
-    ~mesbox("The gate is shut and 50% Luke is on the other side of it doing half of his job, which is the half where the gate stays shut.");
-    return;
-}
-if (coordz(coord) > coordz(loc_coord)) {
-    p_teleport(loc_coord);
-} else {
-    p_teleport(movecoord(loc_coord, 0, 0, 1));
-}
-mes("You go through the gate.");
-
-[opheld1,deal_bucket_swill]
-~mesbox("Sorry, I mean a bucket of 'rum'.");

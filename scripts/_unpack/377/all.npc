@@ -63345,6 +63345,20 @@ walkanim=spirit_walk
 readyanim=spirit_ready
 op2=Attack
 vislevel=150
+huntmode=aggressive_melee
+hitpoints=90
+attack=170
+strength=146
+defence=100
+param=attackrate,4
+param=damagetype,^crush_style
+param=death_drop,null
+param=attack_anim,spirit_attack
+param=defend_anim,spirit_parry
+param=death_anim,spirit_death
+param=attack_sound,deal_spirit_attack
+param=defend_sound,deal_spirit_hit
+param=death_sound,rumdeal_spirit_depart
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Fever spider (level 49), the same source this repo's drop

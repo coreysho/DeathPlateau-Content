@@ -1,50 +1,75 @@
 // Rum Deal.
 //
-// Two varps. deal_quest is the spine; deal_var carries thirteen varbits, and between them and the
-// loc ops the whole quest is already described.
+// Two varps. deal_quest is the spine; deal_var carries thirteen varbits, and the cache names every
+// one of them. Three of them drive multilocs, and those three ARE the quest's mechanics - nothing
+// about this needed guessing, which is why the version this replaces is worth describing: it fixed
+// the vat with the holy wrench, faked the Evil Spirit with two mesboxes and ~damage_self, got the
+// sluglings from Captain Donnie as if he were a bait merchant, never drew a bucket off the tap, and
+// paid out Cooking and Slayer XP and a pair of Slayer gloves that the Slayer shop sells for fifty
+// points. The three multilocs it never touched say what the quest actually is:
 //
-//   deal_barrel          bits 1-4    0-15, and deal_multi_lever reads it: lever_down at 0,1,2,3,4
-//                                    and lever_up at 5. Five pulls.
-//   deal_multi_hopper    bits 5-6    deal_multicontrol: control -> spin -> work
-//   deal_squidfish       bits 7-10
-//   deal_slug            bits 11-14
-//   deal_thulhu          bits 15-19
-//   deal_multi_pirate_a  bit 20      \
-//   ...                              |  six bits, and there are six Zombie Swabs placed on the
-//   deal_multi_pirate_f  bit 25     /   island, every one of them carrying op3=Intimidate
-//   deal_diversion       bits 26-28
-//   deal_farming         bits 29-31  deal_blindweed: weeds3 -> weeds2 -> weeds1 -> empty -> seed
-//                                    -> fullygrown, and only fullygrown carries op1=Pick
+//   deal_multicontrol    multivar deal_multi_hopper
+//                        0 deal_brew_control       "This controls the entire brewery."
+//                        1 deal_brew_control_spin  "A frothing, spinning, possessed control panel."
+//                        2 deal_brew_control_work  "Chugging away nicely."
+//                        no ops on any of the three, forceapproach=south - so it is used WITH an
+//                        item, and the item is the holy wrench. That is the exorcism, and the Evil
+//                        Spirit comes out of the controls, not out of the pipe.
 //
-// The farming varbit is a six-state patch written into the config: three passes of weeding, an
-// empty bed, a planted seed and a crop. Nothing about it needed guessing.
+//   deal_multi_lever     multivar deal_barrel
+//                        deal_lever_down at 0-4    "This lever can't be operated right now."
+//                        deal_lever_up   at 5      "Throw the lever! Mwuhahahaha!"
+//                        so deal_barrel is the five sea creatures in the pressure barrel, and the
+//                        lever is dead until all five are in. Not five pulls.
+//
+//   deal_blindweed       multivar deal_farming
+//                        weeds3 -> weeds2 -> weeds1 -> empty -> seed -> fullygrown
+//                        every state carries op2=Inspect and only fullygrown carries op1=Pick, so
+//                        the raking and the planting are both oplocu: rake, then dibber.
+//
+// The cache also names this quest's own animations - deal_smite_control, deal_wrench_flourish,
+// deal_fillbucket_stagnent, deal_bowl_fish - and the fishbowl those last two belong to is
+// fishbowl_net, "An empty fishbowl in a net", which is what Captain Braindeath hands over.
+//
+//   deal_squidfish       bits 7-10    unused here, and left alone rather than invented a job for
+//   deal_slug            bits 11-14   sluglings in the barrel
+//   deal_thulhu          bits 15-19   karamthulhu in the barrel
+//   deal_multi_pirate_a  bit 20       \  one bit each for the six Zombie Swabs, which carry
+//   ...                               |  op3=Intimidate. Intimidating one stops it attacking you;
+//   deal_multi_pirate_f  bit 25       /  it is not a stage of the quest and never was.
+//   deal_diversion       bits 26-28   unused here, same as deal_squidfish
+//   deal_farming         bits 29-31   the patch
 //
 // ---------------------------------------------------------------------------- the boat
-// deal_boat is placed twice: on Braindeath Island, and at 3680,3554, which is inside the Port
-// Phasmatys wall - so this quest only became reachable when the energy barrier got a handler
-// earlier today. Pirate Pete is standing next to the Phasmatys one.
+// deal_boat is placed twice: on Braindeath Island at 2161,5116, and at 3680,3538, which is inside
+// the Port Phasmatys wall - so this quest only became reachable when the energy barrier got a
+// handler. Pirate Pete stands beside each one. deal_boat itself has no ops at all, so Pete rows.
 //
-// ---------------------------------------------------------------------------- what goes in the vat
-// The obj descriptions name the recipe:
-//   Blindweed          "An inedible, foul smelling herb."
-//   Bucket of water    "It's a bucket of... water?"        from the stagnant lake
-//   Fever spider body  "A diseased deceased Fever Spider. Handle with care."
-//   Karamthulhu        "A sinister looking squid."          deal_squid is a Fishing spot
-//   Sluglings          "They look at you balefully. 'Feed us...'"
-// and what comes out:
-//   Unsanitary swill   "Sorry, I mean a bucket of 'rum'."
+// ---------------------------------------------------------------------------- what goes in
+// The obj descriptions name the recipe, and which vessel each thing goes into is the barrel's
+// multiloc table above: three into the hopper, five into the barrel.
+//   hopper   Blindweed          "An inedible, foul smelling herb."
+//            Bucket of water    "It's a bucket of... water?"      from the stagnant lake
+//            Fever spider body  "A diseased deceased Fever Spider. Handle with care."
+//   barrel   Karamthulhu        "A sinister looking squid."       fished, or off a zombie swab
+//            Sluglings          "They look at you balefully. 'Feed us...'"
+// and what comes out of the tap:
+//            Unsanitary swill   "Sorry, I mean a bucket of 'rum'."
 ^deal_not_started = 0
-^deal_island = 1         // Braindeath has explained the situation
-^deal_crew = 2           // all six swabs intimidated
-^deal_vat = 3            // the tap, with a holy wrench
-^deal_brewing = 4        // everything in the hopper
-^deal_spirit = 5         // what came out of the vat
-^deal_complete = 6
+^deal_island = 1          // Braindeath has explained it and handed over the blindweed seed
+^deal_weed_in = 2         // blindweed in the hopper
+^deal_water_in = 3        // a bucket of the stagnant lake in the hopper
+^deal_brewing = 4         // five creatures in the barrel, the lever pulled, the controls possessed
+^deal_spirit = 5          // the controls exorcised and the Evil Spirit killed
+^deal_spider_in = 6       // a whole fever spider in the hopper
+^deal_swill = 7           // a bucket drawn off the tap
+^deal_donnie_drunk = 8    // Captain Donnie has drunk it and named Rabid Jack
+^deal_complete = 9
 
 ^deal_off = 0
 ^deal_on = 1
 
-// deal_farming, straight off the multiloc table
+// deal_farming, straight off the deal_blindweed multiloc table
 ^deal_weeds3 = 0
 ^deal_weeds2 = 1
 ^deal_weeds1 = 2
@@ -52,27 +77,46 @@
 ^deal_seeded = 4
 ^deal_grown = 5
 
-// deal_barrel, straight off deal_multi_lever
+// deal_barrel, straight off the deal_multi_lever table
 ^deal_pressure_full = 5
 
-^deal_squid_wanted = 1
-^deal_slug_wanted = 1
+// deal_multi_hopper, straight off the deal_multicontrol table
+^deal_control_idle = 0
+^deal_control_possessed = 1
+^deal_control_working = 2
+
+// the requirements the quest scroll lists
+^deal_req_slayer = 42
+^deal_req_crafting = 42
+^deal_req_farming = 40
+^deal_req_prayer = 47
+^deal_req_fishing = 50
+
+// how long the blindweed takes to come up
+^deal_grow_ticks = 50
 
 // ---------------------------------------------------------------------------- places
-// Braindeath Island is m33_79 and m33_80.
-^deal_phasmatys_boat = 0_57_55_32_18     // 3680,3554
-^deal_pete_phasmatys = 0_57_55_32_17
-^deal_island_boat = 0_33_79_49_60
-^deal_island_landing = 1_33_79_50_58    // the jetty is on the brewery's floor (level 1); 0_33_79_49_59 was a walled-in tile
-^deal_braindeath = 1_33_79_32_53
-^deal_davey = 1_33_79_20_44
-^deal_luke = 0_33_79_8_40
-^deal_donnie = 0_33_79_38_22
-^deal_patch = 0_33_79_50_13
-^deal_cupboard = 0_33_79_45_37
-^deal_gate = 1_33_79_8_42
-^deal_tap = 1_33_79_30_37
-^deal_hopper_coord = 2_33_79_30_46
-^deal_pressure_coord = 2_33_79_29_46
-^deal_lever = 2_33_79_29_47
-^deal_control = 1_33_79_31_44
+// Braindeath Island is m33_79 and m33_80. Every one of these was read off the map rather than
+// worked out: the brewery's own floor is level 1, the cellar full of fever spiders is the walled-off
+// part of level 0 underneath it, and the hopper and the barrel are up on level 2.
+^deal_phasmatys_boat = 0_57_55_32_18     // 3680,3538
+^deal_pete_phasmatys = 0_57_55_33_17     // 3681,3537, beside Pete rather than on him
+^deal_island_boat = 0_33_79_49_60        // 2161,5116
+^deal_island_landing = 1_33_79_51_58     // 2163,5114, beside the island's Pete and not on him
+^deal_braindeath = 1_33_79_33_49         // 2145,5105
+^deal_davey = 1_33_79_21_42              // 2133,5098
+^deal_luke = 0_33_79_8_42                // 2120,5098, standing on his own gate
+^deal_donnie = 0_33_79_35_23             // 2147,5079
+^deal_patch = 0_33_79_50_13              // 2162,5069
+^deal_cupboard = 0_33_79_45_37           // 2157,5093, in the cellar
+^deal_gate = 0_33_79_8_42                // 2120,5098 - LEVEL 0. This said level 1.
+^deal_tap = 1_33_79_30_37                // 2142,5093
+^deal_hopper_coord = 2_33_79_30_46       // 2142,5102
+^deal_pressure_coord = 2_33_79_29_46     // 2141,5102
+^deal_lever = 2_33_79_29_47              // 2141,5103
+^deal_control = 1_33_79_31_44            // 2143,5100
+// The Evil Spirit is size 2, so it needs a clear 2x2 and cannot go on the tile the player is
+// standing on to swing the wrench. The controls are 2x2 at 2143,5100 with forceapproach=south, so
+// the player is on 5099 and the spirit comes up in front of them.
+^deal_spirit_spawn = 1_33_79_31_41       // 2143,5097
+^deal_spirit_despawn = 500

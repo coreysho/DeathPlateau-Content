@@ -4,47 +4,102 @@ def_string $text;
 switch_int (%deal_quest) {
     case ^deal_not_started :
         $text = "@dbl@There is a @dre@rowboat@dbl@ inside the wall at @dre@Port Phasmatys|";
-        $text = append($text, "@dbl@with a @dre@pirate@dbl@ sitting next to it who is not a ghost");
+        $text = append($text, "@dbl@with a @dre@pirate@dbl@ sitting next to it who is not a ghost.||");
+        $text = append($text, "@dbl@Minimum requirements:|");
+
+        if (%zogre < ^zogre_complete) {
+            $text = append($text, "@dre@Zogre Flesh Eaters|");
+        } else {
+            $text = append($text, "@str@Zogre Flesh Eaters|");
+        }
+
+        if (stat_base(slayer) < ^deal_req_slayer) {
+            $text = append($text, "@dre@Level <tostring(^deal_req_slayer)> Slayer|");
+        } else {
+            $text = append($text, "@str@Level <tostring(^deal_req_slayer)> Slayer|");
+        }
+
+        // These four are not needed to start and are spent later. Crafting 42 is on the quest's own
+        // requirement list and the walkthrough never says where it goes, so it is listed and not
+        // enforced anywhere - better an unspent requirement than an invented one.
+        if (stat_base(farming) < ^deal_req_farming) {
+            $text = append($text, "@dre@Level <tostring(^deal_req_farming)> Farming|");
+        } else {
+            $text = append($text, "@str@Level <tostring(^deal_req_farming)> Farming|");
+        }
+
+        if (stat_base(prayer) < ^deal_req_prayer) {
+            $text = append($text, "@dre@Level <tostring(^deal_req_prayer)> Prayer|");
+        } else {
+            $text = append($text, "@str@Level <tostring(^deal_req_prayer)> Prayer|");
+        }
+
+        if (stat_base(fishing) < ^deal_req_fishing) {
+            $text = append($text, "@dre@Level <tostring(^deal_req_fishing)> Fishing|");
+        } else {
+            $text = append($text, "@str@Level <tostring(^deal_req_fishing)> Fishing|");
+        }
+
+        if (stat_base(crafting) < ^deal_req_crafting) {
+            $text = append($text, "@dre@Level <tostring(^deal_req_crafting)> Crafting");
+        } else {
+            $text = append($text, "@str@Level <tostring(^deal_req_crafting)> Crafting");
+        }
 
     case ^deal_island :
-        $text = "@str@Braindeath Island. Captain Braindeath brews rum on it and|";
-        $text = append($text, "@str@has not managed to brew any in eight months.|");
-        $text = append($text, "@str@Three things are stopping him:||");
-        $text = append($text, "@dbl@The @dre@crew@dbl@ - six @dre@Zombie Swabs@dbl@ out the front, and they|");
-        $text = append($text, "@dbl@will do as they are told if somebody @dre@intimidates@dbl@ them|");
-        $text = append($text, "@dbl@The @dre@vat@dbl@, eaten through at the tap|");
-        $text = append($text, "@dbl@The @dre@ingredients");
+        $text = "@str@Captain Braindeath brews rum on Braindeath Island and has|";
+        $text = append($text, "@str@not managed to brew any in eight months. Five ingredients|");
+        $text = append($text, "@str@go in, and every one of them has gone to seed or swum off.||");
+        $text = append($text, "@dbl@First: @dre@blindweed@dbl@. The patch in the @dre@south-east@dbl@ corner is|");
+        $text = append($text, "@dbl@the only one that would grow anything|");
+        $text = append($text, "@dbl@The @dre@rake@dbl@ and @dre@seed dibber@dbl@ are in the @dre@cellar cupboard|");
+        $text = append($text, "@dbl@Then put it in the @dre@hopper@dbl@ at the top of the brewery");
 
-    case ^deal_crew :
-        $text = "@str@All six swabs are working, badly, which is the most that|";
-        $text = append($text, "@str@has happened here in eight months.|");
-        $text = append($text, "@dbl@The @dre@wrench@dbl@ is in the @dre@broom cupboard|");
-        $text = append($text, "@dbl@@dre@Davey@dbl@ does the blessing|");
-        $text = append($text, "@dbl@Then the @dre@output tap");
+    case ^deal_weed_in :
+        $text = "@str@The blindweed is in the hopper.||";
+        $text = append($text, "@dbl@Next: a @dre@bucket@dbl@ of the @dre@stagnant lake@dbl@ - not the sea|");
+        $text = append($text, "@dbl@Past @dre@50% Luke@dbl@'s gate and over the rock|");
+        $text = append($text, "@dbl@Captain Braindeath has a bucket");
 
-    case ^deal_vat :
-        $text = "@str@The vat holds. Five things go in the hopper:||";
-        $text = append($text, "@dbl@@dre@Blindweed@dbl@ - the patch is overgrown, and the @dre@seed@dbl@ and|");
-        $text = append($text, "@dbl@kit are in the cupboard|");
-        $text = append($text, "@dbl@A @dre@bucket@dbl@ of the @dre@stagnant lake@dbl@ - not the sea|");
-        $text = append($text, "@dbl@A whole @dre@fever spider|");
-        $text = append($text, "@dbl@A @dre@karamthulhu@dbl@ - the fishing spots round the shore have|");
-        $text = append($text, "@dbl@nothing else in them|");
-        $text = append($text, "@dbl@And @dre@sluglings@dbl@, which @dre@Captain Donnie@dbl@ keeps");
+    case ^deal_water_in :
+        $text = "@str@There is a bucket of the lake in the hopper.||";
+        $text = append($text, "@dbl@Next: @dre@five sea creatures@dbl@ - sluglings or karamthulhu|");
+        $text = append($text, "@dbl@The @dre@fishing spots@dbl@ round the shore have nothing else in them|");
+        $text = append($text, "@dbl@They go in the @dre@pressure barrel@dbl@, not the hopper|");
+        $text = append($text, "@dbl@Then the @dre@lever@dbl@ beside it");
 
     case ^deal_brewing :
-        $text = "@str@All five are in and the hopper has started turning on its|";
-        $text = append($text, "@str@own, which nobody asked it to do.|");
-        $text = append($text, "@dbl@@dre@Five pulls@dbl@ on the @dre@pressure lever");
+        $text = "@str@The lever went over, the brewery started, and then the|";
+        $text = append($text, "@str@brewing controls began spinning on their own and frothing.||");
+        $text = append($text, "@dbl@Captain Braindeath has a @dre@wrench|");
+        $text = append($text, "@dbl@@dre@Davey@dbl@ blesses it, and wants <tostring(^deal_req_prayer)> prayer points about you|");
+        $text = append($text, "@dbl@Then hit the @dre@brewing controls@dbl@ with it");
 
     case ^deal_spirit :
-        $text = "@str@Something came up the pipe that was not rum and it had been|";
-        $text = append($text, "@str@in that vat a long time.|");
+        $text = "@str@Something came out of the controls, and it had been in that|";
+        $text = append($text, "@str@vat a long time. It is not in there now.||");
+        $text = append($text, "@dbl@Last ingredient: a whole @dre@fever spider|");
+        $text = append($text, "@dbl@There are plenty in the @dre@cellar@dbl@, and they carry disease|");
+        $text = append($text, "@dbl@The body goes in the @dre@hopper");
+
+    case ^deal_spider_in :
+        $text = "@str@All five are in and the output tap has started to drip.||";
+        $text = append($text, "@dbl@Draw a @dre@bucket@dbl@ off the @dre@output tap");
+
+    case ^deal_swill :
+        $text = "@str@A bucket of Braindeath 'rum'. It is brown and it moves|";
+        $text = append($text, "@str@slowly.||");
+        $text = append($text, "@dbl@@dre@Captain Donnie@dbl@ is out by the patches with a placard|");
+        $text = append($text, "@dbl@Get it into him");
+
+    case ^deal_donnie_drunk :
+        $text = "@str@Captain Donnie drank it, asked for another, and said the|";
+        $text = append($text, "@str@protest was @dre@Rabid Jack@str@'s idea.||");
         $text = append($text, "@dbl@Tell @dre@Captain Braindeath");
 
     case ^deal_complete :
         $text = "@str@Braindeath rum: blindweed, stagnant water, a whole fever|";
-        $text = append($text, "@str@spider, a squid and some sluglings.|");
+        $text = append($text, "@str@spider, and five things out of the sea.|");
         $text = append($text, "@str@Nobody has ever asked what is in it and Captain Braindeath|");
         $text = append($text, "@str@would like to keep it that way.||");
         $text = append($text, "@red@QUEST COMPLETE!");

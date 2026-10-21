@@ -179,7 +179,18 @@ if_openmain(xplamp);
 [opheld2,waa_helper] mes("Nothing interesting happens.");
 [opheld2,trick_or_treat_head] ~mesbox("Nothing interesting happens.");
 [opheld2,devious_glowingpouch] mes("You empty the pouch.");
-[opheld2,fishbowl_net] mes("You untangle the net.");
+// Rum Deal hands this over - "An empty fishbowl in a net" - and the five sea creatures cannot be
+// fished without the net, so untangling it had to actually produce the net. It said the line and
+// left you holding the tangle.
+[opheld2,fishbowl_net]
+if (inv_freespace(inv) = 0) {
+    mes("You need a free inventory space to untangle the net from the bowl.");
+    return;
+}
+inv_del(inv, fishbowl_net, 1);
+inv_add(inv, fishbowl_empty, 1);
+inv_add(inv, net, 1);
+mes("You untangle the net.");
 // Ghosts Ahoy. Read (op1, above) prints the figures; following them is a thing you do on the
 // island, with the map in your hand, and not a thing you do to the map.
 [opheld2,ahoy_map_complete] ~mesbox("The directions start from the red cross on Dragontooth Island. You will have to be standing there to follow them.");
