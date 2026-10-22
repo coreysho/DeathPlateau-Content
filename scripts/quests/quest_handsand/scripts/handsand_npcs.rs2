@@ -27,6 +27,7 @@ switch_int (%handsand_quest) {
         ~chatnpc("<p,neutral>Zavistic Rarve. He is the one who does the sand for the guild. He will at least listen.");
         %handsand_quest = ^handsand_rarve;
         ~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
+    case ^handsand_rotas : @handsand_bert_scroll;
     case default :
         if (%handsand_quest >= ^handsand_complete) {
             ~chatnpc("<p,happy>Eighty-four buckets a day and I remember every one of them now. It is not better, but it is mine.");
@@ -35,6 +36,29 @@ switch_int (%handsand_quest) {
         ~chatnpc("<p,neutral>Any news?");
         ~chatplayer("<p,neutral>Working on it.");
 }
+
+// Wiki step 3: the two rotas go back to Bert, and what Bert has to give in exchange is the thing
+// he was handed on the night he cannot remember.
+[label,handsand_bert_scroll]
+if (inv_total(inv, handsand_rota_bert) = 0 | inv_total(inv, handsand_rota_sandy) = 0) {
+    ~chatnpc("<p,quiz>You said the office has my hours wrong. Have you got it in writing?");
+    ~chatplayer("<p,sad>Not both halves of it.");
+    ~chatnpc("<p,neutral>Then it is my word against a filing cabinet.");
+    return;
+}
+~chatplayer("<p,neutral>Sandy's copy says days. Yours says nights. Yours is the one that was changed.");
+mes("You put the two rotas side by side on Bert's table.");
+~chatnpc("<p,shock>...that is my handwriting and I never wrote it.");
+~chatnpc("<p,sad>There was a man at the pit that night. He gave me something to hold and I cannot tell you one thing about his face.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>It is in the drawer. Come back with a hand free and I will dig it out.");
+    return;
+}
+inv_del(inv, handsand_rota_bert, 1);
+inv_del(inv, handsand_rota_sandy, 1);
+inv_add(inv, handsand_scroll_magic, 1);
+~objbox(handsand_scroll_magic, "Bert takes the rotas and gives you a scroll out of the drawer. It glows, faintly, which Bert has stopped noticing.", 250, 0, 0);
+~chatnpc("<p,neutral>Take it to your wizard. I have had it in the house a year and it has never done anything.");
 
 [label,handsand_bert_start]
 ~chatnpc("<p,sad>I have got something in my house and I do not want it in my house.");
@@ -232,7 +256,23 @@ stat_advance(thieving, 600);
 // =========================================================================== the sand miners
 // Mazion, Blaec and Reeso are all "covered in sand" and none of them is anywhere near the others.
 // They are the rest of Sandy's crew and between them they are the reason nobody noticed.
-[opnpc1,handsand_naziom] @handsand_miner("<p,neutral>Nights? I have never done a night in my life. Sandy does not run nights.");
+// Mazion works the Entrana sand heap, which is where Yanille's sacks end up. At the stage Rarve
+// sends you he is standing on the rest of Clarence.
+[opnpc1,handsand_naziom]
+if (%handsand_quest = ^handsand_pit_filled & inv_total(inv, handsand_wizhead) = 0) {
+    ~chatplayer("<p,quiz>Did a sack from Yanille come through here with something in it?");
+    ~chatnpc("<p,shock>...you are the second person to ask me that and I liked the first one less.");
+    ~chatnpc("<p,sad>It has been sat behind the furnace for a year because I could not think of anybody to give it to.");
+    if (inv_freespace(inv) = 0) {
+        ~chatnpc("<p,neutral>Not while your hands are full, friend. I am not carrying it out to you.");
+        return;
+    }
+    inv_add(inv, handsand_wizhead, 1);
+    ~objbox(handsand_wizhead, "Mazion fetches a sand-caked head out from behind the furnace and hands it over at arm's length.", 250, 0, 0);
+    ~chatnpc("<p,neutral>Tell whoever gets him that he came out of Yanille sand. I have been saying it for a year.");
+    return;
+}
+@handsand_miner("<p,neutral>Nights? I have never done a night in my life. Sandy does not run nights.");
 [opnpc1,handsand_blaec] @handsand_miner("<p,neutral>Bert does nights. Everyone knows Bert does nights. The office says nobody does nights.");
 [opnpc1,handsand_reeso] @handsand_miner("<p,sad>There was a wizard asking about the Yanille pit. I told him to talk to Sandy. I wish I had not.");
 
@@ -249,40 +289,59 @@ if (%handsand_quest < ^handsand_rarve) {
 // "Betty's counter. There is a vial standing on it." She puts it out and it stays visible until
 // it is taken, which is why this sets the bit rather than just handing the vial over.
 // Her own dialogue is in areas/area_port_sarim/scripts/betty.rs2 and jumps here.
+// REBUILT 2026-10-22 (quest audit). Betty does two separate things, and the quest used to skip the
+// second one entirely: she sells the bottled water for an empty vial, and she is the serum. The
+// rose lens does not go into the orb - the orb is a scrying orb and needs nothing - it goes between
+// her open doorway and the vial she stands out on the counter, and that is what
+// handsand_counter_multiloc's state 1 is for: "Betty's counter. There is a vial standing on it."
 [label,handsand_betty]
 if (%handsand_counter_multi = ^handsand_counter_vial) {
-    if (inv_freespace(inv) = 0) {
-        ~chatnpc("<p,neutral>It is on the counter. It will stay on the counter until you have a hand free.");
-        return;
-    }
-    if (inv_freespace(inv) < 2) {
-        ~chatnpc("<p,neutral>There are two things on that counter and you have room for neither.");
-        return;
-    }
-    inv_add(inv, handsand_bottle_water, 1);
-    // A plain lens as well. The quest needs one to tint and there is nothing else in it that
-    // could hand one over - lens is the Observatory's and this is a magic shop.
-    inv_add(inv, lens, 1);
-    %handsand_counter_multi = ^handsand_counter_plain;
-    %handsand_serum = ^handsand_lens_water;
-    mes("You take the bottle and the lens off the counter.");
-    ~chatnpc("<p,happy>Redberries first, then white ones, then dip the lens. Do not drink any of it.");
+    ~chatnpc("<p,happy>It is standing out ready. Wait for the door to be open and put your lens in the light.");
     return;
 }
-~chatplayer("<p,quiz>I need to tint a lens pink.");
-~chatnpc("<p,laugh>You and the rest of this town.");
-~chatnpc("<p,happy>Bottled water, redberries, then white berries on top, and a lens to dip in it. The water and the lens I can do.");
-%handsand_counter_multi = ^handsand_counter_vial;
-~mesbox("Betty stands a bottle and a plain glass lens on the counter.");
+if (inv_total(inv, handsand_rose_lens) > 0) {
+    ~chatplayer("<p,neutral>The lens is pink. Now what?");
+    if (inv_total(inv, handsand_sand) = 0) {
+        ~chatnpc("<p,happy>Now something of his. A serum has to know whose mouth it is going into - a hair, a nail, a handful of whatever he keeps in his pockets.");
+        ~chatplayer("<p,confused>He sells sand.");
+        ~chatnpc("<p,laugh>Then that will be easy to find and hard to get. Go and pick his pocket.");
+        return;
+    }
+    ~chatnpc("<p,happy>And a pocketful of the man himself. Good. Now the hard part, and I do mean the door.");
+    %handsand_counter_multi = ^handsand_counter_vial;
+    ~mesbox("Betty stands an empty vial on the counter and props the shop door open with a crate.");
+    ~chatnpc("<p,neutral>Stand in the doorway and bend the daylight through the lens into that vial. The lens will not survive it. Nothing good ever does.");
+    return;
+}
+if (inv_total(inv, handsand_pink_dye) > 0) {
+    ~chatnpc("<p,happy>Pink dye, and now a lantern lens to dip in it. A plain one off a glassblower - you will not find one in here.");
+    return;
+}
+if (inv_total(inv, handsand_bottle_water) > 0 | inv_total(inv, handsand_redberry_juice) > 0) {
+    ~chatnpc("<p,happy>Redberries first, then white ones on top of them. Do not drink any of it.");
+    return;
+}
+~chatplayer("<p,quiz>Rarve says you can make a truth serum.");
+~chatnpc("<p,laugh>Rarve says a great many things and expects other people to do them.");
+~chatnpc("<p,happy>Bottled water, redberries, then white berries, and a lantern lens dipped in what comes out. Bring me the pink lens and something out of his own pocket, and I will do the rest.");
+if (inv_total(inv, vial_empty) = 0) {
+    ~chatnpc("<p,neutral>And I will want an empty vial for the water. I am not giving away glass as well.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>When you have a hand free.");
+    return;
+}
+inv_del(inv, vial_empty, 1);
+inv_add(inv, handsand_bottle_water, 1);
+%handsand_serum = ^handsand_lens_water;
+~objbox(handsand_bottle_water, "Betty takes your empty vial and gives you a bottle of water.", 250, 0, 0);
 
 // AUDIT 2026-09-24: Betty used to be skipped once the juice had been made, so losing the juice, the
-// dye or the tinted lens left no way to make another. She now helps whenever the lens is still
-// needed and none of its stages is being carried.
+// dye or the tinted lens left no way to make another. She now helps whenever the serum is still
+// needed - which, since she is the one who finishes it, is the whole of the kit stage.
 [proc,handsand_betty_wanted]()(boolean)
 if (%handsand_quest ! ^handsand_kit) {
-    return(false);
-}
-if (inv_total(inv, handsand_bottle_water) > 0 | inv_total(inv, handsand_redberry_juice) > 0 | inv_total(inv, handsand_pink_dye) > 0 | inv_total(inv, handsand_rose_lens) > 0) {
     return(false);
 }
 return(true);
@@ -319,6 +378,7 @@ switch_int (%handsand_quest) {
     case ^handsand_rarve : return(true);
     case ^handsand_rotas : return(true);
     case ^handsand_confession : return(true);
+    case ^handsand_pit_filled : return(true);
     case ^handsand_kit, ^handsand_ready :
         if (inv_total(inv, handsand_orb_storage) = 0) {
             return(true);
@@ -339,6 +399,7 @@ switch_int (%handsand_quest) {
     case ^handsand_kit : @handsand_rarve_waiting;
     case ^handsand_ready : @handsand_rarve_waiting;
     case ^handsand_confession : @handsand_rarve_done;
+    case ^handsand_pit_filled : @handsand_rarve_head;
 }
 ~chatnpc("<p,neutral>The guild is not open to sightseers.");
 
@@ -350,34 +411,37 @@ if (inv_total(inv, handsand_beerhand) = 0 & inv_total(inv, handsand_sandyhand) =
 ~chatplayer("<p,angry>One of your wizards is dead.");
 ~chatnpc("<p,neutral>One of my wizards is on sabbatical, and has been for six weeks, and has not written.");
 ~chatplayer("<p,angry>He is in a sand pit in Yanille.");
-~chatnpc("<p,sad>Then bring me the part of him I can put a name to, and bring me something that says a man lied about where he was.");
+~chatnpc("<p,sad>Then find out why Bert was there to dig him up, because Bert is not the sort to be anywhere by accident.");
+~chatnpc("<p,neutral>Ask him what nights he works, and ask his office the same question. If the two answers differ, bring me both of them in writing.");
 ~chatnpc("<p,neutral>I cannot go to the guard with a hand. I have tried, with other hands, in other years.");
 
+// Wiki step 3: the scroll Bert was holding is the proof that his memory was taken off him, and it
+// is what buys the orb.
 [label,handsand_rarve_kit]
-if (inv_total(inv, handsand_wizhead) = 0) {
-    ~chatnpc("<p,neutral>The rotas are good. They are not a name. There is a sand pit in Yanille and you have a spade.");
+if (inv_total(inv, handsand_scroll_magic) = 0) {
+    ~chatnpc("<p,neutral>Two rotas that disagree is a clerical error, and a magistrate will say so. Did Bert have nothing else?");
+    ~chatplayer("<p,sad>Nothing he could tell me about.");
+    ~chatnpc("<p,neutral>Then ask him what he was given, and bring me that.");
     return;
 }
-~chatplayer("<p,sad>I found the rest of him.");
+~chatplayer("<p,neutral>Bert has had this in a drawer for a year.");
+mes("You hand Rarve the glowing scroll.");
 if_close;
-mes("Rarve looks at the head for a long time and does not say anything for most of it.");
-p_delay(4);
-~chatnpc("<p,sad>Yes. That is Coop. He did the guild's sand contract and he was a pedant about paperwork, which is presumably what killed him.");
-// The head is not taken until there is room for what it buys - deleting first and then bouncing
-// on the space check would have destroyed the only one in the game.
-if (inv_freespace(inv) < 2) {
-    ~chatnpc("<p,neutral>I am about to give you three things and take one. Make room.");
+p_delay(2);
+~chatnpc("<p,angry>This is a mind-altering charm, and it is guild work. Somebody in this building sold a man his own memory.");
+~chatplayer("<p,quiz>Is that enough?");
+~chatnpc("<p,neutral>It is enough for me. It is not enough for a magistrate - for that I want the man who paid for it saying so in his own voice.");
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>Make room. I am about to give you something fragile.");
     return;
 }
-inv_del(inv, handsand_wizhead, 1);
-~chatnpc("<p,neutral>A confession, then. In his own voice, where a magistrate can hear it.");
+~chatnpc("<p,neutral>A scrying orb. It takes what it is pointed at and it keeps it.");
 inv_add(inv, handsand_orb_storage, 1);
-inv_add(inv, handsand_truthserum, 1);
-inv_add(inv, handsand_scroll_magic, 1);
 %handsand_tele = ^handsand_on;
 %handsand_quest = ^handsand_kit;
 ~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
-~mesbox("Rarve gives you a scrying orb, a vial of truth serum and a scroll keyed back to this room.");
+~mesbox("Rarve gives you a scrying orb, and keys the scroll to this room on the way past.");
+~chatnpc("<p,neutral>A man like that will not talk to you sober. Betty in Port Sarim brews a thing that helps; take her a lantern lens and stand in her doorway.");
 ~chatnpc("<p,neutral>The orb needs a rose-tinted lens or it will record the truth and show you what you wanted to hear. Betty in Port Sarim does the water for the dye.");
 
 [label,handsand_rarve_waiting]
@@ -413,7 +477,6 @@ if (inv_total(inv, handsand_orb_recording) = 0) {
     ~chatplayer("<p,sad>I lost it.");
     ~chatnpc("<p,angry>Then you will have to do it again.");
     inv_add(inv, handsand_orb_storage, 1);
-    inv_add(inv, handsand_truthserum, 1);
     %handsand_question1 = ^handsand_off;
     %handsand_question2 = ^handsand_off;
     %handsand_question3 = ^handsand_off;
@@ -426,16 +489,55 @@ if (inv_total(inv, handsand_orb_recording) = 0) {
 if_close;
 mes("Rarve turns the orb over once and the room fills with Sandy's voice saying the thing about the coffee.");
 p_delay(4);
-inv_del(inv, handsand_orb_recording, 1);
 ~chatnpc("<p,angry>He has been dosing his own night shift for years. That is not one murder, that is a working practice.");
 ~chatplayer("<p,quiz>What happens to Bert?");
 ~chatnpc("<p,neutral>Bert gets his memory back, eventually, and the guild will take his sand directly from now on. He will not have to carry it.");
+~chatnpc("<p,neutral>Although I can do rather better than that for him. Bring me five earth runes and a bucket of his sand and I will see that pit never needs digging again.");
+@handsand_rarve_sandpit;
+
+// Wiki step 5: five earth runes and a bucket of sand, and the pit fills itself from then on. Then
+// the last of Clarence, which went to Entrana with that week's sacks.
+[label,handsand_rarve_sandpit]
+if (inv_total(inv, earthrune) < ^handsand_earth_runes | inv_total(inv, bucket_sand) = 0) {
+    ~chatnpc("<p,neutral>Five earth runes and a bucket of the sand itself. Betty sells the runes and Bert is standing in the sand.");
+    return;
+}
+~chatplayer("<p,neutral>Five earth runes, and a bucket of Yanille sand.");
+inv_del(inv, earthrune, ^handsand_earth_runes);
+inv_del(inv, bucket_sand, 1);
+// and the orb, which he has held on to since he played it
+if (inv_total(inv, handsand_orb_recording) > 0) {
+    inv_del(inv, handsand_orb_recording, 1);
+}
+if_close;
+mes("Rarve pours the bucket out onto the floor of his own study and does something to it that makes your teeth ache.");
+p_delay(4);
+%handsand_quest = ^handsand_pit_filled;
+~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
+~mesbox("Somewhere to the south, a sand pit that has been getting shallower for thirty years is suddenly full to the brim.");
+~chatnpc("<p,neutral>One more thing, and it is the one that hangs him. I can name a hand, but a hand is a hand.");
+~chatnpc("<p,sad>Everything that came out of that pit that week went to the glass furnaces on Entrana. If the rest of him is anywhere it is in a sand heap over there - ask whoever works it.");
+
+[label,handsand_rarve_head]
+if (inv_total(inv, handsand_wizhead) = 0) {
+    ~chatnpc("<p,neutral>Entrana. The sand heap by the furnaces, and whoever is standing in it.");
+    return;
+}
+~chatplayer("<p,sad>Mazion had him. In with that week's sand.");
+if_close;
+mes("Rarve looks at the head for a long time and does not say anything for most of it.");
+p_delay(4);
+~chatnpc("<p,sad>Yes. That is Clarence. He did the guild's sand contract and he was a pedant about paperwork, which is presumably what killed him.");
+inv_del(inv, handsand_wizhead, 1);
+~chatnpc("<p,angry>A name, a confession and a body. Sandy's Sand Corporation is about to have a very bad week.");
 @handsand_finish;
 
 [label,handsand_finish]
 %handsand_quest = ^handsand_complete;
 %handsand_sandy_multi = ^handsand_sandy_at_desk;
-stat_advance(thieving, 90000);
+// 1,000 Thieving and 9,000 Crafting, which is what the scroll says. The Thieving was nine times
+// over.
+stat_advance(thieving, 10000);
 stat_advance(crafting, 90000);
 session_log(^log_adventure, "Quest complete: The Hand in the Sand");
-~send_quest_complete(questlist:handsand, handsand_orb_recording, 200, ^handsand_questpoints, "You have completed\\nThe Hand in the Sand!", "1 Quest Point|9,000 Thieving XP|9,000 Crafting XP|Bert will deliver sand");
+~send_quest_complete(questlist:handsand, handsand_orb_recording, 200, ^handsand_questpoints, "You have completed\\nThe Hand in the Sand!", "1 Quest Point|1,000 Thieving XP|9,000 Crafting XP|Bert will deliver sand");

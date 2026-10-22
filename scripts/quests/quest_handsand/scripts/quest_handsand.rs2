@@ -3,32 +3,36 @@
 // =========================================================================== the sandpit
 // handsand_sandpit_anim carries no ops at all, so digging it is a spade in hand. Bert's colleague
 // went into this pit and only part of him came out of it in a sack of sand.
+// REBUILT 2026-10-22 (quest audit): the rest of Clarence is NOT down here. The hand came up in a
+// sack, and every other sack that week went out of Yanille to the furnaces on Entrana - which is
+// where Mazion is, covered in sand, and why the cache spawns him there with op1=Talk-to.
+// What the pit is good for is a bucket of sand, which is what Rarve wants before he will fill it.
 [oplocu,handsand_sandpit_anim]
 def_obj $item = last_useitem;
 p_arrivedelay;
+if ($item = bucket_empty) {
+    if (%handsand_quest >= ^handsand_pit_filled) {
+        mes("The pit is full to the brim again and nobody has to dig it.");
+    }
+    inv_del(inv, bucket_empty, 1);
+    inv_add(inv, bucket_sand, 1);
+    anim(human_pickuptable, 0);
+    mes("You scoop up a bucket of sand.");
+    return;
+}
 if ($item ! spade) {
     ~displaymessage(^dm_default);
+    return;
+}
+if (%handsand_quest >= ^handsand_pit_filled) {
+    mes("Rarve's sand goes down further than your spade does. Bert is going to be very pleased.");
     return;
 }
 if (%handsand_quest < ^handsand_rarve) {
     mes("You turn over a spadeful of sand. It is sand.");
     return;
 }
-// The head is wanted at ^handsand_rarve AND at ^handsand_rotas - Rarve asks for a name and proof
-// of the lie in the same breath and they can be got in either order - so this stays open until he
-// has actually been given it.
-if (inv_total(inv, handsand_wizhead) > 0 | %handsand_quest >= ^handsand_kit) {
-    mes("There is nothing else down there. You have checked.");
-    return;
-}
-if (inv_freespace(inv) = 0) {
-    mes("You have no room to carry anything else.");
-    return;
-}
-mes("You dig where the hand came from.");
-p_delay(4);
-inv_add(inv, handsand_wizhead, 1);
-~mesbox("The rest of him is down there. You take the part Rarve will be able to name.");
+~mesbox("You dig where the hand came from, and there is nothing else there. Whatever else came out of this pit went out of it in a sack.");
 
 // =========================================================================== Sandy's desk
 // The only loc in the quest with an op. It is Search, and it only ever works while Sandy is at the
@@ -158,7 +162,7 @@ mes("The white berries take the red down to a flat pink.");
 [opheldu,handsand_pink_dye]
 def_obj $item = last_useitem;
 switch_obj ($item) {
-    case lens : @handsand_tint_lens;
+    case bullseye_lantern_lens : @handsand_tint_lens;
     case red_cape : @handsand_dye_cape(red_cape);
     case blue_cape : @handsand_dye_cape(blue_cape);
     case yellow_cape : @handsand_dye_cape(yellow_cape);
@@ -169,9 +173,11 @@ switch_obj ($item) {
     case default : ~displaymessage(^dm_default);
 }
 
+// The lantern lens, which is what the quest's 49 Crafting is for: molten glass and a lens mould
+// (skill_crafting/scripts/glass/glass.rs2, level 49).
 [label,handsand_tint_lens]
 inv_del(inv, handsand_pink_dye, 1);
-inv_del(inv, lens, 1);
+inv_del(inv, bullseye_lantern_lens, 1);
 inv_add(inv, handsand_rose_lens, 1);
 %handsand_serum = ^handsand_lens_tinted;
 stat_advance(crafting, 1000);
@@ -189,17 +195,37 @@ if (%handsand_serum < ^handsand_lens_tinted) {
 }
 ~mesbox("The cape comes out pink. It is a bit pink.");
 
-[opheldu,handsand_rose_lens]
-if (last_useitem ! handsand_orb_storage) {
+// The serum. handsand_counter_multiloc's state 1 is a counter "with a vial standing on it", which
+// is the cache saying how this works: Betty stands a vial out, you stand in the open doorway and
+// focus the daylight through the tinted lens into it, and the lens goes with it.
+[oplocu,handsand_counter_multiloc]
+if (last_useitem ! handsand_rose_lens) {
     ~displaymessage(^dm_default);
     return;
 }
+p_arrivedelay;
+if (%handsand_counter_multi ! ^handsand_counter_vial) {
+    mes("There is nothing on the counter to focus anything into.");
+    return;
+}
+if (inv_total(inv, handsand_sand) = 0) {
+    ~mesbox("Betty will not start without the handful out of Sandy's own pocket. She was quite clear that the serum has to know whose mouth it is going into.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("Whatever ends up in that vial, you have nowhere to put it.");
+    return;
+}
 inv_del(inv, handsand_rose_lens, 1);
+inv_del(inv, handsand_sand, 1);
+%handsand_counter_multi = ^handsand_counter_plain;
 %handsand_serum = ^handsand_lens_fitted;
 %handsand_quest = ^handsand_ready;
 ~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
 stat_advance(crafting, 1000);
-~mesbox("The lens seats into the orb and the whole thing turns the colour of a bad sunset. Rarve said you would know when it was right.");
+inv_add(inv, handsand_truthserum, 1);
+anim(human_pickuptable, 0);
+~mesbox("You hold the lens in the doorway until the light comes through it pink and lands in the vial. The lens cracks across and falls apart in your hand, and Betty tops the vial up out of something behind the counter.");
 
 // =========================================================================== the orb
 // iop1=Activate on handsand_orb_storage; handsand_orb_recording is the pulsing version. It only
@@ -207,7 +233,7 @@ stat_advance(crafting, 1000);
 // here - this is the "you are holding it wrong" branch.
 [opheld1,handsand_orb_storage]
 if (%handsand_serum < ^handsand_lens_fitted) {
-    ~mesbox("The orb hums and does nothing. It is missing its lens.");
+    ~mesbox("The orb hums and waits. There is no point filling it until there is something in Sandy worth recording.");
     return;
 }
 ~mesbox("The orb is ready. It will take what it is pointed at, and there is only one thing worth pointing it at.");

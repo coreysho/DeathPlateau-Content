@@ -52,6 +52,7 @@
 ^handsand_kit = 50         // Rarve has handed over the scroll, the orb and the serum
 ^handsand_ready = 60       // the orb has its rose lens
 ^handsand_confession = 70  // all three questions asked and recorded
+^handsand_pit_filled = 75     // Rarve has refilled Bert's pit; the rest of Clarence is on Entrana
 ^handsand_complete = 80
 
 // =========================================================================== the lens chain
@@ -64,7 +65,7 @@
 ^handsand_lens_juice = 2
 ^handsand_lens_dye = 3
 ^handsand_lens_tinted = 4
-^handsand_lens_fitted = 5
+^handsand_lens_fitted = 5   // the serum made: the lens goes into Betty's sunlight, not the orb
 
 // =========================================================================== multi states
 ^handsand_sandy_at_desk = 0
@@ -78,6 +79,10 @@
 ^handsand_on = 1
 
 // =========================================================================== places
+// What Rarve wants before he will put the pit back: five earth runes and a bucket of the stuff, so
+// he has something to copy.
+^handsand_earth_runes = 5
+
 ^handsand_bert = 0_39_48_54_28          // 2550,3100  Yanille, by the sand pit
 ^handsand_guard_captain = 0_39_48_55_6  // 2551,3078
 ^handsand_sandpit = 0_39_48_46_31       // 2542,3103  no ops - dug with a spade
@@ -85,3 +90,5 @@
 ^handsand_sandy_mug = 0_43_49_37_40     // 2789,3176
 ^handsand_betty_counter = 0_47_50_5_58  // 3013,3258  Port Sarim
 ^handsand_guild = 0_40_48_28_15         // 2588,3087  the Wizards' Guild in Yanille
+^handsand_mazion = 0_44_52_2_14         // 2818,3342  Entrana, by the sand pit the Yanille sacks
+                                        // were shipped to - npc handsand_naziom, name=Mazion

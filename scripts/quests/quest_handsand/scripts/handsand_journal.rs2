@@ -37,24 +37,33 @@ switch_int (%handsand_quest) {
         $text = append($text, "@str@truth serum and a scroll back to the guild.|");
         $text = append($text, "@dbl@The orb needs a @dre@rose-tinted lens@dbl@: @dre@Betty@dbl@ in @dre@Port Sarim|");
         $text = append($text, "@dbl@does the water, then @dre@redberries@dbl@, then @dre@white berries@dbl@, then|");
-        $text = append($text, "@dbl@dip a @dre@lens@dbl@ in it and put the lens in the orb");
+        $text = append($text, "@dbl@dip a @dre@lantern lens@dbl@ in it, and take the pink lens back|@dbl@to @dre@Betty");
 
     case ^handsand_ready :
-        $text = "@str@The orb is lensed and ready.|";
+        $text = "@str@Betty has made the truth serum, and the orb will take|";
+        $text = append($text, "@str@whatever it is pointed at.|");
         $text = append($text, "@dbl@@dre@Sandy@dbl@ drinks coffee. The mug is on the table beside him|");
         $text = append($text, "@dbl@and he only takes his eyes off it when something is|");
         $text = append($text, "@dbl@happening outside the window");
 
     case ^handsand_confession :
         $text = "@str@Sandy said all three of it, and the orb took all three.|";
-        $text = append($text, "@dbl@I should take it to @dre@Zavistic Rarve");
+        $text = append($text, "@str@Rarve has heard it, and will fill Bert's pit for good in|");
+        $text = append($text, "@str@exchange for the materials.|");
+        $text = append($text, "@dbl@He wants @dre@five earth runes@dbl@ and a @dre@bucket of sand");
+
+    case ^handsand_pit_filled :
+        $text = "@str@Bert's pit is full to the brim and will stay that way.|";
+        $text = append($text, "@str@Everything that came out of it the week the hand was|");
+        $text = append($text, "@str@buried went to the furnaces on Entrana.|");
+        $text = append($text, "@dbl@I should ask whoever works the sand heap there");
 
     case ^handsand_complete :
         $text = "@str@Bert dug a hand out of his own sand and could not remember|";
         $text = append($text, "@str@the night it came from, because his employer has been|");
         $text = append($text, "@str@dosing the night shift's coffee for years.|");
-        $text = append($text, "@str@The wizard in the pit was called Coop and he asked Sandy|");
-        $text = append($text, "@str@one question too many about the paperwork.||");
+        $text = append($text, "@str@The wizard in the pit was called Clarence and he asked|");
+        $text = append($text, "@str@Sandy one question too many about the paperwork.||");
         $text = append($text, "@red@QUEST COMPLETE!");
 
     case default :
