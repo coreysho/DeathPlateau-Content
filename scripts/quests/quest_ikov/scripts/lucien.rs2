@@ -105,13 +105,21 @@ if(%ikov <= ^ikov_helping_armadyl) { // guessing...
 ~chatplayer("<p,neutral>Yep, lots of heros about these days.");
 ~chatnpc("<p,neutral>Well if you see any be sure to point them in my direction.");
 
+// THE TWO HALVES OF THIS CONDITION CANNOT SHARE AN `&`. %ikov is a player varp and this script runs
+// as the npc, so it can only be read once npc_findhero has made the killer the active player - and
+// in a single `&` expression both sides are read before either is acted on, so the varp read
+// happened with no active player and the handler died on the spot. Lucien then fell through to an
+// ordinary death, every time: he could be killed over and over with the Armadyl pendant on and the
+// quest would never finish.
 [ai_queue3,ikov_lucien2]
-if(npc_findhero = ^true & %ikov = ^ikov_helping_armadyl) {
-    if_close;
-    npc_setmode(none);
-    npc_walk(npc_coord);
-    queue*(queue_defeat_lucien, 0)(npc_uid);
-    return;
+if(npc_findhero = ^true) {
+    if(%ikov = ^ikov_helping_armadyl) {
+        if_close;
+        npc_setmode(none);
+        npc_walk(npc_coord);
+        queue*(queue_defeat_lucien, 0)(npc_uid);
+        return;
+    }
 }
 gosub(npc_death);
 
