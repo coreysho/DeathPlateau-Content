@@ -1,7 +1,37 @@
 [opnpc1,werewolfinnkeeper]
 ~chatplayer("<p,happy>Hello there!");
 ~chatnpc("<p,happy>Greetings traveller. Welcome to 'The Hair Of The Dog' Tavern. What can I do you for?");
+// Creature of Fenkenstrain: the pickled brain sits on the bar in a jar of vinegar, and Roavar will
+// sell it rather than watch somebody steal it. One jar is spawned on the floor beside the bar
+// (maps/m54_54.jm2) for anybody who would rather take it; this is the fifty-gold way.
+if (%fenk_quest >= ^fenk_started & %fenk_quest < ^fenk_body_sewn & ~obj_gettotal(fenk_brain) = 0 & ~obj_gettotal(fenk_head_full) = 0) {
+    @multi5("Can I buy a beer?", roavar_beer, "Is that a brain in a jar?", roavar_brain, "Can I hear some gossip?", roavar_gossip, "Can I hear a story?", roavar_story, "Nothing thanks.", roavar_nothing);
+}
 @multi4("Can I buy a beer?", roavar_beer, "Can I hear some gossip?", roavar_gossip, "Can I hear a story?", roavar_story, "Nothing thanks.", roavar_nothing);
+
+[label,roavar_brain]
+~chatplayer("<p,quiz>Is that a brain in a jar?");
+~chatnpc("<p,happy>It is. Been on that shelf longer than I've been behind this bar.");
+~chatplayer("<p,quiz>Can I have it?");
+~chatnpc("<p,happy>Fifty gold and it's yours, and I'll not ask what for.");
+switch_int(~p_choice2("Here's fifty gold.", 1, "On second thoughts.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>On second thoughts.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Here's fifty gold.");
+}
+if (inv_total(inv, coins) < ^fenk_brain_price) {
+    ~chatplayer("<p,sad>...which I do not actually have on me.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>You'd need a hand free for it, mind. It's a big jar.");
+    return;
+}
+inv_del(inv, coins, ^fenk_brain_price);
+inv_add(inv, fenk_brain, 1);
+~objbox(fenk_brain, "Roavar takes the jar down off the shelf and pushes it across the bar.", 250, 0, 0);
 
 [label,roavar_beer]
 ~chatplayer("<p,quiz>Can I buy a beer?");

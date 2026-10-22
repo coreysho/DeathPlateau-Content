@@ -1,7 +1,8 @@
 // Creature of Fenkenstrain.
 //
-// As with The Lost Tribe the stage numbers are fixed by the cache, not chosen. Four multinpcs and
-// one multiloc switch on %fenk_quest, and between them they say where the quest starts and ends:
+// REBUILT 2026-10-22 (quest audit). The stage numbers are fixed by the cache, not chosen. Four
+// multinpcs and one multiloc switch on %fenk_quest, and between them they say where the quest
+// starts and ends:
 //
 //   [fenk_fenkenstrain]            multinpc 0..7 -> fenk_fenkenstrain_model
 //   [fenk_fenkenstrain_in_tower]   multinpc 8    -> fenk_fenkenstrain_model
@@ -11,12 +12,28 @@
 //
 // So 8 is the end of it: at 8 and only at 8 the doctor is the one standing in the tower, and the
 // thing on the slab has a name. And 3 is the one stage where a body is lying assembled on the
-// table - which is what sewing it together has to set.
+// table - which is what the sewing has to set.
 //
-// The two shells are placed a few tiles apart in m55_55 (fenk_fenkenstrain at 31,30 and
-// fenk_fenkenstrain_in_tower at 29,35; fenk_creature at 27,35 and fenk_creature_released at
-// 32,30), so the swap at stage 8 moves both of them as well as changing who they are. Nothing in
-// script has to place or despawn anything.
+// WHAT CHANGED IN THE REBUILD. The shape of the quest was right and most of its sources were not.
+// The cache names them, and in four places it names them in so many words:
+//
+//   fenk_fenkenstrain_model  op1=Talk-to, **op3=Pickpocket** - the ending, and nothing handled it
+//   ring_of_charos           obj 4202, in the middle of this quest's own obj block (4183-4204)
+//                            - it is the reward, and the quest gave out no ring at all, which also
+//                            left Garden of Tranquillity's Ring of Charos leg unreachable
+//   fenk_experiment_1        vislevel 51, "It has a key hanging from its collar." - the cavern key
+//   fenk_fireplace           no ops, flanked by two fenk_fireplace_surround locs ("Mmm.. scented
+//                            candles") - which is exactly the wiki's warning to sweep the CENTRE
+//                            and not the surround, and where the conductor mould comes from
+//
+// and the varbits say the rest: %fenk_needle and %fenk_threads_given are the needle and the five
+// thread that are handed to the DOCTOR, who does the sewing himself.
+//
+// Before the rebuild: the doctor handed over the brain, the cavern key and the conductor mould; the
+// marble amulet was on a bench in the shed and the obsidian one came off the gardener; the head was
+// in a coffin; the extended brush hooked the shed key off a ledge (which the quest's own comment
+// admitted was impossible, the brush being inside the shed the key opens); the player sewed the body
+// themselves; and the quest ended with a journal and an argument instead of a ring.
 ^fenk_not_started = 0
 ^fenk_started = 1
 ^fenk_parts_gathered = 2
@@ -24,13 +41,45 @@
 ^fenk_conductor_fitted = 4
 ^fenk_creature_alive = 5
 ^fenk_creature_spoke = 6
-^fenk_has_proof = 7
+^fenk_has_ring = 7
 
-// The four body parts, the three locks, the coffin, the clock and the conductor are all varbits
-// the cache already declares on fenk_flags (%fenk_arms, %fenk_legs, %fenk_torso, %fenk_head,
+// The parts, the locks, the memorial, the clock and the conductor are all varbits the cache
+// already declares on fenk_flags (%fenk_arms, %fenk_legs, %fenk_torso, %fenk_head,
 // %fenk_unlocked_tower/_cavern/_shed, %fenk_coffin, %fenk_wound_clock, %fenk_conductor_repaired,
-// %fenk_read_signpost), so none of them is redeclared here as a bit number.
+// %fenk_read_signpost, %fenk_needle, %fenk_threads_given, %fenk_spoken_to_gardener), so none of
+// them is redeclared here as a bit number.
 
-// The brush reaches the shed key once it is fenk_brush3, three canes on. That is the obj chain
-// itself (fenk_brush0..3), so there is no separate count to declare - and no coord constant for
-// the conductor either, since it is reached through its own [oploc1,fenk_conductor_broken].
+// How many thread the doctor wants, and what the brain costs over Roavar's bar.
+^fenk_threads_wanted = 5
+^fenk_brain_price = 50
+
+// ---------------------------------------------------------------------------- places
+// The three memorials. All three are fenk_coffin ("Memorial", width 2, op1=Push op2=Search) and all
+// three have the six-pointed recess cut in the face; only the one standing below the walled plot
+// north-west of the castle has anything behind it. The other two (3574,3526 and 3578,3527, by the
+// castle's own two graves) grind aside onto bare earth.
+^fenk_plot_memorial_x = 3505
+^fenk_plot_outside = 0_54_55_49_52      // 3505,3572 - the tile north of the memorial
+// 3504,3576 - the walkway in front of the three graves. All three carry forceapproach 7, which at
+// their three placement angles leaves exactly one side each, and all three of those sides are on
+// this row: 3503,3576 for the west grave, 3504,3576 for the middle one, 3505,3576 for the east one.
+// Landing anywhere else in the plot puts a railing between the player and every grave in it.
+^fenk_plot_inside = 0_54_55_48_56
+
+// The three graves in that plot are an eight-tile pocket that touches nothing else on foot: the
+// memorial is the only way in, which is why the family's arms, legs and torso are still in them.
+// Everything east of here is a fenk_grave in the castle grounds, which is the family vault and
+// gives nothing.
+^fenk_plot_grave_east = 3510
+
+// Upstairs, west room and east room. The two bookcases hold the two halves of the old lord's
+// amulet, each pressed into a book - The Joy of Grave Digging and Handy Maggot Avoidance
+// Techniques. The two downstairs are medical texts.
+^fenk_bookcase_west_x = 3542
+^fenk_bookcase_east_x = 3555
+^fenk_bookcase_upstairs_z = 3558
+
+// The pickled brain in the Hair of the Dog in Canifis. The jar was already spawned on the floor by
+// the bar (maps/m54_54.jm2, local 36,18) and nothing in the quest ever mentioned it; Roavar will
+// also sell one, which is the wiki's fifty-gold route.
+^fenk_pub_brain = 0_54_54_36_18         // 3492,3474

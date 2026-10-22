@@ -3,6 +3,10 @@
 // The two doctor shells and the two creature shells are all placed, all four keyed on %fenk_quest,
 // and the swap happens at 8 - so the handlers go on the shells and the endgame needs no npc_add or
 // npc_del at all. See the quest's constant file.
+//
+// fenk_fenkenstrain_model carries op1=Talk-to and **op3=Pickpocket**. The pickpocket is the end of
+// the quest: the Ring of Charos is on the doctor's hand, it is obj 4202 in the middle of this
+// quest's own obj block, and nothing used to take it off him.
 
 // =========================================================================== Dr Fenkenstrain
 
@@ -13,95 +17,120 @@ switch_int (%fenk_quest) {
     case ^fenk_parts_gathered : @fenk_doctor_sew;
     case ^fenk_body_sewn : @fenk_doctor_conductor;
     case ^fenk_conductor_fitted : @fenk_doctor_storm;
-    case ^fenk_creature_alive : @fenk_doctor_dismiss;
+    case ^fenk_creature_alive : @fenk_doctor_tower_key;
     case ^fenk_creature_spoke : @fenk_doctor_dismiss;
-    case ^fenk_has_proof : @fenk_doctor_accused;
     case default : @fenk_doctor_dismiss;
 }
 
 // At stage 8 this shell is the one standing in the tower, and there is nothing left to say through
-// a locked door.
+// a bolted door.
 [opnpc1,fenk_fenkenstrain_in_tower]
 ~chatnpc("<p,angry>Go away! The door is bolted and it is staying bolted!");
 ~chatplayer("<p,happy>Take your time.");
 
+// --------------------------------------------------------------------------- the interview
 [label,fenk_doctor_hire]
 ~chatnpc("<p,neutral>You are not a local. Locals do not come up here.");
-switch_int (~p_choice2("What is this place?", 1, "I'll leave you to it.", 2)) {
+switch_int (~p_choice2("I'm here about the job.", 1, "I'll leave you to it.", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>I'll leave you to it.");
         ~chatnpc("<p,neutral>Wise.");
         return;
     case 1 :
-        ~chatplayer("<p,quiz>What is this place?");
+        ~chatplayer("<p,neutral>I'm here about the job.");
 }
-~chatnpc("<p,happy>My laboratory. My life's work. And, at the moment, my great frustration.");
-~chatnpc("<p,neutral>I am assembling a man. I have the slab, I have the theory, and I have a shortage of arms, legs and torsos.");
-~chatplayer("<p,shock>You want me to rob graves.");
-~chatnpc("<p,happy>I want you to be well paid. The graveyards are full and their occupants have no further use for any of it.");
-switch_int (~p_choice2("Fine. But I want paying.", 1, "Absolutely not.", 2)) {
+if (%fenk_read_signpost = 0) {
+    ~chatnpc("<p,quiz>The job. Which job would that be? I have not advertised in Canifis for a month.");
+    ~chatplayer("<p,neutral>...the butler's job.");
+    ~chatnpc("<p,neutral>Hmph. Somebody has been reading my signpost. Very well - an interview.");
+} else {
+    ~chatnpc("<p,happy>The butler's position. Good. An interview, then, and keep it brief.");
+}
+~chatnpc("<p,quiz>Describe yourself in one word.");
+switch_int (~p_choice3("Braindead.", 1, "Hard-working.", 2, "Qualified.", 3)) {
     case 2 :
-        ~chatplayer("<p,angry>Absolutely not.");
-        ~chatnpc("<p,neutral>Then you are of no use to me. Mind the step on the way out.");
+        ~chatplayer("<p,neutral>Hard-working.");
+        ~chatnpc("<p,angry>I have no use for industry. Try again when you have less about you.");
+        return;
+    case 3 :
+        ~chatplayer("<p,neutral>Qualified.");
+        ~chatnpc("<p,angry>Qualified! The last thing I want in this house is somebody who has been taught things.");
         return;
     case 1 :
-        ~chatplayer("<p,neutral>Fine. But I want paying.");
+        ~chatplayer("<p,neutral>Braindead.");
 }
-~chatnpc("<p,happy>Excellent. Arms, legs and a torso from the graves - a spade will do for those.");
-~chatnpc("<p,neutral>The head is a different matter. There is only one skull on this hill worth having, and it is in the mausoleum.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>Come back when you have a hand free. I have a key for you.");
-    return;
+~chatnpc("<p,happy>Braindead! Excellent. And your best skill?");
+switch_int (~p_choice3("Grave-digging.", 1, "Cooking.", 2, "Conversation.", 3)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Cooking.");
+        ~chatnpc("<p,angry>I do not eat. Not in the usual way.");
+        return;
+    case 3 :
+        ~chatplayer("<p,neutral>Conversation.");
+        ~chatnpc("<p,angry>Out.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>Grave-digging.");
 }
+~chatnpc("<p,happy>Grave-digging. You are hired, and you may start at once.");
+~chatnpc("<p,neutral>I am assembling a man. I have the slab, I have the theory, and I have a shortage of arms, legs, torsos and heads.");
+~chatplayer("<p,shock>You want me to rob graves.");
+~chatnpc("<p,happy>I want you to be useful. The old family is buried behind the railings north-west of here and has no further use for any of it.");
+~chatnpc("<p,neutral>A head as well - and a head is no use to me empty. There is a pickled brain in a jar over the bar in Canifis; the innkeeper will part with it.");
 %fenk_quest = ^fenk_started;
 ~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
-inv_add(inv, fenk_mausoleum_key, 1);
-mes("Dr Fenkenstrain gives you the cavern key.");
 
+// --------------------------------------------------------------------------- the parts
 [label,fenk_doctor_parts]
-if (inv_total(inv, fenk_arms) = 0 | inv_total(inv, fenk_legs) = 0 | inv_total(inv, fenk_torso) = 0 | (inv_total(inv, fenk_head_empty) = 0 & inv_total(inv, fenk_head_full) = 0)) {
-    ~chatnpc("<p,quiz>Arms, legs, a torso and a head. How many of those am I looking at?");
+if (inv_total(inv, fenk_arms) = 0 | inv_total(inv, fenk_legs) = 0 | inv_total(inv, fenk_torso) = 0 | inv_total(inv, fenk_head_full) = 0) {
+    ~chatnpc("<p,quiz>Arms, legs, a torso and a head with something in it. How many of those am I looking at?");
     ~chatplayer("<p,sad>Not all four.");
     ~chatnpc("<p,neutral>Then we are not having a conversation yet.");
     return;
 }
-~chatplayer("<p,neutral>All four.");
-~chatnpc("<p,happy>All four! Splendid. Put them on the slab and sew them together - needle, thread, and a steady hand.");
-~chatnpc("<p,neutral>The head wants filling first. There is a brain in a jar on my bench; it is not doing anything.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>I would hand you the brain, but you are carrying half a cemetery as it is. Make room and ask again.");
-    return;
-}
-inv_add(inv, fenk_brain, 1);
-mes("Dr Fenkenstrain hands you a jar with a brain in it.");
+~chatplayer("<p,neutral>All four, and the head is full.");
+mes("You hand over an armful of other people.");
+inv_del(inv, fenk_arms, 1);
+inv_del(inv, fenk_legs, 1);
+inv_del(inv, fenk_torso, 1);
+inv_del(inv, fenk_head_full, 1);
 %fenk_quest = ^fenk_parts_gathered;
 ~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
+~chatnpc("<p,happy>Splendid. Splendid! Now - I cannot sew.");
+~chatplayer("<p,confused>You cannot sew.");
+~chatnpc("<p,angry>I am a natural philosopher, not a seamstress. Bring me a needle and five lengths of thread and I will manage well enough.");
 
 [label,fenk_doctor_sew]
-~chatnpc("<p,neutral>Brain in the head, head on the body, and sew the whole thing up. The slab is through there.");
-// The brain is handed over once, at the step before; one that has gone missing since would leave
-// the head empty for good.
-if (~obj_gettotal(fenk_brain) = 0 & ~obj_gettotal(fenk_head_full) = 0 & inv_freespace(inv) > 0) {
-    ~chatplayer("<p,sad>I've lost the brain.");
-    ~chatnpc("<p,angry>Then it is fortunate I keep spares. Try to hold on to this one.");
-    inv_add(inv, fenk_brain, 1);
-    mes("Dr Fenkenstrain hands you a jar with a brain in it.");
+if (inv_total(inv, needle) = 0 | inv_total(inv, thread) < ^fenk_threads_wanted) {
+    ~chatnpc("<p,quiz>A needle and five thread. Have you them?");
+    ~chatplayer("<p,sad>Not yet.");
+    ~chatnpc("<p,neutral>Canifis has a general store and I have a body going cold.");
+    return;
 }
+~chatplayer("<p,neutral>A needle, and five thread.");
+inv_del(inv, needle, 1);
+inv_del(inv, thread, ^fenk_threads_wanted);
+%fenk_needle = 1;
+%fenk_threads_given = 1;
+if_close;
+mes("Dr Fenkenstrain sets to work on the slab. It takes a long time and he hums while he does it.");
+p_delay(4);
+%fenk_quest = ^fenk_body_sewn;
+~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
+~mesbox("What is lying on the slab now is not a person. It is a shape that a person would fit into.");
+@fenk_doctor_conductor;
 
+// --------------------------------------------------------------------------- the conductor
 [label,fenk_doctor_conductor]
 ~chatnpc("<p,happy>It is a fine body. Now it wants waking, and for that I want lightning.");
-~chatnpc("<p,angry>The conductor on my roof snapped off in a gale two winters ago and I have not been able to replace it.");
-~chatnpc("<p,neutral>Cast a new one. Silver, from this mould, and get it back onto the roof.");
+~chatnpc("<p,angry>The conductor on my roof snapped off in a gale two winters ago and I have had nothing to cast a new one with.");
 if (~obj_gettotal(fenk_lightning_mould) > 0) {
-    ~chatnpc("<p,neutral>You have the mould already. Use it.");
+    ~chatnpc("<p,happy>You found the mould. Silver, and a furnace, and get it onto the roof.");
     return;
 }
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>When you have somewhere to put it.");
-    return;
-}
-inv_add(inv, fenk_lightning_mould, 1);
-mes("Dr Fenkenstrain gives you the conductor mould.");
+~chatplayer("<p,quiz>What happened to the mould?");
+~chatnpc("<p,neutral>Mislaid. This house has forty rooms and I have looked in eleven of them.");
+~chatnpc("<p,neutral>Ask the gardener, if you can find him. He had opinions about where things in this house end up.");
 
 [label,fenk_doctor_storm]
 ~chatplayer("<p,neutral>The conductor's back on the roof.");
@@ -115,24 +144,51 @@ p_delay(3);
 ~chatnpc("<p,happy>IT LIVES! It lives, it lives, it - ");
 ~chatnpc("<p,confused>...why is it looking at me like that?");
 
+// Wiki step 22: it went for him, he got it into the tower, and he wants somebody else to go up and
+// deal with it.
+[label,fenk_doctor_tower_key]
+~chatnpc("<p,angry>Your creature tried to kill me.");
+~chatplayer("<p,neutral>My creature?");
+~chatnpc("<p,angry>You dug it up. I got it up the tower stair and locked the door on it, and it has been quiet since, which I do not like at all.");
+~chatnpc("<p,neutral>Go up and see what it wants. You are the butler.");
+if (inv_total(inv, fenk_tower_key) > 0) {
+    ~chatnpc("<p,neutral>You have the key. Use it.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,angry>I would give you the key if you had a hand free for it.");
+    return;
+}
+inv_add(inv, fenk_tower_key, 1);
+mes("Dr Fenkenstrain gives you the tower key.");
+
 [label,fenk_doctor_dismiss]
 ~chatnpc("<p,angry>Not now. I am busy, and you are in the way.");
 
-[label,fenk_doctor_accused]
-if (inv_total(inv, fenk_journal) = 0) {
-    ~chatnpc("<p,angry>Not now.");
+// --------------------------------------------------------------------------- the pocket
+// The ring is the one thing in the castle that proves whose it is, and the doctor wears it. 25
+// Thieving, which is the quest's own requirement and the reason for the Thieving reward.
+[opnpc3,fenk_fenkenstrain]
+if (stat(thieving) < 25) {
+    ~mesbox("You need a Thieving level of 25 to do that.");
     return;
 }
-~chatplayer("<p,angry>Lord Rologarth. You murdered him, and then you used him.");
-mes("You hold up the journal.");
-~chatnpc("<p,shock>Where did you - that is private correspondence!");
-~chatplayer("<p,neutral>It's a confession.");
-~chatnpc("<p,angry>It is my LIFE'S WORK, and I will not be lectured about it by a grave robber I hired myself!");
+anim(human_pickpocket, 0);
+if (%fenk_quest ! ^fenk_creature_spoke) {
+    mes("You go through the doctor's pockets. There is nothing in them but chalk.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    mes("Your hand closes on something on a chain, and there is nowhere to put it.");
+    return;
+}
+sound_synth(pick, 1, 0);
+%fenk_quest = ^fenk_has_ring;
+inv_add(inv, ring_of_charos, 1);
+~objbox(ring_of_charos, "You lift a heavy ring off the doctor's finger. There is a six-pointed star cut into the stone.", 250, 0, 0);
 if_close;
-mes("Dr Fenkenstrain backs towards the tower stair, still talking.");
 p_delay(2);
-mes("The tower door slams. A bolt goes across on the inside.");
-p_delay(1);
+~mesbox("Behind you a bolt goes back, and something very heavy comes down the tower stair. Dr Fenkenstrain is suddenly nowhere to be seen.");
 queue(fenk_quest_complete, 0, 0);
 
 // =========================================================================== the creature
@@ -145,28 +201,27 @@ if (%fenk_quest < ^fenk_creature_alive) {
 if (%fenk_quest = ^fenk_creature_alive) {
     @fenk_creature_wakes;
 }
-if (inv_total(inv, fenk_journal) > 0) {
-    ~chatnpc("<p,happy>You found it. Then it is not only me saying it.");
-    ~chatplayer("<p,neutral>He's shut himself in the tower.");
-    ~chatnpc("<p,neutral>Let him rot up there. I have a name again, and that is all I wanted.");
-    return;
-}
-~chatnpc("<p,sad>His own hand, written down. That is what you want. He kept a journal - he could never resist admiring himself on paper.");
+~chatnpc("<p,sad>He wears my ring. He has worn it since the night he put the knife in me.");
+~chatplayer("<p,neutral>Then I'll take it off him.");
+~chatnpc("<p,neutral>Do. And mind his pockets - he has the habit of a man who expects to be robbed.");
 
 [label,fenk_creature_wakes]
 ~chatnpc("<p,confused>...cold. Everything is cold.");
 ~chatplayer("<p,shock>Can you understand me?");
 ~chatnpc("<p,sad>I understand you. I understand a great deal more than he thinks I do.");
-~chatnpc("<p,angry>My name was Rologarth. Lord Rologarth, of this estate, until the good doctor came to me with a proposal and then with a knife.");
-~chatplayer("<p,shock>You're the owner of this castle?");
-~chatnpc("<p,sad>I was its owner. Now I am its exhibit.");
-~chatnpc("<p,neutral>Find me something written. Nobody will take the word of a thing that was sewn together last week.");
+~chatnpc("<p,angry>My name was Rologarth. Lord Rologarth, of this estate, until the good doctor came to me with a proposal.");
+~chatplayer("<p,quiz>What proposal?");
+~chatnpc("<p,angry>That I sell my tenants' labour to the people over the river in Meiyerditch. He had the papers drawn up before he asked.");
+~chatnpc("<p,sad>I would not sign. So he signed for me, and then he sold me as well, and the vampyres were not interested in the paperwork.");
+~chatplayer("<p,shock>And he has been using the rest of us to build whatever he likes ever since.");
+~chatnpc("<p,angry>He has a cellar full of things that used to be people. Stop him.");
+~chatnpc("<p,neutral>Begin with my ring. He has no claim on this estate while somebody else is wearing it.");
 %fenk_quest = ^fenk_creature_spoke;
 ~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
 
-// At stage 8 the released shell is Lord Rologarth, and the quest is over.
+// At stage 8 the released shell is Lord Rologarth, standing in his own hall, and the quest is over.
 [opnpc1,fenk_creature_released]
-~chatnpc("<p,happy>The estate is mine again, such as it is. You have my thanks, and you are welcome here whenever you like.");
+~chatnpc("<p,happy>The estate is mine again, such as it is. You have my thanks, and the ring - I have no finger left that it fits.");
 ~chatplayer("<p,happy>What about the doctor?");
 ~chatnpc("<p,neutral>He has a tower, a bolt and a great deal of time to think. That will do.");
 
@@ -185,26 +240,22 @@ if (inv_total(worn, amulet_of_ghostspeak) = 0 & inv_total(worn, amulet_of_ghosts
 if (%fenk_spoken_to_gardener = 0) {
     ~chatnpc("<p,sad>Forty years I kept these grounds, and he never once came out to look at them.");
     ~chatplayer("<p,quiz>Dr Fenkenstrain?");
-    ~chatnpc("<p,angry>Fenkenstrain. He is not the master here, whatever he tells you. The master was a decent man and one day he simply was not here any more.");
+    ~chatnpc("<p,angry>Fenkenstrain. He is not the master here, whatever he tells you. The master was Lord Rologarth and one day he simply was not here any more.");
     %fenk_spoken_to_gardener = 1;
 }
-if (~obj_gettotal(fenk_obsidian_amulet) > 0 | ~obj_gettotal(fenk_star_amulet) > 0 | %fenk_coffin = 1) {
-    ~chatnpc("<p,neutral>Mind what you do with that amulet. It was the master's.");
-    @fenk_gardener_shed_key;
+if (%fenk_quest >= ^fenk_body_sewn & ~obj_gettotal(fenk_lightning_mould) = 0) {
+    ~chatnpc("<p,neutral>He will have told you something is mislaid. Everything in that house is up the chimney in the west room - the sweep stopped coming the same year I did.");
+    ~chatplayer("<p,quiz>And how would I get at it?");
+    ~chatnpc("<p,neutral>With a brush and three canes off the pile by my shed, bound on with wire. Same as I did it.");
 }
-~chatnpc("<p,neutral>The master wore an amulet in two halves - obsidian and marble. He kept the marble half in the garden shed, of all the daft places.");
-if (inv_freespace(inv) = 0) {
-    ~chatnpc("<p,neutral>I have the other half here, if you had anywhere to put it.");
-    return;
+if (%fenk_quest >= ^fenk_started & ~obj_gettotal(fenk_star_amulet) = 0 & ~obj_gettotal(fenk_marble_amulet) = 0 & ~obj_gettotal(fenk_obsidian_amulet) = 0) {
+    ~chatnpc("<p,neutral>And if it is the family you are digging at, the railings are locked and the memorial below them is the way in.");
+    ~chatnpc("<p,neutral>The master kept the key to it in two halves, pressed in two books in his library, and thought that was a great joke.");
 }
-~chatnpc("<p,neutral>I have carried the obsidian half about with me since the day he went. You had better have it.");
-inv_add(inv, fenk_obsidian_amulet, 1);
-mes("The ghost gives you the obsidian amulet.");
 @fenk_gardener_shed_key;
 
-// The shed key. The shed is where the marble half is, and the broom cupboard is inside it - see
-// [oploc1,fenk_shed_door] - so the key has to come from somewhere outside the shed, and the man
-// who kept the garden is where it came from in the original.
+// The shed key. The broom cupboard is inside the shed - see [oploc1,fenk_shed_door] - so the key
+// has to come from somewhere outside it, and the man who kept the garden is where it came from.
 [label,fenk_gardener_shed_key]
 if (%fenk_unlocked_shed = 1 | inv_total(inv, fenk_shed_key) > 0) {
     return;
@@ -213,27 +264,6 @@ if (inv_freespace(inv) = 0) {
     ~chatnpc("<p,neutral>I would give you my key to the shed, if you had a hand free for it.");
     return;
 }
-~chatnpc("<p,neutral>And you will want this. It is my key to the shed. Nobody has been in there since I died.");
+~chatnpc("<p,neutral>You will want this. It is my key to the shed. Nobody has been in there since I died.");
 inv_add(inv, fenk_shed_key, 1);
 mes("The ghost gives you the shed key.");
-
-// The two halves make the six-pointed star that the memorial in the mausoleum is cut to take.
-[opheldu,fenk_obsidian_amulet]
-if (last_useitem ! fenk_marble_amulet) {
-    ~displaymessage(^dm_default);
-    return;
-}
-@fenk_join_amulet;
-
-[opheldu,fenk_marble_amulet]
-if (last_useitem ! fenk_obsidian_amulet) {
-    ~displaymessage(^dm_default);
-    return;
-}
-@fenk_join_amulet;
-
-[label,fenk_join_amulet]
-inv_del(inv, fenk_obsidian_amulet, 1);
-inv_del(inv, fenk_marble_amulet, 1);
-inv_add(inv, fenk_star_amulet, 1);
-mes("The two triangles lock together into a six-pointed star.");
