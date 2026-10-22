@@ -189,6 +189,14 @@ if ($obj = null) {
 if ($obj = castlewars_saradomin_banner | $obj = castlewars_zamorak_banner) {
     ~castlewars_flag_drop(inv, $obj);
 }
+// Temple of Ikov: the worn pair of boots of lightness weighs -10lb and the pocketed pair 12oz, and
+// the cache has both for that reason. A worn pair left sitting in a pocket would be permanent
+// negative weight, so it goes back to being the ordinary pair the moment it comes off. The way on
+// is [opheld2,ikov_bootsoflightness] in quests/quest_ikov/scripts/ikov_dungeon.rs2.
+if ($obj = ikov_bootsoflightnessworn) {
+    inv_del(inv, ikov_bootsoflightnessworn, 1);
+    inv_add(inv, ikov_bootsoflightness, 1);
+}
 // Monkey Madness: taking a greegree off turns the player back into a human. Hooked here rather than
 // on each of the eight greegree objs because this is the one proc every unequip path funnels
 // through - see quests/quest_mm/scripts/mm_stage3.rs2.

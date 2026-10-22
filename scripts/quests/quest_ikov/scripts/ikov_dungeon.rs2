@@ -236,3 +236,30 @@ if(last_useitem = ikov_shinykey) {
     return;
 }
 ~displaymessage(^dm_default);
+
+// =========================================================================== the boots of lightness
+// The cache has two of these and the quest used neither. ikov_bootsoflightness weighs 12oz and
+// ikov_bootsoflightnessworn weighs -10lb, which is the whole mechanic: the bridge over the lava
+// refuses anybody whose weight is not already negative, and nothing else in the game will take a
+// player there. They are on the floor at the foot of the dark stairs (maps/m41_152.jm2, local
+// 30,39) behind a slashable web, with a knife on the floor beside them.
+//
+// So the swap has to happen on the way on, here, and on the way off, in [proc,on_unequip] in
+// player/scripts/equip.rs2 - the same hook Monkey Madness' greegrees and Ghosts Ahoy' bedsheet use.
+// The specific trigger outranks the wildcard [opheld2,_] that equips everything else.
+[opheld2,ikov_bootsoflightness]
+inv_del(inv, ikov_bootsoflightness, 1);
+inv_add(inv, ikov_bootsoflightnessworn, 1);
+// The slot is found rather than assumed: inv_add takes the first free slot, which is not
+// necessarily the one the boots came out of.
+def_int $i = 0;
+while ($i < inv_size(inv)) {
+    if (inv_getobj(inv, $i) = ikov_bootsoflightnessworn) {
+        ~equip($i);
+        return;
+    }
+    $i = add($i, 1);
+}
+
+[opheld2,ikov_bootsoflightnessworn]
+~equip(last_slot);
