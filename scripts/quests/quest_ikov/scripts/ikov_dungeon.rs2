@@ -43,8 +43,10 @@ cleartimer(move_ikovtrigger);
 
 [timer,move_ikovtrigger]
 // coming from west side is queued and will take 1t longer, coming from east side is not, meaning you can cancel coming from west side
-if(inzone(^ikovbridge_zone_lower, ^ikovbridge_zone_upper, coord) = true) {
-    if(coordx(coord) = coordx(^ikovbridge_zone_lower)) {
+// The LIP zone, not the gap: nothing can stand in the gap, so this used to be a trigger that could
+// never fire. See the quest's constant file.
+if(inzone(^ikovbridge_lip_lower, ^ikovbridge_lip_upper, coord) = true) {
+    if(coordx(coord) = coordx(^ikovbridge_lip_lower)) {
         queue(ikov_movequeue, 0, 0);
     } else {
         @ikov_movebridge;
@@ -54,7 +56,7 @@ if(inzone(^ikovbridge_zone_lower, ^ikovbridge_zone_upper, coord) = true) {
 [queue,ikov_movequeue] @ikov_movebridge;
 
 [label,ikov_movebridge]
-if(inzone(^ikovbridge_zone_lower, ^ikovbridge_zone_upper, coord) = false) {
+if(inzone(^ikovbridge_lip_lower, ^ikovbridge_lip_upper, coord) = false) {
     return;
 }
 def_int $crossed_bridge = testbit(%ikov_dungeon, ^ikov_bridge);
@@ -167,6 +169,20 @@ if(stat(thieving) >= 42 & %ikov < ^ikov_defeated_fire_warrior) {
     return;
 }
 ~mesbox("You find nothing.");
+
+// The cellar south of the Ranging Guild. ikov_trapdoor_down (2637,3408, maps/m41_53.jm2) had no
+// handler at all, while the ladder at the bottom of it - loc_1755 at 2637,9808, handled generically
+// in ladders+stairs/scripts/ladders.rs2 - climbs back out: a one-way pair with the way in missing.
+// Down is the same 6400 that ladder comes up.
+// This is NOT the temple's own entrance, which is loc_1754 at 2677,3405 ("Climb-down", also
+// generic) landing beside the second loc_1755 at 2677,9805. The cellar is ninety-nine tiles of
+// crates and sacks that touch nothing else underground.
+// ikov_trapdoor - the shiny key's shortcut between the dungeon and McGrubor's Wood - is left alone:
+// ikov_trapladder teleports to the trapdoor's own tile rather than to the wood, and working out
+// what that pair was meant to do is not this fix.
+[oploc1,ikov_trapdoor_down]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, 0, 6400), false);
 
 [oploc1,ikov_trapladder]
 p_teleport(0_41_153_41_57);
