@@ -49,7 +49,14 @@ switch_int(%elenaquest) {
 ~chatplayer("<p,angry>This is urgent though!");
 ~chatnpc("<p,neutral>I'll see what I can do I suppose.");
 ~chatnpc("<p,neutral>Mr <nc_name(bravek)> there's a <text_gender("man", "lady")> here who really needs to speak to you.");
-if (.npc_find(coord, bravek, 7, 0) = true) { // yes its possible this doesnt pop off if hes too far
+// SEVEN TILES WAS NOT ENOUGH, and this line is the only way the quest leaves
+// ^quest_elena_spoke_to_plague_house. Bravek is in the next room and wanders it; the clerk wanders
+// a fifty-two tile office; and the radius is measured from the PLAYER, who is standing wherever
+// the clerk happened to be. From the north end of the office Bravek is eight or nine tiles away,
+// so he never answered, the stage never advanced, and the player was left with a clerk who says
+// "he has asked not to be disturbed" and no other way in. Sixteen covers the office and the room
+// behind it and still cannot reach any other part of West Ardougne.
+if (.npc_find(coord, bravek, 16, 0) = true) {
     ~quest_elena_set_progress(^quest_elena_spoke_to_clerk);
     ~.chatnpc("<p,confused>I suppose they can come in then. If they keep it short.");
 }
