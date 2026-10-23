@@ -164,9 +164,17 @@ def_int $inflow = 0;
 if ($valve1 = 1) $inflow = 3;
 else if ($valve1 = 2) $inflow = 7;
 
+// THE RELEASE VALVE AT HALF HAS TO CANCEL THE TAR VALVE AT FULL, because that is the pair of
+// settings every guide to this quest tells the player to use: tar valve fully right, and the
+// release valve to the middle once the pressure is in the green, then do not touch either again.
+// With half bleeding 3 against an inflow of 7 the pressure climbed 4 a tick regardless, left the
+// green zone eight ticks later and never came back - a player following the instructions got to
+// about a third of a barrel and then stalled for ever, with the gauge pinned at 100 and nothing
+// in the room to tell them why. Half now bleeds exactly what Full lets in, so the stated pair
+// holds, and Full bleeds twice that for anyone who overshoots and needs to come back down.
 def_int $outflow = 0;
-if ($valve2 = 1) $outflow = 3;
-else if ($valve2 = 2) $outflow = 7;
+if ($valve2 = 1) $outflow = 7;
+else if ($valve2 = 2) $outflow = 14;
 
 $pressure = max(0, min(100, add($pressure, sub($inflow, $outflow))));
 $heat = max(0, sub($heat, 4));

@@ -25,6 +25,12 @@ switch_int(%regicide_quest) {
         ~chatnpc("<p,worried>Tyras Camp lies further south, but it's guarded. One of Tyras' men stands watch on the path - a tough fighter, so be careful.");
         ~chatnpc("<p,neutral>If you get past him, you'll find General Hining at the camp. Good luck.");
         %regicide_quest = ^regicide_met_tracker;
+    case ^regicide_met_tracker :
+        // She has sent the player on and they have come back without having got there. The tracks
+        // are the thing they have walked past, so she says so.
+        ~chatplayer("<p,quiz>Which way is Tyras Camp, exactly?");
+        ~chatnpc("<p,neutral>West of here there are boot prints crossing the path - a man's, going into the trees. Follow them. They come out at a camp nobody has used in years.");
+        ~chatnpc("<p,neutral>Keep going west from there and you will find Tyras' men. Mind the traps; the forest is full of them, and not all of them are ours.");
     case ^regicide_at_tyras_camp :
         // The return trip. Hining has just thrown the player out, and the tracker is who they were
         // told to report back to - she is the one who sends them on to Iorwerth rather than letting
@@ -40,3 +46,17 @@ switch_int(%regicide_quest) {
     case default :
         ~chatnpc("<p,neutral>Keep that pendant safe, and watch yourself around Tyras' guards.");
 }
+
+// The tracks themselves. Two ground decorations on the path west of the tracker, op1=Follow, and
+// nothing had ever handled them - see the note on ^regicide_old_camp_landing for why that mattered
+// rather more than a missing bit of flavour.
+[oploc1,regicide_old_camp_footprints]
+p_arrivedelay;
+if (%regicide_quest < ^regicide_met_tracker) {
+    ~mesbox("Boot prints in the soft ground, crossing the path and going away west into the trees. They are not fresh.");
+    return;
+}
+mes("You follow the tracks west, pushing through the trees as they go...");
+p_delay(0);
+~forcemove(^regicide_old_camp_landing);
+~mesbox("...and come out where they end. Somebody camped here and left in a hurry: a ring of blackened stones, a tent pole lying where it fell, and nothing else. The path goes on west.");

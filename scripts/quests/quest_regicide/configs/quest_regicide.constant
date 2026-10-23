@@ -41,6 +41,17 @@
 // permanent - the copy is reused by the next player who fires the catapult.
 ^regicide_burn_duration = 400
 
+// --- The tracks west of the Elf Tracker ---
+// regicide_old_camp_footprints is placed at (2240,3150) and (2241,3150) with op1=Follow, and
+// following them is a step of the quest in its own right. It is also the ONE way into the western
+// half of Tirannwn. Three bands of dense forest stand between the tracker's side and the old camp
+// at x=2232-2233, 2235-2236 and 2238-2239, and their crossings all sit on z=3148 where the tile
+// east of the easternmost one is solid - so the chain can be walked west to east but there is no
+// tile beside it to click from the eastern side. The tracks are how you get in; the crossings are
+// how you get back out. Without them Tyras Camp, the catapult and the quartermaster are a 471-tile
+// island nothing in the game can reach.
+^regicide_old_camp_landing = 0_34_49_55_14
+
 // Where Arianwyn steps out of the trees on the way east from Iorwerth Camp. Checked walkable, and
 // two tiles clear of Lord Iorwerth himself at m34_50 (29,52).
 ^regicide_arianwyn_spot = 0_34_50_31_52

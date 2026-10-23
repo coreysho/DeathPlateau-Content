@@ -2,14 +2,23 @@
 // Locs are still only declared in scripts/_unpack/377/all.loc (unmigrated), same situation
 // quest_upass's upass_obstacles.rs2 already relies on for several of its own obstacles.
 //
-// Dense forest is a hard Agility level gate that cannot be failed - you either meet the level
-// or you don't. The Elf Tracker's crystal pendant (checklist item #6/later) will add an
-// alternate way past this same loc type - not built here.
+// Dense forest is a hard Agility level gate that cannot be failed - you either meet the level or
+// you don't, and Lord Iorwerth's crystal pendant is the alternative to meeting it.
 //
-// Leaf trap / tripwire / stick trap are pure fail-chance obstacles, NOT Agility-scaled, per the
-// walkthrough spec. The fail-chance fractions and poison severity below are placeholders and are
-// NOT confirmed against the wiki - flagged with "todo" comments the same way this codebase
-// already flags unverified agility fail rates (see skill_agility/scripts/wilderness_course.rs2).
+// Leaf trap / tripwire / stick trap: all three are obstacles that MOVE YOU when you pass them, and
+// all three scale with Agility. The numbers are the wiki's own, from Leaves_(trap), Tripwire and
+// Sticks_(trap) - a straight line in Agility level from the level-1 figure to the level-99 one:
+//
+//   leaves    70.7% at 1 -> 100%   at 99   fail: up to 18 damage, and you climb out YOUR side
+//   tripwire  12.11% at 1 -> 60.94% at 99  fail: 10 damage and poison, and you stay put
+//   sticks    12.1% at 1 -> 60.9%  at 99   fail: knocked back for 8 damage
+//
+// They used to be flat one-in-eight / one-in-ten rolls that ignored Agility entirely, and - far
+// worse - none of the three moved the player at all. Two of them are the only link between parts
+// of Isafdar: the sticks at 2295,3214 are the one gap in the trees between the Well of Voyage's
+// clearing and the forest west of it, and the tripwire at 2294,3243 is the one gap going north.
+// Flood-filled, the clearing reaches 534 tiles and stops dead, so Regicide could not be played
+// past its second step and neither could anything else in Tirannwn.
 
 // ===== Dense forest: regicide_cross_over1/2/3 (Isafdar) + _tyras_camp variants, op1=Enter =====
 [oploc1,regicide_cross_over1] @regicide_cross_forest;
@@ -25,65 +34,178 @@ if(stat(agility) < 56 & inv_total(inv, regicide_crystal_pendant) < 1) {
     ~mesbox("You need an Agility level of 56 to get through this dense forest.");
     return;
 }
-def_int $dir;
-def_coord $end;
-if(coordz(coord) > coordz(loc_coord)) {
-    $dir = ^exact_south;
-    $end = movecoord(loc_coord, 0, 0, -2);
-} else if(coordz(coord) < coordz(loc_coord)) {
-    $dir = ^exact_north;
-    $end = movecoord(loc_coord, 0, 0, 2);
-} else if(coordx(coord) > coordx(loc_coord)) {
-    $dir = ^exact_west;
-    $end = movecoord(loc_coord, -2, 0, 0);
-} else {
-    $dir = ^exact_east;
-    $end = movecoord(loc_coord, 2, 0, 0);
-}
+def_coord $end = ~regicide_obstacle_end(loc_coord, 3, 2, loc_angle);
 mes("You push your way through the dense forest...");
 p_delay(0);
-// todo: exact crossing distance/anim unverified - Isafdar map layout not yet migrated out of _unpack
-~forcewalk2($end);
+// ~forcewalk2 CANNOT CROSS THIS, and it is the whole point of the obstacle. forcewalk2 goes
+// through ~clipped_telewalk, which checks map_blocked on every single tile of the way and gives up
+// silently the moment one of them is solid - and a band of dense forest is solid by definition.
+// So the player got "You push your way through the dense forest..." followed by "...and come out
+// the other side.", and stood exactly where they had been standing.
+//
+// That was not a cosmetic failure. Flood-filled on the ground plane, the band the Well of Voyage
+// puts you out into is 365 tiles and the band Iorwerth Camp stands in is 1,293, and the two do not
+// share a single pair of adjacent tiles: every one of the fifteen crossings in Isafdar is a loc
+// sitting in solid scenery with open ground two tiles the other side. Nothing else joins them.
+// Regicide stopped dead at the first band for everyone, and so did the half of Mourning's End that
+// crosses the same forest.
+//
+// ~forcemove is the unclipped walk - the same proc West Ardougne's blocked doors use to step a
+// player through a wall - and it is what an obstacle that crosses something solid has to use.
+~forcemove($end);
 mes("...and come out the other side.");
 
-// ===== Leaf trap: regicide_pitfall_corner/mid/side, op1=Jump, 15 HP damage on fail =====
+// ===== Where an obstacle puts you =====
+// Straight on through, on the axis you walked up to it from, as far as the first tile beyond it
+// you can actually stand on.
+//
+// A fixed distance does not work here and that is worth writing down, because it is why this
+// quest could not be walked. The bands of scenery the Isafdar obstacles cross are not all the same
+// thickness: the forest band at 2302,3214 is two tiles of solid ground, a leaf pit is three, and
+// the three crossings in a row at x=2266/2269/2272 on z=3191 are a nine-tile wall with the two
+// middle crossings standing inside it. ~forcemove does not check clipping - which is the only
+// reason it can cross any of them - so a fixed two tiles left the player standing in the middle of
+// the scenery on most of them, which looks exactly like the obstacle having done nothing.
+[proc,regicide_obstacle_end](coord $loc, int $w, int $l, int $angle)(coord)
+// The loc's width and length are passed in because the footprint decides which side the player is
+// standing on, and loc_coord is only its origin corner. GameMap measures the footprint at the
+// loc's original angle and swaps the two on an odd one, so this does the same.
+def_int $sx = $w;
+def_int $sz = $l;
+if ($angle = 1 | $angle = 3) {
+    $sx = $l;
+    $sz = $w;
+}
+def_int $dx = 0;
+def_int $dz = 0;
+if (coordz(coord) > add(coordz($loc), sub($sz, 1))) {
+    $dz = -1;
+} else if (coordz(coord) < coordz($loc)) {
+    $dz = 1;
+} else if (coordx(coord) > add(coordx($loc), sub($sx, 1))) {
+    $dx = -1;
+} else {
+    $dx = 1;
+}
+return(~regicide_first_clear($loc, $dx, $dz, 1));
+
+[proc,regicide_first_clear](coord $loc, int $dx, int $dz, int $n)(coord)
+def_coord $c = movecoord($loc, multiply($dx, $n), 0, multiply($dz, $n));
+if (map_blocked($c) = false) {
+    return($c);
+}
+if ($n >= 10) {
+    // Further than anything in Isafdar is thick. Put the player down rather than leave them
+    // standing on the obstacle; no placement in the map reaches this.
+    return($c);
+}
+return(~regicide_first_clear($loc, $dx, $dz, add($n, 1)));
+
+[proc,regicide_trap_passed](int $at1, int $at99)(boolean)
+def_int $chance = add($at1, divide(multiply(sub($at99, $at1), sub(stat(agility), 1)), 98));
+if (random(1000) < $chance) {
+    return(true);
+}
+return(false);
+
+// ===== Leaf trap: regicide_pitfall_corner/mid/side, op1=Jump =====
 [oploc1,regicide_pitfall_corner] @regicide_leaf_trap;
 [oploc1,regicide_pitfall_mid] @regicide_leaf_trap;
 [oploc1,regicide_pitfall_side] @regicide_leaf_trap;
 
 [label,regicide_leaf_trap]
+def_coord $end = ~regicide_obstacle_end(loc_coord, 1, 1, loc_angle);
 mes("You try to jump over the pile of leaves...");
 p_delay(0);
-// todo: fail chance is a placeholder (1 in 8) - not confirmed against the wiki
-if(random(8) = 0) {
-    mes("...but you misjudge it and fall through!");
-    ~damage_self(15);
+if (~regicide_trap_passed(707, 1000) = false) {
+    // "You climb back out on the same side you fell from" - so no movement at all on a fail, which
+    // is also what keeps a bad roll from dropping anybody into the pit tiles themselves.
+    mes("...but you misjudge it and fall through onto the spikes!");
+    sound_synth(human_hit2, 1, 0);
+    ~damage_self(add(random(18), 1));
     return;
 }
+~forcemove($end);
 mes("...and clear it easily.");
 
-// ===== Tripwire: regicide_trap_tripwire, op1=Step-over, 10 HP damage + poison on fail =====
+// ===== Tripwire: regicide_trap_tripwire, op1=Step-over =====
 [oploc1,regicide_trap_tripwire]
+def_coord $end = ~regicide_obstacle_end(loc_coord, 1, 2, loc_angle);
 mes("You try to step over the tripwire...");
 p_delay(0);
-// todo: fail chance is a placeholder (1 in 8) - not confirmed against the wiki
-if(random(8) = 0) {
-    mes("...but you catch your foot and trigger it!");
+if (~regicide_trap_passed(121, 609) = false) {
+    mes("...but you catch your foot, and four crossbows fire out of the twigs!");
     ~damage_self(10);
-    // todo: poison severity is a placeholder (weak, 4) - not confirmed against the wiki
-    queue(poison_player, 0, 4);
+    queue(poison_player, 0, 2);
     return;
 }
+~forcemove($end);
 mes("...and step over it safely.");
 
-// ===== Stick trap: regicide_trap_woodspring, op1=Pass, 8 HP damage on fail =====
+// ===== Stick trap: regicide_trap_woodspring, op1=Pass =====
 [oploc1,regicide_trap_woodspring]
+def_coord $end = ~regicide_obstacle_end(loc_coord, 3, 1, loc_angle);
 mes("You try to pass the tied sticks...");
 p_delay(0);
-// todo: fail chance is a placeholder (1 in 10) - not confirmed against the wiki
-if(random(10) = 0) {
-    mes("...but you set off the trap!");
+if (~regicide_trap_passed(121, 609) = false) {
+    mes("...but you set the spring off and it knocks you back!");
     ~damage_self(8);
     return;
 }
+~forcemove($end);
 mes("...and pass without incident.");
+
+// ===== Log balances: regicide_logbalance1/2/3_start, op1=Cross =====
+//
+// THREE LOGS, ALL THREE DEAD. Nothing in the codebase named regicide_logbalance at all, so every
+// one of them took the click and did nothing - and they are not scenery. Flood-filled on the
+// ground plane, Isafdar is a handful of bands of open forest separated by solid scenery, and the
+// dense-forest crossings above only join four of them. The logs join the rest: without them the
+// band the Well of Voyage puts you out into reaches 494 tiles and stops, with Iorwerth Camp, the
+// Poison Waste, the tracker and Tyras Camp all on the far side of a river nobody could cross.
+//
+// Each log is a row of regicide_logbalance1/2 ground decorations with a _start placement on each
+// bank, and both banks carry the SAME _start type - so one trigger each, and the pair of bank
+// coords tells the handler which way the player is going. The spans are not all the same length
+// (the eastern one is five tiles between banks, the other two are four), which is why the shared
+// ~log_balance_x/_z procs in skill_agility/scripts/log_balances.rs2 are not reused here: those
+// derive both ends from a centre tile and assume a three-tile log.
+//
+// No Agility gate. The quest's own guide crosses these with nothing in the requirement list, and
+// the 45-Agility figure the wiki gives belongs to the later logs over the river north of the
+// forest, which are not these. No fail chance either, for the reason log_balances.rs2 gives for
+// the two shortcut logs: a fall needs a specific in-river tile to wash the player up from and
+// guessing one would be worse than leaving it out.
+
+// Iorwerth Camp, west of the camp gate: banks at x=2197 and x=2201, z=3237.
+[oploc1,regicide_logbalance1_start] ~regicide_log_cross_x(0_34_50_21_37, 0_34_50_25_37);
+// Centre of the forest: banks at x=2259 and x=2263, z=3250.
+[oploc1,regicide_logbalance2_start] ~regicide_log_cross_x(0_35_50_19_50, 0_35_50_23_50);
+// East, on the way in from the Well of Voyage: banks at z=3233 and z=3238, x=2290.
+[oploc1,regicide_logbalance3_start] ~regicide_log_cross_z(0_35_50_50_33, 0_35_50_50_38);
+
+[proc,regicide_log_cross_x](coord $west, coord $east)
+// Which bank the player is on, decided by the midpoint rather than by which loc was clicked -
+// p_arrivedelay leaves them beside the start tile, not on it, and either bank's loc can be
+// clicked from either side of the river.
+if (coordx(coord) > divide(add(coordx($west), coordx($east)), 2)) {
+    ~regicide_log_walk(~regicide_first_clear($west, -1, 0, 0));
+    return;
+}
+~regicide_log_walk(~regicide_first_clear($east, 1, 0, 0));
+
+[proc,regicide_log_cross_z](coord $south, coord $north)
+if (coordz(coord) > divide(add(coordz($south), coordz($north)), 2)) {
+    ~regicide_log_walk(~regicide_first_clear($south, 0, -1, 0));
+    return;
+}
+~regicide_log_walk(~regicide_first_clear($north, 0, 1, 0));
+
+// The far bank's own tile is where the player should end up, but on two of the three logs that
+// tile carries the _start decoration on solid ground, so the walk goes on to the first tile past
+// it. $n starts at 0 for that reason: the bank itself is the first candidate.
+[proc,regicide_log_walk](coord $end)
+mes("You step onto the log...");
+sound_synth(log_balance, 2, 0);
+~agility_force_move(0, human_walk_logbalance, $end);
+mes("...and step off on the other side.");

@@ -35,7 +35,7 @@ switch_int(%regicide_quest) {
     case ^regicide_told_tracker : @regicide_iorwerth_book;
     case ^regicide_has_book :
         if (~regicide_resupply = true) return;
-        ~chatnpc("<p,neutral>The still is in Rimmington, human, on the far side of the sea. Read the book. It is all in the book.");
+        @regicide_iorwerth_components;
     case ^regicide_tyras_bombed : @regicide_iorwerth_letter;
     case ^regicide_has_letter, ^regicide_seal_broken :
         // Lathas will not finish the quest without the letter, and it is the only copy.
@@ -80,6 +80,34 @@ inv_add(inv, limestone, 1);
 ~objbox(regicide_alchemy, "Lord Iorwerth gives you the Big Book O' Bangs, three empty barrels and a lump of limestone.", 250, 0, 0);
 ~chatnpc("<p,neutral>Everything you need is written down. Coal-tar from the Poison Waste, sulphur from the rocks beside it, and a still in the human town of Rimmington to draw one out of the other.");
 ~chatnpc("<p,neutral>Come back to me when the tent is burning.");
+
+// The five things the bomb is made of, asked about one at a time. This is a step of the quest in
+// its own right - the guides have you ask him about the quicklime, the sulphur, the naphtha, the
+// barrel and the fuse - and it was the one part of the handover missing: he used to say "it is all
+// in the book", and the book is a page of flavour about fire oil with no recipe in it at all.
+[label,regicide_iorwerth_components]
+switch_int(~p_choice5("How do I make quicklime?", 1, "Where do I find sulphur?", 2, "And the naphtha?", 3,
+    "What about the barrel?", 4, "How do I set it off?", 5)) {
+    case 1 :
+        ~chatplayer("<p,quiz>How do I make quicklime?");
+        ~chatnpc("<p,neutral>Limestone, and a furnace hot enough to burn it. Ours are for crystal; the only one in Tirannwn that will take stone is the little forge at Tyras Camp.");
+        ~chatnpc("<p,neutral>Wear gloves. Quicklime does not care whose hands it is in.");
+        ~chatnpc("<p,neutral>Then grind it into a pot, or you will have nothing to carry it in.");
+    case 2 :
+        ~chatplayer("<p,quiz>Where do I find sulphur?");
+        ~chatnpc("<p,neutral>The rocks along the Poison Waste are yellow with it. Break a piece off, and grind that as well.");
+    case 3 :
+        ~chatplayer("<p,quiz>And the naphtha?");
+        ~chatnpc("<p,neutral>Out of coal-tar, and coal-tar is under the surface of the waste itself. Sink a barrel into it and hope the swamp gives the barrel back.");
+        ~chatnpc("<p,neutral>The tar is no use as it is. There is a fractionalising still in the human town of Rimmington that will draw the naphtha out of it, if you feed it coal and keep your nerve.");
+    case 4 :
+        ~chatplayer("<p,quiz>What about the barrel?");
+        ~chatnpc("<p,neutral>You have three of mine. The waste will keep one or two of them, so do not be surprised when it does. Come back to me if it keeps all three.");
+    case 5 :
+        ~chatplayer("<p,quiz>How do I set it off?");
+        ~chatnpc("<p,neutral>A strip of cloth in the lid, and a flame. Four balls of wool on a loom make the cloth, and there is a loom in this camp.");
+        ~chatnpc("<p,neutral>The quicklime and the sulphur go into the barrel of naphtha, the cloth goes into the barrel, and the barrel goes into their catapult.");
+}
 
 // After the catapult. The sealed letter, and Arianwyn put on the path east - he is placed nowhere in
 // any map, so he is a scripted spawn, the same way the Draugen and Koschei are. Talking to Iorwerth
