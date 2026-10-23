@@ -103,6 +103,17 @@ p_arrivedelay;
 
 [oploc1,loc_1754]
 p_arrivedelay;
+// THE CARNILLEAN CELLAR PUTS YOU IN THE ROCK. This ladder lands the player on their OWN tile plus
+// 6400, which is right wherever the room below is at least as wide as the room above. The cellar
+// under the Carnillean house is not: it is 2564-2570 x 9668-9672, and the ladder stands at
+// 2570,3267 with 2571,3267 a perfectly ordinary tile beside it. Approach from the east, which is
+// the side the front door is on, and the click lands you at 2571,9667 - solid rock, with nothing
+// adjacent to walk to. Checked with opfrom: 2570,3268 and 2571,3268 land at 2570,9668 and work;
+// 2571,3267 does not. The cellar has one landing tile, so name it rather than deriving it.
+if (loc_coord = 0_40_51_10_3) {
+    ~climb_ladder(0_40_151_10_4, false);
+    return;
+}
 ~climb_ladder(movecoord(coord(), 0, 0, 6400), false);
 
 [oploc1,loc_1755] // mining guild ladder
