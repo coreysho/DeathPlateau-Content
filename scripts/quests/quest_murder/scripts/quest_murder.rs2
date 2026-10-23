@@ -295,7 +295,23 @@ if(last_item = pot_flour) {
 }
 ~displaymessage(^dm_default);
 
+// WHICH WAY ROUND THE TWO HALVES ARRIVE. Neither the flypaper nor a floured item has an opheldu
+// trigger of its own, so this is reached by OpHeldUHandler's THIRD lookup - the TARGET's category -
+// and on that path last_item is the half that carried the trigger: the floured item, not the paper.
+// Both click orders land the same way (the fourth lookup swaps), so last_item was never the
+// flypaper and this script did nothing at all: no fingerprints, no ^murder_found_fingerprints, and
+// ~murderguard_conclusive_proof unreachable. Murder Mystery could not be completed.
+//
+// The proofobj trigger above is NOT the same case and is right as it stands: pot_flour has its own
+// [opheldu,pot_flour], so the flour half is found by the second lookup, declines, and
+// opheldu_decline hands the click on with last_item still the flour.
+//
+// Both orders are accepted here rather than one, so this keeps working if the flypaper is ever
+// given a trigger of its own.
 [opheldu,_murder_flourobj]
+if(last_useitem = murderpaper) {
+    @create_flourprints(last_item);
+}
 if(last_item = murderpaper) {
     @create_flourprints(last_useitem);
 }
