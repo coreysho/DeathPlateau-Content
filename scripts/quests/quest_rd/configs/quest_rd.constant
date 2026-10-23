@@ -36,10 +36,9 @@
 // ^recruitmentdrive_complete = 2 is declared once, globally, in general/configs/quest.constant.
 
 // --- Which tests this build offers ---
-// Five of the seven are built. Rooms 1 and 6 - the bridge puzzle and the chemistry lab - are the two
-// with real item chains behind them and are not built yet, so the pool is the other five and every
-// run uses all of them. When those two land, the only change needed is to widen the pool here: the
-// selection code already picks five from whatever is offered.
+// All seven are built, and a run sits five of them: rd_begin_run marks two at random as already
+// passed and the rest are handed out lowest-first. Sir Spishyus' bridge (room 1) and Miss Cheevers'
+// lab (room 6) are the two with item chains behind them; both are in the pool.
 ^rd_rooms_needed = 5
 
 // --- Where each test drops you (rooms 1 and 6) ---
