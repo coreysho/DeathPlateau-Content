@@ -90,13 +90,24 @@ if (%zogre = ^zogre_warned) {
 }
 p_telejump(^zogre_stairs_landing);
 
-[oploc1,ogre_cavedoorl] @zogre_leave_tomb;
-[oploc1,ogre_cavedoorr] @zogre_leave_tomb;
+// THE TWO SETS OF OGRE STONE DOORS ARE THE WAY IN, NOT THE WAY OUT. Both pairs teleported the
+// player up to the Jiggig surface, and the guide's step is "head west to two sets of doors, go
+// through both and down the stairs" - so the whole of the ceremonial chamber was unreachable and
+// the quest could not be finished. Flood-filled to be sure, on plane 2 of m38_147:
+//
+//   the burial tomb                 2077 tiles, and the pair at 2441-2442,9433 is in it
+//   the passage behind that pair      44 tiles, and the pair at 2440-2441,9426 is in it
+//   the corridor behind THAT pair     123 tiles, and the stairs down to the chamber are in it
+//
+// and the three pockets touch nowhere else. The tomb's own way out is the staircase at 2478,9437,
+// which ladders+stairs/scripts/stairs.rs2 already takes back up to Jiggig, and the coffins you
+// came down. So these are ordinary double doors, one leaf at a time.
+[oploc1,ogre_cavedoorl] @zogre_cave_door(ogre_cavedoorl_inactive);
+[oploc1,ogre_cavedoorr] @zogre_cave_door(ogre_cavedoorr_inactive);
 
-[label,zogre_leave_tomb]
+[label,zogre_cave_door](loc $open)
 p_arrivedelay;
-mes("You climb back up into the daylight.");
-p_teleport(^zogre_jiggig_landing);
+~open_and_close_door2($open, ~check_axis(coord, loc_coord, loc_angle), door_open);
 
 // =========================================================================== the evidence
 

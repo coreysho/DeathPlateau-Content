@@ -32,13 +32,24 @@
 // (2489,3044) on m38_47; the tomb itself is m38_147 plane 2. zogre_coffinkey is already dropped by
 // [ai_queue3] in drop_tables/scripts/zogre.rs2 and skogre.rs2, so the way in is already earnable.
 ^zogre_tomb_landing = 2_38_147_6_49
-^zogre_jiggig_landing = 0_38_47_16_39
 // The foot of the tomb's stairs up to Jiggig - the stairs' own approach side.
 ^zogre_stairs_landing = 2_38_147_45_29
 
 // Slash Bash (vislevel 111), both Sithik npcs and Brentle Vahn are the four npcs the maps never
-// place and that are not multinpc children, so the boss is spawned when the tomb is opened up.
-^zogre_bash_spawn = 2_38_147_8_50
+// place and that are not multinpc children, so the boss is spawned when the chamber is opened up.
+//
+// HE WAS SPAWNED IN THE WRONG PLACE, two planes away from the player who woke him. The old value
+// was 2_38_147_8_50 - level 2, 2440,9458 - which is the burial tomb, one tile from the coffin
+// landing; the ceremonial chamber is the LEVEL 0 plane of the same mapsquare and the player is
+// telejumped to 0_38_147_10_9. So the boss appeared behind the player at the tomb entrance, where
+// the next person down the coffin would walk into a level 111 undead, while the chamber they had
+// just unlocked was empty all the way to the stand.
+//
+// 2480,9444 is beside the artefact stand at 2483,9445, at the far end of the chamber's 853-tile
+// pocket, and is one of the 78 tiles in there that take his 3x3 footprint (blockfit) - which
+// matters, because npc_add onto a tile the npc does not fit puts him there for one tick and the
+// engine takes him away again.
+^zogre_bash_spawn = 0_38_147_48_36
 ^zogre_bash_despawn = 500
 
 // ---------------------------------------------------------------------------- the reward
