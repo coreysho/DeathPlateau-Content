@@ -278,9 +278,12 @@ if(last_useitem = troll_key_godric) {
 
 [oplocu,troll_celldoor_eadgar]
 // no nih
+// THE WRONG-KEY BRANCH TESTED THE RIGHT KEY. Both arms read troll_key_eadgar, so the second was
+// unreachable: putting Godric's key on Eadgar's cell said nothing at all, while the other cell
+// door tells you plainly that the key does not fit. Mirrors troll_celldoor_godric above.
 if(last_useitem = troll_key_eadgar) {
     @troll_unlock_cell_2;
-} else if(last_useitem = troll_key_eadgar) {
+} else if(last_useitem = troll_key_godric) {
     mes("This key doesn't open this door.");
 }
 
