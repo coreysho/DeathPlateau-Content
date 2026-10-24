@@ -28,9 +28,13 @@ if(%desertrescue = ^desertrescue_not_started) {
 } else if(%desertrescue = ^desertrescue_picked_first_skill) {
     ~chatnpc("<p,happy>Thank you very much for returning my daughter to me. I'm really very grateful... I would like to reward you for your bravery and daring. I can offer you increased knowledge in one of the following areas.");
     @irena_xpreward;
-} else if(%desertrescue = ^desertrescue_picked_first_skill) {
-    ~chatnpc("<p,happy>Thank you very much for returning my daughter to me. I'm really very grateful... I would like to reward you for your bravery and daring. I can offer you increased knowledge in one of the following areas.");
-    @irena_xpreward;
+// FIXED 2026-10-24 (walkthrough, tools/sim/quest_desertrescue_run.ts): this branch tested
+// ^desertrescue_picked_first_skill as well, so it was unreachable - the branch above it had
+// already matched. ^desertrescue_picked_second_skill is the stage it was written for: both skills
+// taken and queue(desertrescue_complete) not yet run, which is where a player who logs out in
+// that one tick comes back to. ~irena_checkrewards queues it.
+} else if(%desertrescue = ^desertrescue_picked_second_skill) {
+    @irena_checkrewards;
 } else if(%desertrescue = ^desertrescue_complete) {
     mes("Irena seems happy now that her daughter has returned home.");
     ~chatnpc("<p,neutral>Thanks so much for returning my daughter to me. I expect that she will go on another trip soon though. She is the adventurous type... a bit like yourself really! Okay, see you around then!");
