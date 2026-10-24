@@ -164,7 +164,11 @@ if(%itwatchtower >= ^itwatchtower_skavid_crystal) {
     return;
 }
 if(getbit_range(%itwatchtower_bits, ^itwatchtower_learning_skavid, ^itwatchtower_learned_nod) = calc(pow(2, 5) - 1)) {
-    def_int $mes_type = random(3);
+    // FOUR PHRASES, FOUR OUTCOMES. random(3) returns 0, 1 or 2, so "Gor nod..." - and with it the
+    // "Tanath." answer, the only use case 4 of the menu below has - could never come up: the mad
+    // skavid had three riddles where the quest gives him four, and a quarter of his own dialogue
+    // was dead. The switch has four cases, so the roll is over four.
+    def_int $mes_type = random(4);
     switch_int($mes_type) {
         case 0 : ~chatnpc("<p,bored>Ar cur...");
         case 1 : ~chatnpc("<p,bored>Bidith ig...");
