@@ -56,5 +56,12 @@
 // first-floor ladder is now a laddermiddle whose Climb-up lands here (ladders.rs2), and
 // favour_seer_laddertop is placed above it to come back down.
 ^osf_seer_ladder = 1_42_54_11_20        // 2699,3476  first floor
-^osf_seer_roof = 3_42_54_12_20          // 2700,3476  the weathervane platform
+// AUDIT 2026-10-24 (on-foot walk): this was 3_42_54_12_20 - 2700,3476 - which the map flags
+// impassable, and favour_seer_laddertop was placed at (11,20), 2699,3476, whose four side
+// neighbours are ALL impassable too. So the way down off the weathervane platform could not be
+// reached from any tile a player can stand on: you climbed up and then could never climb down.
+// The platform's walkable floor is x 2700-2704 by z 3470-3475; everything on z=3476 and on
+// x=2699 carries f1. The ladder is at (12,20) now - still a wall tile, as a ladder should be,
+// but one whose south side is floor - and the arrival is that floor tile.
+^osf_seer_roof = 3_42_54_12_19          // 2700,3475  the weathervane platform
 ^osf_seer_first_floor = 1_42_54_12_20   // 2700,3476  beside the first-floor ladder
