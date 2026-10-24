@@ -55,7 +55,16 @@ if($start_pos = ^ta_quir_priw & $dest = ^sindarpos) {
 return (-1);
 
 [opnpc1,pilot_grand_tree]
-if(%grandtree = ^grandtree_released_prison & inzone(3_38_54_31_43, 3_38_54_35_47, npc_coord) = true) {
+// THE PILOT WANDERS, and this used to ask whether he was standing inside a five-by-five patch of
+// the platform - 3_38_54_(31,43) to (35,47). He walks out of it. Caught on a walkthrough: two runs
+// in a row he was at 2464,3497 and 2464,3501, and only the second one got the escape dialogue; the
+// first got the ordinary Gnome Air menu, which at that point in the quest is a dead end, because
+// Glough has put guards on the front gate (areas/area_gnome/scripts/gnome_gate.rs2 keys off the
+// same stage) and the glider is the only way out of the stronghold.
+//
+// He is the only pilot_grand_tree on plane 3 - the other one is the crashed glider on Karamja, at
+// ground level - so the plane is the thing to ask about, and it cannot drift.
+if(%grandtree = ^grandtree_released_prison & coordy(npc_coord) = 3) {
     ~chatnpc("<p,neutral>Hi, the King said that you need to leave?");
     ~chatplayer("<p,sad>Apparently humans are invading!");
     ~chatnpc("<p,angry>I find that hard to believe!|I have lots of human friends.");
