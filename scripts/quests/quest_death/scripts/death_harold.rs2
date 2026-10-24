@@ -122,6 +122,14 @@ p_pausebutton;
 if_close;
 
 [proc,dice_winnings]
+// NOTHING TO SETTLE IS NOT A HAND TO SETTLE. ~death_get_bet is zero between hands, and settling a
+// zero bet reached inv_add(inv, coins, 0) - which is a script error, not a no-op: "An input for a
+// ObjStack was out of range. Range should be: 1 to 2147483647. Input was 0." It turned up on a
+// walkthrough of this quest, thrown out of [if_button,inter_156:com_28], because the end-of-hand
+// queue had already run and cleared the bet before the player's own roll settled it.
+if (~death_get_bet = 0) {
+    return;
+}
 %death_bits = setbit(%death_bits, ^death_goldclaimed);
 if(inv_total(inv, coins) < ~death_get_bet) {
     if(npc_find(coord, death_guard_equiproom, 5, 0) = true) {
@@ -144,10 +152,13 @@ if(~death_get_playerroll > 0 & (testbit(%death_bits, ^harold_verydrunk) = ^true 
 }
 
 [queue,haroldgamble_end]
-~death_set_bet(0);
+// SETTLE FIRST, THEN CLEAR. Clearing the bet before calling ~dice_winnings meant the settle it was
+// there to perform - the player who walks away mid-hand loses their stake - was performed with a
+// stake of zero, so walking away was free and the next roll threw the ObjStack error above.
 if(testbit(%death_bits, ^death_goldclaimed) = ^false) {
     ~dice_winnings;
 }
+~death_set_bet(0);
 if(testbit(%death_bits, ^harold_lostall) = ^true) {
     if(npc_find(coord, death_guard_equiproom, 5, 0) = true) {
         if(testbit(%death_bits, ^harold_verydrunk) = ^false) {
