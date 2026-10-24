@@ -176,7 +176,10 @@ if (inzone(0_52_53_22_23, 0_52_53_27_26, loc_coord) = true | inzone(0_52_53_22_3
 // LEVEL 3 SITES
 if (inzone(0_52_53_22_12, 0_52_53_29_20, loc_coord) = true | inzone(0_52_53_42_45, 0_52_53_49_50, loc_coord) = true) {
     if (~itexam_progress < ^itexam_impress_archeological_expert) {
-        @digworkman1_intervene_site(1);
+        // FIXED 2026-10-24 (walkthrough): this passed 1, so the workman turned a player away from
+        // a LEVEL 3 dig by telling them they had not passed the level 1 exam - which they had, and
+        // which sent you back to the examiner for a certificate you were already carrying.
+        @digworkman1_intervene_site(3);
     }
     @dig_level_3_site($item);
 }
@@ -663,7 +666,11 @@ if (last_useitem = rope) {
         anim(human_pickuptable, 0);
         inv_del(inv, rope, 1);
     } else {
-        @digsite_winch_teleport;
+        // FIXED 2026-10-24 (walkthrough, tools/sim/quest_itexam_run.ts): this said
+        // @digsite_winch_teleport, which is the WESTERN winch's shaft - so a second rope used on
+        // the private winch after it was already roped put you down the other hole, on the far
+        // side of the bricks, seventeen squares from where the click was.
+        @digsite_private_winch_teleport;
     }
 } else {
     ~displaymessage(^dm_default);
