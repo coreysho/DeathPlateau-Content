@@ -482,11 +482,19 @@ p_delay(5);
 ~mesbox("\"Six hundred years,\" he says. \"We sealed it because nobody could make it work, and we told ourselves we had sealed it for a reason, and those are not the same thing.\"");
 p_delay(3);
 %mourning_quest_main = ^mt_complete;
-stat_advance(agility, 60000);
-stat_advance(thieving, 60000);
-stat_advance(mining, 60000);
+// THE REWARD IS ONE SKILL AND IT IS SIXTY THOUSAND. This used to award 6,000 Agility, 6,000
+// Thieving and 6,000 Mining - a tenth of the one reward the quest actually gives, spread over two
+// skills it does not touch. 60,000 Agility XP, and the crystal trinket, which is the item on the
+// reward scroll and was never handed over: ~send_quest_complete only draws the obj, it does not
+// add it (the same trap as Enakhra's camulet).
+stat_advance(agility, 600000);
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, mourning_crystal_trinket, 1);
+} else {
+    obj_add(coord, mourning_crystal_trinket, 1, ^lootdrop_duration);
+}
 session_log(^log_adventure, "Quest complete: Mourning's End Part II");
-~send_quest_complete(questlist:mourning2, mourning_crystal_trinket, 200, ^mt_questpoints, "You have completed\\nMourning's End Part II!", "2 Quest Points|6,000 Agility XP|6,000 Thieving XP|6,000 Mining XP|The light temple");
+~send_quest_complete(questlist:mourning2, mourning_crystal_trinket, 200, ^mt_questpoints, "You have completed\\nMourning's End Part II!", "2 Quest Points|60,000 Agility XP|A crystal trinket|The light temple");
 
 // =========================================================================== the way in
 [proc,mt_tunnel]()(boolean)
