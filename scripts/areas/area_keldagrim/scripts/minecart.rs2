@@ -1,0 +1,167 @@
+// The Keldagrim minecart system - three stations, the hub and two spokes.
+//
+// configs/minecart.constant has the coords, the fare, and what was already on the map before this.
+// Short version: nine Cart conductors with nothing to say, two station carts whose "Ride" did
+// nothing, a hub with four platforms and no cart standing at any of them, and four tickets with
+// nowhere to be used.
+
+// ============================================================================== the conductors
+// Three of the nine stand at a station. The other six are depot staff and say so.
+[opnpc1,dwarf_city_train_conductor4] @minecart_conductor(^minecart_station_kelda);
+[opnpc1,dwarf_city_train_conductor7] @minecart_conductor(^minecart_station_ice);
+[opnpc1,dwarf_city_train_conductor6] @minecart_conductor(^minecart_station_whitewolf);
+
+[opnpc1,dwarf_city_train_conductor1] @minecart_conductor_idle;
+[opnpc1,dwarf_city_train_conductor2] @minecart_conductor_idle;
+[opnpc1,dwarf_city_train_conductor3] @minecart_conductor_idle;
+[opnpc1,dwarf_city_train_conductor5] @minecart_conductor_idle;
+[opnpc1,dwarf_city_train_conductor8] @minecart_conductor_idle;
+
+[label,minecart_conductor_idle]
+~chatnpc("<p,neutral>Carts in, carts out. Mind the track and keep your hands where I can see them.");
+
+[label,minecart_conductor](int $here)
+if (~minecart_may_travel = false) {
+    return;
+}
+if ($here = ^minecart_station_kelda) {
+    ~chatnpc("<p,quiz>Where to? The mines under Ice Mountain, or the passage under White Wolf?");
+    switch_int (~p_choice3("The dwarven mines under Ice Mountain.", 1, "The passage under White Wolf Mountain.", 2, "Nowhere, thanks.", 3)) {
+        case 1 :
+            ~chatplayer("<p,neutral>The dwarven mines under Ice Mountain.");
+            @minecart_sell(^minecart_station_ice);
+        case 2 :
+            ~chatplayer("<p,neutral>The passage under White Wolf Mountain.");
+            @minecart_sell(^minecart_station_whitewolf);
+        case default :
+            ~chatplayer("<p,neutral>Nowhere, thanks.");
+    }
+    return;
+}
+// both spokes run to the hub and nowhere else, which is what the four tickets describe
+~chatnpc("<p,quiz>This line runs to Keldagrim. Want a seat?");
+if (~p_choice2("Yes please.", 1, "No thanks.", 2) ! 1) {
+    ~chatplayer("<p,neutral>No thanks.");
+    return;
+}
+~chatplayer("<p,neutral>Yes please.");
+@minecart_sell(^minecart_station_kelda);
+
+// The fare in coins. The cart itself takes a ticket instead - see further down.
+[label,minecart_sell](int $to)
+if (~minecart_route_open($to) = false) {
+    return;
+}
+def_int $fare = ~minecart_fare;
+if (inv_total(inv, coins) < $fare) {
+    ~chatnpc("<p,neutral><tostring($fare)> coins for the seat, and you have not got it. The cart goes nowhere on credit.");
+    return;
+}
+~chatnpc("<p,neutral>That will be <tostring($fare)> coins.");
+inv_del(inv, coins, $fare);
+@minecart_ride($to);
+
+[proc,minecart_fare]()(int)
+// Old School halves the fare for a Ring of charos(a). The unlocked ring is that ring here.
+if (inv_total(worn, ring_of_charos_unlocked) > 0) {
+    return(^minecart_fare_charos);
+}
+return(^minecart_fare);
+
+// =============================================================================== the carts
+// All three carry op1=Ride and none of them had a trigger. Riding wants the ticket for that
+// direction; paying the conductor is the other way round.
+[oploc1,keldagrim_train_cart]
+p_arrivedelay;
+if (~minecart_may_travel = false) {
+    return;
+}
+if (inv_total(inv, dwarf_minecart_ticket_kelda_ice) > 0) {
+    if (~minecart_route_open(^minecart_station_ice) = false) {
+        return;
+    }
+    inv_del(inv, dwarf_minecart_ticket_kelda_ice, 1);
+    @minecart_ride(^minecart_station_ice);
+}
+if (inv_total(inv, dwarf_minecart_ticket_kelda_whitewolf) > 0) {
+    if (~minecart_route_open(^minecart_station_whitewolf) = false) {
+        return;
+    }
+    inv_del(inv, dwarf_minecart_ticket_kelda_whitewolf, 1);
+    @minecart_ride(^minecart_station_whitewolf);
+}
+@minecart_no_ticket;
+
+[oploc1,icemountain_train_cart]
+p_arrivedelay;
+if (~minecart_may_travel = false) {
+    return;
+}
+if (inv_total(inv, dwarf_minecart_ticket_ice_kelda) = 0) {
+    @minecart_no_ticket;
+}
+inv_del(inv, dwarf_minecart_ticket_ice_kelda, 1);
+@minecart_ride(^minecart_station_kelda);
+
+// No Fishing Contest check on this one: the gate the contest opens is the passage this cart sits
+// IN, so anybody standing here is past it already, and the check exists to stop the cart putting
+// somebody down behind it rather than to stop them leaving.
+[oploc1,whitewolfmountain_train_cart]
+p_arrivedelay;
+if (~minecart_may_travel = false) {
+    return;
+}
+if (inv_total(inv, dwarf_minecart_ticket_whitewolf_kelda) = 0) {
+    @minecart_no_ticket;
+}
+inv_del(inv, dwarf_minecart_ticket_whitewolf_kelda, 1);
+@minecart_ride(^minecart_station_kelda);
+
+[label,minecart_no_ticket]
+mes("You have no ticket for this cart. The conductor will sell you a seat.");
+
+// ============================================================================== the journey
+[label,minecart_ride](int $to)
+if_close;
+mes("You climb into the cart. A dwarf releases the brake and it rolls away.");
+sound_synth(door_open, 1, 0);
+p_delay(4);
+mes("The tunnel goes past in the dark, a very long way.");
+p_delay(4);
+switch_int ($to) {
+    case ^minecart_station_kelda :
+        p_teleport(^minecart_kelda_board);
+        ~mesbox("The cart runs into the Keldagrim depot and stops against the buffer.");
+    case ^minecart_station_ice :
+        p_teleport(^minecart_ice_board);
+        ~mesbox("The cart comes to a stop in the dwarven mines under Ice Mountain.");
+    case ^minecart_station_whitewolf :
+        p_teleport(^minecart_whitewolf_board);
+        ~mesbox("The cart comes to a stop in the passage under White Wolf Mountain.");
+}
+
+// ============================================================================== who may ride
+// The whole system wants The Giant Dwarf started - ^gd_arrived is the stage where the player is
+// through the tunnel and inside the city, which is the first point at which they have seen the
+// place at all. The White Wolf line additionally wants the Fishing Contest, because that is what
+// opens the passage its far end sits in; without it the cart would put a player down behind a gate
+// they cannot pass.
+// ~mesbox rather than ~chatnpc, because this is called from the carts as well as from the
+// conductors and there is no active npc on an oploc - the compiler says so: "Attempt to access
+// uninitialized pointer [ 'active_npc' ]".
+[proc,minecart_may_travel]()(boolean)
+if (%giantdwarf_quest < ^gd_arrived) {
+    ~mesbox("The Consortium's carts are for Consortium business, and you have none. Keldagrim is not somewhere you have any standing yet.");
+    return(false);
+}
+return(true);
+
+[proc,minecart_route_open](int $to)(boolean)
+if ($to ! ^minecart_station_whitewolf) {
+    return(true);
+}
+if (%fishingcompo < ^fishingcompo_complete) {
+    ~mesbox("The White Wolf line ends inside the mountain passage, and the passage is shut to you. Winning the Hemenster fishing competition is what opens it.");
+    return(false);
+}
+return(true);

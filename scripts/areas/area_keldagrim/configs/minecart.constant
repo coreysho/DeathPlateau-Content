@@ -1,0 +1,44 @@
+// The Keldagrim minecart system - https://oldschool.runescape.wiki/w/Keldagrim_minecart_system
+//
+// Three stations and almost all of it already on the map with no trigger on any of it: nine Cart
+// conductors stood about saying nothing, two station carts carried "Ride" that did nothing, and the
+// four tickets The Giant Dwarf hands out had nowhere to be used. 196 tiles of ridable track are
+// laid in the Keldagrim depot alone, in four lines ending in buffers.
+//
+// WHAT WAS AND WAS NOT PLACED, because an earlier survey of this got it backwards. It recorded "no
+// station, cart or driver placed at either end" - in fact `icemountain_train_cart` is at
+// 2995,9836 with conductor7 beside it at 2995,9837, and `whitewolfmountain_train_cart` is at
+// 2875,9868 with conductor6 at 2874,9872. What was genuinely missing is the HUB's own cart:
+// `keldagrim_train_cart` was placed nowhere, so the depot had four platforms and nothing standing
+// at any of them. It is now on the buffer line at 2909,10171, beside conductor4 at 2906,10171.
+//
+// The `mining_cart_driver` npc that survey mentions is a red herring - its one spawn is at
+// 3287,3022 in the desert and belongs to quests/quest_desertrescue.
+//
+// TWO WAYS TO TRAVEL, which is what makes the cache's four tickets mean something. The conductor
+// takes the fare in coins; the cart itself takes a TICKET, one per direction, and The Giant Dwarf
+// hands over `dwarf_minecart_ticket_kelda_ice` as part of its reward - so the quest's souvenir is a
+// free first ride rather than a mute item.
+//
+// Old School puts the fare at 100 to 150 coins and halves it for a Ring of charos(a); it does not
+// publish a figure per route, so both routes charge the same.
+^minecart_fare = 150
+^minecart_fare_charos = 75
+
+// The Grand Exchange station is not here: there is no Grand Exchange in 2006, and no fourth cart in
+// the cache. Three stations, hub and two spokes, which is what the tickets describe.
+^minecart_station_kelda = 1
+^minecart_station_ice = 2
+^minecart_station_whitewolf = 3
+
+// THE TRACK BLOCKS, and every arrival tile here was chosen twice because of it.
+// ridable_trackstraight_gdecor carries no blockwalk=no, so a track tile is solid: the Keldagrim
+// depot is lines of track at z 10169, 10171 and 10173 with the PLATFORMS in the rows between them,
+// and the first three tiles picked for arrivals were all on the track itself. A player teleported
+// onto one would have been standing inside the rails. tools/sim/minecart.ts checks every landing.
+^minecart_kelda_cart = 0_45_158_29_59       // 2909,10171 - the hub cart, on the buffer line
+^minecart_kelda_board = 0_45_158_30_60      // 2910,10172 - the platform beside it
+^minecart_ice_cart = 0_46_153_51_44         // 2995,9836 - the north-west corner of the Dwarven Mine
+^minecart_ice_board = 0_46_153_52_45        // 2996,9837 - beside the cart, by the conductor
+^minecart_whitewolf_cart = 0_44_154_59_12   // 2875,9868 - the east end of the mountain passage
+^minecart_whitewolf_board = 0_44_154_58_13  // 2874,9869 - the walkway west of the rails
