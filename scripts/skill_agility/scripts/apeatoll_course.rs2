@@ -1,0 +1,147 @@
+// The Ape Atoll Agility Course - https://oldschool.runescape.wiki/w/Ape_Atoll_Agility_Course
+//
+// Five obstacles, Agility 48, 580 experience a lap. configs/apeatoll_course.constant has what the
+// cache ships, which tile the engine takes each click from, and why the monkeybars are one obstacle
+// rather than the two the cache's two "Swing Across" locs suggest.
+
+[oploc1,loc_12568] // Stepping stone
+if (~apeatoll_blocked = true) { return; }
+p_arrivedelay;
+// The stone sits on the only blocked tile of the crossing, with 2753 one side and 2755 the other
+// and nothing else beside it, so whichever of the two the player is on names the way they are
+// going. Old School stopped this one being failable and there is no water modelled under it here,
+// so it throws nobody in.
+def_coord $to = ^apeatoll_stone_west;
+def_int $dir = ^exact_west;
+if (coordx(coord) < coordx(loc_coord)) {
+    $to = ^apeatoll_stone_east;
+    $dir = ^exact_east;
+}
+mes("You jump onto the slippery stone and across.");
+~agility_exactmove(human_steppingstonejump, 20, 2, coord, $to, 48, 60, $dir, false);
+sound_synth(jump_no_land, 1, 0);
+~agility_xp(^apeatoll_xp_stone);
+~apeatoll_progress(1);
+
+[oploc1,loc_12570] // Tropical tree, up onto the monkeybar walkway
+if (~apeatoll_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the tropical tree.");
+anim(human_climbing, 0);
+sound_synth(climb_wall, 1, 0);
+p_delay(1);
+if (~apeatoll_slipped = true) {
+    ~apeatoll_fail(^apeatoll_stone_west, "You lose your footing on the trunk and slide back down.");
+    return;
+}
+~agility_xp(^apeatoll_xp_tree);
+p_telejump(^apeatoll_tree_top);
+~apeatoll_progress(2);
+
+[oploc1,loc_12573] // Monkeybars, the whole walkway, ending on the ledge below its west end
+if (~apeatoll_blocked = true) { return; }
+p_arrivedelay;
+// The engine takes this click from 2752,2742 as well as from 2752,2741, so start by getting onto
+// the end of the walkway. Those two are adjacent and both walkable, so a clipped walk does it.
+~forcewalk2(^apeatoll_bars_start);
+mes("You swing across the monkeybars.");
+~apeatoll_bars_on;
+if (~apeatoll_slipped = true) {
+    ~apeatoll_bars_off;
+    ~apeatoll_fail(^apeatoll_bars_start, "You miss the hand hold and drop off the bars.");
+    return;
+}
+// ~forcemove rather than ~forcewalk2 for the crossing itself, because 2751 and 2748 are blocked -
+// they are the two supports the walkway hangs from - and a clipped walk will not cross them.
+~forcemove(^apeatoll_bars_west_end);
+~apeatoll_bars_off;
+p_delay(0);
+// And then let go. The west end has no floor on plane 2 and the skull slope can be reached from
+// 2747 on plane 0 and nowhere else, so that is where the bars put you; p_exactmove cannot change
+// storey, which is why this is a telejump.
+~agility_xp(^apeatoll_xp_bars);
+p_telejump(^apeatoll_slope_foot);
+~apeatoll_progress(3);
+
+[oploc1,loc_12576] // Skull slope, up over the wall of skulls and down onto the lowland
+if (~apeatoll_blocked = true) { return; }
+p_arrivedelay;
+mes("You climb the wall of skulls...");
+anim(human_climbing, 0);
+sound_synth(climbing_loop, 2, 0);
+p_delay(1);
+if (~apeatoll_slipped = true) {
+    ~apeatoll_fail(^apeatoll_slope_foot, "...and the skulls give way under your hands.");
+    return;
+}
+mes("...and down the other side.");
+~agility_xp(^apeatoll_xp_slope);
+p_telejump(^apeatoll_slope_top);
+~apeatoll_progress(4);
+
+[oploc1,loc_12578] // Rope, across the rocks at the south end of the lap
+if (~apeatoll_blocked = true) { return; }
+p_arrivedelay;
+// One direction only: forceapproach leaves the west side, so 2751,2731 is the one tile this can be
+// clicked from and the swing is always eastwards over the span.
+~forcewalk2(^apeatoll_rope_start);
+if (~apeatoll_slipped = true) {
+    anim(human_ropeswing_long_miss, 0);
+    p_delay(1);
+    ~apeatoll_fail(^apeatoll_rope_start, "You lose your grip on the rope and land hard.");
+    return;
+}
+mes("You grab the rope and swing across.");
+~agility_exactmove(human_ropeswing_long, 20, 2, coord, ^apeatoll_rope_end, 45, 70, ^exact_east, false);
+sound_synth(swing_across, 1, 0);
+~agility_xp(^apeatoll_xp_rope);
+~apeatoll_progress(5);
+
+// ============================================================================================
+
+[proc,apeatoll_blocked]()(boolean)
+if (stat(agility) < ^apeatoll_level) {
+    ~mesbox("You need an Agility level of <tostring(^apeatoll_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+// ONE ROLL FOR THE WHOLE COURSE. Old School gives the course a single level, 48, and says the
+// obstacles stop being failable at 75; it publishes no rate per obstacle. stat_random's value is
+// floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1 against a 0-255 roll, so 200
+// and 275 is 236 at level 48 - a fall about one try in thirteen - and 256 at level 75, which can no
+// longer be beaten. That is the published shape of it in two numbers.
+[proc,apeatoll_slipped]()(boolean)
+if (stat_random(agility, 200, 275) = false) {
+    return(true);
+}
+return(false);
+
+// A fall costs a little health and leaves the player on the tile they set out from, which is always
+// one they can walk off. Old School players fail the rope on purpose to get back to the start
+// quickly; nothing here teleports them, so a missed rope simply leaves them on the near side.
+[proc,apeatoll_fail](coord $to, string $message)
+%apeatoll_course_progress = 0;
+~agility_instant_fail($to, calc(((stat(hitpoints) * 6) / 100) + 1), $message);
+
+[proc,apeatoll_bars_on]
+~bas_set(human_monkeybars_ready, human_monkeybars_ready, human_monkeybars_walk,
+         human_monkeybars_ready, human_monkeybars_ready, human_monkeybars_ready, null);
+anim(human_monkeybars_on, 0);
+sound_synth(monkeybars_on, 1, 0);
+p_delay(0);
+sound_synth(monkeybars_loop, 3, 40);
+
+[proc,apeatoll_bars_off]
+anim(human_monkeybars_off, 0);
+sound_synth(monkeybars_off, 1, 0);
+~update_bas;
+
+[proc,apeatoll_progress](int $completed)
+if (calc(%apeatoll_course_progress + 1) >= $completed) {
+    %apeatoll_course_progress = $completed;
+}
+if (%apeatoll_course_progress < ^apeatoll_obstacles) { return; }
+%apeatoll_course_progress = 0;
+~agility_xp(^apeatoll_xp_lap);
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_apeatoll);

@@ -1,0 +1,70 @@
+// The Ape Atoll Agility Course - https://oldschool.runescape.wiki/w/Ape_Atoll_Agility_Course
+//
+// Agility 48. Five obstacles and a 300 experience lap bonus: 580 a lap, which is exactly what Old
+// School pays for it. Every piece of this was already on the map and not one of the locs had a
+// trigger, so a player could walk the whole course and click through it in silence.
+//
+// WHAT THE CACHE SHIPS, which is not quite the Old School course. Old School lists six obstacles:
+// stepping stone 40, tropical tree 40, monkeybars 40, skull slope 60, rope 100, and a tropical tree
+// climbed back DOWN for nothing. The five that pay are all placed here. The sixth is not: the only
+// Climb-down of that family is loc_12569, named "Temp Stone 4 Zip" in the cache and placed nowhere,
+// and nothing is lost by its absence because it paid nothing. 40 + 40 + 40 + 60 + 100 + 300 = 580
+// either way.
+//
+// AND loc_12575 IS NOT AN OBSTACLE, which took a probe to settle rather than arithmetic. The cache
+// has TWO Monkeybars locs with "Swing Across" on them - loc_12573 at the east end of the walkway
+// (2752,2741) and loc_12575 at the west end (2747,2741) - and the obvious reading is two spans with
+// the platform at 2749-2750 between them. tools/sim/apereach.ts asks the engine instead, and the
+// engine says loc_12575 can be reached from NOWHERE: its own tile is blocked on plane 2 and so is
+// every tile beside it, because 2748 is the support and 2746 has no plane 2 floor at all. So the
+// monkeybars are ONE obstacle, loc_12573, carrying the player the whole way across and paying the
+// whole 40. loc_12575 is the far anchor of the same structure and is scenery. It gets no handler,
+// because a handler nothing can ever click is dead code.
+//
+// WHERE THE ENGINE TAKES EACH CLICK FROM (tools/sim/apereach.ts, the only authority on this):
+//   loc_12568 stepping stone  2753,2742 or 2755,2742 - either side, so it is two-way
+//   loc_12570 tropical tree   2753,2742 only (forceapproach 13 shuts the other three sides)
+//   loc_12573 monkeybars      2752,2741 or 2752,2742
+//   loc_12576 skull slope     2747,2741 only
+//   loc_12578 rope            2751,2731 only (forceapproach 7 leaves the west side)
+//
+// THE LAP IS A CLIMB AND A FALL, which is what the tile heights say and what decides the order.
+// Along z 2741 the ground runs 2743 (height 131, the lowland) - 2744 and 2745 blocked, which is the
+// skull slope itself - 2746 and 2747 (117 and 103, a ledge) - 2748, 2749 and 2750 blocked, which is
+// the cliff - 2751 onwards (27, the plateau). Lower numbers are higher ground. So the plateau at
+// the east end is the top of it: the stepping stone and the tree are up there, the monkeybars carry
+// you west over the cliff and drop you on the ledge, the skull slope puts you over its lip onto the
+// lowland, and the rope swing at the south end is the last thing before the walk back to the start.
+//
+// THE SLOPE IS CLIMBED UP AND OVER. Its op is "Climb-up" and its landing is lower than the tile it
+// is climbed from, which looks contradictory until you read the heights: the ledge is 2746 (117)
+// and 2747 (103), the wall of skulls is 2745 (127) and 2744 (131), and the far side is 2743 (131).
+// You go up the wall and come down the other side, the way the barbarian course's obstacle net does.
+//
+// EXPERIENCE IS IN TENTHS OF A POINT: ~agility_xp takes xp * 10.
+^apeatoll_level = 48
+^apeatoll_obstacles = 5
+^apeatoll_xp_stone = 400
+^apeatoll_xp_tree = 400
+^apeatoll_xp_bars = 400
+^apeatoll_xp_slope = 600
+^apeatoll_xp_rope = 1000
+^apeatoll_xp_lap = 3000
+
+// WHERE EACH ONE PUTS YOU. Read off m42_42 and m43_42 and then proved with tools/sim/apecourse.ts,
+// which walks the lap and refuses any landing a player could not walk off.
+^apeatoll_stone_west = 0_43_42_1_54     // 2753,2742 - the far side of the stepping stone
+^apeatoll_stone_east = 0_43_42_3_54     // 2755,2742 - and the near side, where the lap starts
+^apeatoll_tree_top = 2_43_42_1_54       // 2753,2742 on plane 2, the top of the tropical tree
+^apeatoll_bars_start = 2_43_42_0_53     // 2752,2741 - the east end of the walkway
+^apeatoll_bars_west_end = 2_42_42_59_53 // 2747,2741 - the west end, which has no floor to stand on
+^apeatoll_slope_foot = 0_42_42_59_53    // 2747,2741 on plane 0 - the ledge the bars drop you onto
+^apeatoll_slope_top = 0_42_42_55_53     // 2743,2741 - and the lowland past the skull slope
+^apeatoll_rope_start = 0_42_42_63_43    // 2751,2731 - the only tile the rope takes a click from
+^apeatoll_rope_end = 0_43_42_4_43       // 2756,2731 - and the first standable tile past its span
+
+// THE LEDGE IS AN ISLAND ON PURPOSE. 2746,2741 and 2747,2741 are the only two unblocked tiles on
+// the cliff face - 2745 and 2748 are blocked, and so is everything at z 2740 and 2742 between them
+// - and the skull slope is reachable from 2747 and nowhere else, which is what makes the bars'
+// landing unambiguous. Being shut in there is fine, because the slope is gated on the same course
+// level as the bars that put you there: anyone who crossed can climb out.
