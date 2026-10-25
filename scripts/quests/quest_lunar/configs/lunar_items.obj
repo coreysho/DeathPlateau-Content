@@ -646,6 +646,10 @@ tradeable=no
 // TODO by hand: weight, category, param= combat bonuses, equip requirement
 weight=1360g
 category=light_source_unlit
+// param=product is what the tinderbox reads ([label,ignite_light_source] in
+// skill_firemaking/scripts/light_source.rs2). Without it the category matched, the handler ran and
+// oc_param returned nothing, so a tinderbox on this lantern deleted it and gave back nothing.
+param=product,lunar_emerald_lantern_lit
 
 [lunar_emerald_lantern_lit]
 name=Emerald lantern

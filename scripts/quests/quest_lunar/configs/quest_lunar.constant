@@ -135,6 +135,55 @@
 ^lunar_me_spawn = 2_28_79_31_32
 
 // The Lunar Isle mine (474 m36_161, planes 2 and 3): down the ladder at 2142,3944.
+// ======================================================= the Lady Zay, moored at Pirates' Cove
+// Four decks are drawn and three of them are walkable: plane 0 is the hold, plane 1 the gun deck,
+// plane 2 the main deck. Plane 3 carries the wheel and the masts and has no walls anywhere in the
+// mapsquare, so its stairs are deliberately left unhandled - a player let up there could walk off
+// over the sea.
+//
+// Getting aboard is two ladders and a gangplank, all of it already on the map and none of it
+// wired before this: loc474_16959 / loc474_16961 are the halves of a ladder, placed at the shore
+// (2212,3809) and again on the pier (2214,3801), and loc474_16898 is the gangplank at 2217-2219,
+// z 3797, which walks straight onto the main deck at 2220,3797. loc474_16945 / loc474_16947 are
+// the ship's own stairs between the three decks.
+^lunar_zay_crew = 5
+^lunar_zay_symbols = 5
+
+// The five crew, in the order the quest insists on. Old School is strict about it and so is this:
+// asking out of turn gets a brush-off and counts for nothing.
+^lunar_crew_shultz = 1
+^lunar_crew_cabinboy = 2
+^lunar_crew_burns = 3
+^lunar_crew_lee = 4
+^lunar_crew_daveyboy = 5
+
+// The five symbols. Each loc type is placed many times over, so every handler switches on
+// loc_coord - these are the ones the cabin boy actually drew on.
+^lunar_symbol_cannon = 1_34_59_48_26     // 2224,3802 - loc474_16939, the one cannon amidships
+^lunar_symbol_wallchart = 2_34_59_46_14  // 2222,3790 - loc474_16975, the southernmost room
+^lunar_symbol_chest = 0_34_59_47_35      // 2223,3811 - loc474_16891, the northernmost chest in the
+// hold a player can actually get to. There is one further forward at 2223,3813 and cargo has it
+// walled in on every side - tools/sim/locreach.ts reports it reachable from nowhere at all, and
+// so does the chest at 2228,3791. Three of the six chests on this ship are decoration.
+^lunar_symbol_support = 0_34_59_48_17    // 2224,3793 - loc474_16951, the hold's support
+^lunar_symbol_crate = 0_34_59_50_14      // 2226,3790 - loc474_16862, the crate by the cooking range
+
+// The pier ladders and the ship's stairs: the tile each one puts you on. Read off m34_59 - the
+// ladders' own tiles are blocked on the deck above, which is why the landings are not simply the
+// same square one floor up.
+^lunar_zay_shore_foot = 0_34_59_36_33    // 2212,3809 - the shore ladder
+^lunar_zay_shore_head = 1_34_59_37_33    // 2213,3809 - and the pier walkway above it
+^lunar_zay_rock_foot = 0_34_59_37_19     // 2213,3795 - the ladder down to the rocks
+^lunar_zay_rock_head = 1_34_59_37_20     // 2213,3796
+^lunar_zay_pier_foot = 1_34_59_38_25     // 2214,3801 - the pier's own ladder
+^lunar_zay_pier_head = 2_34_59_38_24     // 2214,3800 - the pier deck, and the gangplank
+^lunar_zay_hold_foot = 0_34_59_49_32     // 2225,3808 - the hold stairs
+^lunar_zay_hold_head = 1_34_59_49_31     // 2225,3807 - the gun deck
+^lunar_zay_wstair_foot = 1_34_59_46_16   // 2222,3792 - the west stairs, gun deck to main deck
+^lunar_zay_wstair_head = 2_34_59_45_16   // 2221,3792
+^lunar_zay_estair_foot = 1_34_59_50_16   // 2226,3792 - and the east stairs
+^lunar_zay_estair_head = 2_34_59_50_16   // 2226,3792
+
 ^lunar_mine_entrance = 0_33_61_30_40
 ^lunar_mine_bottom = 2_36_161_30_41
 

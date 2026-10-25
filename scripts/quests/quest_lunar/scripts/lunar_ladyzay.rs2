@@ -1,0 +1,419 @@
+// Lunar Diplomacy, the Lady Zay - stages 20 to 70, which had no writer at all.
+//
+// With the Seal of Passage in hand, [label,lunar_bentley] used to sail you straight to Lunar Isle
+// and set ^lunar_arrived 80, so ^lunar_sailed_circle, ^lunar_jinxed, ^lunar_questioning,
+// ^lunar_confessed and ^lunar_symbols_gone were five stages nothing could reach, %lunar_bits was
+// never touched, and lunar_emerald_lens, lunar_emerald_lantern and lunar_emerald_lantern_lit were
+// three objs nothing in the game could make. The walk reported the quest complete because it
+// completed through that bypass, not because this chapter was here.
+//
+// Everything it needs was already on the map. All seven crew are declared in lunar_npcs.npc and
+// the ship is drawn across four planes in m34_59; what was missing was any npc spawn - the
+// mapsquare had two NPC lines in the whole of it, Lokar and Bentley, both standing on the dock -
+// and a trigger on any of the ladders, stairs or symbol carriers. Bentley has moved aboard and the
+// other six are spawned where the Old School guide puts them. configs/quest_lunar.constant has the
+// coords, and the reason plane 3 is left alone.
+//
+// THE ORDER MATTERS, and Old School says so twice over: the five crew have to be questioned in
+// turn, and the lantern has to be lit before a mark can be seen at all. Asking out of turn gets a
+// brush-off that counts for nothing, and the five symbol carriers have no op of their own - they
+// are scenery until something is used on them, which is what makes a mark invisible until the lens
+// is in front of a flame.
+
+// =============================================================== aboard: the ladders and stairs
+// None of these had a trigger, so climbing the Lady Zay said nothing at all. The landings are not
+// simply the same square one floor up: a ladder's own tile is blocked on the deck above it, which
+// is the whole reason each placement has to be named. The Lunar Isle copy of this ship (m33_60 and
+// m33_61) is deliberately NOT wired - nothing up there belongs to a quest, and its decks have not
+// been checked for a landing that would strand somebody.
+[oploc1,loc474_16959] // Ladder, the climbing-up half
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case ^lunar_zay_shore_foot : ~climb_ladder(^lunar_zay_shore_head, true);
+    case ^lunar_zay_rock_foot : ~climb_ladder(^lunar_zay_rock_head, true);
+    case ^lunar_zay_pier_foot : ~climb_ladder(^lunar_zay_pier_head, true);
+    case default : ~displaymessage(^dm_default);
+}
+
+[oploc1,loc474_16961] // Ladder, the climbing-down half
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case ^lunar_zay_shore_head : ~climb_ladder(^lunar_zay_shore_foot, false);
+    case ^lunar_zay_rock_head : ~climb_ladder(^lunar_zay_rock_foot, false);
+    case ^lunar_zay_pier_head : ~climb_ladder(^lunar_zay_pier_foot, false);
+    case default : ~displaymessage(^dm_default);
+}
+
+[oploc1,loc474_16945] // Stairs, the lower half
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case ^lunar_zay_hold_foot : ~climb_ladder(^lunar_zay_hold_head, true);
+    case ^lunar_zay_wstair_foot : ~climb_ladder(^lunar_zay_wstair_head, true);
+    case ^lunar_zay_estair_foot : ~climb_ladder(^lunar_zay_estair_head, true);
+    case default : ~displaymessage(^dm_default);
+}
+
+[oploc1,loc474_16947] // Stairs, the upper half
+p_arrivedelay;
+switch_coord (loc_coord) {
+    case ^lunar_zay_hold_head : ~climb_ladder(^lunar_zay_hold_foot, false);
+    case ^lunar_zay_wstair_head : ~climb_ladder(^lunar_zay_wstair_foot, false);
+    case ^lunar_zay_estair_head : ~climb_ladder(^lunar_zay_estair_foot, false);
+    case default : ~displaymessage(^dm_default);
+}
+
+// ====================================================================== Captain Bentley, aboard
+// Reached from [label,lunar_bentley] while the quest is between the seal and the marks being gone.
+// Four beats: he sails and comes back where he started, he is baffled and sends you below, he
+// hears what his navigator worked out, and he sets you to questioning the crew.
+[label,lunar_zay_bentley]
+if (%lunar_quest = ^lunar_has_seal) {
+    ~chatnpc("<p,quiz>Aye? What can I do for you?");
+    if (~p_choice2("Can we sail to Lunar Isle now?", 1, "Nothing, thanks.", 2) ! 1) {
+        ~chatplayer("<p,neutral>Nothing, thanks.");
+        return;
+    }
+    ~chatplayer("<p,quiz>Can we sail to Lunar Isle now?");
+    ~chatnpc("<p,happy>Aye. Hold on to something.");
+    if_close;
+    mes("Captain Bentley gives the order and the Lady Zay stands out of the cove.");
+    p_delay(4);
+    mes("The sea goes past for a long while.");
+    p_delay(4);
+    ~mesbox("...and then Pirates' Cove comes back over the bow. The Lady Zay has sailed a circle and tied up exactly where she started.");
+    %lunar_quest = ^lunar_sailed_circle;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+    return;
+}
+if (%lunar_quest = ^lunar_sailed_circle) {
+    ~chatnpc("<p,sad>Thirty years on this water and I have never once put a ship back where I took her from.");
+    ~chatplayer("<p,quiz>What happened?");
+    ~chatnpc("<p,confused>North the whole way. I would swear to it. Ask my navigator - he is below on the gun deck, through the door and down the south stairs. If his charts say north then something else is wrong.");
+    return;
+}
+if (%lunar_quest = ^lunar_jinxed) {
+    if (%lunar_blamed_navigator = 0) {
+        ~chatnpc("<p,quiz>Well? Did Jack have anything for ye?");
+        switch_int (~p_choice2("He says the ship is jinxed.", 1, "He says your navigation is at fault.", 2)) {
+            case 1 :
+                ~chatplayer("<p,neutral>He says the ship is jinxed.");
+                ~chatnpc("<p,angry>Jinxed. On my ship.");
+            case 2 :
+                ~chatplayer("<p,neutral>He says your navigation is at fault.");
+                ~chatnpc("<p,angry>Does he now. Jack's eyes are the only part of him worth the biscuit, and his charts were right - so it is not the navigation. It is the ship.");
+        }
+        %lunar_blamed_navigator = 1;
+        ~chatnpc("<p,neutral>Somebody aboard has marked her. Five in the crew and one of them did it.");
+        ~chatnpc("<p,neutral>Go and ask them. Shultz at the bow first, then the boy, then Burns in the hold, then Lee, then Davey-boy - in that order, or they will close ranks on ye.");
+        %lunar_quest = ^lunar_questioning;
+        ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+        return;
+    }
+    ~chatnpc("<p,neutral>Shultz, the boy, Burns, Lee, Davey-boy. In that order.");
+    return;
+}
+if (%lunar_quest = ^lunar_questioning) {
+    if (%lunar_crew_asked < ^lunar_zay_crew) {
+        ~chatnpc("<p,neutral>Keep at them. <tostring(%lunar_crew_asked)> of the five so far.");
+        return;
+    }
+    ~chatnpc("<p,neutral>All five, and not a word of use between them. Go back to the boy - he is the one who would not look at me.");
+    return;
+}
+if (%lunar_quest = ^lunar_confessed) {
+    ~chatnpc("<p,neutral>The boy's marks. Find them and rub them out, every one, or we sail in circles until the biscuit runs out.");
+    ~chatnpc("<p,neutral>Ye will not see them with the naked eye. That is what the lens is for.");
+    return;
+}
+~chatnpc("<p,quiz>Aye? What can I do for you?");
+
+// ========================================================================== Bird's-Eye Jack
+[label,lunar_zay_jack]
+if (%lunar_quest = ^lunar_sailed_circle) {
+    ~chatplayer("<p,quiz>We sailed in a circle. Was that the navigation?");
+    ~chatnpc("<p,angry>It was not. I had her north by the stars and north by the chart and north by the rutter, and north is where she went.");
+    ~chatnpc("<p,confused>And then she was here. That is not weather and it is not current.");
+    ~chatplayer("<p,quiz>What is it, then?");
+    ~chatnpc("<p,neutral>She is jinxed. Marked. I saw it done once before, off the Hook - somebody draws on a ship and she will not leave the place she was drawn in.");
+    %lunar_quest = ^lunar_jinxed;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+    ~chatnpc("<p,neutral>Tell the captain. He will not like hearing it from me.");
+    return;
+}
+if (%lunar_quest = ^lunar_jinxed) {
+    ~chatnpc("<p,neutral>Told him yet? He will want it from you, not from me.");
+    return;
+}
+if (%lunar_quest = ^lunar_questioning | %lunar_quest = ^lunar_confessed) {
+    ~chatnpc("<p,neutral>Marks on a ship are drawn small and drawn dark. Green glass is the old trick for seeing them - an emerald, ground thin, in front of a flame.");
+    return;
+}
+~chatnpc("<p,neutral>Navigator of the Lady Zay, that's me. Best eyes on the northern sea, and don't let the captain tell you otherwise.");
+
+// ============================================================================ the five crew
+// Out of turn gets a brush-off and advances nothing, which is Old School's rule for this.
+[label,lunar_zay_out_of_turn]
+~chatnpc("<p,neutral>Ask me when the captain has worked through the rest of us. I will not go first.");
+
+[proc,lunar_zay_asking]()(boolean)
+if (%lunar_quest = ^lunar_questioning) {
+    return(true);
+}
+return(false);
+
+[opnpc1,eagleeye_shultz]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (~lunar_zay_asking = false) {
+    ~chatnpc("<p,neutral>Bow watch. Nothing to see but water, and I have seen it.");
+    return;
+}
+if (%lunar_crew_asked ! calc(^lunar_crew_shultz - 1)) {
+    @lunar_zay_out_of_turn;
+}
+~chatplayer("<p,quiz>Somebody has marked the ship. Was it you?");
+~chatnpc("<p,angry>Marked her? I am the lookout. If anybody had been chalking the hull I would have seen them from up here.");
+~chatplayer("<p,quiz>Did you see anyone?");
+~chatnpc("<p,confused>Only the boy, and the boy goes everywhere. That is what a boy is for.");
+%lunar_crew_asked = ^lunar_crew_shultz;
+
+[opnpc1,beefy_burns]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (~lunar_zay_asking = false) {
+    ~chatnpc("<p,neutral>Cargo. Mine. Do not touch it.");
+    return;
+}
+if (%lunar_crew_asked ! calc(^lunar_crew_burns - 1)) {
+    @lunar_zay_out_of_turn;
+}
+~chatplayer("<p,quiz>Somebody has marked the ship. Was it you?");
+~chatnpc("<p,angry>I shift barrels. I do not draw.");
+~chatplayer("<p,quiz>Has anyone been down here?");
+~chatnpc("<p,neutral>The boy was behind the support there a good while and came out with his hands black. Said he had been counting.");
+%lunar_crew_asked = ^lunar_crew_burns;
+
+[opnpc1,lecherous_lee]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (~lunar_zay_asking = false) {
+    ~chatnpc("<p,happy>Fine day. Finer company.");
+    return;
+}
+if (%lunar_crew_asked ! calc(^lunar_crew_lee - 1)) {
+    @lunar_zay_out_of_turn;
+}
+~chatplayer("<p,quiz>Somebody has marked the ship. Was it you?");
+~chatnpc("<p,happy>I have written on a great many things in my time but never on a ship.");
+~chatplayer("<p,quiz>Who has, then?");
+~chatnpc("<p,neutral>The boy had a stick of charcoal off me. Said it was for a letter home. He cannot write.");
+%lunar_crew_asked = ^lunar_crew_lee;
+
+[opnpc1,first_mate_daveyboy]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (~lunar_zay_asking = false) {
+    ~chatnpc("<p,neutral>First mate. Speak to the captain, he is the one with the hat.");
+    return;
+}
+if (%lunar_crew_asked ! calc(^lunar_crew_daveyboy - 1)) {
+    @lunar_zay_out_of_turn;
+}
+~chatplayer("<p,quiz>Somebody has marked the ship. Was it you?");
+~chatnpc("<p,angry>I would put a man over the side for it.");
+~chatplayer("<p,quiz>And a boy?");
+~chatnpc("<p,sad>...the boy has been sick twice this week and neither time at sea. Ask him again. Ask him properly.");
+%lunar_crew_asked = ^lunar_crew_daveyboy;
+
+// ================================================================================ the cabin boy
+// Twice: once in his turn, where he says nothing useful, and once after all five, where he breaks.
+// The second one hands over two items, so it wants two free spaces - Old School says the same.
+[opnpc1,cabin_boy]
+if (~lunar_has_seal = false) {
+    @lunar_no_seal;
+}
+if (%lunar_quest >= ^lunar_confessed & %lunar_quest < ^lunar_symbols_gone) {
+    @lunar_zay_boy_again;
+}
+if (~lunar_zay_asking = false) {
+    ~chatnpc("<p,neutral>I am not meant to talk to passengers.");
+    return;
+}
+if (%lunar_crew_asked = ^lunar_zay_crew) {
+    @lunar_zay_boy_confess;
+}
+if (%lunar_crew_asked ! calc(^lunar_crew_cabinboy - 1)) {
+    @lunar_zay_out_of_turn;
+}
+~chatplayer("<p,quiz>Somebody has marked the ship. Was it you?");
+~chatnpc("<p,scared>No.");
+~chatplayer("<p,quiz>You answered that very quickly.");
+~chatnpc("<p,scared>...I have work to do.");
+%lunar_crew_asked = ^lunar_crew_cabinboy;
+
+[label,lunar_zay_boy_confess]
+~chatplayer("<p,neutral>Every one of them says you were there, with charcoal, with black hands.");
+~chatnpc("<p,scared>I did not want to go! My mother is on the mainland and the Moon Clan turn people inside out, everybody says so!");
+~chatplayer("<p,quiz>So you jinxed the ship.");
+~chatnpc("<p,sad>A pedlar in Rellekka sold me the marks and the glass to see them by. Five of them. I thought she would simply not sail.");
+if (inv_freespace(inv) < 2) {
+    ~chatnpc("<p,sad>I will give you the lens and a lantern to put it in - but your hands are full.");
+    ~mesbox("You need two free inventory spaces for the lens and the lantern.");
+    return;
+}
+~chatnpc("<p,sad>Here. The glass, and a lantern to put it in. Do not tell the captain it was me.");
+inv_add(inv, lunar_emerald_lens, 1);
+inv_add(inv, bullseye_lantern_nolens, 1);
+%lunar_quest = ^lunar_confessed;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+~mesbox("The cabin boy hands you an emerald lens and an unfinished bullseye lantern. Put the lens in the lantern, light it, and the marks will show.");
+
+[label,lunar_zay_boy_again]
+if (~obj_gettotal(lunar_emerald_lens) = 0 & ~obj_gettotal(lunar_emerald_lantern) = 0 & ~obj_gettotal(lunar_emerald_lantern_lit) = 0) {
+    if (inv_freespace(inv) < 1) {
+        ~chatnpc("<p,sad>I have another lens, but your hands are full.");
+        return;
+    }
+    ~chatnpc("<p,sad>You lost it? I have one more. That is the last of them.");
+    inv_add(inv, lunar_emerald_lens, 1);
+    return;
+}
+~chatnpc("<p,sad>Five marks. The cannon, the chart in the aft room, the chest and the support in the hold, and the crate by the range. Please hurry.");
+
+// ======================================================================== the lens and the lamp
+// The lens goes into any bullseye lantern. Old School documents all three of these because the
+// boy's lantern has no oil in it: an unfinished one gives you an unlit emerald lantern to light
+// yourself, and putting the lens into a lantern you already had lit skips that step.
+[opheldu,lunar_emerald_lens]
+def_obj $other = last_useitem;
+if ($other = lunar_emerald_lens) {
+    $other = last_item;
+}
+switch_obj ($other) {
+    case bullseye_lantern_nolens, bullseye_lantern_empty, bullseye_lantern_unlit :
+        inv_del(inv, lunar_emerald_lens, 1);
+        inv_del(inv, $other, 1);
+        inv_add(inv, lunar_emerald_lantern, 1);
+        mes("You fit the emerald lens into the lantern.");
+    case bullseye_lantern_lit :
+        inv_del(inv, lunar_emerald_lens, 1);
+        inv_del(inv, bullseye_lantern_lit, 1);
+        inv_add(inv, lunar_emerald_lantern_lit, 1);
+        mes("You fit the emerald lens into the lit lantern. The light turns a strange green.");
+    case default :
+        ~displaymessage(^dm_default);
+}
+
+// The lit lantern's Extinguish sits on op3, so it needs its own trigger the way the op2 ones do.
+[opheld3,lunar_emerald_lantern_lit] ~extinguish_light_source(lunar_emerald_lantern);
+
+// ============================================================================== the five marks
+// None of these five locs has an op of its own - they are scenery until the lantern is used on
+// them, which is exactly what makes a mark invisible until you can see it. Each loc type is placed
+// many times over on this ship, so every one switches on loc_coord: the cannon handler covers one
+// cannon out of sixteen, the chest handler one chest out of six.
+[proc,lunar_zay_rubbing]()(boolean)
+if (%lunar_quest ! ^lunar_confessed) {
+    return(false);
+}
+if (last_useitem ! lunar_emerald_lantern_lit) {
+    return(false);
+}
+return(true);
+
+[proc,lunar_zay_rub](string $where)
+mes("Green light picks out a mark drawn small and dark on the <$where>.");
+p_delay(1);
+anim(human_pickupfloor, 0);
+p_delay(2);
+mes("You rub it away.");
+~lunar_zay_symbol_count;
+
+[proc,lunar_zay_symbol_count]
+def_int $done = 0;
+if (%lunar_rubbed_cannon = 1) {
+    $done = calc($done + 1);
+}
+if (%lunar_rubbed_wallchart = 1) {
+    $done = calc($done + 1);
+}
+if (%lunar_rubbed_chest = 1) {
+    $done = calc($done + 1);
+}
+if (%lunar_rubbed_support = 1) {
+    $done = calc($done + 1);
+}
+if (%lunar_rubbed_crate = 1) {
+    $done = calc($done + 1);
+}
+if ($done < ^lunar_zay_symbols) {
+    mes("<tostring($done)> of the five marks are gone.");
+    return;
+}
+%lunar_quest = ^lunar_symbols_gone;
+~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+~mesbox("That is the last of the five. Tell Captain Bentley the Lady Zay is clean.");
+
+[oplocu,loc474_16939] // Cannon
+if (loc_coord ! ^lunar_symbol_cannon | ~lunar_zay_rubbing = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%lunar_rubbed_cannon = 1) {
+    mes("There is nothing left on the cannon.");
+    return;
+}
+%lunar_rubbed_cannon = 1;
+~lunar_zay_rub("cannon's carriage");
+
+[oplocu,loc474_16975] // Wallchart
+if (loc_coord ! ^lunar_symbol_wallchart | ~lunar_zay_rubbing = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%lunar_rubbed_wallchart = 1) {
+    mes("There is nothing left on the wallchart.");
+    return;
+}
+%lunar_rubbed_wallchart = 1;
+~lunar_zay_rub("corner of the wallchart");
+
+[oplocu,loc474_16891] // Chest
+if (loc_coord ! ^lunar_symbol_chest | ~lunar_zay_rubbing = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%lunar_rubbed_chest = 1) {
+    mes("There is nothing left on the chest.");
+    return;
+}
+%lunar_rubbed_chest = 1;
+~lunar_zay_rub("lid of the chest");
+
+[oplocu,loc474_16951] // Support
+if (loc_coord ! ^lunar_symbol_support | ~lunar_zay_rubbing = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%lunar_rubbed_support = 1) {
+    mes("There is nothing left on the support.");
+    return;
+}
+%lunar_rubbed_support = 1;
+~lunar_zay_rub("back of the support");
+
+[oplocu,loc474_16862] // Crate
+if (loc_coord ! ^lunar_symbol_crate | ~lunar_zay_rubbing = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%lunar_rubbed_crate = 1) {
+    mes("There is nothing left on the crate.");
+    return;
+}
+%lunar_rubbed_crate = 1;
+~lunar_zay_rub("side of the crate");

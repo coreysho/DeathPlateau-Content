@@ -168,6 +168,12 @@ if (~lunar_has_seal = false) {
     ~chatnpc("<p,neutral>Not without a Seal of Passage you don't. The Moon Clan would have you inside out before you were off the gangplank. Brundt will give you another.");
     return;
 }
+// THE JINX, which this used to skip straight over. Between the seal and the five marks being
+// rubbed out, every word Bentley has belongs to scripts/lunar_ladyzay.rs2: the first attempt
+// sails a circle, and the voyage only works once the ship is clean.
+if (%lunar_quest < ^lunar_symbols_gone) {
+    @lunar_zay_bentley;
+}
 ~chatnpc("<p,quiz>Aye? What can I do for you?");
 if (~p_choice2("Can we sail to Lunar Isle now?", 1, "Nothing, thanks.", 2) ! 1) {
     ~chatplayer("<p,neutral>Nothing, thanks.");
@@ -189,7 +195,7 @@ if (coordz(coord) > ^lunar_isle_north_z) {
 mes("You board the Lady Zay, and Captain Bentley sets a course north.");
 p_delay(4);
 p_telejump(^lunar_isle_pier);
-if (%lunar_quest = ^lunar_has_seal) {
+if (%lunar_quest = ^lunar_symbols_gone) {
     %lunar_quest = ^lunar_arrived;
     ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
     ~mesbox("The Lady Zay comes alongside a pier of white stone. This is Lunar Isle, and the Moon Clan are watching you from the rocks.");
@@ -202,6 +208,11 @@ if (%lunar_quest = ^lunar_has_seal) {
 [opnpc1,birdseye_jack]
 if (~lunar_has_seal = false) {
     @lunar_no_seal;
+}
+// The navigator is the one who works out what is wrong with the ship, so the jinx chapter owns
+// him from the failed voyage until the marks are gone (scripts/lunar_ladyzay.rs2).
+if (%lunar_quest >= ^lunar_sailed_circle & %lunar_quest < ^lunar_symbols_gone) {
+    @lunar_zay_jack;
 }
 // Dream Mentor. Jack keeps Cyrisus's bank account and that conversation is the only way to get
 // Cyrisus's equipment, so the quest claims him while it is waiting on it and hands him straight

@@ -139,3 +139,43 @@ endbit=8
 basevar=lunar_task
 startbit=9
 endbit=9
+
+// ======================================================= the Lady Zay's jinx, all on %lunar_bits
+// How many of the five crew have been questioned, in order. 0 to 5.
+[lunar_crew_asked]
+basevar=lunar_bits
+startbit=0
+endbit=2
+
+// One bit per symbol rubbed out, so none of them can be done twice.
+[lunar_rubbed_cannon]
+basevar=lunar_bits
+startbit=3
+endbit=3
+
+[lunar_rubbed_wallchart]
+basevar=lunar_bits
+startbit=4
+endbit=4
+
+[lunar_rubbed_chest]
+basevar=lunar_bits
+startbit=5
+endbit=5
+
+[lunar_rubbed_support]
+basevar=lunar_bits
+startbit=6
+endbit=6
+
+[lunar_rubbed_crate]
+basevar=lunar_bits
+startbit=7
+endbit=7
+
+// Set once Bentley has been told his navigator is the one who worked it out, which is what makes
+// him set you to questioning the crew.
+[lunar_blamed_navigator]
+basevar=lunar_bits
+startbit=8
+endbit=8
