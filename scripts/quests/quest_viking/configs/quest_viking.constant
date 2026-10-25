@@ -60,7 +60,11 @@
 // Eight candidate tiles across the moors south and east of Rellekka (m41_56 and m42_56, outside the
 // town walls), each verified walkable at level 0 with three clear tiles in every direction so the
 // spawn can never land inside a wall or a building.
-^viking_draugen_spot_1 = 0_41_56_14_38
+// FIXED 2026-10-24 (walkthrough, tools/sim/quest_viking_run.ts): this was 0_41_56_14_38, which
+// is 2638,3622 - a blocked tile. The butterfly and then the Draugen were being npc_add-ed
+// inside a rock, where neither could move and the player could only ever reach them from a
+// diagonal. The other seven spots are all standable; this one is now the open tile beside it.
+^viking_draugen_spot_1 = 0_41_56_13_38
 ^viking_draugen_spot_2 = 0_41_56_23_28
 ^viking_draugen_spot_3 = 0_41_56_26_45
 ^viking_draugen_spot_4 = 0_41_56_39_44
