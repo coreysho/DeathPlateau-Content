@@ -1,0 +1,63 @@
+// Temple Trekking's working state, all on templetrek_temp_var.
+//
+// It has to go here because the cache has already spent every bit of templetrek_main_var:
+// npcs_visible 0, npc_point_value 1-13, button_control 14, last_event 15-18, event_flash 19-23,
+// multi_npc_food_give 24-27, debug_room_id 28-31. templetrek_temp_var (varp 702) is declared in the
+// cache with no varbits on it at all, which is where a trek in progress belongs - it is temporary by
+// definition and a logout should not leave somebody half way across the swamp.
+
+// Which route: 0 none, 1 the swamp, 2 the Salve, 3 the Hollows.
+[trek_route]
+basevar=templetrek_temp_var
+startbit=0
+endbit=1
+
+// Which of the six is being escorted, 1-6, or 0 for nobody.
+[trek_escort]
+basevar=templetrek_temp_var
+startbit=2
+endbit=4
+
+// Which of the fourteen rooms the player is standing in, 1-14.
+[trek_room]
+basevar=templetrek_temp_var
+startbit=5
+endbit=8
+
+// How many rooms are behind them. The route's leg count is what it has to reach.
+[trek_leg]
+basevar=templetrek_temp_var
+startbit=9
+endbit=12
+
+// Set once the room's event is resolved, which is what opens its Continue-trek path.
+[trek_event_done]
+basevar=templetrek_temp_var
+startbit=13
+endbit=13
+
+// How many of the event's monsters are down, and how many it put out in the first place. Route 2
+// lets a player evade once half of them are dead, which needs both numbers.
+[trek_kills]
+basevar=templetrek_temp_var
+startbit=14
+endbit=17
+
+[trek_spawned]
+basevar=templetrek_temp_var
+startbit=18
+endbit=21
+
+// The bridge, 0 to 3, because the cache's bridge is a three-stage repair and not a flag: broken ->
+// "Partially broken" -> "Sightly broken" [sic] -> "Fixed bridge", and only the last of the four
+// carries op2=Walk-across. Three pieces of wood, and crossing is a click rather than a walk.
+[trek_bridge_fixed]
+basevar=templetrek_temp_var
+startbit=22
+endbit=23
+
+// The vine crossing: 0 nothing, 1 a vine cut, 2 a rope made and tied.
+[trek_vine_state]
+basevar=templetrek_temp_var
+startbit=24
+endbit=25

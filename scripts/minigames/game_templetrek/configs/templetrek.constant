@@ -1,0 +1,189 @@
+// Temple Trekking - https://oldschool.runescape.wiki/w/Temple_Trekking
+//
+// Escort a volunteer from Burgh de Rott to Paterdomus through Mort Myre, defending them on the way.
+// Unlocked by In Aid of the Myreque. None of it was written; all of it was on the map.
+//
+// WHAT THE CACHE ALREADY HAD, which is almost everything:
+//
+//   * Six escorts, SPAWNED in Burgh de Rott and invisible behind a multivar. Their multi forms sit
+//     at 3475-3481, 3235-3241 with multivar=templetrek_npcs_visible and multinpc=1,<escort>, so one
+//     varbit makes all six appear. They are Old School's own six: Dalcian Fang and Fyiona Fray
+//     (easy), Valantay Eppel and Jayene Kliyn (medium), Rolayne Twickit and Smiddi Ryak (hard).
+//   * Seven map regions, m31_78 to m37_78, holding FOURTEEN rooms - which is exactly the number of
+//     events Old School lists. Each room is its own island of floor with a Path loc at each way
+//     out: op2=Continue-trek to go on, op2=Escape to abandon, op2=Evade-event to slip past.
+//   * Every event monster, in THREE tiers, which is the three routes: Swamp snake 80/109/139,
+//     Ghast 79/109/139, Giant snail 80/109/139, Juvinate 59/90/119, shadow 80/110/140. Old School
+//     puts route 1 at about level 80, route 2 at 110 and route 3 at 140, so tier n IS route n.
+//   * The three reward tokens, 27 tomes of experience (nine skills x three routes), the vine rope
+//     parts, the snail shell, the swamp snake hide and the branch.
+//   * A 13-bit templetrek_npc_point_value, which holds 0-8191 - and Old School's point range for a
+//     trek is 325 to 8,000.
+//
+// WHAT IT DID NOT HAVE: a single line of script, and no varbits on templetrek_temp_var. The cache
+// uses every bit of templetrek_main_var already (npcs_visible 0, point_value 1-13, button_control
+// 14, last_event 15-18, event_flash 19-23, multi_npc_food_give 24-27, debug_room_id 28-31), so the
+// trek's own working state goes on templetrek_temp_var - see configs/templetrek.varbit.
+
+^trek_unlock_quest_stage = 110    // ^m2_complete, In Aid of the Myreque
+
+// =============================================================================== the three routes
+// Old School: route 1 through Mort Myre, monsters about level 80, events can be evaded. Route 2
+// along the Salve, about 110, evade only once half the monsters are down. Route 3 through the
+// Hollows, about 140, no evading at all. The event counts here are at the low end of what it
+// documents (route 1 "0-9", route 2 "0-4", route 3 "0-5, usually about 3") because a trek a player
+// will actually repeat wants to be shorter rather than longer.
+^trek_route_none = 0
+^trek_route_swamp = 1
+^trek_route_salve = 2
+^trek_route_hollows = 3
+
+^trek_legs_swamp = 5
+^trek_legs_salve = 4
+^trek_legs_hollows = 3
+
+// ============================================================================== the six escorts
+// Easy escorts are the strongest and bring the fewest monsters, which reads backwards until you
+// remember the difficulty is the ESCORT's: a tough escort makes an easy trek.
+^trek_escort_none = 0
+^trek_escort_dalcian = 1      // easy
+^trek_escort_fyiona = 2       // easy
+^trek_escort_valantay = 3     // medium
+^trek_escort_jayene = 4       // medium
+^trek_escort_rolayne = 5      // hard
+^trek_escort_smiddi = 6       // hard
+
+^trek_monsters_easy = 3
+^trek_monsters_medium = 4
+^trek_monsters_hard = 5
+
+^trek_food_max = 15           // what the escort's pack holds, and the width of multi_npc_food_give
+
+// How long a spawned escort or monster lives if nothing kills it. Long, because a trek is slow and
+// an escort that evaporated mid-room would read as a death.
+^trek_escort_life = 2000
+^trek_monster_life = 1200
+// How long a mended bridge stays mended. Long enough for a trek and no longer - the next player
+// through that room wants to find it broken.
+^trek_bridge_life = 2000
+
+// ================================================================================= the fourteen
+// One event per room, because the room IS the event - the bridge room has a broken bridge in it and
+// the ruin has the shade furniture. A trek draws its legs from this pool without repeating the one
+// before, which is what templetrek_last_event is for.
+^trek_event_none = 0
+^trek_event_snakes = 1
+^trek_event_ghasts = 2
+^trek_event_snails = 3
+^trek_event_vampyres = 4
+^trek_event_shades = 5
+^trek_event_bridge = 6
+^trek_event_vines = 7
+^trek_event_samaritan = 8
+^trek_rooms = 14
+
+// Points, from Old School: a puzzle is 500, a kill is 325, 625 or 1,125 by route, and the total a
+// token pays out on runs from 325 to 8,000.
+^trek_points_puzzle = 500
+^trek_points_kill_swamp = 325
+^trek_points_kill_salve = 625
+^trek_points_kill_hollows = 1125
+^trek_points_max = 8000
+
+// ================================================================================ where it happens
+// Burgh de Rott, where the six stand, and the Paterdomus landing - the same tile the temple's own
+// south staircase puts a player on, so it is known to be floor.
+^trek_burgh_start = 0_54_50_24_43      // 3480,3243 - beside the escorts. m54_50's base is
+// 3456,3200, so the local x is 24 and not 48: 48 is 3504, which is twenty-four tiles east of the
+// six and where escaping a trek used to drop you.
+^trek_paterdomus = 0_53_54_25_30       // 3417,3486 - the temple, south end
+
+// The vestibule between Burgh de Rott and the first room: a 26-tile island in m32_78 with a
+// signpost, a path north to begin and a path south to go home again.
+^trek_vestibule = 0_32_78_4_52         // 2052,5044
+^trek_vestibule_sign = 0_32_78_5_51    // 2053,5043
+
+// THE FOURTEEN ROOMS. entry is where the player and the escort are put down; success, fail and
+// evade are the Path locs at the ways out. Read off the floor islands in m31_78..m37_78 - each
+// room is one island, and the Paths sit on its edges. Ten of them carry all three exits; the four
+// puzzle and friendly rooms have no evade, which costs nothing because a puzzle cannot be evaded.
+^trek_r1_entry = 0_31_78_15_38
+^trek_r1_success = 0_31_78_15_59
+^trek_r1_fail = 0_31_78_15_36
+^trek_r1_evade = 0_31_78_5_50
+^trek_r2_entry = 0_31_78_44_38
+^trek_r2_success = 0_31_78_56_56
+^trek_r2_fail = 0_31_78_44_36
+^trek_r2_evade = 0_31_78_37_57
+^trek_r3_entry = 0_34_78_15_38
+^trek_r3_success = 0_34_78_15_59
+^trek_r3_fail = 0_34_78_15_36
+^trek_r3_evade = 0_34_78_5_50
+^trek_r4_entry = 0_34_78_44_38
+^trek_r4_success = 0_34_78_56_56
+^trek_r4_fail = 0_34_78_44_36
+^trek_r4_evade = 0_34_78_37_57
+^trek_r5_entry = 0_35_78_15_38
+^trek_r5_success = 0_35_78_15_59
+^trek_r5_fail = 0_35_78_15_36
+^trek_r5_evade = 0_35_78_5_50
+^trek_r6_entry = 0_35_78_44_38
+^trek_r6_success = 0_35_78_56_56
+^trek_r6_fail = 0_35_78_44_36
+^trek_r6_evade = 0_35_78_35_57
+^trek_r7_entry = 0_36_78_15_37
+^trek_r7_success = 0_36_78_15_59
+^trek_r7_fail = 0_36_78_15_35
+^trek_r7_evade = 0_36_78_4_50
+^trek_r8_entry = 0_36_78_44_39
+^trek_r8_success = 0_36_78_56_56
+^trek_r8_fail = 0_36_78_44_35
+^trek_r8_evade = 0_36_78_36_58
+^trek_r9_entry = 0_37_78_15_35
+^trek_r9_success = 0_37_78_15_60
+^trek_r9_fail = 0_37_78_15_33
+^trek_r9_evade = 0_37_78_5_50
+^trek_r10_entry = 0_37_78_44_36
+^trek_r10_success = 0_37_78_56_58
+^trek_r10_fail = 0_37_78_44_34
+^trek_r10_evade = 0_37_78_33_56
+^trek_r11_entry = 0_33_78_31_9
+^trek_r11_success = 0_33_78_22_40
+^trek_r11_fail = 0_33_78_31_7
+^trek_r11_evade = 0_33_78_14_24
+^trek_r12_entry = 0_32_78_34_49
+^trek_r12_success = 0_32_78_55_45
+^trek_r12_fail = 0_32_78_32_49
+^trek_r13_entry = 0_32_78_44_12
+^trek_r13_success = 0_32_78_42_32
+^trek_r13_fail = 0_32_78_44_10
+^trek_r14_entry = 0_35_78_29_14
+^trek_r14_success = 0_35_78_29_29
+^trek_r14_fail = 0_35_78_29_12
+
+// The broken bridge: the loc is on plane 1 and the far bank is a click away, not a walk.
+^trek_bridge_loc = 1_32_78_42_47       // 2090,5039
+// WHERE THE BRIDGE ACTUALLY LANDS YOU, which took three goes and a flood of the room to settle.
+// The engine's own regions are: the west bank, 101 tiles, x 2080-2089; the east bank with the
+// Continue-trek path on it, 96 tiles, x 2091-2103; and a 19-tile POCKET at x 2092-2095, z
+// 5032-5038 that touches neither. 2093,5037 is in no region at all and 2094,5037 is in the pocket,
+// so both of the first two landings left the player somewhere the way north could not be reached
+// from. The bridge spans z 5039: 2089 on one side, 2091 on the other, and nothing else crosses -
+// 0 doors and 0 climbables between the two banks, which is the puzzle doing its job.
+^trek_bridge_cross = 0_32_78_43_47     // 2091,5039 - the east bank, off the end of the bridge
+
+// THE VINE CROSSING, which is two floor islands and a two-tile gap rather than one room. The south
+// island is 2081-2098 z 5002-5013 and the north is 2089-2097 z 5016-5024; z 5014 and 5015 are
+// solid blocked, so the only way over is the branch that reaches across at 2093,5014.
+//
+// Three of the locs this event wants are in the cache and placed - the swamp tree with vines on it,
+// the big tree bases and the two branches - and templetrek_swamptree_branch_vine, the one that
+// carries Look-at and Swing-on, is placed NOWHERE. So the rope is what puts it there: tying the
+// rope to the branch loc_adds the vine version over the top of it, and swinging on that is the
+// crossing. Neither the vine tree nor the branch has an op of its own, which is why both are
+// driven with [oplocu] - using an item on a loc needs no option on the loc at all.
+^trek_vine_tree = 0_32_78_47_18        // 2095,5010 - templetrek_swamptree_small_vines
+^trek_vine_branch = 0_32_78_45_22      // 2093,5014 - templetrek_swamptree_branch, over the gap
+^trek_vine_branch_angle = 2
+^trek_vine_landing = 0_32_78_45_24     // 2093,5016 - the north island, the other side of the gap
+^trek_vine_life = 2000

@@ -1,0 +1,363 @@
+// Temple Trekking's events. One per room, because the room IS the event - the bridge room has a
+// broken bridge standing in it and the ruin has the shade furniture.
+//
+// Five of the eight are combat, and they are all the same shape: put out three, four or five of
+// something depending on how tough the escort is, and the room is done when they are dead. Each
+// monster exists in the cache in three tiers and tier n is route n - Swamp snake 80/109/139, Ghast
+// 79/109/139, Giant snail 80/109/139, Juvinate 59/90/119, shadow 80/110/140 - which lines up with
+// what Old School says about the three roads being level 80, 110 and 140.
+//
+// NOT WIRED, and said plainly: the route 3 boat with the head and its four tentacles. The boat is
+// placed at 2062,5034 on plane 2 with op4=Continue-trek and op5=Escape-event, which is a different
+// shape from every other room - it is a vehicle rather than a path - and the head is worth 4,000
+// points on its own. It wants its own pass. Route 3 is otherwise complete: three legs of tier-3
+// monsters with no evading.
+
+[proc,trek_tier]()(int)
+if (%trek_route = ^trek_route_none) {
+    return(1);
+}
+return(%trek_route);
+
+[proc,trek_kill_points]()(int)
+switch_int (%trek_route) {
+    case ^trek_route_salve : return(^trek_points_kill_salve);
+    case ^trek_route_hollows : return(^trek_points_kill_hollows);
+}
+return(^trek_points_kill_swamp);
+
+// Points are capped at Old School's 8,000 rather than allowed to wrap: npc_point_value is thirteen
+// bits, so 8192 would roll round to nothing and a long trek would pay out less than a short one.
+[proc,trek_add_points](int $n)
+def_int $total = calc(%templetrek_npc_point_value + $n);
+if ($total > ^trek_points_max) {
+    $total = ^trek_points_max;
+}
+%templetrek_npc_point_value = $total;
+
+// =============================================================================== starting one
+[label,trek_start_event](int $event)
+switch_int ($event) {
+    case ^trek_event_snakes : @trek_event_combat_snakes;
+    case ^trek_event_ghasts : @trek_event_combat_ghasts;
+    case ^trek_event_snails : @trek_event_combat_snails;
+    case ^trek_event_vampyres : @trek_event_combat_vampyres;
+    case ^trek_event_shades : @trek_event_combat_shades;
+    case ^trek_event_bridge : @trek_event_bridge_start;
+    case ^trek_event_vines : @trek_event_vines_start;
+    case ^trek_event_samaritan : @trek_event_samaritan_start;
+}
+
+// ================================================================================== combat
+// One spawner for all five. The monsters go down beside the player rather than on top of them, and
+// they are left to find their own target - the escort is standing right there and these are all
+// aggressive, which is the whole point of the event.
+[proc,trek_spawn_monsters](npc $type, string $line)
+def_int $n = ~trek_monsters;
+def_int $i = 0;
+%trek_spawned = $n;
+%trek_kills = 0;
+while ($i < $n) {
+    npc_add(~trek_spawn_tile($i), $type, ^trek_monster_life);
+    $i = calc($i + 1);
+}
+mes($line);
+
+// Five tiles around the player, which is as many as the hardest escort brings. movecoord rather
+// than map_findsquare, because these rooms are narrow and a random square can land in the water.
+[proc,trek_spawn_tile](int $i)(coord)
+switch_int ($i) {
+    case 0 : return(movecoord(coord, 2, 0, 2));
+    case 1 : return(movecoord(coord, -2, 0, 2));
+    case 2 : return(movecoord(coord, 2, 0, 4));
+    case 3 : return(movecoord(coord, -2, 0, 4));
+}
+return(movecoord(coord, 0, 0, 5));
+
+[label,trek_event_combat_snakes]
+switch_int (~trek_tier) {
+    case 2 : ~trek_spawn_monsters(templetrek_snake_2, "Swamp snakes come out of the reeds, and they have seen your charge.");
+    case 3 : ~trek_spawn_monsters(templetrek_snake_3, "Swamp snakes come out of the reeds, and they have seen your charge.");
+    case default : ~trek_spawn_monsters(templetrek_snake_1, "Swamp snakes come out of the reeds, and they have seen your charge.");
+}
+
+[label,trek_event_combat_snails]
+switch_int (~trek_tier) {
+    case 2 : ~trek_spawn_monsters(templetrek_giantsnail_2, "Giant snails. They spit, so keep something between you and them.");
+    case 3 : ~trek_spawn_monsters(templetrek_giantsnail_3, "Giant snails. They spit, so keep something between you and them.");
+    case default : ~trek_spawn_monsters(templetrek_giantsnail_1, "Giant snails. They spit, so keep something between you and them.");
+}
+
+[label,trek_event_combat_shades]
+switch_int (~trek_tier) {
+    case 2 : ~trek_spawn_monsters(templetrek_shade_2, "Shadows come out of the ruin and take shape.");
+    case 3 : ~trek_spawn_monsters(templetrek_shade_3, "Shadows come out of the ruin and take shape.");
+    case default : ~trek_spawn_monsters(templetrek_shade_1, "Shadows come out of the ruin and take shape.");
+}
+
+// Old School gates juvinates behind a silver weapon, so the warning goes up front rather than
+// leaving a player to work out why nothing is landing.
+[label,trek_event_combat_vampyres]
+if (inv_total(worn, silver_sickle) = 0 & inv_total(worn, silver_sickle_blessed) = 0 & inv_total(inv, silver_sickle) = 0 & inv_total(inv, silver_sickle_blessed) = 0) {
+    mes("Juvinates. Nothing but silver will hurt them, and you have none - get your charge past, or get out.");
+} else {
+    mes("Juvinates. Silver is the only thing they mind.");
+}
+switch_int (~trek_tier) {
+    case 2 : ~trek_spawn_monsters(templetrek_vampire_2, "They come at your charge first.");
+    case 3 : ~trek_spawn_monsters(templetrek_vampire_3, "They come at your charge first.");
+    case default : ~trek_spawn_monsters(templetrek_vampire_1, "They come at your charge first.");
+}
+
+// Ghasts are the one combat event with a hidden half. The cache has an invisible ghast and a
+// visible one in each tier for exactly this: Old School makes them invisible until a druid pouch
+// shows them, and only the hidden ones go for the escort.
+[label,trek_event_combat_ghasts]
+if (inv_total(inv, druid_pouch) = 0) {
+    // mes, not ~mesbox: a mesbox pauses the script until the player clicks Continue, and the
+    // monsters are spawned further down. Opening an event with one meant nothing ever came out.
+    mes("Something is rotting your pack from the inside. Ghasts, and you cannot see them without a druid pouch.");
+    switch_int (~trek_tier) {
+        case 2 : ~trek_spawn_monsters(templetrek_ghast_invis_2, "Your charge is being pulled at by something that is not there.");
+        case 3 : ~trek_spawn_monsters(templetrek_ghast_invis_3, "Your charge is being pulled at by something that is not there.");
+        case default : ~trek_spawn_monsters(templetrek_ghast_invis_1, "Your charge is being pulled at by something that is not there.");
+    }
+    return;
+}
+switch_int (~trek_tier) {
+    case 2 : ~trek_spawn_monsters(templetrek_ghast_vis_2, "The pouch turns them solid. Ghasts.");
+    case 3 : ~trek_spawn_monsters(templetrek_ghast_vis_3, "The pouch turns them solid. Ghasts.");
+    case default : ~trek_spawn_monsters(templetrek_ghast_vis_1, "The pouch turns them solid. Ghasts.");
+}
+
+// A druid pouch on an invisible ghast is what makes it a target - the same click Old School uses.
+[opnpcu,templetrek_ghast_invis_1] @trek_reveal_ghast(templetrek_ghast_vis_1);
+[opnpcu,templetrek_ghast_invis_2] @trek_reveal_ghast(templetrek_ghast_vis_2);
+[opnpcu,templetrek_ghast_invis_3] @trek_reveal_ghast(templetrek_ghast_vis_3);
+
+[label,trek_reveal_ghast](npc $vis)
+if (last_useitem ! druid_pouch) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_coord $where = npc_coord;
+npc_del;
+npc_add($where, $vis, ^trek_monster_life);
+mes("The pouch pulls it into the light.");
+
+// Every one of the event monsters reports its own death. The room is done when the last of them is
+// down, and the kill is worth what the route pays.
+[ai_queue1,templetrek_snake_1] @trek_monster_died;
+[ai_queue1,templetrek_snake_2] @trek_monster_died;
+[ai_queue1,templetrek_snake_3] @trek_monster_died;
+[ai_queue1,templetrek_ghast_vis_1] @trek_monster_died;
+[ai_queue1,templetrek_ghast_vis_2] @trek_monster_died;
+[ai_queue1,templetrek_ghast_vis_3] @trek_monster_died;
+[ai_queue1,templetrek_giantsnail_1] @trek_monster_died;
+[ai_queue1,templetrek_giantsnail_2] @trek_monster_died;
+[ai_queue1,templetrek_giantsnail_3] @trek_monster_died;
+[ai_queue1,templetrek_vampire_1] @trek_monster_died;
+[ai_queue1,templetrek_vampire_2] @trek_monster_died;
+[ai_queue1,templetrek_vampire_3] @trek_monster_died;
+[ai_queue1,templetrek_shade_1] @trek_monster_died;
+[ai_queue1,templetrek_shade_2] @trek_monster_died;
+[ai_queue1,templetrek_shade_3] @trek_monster_died;
+
+[label,trek_monster_died]
+if (npc_findhero = ^false) {
+    return;
+}
+if (p_finduid(uid) = false) {
+    return;
+}
+~trek_kill_counted;
+
+[proc,trek_kill_counted]
+%trek_kills = calc(%trek_kills + 1);
+~trek_add_points(~trek_kill_points);
+if (%trek_kills < %trek_spawned) {
+    mes("<tostring(calc(%trek_spawned - %trek_kills))> of them left.");
+    return;
+}
+%trek_event_done = 1;
+~mesbox("That is the last of them. The path north is clear.");
+
+// =============================================================================== the bridge
+// A THREE-STAGE REPAIR, which is what the cache says rather than what a flag would suggest. The
+// four locs are "Broken bridge" ("I could mend this if I had some wood..."), "Partially broken
+// bridge", "Sightly broken bridge" [the cache's own spelling] and "Fixed bridge" ("This bridge can
+// be traversed safely") - and only the last one carries op2=Walk-across. So it takes three pieces
+// of wood, and the far bank is reached by clicking the finished bridge rather than walking over it:
+// the ditch is not crossable on foot, which is why the room's Continue-trek path sits on the far
+// side and could not be reached at all until this was right.
+//
+// The zombie Old School warns about is already spawned in this room at 2087,5045.
+[label,trek_event_bridge_start]
+mes("The bridge over the ditch is down. Three pieces of wood would put it back - planks and a hammer, or logs and an axe.");
+
+[oploc1,templetrek_bridge_broken] @trek_bridge_mend(templetrek_bridge_fixed_1, 1);
+[oploc1,templetrek_bridge_fixed_1] @trek_bridge_mend(templetrek_bridge_fixed_2, 2);
+[oploc1,templetrek_bridge_fixed_2] @trek_bridge_mend(templetrek_bridge_fixed_3, 3);
+
+[label,trek_bridge_mend](loc $next, int $stage)
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("Rotten planks and a long drop. Somebody has been here before you.");
+    return;
+}
+def_boolean $planks = false;
+if (inv_total(inv, plank) > 0 & inv_total(inv, hammer) > 0) {
+    $planks = true;
+}
+if ($planks = false & (inv_total(inv, logs) = 0 | ~woodcutting_axe_checker(false) = null)) {
+    ~mesbox("You need planks and a hammer, or logs and an axe.");
+    return;
+}
+mes("You lay another length across and make it fast.");
+anim(human_axe_chop, 0);
+p_delay(3);
+if ($planks = true) {
+    inv_del(inv, plank, 1);
+} else {
+    inv_del(inv, logs, 1);
+}
+loc_change($next, ^trek_bridge_life);
+%trek_bridge_fixed = $stage;
+if ($stage < 3) {
+    mes("Two more lengths and it will take your weight.");
+    if ($stage = 2) {
+        mes("One more.");
+    }
+    return;
+}
+%trek_event_done = 1;
+~trek_add_points(^trek_points_puzzle);
+~mesbox("The bridge will take your weight now, and your charge's. Cross it and carry on.");
+
+// Walk-across is on the finished bridge and nowhere else, and it is the only way over the ditch.
+[oploc2,templetrek_bridge_fixed_3]
+p_arrivedelay;
+mes("You walk your charge across.");
+p_delay(2);
+p_teleport(^trek_bridge_cross);
+
+// Searching any of the four says what state it is in, which is what op1 does when there is no wood
+// to put into it. The mend handlers above cover that case; this is the finished one.
+[oploc1,templetrek_bridge_fixed_3] ~mesbox("The bridge is sound. Walk across it.");
+
+// ================================================================================ the vines
+// Old School: cut vines with a knife, then swing across. Here that is three clicks and two objs the
+// cache keeps for nothing else, templetrek_short_vine and templetrek_long_vine.
+//
+// Neither the vine tree nor the branch has an op of its own - they are scenery - so both are driven
+// with [oplocu], which needs no option on the loc. And the loc that DOES carry Swing-on,
+// templetrek_swamptree_branch_vine, is placed nowhere in the cache: tying the rope is what puts it
+// over the branch. See the note in configs/templetrek.constant.
+[label,trek_event_vines_start]
+mes("The ground gives out at a gully. A swamp tree to the east has vines on it, and a branch reaches over the gap - a knife would start this.");
+
+[oplocu,templetrek_swamptree_small_vines]
+// last_useitem is read BEFORE p_arrivedelay, because arriving corrupts it - the compiler says so:
+// "Attempt to access corrupted pointer [ 'last_useitem' ]", corrupted at the p_arrivedelay.
+def_obj $used = last_useitem;
+p_arrivedelay;
+if (loc_coord ! ^trek_vine_tree | ~trek_in_vine_room = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if ($used ! knife) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    ~mesbox("Your hands are full.");
+    return;
+}
+anim(human_knife_chop, 0);
+p_delay(2);
+inv_add(inv, templetrek_short_vine, 1);
+if (%trek_vine_state < 1) {
+    %trek_vine_state = 1;
+}
+mes("You cut a length of vine down. One more and there is enough to make a rope.");
+
+[opheldu,templetrek_short_vine]
+def_obj $other = last_useitem;
+if ($other = templetrek_short_vine) {
+    $other = last_item;
+}
+if ($other ! templetrek_short_vine) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_total(inv, templetrek_short_vine) < 2) {
+    ~mesbox("One length is not enough to cross anything. Cut another.");
+    return;
+}
+inv_del(inv, templetrek_short_vine, 2);
+inv_add(inv, templetrek_long_vine, 1);
+// The state moves when the ITEM does, not after the animation: anything after a p_delay is a
+// promise, and a logout or a closed dialogue in between left a player holding a rope the room did
+// not know about.
+%trek_vine_state = 2;
+anim(templetrek_making_vine_rope, 0);
+p_delay(3);
+mes("You twist the two lengths into a rope.");
+
+[oplocu,templetrek_swamptree_branch]
+def_obj $used = last_useitem;
+p_arrivedelay;
+if (loc_coord ! ^trek_vine_branch | ~trek_in_vine_room = false) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if ($used ! templetrek_long_vine) {
+    ~displaymessage(^dm_default);
+    return;
+}
+inv_del(inv, templetrek_long_vine, 1);
+anim(templetrek_rope_lasso, 0);
+p_delay(3);
+loc_add(^trek_vine_branch, templetrek_swamptree_branch_vine, ^trek_vine_branch_angle, centrepiece_straight, ^trek_vine_life);
+%trek_event_done = 1;
+~trek_add_points(^trek_points_puzzle);
+~mesbox("You get the rope over the branch and haul it tight. It will carry you both across.");
+
+[oploc1,templetrek_swamptree_branch_vine] ~mesbox("A vine rope over the branch, reaching the far side of the gully.");
+
+[oploc2,templetrek_swamptree_branch_vine]
+p_arrivedelay;
+mes("You swing across, and your charge follows.");
+anim(human_ropeswing_long, 0);
+p_delay(2);
+p_teleport(^trek_vine_landing);
+
+[proc,trek_in_vine_room]()(boolean)
+if (%trek_route = ^trek_route_none) {
+    return(false);
+}
+if (~trek_event(%trek_room) ! ^trek_event_vines) {
+    return(false);
+}
+return(true);
+
+// ============================================================================ the samaritan
+// Abidor Crank, who is the friendly event: Old School has him heal the player and the follower and
+// raise the player's Defence. He is not spawned anywhere, so the event puts him out and takes him
+// away again when the room is left.
+[label,trek_event_samaritan_start]
+npc_add(movecoord(coord, 0, 0, 3), templetrek_good_samaritan, ^trek_monster_life);
+%trek_event_done = 1;
+~trek_add_points(^trek_points_puzzle);
+mes("Somebody is sitting by the path with a pot on a fire, and he waves you over.");
+
+[opnpc1,templetrek_good_samaritan]
+~chatnpc("<p,happy>Abidor Crank. Sit down, both of you - there is enough in the pot.");
+if (%trek_route = ^trek_route_none) {
+    ~chatnpc("<p,neutral>Travelling alone out here? That is a way to stop travelling.");
+    return;
+}
+~chatplayer("<p,happy>We will, thank you.");
+stat_heal(hitpoints, stat_base(hitpoints), 0);
+stat_boost(defence, 3, 0);
+~mesbox("The stew is hot and whatever is in it does you good. You both feel steadier.");

@@ -1,0 +1,153 @@
+// Temple Trekking's rewards: the token the escort hands over at Paterdomus, and what clicking it
+// gets you.
+//
+// Old School: the follower gives a reward token on arrival - blue off route 1, yellow off route 2,
+// red off route 3 - and the token is redeemed by clicking it anywhere. How much it pays out depends
+// on the points banked on the way, which is the cache's own thirteen-bit
+// templetrek_npc_point_value: a puzzle is 500, a kill is 325, 625 or 1,125 by route, and the total
+// runs 325 to 8,000.
+//
+// The tomes are the exception to the points. Each one grants experience in one random skill out of
+// Agility, Firemaking, Fishing, Mining, Slayer, Thieving and Woodcutting, and the cache has 27 of
+// them - nine names x three colours - of which those seven skills are what Old School actually
+// lists. The level_1/2/3 in the obj names is the ROUTE, not a tier of tome.
+
+[proc,trek_token]()(namedobj)
+switch_int (%trek_route) {
+    case ^trek_route_salve : return(templetrek_yellow_token);
+    case ^trek_route_hollows : return(templetrek_red_token);
+}
+return(templetrek_blue_token);
+
+// Handed the token rather than working it out, because the caller has to read the route before it
+// clears the trek - see the note in [label,trek_arrive].
+[proc,trek_pay_token](namedobj $token)
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, $token, 1, ^lootdrop_duration);
+    ~mesbox("Your charge presses a reward token into your hand, and your hands are full - it is on the ground at your feet.");
+    return;
+}
+inv_add(inv, $token, 1);
+~mesbox("Your charge thanks you and gives you a reward token. Click it to claim what the trek was worth.");
+
+// ============================================================================= claiming it
+// One handler per colour, because the colour is the route and the route decides which tomes the
+// token can produce.
+[opheld1,templetrek_blue_token] @trek_claim(templetrek_blue_token, ^trek_route_swamp);
+[opheld1,templetrek_yellow_token] @trek_claim(templetrek_yellow_token, ^trek_route_salve);
+[opheld1,templetrek_red_token] @trek_claim(templetrek_red_token, ^trek_route_hollows);
+
+[label,trek_claim](namedobj $token, int $route)
+if (inv_freespace(inv) < 2) {
+    ~mesbox("You need two free inventory spaces to claim a token.");
+    return;
+}
+def_int $points = %templetrek_npc_point_value;
+if ($points < ^trek_points_kill_swamp) {
+    $points = ^trek_points_kill_swamp;
+}
+inv_del(inv, $token, 1);
+%templetrek_npc_point_value = 0;
+// How many things it pays out: one per 1,500 points banked, at least one and at most four. The
+// points themselves are spent, so a token is worth what its own trek earned.
+def_int $rolls = calc($points / 1500);
+if ($rolls < 1) {
+    $rolls = 1;
+}
+if ($rolls > 4) {
+    $rolls = 4;
+}
+mes("You break the token open.");
+def_int $i = 0;
+while ($i < $rolls) {
+    ~trek_one_reward($route);
+    $i = calc($i + 1);
+}
+
+// Old School's token table, as far as it publishes it: pure essence, bow strings, silver bars,
+// herbs, coal, iron ore, watermelon seeds, raw lobsters and tomes of experience. One roll in four
+// is a tome, which is the only part of the table that is not a stack of materials.
+[proc,trek_one_reward](int $route)
+if (random(4) = 0) {
+    ~trek_give_tome($route);
+    return;
+}
+// Pure essence is not a 2006 item and this build has none, so the essence line of Old School's
+// table is blankrune - rune essence, which is what Runecrafting mined then.
+switch_int (random(8)) {
+    case 0 : ~trek_give(blankrune, 100);
+    case 1 : ~trek_give(bow_string, 30);
+    case 2 : ~trek_give(silver_bar, 10);
+    case 3 : ~trek_give(unidentified_harralander, 5);
+    case 4 : ~trek_give(coal, 50);
+    case 5 : ~trek_give(iron_ore, 40);
+    case 6 : ~trek_give(watermelon_seed, 3);
+    case default : ~trek_give(raw_lobster, 10);
+}
+
+[proc,trek_give](namedobj $what, int $n)
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, $what, $n, ^lootdrop_duration);
+    mes("<tostring($n)> x <lowercase(oc_name($what))>, dropped at your feet.");
+    return;
+}
+inv_add(inv, $what, $n);
+mes("<tostring($n)> x <lowercase(oc_name($what))>.");
+
+// The tome is handed over rather than read for the player: Old School gives a tome, and the tome is
+// what grants the experience when it is read. Which of the 27 you get is the route for the colour
+// and a random one of the seven skills.
+[proc,trek_give_tome](int $route)
+def_namedobj $tome = ~trek_tome($route, random(7));
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, $tome, 1, ^lootdrop_duration);
+    mes("A tome of experience, dropped at your feet.");
+    return;
+}
+inv_add(inv, $tome, 1);
+mes("A tome of experience.");
+
+[proc,trek_tome](int $route, int $skill)(namedobj)
+switch_int ($skill) {
+    case 0 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_agility_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_agility_level_3);
+        }
+        return(templetrek_tome_agility_level_1);
+    case 1 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_firemaking_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_firemaking_level_3);
+        }
+        return(templetrek_tome_firemaking_level_1);
+    case 2 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_fishing_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_fishing_level_3);
+        }
+        return(templetrek_tome_fishing_level_1);
+    case 3 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_mining_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_mining_level_3);
+        }
+        return(templetrek_tome_mining_level_1);
+    case 4 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_slayer_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_slayer_level_3);
+        }
+        return(templetrek_tome_slayer_level_1);
+    case 5 :
+        switch_int ($route) {
+            case ^trek_route_salve : return(templetrek_tome_thieving_level_2);
+            case ^trek_route_hollows : return(templetrek_tome_thieving_level_3);
+        }
+        return(templetrek_tome_thieving_level_1);
+}
+switch_int ($route) {
+    case ^trek_route_salve : return(templetrek_tome_woodcutting_level_2);
+    case ^trek_route_hollows : return(templetrek_tome_woodcutting_level_3);
+}
+return(templetrek_tome_woodcutting_level_1);

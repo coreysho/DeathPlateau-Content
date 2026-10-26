@@ -1,0 +1,313 @@
+// Temple Trekking - the trek itself: starting one, the fourteen rooms, the three ways out of each,
+// and arriving at Paterdomus.
+//
+// configs/templetrek.constant has the room table and why every coord in it is where it is.
+// scripts/templetrek_events.rs2 has the fourteen events. scripts/templetrek_reward.rs2 has the
+// tokens and the tomes.
+
+// ========================================================================= the six in Burgh de Rott
+// The six are spawned already and hidden behind multivar=templetrek_npcs_visible, so the first
+// thing In Aid of the Myreque has to do is make them visible. ~trek_unlock is called from the
+// quest's own completion and from every one of these handlers, so an existing save that finished
+// the quest before this existed still sees them.
+// ON THE MULTINPC FORM, NOT THE CHILD. The six placed npcs ARE the multi forms - the multinpc only
+// changes what a client draws - so the op arrives on templetrek_multi_*, which is the same way
+// quest_myreque2 hooks burgh_gadderanks_multinpc and the two bank tellers. A trigger on the child
+// never fires for the one standing in Burgh de Rott.
+//
+// The children DO get triggers as well, because a trek spawns one of them to walk beside the
+// player and that one is a plain npc. Talking to your own escort mid-trek should say something.
+[opnpc1,templetrek_multi_retired_man_easy] @trek_talk(^trek_escort_dalcian);
+[opnpc1,templetrek_multi_retired_soldier_easy] @trek_talk(^trek_escort_fyiona);
+[opnpc1,templetrek_multi_man_med] @trek_talk(^trek_escort_valantay);
+[opnpc1,templetrek_multi_woman_med] @trek_talk(^trek_escort_jayene);
+[opnpc1,templetrek_multi_oldman_hard] @trek_talk(^trek_escort_rolayne);
+[opnpc1,templetrek_multi_child_hard] @trek_talk(^trek_escort_smiddi);
+
+[opnpc1,templetrek_retired_man_easy] @trek_escort_chat;
+[opnpc1,templetrek_retired_soldier_easy] @trek_escort_chat;
+[opnpc1,templetrek_man_med] @trek_escort_chat;
+[opnpc1,templetrek_woman_med] @trek_escort_chat;
+[opnpc1,templetrek_oldman_hard] @trek_escort_chat;
+[opnpc1,templetrek_child_hard] @trek_escort_chat;
+
+[label,trek_escort_chat]
+if (%trek_route = ^trek_route_none) {
+    ~chatnpc("<p,neutral>I'm waiting on somebody to see me north.");
+    return;
+}
+if (%trek_event_done = 0) {
+    ~chatnpc("<p,scared>Deal with it and let's get on.");
+    return;
+}
+~chatnpc("<p,neutral>North, then. <tostring(calc(~trek_legs - %trek_leg))> more of this.");
+
+[proc,trek_unlock]
+if (%myreque_2_quest >= ^trek_unlock_quest_stage) {
+    %templetrek_npcs_visible = 1;
+}
+
+[label,trek_talk](int $who)
+if (%myreque_2_quest < ^trek_unlock_quest_stage) {
+    ~chatnpc("<p,scared>I'm not walking into that swamp with a stranger. Help the Myreque first and we'll talk.");
+    return;
+}
+if (%trek_route ! ^trek_route_none) {
+    ~chatnpc("<p,confused>You already set off with somebody. Finish that, or come back when you have.");
+    return;
+}
+~chatnpc("<p,neutral>I want to get to Paterdomus, and I'll not make it across Mort Myre on my own. Will you see me there?");
+// All three of Old School's roads. The Hollows is the hardest and cannot be evaded on; its one
+// extra event, the boat and the tentacle, is not wired - see the note in templetrek_events.rs2 -
+// so the road is otherwise itself: three legs of the worst monsters in the swamp.
+switch_int (~p_choice4("The swamp road - the quiet way.", 1, "Along the Salve - quicker, worse.", 2, "Through the Hollows - worst of the three.", 3, "Not today.", 4)) {
+    case 1 : @trek_begin($who, ^trek_route_swamp);
+    case 2 : @trek_begin($who, ^trek_route_salve);
+    case 3 : @trek_begin($who, ^trek_route_hollows);
+    case default : ~chatplayer("<p,neutral>Not today.");
+}
+
+[label,trek_begin](int $who, int $route)
+if_close;
+%trek_escort = $who;
+%trek_route = $route;
+%trek_leg = 0;
+%trek_room = 0;
+%trek_event_done = 0;
+%trek_kills = 0;
+%trek_spawned = 0;
+%templetrek_npc_point_value = 0;
+%templetrek_last_event = 0;
+mes("You and <~trek_escort_name> set out for the edge of the swamp.");
+p_delay(2);
+p_teleport(^trek_vestibule);
+~mesbox("The path forks at a signpost. North is the way you came to escort them; south goes back to Burgh de Rott.");
+
+[proc,trek_escort_name]()(string)
+switch_int (%trek_escort) {
+    case ^trek_escort_dalcian : return("Dalcian Fang");
+    case ^trek_escort_fyiona : return("Fyiona Fray");
+    case ^trek_escort_valantay : return("Valantay Eppel");
+    case ^trek_escort_jayene : return("Jayene Kliyn");
+    case ^trek_escort_rolayne : return("Rolayne Twickit");
+    case ^trek_escort_smiddi : return("Smiddi Ryak");
+}
+return("your charge");
+
+[proc,trek_escort_type]()(npc)
+switch_int (%trek_escort) {
+    case ^trek_escort_dalcian : return(templetrek_retired_man_easy);
+    case ^trek_escort_fyiona : return(templetrek_retired_soldier_easy);
+    case ^trek_escort_valantay : return(templetrek_man_med);
+    case ^trek_escort_jayene : return(templetrek_woman_med);
+    case ^trek_escort_rolayne : return(templetrek_oldman_hard);
+    case ^trek_escort_smiddi : return(templetrek_child_hard);
+}
+return(templetrek_retired_man_easy);
+
+// Easy escorts are the strongest and bring the fewest monsters - the difficulty is theirs, not the
+// trek's, so a tough escort makes for a quiet walk.
+[proc,trek_monsters]()(int)
+switch_int (%trek_escort) {
+    case ^trek_escort_dalcian, ^trek_escort_fyiona : return(^trek_monsters_easy);
+    case ^trek_escort_valantay, ^trek_escort_jayene : return(^trek_monsters_medium);
+}
+return(^trek_monsters_hard);
+
+[proc,trek_legs]()(int)
+switch_int (%trek_route) {
+    case ^trek_route_swamp : return(^trek_legs_swamp);
+    case ^trek_route_salve : return(^trek_legs_salve);
+}
+return(^trek_legs_hollows);
+
+// ============================================================================= the signpost
+[oploc1,templetrek_dangersign]
+p_arrivedelay;
+~mesbox("MORT MYRE. Travellers are advised that the Salve runs north and that nothing else here is advice.");
+
+// ===================================================================== out of the vestibule
+[oploc2,templetrek_swamp_continue_1] @trek_leave_vestibule;
+[oploc2,templetrek_swamp_continue_2] @trek_leave_vestibule;
+
+[label,trek_leave_vestibule]
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("There is nobody with you to escort. Speak to one of the volunteers in Burgh de Rott.");
+    return;
+}
+@trek_next_room;
+
+[oploc2,templetrek_swamp_burgh_return]
+p_arrivedelay;
+~trek_abandon("You turn back, and your charge goes with you.");
+
+// ============================================================================== the rooms
+// A leg draws a room at random and never the event that was just played, which is what the cache's
+// four-bit templetrek_last_event is for.
+[label,trek_next_room]
+def_int $room = 0;
+def_int $guard = 0;
+while ($guard < 30) {
+    $room = calc(random(^trek_rooms) + 1);
+    if (~trek_event($room) ! %templetrek_last_event) {
+        $guard = 99;
+    } else {
+        $guard = calc($guard + 1);
+    }
+}
+if ($guard ! 99) {
+    $room = calc(random(^trek_rooms) + 1);
+}
+%trek_room = $room;
+%trek_event_done = 0;
+%trek_kills = 0;
+%trek_spawned = 0;
+%trek_bridge_fixed = 0;
+%trek_vine_state = 0;
+%templetrek_last_event = ~trek_event($room);
+if_close;
+mes("You press on into the swamp.");
+p_delay(2);
+p_teleport(~trek_entry($room));
+~trek_place_escort;
+@trek_start_event(~trek_event($room));
+
+// The escort walks after the player. npc_setmode(playerfollow) takes the active player as its
+// target, which is why this is done from a player script with npc_find in front of it: no active
+// player, and the engine throws "Target must be a Player for playerfollow mode".
+[proc,trek_place_escort]
+def_npc $type = ~trek_escort_type;
+~trek_clear_escort;
+npc_add(coord, $type, ^trek_escort_life);
+if (npc_find(coord, $type, 3, 0) = true) {
+    npc_setmode(playerfollow);
+}
+
+[proc,trek_clear_escort]
+def_npc $type = ~trek_escort_type;
+if (npc_find(coord, $type, 40, 0) = true) {
+    npc_del;
+}
+
+// ===================================================================== the three ways out
+// Look-at is op1 on all three Paths and says where the thing goes; the op2s are the ones that move
+// you. Every one of them is placed in all fourteen rooms, so the handlers read the player's state
+// rather than the coord.
+[oploc1,templetrek_swamp_success_path] ~mesbox("The path carries on north, deeper in.");
+[oploc1,templetrek_swamp_fail_path] ~mesbox("The way you came. Taking it means leaving your charge to make their own way.");
+
+[oploc2,templetrek_swamp_success_path]
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("You are not escorting anybody.");
+    return;
+}
+if (%trek_event_done = 0) {
+    ~mesbox("You cannot leave this behind you yet.");
+    return;
+}
+%trek_leg = calc(%trek_leg + 1);
+if (%trek_leg >= ~trek_legs) {
+    @trek_arrive;
+}
+@trek_next_room;
+
+[oploc2,templetrek_swamp_fail_path]
+p_arrivedelay;
+~trek_abandon("You take the path back and leave your charge standing in the swamp.");
+
+// Old School: route 1 can evade anything, route 2 only once half the monsters are down, route 3
+// never. A puzzle room has no evade Path placed at all, so there is nothing to refuse there.
+[oploc2,templetrek_swamp_evade_path]
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("You are not escorting anybody.");
+    return;
+}
+if (%trek_route = ^trek_route_hollows) {
+    ~mesbox("There is no slipping past anything on this road.");
+    return;
+}
+if (%trek_route = ^trek_route_salve) {
+    if (%trek_spawned = 0 | %trek_kills < calc(%trek_spawned / 2)) {
+        ~mesbox("Too many of them still standing to get past.");
+        return;
+    }
+}
+%trek_event_done = 1;
+mes("You take your charge round the edge of it.");
+%trek_leg = calc(%trek_leg + 1);
+if (%trek_leg >= ~trek_legs) {
+    @trek_arrive;
+}
+@trek_next_room;
+
+// ================================================================================ the end
+[label,trek_arrive]
+if_close;
+~trek_clear_escort;
+mes("The ground rises, and the Salve is in front of you.");
+p_delay(3);
+p_teleport(^trek_paterdomus);
+// THE ROUTE IS READ, THEN CLEARED, THEN THE TOKEN IS PAID - and the order matters twice over.
+// The colour of the token IS the route (blue for the swamp, yellow for the Salve, red for the
+// Hollows), so paying after the clear handed out a blue token on every route; and paying BEFORE the
+// clear is no good either, because ~trek_pay_token ends in a mesbox and a mesbox parks the script -
+// so the clears never ran and the player arrived at Paterdomus still on a trek. Hence the local.
+def_namedobj $token = ~trek_token;
+%trek_route = ^trek_route_none;
+%trek_escort = ^trek_escort_none;
+%trek_room = 0;
+%trek_leg = 0;
+%trek_event_done = 0;
+~trek_pay_token($token);
+
+[proc,trek_abandon](string $why)
+if_close;
+~trek_clear_escort;
+mes($why);
+p_delay(2);
+p_teleport(^trek_burgh_start);
+%trek_route = ^trek_route_none;
+%trek_escort = ^trek_escort_none;
+%trek_room = 0;
+%trek_leg = 0;
+%trek_event_done = 0;
+%templetrek_npc_point_value = 0;
+~mesbox("The trek is over. Speak to one of the volunteers when you want to try again.");
+
+// ============================================================================== the room table
+// One switch each rather than an enum, because every one of these coords was read off a floor
+// island by hand and a reader wants to see them next to the room they belong to.
+[proc,trek_entry](int $room)(coord)
+switch_int ($room) {
+    case 1 : return(^trek_r1_entry);
+    case 2 : return(^trek_r2_entry);
+    case 3 : return(^trek_r3_entry);
+    case 4 : return(^trek_r4_entry);
+    case 5 : return(^trek_r5_entry);
+    case 6 : return(^trek_r6_entry);
+    case 7 : return(^trek_r7_entry);
+    case 8 : return(^trek_r8_entry);
+    case 9 : return(^trek_r9_entry);
+    case 10 : return(^trek_r10_entry);
+    case 11 : return(^trek_r11_entry);
+    case 12 : return(^trek_r12_entry);
+    case 13 : return(^trek_r13_entry);
+    case 14 : return(^trek_r14_entry);
+}
+return(^trek_r1_entry);
+
+[proc,trek_event](int $room)(int)
+switch_int ($room) {
+    case 1, 5, 9 : return(^trek_event_snakes);
+    case 2, 6, 10 : return(^trek_event_ghasts);
+    case 3, 7 : return(^trek_event_snails);
+    case 4, 8 : return(^trek_event_vampyres);
+    case 11 : return(^trek_event_shades);
+    case 12 : return(^trek_event_bridge);
+    case 13 : return(^trek_event_vines);
+    case 14 : return(^trek_event_samaritan);
+}
+return(^trek_event_snakes);

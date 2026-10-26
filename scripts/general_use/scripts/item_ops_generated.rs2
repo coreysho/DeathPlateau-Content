@@ -157,9 +157,9 @@ if_openmain(xplamp);
 [opheld1,burgh_generalstore_crate] @m2_crate_search;
 [opheld1,burgh_rod_command1] mes("A silvery rod of mithril and silver with a sapphire on the top.");
 [opheld1,burgh_rod_command2] mes("A silvery rod of mithril and silver with a sapphire on the top, it has been enchanted.");
-[opheld1,templetrek_yellow_token] ~mesbox("Nothing interesting happens.");
-[opheld1,templetrek_red_token] ~mesbox("Nothing interesting happens.");
-[opheld1,templetrek_blue_token] ~mesbox("Nothing interesting happens.");
+// The three reward tokens had "Nothing interesting happens" here, which was true until Temple
+// Trekking was written. Clicking one now claims what the trek was worth:
+// minigames/game_templetrek/scripts/templetrek_reward.rs2.
 // The Mystery box is the Quiz Master's prize and opens in
 // "macro events"/scripts/general/macro_event_quiz.rs2.
 // The five coffins' Check is the Gravedigger event's, in

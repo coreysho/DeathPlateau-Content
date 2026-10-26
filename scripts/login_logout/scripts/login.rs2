@@ -188,3 +188,7 @@ if_settab(options, ^tab_game_options);
 if_settab(music, ^tab_musicplayer);
 // which of each Options toggle's two tooltips is true (game_options.rs2)
 ~options_tooltips;
+// Temple Trekking's six volunteers are hidden behind a varbit the quest sets. Anybody who finished
+// In Aid of the Myreque before the minigame was written has the quest and not the varbit, so this
+// catches them up rather than leaving an empty street in Burgh de Rott.
+~trek_unlock;
