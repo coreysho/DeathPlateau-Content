@@ -151,7 +151,13 @@ loc_change(loc_2572, $respawn_ticks); //looted chest
 
 [proc,pick_pocket_check_for_reward](dbrow $data)
 def_int $count = calc(db_getfieldcount($data, pickpocket:loot) - 1);
+// 128 unless the row says otherwise. The Master Farmer's seed table runs from one in six to one in
+// nine thousand and cannot be written in 128ths, so its row carries loot_total,10000; every other
+// pocket leaves the column out and is unchanged.
 def_int $reward_rarity_denominator = 128;
+if (db_getfieldcount($data, pickpocket:loot_total) > 0) {
+    $reward_rarity_denominator = db_getfield($data, pickpocket:loot_total, 0);
+}
 // The Rogue outfit doubles what a pickpocket yields. Rolled ONCE, here, rather than once per
 // item: it is the theft that doubles, so a pocket paying two things pays double of both or
 // neither. Stalls and chests are deliberately untouched - OSRS's set effect is pickpocketing

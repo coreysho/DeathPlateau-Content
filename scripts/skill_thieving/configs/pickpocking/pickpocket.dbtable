@@ -9,3 +9,7 @@ column=loot,namedobj,int,int,int,LIST
 column=pocket,string
 // The Rocky's base chance for this target - B in 1 in (B - level*25), the OSRS wiki's own figure.
 column=pet_base,int
+// What the loot weights above are out of. Absent means 128, which every pocket in this table used
+// before the Master Farmer, whose rarest seed is one in nine thousand and cannot be written as a
+// whole number of 128ths at all. Same column, same meaning, as stealing:loot_total.
+column=loot_total,int
