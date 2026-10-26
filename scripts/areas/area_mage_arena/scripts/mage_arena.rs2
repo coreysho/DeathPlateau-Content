@@ -21,6 +21,46 @@ mes("You pull the lever...");
 p_delay(0);
 ~player_teleport_normal(0_48_61_18_52);
 
+// THE TWO LEVERS AT THE ARENA WALL, which is how you get back in.
+//
+// Reported as "mage arena - cant re enter the arena". Both levers are on the map, both carry
+// op1=Pull, and nothing answered either of them: magearena_lever_in at 3104,3956 in the little
+// web-sealed chamber north of the arena, and magearena_lever_out at 3105,3952 just inside the
+// wall. Their own examines say what they are for - "This must let me in to the arena somehow..."
+// and "This must let me out of the arena somehow..." - and they were dead clicks.
+//
+// "There are 2 levers at the Mage Arena. The western lever inside the house behind 2 spiderwebs
+// takes players to the Mage Arena bank. The eastern lever behind a spiderweb next to the arena
+// wall takes players inside of the Mage Arena." (/w/Mage_Arena) The western pair is
+// magearena_lever_to_cellar / _from_cellar above and has always worked; this is the eastern pair.
+//
+// A FOUR-TILE HOP THROUGH A WALL, so it moves the player rather than casting a teleport on them.
+// The western levers use ~player_teleport_normal because they cross the world; these two do not,
+// and the arena is a place the live game will not let you teleport out of at all.
+[oploc1,magearena_lever_in]
+~magearena_lever_pull;
+// "Before the player can cast god spells or access the Mage Arena, players must complete the
+// miniquest." Nothing about weapons or armour: that is Kolodion's rule for his own fight, and the
+// battle mages inside are fought in whatever you brought.
+if (%magearena < ^mage_arena_complete) {
+    mes("You cannot enter without the permission of Kolodion.");
+    return;
+}
+p_teleport(^mage_arena_inside_coord);
+
+[oploc1,magearena_lever_out]
+~magearena_lever_pull;
+p_teleport(^mage_arena_outside_coord);
+
+[proc,magearena_lever_pull]
+p_arrivedelay;
+anim(human_leverdown, 0);
+sound_synth(lever, 1, 0);
+if_close;
+p_delay(1);
+mes("You pull the lever...");
+p_delay(0);
+
 [oploc1,magearena_waterportal1] @jump_in_sparkling_pool(^sparkling_pool_chamber_coord);
 [oploc1,magearena_waterportal2] @jump_in_sparkling_pool(^sparkling_pool_return_coord);
 
