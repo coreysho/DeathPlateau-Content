@@ -1,0 +1,6 @@
+// Which imbued god cape a Zaros cape was made from. Only the three repaints carry it, so it is
+// also how ~zaros_cape_repaint tells a repainted cape from a plain one before it eats a second kit
+// - the same check, for the same reason, as whip_from in area_wilderness/configs/whip_colours.param.
+[zaros_cape_from]
+type=namedobj
+default=null

@@ -43,13 +43,16 @@
 //
 // restock=yes, one at a time: the shelf refills, so the shop is a tap and not a race.
 //
+// NINETEEN ROWS AS OF 26 OCTOBER: the eighteen below plus the Zaros cape kit, which repaints an
+// imbued god cape and changes nothing else about it (areas/area_mage_arena/configs/zaros_cape.obj).
+//
 // SEVENTEEN ROWS AS OF 13 OCTOBER: the eight he already sold, plus one abyssal whip colour kit per
 // row (areas/area_wilderness/configs/whip_colours.obj, generated). Nine of the seventeen are the
 // whip kits, and they are the first thing on this shelf that is not his own outfit - the ninth,
 // Gravedigger, is black with bone links and is the whip that matches the helmet.
 [death_token_shop]
 scope=shared
-size=18
+size=20
 restock=yes
 stackall=yes
 allstock=no
@@ -71,3 +74,4 @@ stock15=whip_kit_tempest,1000,1
 stock16=whip_kit_bone,1000,1
 stock17=whip_kit_gravedigger,1000,1
 stock18=royal_seed_pod,1000,1
+stock19=zaros_cape_kit,1000,1

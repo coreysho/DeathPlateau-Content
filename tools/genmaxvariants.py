@@ -41,6 +41,13 @@ GODS = [('saradomin', 'saradomin_cape', 'imbued_saradomin_cape', 'saradomin_staf
 GOD_OF = {'saradomin': 'saradomin', 'guthix': 'guthix', 'zamorak': 'zamorak',
           'imbued_saradomin': 'saradomin', 'imbued_guthix': 'guthix',
           'imbued_zamorak': 'zamorak'}
+# THE ZAROS CAPES ARE COSMETIC COPIES and have to answer the same god as the cape they were made
+# from, or the ornament kit would quietly take away a god spell and a God Wars protection. They are
+# not max capes and do not come out of the variant scan, so they are named here.
+# See tools/genzaroscape.py and areas/area_mage_arena/configs/zaros_cape.obj.
+ZAROS = {'saradomin': 'imbued_zaros_cape_saradomin',
+         'guthix': 'imbued_zaros_cape_guthix',
+         'zamorak': 'imbued_zaros_cape_zamorak'}
 WEARPOS = ['hat', 'back', 'front', 'righthand', 'torso', 'lefthand', 'arms', 'legs',
            'head', 'hands', 'feet', 'jaw', 'ring', 'quiver']
 # The two variants whose models are their own. Everything else wears the plain cape's.
@@ -251,6 +258,8 @@ def build_god(spec):
         L.append('val=%s,^god_%s' % (imbued, god))
         for name in by_god.get(god, []):
             L.append('val=%s,^god_%s' % (name, god))
+        if god in ZAROS:
+            L.append('val=%s,^god_%s' % (ZAROS[god], god))
     L += ['',
           '[god_staff_god]',
           'inputtype=obj',
