@@ -205,7 +205,25 @@ if (%trek_kills < %trek_spawned) {
 //
 // The zombie Old School warns about is already spawned in this room at 2087,5045.
 [label,trek_event_bridge_start]
+// THE BRIDGE HAS TO BE PUT BACK THE WAY IT WAS FIRST. A mended one stays mended for 2000 ticks, so
+// a trek that drew this room twice - the draw only refuses the room immediately before - arrived to
+// find no Broken bridge to click and no way on but Escape. Old School instances its rooms and the
+// bridge is always down; here it is knocked down again on the way in.
+~trek_break_bridge;
 mes("The bridge over the ditch is down. Three pieces of wood would put it back - planks and a hammer, or logs and an axe.");
+
+[proc,trek_break_bridge]
+if (loc_find(^trek_bridge_loc, templetrek_bridge_fixed_1) = true) {
+    loc_change(templetrek_bridge_broken, 0);
+    return;
+}
+if (loc_find(^trek_bridge_loc, templetrek_bridge_fixed_2) = true) {
+    loc_change(templetrek_bridge_broken, 0);
+    return;
+}
+if (loc_find(^trek_bridge_loc, templetrek_bridge_fixed_3) = true) {
+    loc_change(templetrek_bridge_broken, 0);
+}
 
 [oploc1,templetrek_bridge_broken] @trek_bridge_mend(templetrek_bridge_fixed_1, 1);
 [oploc1,templetrek_bridge_fixed_1] @trek_bridge_mend(templetrek_bridge_fixed_2, 2);
@@ -266,6 +284,11 @@ p_teleport(^trek_bridge_cross);
 // templetrek_swamptree_branch_vine, is placed nowhere in the cache: tying the rope is what puts it
 // over the branch. See the note in configs/templetrek.constant.
 [label,trek_event_vines_start]
+// Same as the bridge: the rope put over the branch is a loc_add with a 2000-tick life, so a second
+// visit would find the crossing already rigged and the room still shut. Take it down again.
+if (loc_find(^trek_vine_branch, templetrek_swamptree_branch_vine) = true) {
+    loc_del(0);
+}
 mes("The ground gives out at a gully. A swamp tree to the east has vines on it, and a branch reaches over the gap - a knife would start this.");
 
 [oplocu,templetrek_swamptree_small_vines]
@@ -376,6 +399,19 @@ if (%trek_route = ^trek_route_none) {
 ~chatplayer("<p,happy>We will, thank you.");
 stat_heal(hitpoints, stat_base(hitpoints), 0);
 stat_boost(defence, 3, 0);
+// BOTH of you, which is what Old School says he does and what the first pass missed - he healed
+// the player and left the villager standing there bleeding.
+def_npc $charge = ~trek_escort_type;
+if (npc_find(coord, $charge, 20, 0) = true) {
+    npc_statheal(hitpoints, npc_basestat(hitpoints), 0);
+}
+// "...and turns rotten food into stew", which the cache has both halves of.
+def_int $rotten = inv_total(inv, rotten_food);
+if ($rotten > 0) {
+    inv_del(inv, rotten_food, $rotten);
+    inv_add(inv, stew, $rotten);
+    mes("He takes the rotten food off you, does something to it, and hands back stew.");
+}
 ~mesbox("The stew is hot and whatever is in it does you good. You both feel steadier.");
 
 // ============================================================================== the tentacles
@@ -500,6 +536,13 @@ if (npc_stat(hitpoints) <= ^trek_escort_bite) {
 }
 npc_statsub(hitpoints, ^trek_escort_bite, 0);
 mes("Your charge is being mauled.");
+// and they eat, once they are down to half and if there is anything in the pack to eat. This is
+// what stocking them up before you leave Burgh de Rott actually buys you.
+if (%templetrek_multi_npc_food_give > 0 & calc(npc_stat(hitpoints) * 2) <= npc_basestat(hitpoints)) {
+    %templetrek_multi_npc_food_give = calc(%templetrek_multi_npc_food_give - 1);
+    npc_statheal(hitpoints, ^trek_escort_meal, 0);
+    mes("Your charge eats something out of their pack.");
+}
 return(false);
 
 // Only the monsters of the event actually running, which is three types rather than twenty.
@@ -511,12 +554,11 @@ switch_int (~trek_event(%trek_room)) {
     case ^trek_event_shades : return(~trek_any_near($where, templetrek_shade_1, templetrek_shade_2, templetrek_shade_3));
     case ^trek_event_tentacles : return(~trek_any_near($where, templetrek_tentacle_arm, templetrek_tentacle_head, templetrek_tentacle_arm));
     case ^trek_event_ghasts :
-        // Old School: only the HIDDEN ghasts go for the follower. Both forms are checked anyway,
-        // because a revealed one standing over them is still standing over them.
-        if (~trek_any_near($where, templetrek_ghast_invis_1, templetrek_ghast_invis_2, templetrek_ghast_invis_3) = true) {
-            return(true);
-        }
-        return(~trek_any_near($where, templetrek_ghast_vis_1, templetrek_ghast_vis_2, templetrek_ghast_vis_3));
+        // ONLY THE HIDDEN ONES. Old School is specific about it - a ghast you have pulled into the
+        // light with a druid pouch is something you can fight, and it is the ones you cannot see
+        // that go for your charge. So showing them is not only how you kill them, it is how you
+        // get them off the villager.
+        return(~trek_any_near($where, templetrek_ghast_invis_1, templetrek_ghast_invis_2, templetrek_ghast_invis_3));
 }
 return(false);
 
@@ -546,6 +588,7 @@ p_teleport(^trek_burgh_start);
 %trek_leg = 0;
 %trek_event_done = 0;
 %templetrek_npc_point_value = 0;
+~trek_clear_pack;
 ~mesbox("You walked out of Mort Myre alone. There is no token for that.");
 
 // A trek that ends any other way stops the watch too - the queue would otherwise sit there and
@@ -569,6 +612,46 @@ clearqueue(trek_escort_watch);
 %trek_leg = 0;
 %trek_event_done = 0;
 %templetrek_npc_point_value = 0;
+~trek_clear_pack;
 
 [proc,in_templetrek](coord $where)(boolean)
 return(inzone(^trek_zone_sw, ^trek_zone_ne, $where));
+
+// ============================================================================ the escort's pack
+// Old School: "Before leaving, you can stock the follower's pack with up to 15 food items." There
+// is no interface for it in the cache - no templetrek component of any kind - so it is done the way
+// everything else without one is done, by using the food on them. The counter is the cache's own
+// templetrek_multi_npc_food_give, which is four bits wide and so holds exactly fifteen.
+[opnpcu,templetrek_retired_man_easy] @trek_feed;
+[opnpcu,templetrek_retired_soldier_easy] @trek_feed;
+[opnpcu,templetrek_man_med] @trek_feed;
+[opnpcu,templetrek_woman_med] @trek_feed;
+[opnpcu,templetrek_oldman_hard] @trek_feed;
+[opnpcu,templetrek_child_hard] @trek_feed;
+[opnpcu,templetrek_multi_retired_man_easy] @trek_feed;
+[opnpcu,templetrek_multi_retired_soldier_easy] @trek_feed;
+[opnpcu,templetrek_multi_man_med] @trek_feed;
+[opnpcu,templetrek_multi_woman_med] @trek_feed;
+[opnpcu,templetrek_multi_oldman_hard] @trek_feed;
+[opnpcu,templetrek_multi_child_hard] @trek_feed;
+
+[label,trek_feed]
+def_obj $food = last_useitem;
+if (%templetrek_multi_npc_food_give >= ^trek_food_max) {
+    ~mesbox("Their pack holds fifteen and it holds fifteen now.");
+    return;
+}
+// Anything in the consume table counts as food, which is the same test eating one uses.
+db_find(consume_table:consumable, $food);
+if (db_findnext = null) {
+    ~chatnpc("<p,confused>I'll not be eating that.");
+    return;
+}
+inv_del(inv, $food, 1);
+%templetrek_multi_npc_food_give = calc(%templetrek_multi_npc_food_give + 1);
+mes("You put the <lowercase(oc_name($food))> in their pack. <tostring(%templetrek_multi_npc_food_give)> of <tostring(^trek_food_max)>.");
+
+// Emptied when a trek begins and when one ends, and on login - which is Old School's "followers
+// lose their food if you log out" without having to care what scope the varp carries.
+[proc,trek_clear_pack]
+%templetrek_multi_npc_food_give = 0;

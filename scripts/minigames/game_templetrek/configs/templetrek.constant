@@ -57,7 +57,11 @@
 ^trek_monsters_medium = 4
 ^trek_monsters_hard = 5
 
-^trek_food_max = 15           // what the escort's pack holds, and the width of multi_npc_food_give
+// What the escort's pack holds, and exactly the width of the cache's own templetrek_multi_npc_food_give
+// (four bits, 0-15). Old School: "Before leaving, you can stock the follower's pack with up to 15
+// food items. Followers lose their food if you log out." - which is why the counter is cleared on
+// login as well as when a trek starts and ends.
+^trek_food_max = 15
 
 // How long a spawned escort or monster lives if nothing kills it. Long, because a trek is slow and
 // an escort that evaporated mid-room would read as a death.
@@ -73,6 +77,9 @@
 // effect is the one that matters. Leave your charge surrounded and they go down.
 ^trek_watch_ticks = 5
 ^trek_escort_bite = 4
+// What one thing out of the pack is worth to them. Old School does not publish a figure; this is
+// enough that a full pack of fifteen roughly doubles how long an easy escort lasts.
+^trek_escort_meal = 8
 
 // The whole of the trek map, for the death hook: seven regions, m31_78 to m37_78, all four planes.
 ^trek_zone_sw = 0_31_78_0_0

@@ -284,6 +284,7 @@ def_namedobj $token = ~trek_token;
 %trek_room = 0;
 %trek_leg = 0;
 %trek_event_done = 0;
+~trek_clear_pack;
 ~trek_pay_token($token);
 
 [proc,trek_abandon](string $why)
@@ -300,6 +301,7 @@ p_teleport(^trek_burgh_start);
 %trek_leg = 0;
 %trek_event_done = 0;
 %templetrek_npc_point_value = 0;
+~trek_clear_pack;
 ~mesbox("The trek is over. Speak to one of the volunteers when you want to try again.");
 
 // ============================================================================== the room table
