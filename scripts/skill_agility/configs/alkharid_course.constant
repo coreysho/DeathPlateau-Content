@@ -20,7 +20,7 @@
 // street. Every tile below was read off the grafted map and checked against the engine's own
 // collision - tools/sim/alkharidcourse.ts walks the lap and fails if any of them is blocked, off
 // the roof, or unreachable from the obstacle before it.
-^alkharid_land_wall = 3_51_49_9_56      // 3273,3192 - the roof over Ellis the Tanner's
+^alkharid_land_wall = 3_51_49_8_46       // 3272,3182 (was 3273,3192)
 ^alkharid_land_rope1 = 3_51_49_8_36     // 3272,3172
 ^alkharid_land_cable = 3_51_49_19_30    // 3283,3166 - the west edge of the long roof
 ^alkharid_land_zip = 1_51_49_50_27      // 3314,3163 - and down two floors
