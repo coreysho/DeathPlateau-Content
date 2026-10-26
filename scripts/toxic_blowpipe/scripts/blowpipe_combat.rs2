@@ -61,7 +61,8 @@ return($rate);
 // Every dart fired was being destroyed, which quietly doubled what the weapon costs to run.
 //
 // It drops the way every other ranged shot drops its ammo, at the target's feet and on the same
-// one-in-^dropammo_chance odds of breaking instead (player_ranged.rs2) - obj_add rather than
+// break-or-fall odds (~ranged_ammo_falls, quest_animmag/scripts/avas_device.rs2, which is where
+// the share that falls depends on which Ava's device is worn) - obj_add rather than
 // inv_dropitem_delayed, because a loaded dart is a count in a varp and not an item in the quiver.
 [proc,blowpipe_spend](coord $at)(boolean)
 if (random(3) ! 0) {
@@ -70,7 +71,7 @@ if (random(3) ! 0) {
 if (~ranged_ammo_saved = false) {
     def_namedobj $dart = %blowpipe_dart_type;
     %blowpipe_darts = max(0, sub(%blowpipe_darts, 1));
-    if ($dart ! null & random(^dropammo_chance) ! 0 & map_blocked($at) = false) {
+    if ($dart ! null & ~ranged_ammo_falls = true & map_blocked($at) = false) {
         obj_add($at, $dart, 1, ^lootdrop_duration);
     }
 }

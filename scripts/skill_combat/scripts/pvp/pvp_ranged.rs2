@@ -115,7 +115,7 @@ if($ammo = holy_water) {
 if (~ranged_ammo_saved = true) { // Ava's device, or the Ranging cape standing in for one: the ammo stays in the quiver
     return;
 }
-if (random(^dropammo_chance) ! 0) {
+if (~ranged_ammo_falls = true) {
     if (~in_duel_arena(coord) = true) {
         inv_moveitem(worn, duelarrows, $ammo, 1);
         return;
@@ -143,7 +143,7 @@ if($ammo = holy_water) {
 if (~ranged_ammo_saved = true) { // Ava's device, or the Ranging cape standing in for one: the ammo stays in the quiver
     return;
 }
-if (random(^dropammo_chance) ! 0) {
+if (~ranged_ammo_falls = true) {
     if (~in_duel_arena(coord) = true) {
         inv_moveitem(worn, duelarrows, $ammo, 1);
         return;
