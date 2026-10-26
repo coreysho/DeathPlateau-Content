@@ -118,3 +118,39 @@
 // itself (that is ^animmag_attract_interval, checked against map_clock); it only has to be fine
 // enough not to round it up much.
 ^animmag_attract_ticks = 25
+
+// WHAT THE MAGNET PULLS IN, AND HOW OFTEN. One roll of ONE item every 3.5 minutes, off the live
+// table (https://oldschool.runescape.wiki/w/Ava's_accumulator, Metal attraction):
+//
+//   steel arrow   1975/2000      toy mouse        1/2000
+//   steel dart       5/2000      broken arrow     1/2000
+//   steel knife      5/2000      steel arrowtips  1/2000
+//   iron ore         5/2000      steel med helm   1/2000
+//   steel nails      5/2000      steel bar        1/2000
+//
+// NO BROKEN ARROW IN THIS CACHE, so its 1/2000 goes to the arrow row - which is why the first
+// threshold below is 1976 and not 1975. Rolling it and handing out nothing would be a silent
+// nothing-happened once every two thousand attractions; giving the arrow is what a player would
+// never be able to tell from the live game.
+//
+// The thresholds are cumulative over random(^avas_attract_rolls), read in the order above.
+^avas_attract_rolls = 2000
+^avas_attract_arrow = 1976
+^avas_attract_dart = 1981
+^avas_attract_knife = 1986
+^avas_attract_ore = 1991
+^avas_attract_nails = 1996
+^avas_attract_mouse = 1997
+^avas_attract_tips = 1998
+^avas_attract_helm = 1999
+
+// THE SHARE THAT FALLS ON THE FLOOR, out of the shots a device did not bring back. Twenty per cent
+// of every shot breaks on impact whatever is worn - "20% of ammunition is broken upon impact, so
+// this percentage is 80% minus the Recovery Rate" (/w/Ava's_device) - so the bigger the recovery,
+// the smaller the share left over that lands on the ground rather than breaking.
+//   attractor    100 - 60 = 40 left over, of which 20 falls
+//   accumulator  100 - 72 = 28 left over, of which  8 falls
+^avas_attractor_rest = 40
+^avas_attractor_floor = 20
+^avas_accumulator_rest = 28
+^avas_accumulator_floor = 8

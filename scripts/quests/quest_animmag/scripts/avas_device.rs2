@@ -7,8 +7,14 @@
 //   accumulator           20%                 8%                   72%
 // and "approximately every 3.5 minutes, Ava's accumulator will attract an assortment of steel
 // items, provided that the player has moved at least three tiles since the last pickup"; the
-// attractor pulls in iron rather than steel. Metal body armour causes "interference" and stops that
-// attraction (it does not stop the ammo coming back).
+// attractor pulls in iron rather than steel.
+//
+// METAL BODY ARMOUR STOPS THE AMMO COMING BACK, which is what this file used to say it did not.
+// "The ammunition recovery effect does not work if the player is wearing metallic torso armour
+// (most melee armour, Ahrim's robetop, etc.) due to the metal causing interference with the
+// magnet" (/w/Ava's_device), and the accumulator's own page puts it more broadly still: "the
+// accumulator will not work when metal torso armour (Ahrim's top included) is worn". So
+// interference now stops both halves, which is the only reading both pages agree on.
 //
 // Both devices are cape-slot items, so they and a Ranging cape are mutually exclusive - which is
 // why ~avas_device below can simply ask the cape slot what is in it. ~ranged_ammo_saved is what
@@ -50,6 +56,12 @@ return(null);
 // used to stand in for one.
 [proc,ranged_ammo_saved]()(boolean)
 def_namedobj $device = ~avas_device;
+// Interference, which is a property of the magnet and so is asked only of a player wearing one:
+// the Ranging cape below is a different mechanic standing in for a device and has no magnet to
+// interfere with.
+if ($device ! null & ~avas_interference = true) {
+    return(false);
+}
 if ($device = avas_accumulator) {
     if (random(100) < ^animmag_accumulator_save) {
         return(true);
@@ -63,6 +75,38 @@ if ($device = avas_attractor) {
     return(false);
 }
 return(~skillcape_ammo_saved);
+
+// WHAT BECOMES OF A SHOT THAT DID NOT COME BACK: it breaks on impact, or it lands on the floor.
+//
+//                breaks   comes back   lands on the floor
+//    nothing       20%         -              80%
+//    attractor     20%        60%             20%
+//    accumulator   20%         72%             8%
+//
+// Twenty per cent of every shot breaks whatever is worn, and a device takes its recovery out of
+// the other eighty - "20% of ammunition is broken upon impact, so this percentage is 80% minus
+// the Recovery Rate" (/w/Ava's_device). ~ranged_ammo_saved has already taken the recovery, so the
+// split left here is between the break and the floor, and it is NOT the same split for every
+// device: a one-in-five break of whatever is left over gives an accumulator 22% on the floor
+// where the live game gives it 8%, which is most of a third more ammunition back.
+[proc,ranged_ammo_falls]()(boolean)
+def_namedobj $device = ~avas_device;
+if ($device = avas_accumulator) {
+    if (random(^avas_accumulator_rest) < ^avas_accumulator_floor) {
+        return(true);
+    }
+    return(false);
+}
+if ($device = avas_attractor) {
+    if (random(^avas_attractor_rest) < ^avas_attractor_floor) {
+        return(true);
+    }
+    return(false);
+}
+if (random(^dropammo_chance) ! 0) {
+    return(true);
+}
+return(false);
 
 // =========================================================================== attracting metal
 
@@ -111,18 +155,45 @@ if (~animmag_distance(%animmag_attract_coord, coord) < ^animmag_attract_distance
 if (~avas_interference = true) {
     return;
 }
-def_int $count = calc(5 + random(20));
-// The quiver first, if what is in it is the same thing, and the pack otherwise.
-if (inv_getobj(worn, ^wearpos_quiver) = $metal) {
-    inv_add(worn, $metal, $count);
-    mes("Your Ava's device attracts some <oc_name($metal)> into your quiver.");
+~avas_attract_give($metal);
+
+// WHERE THE ATTRACTED ITEM GOES. "The item will prioritise being equipped over going to the
+// inventory if the attracted item can be equipped. The item will drop to the ground if there is
+// no space in the equipment or inventory." (/w/Ava's_accumulator)
+//
+// Equipping means the slot the thing belongs in is EMPTY, or already holds the same stackable
+// thing: the magnet drops a steel arrow into an empty quiver or onto the steel arrows already
+// there - "it can also generate iron arrows into the player's ammo slot if it's empty or there
+// are iron arrows in it" (/w/Ava's_attractor) - and it does not take your helmet off to put a
+// steel one on.
+[proc,avas_attract_give](namedobj $item)
+def_int $slot = oc_wearpos($item);
+if ($slot ! null) {
+    def_obj $held = inv_getobj(worn, $slot);
+    if ($held = null) {
+        inv_setslot(worn, $slot, $item, 1);
+        ~update_bas;
+        ~avas_attract_said($item);
+        return;
+    }
+    if ($held = $item & oc_stackable($item) = true) {
+        inv_add(worn, $item, 1);
+        ~avas_attract_said($item);
+        return;
+    }
+}
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, $item, 1);
+    ~avas_attract_said($item);
     return;
 }
-if (inv_freespace(inv) < 1) {
-    return;
-}
-inv_add(inv, $metal, $count);
-mes("Your Ava's device attracts some <oc_name($metal)>.");
+// Nowhere to put it, so it lands at your feet rather than being thrown away. This is the branch
+// that used to be a bare return: an attraction with a full pack simply did not happen.
+obj_add(coord, $item, 1, ^lootdrop_duration);
+mes("Your Ava's device attracts <~add_article(lowercase(oc_name($item)))>, and drops it at your feet.");
+
+[proc,avas_attract_said](namedobj $item)
+mes("Your Ava's device attracts <~add_article(lowercase(oc_name($item)))>.");
 
 // Chebyshev distance between two coords - tiles moved, as the engine measures everything else.
 [proc,animmag_distance](coord $from, coord $to)(int)
@@ -139,21 +210,66 @@ if ($dx > $dz) {
 }
 return($dz);
 
-// The attractor pulls in iron, the accumulator steel; arrows most of the time, knives and darts the
-// rest ("an assortment of metal ammunition" / "an assortment of steel items").
+// THE TABLE THE MAGNET ROLLS ON. One item, and nearly always an arrow:
+//
+//   steel arrow   1975/2000      toy mouse        1/2000
+//   steel dart       5/2000      broken arrow     1/2000
+//   steel knife      5/2000      steel arrowtips  1/2000
+//   iron ore         5/2000      steel med helm   1/2000
+//   steel nails      5/2000      steel bar        1/2000
+//
+// Reported from the game as "not picking up arrows, picks up 24 stack of steel items/iron items",
+// and that is exactly what it used to do: five to twenty-four items at a time, an arrow only six
+// times in eight, with a knife or a dart one time in eight each where the live game rolls them
+// one time in four hundred. A player watching the thing work would see junk where the live game
+// hands them arrows and almost nothing else.
+//
+// The attractor pulls in iron rather than steel; the live game documents only its arrows ("it can
+// also generate iron arrows into the player's ammo slot"), so the rest of its table is the iron
+// twin of the accumulator's, row for row and weight for weight. The IRON ORE row is iron ore in
+// both, because it is iron ore in the live table rather than the iron version of anything.
+//
+// ^avas_attract_* in quest_animmag.constant are the cumulative thresholds, and say what happened
+// to the broken arrow this cache does not have.
 [proc,avas_iron_item]()(namedobj)
-switch_int (random(8)) {
-    case 0 : return(iron_knife);
+switch_int (~avas_attract_row) {
     case 1 : return(iron_dart);
+    case 2 : return(iron_knife);
+    case 3 : return(iron_ore);
+    case 4 : return(nails_iron);
+    case 5 : return(poh_toy_mouse_unwound);
+    case 6 : return(iron_arrowheads);
+    case 7 : return(iron_med_helm);
+    case 8 : return(iron_bar);
     case default : return(iron_arrow);
 }
 
 [proc,avas_steel_item]()(namedobj)
-switch_int (random(8)) {
-    case 0 : return(steel_knife);
+switch_int (~avas_attract_row) {
     case 1 : return(steel_dart);
+    case 2 : return(steel_knife);
+    case 3 : return(iron_ore);
+    case 4 : return(nails);
+    case 5 : return(poh_toy_mouse_unwound);
+    case 6 : return(steel_arrowheads);
+    case 7 : return(steel_med_helm);
+    case 8 : return(steel_bar);
     case default : return(steel_arrow);
 }
+
+// Which row of the table came up: 0 for the arrow and 1-8 for the rest, in the order above. One
+// roll, read against the cumulative thresholds, so the two tables cannot drift apart.
+[proc,avas_attract_row]()(int)
+def_int $roll = random(^avas_attract_rolls);
+if ($roll < ^avas_attract_arrow) { return(0); }
+if ($roll < ^avas_attract_dart) { return(1); }
+if ($roll < ^avas_attract_knife) { return(2); }
+if ($roll < ^avas_attract_ore) { return(3); }
+if ($roll < ^avas_attract_nails) { return(4); }
+if ($roll < ^avas_attract_mouse) { return(5); }
+if ($roll < ^avas_attract_tips) { return(6); }
+if ($roll < ^avas_attract_helm) { return(7); }
+return(8);
 
 // Metal body armour worn over the magnet - the list is configs/animmag.enum, which says why it is a
 // list and not a category test.

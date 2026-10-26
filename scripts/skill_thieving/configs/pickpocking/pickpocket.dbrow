@@ -305,3 +305,94 @@ data=loot,fire_orb,1,1,2
 data=loot,diamond,1,1,1
 data=loot,gold_ore,1,1,1
 data=pocket,elf's pocket
+
+// THE MASTER FARMERS. Reported as "master farmer's not coded for pickpocketing": all three carry
+// op3=Pickpocket and pickpocket.rs2 has had the triggers for them all along, so the click reached
+// ~attempt_pick_pocket, found no row here, and said "Nothing interesting happens."
+//
+// "Level 38 Thieving is required to pickpocket them. Successful pickpockets can result in most
+// types of seeds, excluding tree seeds and fruit tree seeds. 43 Thieving experience is granted
+// upon successfully pickpocketing a Master Farmer. Failing to pickpocket a Master Farmer results
+// in being stunned for five seconds and taking three hitpoints of damage."
+// (https://oldschool.runescape.wiki/w/Master_Farmer). success_chance is the wiki's own skilling
+// success chart for this target: low=90, high=240 at 38 Thieving.
+//
+// THE WEIGHTS ARE OUT OF 10000, not 128 - see loot_total in the dbtable, which exists because this
+// table's rarest seed is one in nine thousand and cannot be written as a whole number of 128ths.
+// They are the wiki's rarities turned into ten-thousandths, and the six sub-table totals it states
+// are what they add up to:
+//
+//   allotments 4852 (485/1000)   bushes   971 (97/1000)
+//   hops       2431 (243/1000)   special   49 (5/1000)
+//   flowers    1220 (122/1000)   herbs    477 (48/1000)
+//
+// FOUR SEEDS ARE NOT IN THIS CACHE and their weight stays in the sub-table it came from, so the
+// proportions above hold: snape grass (1/260) goes to the potato seed, poison ivy (1/937) to the
+// redberry, and the seaweed and potato cactus spores to the mushroom. The herb table's rounding
+// remainder goes to the guam. Left unassigned, that weight would be a successful pickpocket that
+// paid nothing, which is a thing the live game never does.
+//
+// NOT MODELLED: in the live game the herb seeds' rarity scales with Farming level up to 85. The
+// loot column is a flat weight with nowhere to put a second rate, so these are the BASE figures -
+// what an unscaled player gets - which is also what a 2006-era server should be giving, since the
+// scaling was added in 2019 to stop low-stat bots farming them.
+[pickpocket_master_farmer]
+table=pickpocket
+data=npc,master_farmer_1
+data=npc,master_farmer_2
+data=npc,martin_the_master_farmer
+data=level,38
+data=experience,430
+data=stun_ticks,8
+data=stun_damage,3
+data=success_chance,90,240
+// allotments - 4852, the potato carrying the snape grass seed this cache has not got
+data=loot,potato_seed,1,4,1808
+data=loot,onion_seed,1,3,1328
+data=loot,cabbage_seed,1,3,694
+data=loot,tomato_seed,1,2,637
+data=loot,sweetcorn_seed,1,2,221
+data=loot,strawberry_seed,1,1,111
+data=loot,watermelon_seed,1,1,53
+// hops - 2431
+data=loot,barley_seed,1,12,556
+data=loot,hammerstone_hop_seed,1,9,556
+data=loot,asgarnian_hop_seed,1,6,418
+data=loot,jute_seed,1,9,415
+data=loot,yanillian_hop_seed,1,6,277
+data=loot,krandorian_hop_seed,1,6,139
+data=loot,wildblood_hop_seed,1,3,70
+// flowers - 1220
+data=loot,marigold_seed,1,1,459
+data=loot,nasturtium_seed,1,1,304
+data=loot,rosemary_seed,1,1,196
+data=loot,woad_seed,1,1,145
+data=loot,limpwurt_seed,1,1,116
+// bushes - 971, the redberry carrying the poison ivy seed
+data=loot,redberry_bush_seed,1,1,399
+data=loot,cadavaberry_bush_seed,1,1,272
+data=loot,dwellberry_bush_seed,1,1,194
+data=loot,jangerberry_bush_seed,1,1,78
+data=loot,whiteberry_bush_seed,1,1,28
+// special - 49, the mushroom spore carrying the seaweed and potato cactus spores
+data=loot,mushroom_seed,1,1,29
+data=loot,belladonna_seed,1,1,12
+data=loot,cactus_seed,1,1,8
+// herbs - 477, the guam carrying the table's rounding remainder
+data=loot,guam_seed,1,1,168
+data=loot,marrentill_seed,1,1,105
+data=loot,tarromin_seed,1,1,71
+data=loot,harralander_seed,1,1,49
+data=loot,toadflax_seed,1,1,23
+data=loot,ranarr_seed,1,1,18
+data=loot,irit_seed,1,1,15
+data=loot,avantoe_seed,1,1,11
+data=loot,kwuarm_seed,1,1,7
+data=loot,snapdragon_seed,1,1,3
+data=loot,cadantine_seed,1,1,3
+data=loot,lantadyme_seed,1,1,2
+data=loot,dwarf_weed_seed,1,1,1
+data=loot,torstol_seed,1,1,1
+data=pocket,master farmer's pocket
+data=pet_base,257211
+data=loot_total,10000

@@ -4,6 +4,13 @@ if($product = torch_lit & inzone(0_43_51_8_7, 1_43_51_52_63, coord) = true) {
     mes("Your tinderbox is damp from the sea crossing. It won't light here.");
     return;
 }
+// The bug lantern is the one light source with a level on it: "a lit bug lantern, which requires a
+// Firemaking level of 33 to light" (/w/Harpie_Bug_Swarm). Nothing in the game lit one before, so
+// nothing had asked.
+if ($product = slayer_buglan_on & stat(firemaking) < ^bug_lantern_light_level) {
+    mes("You need a Firemaking level of <tostring(^bug_lantern_light_level)> to light this lantern.");
+    return;
+}
 inv_del(inv, $unlit_source, 1);
 inv_add(inv, $product, 1);
 if($product ! lit_black_candle & $product ! lit_candle) {
@@ -64,6 +71,9 @@ mes("You put the candle in the lantern.");
 [opheld2,bullseye_lantern_lit] ~extinguish_light_source(bullseye_lantern_unlit);
 [opheld2,candle_lantern_lit] ~extinguish_light_source(candle_lantern_unlit);
 [opheld2,candle_lantern_black_lit] ~extinguish_light_source(candle_lantern_black_unlit);
+// The bug lantern carries its Extinguish on op3 rather than op2, which is why the op2 sweep that
+// found the five above walked straight past it. Same fault, same fix: nothing answered the click.
+[opheld3,slayer_buglan_on] ~extinguish_light_source(slayer_buglan_off);
 
 // Written back into the slot it came from rather than added, so a full inventory can still put a
 // lantern out - and so the lantern does not move while you are looking at it.

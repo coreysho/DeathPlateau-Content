@@ -65,6 +65,27 @@ manwear=obj_elder_chaos_hood_manwear,0
 womanwear=obj_elder_chaos_hood_womanwear,0
 manhead=obj_elder_chaos_hood_manhead
 womanhead=obj_elder_chaos_hood_womanhead
+// THE CHATHEAD'S OWN COLOURS, which is the one place the import did not bake them in.
+//
+// Every other model in this set - the three icons and the six worn models - came out of
+// tools/models/importosrs.py with the recolour already in the mesh: HSL16 929 for the cloth, 914
+// for its shadow, 2954 for the trim. The two HEAD models did not. They still carry the colours the
+// OSRS cache ships, 8741 and 4888, which are an olive brown; the trim colour they share with the
+// rest of the set is the giveaway that the other two rows are the same two surfaces unrecoloured.
+//
+// So the hood was dark red and the face under it was olive. ObjType.method228 applies an obj's
+// recolour pairs when it builds the head model, and neither source colour appears in the icon or
+// the worn models, so this pair reaches the chathead and nothing else.
+//
+// THE NUMBERS ARE RGB15, NOT THE HSL16 THE MODEL STORES. ObjConfig.ts puts every recolour value
+// over 100 through ColorConversion.rgb15toHsl16, so a pair written as the model's own colours
+// matches nothing at all - which is how the first attempt at this silently did nothing. Each one
+// below is the single RGB15 value that converts to the HSL16 it is named for, and 15425 is the
+// same red the top's existing pair already uses for exactly this cloth.
+recol1s=14724
+recol1d=15425
+recol2s=11425
+recol2d=9216
 wearpos=hat
 wearpos2=head
 wearpos3=jaw

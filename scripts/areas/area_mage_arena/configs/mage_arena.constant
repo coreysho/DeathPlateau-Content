@@ -25,3 +25,10 @@
 ^god_saradomin = 1
 ^god_guthix = 2
 ^god_zamorak = 3
+
+// THE EASTERN LEVERS' TWO SIDES. magearena_lever_in sits at 3104,3956 in the web-sealed chamber
+// north of the arena wall and puts you on the arena's northern strip; magearena_lever_out sits at
+// 3105,3952 just inside it and puts you back in the chamber. Four tiles apart with a solid wall
+// between them, which is the whole point of the pair.
+^mage_arena_inside_coord = 0_48_61_33_47
+^mage_arena_outside_coord = 0_48_61_33_52

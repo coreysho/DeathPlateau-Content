@@ -70,6 +70,11 @@ if ($bolt_effect ! ^bolt_none | $hit = true) {
         & oc_category($rhand) ! weapon_bow & inv_total(worn, slayer_broad_arrows) = 0) {
         $maxhit = 0;
     }
+    // Harpie bug swarms want a lit bug lantern in hand, and take nothing from anybody without one
+    // (skill_slayer/scripts/npcs/harpie_bug_swarm.rs2).
+    if (~harpie_lantern_missing = true) {
+        $maxhit = 0;
+    }
     // Horror from the Deep - Dagannoth Mother (quest_horror): ranged only damages her during her
     // green/ranged-weakness phase. See the matching melee-side comment in player_melee.rs2 and the
     // magic-side handling in player_magic.rs2 for the other four (elemental) phases.
@@ -209,7 +214,7 @@ if($ammo = holy_water) {
 if (~ranged_ammo_saved = true) { // Ava's device, or the Ranging cape standing in for one: the ammo stays in the quiver
     return;
 }
-if (random(^dropammo_chance) ! 0) {
+if (~ranged_ammo_falls = true) {
     if (map_blocked(npc_coord) = false) {
         inv_dropitem_delayed(worn, npc_coord, $ammo, 1, ^lootdrop_duration, $delay);
         return;
