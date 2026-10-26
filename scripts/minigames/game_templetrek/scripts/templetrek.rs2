@@ -174,9 +174,15 @@ if ($guard ! 99) {
 %trek_vine_state = 0;
 %templetrek_last_event = ~trek_event($room);
 if_close;
+// The room being LEFT is emptied first, while the player is still standing in it - npc_find works
+// off the player's coord, so anything cleared after the teleport is cleared in the wrong room. Every
+// leg used to leave its escort and its monsters behind for that reason.
+~trek_clear_escort;
+~trek_clear_monsters;
 mes("You press on into the swamp.");
 p_delay(2);
 p_teleport(~trek_entry($room));
+// ...and the room being entered is emptied too, in case somebody else left something in it.
 ~trek_clear_monsters;
 ~trek_place_escort;
 @trek_start_event(~trek_event($room));
@@ -192,11 +198,18 @@ if (npc_find(coord, $type, 3, 0) = true) {
     npc_setmode(playerfollow);
 }
 
+// ALL SIX, not just the one %trek_escort currently names, and in a loop rather than once. Looking
+// up the current type only works while that varbit is still set and there is exactly one of them
+// standing about - and a teardown that has already cleared the varbit, or a trek that ended badly
+// somewhere, leaves a villager wandering Mort Myre for ever. One escort was surviving the
+// escort-death path for exactly this reason.
 [proc,trek_clear_escort]
-def_npc $type = ~trek_escort_type;
-if (npc_find(coord, $type, 40, 0) = true) {
-    npc_del;
-}
+~trek_clear_one(templetrek_retired_man_easy);
+~trek_clear_one(templetrek_retired_soldier_easy);
+~trek_clear_one(templetrek_man_med);
+~trek_clear_one(templetrek_woman_med);
+~trek_clear_one(templetrek_oldman_hard);
+~trek_clear_one(templetrek_child_hard);
 
 // ===================================================================== the three ways out
 // Look-at is op1 on all three Paths and says where the thing goes; the op2s are the ones that move
@@ -254,6 +267,7 @@ if (%trek_leg >= ~trek_legs) {
 // ================================================================================ the end
 [label,trek_arrive]
 if_close;
+~trek_stop_watch;
 ~trek_clear_escort;
 ~trek_clear_monsters;
 mes("The ground rises, and the Salve is in front of you.");
@@ -274,6 +288,7 @@ def_namedobj $token = ~trek_token;
 
 [proc,trek_abandon](string $why)
 if_close;
+~trek_stop_watch;
 ~trek_clear_escort;
 ~trek_clear_monsters;
 mes($why);
@@ -319,6 +334,8 @@ return(^trek_r1_entry);
 %trek_spawned = 0;
 %templetrek_last_event = ^trek_event_tentacles;
 if_close;
+~trek_clear_escort;
+~trek_clear_monsters;
 mes("The ground gives out at the water, and there is a boat drawn up.");
 p_delay(2);
 p_teleport(^trek_r15_entry);

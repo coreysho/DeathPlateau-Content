@@ -63,6 +63,20 @@
 // an escort that evaporated mid-room would read as a death.
 ^trek_escort_life = 2000
 ^trek_monster_life = 1200
+
+// WHAT HAPPENS TO THE ESCORT, which is the whole stake of the minigame and the one thing it was
+// missing. Old School: "A trek fails if you or the follower die." There is no npc-against-npc
+// combat in this build - huntmode hunts PLAYERS, and the two [ai_opnpc] triggers in the whole of
+// content are a pet following its owner - so a monster will never swing at the escort of its own
+// accord. What happens instead is scripted: while a combat event is unresolved, anything of that
+// event's standing within two tiles of the escort takes a bite out of them every few ticks. The
+// effect is the one that matters. Leave your charge surrounded and they go down.
+^trek_watch_ticks = 5
+^trek_escort_bite = 4
+
+// The whole of the trek map, for the death hook: seven regions, m31_78 to m37_78, all four planes.
+^trek_zone_sw = 0_31_78_0_0
+^trek_zone_ne = 3_37_78_63_63
 // How long a mended bridge stays mended. Long enough for a trek and no longer - the next player
 // through that room wants to find it broken.
 ^trek_bridge_life = 2000

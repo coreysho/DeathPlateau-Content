@@ -20,6 +20,14 @@ p_delay(3);
 %death = ^false;
 
 [queue,player_death_default]
+// Temple Trekking is NOT a safe death - Old School sends your unprotected items to a grave outside
+// the instance - so this is a cleanup and not a jump: the trek is torn down, the escort and
+// whatever was chewing on them are despawned, and the ordinary death below runs as usual. Without
+// it a player who died in the swamp stayed "on a trek" for ever and could never start another.
+// minigames/game_templetrek/scripts/templetrek_events.rs2.
+if (~in_templetrek(coord) = true) {
+    ~trek_player_died;
+}
 if (~in_castlewars_game(coord) = true) {
     @player_death_castlewars;
 }

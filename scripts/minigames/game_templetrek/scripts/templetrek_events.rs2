@@ -67,6 +67,7 @@ while ($i < $n) {
     $i = calc($i + 1);
 }
 mes($line);
+~trek_watch_escort;
 
 // Five tiles around the player, which is as many as the hardest escort brings. movecoord rather
 // than map_findsquare, because these rooms are narrow and a random square can land in the water.
@@ -400,6 +401,7 @@ p_delay(^trek_tentacle_rise);
 ~trek_woken(^trek_tentacle_head, templetrek_tentacle_head_spawning, templetrek_tentacle_head);
 %trek_spawned = 5;
 %trek_kills = 0;
+~trek_watch_escort;
 ~mesbox("A head and four tentacles, and nowhere to stand but the boat. Keep them off your charge.");
 
 [proc,trek_rise](coord $where, npc $what)
@@ -447,7 +449,8 @@ npc_add($where, $to, ^trek_monster_life);
 ~trek_clear_one(templetrek_good_samaritan);
 
 // Bounded, and npc_find is called again each time rather than walked with npc_findnext: deleting
-// the npc the iterator is standing on is not a thing to rely on.
+// the npc the iterator is standing on is not a thing to rely on. Shared with trek_clear_escort,
+// which sweeps the six villagers the same way.
 [proc,trek_clear_one](npc $type)
 def_int $i = 0;
 while ($i < 8) {
@@ -457,3 +460,115 @@ while ($i < 8) {
     npc_del;
     $i = calc($i + 1);
 }
+
+// ====================================================================== keeping your charge alive
+// The watch runs while a combat event is unresolved and stops when it is. One queue, re-queued -
+// there is nothing in this build that gives an npc a standing order to attack another npc, so the
+// mauling is done here instead. See the note in configs/templetrek.constant.
+[proc,trek_watch_escort]
+clearqueue(trek_escort_watch);
+queue(trek_escort_watch, ^trek_watch_ticks, 0);
+
+[queue,trek_escort_watch](int $unused)
+if (%trek_route = ^trek_route_none) {
+    return;
+}
+if (%trek_event_done = 1) {
+    return;
+}
+if (~trek_maul_escort = true) {
+    @trek_escort_down;
+}
+queue(trek_escort_watch, ^trek_watch_ticks, 0);
+
+// Returns true when that was the bite that finished them. The escort is found twice on purpose:
+// npc_find moves the active npc, so looking for a monster beside them loses them.
+[proc,trek_maul_escort]()(boolean)
+def_npc $escort = ~trek_escort_type;
+if (npc_find(coord, $escort, 40, 0) = false) {
+    return(false);
+}
+def_coord $where = npc_coord;
+if (~trek_monster_near($where) = false) {
+    return(false);
+}
+if (npc_find($where, $escort, 2, 0) = false) {
+    return(false);
+}
+if (npc_stat(hitpoints) <= ^trek_escort_bite) {
+    return(true);
+}
+npc_statsub(hitpoints, ^trek_escort_bite, 0);
+mes("Your charge is being mauled.");
+return(false);
+
+// Only the monsters of the event actually running, which is three types rather than twenty.
+[proc,trek_monster_near](coord $where)(boolean)
+switch_int (~trek_event(%trek_room)) {
+    case ^trek_event_snakes : return(~trek_any_near($where, templetrek_snake_1, templetrek_snake_2, templetrek_snake_3));
+    case ^trek_event_snails : return(~trek_any_near($where, templetrek_giantsnail_1, templetrek_giantsnail_2, templetrek_giantsnail_3));
+    case ^trek_event_vampyres : return(~trek_any_near($where, templetrek_vampire_1, templetrek_vampire_2, templetrek_vampire_3));
+    case ^trek_event_shades : return(~trek_any_near($where, templetrek_shade_1, templetrek_shade_2, templetrek_shade_3));
+    case ^trek_event_tentacles : return(~trek_any_near($where, templetrek_tentacle_arm, templetrek_tentacle_head, templetrek_tentacle_arm));
+    case ^trek_event_ghasts :
+        // Old School: only the HIDDEN ghasts go for the follower. Both forms are checked anyway,
+        // because a revealed one standing over them is still standing over them.
+        if (~trek_any_near($where, templetrek_ghast_invis_1, templetrek_ghast_invis_2, templetrek_ghast_invis_3) = true) {
+            return(true);
+        }
+        return(~trek_any_near($where, templetrek_ghast_vis_1, templetrek_ghast_vis_2, templetrek_ghast_vis_3));
+}
+return(false);
+
+[proc,trek_any_near](coord $where, npc $a, npc $b, npc $c)(boolean)
+if (npc_find($where, $a, 2, 0) = true) {
+    return(true);
+}
+if (npc_find($where, $b, 2, 0) = true) {
+    return(true);
+}
+if (npc_find($where, $c, 2, 0) = true) {
+    return(true);
+}
+return(false);
+
+[label,trek_escort_down]
+clearqueue(trek_escort_watch);
+if_close;
+mes("Your charge goes down, and does not get up.");
+~trek_clear_escort;
+~trek_clear_monsters;
+p_delay(3);
+p_teleport(^trek_burgh_start);
+%trek_route = ^trek_route_none;
+%trek_escort = ^trek_escort_none;
+%trek_room = 0;
+%trek_leg = 0;
+%trek_event_done = 0;
+%templetrek_npc_point_value = 0;
+~mesbox("You walked out of Mort Myre alone. There is no token for that.");
+
+// A trek that ends any other way stops the watch too - the queue would otherwise sit there and
+// maul whoever the next escort is before their own event had started.
+[proc,trek_stop_watch]
+clearqueue(trek_escort_watch);
+
+// The player dying in the swamp. Old School is explicit that a trek fails if either of you dies,
+// and that it is not a safe death - so this tidies the trek up and lets the ordinary death run.
+// Reached from [queue,player_death_default] in player/scripts/death.rs2.
+[proc,trek_player_died]
+if (%trek_route = ^trek_route_none) {
+    return;
+}
+clearqueue(trek_escort_watch);
+~trek_clear_escort;
+~trek_clear_monsters;
+%trek_route = ^trek_route_none;
+%trek_escort = ^trek_escort_none;
+%trek_room = 0;
+%trek_leg = 0;
+%trek_event_done = 0;
+%templetrek_npc_point_value = 0;
+
+[proc,in_templetrek](coord $where)(boolean)
+return(inzone(^trek_zone_sw, ^trek_zone_ne, $where));
