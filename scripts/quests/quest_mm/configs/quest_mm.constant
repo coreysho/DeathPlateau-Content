@@ -244,14 +244,36 @@
 // is reused as "has handed over the training reward".
 ^mm_daero_paid = 1
 
+// --- The Ape Atoll dungeon's traps (scripts/mm_dungeon.rs2) ---
+// The two numbers that are not quest_upass's. The floor spikes are Old School's own figure, "hit 4
+// if stood on", and they keep hitting until the player moves. The spear trap's poison is the
+// shortest severity any npc in the cache carries, because Old School says this one "fades quickly".
+^mm_floorspike_damage = 4
+^mm_speartrap_poison = 5
+
 // ===================================================================================================
 // STILL NOT BUILT
 // ===================================================================================================
-// * THE JAIL. mm_jail_door, mm_jail_door_unpickable and mm_jail_posts are placed on m43_43 and the
-//   mm_jail_count varbit is an 8-bit counter, so a jail sequence was clearly intended. It is
-//   DELIBERATELY SKIPPED: in the real quest you are jailed for walking into Marim as a human, and
-//   the cache gives no npc dialogue, no cell coordinate and no escape route to build that from.
-//   Instead the monkey guards simply stop a human at the gate. Flagged rather than invented.
+// * THE DUNGEON'S FALLING ROCKS. Old School drops rocks on you anywhere in the Ape Atoll dungeon
+//   unless you are standing under a rock ledge, and hides two rock traps under two of those ledges.
+//   The cache has the pieces for the first half - a mm_roofcollapse spotanim named for this quest,
+//   the human_rockfall seq, and the one-bit mm_rock_falling varbit - and for the second half it has
+//   mm_rocktrap, which is mm_double_springtrap_trigger under another name.
+//   NEITHER IS BUILT, because the map does not support either: mm_rocktrap is placed on no
+//   mapsquare in the game, and overhang3rock ("Overhanging rock / A rocky ledge") is placed nowhere
+//   in the four dungeon squares, so there is nowhere to shelter and nowhere to put a rock trap.
+//   Choosing a rate and inventing ledges would be inventing the step. What IS built is the ninety-one
+//   traps the 377 map actually places - see scripts/mm_dungeon.rs2.
+// * THE FOUR NAMED NINJA MONKEYS AND THE NINJA MONKEY GUARD. mm_oipuis, mm_ouhai, mm_uodai,
+//   mm_uyoro, mm_duke and mm_monkey_guard have no static spawn, and that is correct: in Old School
+//   none of them has one either. They are the capture event - "Monkey Guards will appear if players
+//   talk to a monkey on Ape Atoll while in human form", one named monkey plus one or two guards, and
+//   a hit from the named one puts you in the cell. The cell and the arrest ARE built
+//   ([label,mm_jail_arrest]); what is missing is that second doorway into it, and with it any
+//   dialogue for the eleven Marim monkeys, none of which has an opnpc1 at all.
+//   The temple's nine Monkey Guards are NOT missing: mm_religious_guard is named "Monkey Guard" at
+//   vislevel 167, and its nine placements on m43_43 are Old School's own nine coordinates for the
+//   Temple of Marimbo, tile for tile.
 // * THE HANGAR PUZZLE. Unchanged from stage one - five mm_glider and five mm_bunker_lever in matched
 //   rows with nothing in the cache saying which lever drives which glider.
 // * THE REINITIALISATION PANEL and mm_reinitialisation_crate on the m37_154 copy.

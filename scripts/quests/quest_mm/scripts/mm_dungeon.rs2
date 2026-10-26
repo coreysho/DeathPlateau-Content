@@ -1,0 +1,200 @@
+// THE APE ATOLL DUNGEON COULD NOT HURT ANYBODY.
+//
+// Reported from play as "no rocks falling when in cave on your way to zooknock". What the cave is
+// missing is worse than rocks: the 377 cache places NINETY-ONE traps across its four mapsquares and
+// not one of them had a script behind it. Seventy-two mm_floorspikes animating away under the
+// player's feet, fifteen mm_speartrap, two mm_double_springtrap with their own searchable triggers -
+// all drawn, all doing nothing. The whole walk to Zooknock cost not one hitpoint.
+//
+// Everything used below is the cache's own, which is why this is a build and not an invention:
+//
+//   mm_floorspikes                "Floor spikes / Human sieve creation", animated, one tile, 72 of them
+//   mm_speartrap                  "Slight indentations / Looks suspicious", width 2, 15 of them
+//   mm_double_springtrap          "Stalagmites", width 3, with mm_double_springtrap_trigger on the
+//                                 middle tile of each - 2 of them
+//   mm_crossing_plank             "Plank", for laying over the spring trap
+//   speartrap_release             the spear trap firing
+//   double_springtrap_release     the spring trap firing, and double_springtrap_reset closing again
+//
+// And it is written against the one the engine already has: [timer,upass_trap] in
+// quest_upass/scripts/upass_obstacles.rs2. These are the SAME traps - mm_speartrap is
+// upass_speartrap recoloured, mm_double_springtrap_trigger is upass_logtrap_trigger_0 recoloured -
+// so the damage formulas, the "Ouch!", the reset delay and the plank crossing are that file's,
+// not numbers made up here. Old School gives one figure of its own, that the floor spikes "hit 4 if
+// stood on" and "will continuously hit you until you move or die", and that is ^mm_floorspike_damage.
+//
+// A greegree does NOT help. Old School is explicit that in monkey form "damage will still be taken
+// from traps and falling rocks", so nothing here asks ~mm_is_monkey.
+//
+// THE TIMER RUNS EVERY TICK, AND ONLY WHERE A TRAP IS. A walking player covers one tile a tick, so
+// a trap underfoot can never be stepped over; a running player covers two, which is how Old School's
+// "run trick" skips them. The 45 zone declarations below are every 8x8 zone that holds a trap tile,
+// generated from the four mapsquares rather than typed - the same reason upass_grid_traps is on
+// [zone] and not [mapzone]: "want to avoid running 1t timers too often".
+
+// ---------------------------------------------------------------------------------------------------
+// The 45 zones that hold a trap
+// ---------------------------------------------------------------------------------------------------
+[zone,0_42_142_0_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_0_24] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_8_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_8_24] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_8_48] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_16_8] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_16_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_16_24] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_16_40] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_16_48] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_24_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_24_24] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_24_40] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_24_48] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_32_8] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_40_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_40_32] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_8] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_16] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_24] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_32] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_40] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_48] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_48_56] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_56_8] settimer(mm_dungeon_trap, 1);
+[zone,0_42_142_56_16] settimer(mm_dungeon_trap, 1);
+[zone,0_43_142_0_40] settimer(mm_dungeon_trap, 1);
+[zone,0_43_142_40_24] settimer(mm_dungeon_trap, 1);
+[zone,0_43_142_40_32] settimer(mm_dungeon_trap, 1);
+[zone,0_43_142_48_16] settimer(mm_dungeon_trap, 1);
+[zone,0_43_142_56_16] settimer(mm_dungeon_trap, 1);
+[zone,0_43_143_24_32] settimer(mm_dungeon_trap, 1);
+[zone,0_43_143_32_40] settimer(mm_dungeon_trap, 1);
+[zone,0_43_143_32_48] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_0_40] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_8_56] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_16_0] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_32_0] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_40_56] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_48_0] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_48_8] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_48_16] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_48_24] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_48_56] settimer(mm_dungeon_trap, 1);
+[zone,1_42_143_56_40] settimer(mm_dungeon_trap, 1);
+
+[zoneexit,0_42_142_0_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_0_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_8_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_8_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_8_48] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_16_8] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_16_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_16_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_16_40] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_16_48] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_24_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_24_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_24_40] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_24_48] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_32_8] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_40_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_40_32] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_8] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_32] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_40] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_48] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_48_56] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_56_8] cleartimer(mm_dungeon_trap);
+[zoneexit,0_42_142_56_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_142_0_40] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_142_40_24] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_142_40_32] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_142_48_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_142_56_16] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_143_24_32] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_143_32_40] cleartimer(mm_dungeon_trap);
+[zoneexit,0_43_143_32_48] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_0_40] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_8_56] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_16_0] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_32_0] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_40_56] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_48_0] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_48_8] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_48_16] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_48_24] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_48_56] cleartimer(mm_dungeon_trap);
+[zoneexit,1_42_143_56_40] cleartimer(mm_dungeon_trap);
+
+// ---------------------------------------------------------------------------------------------------
+// What is underfoot
+// ---------------------------------------------------------------------------------------------------
+[timer,mm_dungeon_trap]
+// THE FLOOR SPIKES ARE NOT HIDDEN and they are not a chance: they are drawn, they are animating, and
+// standing on them hits you until you move. One tile each, so the player's own coord is exact.
+if (loc_find(coord, mm_floorspikes) = true) {
+    say("Ouch!");
+    queue(damage_player, 0, ^mm_floorspike_damage);
+    return;
+}
+// THE SPEAR TRAP IS WIDTH 2, which loc_find does not know about - it only ever matches a loc's
+// origin tile. At an even angle the second tile is east of the origin and at an odd angle it is
+// north of it, so the origin of a trap covering this tile is either here, one west, or one south.
+// A failed loc_find leaves the active loc alone, so whichever of the three matches is the one
+// loc_anim fires.
+if (loc_find(coord, mm_speartrap) = true | loc_find(movecoord(coord, -1, 0, 0), mm_speartrap) = true | loc_find(movecoord(coord, 0, 0, -1), mm_speartrap) = true) {
+    loc_anim(speartrap_release);
+    say("Ouch!");
+    queue(damage_player, 0, calc(((stat(hitpoints) * 10) / 100) + 1));
+    // Old School: the small hidden spike traps poison, and the poison "fades quickly". ^mm_speartrap_poison
+    // is the shortest severity the cache uses on any npc.
+    queue(poison_player, 0, ^mm_speartrap_poison);
+    return;
+}
+// AND THE SPRING TRAP, whose trigger sits on the middle tile of its own stalagmites - 2692,9109
+// under 2692-2694,9109 and 2743,9146 under 2743,9145-9147 - so the trigger coord is exact and the
+// stalagmites are one west of it at an even angle and one south at an odd one.
+if (loc_find(coord, mm_double_springtrap_trigger) = true) {
+    if (loc_find(movecoord(loc_coord, -1, 0, 0), mm_double_springtrap) = true | loc_find(movecoord(loc_coord, 0, 0, -1), mm_double_springtrap) = true) {
+        loc_anim(double_springtrap_release);
+    }
+    say("Ouch!");
+    queue(damage_player, 0, calc(((stat_base(hitpoints) * 8) / 100) + 1));
+    world_delay(1);
+    loc_anim(double_springtrap_reset);
+}
+
+// ---------------------------------------------------------------------------------------------------
+// Searching the rock, and laying a plank over it
+// ---------------------------------------------------------------------------------------------------
+// Both are upass_double_springtrap_trigger's, because it is the same trap: there is no way to disarm
+// it and the way past is a plank. mm_crossing_plank is in the cache for exactly this and was
+// referenced by nothing.
+[oploc1,mm_double_springtrap_trigger]
+~mesbox("The rock shifts a little under your hand...|It is a trap, and there is nothing on it to disarm.|Something laid across it would do.");
+
+[oplocu,mm_double_springtrap_trigger]
+if (last_useitem ! woodplank) {
+    ~mesbox("That is not going to bridge anything.");
+    return;
+}
+mes("You lay the plank across the flat rock...");
+anim(human_pickupfloor, 0);
+sound_synth(put_down, 1, 0);
+p_delay(1);
+mes("...and walk over before it settles.");
+loc_del(5);
+if (coordz(coord) > coordz(loc_coord)) {
+    loc_add(loc_coord, mm_crossing_plank, 0, grounddecor, 5);
+    ~forcemove(movecoord(loc_coord, 0, 0, -1));
+} else if (coordz(coord) < coordz(loc_coord)) {
+    loc_add(loc_coord, mm_crossing_plank, 0, grounddecor, 5);
+    ~forcemove(movecoord(loc_coord, 0, 0, 1));
+} else if (coordx(coord) > coordx(loc_coord)) {
+    loc_add(loc_coord, mm_crossing_plank, 1, grounddecor, 5);
+    ~forcemove(movecoord(loc_coord, -1, 0, 0));
+} else {
+    loc_add(loc_coord, mm_crossing_plank, 1, grounddecor, 5);
+    ~forcemove(movecoord(loc_coord, 1, 0, 0));
+}
