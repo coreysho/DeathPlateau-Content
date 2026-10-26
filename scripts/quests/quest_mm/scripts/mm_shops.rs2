@@ -1,0 +1,38 @@
+// DAGA SELLS THE DRAGON SCIMITAR ONLY TO SOMEONE WHO HAS FINISHED THE QUEST.
+//
+// The cache ships two inventories for his counter and the build only ever opened one. mm_scimitar_shop
+// is bronze, iron, steel and mithril; mm_scimitar_shop2 is the same four with dragon_scimitar added,
+// and nothing in the repo referenced it - so Daga's Scimitar Smithy, which is the only place in the
+// game that sells a dragon scimitar, never sold one. Reported from play as "daga scimtar shop
+// doesnt offer d scim".
+//
+// Old School gates it on Monkey Madness being complete, which is also the only way to be standing
+// in his shop in the first place without the island killing you, and the reason the quest's reward
+// list names the scimitar at all.
+//
+// His own params carry the prices and the title, so this reads them rather than repeating them:
+// only the inventory differs between the two counters. ~openshop_obj is the engine's own
+// two-counter path, written for Gabooty, and takes the inv as an argument.
+//
+// A named [opnpc3,mm_daga] beats the category's [opnpc3,_shop_keeper], so nothing else changes.
+
+[opnpc3,mm_daga]
+@mm_daga_trade;
+
+[opnpc1,mm_daga]
+~chatnpc("<p,happy>Ook ook! You want a blade?");
+def_int $choice = ~p_choice2("Yes please. What are you selling?", 1, "No thanks.", 2);
+if ($choice = 2) {
+    ~chatplayer("<p,neutral>No thanks.");
+    return;
+}
+~chatplayer("<p,quiz>Yes please. What are you selling?");
+@mm_daga_trade;
+
+[label,mm_daga_trade]
+def_inv $counter = mm_scimitar_shop;
+if (%mm_main = ^mm_complete) {
+    $counter = mm_scimitar_shop2;
+}
+~openshop_obj($counter, npc_param(shop_currency), npc_param(shop_buy_multiplier),
+              npc_param(shop_sell_multiplier), npc_param(shop_delta), npc_param(shop_title));

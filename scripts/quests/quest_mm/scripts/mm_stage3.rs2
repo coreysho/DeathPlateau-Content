@@ -179,18 +179,29 @@ return(null);
 // scripts/_unpack/377/all.npc, so it cannot drift.
 [proc,mm_monkey_bas](npc $form)
 switch_npc ($form) {
-    case mm_transmogrification_normal_monkey : ~mm_bas(monkey_ready, monkey_walk);
-    case mm_transmogrification_small_ninja_monkey, mm_transmogrification_medium_ninja_monkey : ~mm_bas(m_monkey_ready, m_monkey_walk);
-    case mm_transmogrification_normal_gorilla, mm_transmogrification_bearded_gorilla, mm_transmogrification_ancient_monkey : ~mm_bas(m_gorilla_ready, m_gorilla_walk);
-    case mm_transmogrification_small_zombie_monkey, mm_transmogrification_large_zombie_monkey : ~mm_bas(m_monkey_ready, m_zombie_walk);
-    case default : ~mm_bas(monkey_ready, monkey_walk);
+    case mm_transmogrification_normal_monkey : ~mm_bas(monkey_ready, monkey_walk, monkey_walk);
+    case mm_transmogrification_small_ninja_monkey, mm_transmogrification_medium_ninja_monkey : ~mm_bas(m_monkey_ready, m_monkey_walk, m_monkey_run);
+    case mm_transmogrification_normal_gorilla, mm_transmogrification_bearded_gorilla, mm_transmogrification_ancient_monkey : ~mm_bas(m_gorilla_ready, m_gorilla_walk, m_gorilla_run);
+    case mm_transmogrification_small_zombie_monkey, mm_transmogrification_large_zombie_monkey : ~mm_bas(m_monkey_ready, m_zombie_walk, m_zombie_walk);
+    case default : ~mm_bas(monkey_ready, monkey_walk, monkey_walk);
 }
 
-// One walk seq for all six directions and the run, which is what the cache gives these npcs: none
-// of them has a backwards, sideways or running animation of its own. Naming it once keeps the
-// table above one line per form.
-[proc,mm_bas](seq $ready, seq $walk)
-~bas_set($ready, $walk, $walk, $walk, $walk, $walk, $walk);
+// THE TURN IS THE READY, AND THE RUN IS A RUN. This used to pass the walk for all six of
+// bas_set's remaining slots, which got two things wrong at once and both were reported from play
+// as "turning into a monkey walkin animation is bugged" - which is exactly what it is, twice over:
+//
+//   the TURN slot was the walk, so a monkey standing still and turning on the spot played a whole
+//   walk cycle going nowhere;
+//   and the RUN slot was the walk, so a running monkey ambled.
+//
+// The cache has m_monkey_run and m_gorilla_run and neither was referenced anywhere in the build.
+// The small Karamjan monkey and the two zombies genuinely have no run of their own - monkey_* and
+// m_zombie_* stop at walk - so those two keep the walk, which is the whole reason this takes the
+// run as an argument rather than deriving it.
+//
+// Backwards and sideways stay the walk: no monkey in the cache has those either.
+[proc,mm_bas](seq $ready, seq $walk, seq $run)
+~bas_set($ready, $ready, $walk, $walk, $walk, $walk, $run);
 
 [proc,mm_greegree_form]()(npc)
 def_obj $held = inv_getobj(worn, ^wearpos_rhand);

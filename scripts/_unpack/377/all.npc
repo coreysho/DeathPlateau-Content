@@ -35910,6 +35910,8 @@ vislevel=149
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_duke]
 name=Duke
@@ -35927,6 +35929,10 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_oipuis]
 name=Oipuis
@@ -35944,6 +35950,10 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_uyoro]
 name=Uyoro
@@ -35961,6 +35971,10 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_ouhai]
 name=Ouhai
@@ -35978,6 +35992,10 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_uodai]
 name=Uodai
@@ -35995,6 +36013,10 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_doublescimitar
+param=defend_anim,m_monkey_block_doublescimitar
 
 [mm_padulah]
 name=Padulah
@@ -36011,6 +36033,10 @@ head1=npc_1441_head
 param=death_drop,mm_normal_monkey_bones
 
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_scimitar
+param=defend_anim,m_monkey_block_scimitar
 
 [mm_awowogei_cutscene]
 name=Awowogei
@@ -36126,6 +36152,10 @@ moverestrict=nomove
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_melee
+huntrange=5
+param=attack_anim,m_monkey_attack_scimitar
+param=defend_anim,m_monkey_block_scimitar
 
 [mm_monkey_archer]
 name=Monkey Archer
@@ -36156,6 +36186,10 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_ranged
+huntrange=8
+param=attack_anim,m_monkey_attack_bow
+param=defend_anim,m_monkey_block_bow
 
 [mm_ravine_archer]
 name=Monkey Archer
@@ -36186,6 +36220,10 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_ranged
+huntrange=8
+param=attack_anim,m_monkey_attack_bow
+param=defend_anim,m_monkey_block_bow
 
 [mm_posted_archer]
 name=Monkey Archer
@@ -36216,6 +36254,10 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+huntmode=mm_aggressive_ranged
+huntrange=8
+param=attack_anim,m_monkey_attack_bow
+param=defend_anim,m_monkey_block_bow
 
 [mm_religious_guard]
 name=Monkey Guard
@@ -36244,6 +36286,8 @@ moverestrict=nomove
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+huntmode=mm_aggressive_melee
+huntrange=5
 
 [mm_religious_trapdoor_guard]
 name=Monkey Guard
@@ -36268,6 +36312,8 @@ moverestrict=nomove
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+huntmode=mm_aggressive_melee
+huntrange=5
 
 [mm_elder_guard_1]
 name=Elder Guard
@@ -36281,6 +36327,8 @@ op1=Talk-to
 vislevel=hide
 head1=npc_1460_head
 moverestrict=nomove
+huntmode=mm_aggressive_melee
+huntrange=5
 
 [mm_elder_guard_2]
 name=Elder Guard
@@ -36294,6 +36342,8 @@ op1=Talk-to
 vislevel=hide
 head1=npc_1460_head
 moverestrict=nomove
+huntmode=mm_aggressive_melee
+huntrange=5
 
 [mm_zoo_monkey]
 name=Monkey
@@ -36352,6 +36402,8 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+huntmode=aggressive_melee
+huntrange=5
 
 [mm_zombie_monkey_large_guard]
 name=Monkey Zombie
@@ -36385,6 +36437,8 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+huntmode=aggressive_melee
+huntrange=5
 
 [mm_zombie_monkey_small]
 name=Monkey Zombie
@@ -36412,6 +36466,8 @@ param=damagetype,^crush_style
 
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+huntmode=aggressive_melee
+huntrange=5
 
 [mm_bonzara]
 name=Bonzara
@@ -36504,6 +36560,8 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
+huntmode=aggressive_melee
+huntrange=5
 
 [mm_warehouse_spider]
 name=Spider
@@ -36613,6 +36671,8 @@ param=death_drop,null
 
 param=attack_anim,scorpion_attack
 param=death_anim,scorpion_death
+huntmode=aggressive_melee
+huntrange=4
 
 [mm_jungle_spider]
 name=Jungle spider
@@ -36633,6 +36693,8 @@ param=death_drop,null
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+huntmode=aggressive_melee
+huntrange=4
 
 [mm_jungle_snake]
 name=Snake
@@ -36653,6 +36715,8 @@ param=death_anim,snake_death
 param=death_sound,snake_death
 param=defend_anim,snake_block
 param=defend_sound,snake_hit
+huntmode=aggressive_melee
+huntrange=4
 
 [mm_transmogrification_small_ninja_monkey]
 name=Small ninja monkey
@@ -77628,6 +77692,7 @@ vislevel=hide
 turnspeed=0
 head1=npc_3481_head
 head2=npc_3481_headi2
+moverestrict=nomove
 
 [hundred_ilm_kikazaru]
 name=Kikazaru
@@ -77641,6 +77706,7 @@ vislevel=hide
 turnspeed=0
 head1=npc_3481_head
 head2=npc_3482_head
+moverestrict=nomove
 
 [hundred_ilm_iwazaru]
 name=Iwazaru
@@ -77659,6 +77725,7 @@ head2=npc_3483_head
 // no death_drop - so the one thing the whole sub-quest needs it for, a snake corpse, could not be
 // obtained. hundred_ilm_snake_corpse ("Like a snake only not alive") exists and nothing else drops
 // or gives it.
+moverestrict=nomove
 
 [hundred_ilm_snake]
 name=Big Snake

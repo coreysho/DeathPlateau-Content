@@ -110,7 +110,24 @@ if (%hundred_ilm_quest < ^hundred_monkey_told) {
 if (%hundred_ilm_banana = 0) {
     @hundred_pick_plain_banana;
 }
-mes("You take hold of the trunk and lean back on it with your whole weight.");
+// HAULING THE CROWN DOWN TAKES A ROPE AND A GORILLA, and it used to take neither: the tree bent
+// for a human with empty hands and the message said a rope had been used. Reported from play as
+// "it auto used rope didnt have in inv, and didnt need to be a gorilla".
+//
+// Both halves are Old School's. A rope goes round the crown - it is on the quest's item list - and
+// the pull needs a gorilla's weight, which is one of the two gorilla greegrees. ~mm_greegree_form
+// answers what the player currently IS, reading the worn greegree's own param, so this asks the
+// same question the island's monkeys ask.
+def_npc $form = ~mm_greegree_form;
+if ($form ! mm_transmogrification_normal_gorilla & $form ! mm_transmogrification_bearded_gorilla) {
+    ~mesbox("The crown is thirty feet up and the trunk is thicker than you are. Something with a gorilla's shoulders might bend it; you are not going to.");
+    return;
+}
+if (inv_total(inv, rope) < 1) {
+    ~mesbox("You could get a grip on it with a rope. Without one there is nothing up there to take hold of.");
+    return;
+}
+mes("You throw the rope over the crown and lean back on it with your whole weight.");
 anim(human_pickuptable, 0);
 %hundred_ilm_red_banana_tree = ^hundred_banana_tree_pulling;
 p_delay(3);

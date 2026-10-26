@@ -4851,11 +4851,12 @@ check(len(set(_forms.values())) == 8,
 # forms use FOUR different sets, and hardcoding one of them is how the only greegree there used to
 # be got animated as the wrong size of monkey.
 _bas = MMRS.split('[proc,mm_monkey_bas]', 1)[1].split('\n[', 1)[0]
-_cases = re.findall(r'case ([\w, ]+) : ~mm_bas\((\w+), (\w+)\);', _bas)
-_want = {}
-for _names, _ready, _walk in _cases:
+_cases = re.findall(r'case ([\w, ]+) : ~mm_bas\((\w+), (\w+), (\w+)\);', _bas)
+_want, _runs = {}, {}
+for _names, _ready, _walk, _run in _cases:
     for _n in [x.strip() for x in _names.split(',')]:
         _want[_n] = (_ready, _walk)
+        _runs[_n] = _run
 _drift = []
 for _form in sorted(set(_forms.values())):
     _blk = ALLNPC.split('[%s]' % _form, 1)
@@ -4877,6 +4878,30 @@ check(not _drift,
 check(len({v for v in _want.values()}) >= 4,
       'and they are not all the same set, which is the mistake this replaced: %d distinct sets'
       % len({v for v in _want.values()}))
+
+# ---- AND THE RUN IS A RUN WHERE THERE IS ONE.
+# bas_set's last slot is the running animation and ~mm_bas used to be handed the walk for it, along
+# with the turn - so a running monkey ambled and a monkey turning on the spot played a walk cycle
+# going nowhere. The cache has m_monkey_run and m_gorilla_run and neither was referenced anywhere
+# in the build. The seq names cannot be read out of all.npc - npcs have no run field - so what is
+# pinned here is the rule: a form whose family HAS a run uses it, and the two families that do not
+# (the small Karamjan monkey and the zombies) fall back to their walk.
+_ALLSEQ = read('scripts/_unpack/377/all.seq')
+_runbad = []
+for _form, _run in sorted(_runs.items()):
+    if '[%s]' % _run not in _ALLSEQ:
+        _runbad.append('%s runs with %s, which is not a seq' % (_form, _run))
+        continue
+    _family = _want[_form][1].rsplit('_', 1)[0]          # m_monkey_walk -> m_monkey
+    _own = '[%s_run]' % _family
+    if _own in _ALLSEQ and _run != '%s_run' % _family:
+        _runbad.append('%s has %s_run and does not use it' % (_form, _family))
+check(not _runbad,
+      'every form runs with its own family run seq where the cache has one, and its walk where it '
+      'does not: %s' % (_runbad[:2] or 'all %d forms' % len(_runs)))
+check(not re.search(r'~bas_set\(\$ready, \$walk,', MMRS),
+      "and the turn slot is the ready, not the walk - a monkey turning on the spot used to play a "
+      'whole walk cycle going nowhere')
 
 # ---- THE RECIPE reads the table rather than naming a head
 _carve = MMRS.split('[label,mm_zooknock_carve]', 1)[1].split('\n[', 1)[0]

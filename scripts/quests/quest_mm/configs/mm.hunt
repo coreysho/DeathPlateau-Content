@@ -1,0 +1,42 @@
+// APE ATOLL IS HOSTILE TO ANYTHING THAT IS NOT A MONKEY, and until now it was hostile to nothing.
+//
+// Not one npc on the island or in Zooknock's tunnel carried a huntmode, so the monkey guards, the
+// archers on the walkways, the gorillas and the zombies all stood and watched the player walk past
+// - and walk through them, since nothing that never attacks ever gets in your way. Reported from
+// play as "nothing is agro on island or in tunnel" and "monkeys dont shoot arrows at u".
+//
+// THE GREEGREE IS WHAT STOPS THEM. That is the whole point of the quest: Zooknock carves you a
+// monkey and the island stops seeing an intruder. So these are shaped on [aggressive_melee] and
+// [aggressive_ranged] from the 377 cache - same visibility, same combat guards - with one addition
+// borrowed from the God Wars dungeon, where "aggressive unless you are wearing their god's item"
+// has the same shape: check_invparam=worn,mm_transmog_npc,<1 means "hunt only when nothing WORN
+// carries the transmogrification param", and every greegree carries it (quest_mm.param).
+//
+// Worn, not inv: carrying a greegree in your pack is not wearing a monkey's face, and the quest
+// makes you wield it.
+//
+// check_nottoostrong is off, like the cache's own aggressive pair: Ape Atoll does not care how
+// high your combat level is, which is the island's reputation and the reason the quest tells you
+// to bring the greegree rather than a weapon.
+
+[mm_aggressive_melee]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,mm_transmog_npc,<1
+find_keephunting=off
+find_newmode=opplayer2
+
+[mm_aggressive_ranged]
+type=player
+check_vis=lineofsight
+check_nottoostrong=off
+check_notcombat=%lastcombat
+check_notcombat_self=%npc_lastcombat
+check_notbusy=off
+check_invparam=worn,mm_transmog_npc,<1
+find_keephunting=off
+find_newmode=applayer2
