@@ -3431,6 +3431,7 @@ param=slayer_category,^slayer_dwarf
 
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_chaos]
 name=Chaos dwarf
 desc=A dwarf gone bad.
@@ -3475,6 +3476,7 @@ huntrange=1
 
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_mountain]
 name=Dwarf
 desc=A mountain dwelling short angry guy.
@@ -3508,6 +3510,7 @@ param=slayer_category,^slayer_dwarf
 
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_tunnel]
 name=Dwarf
 desc=A short angry guy.
@@ -3541,6 +3544,7 @@ param=slayer_category,^slayer_dwarf
 
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [hobgoblin_unarmed]
 name=Hobgoblin
 desc=An ugly, smelly creature.
@@ -6697,6 +6701,7 @@ param=defend_sound,swordclash4
 
 param=attack_sound,giant_attack
 param=death_sound,giant_death
+
 [entrana_monk]
 name=Monk
 desc=A holy man.
@@ -9517,6 +9522,7 @@ moverestrict=indoors
 // meant to stay put. The OSRS wiki files him under Seated NPCs and has him "practicing with a deck
 // of cards" by the Chemist, so being static is what he should be doing, not a missing walk cycle.
 // wanderrange=0 + moverestrict=nomove is what [morris] and the other turnspeed=0 npcs here use.
+
 [gambler1]
 name=Chancy
 desc=He's ready for a bet.
@@ -11271,6 +11277,7 @@ moverestrict=indoors
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [giantrat]: Giant rat 3 = Giant rat 3.
+
 [giantrat_grey]
 name=Giant rat
 desc=Overgrown vermin.
@@ -19717,6 +19724,7 @@ param=death_anim,cat_death
 // the pet system was dead. Freeing Evil Dave is built on it, so it is turned on here for every cat.
 // The cats a player owns. follower=yes on these and on every other npc with param=pet_item_id:
 // no minimap dot, and the right-click options only for the owner. See npc/configs/boss_pets.npc.
+
 [kittenpet1]
 name=Kitten
 desc=A friendly little pet.
@@ -25173,6 +25181,7 @@ param=death_anim,cow_death
 param=death_sound,cow_death
 param=defend_anim,cow_block
 param=defend_sound,cow_hit
+
 [duel_mubariz]
 name=Mubariz
 desc=Tough looking combat type.
@@ -28439,6 +28448,7 @@ huntrange=8
 param=slayer_category,^slayer_troll
 
 param=attack_sound,troll_attack
+
 [troll_thrower2]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -28488,6 +28498,7 @@ huntrange=8
 param=slayer_category,^slayer_troll
 
 param=attack_sound,troll_attack
+
 [troll_thrower3]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -28537,6 +28548,7 @@ huntrange=8
 param=slayer_category,^slayer_troll
 
 param=attack_sound,troll_attack
+
 [troll_thrower4]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -28586,6 +28598,7 @@ huntrange=8
 param=slayer_category,^slayer_troll
 
 param=attack_sound,troll_attack
+
 [troll_thrower5]
 name=Thrower Troll
 desc=Small for a troll but mean, ugly and throws rocks.
@@ -28635,6 +28648,7 @@ huntrange=8
 param=slayer_category,^slayer_troll
 
 param=attack_sound,troll_attack
+
 [troll_cook]
 name=Cook
 desc=Human is his speciality.
@@ -29277,6 +29291,7 @@ param=rangedefence,10000
 param=attack_anim,lion_attack
 param=death_anim,lion_death
 param=defend_anim,lion_block
+
 [tbwt_beast_cutscene]
 name=The Shaikahan
 desc=A huge beast, resembling in some ways a lion, but mostly a twisted nightmare.
@@ -29402,6 +29417,7 @@ head1=obj_pickpocket_guide_woodelf
 // Levels and bonuses read off the OSRS wiki page for Elf archer (level 90), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [regicide_darkelf]
 name=Elf warrior
 desc=He looks pretty handy with that bow.
@@ -29589,6 +29605,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [regicide_bunny1]
 name=Rabbit
 desc=A cute bunny rabbit.
@@ -29608,6 +29625,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [regicide_bunny2]
 name=Rabbit
 desc=A cute bunny rabbit.
@@ -29627,6 +29645,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [regicide_darkbear]
 name=Grizzly bear
 desc=Eek! A big bear!
@@ -29646,6 +29665,7 @@ param=death_anim,bear_death
 param=death_sound,bear_death
 param=defend_anim,bear_block
 param=defend_sound,bear_hit
+
 [regicide_darkbear_cub1]
 name=Grizzly bear cub
 desc=Eek! A bear cub!
@@ -29667,6 +29687,7 @@ param=death_anim,bear_death
 param=death_sound,bear_death
 param=defend_anim,bear_block
 param=defend_sound,bear_hit
+
 [regicide_darkbear_cub2]
 name=Grizzly bear cub
 desc=Eek! A bear cub!
@@ -29688,6 +29709,7 @@ param=death_anim,bear_death
 param=death_sound,bear_death
 param=defend_anim,bear_block
 param=defend_sound,bear_hit
+
 [direwolf]
 name=Dire Wolf
 desc=What big teeth you have.
@@ -29743,6 +29765,7 @@ head1=obj_pickpocket_guide_woodelf
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [regicide_tyras_guard]: Tyras guard 110 = 110.
+
 [regicide_old_camp_guard]
 name=Tyras guard
 desc=One of King Tyras's men.
@@ -29819,6 +29842,7 @@ head1=npc_1202_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [regicide_tyras_guard]: Tyras guard 110 = 110.
+
 [regicide_tyras_camp_guard]
 name=Tyras guard
 desc=One of King Tyras's men.
@@ -30245,6 +30269,7 @@ huntmode=cowardly
 param=attack_sound,ghoul_attack
 param=death_sound,ghoul_death
 param=defend_sound,ghoul_hit
+
 [vampire_leech]
 name=Leech
 desc=Yuck! It's all slimy!
@@ -30428,6 +30453,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailround_red+black]
 name=Blood Blamish Snail
 desc=A blood coloured blamish snail, these types are said to spit acid.
@@ -30454,6 +30480,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailround_yellow]
 name=Ochre Blamish Snail
 desc=A muddy coloured blamish snail, these types are said to spit acid.
@@ -30480,6 +30507,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailround_blue]
 name=Bruise Blamish Snail
 desc=A bruise blue coloured blamish snail, these types are said to spit acid.
@@ -30506,6 +30534,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailround_orange]
 name=Bark Blamish Snail
 desc=A branch bark coloured blamish snail, these types are said to spit acid.
@@ -30532,6 +30561,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailpoint_swamp]
 name=Myre Blamish Snail
 desc=A marsh coloured blamish snail, these types are said to spit acid.
@@ -30555,6 +30585,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailpoint_red+black]
 name=Blood Blamish Snail
 desc=A blood coloured blamish snail, these types are said to spit acid.
@@ -30579,6 +30610,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailpoint_yellow]
 name=Ochre Blamish Snail
 desc=A muddy coloured blamish snail, these types are said to spit acid.
@@ -30603,6 +30635,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [mmsnailpoint_blue]
 name=Bruise Blamish Snail
 desc=A bruise blue coloured blamish snail, these types are said to spit acid.
@@ -30627,6 +30660,7 @@ param=attack_anim,snail_attack
 param=death_anim,snail_death
 param=death_sound,snail_death
 param=defend_sound,snail_hit
+
 [0_54_53_slimey_eel]
 name=Fishing spot
 desc=I can see 'things' swimming in the water.
@@ -30722,6 +30756,7 @@ param=death_anim,human_death
 // Levels and bonuses read off the OSRS wiki page for Loar Shade (level 40), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [shadeshadow_level1]
 name=Loar Shadow
 desc=A shadowy sort of entity, kind of creepy looking.
@@ -30791,6 +30826,7 @@ readyanim=shade_heaven
 // Levels and bonuses read off the OSRS wiki page for Phrin Shade (level 60), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [shadeshadow_level2]
 name=Phrin Shadow
 desc=A shadowy sort of entity, kind of creepy looking.
@@ -30846,6 +30882,7 @@ param=death_drop,shade_bones2
 // Levels and bonuses read off the OSRS wiki page for Riyl Shade (level 80), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [shadeshadow_level3]
 name=Riyl Shadow
 desc=A shadowy sort of entity, kind of creepy looking.
@@ -30901,6 +30938,7 @@ param=death_drop,shade_bones3
 // Levels and bonuses read off the OSRS wiki page for Asyn Shade (level 100), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [shadeshadow_level4]
 name=Asyn Shadow
 desc=A shadowy sort of entity, kind of creepy looking.
@@ -30956,6 +30994,7 @@ param=death_drop,shade_bones4
 // Levels and bonuses read off the OSRS wiki page for Fiyr Shade (level 120), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [shadeshadow_level5]
 name=Fiyr Shadow
 desc=A shadowy sort of entity, kind of creepy looking.
@@ -31720,6 +31759,7 @@ head2=idk_man_jaw_split_head
 // option AND a fully stocked [viking_general_store] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_sigmund]
 name=Sigmund The Merchant
 desc=A Fremennik merchant.
@@ -32165,6 +32205,7 @@ head2=idk_man_jaw_split_head
 // option AND a fully stocked [viking_bar] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_longhall_barkeep]
 name=Thora the Barkeep
 desc=The Longhall barkeep
@@ -32201,6 +32242,7 @@ param=shop_title,The Longhall Bar
 // option AND a fully stocked [viking_clothes_shop] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_clothing_shopkeeper]
 name=Yrsa
 desc=Pretty shabbily dressed for a clothes shop owner.
@@ -32271,6 +32313,7 @@ head2=idk_man_jaw_split_head
 // option AND a fully stocked [viking_weapons_shop] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_weapons_salesman]
 name=Skulgrimen
 desc=Sells and makes weapons and armour.
@@ -32740,6 +32783,7 @@ head1=idk_woman_hair_bun_head
 // option AND a fully stocked [viking_fishmonger] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_fish_monger]
 name=Fish monger
 desc=Fish-tastic!
@@ -32783,6 +32827,7 @@ param=shop_title,Fremennik Fishmonger
 // option AND a fully stocked [viking_furshop] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [viking_fur_monger]
 name=Fur trader
 desc=I wonder what he does with all that fur?
@@ -32959,6 +33004,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [viking_bunny_2]
 name=Bunny
 desc=Hoppity, hoppity.
@@ -32982,6 +33028,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [viking_seagull]
 name=Gull
 desc=A sea bird.
@@ -33076,6 +33123,7 @@ param=slayer_category,^slayer_bear
 param=attack_sound,bear_attack
 param=death_sound,bear_death
 param=defend_sound,bear_hit
+
 [brownbear_cub_2]
 name=Bear Cub
 desc=Cute.  But deadly.
@@ -33108,6 +33156,7 @@ param=slayer_category,^slayer_bear
 param=attack_sound,bear_attack
 param=death_sound,bear_death
 param=defend_sound,bear_hit
+
 [unicorn_foal_1]
 name=Unicorn Foal
 desc=Horned Horsey.
@@ -33660,6 +33709,7 @@ head1=idk_woman_hair_medium_head
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [misc_banker]
 name=Banker
 desc=He seems happy to see you.
@@ -33692,6 +33742,7 @@ category=bank_teller
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Arnor 1 <- Man 2.
+
 [misc_etc_man_1]
 name=Arnor
 desc=A subject of Etceteria.
@@ -33731,6 +33782,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Haming 1 <- Man 2.
+
 [misc_etc_man_2]
 name=Haming
 desc=A subject of Etceteria.
@@ -33799,6 +33851,7 @@ head2=idk_man_jaw_long_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Helga 1 <- Woman 2.
+
 [misc_etc_woman_1]
 name=Helga
 desc=A subject of Etceteria.
@@ -33840,6 +33893,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Matilda 1 <- Woman 2.
+
 [misc_etc_woman_2]
 name=Matilda
 desc=A subject of Etceteria.
@@ -33881,6 +33935,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Ashild 1 <- Woman 2.
+
 [misc_etc_woman_3]
 name=Ashild
 desc=A subject of Etceteria.
@@ -33921,6 +33976,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Skraeling 2 <- Man 2.
+
 [etc_guard1]
 name=Skraeling
 desc=A warrior of Etceteria.
@@ -33967,6 +34023,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Skraeling 2 <- Man 2.
+
 [etc_guard2]
 name=Skraeling
 desc=A warrior of Etceteria.
@@ -34013,6 +34070,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [etc_fishmonger] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [etc_fish_monger]
 name=Fishmonger
 desc=Hmm, he smells.
@@ -34053,6 +34111,7 @@ param=shop_title,Etceteria Fishmonger
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [etc_greengrocer] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [etc_veg_monger]
 name=Greengrocer
 desc=At least he eats his greens.
@@ -34306,6 +34365,7 @@ head1=obj_pickpocket_guide_warrior
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Ragnar 1 <- Man 2.
+
 [misc_man_1]
 name=Ragnar
 desc=A subject of Miscellania.
@@ -34347,6 +34407,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Einar 1 <- Man 2.
+
 [misc_man_2]
 name=Einar
 desc=A subject of Miscellania.
@@ -34387,6 +34448,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Alrik 1 <- Man 2.
+
 [misc_man_3]
 name=Alrik
 desc=A subject of Miscellania.
@@ -34429,6 +34491,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Thorhild 1 <- Woman 2.
+
 [misc_woman_1]
 name=Thorhild
 desc=A subject of Miscellania.
@@ -34469,6 +34532,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Halla 1 <- Woman 2.
+
 [misc_woman_2]
 name=Halla
 desc=A subject of Miscellania.
@@ -34565,6 +34629,7 @@ head2=idk_man_jaw_split_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Rannveig 2 <- Woman 2.
+
 [misc_woman_4]
 name=Rannveig
 desc=A subject of Miscellania.
@@ -34606,6 +34671,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Thora 2 <- Woman 2.
+
 [misc_woman_5]
 name=Thora
 desc=A subject of Miscellania.
@@ -34647,6 +34713,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Valgerd 2 <- Woman 2.
+
 [misc_woman_6]
 name=Valgerd
 desc=A subject of Miscellania.
@@ -34690,6 +34757,7 @@ param=death_sound,female_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Skraeling 2 <- Man 2.
+
 [misc_man_4]
 name=Skraeling
 desc=A warrior of Miscellania.
@@ -34736,6 +34804,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Broddi 2 <- Man 2.
+
 [misc_man_5]
 name=Broddi
 desc=A subject of Miscellania.
@@ -34777,6 +34846,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Skraeling 2 <- Man 2.
+
 [misc_man_6]
 name=Skraeling
 desc=A warrior of Miscellania.
@@ -34822,6 +34892,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Ragnvald 2 <- Man 2.
+
 [misc_man_7]
 name=Ragnvald
 desc=A subject of Miscellania.
@@ -34865,6 +34936,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [misc_fishmonger] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [misc_fish_monger]
 name=Fishmonger
 desc=Hmm, he smells.
@@ -34906,6 +34978,7 @@ param=shop_title,Miscellania Fishmonger
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [misc_greengrocer] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [misc_veg_monger]
 name=Greengrocer
 desc=At least he eats his greens.
@@ -35067,6 +35140,7 @@ head1=obj_pickpocket_guide_warrior
 
 // FIXED 2026-09-25: Miscellania's four Cage/Harpoon spots had no category, so neither op did
 // anything - the island's fishing, and Fisherman Frodi's approval, were out of reach.
+
 [0_40_60_rarefish]
 name=Fishing spot
 desc=I can see fish swimming in the water.
@@ -35107,6 +35181,7 @@ param=death_anim,bird_death
 param=death_sound,bird_death
 param=defend_anim,bird_block
 param=defend_sound,bird_hit
+
 [misc_chicken]
 name=Chicken
 desc=Yep, definitely a chicken.
@@ -35137,6 +35212,7 @@ param=retreat,1
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [chicken]: Chicken 1 = Chicken 1.
+
 [misc_chicken_brown]
 name=Chicken
 desc=Yep, definitely a chicken.
@@ -35174,6 +35250,7 @@ param=retreat,1
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [rooster]: Rooster 2 <- Rooster 3.
+
 [misc_rooster]
 name=Rooster
 desc=He rules the...er...roost.
@@ -35230,6 +35307,7 @@ param=death_anim,rabbit_death
 param=death_sound,rabbit_death
 param=defend_anim,rabbit_block
 param=defend_sound,rabbit_hit
+
 [0_43_42_memberfish]
 name=Fishing spot
 desc=I can see fish swimming in the water.
@@ -35645,6 +35723,7 @@ head1=npc_1431_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mm_food_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [mm_solihib]
 name=Solihib
 desc=The food merchant of Ape Atoll.
@@ -35671,6 +35750,7 @@ param=shop_title,Solihib's Food Stall
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mm_scimitar_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [mm_daga]
 name=Daga
 desc=A shrewd-looking monkey swordsmith.
@@ -35697,6 +35777,7 @@ param=shop_title,Daga's Scimitar Smithy
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mm_magic_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [mm_tutab]
 name=Tutab
 desc=A magical trinket dealer.
@@ -35723,6 +35804,7 @@ param=shop_title,Tutab's Magical Market
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mm_general_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [mm_ifaba]
 name=Ifaba
 desc=A general store type of monkey.
@@ -35747,6 +35829,7 @@ param=shop_title,Ifaba's General Store
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mm_crafting_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [mm_hamab]
 name=Hamab
 desc=A female monkey skilled in crafting.
@@ -35827,6 +35910,7 @@ vislevel=149
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
+
 [mm_duke]
 name=Duke
 desc=A large ninja monkey wielding two scimitars.
@@ -35843,6 +35927,7 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_oipuis]
 name=Oipuis
 desc=A large ninja monkey wielding two scimitars.
@@ -35859,6 +35944,7 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_uyoro]
 name=Uyoro
 desc=A large ninja monkey wielding two scimitars.
@@ -35875,6 +35961,7 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_ouhai]
 name=Ouhai
 desc=A large ninja monkey wielding two scimitars.
@@ -35891,6 +35978,7 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_uodai]
 name=Uodai
 desc=A large ninja monkey wielding two scimitars.
@@ -35907,6 +35995,7 @@ head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_padulah]
 name=Padulah
 desc=A scimitar wielding ninja monkey. He looks like he is guarding something.
@@ -35922,6 +36011,7 @@ head1=npc_1441_head
 param=death_drop,mm_normal_monkey_bones
 
 param=death_anim,m_monkey_death
+
 [mm_awowogei_cutscene]
 name=Awowogei
 desc=A rather dapper little monkey.
@@ -36036,6 +36126,7 @@ moverestrict=nomove
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_drop,mm_medium_ninja_monkey_bones
 param=death_anim,m_monkey_death
+
 [mm_monkey_archer]
 name=Monkey Archer
 desc=A bow wielding ninja monkey.
@@ -36065,6 +36156,7 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+
 [mm_ravine_archer]
 name=Monkey Archer
 desc=A bow wielding ninja monkey. It looks particularly dangerous.
@@ -36094,6 +36186,7 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+
 [mm_posted_archer]
 name=Monkey Archer
 desc=A bow wielding ninja monkey.
@@ -36123,6 +36216,7 @@ moverestrict=nomove
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=death_anim,m_monkey_death
+
 [mm_religious_guard]
 name=Monkey Guard
 desc=A huge brutish gorilla armoured with dangerous looking vambraces.
@@ -36150,6 +36244,7 @@ moverestrict=nomove
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [mm_religious_trapdoor_guard]
 name=Monkey Guard
 desc=A huge brutish gorilla armoured with dangerous looking vambraces.
@@ -36173,6 +36268,7 @@ moverestrict=nomove
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [mm_elder_guard_1]
 name=Elder Guard
 desc=A huge brutish gorilla stands here, blocking the way.
@@ -36223,6 +36319,7 @@ head1=npc_1463_head
 // Levels and bonuses read off the OSRS wiki page for Monkey Zombie (all three levels share one stat block), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [mm_zombie_monkey_large]
 name=Monkey Zombie
 desc=A large and lumbering undead monkey.
@@ -36255,6 +36352,7 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+
 [mm_zombie_monkey_large_guard]
 name=Monkey Zombie
 desc=A large and lumbering undead monkey stands here, blocking the way.
@@ -36287,6 +36385,7 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+
 [mm_zombie_monkey_small]
 name=Monkey Zombie
 desc=A recently deceased monkey. Its flesh seems to be worse for the wear.
@@ -36313,6 +36412,7 @@ param=damagetype,^crush_style
 
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
+
 [mm_bonzara]
 name=Bonzara
 desc=A small monkey dressed in purple clothes. He looks like a priest.
@@ -36404,6 +36504,7 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
+
 [mm_warehouse_spider]
 name=Spider
 desc=It's an extremely small brown spider. Probably very poisonous.
@@ -36470,6 +36571,7 @@ param=death_anim,bird_death
 param=death_sound,bird_death
 param=defend_anim,bird_block
 param=defend_sound,bird_hit
+
 [mm_jungle_bird_blue]
 name=Bird
 desc=It's a brightly coloured bird of the jungle. It flies very quickly.
@@ -36492,6 +36594,7 @@ param=death_anim,bird_death
 param=death_sound,bird_death
 param=defend_anim,bird_block
 param=defend_sound,bird_hit
+
 [mm_jungle_scorpion]
 name=Scorpion
 desc=It's an extremely dangerous looking scorpion.
@@ -36510,6 +36613,7 @@ param=death_drop,null
 
 param=attack_anim,scorpion_attack
 param=death_anim,scorpion_death
+
 [mm_jungle_spider]
 name=Jungle spider
 desc=A very dangerous looking spider, with its fangs unsheathed.
@@ -36529,6 +36633,7 @@ param=death_drop,null
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+
 [mm_jungle_snake]
 name=Snake
 desc=It's a camouflaged jungle snake.
@@ -36548,6 +36653,7 @@ param=death_anim,snake_death
 param=death_sound,snake_death
 param=defend_anim,snake_block
 param=defend_sound,snake_hit
+
 [mm_transmogrification_small_ninja_monkey]
 name=Small ninja monkey
 desc=It's a monkey.
@@ -36845,6 +36951,7 @@ resizev=180
 vislevel=35
 
 param=death_anim,m_monkey_death
+
 [npc_1503]
 name=Monkey
 desc=It's a monkey.
@@ -36859,6 +36966,7 @@ resizev=180
 vislevel=61
 
 param=death_anim,m_monkey_death
+
 [npc_1504]
 name=Monkey
 desc=It's a monkey.
@@ -36873,6 +36981,7 @@ resizev=180
 vislevel=35
 
 param=death_anim,m_monkey_death
+
 [npc_1505]
 name=Monkey
 desc=It's a monkey.
@@ -36887,6 +36996,7 @@ vislevel=35
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [npc_1506]
 name=Monkey
 desc=It's a monkey.
@@ -36903,6 +37013,7 @@ vislevel=35
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [npc_1507]
 name=Monkey
 desc=It's a monkey.
@@ -36919,6 +37030,7 @@ vislevel=35
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [npc_1508]
 name=Monkey
 desc=It's a monkey.
@@ -36938,6 +37050,7 @@ vislevel=35
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [npc_1509]
 name=Monkey
 desc=It's a monkey.
@@ -36954,6 +37067,7 @@ vislevel=35
 param=attack_anim,m_gorilla_attack
 param=death_anim,m_gorilla_death
 param=defend_anim,m_gorilla_block
+
 [npc_1510]
 name=Monkey
 desc=It's a monkey.
@@ -37034,6 +37148,7 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
+
 [toms_gnome_troop1]
 name=Gnome
 desc=It's a gnome.
@@ -37215,6 +37330,7 @@ vislevel=50
 param=attack_anim,magicaxe_attack
 param=death_anim,magicaxe_death
 param=defend_anim,magicaxe_block
+
 [possessed_pickaxe_stationary]
 name=Bronze pickaxe
 desc=Useful for hitting rocks.
@@ -37250,6 +37366,7 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
+
 [hauntedmine_boss_ghost]
 name=Treus Dayth
 desc=Eeek! A big ghost!
@@ -37358,6 +37475,7 @@ minimap=no
 // and as blocking npcs they cut that floor into pockets: findPath could not get a player from
 // 2791,4457 to 2789,4457, three tiles away, so the fight could never be joined. The chamber's
 // real obstacles are locs and are unaffected.
+
 [hauntedmine_boss_key]
 blockwalk=none
 name=Innocent looking key
@@ -37477,6 +37595,7 @@ readyanim=ghost_ready
 vislevel=hide
 
 // not real name
+
 [santa_claus]
 name=Santa
 desc=He knows if you've been naughty or nice.
@@ -37936,6 +38055,7 @@ param=death_anim,giant_death
 param=death_sound,giant_death
 param=defend_anim,giant_block
 param=defend_sound,giant_hit
+
 [firegiant_big2]
 name=Fire giant
 desc=A very large elemental adversary.
@@ -37964,6 +38084,7 @@ param=death_anim,giant_death
 param=death_sound,giant_death
 param=defend_anim,giant_block
 param=defend_sound,giant_hit
+
 [firegiant_big3]
 name=Fire giant
 desc=A very large elemental adversary.
@@ -37992,6 +38113,7 @@ param=death_anim,giant_death
 param=death_sound,giant_death
 param=defend_anim,giant_block
 param=defend_sound,giant_hit
+
 [firegiant2]
 name=Fire giant
 desc=A very large elemental adversary.
@@ -38018,6 +38140,7 @@ param=death_anim,giant_death
 param=death_sound,giant_death
 param=defend_anim,giant_block
 param=defend_sound,giant_hit
+
 [firegiant3]
 name=Fire giant
 desc=A very large elemental adversary.
@@ -38045,6 +38168,7 @@ param=death_anim,giant_death
 param=death_sound,giant_death
 param=defend_anim,giant_block
 param=defend_sound,giant_hit
+
 [mossgiant2]
 name=Moss giant
 desc=His beard seems to have a life of its own.
@@ -38798,6 +38922,7 @@ param=death_drop,big_bones
 param=attack_sound,giant_attack
 param=death_sound,giant_death
 param=defend_sound,giant_hit
+
 [roving_golrie]
 name=Golrie
 desc=No longer locked in his own cage.
@@ -38951,6 +39076,7 @@ active=no
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [cow]: Undead Cow 2 <- Cow 2.
+
 [ahoy_undead_cow]
 name=Undead Cow
 desc=It's an undead cow.
@@ -38993,6 +39119,7 @@ param=death_sound,cow_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [chicken]: Undead Chicken 1 <- Chicken 1.
+
 [ahoy_undead_chicken]
 name=Undead Chicken
 desc=Yep, definitely a chicken...an undead chicken
@@ -39043,6 +39170,7 @@ vislevel=32
 
 param=attack_anim,scorpion_attack
 param=death_anim,scorpion_death
+
 [ahoy_robin]
 name=Robin
 desc=A master bowman.
@@ -39179,6 +39307,7 @@ param=death_drop,null
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [ahoy_generalshop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [ahoy_ghost_shopkeeper]
 name=Ghost Shopkeeper
 desc=Beware the ghostly shopkeeper's wares!
@@ -39230,6 +39359,7 @@ head1=npc_1686_head
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [ahoy_ghost_banker]
 name=Ghost Banker
 desc=A ghost banker.
@@ -39954,6 +40084,7 @@ readyanim=sheep_ready
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [cow]: Cow calf 2 <- Cow 2.
+
 [cow2_calf]
 name=Cow calf
 desc=Prelude to a steak!
@@ -40028,6 +40159,7 @@ category=cow
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [cow]: Cow calf 2 <- Cow 2.
+
 [cow3_calf]
 name=Cow calf
 desc=Young and tender, nearly ready for the slaughter.
@@ -40089,6 +40221,7 @@ head1=npc_1679_head
 // option AND a fully stocked [wildernesscapeshop1] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_1]
 name=William
 desc=A very brave merchant.
@@ -40121,6 +40254,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop2] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_2]
 name=Ian
 desc=A very brave merchant.
@@ -40155,6 +40289,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop3] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_3]
 name=Larry
 desc=A very brave merchant.
@@ -40186,6 +40321,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop4] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_4]
 name=Darren
 desc=A very brave merchant.
@@ -40218,6 +40354,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop5] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_5]
 name=Edward
 desc=A very brave merchant.
@@ -40252,6 +40389,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop6] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_6]
 name=Richard
 desc=A very brave merchant.
@@ -40286,6 +40424,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop7] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_7]
 name=Neil
 desc=A very brave merchant.
@@ -40320,6 +40459,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop8] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_8]
 name=Edmond
 desc=A very brave merchant.
@@ -40351,6 +40491,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop9] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_9]
 name=Simon
 desc=A very brave merchant.
@@ -40383,6 +40524,7 @@ param=shop_title,Team Cape Store
 // option AND a fully stocked [wildernesscapeshop10] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [wilderness_capeseller_10]
 name=Sam
 desc=A very brave merchant.
@@ -40543,6 +40685,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [favour_gangster_dwarf_2]
 name=Dwarf gang member
 desc=A short stout menacing fellow.
@@ -40584,6 +40727,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [favour_gangster_dwarf_3]
 name=Dwarf gang member
 desc=A short stout menacing fellow.
@@ -40627,6 +40771,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [favour_phantuwti_farsight]
 name=Phantuwti Fanstuwi Farsight
 desc=A slightly more eccentric seer.
@@ -40737,6 +40882,7 @@ vislevel=92
 
 param=attack_anim,rock_attack
 param=death_anim,rock_death
+
 [slagilith_hybernate]
 name=Rock pile
 desc=A pile of boulders.
@@ -40923,6 +41069,7 @@ head1=npc_1812_head
 
 param=attack_anim,bearsuit_attack
 param=death_anim,bearsuit_death
+
 [mdaughter_bearman_fighter]
 name=The Kendal
 desc=Is that a bear... or a man?
@@ -40937,6 +41084,7 @@ head1=npc_1812_head
 
 param=attack_anim,bearsuit_attack
 param=death_anim,bearsuit_death
+
 [mdaughter_camp_male1]
 name=Camp dweller
 desc=One of the inhabitants of the camp.
@@ -41571,6 +41719,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_warrior_green]
 name=Arzinian Avatar of Strength
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing strength.
@@ -41589,6 +41738,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_warrior_yellow]
 name=Arzinian Avatar of Strength
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing strength.
@@ -41607,6 +41757,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_archer]
 name=Arzinian Avatar of Ranging
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing ranging.
@@ -41621,6 +41772,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_archer_green]
 name=Arzinian Avatar of Ranging
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing ranging.
@@ -41639,6 +41791,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_archer_yellow]
 name=Arzinian Avatar of Ranging
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing ranging.
@@ -41657,6 +41810,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_mage]
 name=Arzinian Avatar of Magic
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing magic.
@@ -41671,6 +41825,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_mage_green]
 name=Arzinian Avatar of Magic
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing magic.
@@ -41689,6 +41844,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_avatar_mage_yellow]
 name=Arzinian Avatar of Magic
 desc=It is the avatar of the Arzinian Being of Bordanzan, representing magic.
@@ -41707,6 +41863,7 @@ head1=npc_1850_head
 param=attack_anim,rock_avatar_attack
 param=death_anim,rock_avatar_death
 param=defend_anim,rock_avatar_block
+
 [dwarf_rock_actual_demon]
 name=Arzinian Being of Bordanzan
 desc=It's the Arzinian Being, whatever that is, that comes from Bordanzan, wherever that is.
@@ -42034,6 +42191,7 @@ head1=npc_ugthanki_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [snake]: Desert snake 5 <- Snake 5.
+
 [feud_desert_snake]
 name=Desert snake
 desc=A slithering serpent.
@@ -43073,6 +43231,7 @@ head2=npc_1125_headi2
 // Levels and bonuses read off the OSRS wiki page for Ice troll (level 120 variant; the wiki does not itemise 121/123/124 separately), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [trollrescue_icetroll_melee1]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43113,6 +43272,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [trollrescue_icetroll_melee2]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43155,6 +43315,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [trollrescue_icetroll_melee3]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43190,6 +43351,7 @@ param=damagetype,^crush_style
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
+
 [trollrescue_icetroll_melee4]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43232,6 +43394,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [trollrescue_icetroll_melee5]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43267,6 +43430,7 @@ param=damagetype,^crush_style
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=slayer_category,^slayer_troll
+
 [trollrescue_icetroll_melee6]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43309,6 +43473,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [trollrescue_icetroll_melee7]
 name=Ice Troll
 desc=Brrrrr...he must be cold!
@@ -43345,6 +43510,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [troll_block_1]
 // name= added 2026-09-08. This is a multi SHELL - the client resolves multinpc before it draws
 // anything, so the chathead was always right, but npc_name reads the ACTIVE npc with no multi
@@ -43467,6 +43633,7 @@ head2=npc_1125_headi2
 // that run away. Nothing else uses them: Troll Romance has its own copies
 // (quest_troll_love.npc), so this changes the God Wars wolves and only those. ice_wolf_6 is
 // the same change, further down.
+
 [ice_wolf_1]
 name=Ice wolf
 desc=Not man's best friend.
@@ -44232,6 +44399,7 @@ head1=obj_roguetrader_menaphite_hat_manhead
 
 // Level 91 with op2=Attack and nothing behind it either. He is what the walkthrough calls
 // "the level 91 Possessed Priest", and he is the one fight this quest has.
+
 [ics_little_possessedpriest]
 name=Possessed Priest
 desc=He has a dangerous glint in his eye.
@@ -44309,6 +44477,7 @@ param=slayer_category,^slayer_crocodile
 
 param=attack_anim,croc_attack
 param=death_anim,croc_death
+
 [ics_little_jackal]
 name=Jackal
 desc=He has had his day...
@@ -44322,6 +44491,7 @@ param=slayer_category,^slayer_dog
 param=attack_anim,dog_attack
 param=death_anim,dog_death
 param=defend_anim,dog_block
+
 [ics_little_locust]
 name=Locust
 desc=Obnoxious overgrown insect.
@@ -44337,6 +44507,7 @@ param=attack_sound,locust_attack
 param=death_anim,locust_death
 param=death_sound,locust_death
 param=defend_sound,locust_hit
+
 [ics_little_vulture]
 name=Vulture
 desc=If you see them circling... run.
@@ -44360,6 +44531,7 @@ vislevel=11
 param=death_drop,null
 
 param=death_anim,chompy_toad_death
+
 [ics_little_plague_cow1]
 name=Plagued Cow
 desc=I might give the burgers a miss in this town.
@@ -44434,6 +44606,7 @@ op2=Attack
 vislevel=98
 
 param=attack_anim,scarab_attack
+
 [ics_little_multi_wanderer]
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
@@ -44709,6 +44882,7 @@ head1=npc_thrantax_head
 // The five mummies in Klenter's tomb carry op2=Attack and vislevel=84 and had no stats at all,
 // so they could neither hit nor be hurt - eighty-four-level scenery standing in the one room
 // the quest spends its time in. Statted as level-84 undead; death_drop was already ashes.
+
 [ics_little_mummy_1]
 name=Mummy
 desc=A tightly wrapped monster.
@@ -45316,6 +45490,7 @@ param=death_drop,null
 param=attack_sound,rat_attack
 param=death_sound,rat_death
 param=defend_sound,rat_hit
+
 [barrows_giantrat]
 name=Giant crypt rat
 desc=A nasty overgrown rodent.
@@ -45495,6 +45670,7 @@ head1=npc_2038_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [uglug_nar_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [zogre_uglug_nar]
 name=Uglug Nar
 desc=An ogre shaman
@@ -45816,6 +45992,7 @@ param=death_drop,zogre_bones
 param=attack_anim,ogre_attack
 param=death_anim,ogre_death
 param=defend_anim,ogre_block
+
 [zogre_dance_1]
 name=Zogre
 desc=A partially decomposing zombie ogre.
@@ -46073,6 +46250,7 @@ param=death_anim,zombie_death
 param=death_sound,zombie_death
 param=defend_anim,zombie_block
 param=defend_sound,zombie_hit
+
 [zogre_human_zavistic_rarve]
 name=Zavistic Rarve
 desc=The Grand Secretary of the Wizards' Guild in Yanille.
@@ -47411,6 +47589,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_black_guard2]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -47463,6 +47642,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_black_guard3]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -47513,6 +47693,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_black_guard4]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -47563,6 +47744,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_berserker1]
 name=Black Guard Berserker
 desc=An elite member of the Black Guard.
@@ -47610,6 +47792,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_berserker2]
 name=Black Guard Berserker
 desc=An elite member of the Black Guard.
@@ -47657,6 +47840,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_berserker3]
 name=Black Guard Berserker
 desc=An elite member of the Black Guard.
@@ -47707,6 +47891,7 @@ param=slayer_category,^slayer_dwarf
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [dwarf_city_gnome_emissary]
 name=Gnome emissary
 desc=Apparantly negotiating some business with the Red Axe.
@@ -48023,6 +48208,7 @@ head1=npc_macro_dwarf_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_warhammer_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_warhammer]
 name=Vigr
 desc=Proprietor of Vigr's Warhammers.
@@ -48057,6 +48243,7 @@ param=shop_title,Vigr's Warhammer Shop
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_quality_weapons_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_weapons]
 name=Santiri
 desc=Proprietor of the Quality Weapons Shop.
@@ -48089,6 +48276,7 @@ param=shop_title,Keldagrim Quality Weapons
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_quality_armour_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_armour]
 name=Saro
 desc=Proprietor of the Quality Armour Shop.
@@ -48122,6 +48310,7 @@ param=shop_title,Keldagrim Quality Armour
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_general_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_general_store]
 name=Gunslik
 desc=Proprietor of Gunslik's Assorted Items.
@@ -48176,6 +48365,7 @@ head2=npc_1847_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_bread_stall] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_bakery]
 name=Randivor
 desc=He's selling his bread on the market here.
@@ -48210,6 +48400,7 @@ param=shop_title,Randivor's Bread Stall
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_gem_stall] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_gems]
 name=Hervi
 desc=A gem stall owner, with goods from the deepest of mines.
@@ -48245,6 +48436,7 @@ param=shop_title,Hervi's Gem Stall
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_crafting_stall] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_craft]
 name=Nolar
 desc=A crafty dwarf.
@@ -48279,6 +48471,7 @@ param=shop_title,Nolar's Crafting Stall
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_silver_stall] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_silver]
 name=Gulldamar
 desc=He has lots of silver on display. And only silver.
@@ -48315,6 +48508,7 @@ param=shop_title,Gulldamar's Silver Stall
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_pickaxe_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_pickaxe]
 name=Tati
 desc=An old mining dwarf, now he sells pickaxes and generally acts grumpy.
@@ -48348,6 +48542,7 @@ param=shop_title,Tati's Pickaxe Shop
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_clothes_shop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_cloth]
 name=Agmundi
 desc=She seems to be doing rather well for herself, selling clothes in a palace shop.
@@ -48379,6 +48574,7 @@ param=shop_title,Agmundi's Clothes Shop
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [keldagrim_clothes_stall] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [dwarf_city_shop_cloth_poor]
 name=Vermundi
 desc=A rather poor looking little dwarf, selling her clothes on the market.
@@ -48409,6 +48605,7 @@ param=shop_title,Vermundi's Clothes Stall
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [dwarf_city_banker1]
 name=Banker
 desc=A rather personable banker lady.
@@ -50265,6 +50462,7 @@ head2=idk_man_jaw_long_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [khazard_troop]: Khazard trooper 19 = 19.
+
 [battlefield_khazard_troop]
 name=Khazard trooper
 desc=It's one of General Khazard's warriors.
@@ -50303,6 +50501,7 @@ param=defend_sound,blade2
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [khazard_troop]: Khazard trooper 19 = 19.
+
 [battlefield_khazard_troop_spearmen]
 name=Khazard trooper
 desc=It's one of General Khazard's warriors.
@@ -50340,6 +50539,7 @@ param=defend_sound,blade2
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [gnomeknight]: Gnome troop 3 <- Gnome troop 1.
+
 [battlefield_gnomeknight]
 name=Gnome troop
 desc=It's a tree gnome trooper.
@@ -50374,6 +50574,7 @@ param=proj_height,48
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [gnomeknight]: Gnome troop 3 <- Gnome troop 1.
+
 [battlefield_d_skingnomeknight]
 name=Gnome troop
 desc=It's a tree gnome trooper.
@@ -50416,6 +50617,7 @@ param=proj_height,48
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [gnome]: Gnome 3 <- Gnome 1.
+
 [battlefield_gnome_troop]
 name=Gnome
 desc=Like a mini man!
@@ -50452,6 +50654,7 @@ param=proj_height,48
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [gnome]: Gnome 1 = Gnome 1.
+
 [battlefield_darkskinned_gnome_archer]
 name=Gnome
 desc=Like a mini man!
@@ -50492,6 +50695,7 @@ param=proj_height,48
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [gnome]: Gnome 3 <- Gnome 1.
+
 [battlefield_gnome_archer]
 name=Gnome
 desc=Like a mini man!
@@ -50526,6 +50730,7 @@ param=proj_height,48
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [terrorbird3]: Mounted terrorbird gnome 49 = 49.
+
 [battlefield_terrorbird_mountedspear]
 name=Mounted terrorbird gnome
 desc=These gnomes know how to get around!
@@ -50611,6 +50816,7 @@ param=death_anim,wom_bed_death
 param=death_sound,wom_bed_death
 param=defend_anim,wom_bed_block
 param=defend_sound,wom_bed_hit
+
 [paladin2]
 name=Paladin
 desc=A holy warrior.
@@ -50978,6 +51184,7 @@ walkanim=rogue_spinblades
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_1]
 name=Sir Spishyus
 desc=An observer for the Temple Knights.
@@ -51016,6 +51223,7 @@ head2=idk_man_jaw_goatee_head
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_2]
 name=Lady Table
 desc=An observer for the Temple Knights.
@@ -51050,6 +51258,7 @@ head1=obj_pickpocket_guide_warrior
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_3]
 name=Sir Kuam Ferentse
 desc=An observer for the Temple Knights.
@@ -51136,6 +51345,7 @@ category=guard
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_4]
 name=Sir Tinley
 desc=An observer for the Temple Knights.
@@ -51174,6 +51384,7 @@ head2=idk_man_jaw_goatee_head
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_5]
 name=Sir Ren Itchood
 desc=An observer for the Temple Knights.
@@ -51214,6 +51425,7 @@ head3=obj_headband_red_manhead
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_6]
 name=Miss Cheevers
 desc=An observer for the Temple Knights.
@@ -51250,6 +51462,7 @@ head2=obj_headband_red_womanhead
 // walked them in their standing pose - Ms. Hynn Terprett slid around seated on her throne and
 // Sir Ren Itchood walked while playing a lyre. Pinned the same way Sir Tiffy already is, rather
 // than handing them human_walk_*: crossed arms and a relaxed guard pose do not walk either.
+
 [rd_observer_room_7]
 name=Ms. Hynn Terprett
 desc=An observer for the Temple Knights.
@@ -51737,6 +51950,7 @@ vislevel=hide
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [cow]: Cow calf 2 <- Cow 2.
+
 [calf]
 name=Cow calf
 desc=Young but still beefy.
@@ -51791,6 +52005,7 @@ ambient=15
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [chicken]: Chicken 1 = Chicken 1.
+
 [farm_chicken_brown]
 name=Chicken
 desc=Yep, definitely a chicken.
@@ -51829,6 +52044,7 @@ param=retreat,1
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [chicken]: Chicken 1 = Chicken 1.
+
 [farm_chicken_dark_brown]
 name=Chicken
 desc=Yep, definitely a chicken.
@@ -51869,6 +52085,7 @@ param=retreat,1
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [chicken]: Chicken 1 = Chicken 1.
+
 [farm_chicken_tan]
 name=Chicken
 desc=Yep, definitely a chicken.
@@ -52725,6 +52942,7 @@ category=diseased_sheep
 // unreachable. Same gap that was found in Sir Leye and the Tyras guard. The numbers are copied
 // verbatim from [mourner2] further up this file, which is the same npc at the same vislevel and
 // already had them.
+
 [mourning_overpass_mourner1]
 name=Mourner
 desc=A mourner.
@@ -52772,6 +52990,7 @@ param=attack_sound,staff_hit
 // unreachable. Same gap that was found in Sir Leye and the Tyras guard. The numbers are copied
 // verbatim from [mourner2] further up this file, which is the same npc at the same vislevel and
 // already had them.
+
 [mourning_overpass_mourner2]
 name=Mourner
 desc=A mourner.
@@ -52819,6 +53038,7 @@ param=attack_sound,staff_hit
 // unreachable. Same gap that was found in Sir Leye and the Tyras guard. The numbers are copied
 // verbatim from [mourner2] further up this file, which is the same npc at the same vislevel and
 // already had them.
+
 [mourning_overpass_mourner3]
 name=Mourner
 desc=A mourner.
@@ -52864,6 +53084,7 @@ param=attack_sound,staff_hit
 // option AND a fully stocked [lletyageneralshop1] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [mourning_stores_man]
 name=Eudav
 desc=Buys wholesale, sells retail.
@@ -52896,6 +53117,7 @@ param=shop_title,Lletya General Store
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [mourning_elf_bankerm]
 name=Banker
 desc=He can look after my money.
@@ -52922,6 +53144,7 @@ category=bank_teller
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [mourning_elf_bankerf]
 name=Banker
 desc=She can look after my money.
@@ -52956,6 +53179,7 @@ category=bank_teller
 // option AND a fully stocked [lletyaarcheryshop1] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [mourning_bow_seller]
 name=Dalldav
 desc=Buys and sells bows.
@@ -52988,6 +53212,7 @@ param=shop_title,Lletya Archery Shop
 // option AND a fully stocked [lletyafoodshop1] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [mourning_elven_cook]
 name=Gethin
 desc=Looks like he knows his way around a kitchen.
@@ -53034,6 +53259,7 @@ head1=npc_1202_head
 // Levels and bonuses read off the OSRS wiki page for Elf warrior (level 108), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [mourning_guard_melee]
 name=Elf warrior
 desc=I don't wanna be at the wrong end of that pike.
@@ -53070,6 +53296,7 @@ param=damagetype,^stab_style
 // Levels and bonuses read off the OSRS wiki page for Elf warrior (level 108), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [mourning_guard_melee2]
 name=Elf warrior
 desc=I don't wanna be at the wrong end of that pike.
@@ -53105,6 +53332,7 @@ param=damagetype,^stab_style
 // Levels and bonuses read off the OSRS wiki page for Elf archer (level 90), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [mourning_guard_range]
 name=Elf warrior
 desc=He looks pretty handy with that bow.
@@ -53147,6 +53375,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Elf archer (level 90), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [mourning_guard_range2]
 name=Elf warrior
 desc=He looks pretty handy with that bow.
@@ -53487,6 +53716,7 @@ head1=npc_1679_head
 // refuses the op if the resolved child does not declare it. op1=Prod, copied from the undyed
 // herder_plaguesheep_* they replace, is the whole fix; Sheep Herder's own logic reads the shell and
 // never sees these types.
+
 [mourning_plaguesheep_1]
 name=Sick-looking sheep (1)
 desc=This sheep is dyed red.
@@ -54438,6 +54668,7 @@ head1=npc_ogre_chieftan_head
 param=attack_anim,ogre_attack
 param=death_anim,ogre_death
 param=defend_anim,ogre_block
+
 [viking_dagganoth_cave_ferryman_rellekka]
 // name= added 2026-09-08. This is a multi SHELL - the client resolves multinpc before it draws
 // anything, so the chathead was always right, but npc_name reads the ACTIVE npc with no multi
@@ -54800,6 +55031,7 @@ op2=Attack
 vislevel=137
 
 param=attack_anim,horror_crab_attack
+
 [giant_rockcrab_hidden]
 name=Boulder
 desc=Heavy rock!
@@ -54824,6 +55056,7 @@ param=slayer_category,^slayer_dagannoth
 
 param=attack_anim,horror_dagannoth_attack
 param=death_anim,horror_dagannoth_death
+
 [dungeon_dagganoth_mainroom]
 name=Dagannoth
 desc=A darkened horror from the ocean depths...
@@ -54957,6 +55190,7 @@ param=magicattack_anim,wallasalki_attack
 param=attack_sound,wallasalki_attack
 param=death_sound,wallasalki_death
 param=defend_sound,wallasalki_hit
+
 [agilityarena_non_combat_bat]
 name=Giant bat
 desc=Annoying flappy thing.
@@ -55039,6 +55273,7 @@ param=death_anim,snake_death
 param=death_sound,snake_death
 param=defend_anim,snake_block
 param=defend_sound,snake_hit
+
 [tbwcu_snakejungle_appear]
 name=Bush Snake
 desc=A slithering serpent that likes to hide in the bush.
@@ -55055,6 +55290,7 @@ param=death_anim,snake_death
 param=death_sound,snake_death
 param=defend_anim,snake_block
 param=defend_sound,snake_hit
+
 [tbwcu_jungle_spider]
 name=Jungle spider
 desc=A barely visible deadly jungle spider.
@@ -55070,6 +55306,7 @@ vislevel=44
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+
 [tbwcu_spider_appear]
 name=Jungle Spider
 desc=A barely visible deadly jungle spider.
@@ -55086,6 +55323,7 @@ vislevel=44
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+
 [tbwcu_mosquito_single]
 name=Large mosquito
 desc=A flying blood sucker.
@@ -55097,6 +55335,7 @@ vislevel=13
 
 param=attack_anim,tbw_mosquito_attack
 param=death_anim,tbw_mosquito_death
+
 [tbwcu_mosquito_swarm3]
 name=Mosquito swarm
 desc=A swarm of three highly agile mosquitoes.
@@ -55108,6 +55347,7 @@ vislevel=17
 
 param=attack_anim,tbw_mosquito_attack
 param=death_anim,tbw_mosquito_death
+
 [tbwcu_mosquito_swarm5]
 name=Mosquito swarm
 desc=A swarm of five highly agile mosquitoes.
@@ -55119,6 +55359,7 @@ vislevel=20
 
 param=attack_anim,tbw_mosquito_attack
 param=death_anim,tbw_mosquito_death
+
 [tbwcu_tribesman_instant]
 name=Tribesman
 desc=A vicious warrior.
@@ -56260,6 +56501,7 @@ size=3
 // option AND a fully stocked [smithing_guild_ore_seller] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [smithing_guild_ore_seller]
 name=Ordan
 desc=He smells of rock dust.
@@ -56291,6 +56533,7 @@ param=shop_title,Smithing Guild Ore Seller
 // option AND a fully stocked [smithing_guild_buyer] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [smithing_guild_buyer]
 name=Jorzik
 desc=He buys stuff.
@@ -57045,6 +57288,7 @@ head1=npc_2591_head
 
 param=attack_anim,thzaar_staff_attack
 param=death_anim,thzaar_staff_death
+
 [tzhaar_mej4]
 name=TzHaar-Mej
 desc=Appears to be some kind of mystic.
@@ -57068,6 +57312,7 @@ head1=npc_2591_head
 
 param=attack_anim,thzaar_staff_attack
 param=death_anim,thzaar_staff_death
+
 [tzhaar_mej5]
 name=TzHaar-Mej
 desc=Appears to be some kind of mystic.
@@ -57134,6 +57379,7 @@ vislevel=103
 head1=npc_2591_head
 
 param=death_anim,thzaar_death
+
 [tzhaar_mej7]
 name=TzHaar-Mej
 desc=Appears to be some kind of mystic.
@@ -57200,6 +57446,7 @@ vislevel=74
 head1=npc_2591_head
 
 param=death_anim,thzaar_death
+
 [tzhaar_hur2]
 name=TzHaar-Hur
 desc=Looks like a craftsman of some kind.
@@ -57222,6 +57469,7 @@ vislevel=74
 head1=npc_2591_head
 
 param=death_anim,thzaar_death
+
 [tzhaar_hur3]
 name=TzHaar-Hur
 desc=Looks like a craftsman of some kind.
@@ -58038,6 +58286,7 @@ param=attack_sound,firebat_attack
 param=death_anim,firebat_death
 param=death_sound,firebat_death
 param=defend_sound,firebat_hit
+
 [tzhaar_fightpit_swarm_1b]
 name=Tz-Kih
 desc=Some kind of bat...
@@ -58054,6 +58303,7 @@ param=attack_sound,firebat_attack
 param=death_anim,firebat_death
 param=death_sound,firebat_death
 param=defend_sound,firebat_hit
+
 [tzhaar_fightpit_swarm_2a]
 name=Tz-Kek
 desc=Looks like living lava...
@@ -58071,6 +58321,7 @@ param=attack_sound,lavabeast_attack
 param=death_anim,lavabeast_death
 param=death_sound,lavabeast_death
 param=defend_sound,lavabeast_hit
+
 [tzhaar_fightpit_swarm_2b]
 name=Tz-Kek
 desc=Looks like living lava...
@@ -58100,6 +58351,7 @@ param=attack_sound,lavabeast_attack
 param=death_anim,lavabeast_death
 param=death_sound,lavabeast_death
 param=defend_sound,lavabeast_hit
+
 [tzhaar_fightpit_swarm_3a]
 name=Tok-Xil
 desc=I don't like the look of those spines...
@@ -58116,6 +58368,7 @@ contrast=60
 vislevel=90
 
 param=death_anim,magmaquris_death
+
 [tzhaar_fightpit_swarm_3b]
 name=Tok-Xil
 desc=I don't like the look of those spines...
@@ -58138,6 +58391,7 @@ contrast=60
 vislevel=90
 
 param=death_anim,magmaquris_death
+
 [wom_original]
 name=Wise Old Man
 desc=A venerable sage.
@@ -59030,6 +59284,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Man 2 = Man 2.
+
 [man4_for_musa_point]
 name=Man
 desc=One of Gielinor's many citizens.
@@ -59141,6 +59396,7 @@ huntmode=cowardly
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [rat]: Rat 1 = Rat 1.
+
 [rat_indoors]
 name=Rat
 desc=A popular dwarven delicacy.
@@ -59176,6 +59432,7 @@ param=slayer_category,^slayer_rat
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Hengel 2 <- Man 2.
+
 [rimmington_hengel]
 name=Hengel
 desc=A citizen of Rimmington.
@@ -59217,6 +59474,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [woman]: Anja 2 <- Woman 2.
+
 [rimmington_anja]
 name=Anja
 desc=A citizen of Rimmington.
@@ -59289,6 +59547,7 @@ huntmode=cowardly
 huntrange=1
 
 param=defend_anim,hobgoblin_block
+
 [rimmington_hobgoblin_unarmed_2]
 name=Hobgoblin
 desc=An ugly, smelly creature.
@@ -59329,6 +59588,7 @@ huntmode=cowardly
 huntrange=1
 
 param=defend_anim,hobgoblin_block
+
 [rimmington_hobgoblin_unarmed_3]
 name=Hobgoblin
 desc=An ugly, smelly creature.
@@ -59365,6 +59625,7 @@ huntmode=cowardly
 huntrange=1
 
 param=defend_anim,hobgoblin_block
+
 [rimmington_hobgoblin_armed_1]
 name=Hobgoblin
 desc=An ugly, smelly creature wielding a spear.
@@ -59404,6 +59665,7 @@ huntmode=cowardly
 huntrange=1
 
 param=defend_anim,hobgoblin_block
+
 [makeover_mage_frog]
 name=Frog
 desc=Didn't the mage say this procedure was totally safe?
@@ -59520,6 +59782,7 @@ param=death_anim,chicken_death
 param=death_sound,chicken_death
 param=defend_anim,chicken_block
 param=defend_sound,chicken_hit
+
 [sarim_seagull_pier_big]
 name=Seagull
 desc=Smells of rotten fish.
@@ -59538,6 +59801,7 @@ param=death_anim,chicken_death
 param=death_sound,chicken_death
 param=defend_anim,chicken_block
 param=defend_sound,chicken_hit
+
 [jail_pirate]
 name=Pirate
 desc=Yar! Shiver me timbers!
@@ -60780,6 +61044,7 @@ head1=idk_man_hair_dreadlocks_head
 // two ids per tier so two can be on screen at once; the wave builder uses the a records only, and
 // tools/fightcave_battery.py holds that line so a half-configured duplicate cannot appear.
 // ---------------------------------------------------------------------------------------------
+
 [tzhaar_fightcave_swarm_1a]
 // OSRS npc 3116's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2627 and the five firebat seqs. Every ambient, contrast, size and
@@ -60828,6 +61093,7 @@ param=attack_sound,firebat_attack
 param=death_anim,firebat_death
 param=death_sound,firebat_death
 param=defend_sound,firebat_hit
+
 [tzhaar_fightcave_swarm_2a]
 // OSRS npc 3118's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2629 recoloured and the five lavabeast seqs. Every ambient, contrast, size and
@@ -60899,6 +61165,7 @@ param=attack_sound,lavabeast_attack
 param=death_anim,lavabeast_death
 param=death_sound,lavabeast_death
 param=defend_sound,lavabeast_hit
+
 [tzhaar_fightcave_swarm_2spawn]
 // OSRS npc 3120's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2629 at 80 and the five lavabeast seqs. Every ambient, contrast, size and
@@ -60993,6 +61260,7 @@ contrast=60
 vislevel=90
 
 param=death_anim,magmaquris_death
+
 [tzhaar_fightcave_swarm_4a]
 // OSRS npc 3123's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2741 and the lizard_cleric seqs. Every ambient, contrast, size and
@@ -61052,6 +61320,7 @@ param=attack_sound,lizard_cleric_attack
 param=death_anim,lizard_cleric_death
 param=death_sound,lizard_cleric_death
 param=defend_sound,lizard_cleric_hit
+
 [tzhaar_fightcave_swarm_5a]
 // OSRS npc 3125's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2743 and the six igniferum seqs. Every ambient, contrast, size and
@@ -61118,6 +61387,7 @@ vislevel=360
 
 param=attack_anim,igniferum_attack
 param=death_anim,igniferum_death
+
 [tzhaar_fightcave_swarm_boss]
 // OSRS npc 3127's own art - models AND animations, imported 2026-09-17,
 // replacing npc_2745 and the seven lordmagmus seqs. Every ambient, contrast, size and
@@ -61811,6 +62081,7 @@ param=death_drop,null
 // The recolours and the resize are gone with the mesh they were for.
 param=attack_anim,shadow_attack
 param=death_anim,shadow_death
+
 [mourning_dark_beast]
 name=Dark beast
 desc=From a darker dimension.
@@ -62806,6 +63077,7 @@ head2=npc_1688_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_1]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -62852,6 +63124,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_2]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -62899,6 +63172,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_3]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -62946,6 +63220,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_4]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -62992,6 +63267,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_5]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -63036,6 +63312,7 @@ param=death_anim,human_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [fever_pirate_enemy_02]: Zombie Pirate 57 <- Pirate 57.
+
 [deal_zombie_pirates_6]
 name=Zombie Pirate
 desc=An undead sea scoundrel.
@@ -63083,6 +63360,7 @@ param=death_anim,human_death
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_a]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63126,6 +63404,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_b]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63170,6 +63449,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_c]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63214,6 +63494,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_d]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63257,6 +63538,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_e]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63298,6 +63580,7 @@ param=damagetype,^crush_style
 // Levels and bonuses read off the OSRS wiki page for Zombie swab (level 55), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
+
 [deal_pirate_f]
 name=Zombie Swab
 desc=He talks a good fight.
@@ -63366,6 +63649,7 @@ param=death_sound,rumdeal_spirit_depart
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,spirit_attack
 param=death_anim,spirit_death
+
 [deal_fever_spiders1]
 name=Fever Spider
 desc=A bunch of legs, eyes and teeth.
@@ -63396,6 +63680,7 @@ param=slayer_category,^slayer_feverspider
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+
 [deal_brewer_1]
 name=Brewer
 desc=A worker in the brewery.
@@ -65765,6 +66050,7 @@ resizev=134
 
 param=attack_anim,mouse_attack
 param=death_anim,mouse_death
+
 [vc_kingrat]
 name=King rat
 desc=The master of all rats.
@@ -66685,6 +66971,7 @@ huntrange=4
 wanderrange=2
 maxrange=6
 respawnrate=100
+
 [elid_golem_white]
 name=White golem
 desc=An animated clay statue.
@@ -66731,6 +67018,7 @@ huntrange=4
 wanderrange=2
 maxrange=6
 respawnrate=100
+
 [elid_golem_grey]
 name=Grey golem
 desc=An animated clay statue.
@@ -66777,6 +67065,7 @@ huntrange=4
 wanderrange=2
 maxrange=6
 respawnrate=100
+
 [elid_ghaslor]
 name=Ghaslor the Elder
 desc=The oldest man in Nardah.
@@ -67030,6 +67319,7 @@ head2=obj_headband_red_womanhead
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [armourshopnardah] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [elid_shield_seller]
 name=Seddu
 desc=An armour merchant.
@@ -67069,6 +67359,7 @@ param=shop_title,Seddu's Adventurers' Store
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [generalshopnardah] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [elid_general_seller]
 name=Kazemde
 desc=A seller of many things.
@@ -67259,6 +67550,7 @@ head1=obj_roguetrader_menaphite_hat_womanhead
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [chociceshopnardah] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [elid_choc_ice_seller]
 name=Rokuh
 desc=A seller of tasty choc ices.
@@ -67300,6 +67592,7 @@ param=shop_title,Rokuh's Chocolate Ices
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [elid_banker]
 name=Nardah Banker
 desc=A banker of Nardah.
@@ -67513,6 +67806,7 @@ wanderrange=0
 moverestrict=nomove
 
 param=death_anim,earthwarrior_death
+
 [champions_giant]
 name=Giant Champion
 desc=Champion of the Giants!
@@ -67524,6 +67818,7 @@ op2=Attack
 vislevel=56
 
 param=death_anim,champions_giant_death
+
 [champions_ghoul]
 name=Ghoul Champion
 desc=Champion of the Ghouls!
@@ -67551,6 +67846,7 @@ vislevel=85
 param=attack_sound,ghoul_attack
 param=death_sound,ghoul_death
 param=defend_sound,ghoul_hit
+
 [champions_goblin]
 name=Goblin Champion
 desc=Champion of the Goblins!
@@ -67577,6 +67873,7 @@ vislevel=56
 param=attack_anim,hobgoblin_attack
 param=death_anim,hobgoblin_death
 param=defend_anim,hobgoblin_block
+
 [champions_imp]
 name=Imp Champion
 desc=Champion of the Imps!
@@ -67592,6 +67889,7 @@ param=death_anim,imp_death
 param=death_sound,imp_death
 param=defend_anim,imp_block
 param=defend_sound,imp_hit
+
 [champions_jogre]
 name=Jogre Champion
 desc=Champion of the Jogres!
@@ -67605,6 +67903,7 @@ op2=Attack
 vislevel=107
 
 param=attack_anim,champions_jogre_attack
+
 [champions_skeleton]
 name=Skeleton Champion
 desc=Champion of the Skeletons!
@@ -67629,6 +67928,7 @@ op2=Attack
 vislevel=51
 
 param=death_anim,champions_zombie_death
+
 [champions_human]
 name=Leon D'Cour
 desc=Champion of Champions!
@@ -67923,6 +68223,7 @@ param=death_drop,big_bones
 param=attack_sound,giant_attack
 param=death_sound,giant_death
 param=defend_sound,giant_hit
+
 [icewarrior_low_wanderrange]
 name=Ice warrior
 desc=A cold-hearted elemental warrior.
@@ -69596,6 +69897,7 @@ head2=obj_piratehat_manhead
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [charleyshop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [fever_pirate_two_feet_charley]
 name=Charley
 desc=Two feet Charley.
@@ -69633,6 +69935,7 @@ param=shop_title,Charley's Fish
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [smithsshop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [fever_smithing_smith]
 name=Smith
 desc=Smithing Smith.
@@ -69675,6 +69978,7 @@ param=shop_title,The Smith's Scimitars
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [joeshop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [fever_harpoon_joe]
 name=Joe
 desc=Harpoon Joe.
@@ -69759,6 +70063,7 @@ head1=idk_woman_hair_bun_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [mikeshop] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [fever_dodgy_mike]
 name=Mike
 desc=Dodgy Mike.
@@ -70842,6 +71147,7 @@ minimap=no
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [fever_banker_01]
 name=Banker
 desc=He can look after my money.
@@ -70872,6 +71178,7 @@ category=bank_teller
 // FIXED 2026-09-08 (dead-op audit): op1=Talk-to and op3=Bank were both dead - this banker had no
 // category, and every working banker in the game is served by [apnpc1,_bank_teller] /
 // [apnpc3,_bank_teller] in interface_bank/scripts/banker.rs2 via category=bank_teller.
+
 [fever_banker_02]
 name=Banker
 desc=He can look after my money.
@@ -70951,6 +71258,7 @@ param=slayer_category,^slayer_killerwatt
 param=attack_anim,killerwatt_biped_attack
 param=death_anim,killerwatt_biped_death
 param=defend_anim,killerwatt_biped_block
+
 [slayer_killerwatt_ball]
 name=Killerwatt
 desc=A ball of electrical energy.
@@ -70991,6 +71299,7 @@ param=slayer_category,^slayer_killerwatt
 param=attack_sound,killerwatt_ball_attack
 param=death_sound,killerwatt_ball_death
 param=defend_sound,killerwatt_ball_hit
+
 [stormcloud_non_attacking]
 name=Storm Cloud
 desc=A very small storm!
@@ -71017,6 +71326,7 @@ minimap=no
 // option AND a fully stocked [shop_pies] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [merchant_pies]
 name=Romily Weaklax
 desc=A family baker, from the North.
@@ -71322,6 +71632,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_falador_dwarf_normal2]
 name=Dwarf
 desc=Loves mining.
@@ -71366,6 +71677,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_falador_dwarf_normal3]
 name=Dwarf
 desc=Loves mining.
@@ -71404,6 +71716,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [falador_man1]
 name=Drunken man
 desc=One of Gielinor's many citizens, currently incapacitated by alcohol.
@@ -72005,6 +72318,7 @@ head2=idk_man_jaw_short_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: 'Cuffs' 3 <- Man 2.
+
 [falador_doric_area_man1]
 name='Cuffs'
 desc=He looks a bit dodgy.
@@ -72039,6 +72353,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Narf 2 <- Man 2.
+
 [falador_doric_area_man2]
 name=Narf
 desc=Looks unpleasant.
@@ -72076,6 +72391,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Rusty 2 <- Man 2.
+
 [falador_doric_area_man3]
 name=Rusty
 desc=Seems to be loitering.
@@ -72114,6 +72430,7 @@ param=damagetype,^crush_style
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [man]: Jeff 2 <- Man 2.
+
 [falador_doric_area_man4]
 name=Jeff
 desc=Untrustworthy.
@@ -73289,6 +73606,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_02]
 name=Dwarf
 desc=A dwarven worker.
@@ -73330,6 +73648,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_03]
 name=Dwarf
 desc=A dwarven worker.
@@ -73371,6 +73690,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_04]
 name=Dwarf
 desc=A dwarven worker.
@@ -73406,6 +73726,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_05]
 name=Dwarf
 desc=A dwarven worker.
@@ -73443,6 +73764,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_06]
 name=Dwarf
 desc=A dwarven worker.
@@ -73488,6 +73810,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_07]
 name=Dwarf
 desc=A dwarven worker.
@@ -73532,6 +73855,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_08]
 name=Dwarf
 desc=A dwarven worker.
@@ -73579,6 +73903,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_black_guard_01]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -73627,6 +73952,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_black_guard_02]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -73677,6 +74003,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_black_guard_03]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -73725,6 +74052,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_black_guard_04]
 name=Black Guard
 desc=A member of the Black Guard, a special division of the dwarven army.
@@ -73773,6 +74101,7 @@ param=death_anim,dwarf_death
 param=attack_sound,dwarf_attack
 param=death_sound,dwarf_death
 param=defend_sound,dwarf_hit
+
 [fai_dwarf_worker_patrol_01]
 name=Engineering assistant
 desc=He looks busy.
@@ -74306,6 +74635,7 @@ head2=idk_man_jaw_medium_head
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [cow]: Cow 2 = Cow 2.
+
 [fairy_cow]
 name=Cow
 desc=Converts grass to beef.
@@ -74403,6 +74733,7 @@ head1=npc_3313_head
 param=attack_anim,tanglefoot_attack
 param=death_anim,tanglefoot_death
 param=defend_anim,tanglefoot_block
+
 [fairy_queen_multi]
 // name= added 2026-09-08. This is a multi SHELL - the client resolves multinpc before it draws
 // anything, so the chathead was always right, but npc_name reads the ACTIVE npc with no multi
@@ -74926,6 +75257,7 @@ param=death_drop,big_bones
 param=attack_sound,mole_attack
 param=death_sound,mole_death
 param=defend_sound,mole_hit
+
 [mole_baby_01]
 name=Baby Mole
 desc=I will call him, Mini Mole.
@@ -75078,6 +75410,7 @@ huntmode=aggressive_melee
 param=attack_sound,zygomite_attack
 param=death_sound,zygomite_death
 param=defend_sound,zygomite_hit
+
 [slayer_mutated_zygomite_adult]
 name=Zygomite
 desc=A fun guy. No wait, that's awful..
@@ -75120,6 +75453,7 @@ huntmode=aggressive_melee
 param=attack_sound,zygomite_attack
 param=death_sound,zygomite_death
 param=defend_sound,zygomite_hit
+
 [white_knight_yellow_plumes_f]
 name=White Knight
 desc=A White Knight proselyte.
@@ -75450,6 +75784,7 @@ respawnrate=25
 // set BY talking to her, so at state 2 - standing in the frozen room with nine statues and nobody
 // to ask about them - the shell resolved to no child at all: no name, no model, no ops. She was
 // invisible at exactly the moment the quest needs her. States 1, 2 and 5 point at the same child.
+
 [hundred_aris]
 vislevel=hide
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
@@ -75849,6 +76184,7 @@ head4=npc_1901_headi2
 //
 // wanderrange=0 + moverestrict=nomove, as [gambler1] uses. Rohak stands in the dwarf camp in
 // Old School and has nowhere to be.
+
 [hundred_dwarf_dad_multi]
 walkanim=dwarf_walk
 readyanim=dwarf_ready
@@ -75920,6 +76256,7 @@ head1=npc_lawgof2_head
 head2=npc_mcannonguard_headi2
 
 // The other half of the swap - see [hundred_dwarf_dad_multi] above. Pinned for the same reason.
+
 [hundred_dwarf_drunk_multi]
 readyanim=dwarf_drunkready
 walkanim=dwarf_drunkwalk
@@ -76284,6 +76621,7 @@ param=death_drop,null
 param=attack_sound,mudskipper_attack
 param=death_sound,mudskipper_death
 param=defend_sound,mudskipper_hit
+
 [hundred_pirate_giant_mudskipper_2]
 name=Mudskipper
 desc=Not the most beautiful fish in the sea.
@@ -76314,6 +76652,7 @@ param=death_drop,null
 param=attack_sound,mudskipper_attack
 param=death_sound,mudskipper_death
 param=defend_sound,mudskipper_hit
+
 [hundred_pirate_giant_crab]
 name=Crab
 desc=Nice claw!
@@ -77218,6 +77557,7 @@ walkanim=100_jubbly_toad_balloon_deflate
 // FIXED again (quest audit): the Attack was still op5, and nothing answers op5 on this bird - the
 // player combat entry points are op2 ([opnpc5,chompy_bird] is the chompy's own ogre-bow script) -
 // so clicking Attack did nothing and the bird still could not be killed. It is op2 now.
+
 [100_jubbly_bird]
 name=Jubbly bird
 desc=A large boisterous bird, a delicacy for ogres.
@@ -77319,6 +77659,7 @@ head2=npc_3483_head
 // no death_drop - so the one thing the whole sub-quest needs it for, a snake corpse, could not be
 // obtained. hundred_ilm_snake_corpse ("Like a snake only not alive") exists and nothing else drops
 // or gives it.
+
 [hundred_ilm_snake]
 name=Big Snake
 desc=A big snake.
@@ -77644,6 +77985,7 @@ head4=npc_1901_headi2
 // everything else. black_knight_titan already uses 1000 that way, so this is the repo's own idiom
 // rather than an invention. SIMPLIFICATION, recorded honestly: the engine's defence params separate
 // melee, ranged and magic and nothing finer, so the four elemental forms are all "hit it with magic".
+
 [hundred_minion1]
 name=Agrith-Na-Na
 desc=Big, scary, angry and a good source of energy.
@@ -77971,6 +78313,7 @@ param=rangedefence,1000
 // as models and nothing else - no category, no pet_item_id, no cat_next_id, no follower_id - so the
 // pet system could not see them and a cat could not become one. They are the form an ordinary cat
 // takes in Evil Dave's cellar; without these lines the sub-quest has no way to get spice.
+
 [overgrowncat_hell]
 name=Overgrown hellcat
 desc=A hellish not-so little pet.
@@ -78953,6 +79296,7 @@ head2=npc_dskin_w_ardoungecitizen2_head
 // option AND a fully stocked [burgh_general_store] in _unpack/727/all.inv; nothing in the repo ever bound
 // them, so clicking Trade did nothing. category=shop_keeper + param=owned_shop is what
 // shop/scripts/shop.rs2's generic [opnpc3,_shop_keeper] binds against. Same defect as Jossik.
+
 [burgh_general_store_owner]
 name=Aurel
 desc=A flea infested, pale looking excuse of a man.
@@ -79951,6 +80295,7 @@ op2=Attack
 ambient=5
 vislevel=59
 head1=npc_3514_head
+huntmode=aggressive_melee
 
 [templetrek_vampire_2]
 name=Juvinate
@@ -79981,6 +80326,7 @@ op2=Attack
 ambient=5
 vislevel=90
 head1=npc_3514_head
+huntmode=aggressive_melee
 
 [templetrek_vampire_3]
 name=Juvinate
@@ -80010,6 +80356,7 @@ op2=Attack
 ambient=5
 vislevel=119
 head1=npc_3514_head
+huntmode=aggressive_melee
 
 [sheep_shearer_the_thing]
 name=Sheep
@@ -80052,6 +80399,7 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
+
 [poh_guarddog]
 name=Guard dog
 desc=Beware of the dog!
@@ -80073,6 +80421,7 @@ vislevel=44
 param=attack_anim,dog_attack
 param=death_anim,dog_death
 param=defend_anim,dog_block
+
 [poh_hobgoblin]
 name=Hobgoblin
 desc=He doesn't look very welcoming.
@@ -80095,6 +80444,7 @@ vislevel=54
 param=attack_anim,hobgoblin_attack
 param=death_anim,hobgoblin_death
 param=defend_anim,hobgoblin_block
+
 [poh_troll]
 name=Troll
 desc=A pet Troll!
@@ -80113,6 +80463,7 @@ param=death_anim,troll_death
 param=death_sound,troll_death
 param=defend_anim,troll_block
 param=defend_sound,troll_hit
+
 [poh_giantspider]
 name=Huge Spider
 desc=No spider could get that big! It's unrealistic!
@@ -80133,6 +80484,7 @@ vislevel=81
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
+
 [poh_hellhound]
 name=Hellhound
 desc=Good doggie...
@@ -80147,6 +80499,7 @@ vislevel=122
 param=attack_anim,hell_attack
 param=death_anim,hell_death
 param=defend_anim,hell_block
+
 [poh_ogre]
 name=Ogre
 desc=He's full of pent-up aggression.
@@ -80164,6 +80517,7 @@ vislevel=53
 param=attack_anim,ogre_attack
 param=death_anim,ogre_death
 param=defend_anim,ogre_block
+
 [poh_kalphite_soldier]
 name=Kalphite Soldier
 desc=I don't think insect repellent will work...
@@ -80183,6 +80537,7 @@ vislevel=85
 
 param=death_anim,kalphite_death
 param=defend_anim,kalphite_block
+
 [poh_dagganoth]
 name=Dagannoth
 desc=A darkened horror from the ocean depths...
@@ -80204,6 +80559,7 @@ vislevel=135
 
 param=attack_anim,horror_dagannoth_attack
 param=death_anim,horror_dagannoth_death
+
 [poh_tok_xil]
 name=Tok-Xil
 desc=I don't like the look of those spines...
@@ -80221,6 +80577,7 @@ contrast=60
 vislevel=90
 
 param=death_anim,magmaquris_death
+
 [poh_oub_monster1]
 name=Rocnar
 desc=It's full of pent-up aggression.
@@ -80234,6 +80591,7 @@ vislevel=97
 param=attack_anim,oub_monster1_attack
 param=death_anim,oub_monster1_death
 param=defend_anim,oub_monster1_block
+
 [poh_toy_soldier]
 name=Toy Soldier
 desc=Nice piece of crafting that...
@@ -80296,6 +80654,8 @@ vislevel=80
 
 param=attack_anim,royal_sea_snake_attack
 param=death_anim,royal_sea_snake_death
+huntmode=aggressive_melee
+
 [templetrek_snake_2]
 name=Swamp snake
 desc=A large snake that thrives in swamps.
@@ -80324,6 +80684,8 @@ vislevel=109
 
 param=attack_anim,royal_sea_snake_attack
 param=death_anim,royal_sea_snake_death
+huntmode=aggressive_melee
+
 [templetrek_snake_3]
 name=Swamp snake
 desc=A large snake that thrives in swamps.
@@ -80352,6 +80714,8 @@ vislevel=139
 
 param=attack_anim,royal_sea_snake_attack
 param=death_anim,royal_sea_snake_death
+huntmode=aggressive_melee
+
 [templetrek_snake_dead]
 name=Swamp snake
 desc=A dead snake, it thrived in the swamp until it met you.
@@ -80450,6 +80814,7 @@ minimap=no
 size=2
 walkanim=inv_ghast_walk
 readyanim=inv_ghast_ready
+huntmode=aggressive_melee
 
 [templetrek_ghast_invis_2]
 name=Ghast
@@ -80460,6 +80825,7 @@ minimap=no
 size=2
 walkanim=inv_ghast_walk
 readyanim=inv_ghast_ready
+huntmode=aggressive_melee
 
 [templetrek_ghast_invis_3]
 name=Ghast
@@ -80470,6 +80836,7 @@ minimap=no
 size=2
 walkanim=inv_ghast_walk
 readyanim=inv_ghast_ready
+huntmode=aggressive_melee
 
 [templetrek_ghast_vis_1]
 name=Ghast
@@ -80499,6 +80866,8 @@ param=death_anim,ghast_death
 param=death_sound,ghast_death
 param=defend_anim,ghast_block
 param=defend_sound,ghast_hit
+huntmode=aggressive_melee
+
 [templetrek_ghast_vis_2]
 name=Ghast
 desc=Arrghhh... A Ghast.
@@ -80527,6 +80896,8 @@ param=death_anim,ghast_death
 param=death_sound,ghast_death
 param=defend_anim,ghast_block
 param=defend_sound,ghast_hit
+huntmode=aggressive_melee
+
 [templetrek_ghast_vis_3]
 name=Ghast
 desc=Arrghhh... A Ghast.
@@ -80555,6 +80926,8 @@ param=death_anim,ghast_death
 param=death_sound,ghast_death
 param=defend_anim,ghast_block
 param=defend_sound,ghast_hit
+huntmode=aggressive_melee
+
 [templetrek_giantsnail_1]
 name=Giant snail
 desc=Euew.
@@ -80568,8 +80941,14 @@ readyanim=templetrek_giant_snail_ready
 ambient=15
 vislevel=80
 
-param=attack_anim,templetrek_giant_snail_attack
+param=attack_anim,templetrek_giant_snail_slime_attack
 param=death_anim,templetrek_giant_snail_death
+huntmode=aggressive_ranged
+param=damagetype,^ranged_style
+param=proj_launch,trek_snail_acid_attack
+param=proj_travel,trek_snail_acid_travel
+param=rangeattack_sound,snail_spit
+
 [templetrek_giantsnail_2]
 name=Giant snail
 desc=Euew.
@@ -80595,8 +80974,14 @@ readyanim=templetrek_giant_snail_ready
 ambient=15
 vislevel=109
 
-param=attack_anim,templetrek_giant_snail_attack
+param=attack_anim,templetrek_giant_snail_slime_attack
 param=death_anim,templetrek_giant_snail_death
+huntmode=aggressive_ranged
+param=damagetype,^ranged_style
+param=proj_launch,trek_snail_acid_attack
+param=proj_travel,trek_snail_acid_travel
+param=rangeattack_sound,snail_spit
+
 [templetrek_giantsnail_3]
 name=Giant snail
 desc=Euew.
@@ -80622,8 +81007,14 @@ readyanim=templetrek_giant_snail_ready
 ambient=15
 vislevel=139
 
-param=attack_anim,templetrek_giant_snail_attack
+param=attack_anim,templetrek_giant_snail_slime_attack
 param=death_anim,templetrek_giant_snail_death
+huntmode=aggressive_ranged
+param=damagetype,^ranged_style
+param=proj_launch,trek_snail_acid_attack
+param=proj_travel,trek_snail_acid_travel
+param=rangeattack_sound,snail_spit
+
 [templetrek_shade_1]
 name=Riyl shadow
 desc=The shadowy remains of a long departed soul.
@@ -80644,6 +81035,8 @@ param=attack_sound,shade_attack
 param=death_sound,shade_death
 param=defend_anim,shade_block
 param=defend_sound,shade_hit
+huntmode=aggressive_melee
+
 [templetrek_shade_2]
 name=Asyn shadow
 desc=The shadowy remains of a long departed soul.
@@ -80664,6 +81057,8 @@ param=attack_sound,shade_attack
 param=death_sound,shade_death
 param=defend_anim,shade_block
 param=defend_sound,shade_hit
+huntmode=aggressive_melee
+
 [templetrek_shade_3]
 name=Shade
 desc=The shadowy remains of a long departed soul.
@@ -80682,6 +81077,8 @@ param=attack_sound,shade_attack
 param=death_sound,shade_death
 param=defend_anim,shade_block
 param=defend_sound,shade_hit
+huntmode=aggressive_melee
+
 [templetrek_tentacle_arm]
 name=Tentacle
 desc=I'm glad I can't see the rest of it!
@@ -80703,6 +81100,8 @@ vislevel=99
 param=attack_anim,tentacle_monster_attack
 param=death_anim,tentacle_monster_death
 param=defend_anim,tentacle_monster_block
+huntmode=aggressive_melee
+
 [templetrek_tentacle_head]
 name=Head
 desc=I'm glad I can't see the rest of it!
@@ -80723,6 +81122,8 @@ vislevel=140
 
 param=attack_anim,templetrek_tentacle_head_attack
 param=death_anim,templetrek_tentacle_head_death
+huntmode=aggressive_melee
+
 [templetrek_tentacle_head_spawning]
 name=Head
 desc=I'm glad I can't see the rest of it!
@@ -81838,6 +82239,7 @@ param=death_drop,null
 param=attack_sound,goblin_attack
 param=death_sound,goblin_death
 param=defend_sound,goblin_hit
+
 [soulbane_bear]
 name=Angry bear
 desc=He looks a little on the cross side!
@@ -81881,6 +82283,7 @@ param=death_drop,null
 param=attack_sound,bear_attack
 param=death_sound,bear_death
 param=defend_sound,bear_hit
+
 [soulbane_fear_beast]
 name=Fear reaper
 desc=AHHHH!
@@ -82053,6 +82456,7 @@ param=death_anim,sheep_death
 param=death_sound,sheep_death
 param=defend_anim,sheep_block
 param=defend_sound,sheep_hit
+
 [ramunsheered]
 name=Ram
 desc=White and fluffy.
@@ -82069,6 +82473,7 @@ param=death_anim,sheep_death
 param=death_sound,sheep_death
 param=defend_anim,sheep_block
 param=defend_sound,sheep_hit
+
 [talking_sack]
 name=Bones
 desc=Bony.
@@ -82103,6 +82508,7 @@ param=death_anim,vulture_ground_death
 param=attack_sound,vulture_attack
 param=death_sound,vulture_death
 param=defend_sound,vulture_hit
+
 [rag_vulture_flying]
 name=Vulture
 desc=If you see them circling... run.
@@ -85578,6 +85984,7 @@ head1=idk_woman_hair_bun_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [pest_archery_store] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [pest_squire_rangeshop]
 name=Squire
 desc=A squire of balance.
@@ -85626,6 +86033,7 @@ head2=idk_man_jaw_split_head
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [pest_rune_store] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [pest_squire_runeshop]
 name=Squire
 desc=A squire of balance.
@@ -85655,6 +86063,7 @@ param=shop_title,Void Knight Rune Store
 
 // FIXED 2026-09-08 (dead-op audit, round 2): op3=Trade with nothing behind it. The cache ships a
 // stocked [pest_general_store] in _unpack/727/all.inv and nothing bound it. See claude/dead-op-audit.md.
+
 [pest_squire_storemaster]
 name=Squire
 desc=A squire of balance.
@@ -86006,6 +86415,7 @@ head1=obj_pickpocket_guide_gnome
 
 param=death_anim,midget_death
 param=defend_anim,midget_block
+
 [gnome_driver]
 name=Gnome Driver
 desc=Yee haa!
@@ -86023,6 +86433,7 @@ head1=npc_commander_montai_head
 
 param=death_anim,midget_death
 param=defend_anim,midget_block
+
 [gnome_mage]
 name=Gnome Mage
 desc=A battle mage of the gnomish variety.
@@ -86039,6 +86450,7 @@ head1=npc_1425_head
 
 param=death_anim,midget_death
 param=defend_anim,midget_block
+
 [gnome_tortoise_commander]
 name=Lieutenant Schepbur
 desc=The battle tortoise commander. Sir!
@@ -86434,6 +86846,7 @@ vislevel=333
 
 param=death_anim,kalphite_death
 param=defend_anim,kalphite_block
+
 [swan_kalphite_2]
 name=Kalphite Queen
 desc=I don't think insect repellent will work...
@@ -86449,6 +86862,7 @@ vislevel=333
 
 param=death_anim,kalphite_queen_death
 param=defend_anim,kalphite_queen_block
+
 [swan_drunkendwarf]
 name=Drunken Dwarf
 desc=He's had a fair bit to drink...
@@ -86546,6 +86960,7 @@ vislevel=79
 param=attack_anim,swan_seatroll_attack
 param=death_anim,swan_seatroll_death
 param=defend_anim,swan_seatroll_block
+
 [swan_troll_fishing_1]
 name=Sea troll
 desc=An aquatic troll.
@@ -86566,6 +86981,7 @@ vislevel=65
 param=attack_anim,swan_seatroll_attack
 param=death_anim,swan_seatroll_death
 param=defend_anim,swan_seatroll_block
+
 [swan_troll_fishing_2]
 name=Sea troll
 desc=An aquatic troll.
@@ -86586,6 +87002,7 @@ vislevel=87
 param=attack_anim,swan_seatroll_attack
 param=death_anim,swan_seatroll_death
 param=defend_anim,swan_seatroll_block
+
 [swan_troll_fishing_3]
 name=Sea troll
 desc=An aquatic troll.
@@ -86603,6 +87020,7 @@ vislevel=101
 param=attack_anim,swan_seatroll_attack
 param=death_anim,swan_seatroll_death
 param=defend_anim,swan_seatroll_block
+
 [swan_skeleton_battle]
 name=Skeleton Mage
 desc=Recalled to unlife!
@@ -86680,6 +87098,7 @@ param=death_anim,swan_queen_death
 
 param=attack_anim,swan_queen_attack
 param=death_anim,swan_queen_death
+
 [swan_fishingspot]
 name=Fishing spot
 desc=I can see fish swimming in the water.

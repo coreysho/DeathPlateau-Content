@@ -20,6 +20,11 @@ if (%trek_route = ^trek_route_none) {
 return(%trek_route);
 
 [proc,trek_kill_points]()(int)
+// The boat is its own rate: Old School gives the head and its four tentacles 4,000 between them,
+// which is 800 a kill and not route 3's 1,125.
+if (~trek_event(%trek_room) = ^trek_event_tentacles) {
+    return(^trek_points_tentacle);
+}
 switch_int (%trek_route) {
     case ^trek_route_salve : return(^trek_points_kill_salve);
     case ^trek_route_hollows : return(^trek_points_kill_hollows);
@@ -65,14 +70,20 @@ mes($line);
 
 // Five tiles around the player, which is as many as the hardest escort brings. movecoord rather
 // than map_findsquare, because these rooms are narrow and a random square can land in the water.
+//
+// AND THEY ARE SPREAD FAR APART, because these monsters are big: a ghast is 2x2, a giant snail 3x3,
+// and a swamp snake is 3x3 on route 1, 4x4 on route 2 and 5x5 on route 3. An npc's coord is its
+// south-west corner, so two of them two tiles apart overlap and the second never appears. Four and
+// six tiles of clearance fits the largest of them with room over, and every event room is at least
+// twenty tiles deep.
 [proc,trek_spawn_tile](int $i)(coord)
 switch_int ($i) {
-    case 0 : return(movecoord(coord, 2, 0, 2));
-    case 1 : return(movecoord(coord, -2, 0, 2));
-    case 2 : return(movecoord(coord, 2, 0, 4));
-    case 3 : return(movecoord(coord, -2, 0, 4));
+    case 0 : return(movecoord(coord, 4, 0, 4));
+    case 1 : return(movecoord(coord, -4, 0, 4));
+    case 2 : return(movecoord(coord, 4, 0, 10));
+    case 3 : return(movecoord(coord, -4, 0, 10));
 }
-return(movecoord(coord, 0, 0, 5));
+return(movecoord(coord, 0, 0, 14));
 
 [label,trek_event_combat_snakes]
 switch_int (~trek_tier) {
@@ -315,12 +326,16 @@ if ($used ! templetrek_long_vine) {
     ~displaymessage(^dm_default);
     return;
 }
+// The rope is tied the moment it leaves your hand, and the throw is animated afterwards. Putting
+// the p_delay first meant the loc and the flag were on the far side of it, and one run in six had
+// the vine rope over the branch - Swing-on worked - while the room still thought the way was shut.
+// Same rule as the vine twisting above: commit the state next to the thing it describes.
 inv_del(inv, templetrek_long_vine, 1);
-anim(templetrek_rope_lasso, 0);
-p_delay(3);
 loc_add(^trek_vine_branch, templetrek_swamptree_branch_vine, ^trek_vine_branch_angle, centrepiece_straight, ^trek_vine_life);
 %trek_event_done = 1;
 ~trek_add_points(^trek_points_puzzle);
+anim(templetrek_rope_lasso, 0);
+p_delay(3);
 ~mesbox("You get the rope over the branch and haul it tight. It will carry you both across.");
 
 [oploc1,templetrek_swamptree_branch_vine] ~mesbox("A vine rope over the branch, reaching the far side of the gully.");
@@ -361,3 +376,84 @@ if (%trek_route = ^trek_route_none) {
 stat_heal(hitpoints, stat_base(hitpoints), 0);
 stat_boost(defence, 3, 0);
 ~mesbox("The stew is hot and whatever is in it does you good. You both feel steadier.");
+
+// ============================================================================== the tentacles
+// Route 3's last leg, out on the water. Not a combat room like the other five: the monsters come up
+// out of the swamp around the boat rather than walking at you, there is no Path to leave by, and the
+// cache keeps a second copy of each - templetrek_tentacle_arm_spawning and
+// templetrek_tentacle_head_spawning - whose ready animation IS the rising-out-of-the-water one.
+// So the thing is put out in its spawning form, given four ticks to come up, and then swapped for
+// the form that fights. That pair of npcs exists for no other reason.
+[label,trek_event_tentacles_start]
+mes("The water goes still, and then it does not.");
+~trek_rise(^trek_tentacle_1, templetrek_tentacle_arm_spawning);
+~trek_rise(^trek_tentacle_2, templetrek_tentacle_arm_spawning);
+~trek_rise(^trek_tentacle_3, templetrek_tentacle_arm_spawning);
+~trek_rise(^trek_tentacle_4, templetrek_tentacle_arm_spawning);
+~trek_rise(^trek_tentacle_head, templetrek_tentacle_head_spawning);
+sound_synth(watersplash, 1, 0);
+p_delay(^trek_tentacle_rise);
+~trek_woken(^trek_tentacle_1, templetrek_tentacle_arm_spawning, templetrek_tentacle_arm);
+~trek_woken(^trek_tentacle_2, templetrek_tentacle_arm_spawning, templetrek_tentacle_arm);
+~trek_woken(^trek_tentacle_3, templetrek_tentacle_arm_spawning, templetrek_tentacle_arm);
+~trek_woken(^trek_tentacle_4, templetrek_tentacle_arm_spawning, templetrek_tentacle_arm);
+~trek_woken(^trek_tentacle_head, templetrek_tentacle_head_spawning, templetrek_tentacle_head);
+%trek_spawned = 5;
+%trek_kills = 0;
+~mesbox("A head and four tentacles, and nowhere to stand but the boat. Keep them off your charge.");
+
+[proc,trek_rise](coord $where, npc $what)
+npc_add($where, $what, ^trek_monster_life);
+
+[proc,trek_woken](coord $where, npc $from, npc $to)
+if (npc_find($where, $from, 1, 0) = true) {
+    npc_del;
+}
+npc_add($where, $to, ^trek_monster_life);
+
+[ai_queue1,templetrek_tentacle_arm] @trek_monster_died;
+[ai_queue1,templetrek_tentacle_head] @trek_monster_died;
+
+// ========================================================================= clearing a room out
+// A TREK CAN WALK BACK INTO A ROOM IT HAS ALREADY BEEN IN. The draw now refuses the room just
+// played as well as the event, but with fourteen rooms and up to five legs a repeat two legs later
+// is still possible - and a four-leg trek that drew room 5 twice put the player back among the
+// three swamp snakes they had left standing there, with six alive and the kill count expecting
+// three. So the room is emptied on the way in, which holds however the draw goes and also tidies up
+// after a trek somebody abandoned halfway.
+[proc,trek_clear_monsters]
+~trek_clear_one(templetrek_snake_1);
+~trek_clear_one(templetrek_snake_2);
+~trek_clear_one(templetrek_snake_3);
+~trek_clear_one(templetrek_ghast_invis_1);
+~trek_clear_one(templetrek_ghast_invis_2);
+~trek_clear_one(templetrek_ghast_invis_3);
+~trek_clear_one(templetrek_ghast_vis_1);
+~trek_clear_one(templetrek_ghast_vis_2);
+~trek_clear_one(templetrek_ghast_vis_3);
+~trek_clear_one(templetrek_giantsnail_1);
+~trek_clear_one(templetrek_giantsnail_2);
+~trek_clear_one(templetrek_giantsnail_3);
+~trek_clear_one(templetrek_vampire_1);
+~trek_clear_one(templetrek_vampire_2);
+~trek_clear_one(templetrek_vampire_3);
+~trek_clear_one(templetrek_shade_1);
+~trek_clear_one(templetrek_shade_2);
+~trek_clear_one(templetrek_shade_3);
+~trek_clear_one(templetrek_tentacle_arm);
+~trek_clear_one(templetrek_tentacle_head);
+~trek_clear_one(templetrek_tentacle_arm_spawning);
+~trek_clear_one(templetrek_tentacle_head_spawning);
+~trek_clear_one(templetrek_good_samaritan);
+
+// Bounded, and npc_find is called again each time rather than walked with npc_findnext: deleting
+// the npc the iterator is standing on is not a thing to rely on.
+[proc,trek_clear_one](npc $type)
+def_int $i = 0;
+while ($i < 8) {
+    if (npc_find(coord, $type, 30, 0) = false) {
+        return;
+    }
+    npc_del;
+    $i = calc($i + 1);
+}

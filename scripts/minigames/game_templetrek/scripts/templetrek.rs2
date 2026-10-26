@@ -148,9 +148,16 @@ p_arrivedelay;
 [label,trek_next_room]
 def_int $room = 0;
 def_int $guard = 0;
+// Route 3 finishes on the water. The boat is room 15 and it is never in the random draw, so the
+// Hollows road is two rooms of the worst monsters in the swamp and then the crossing.
+if (%trek_route = ^trek_route_hollows & %trek_leg = calc(~trek_legs - 1)) {
+    @trek_enter_boat;
+}
 while ($guard < 30) {
     $room = calc(random(^trek_rooms) + 1);
-    if (~trek_event($room) ! %templetrek_last_event) {
+    // not the event just played, and not the same room either - a four-leg trek drew room 5 twice
+    // and the player walked back into the three swamp snakes they had left standing there.
+    if (~trek_event($room) ! %templetrek_last_event & $room ! %trek_room) {
         $guard = 99;
     } else {
         $guard = calc($guard + 1);
@@ -170,6 +177,7 @@ if_close;
 mes("You press on into the swamp.");
 p_delay(2);
 p_teleport(~trek_entry($room));
+~trek_clear_monsters;
 ~trek_place_escort;
 @trek_start_event(~trek_event($room));
 
@@ -247,6 +255,7 @@ if (%trek_leg >= ~trek_legs) {
 [label,trek_arrive]
 if_close;
 ~trek_clear_escort;
+~trek_clear_monsters;
 mes("The ground rises, and the Salve is in front of you.");
 p_delay(3);
 p_teleport(^trek_paterdomus);
@@ -266,6 +275,7 @@ def_namedobj $token = ~trek_token;
 [proc,trek_abandon](string $why)
 if_close;
 ~trek_clear_escort;
+~trek_clear_monsters;
 mes($why);
 p_delay(2);
 p_teleport(^trek_burgh_start);
@@ -282,6 +292,7 @@ p_teleport(^trek_burgh_start);
 // island by hand and a reader wants to see them next to the room they belong to.
 [proc,trek_entry](int $room)(coord)
 switch_int ($room) {
+    case ^trek_room_boat : return(^trek_r15_entry);
     case 1 : return(^trek_r1_entry);
     case 2 : return(^trek_r2_entry);
     case 3 : return(^trek_r3_entry);
@@ -299,8 +310,51 @@ switch_int ($room) {
 }
 return(^trek_r1_entry);
 
+// Into the boat. Separate from trek_next_room because there is nothing to draw and no Path to
+// arrive beside - the deck is the room.
+[label,trek_enter_boat]
+%trek_room = ^trek_room_boat;
+%trek_event_done = 0;
+%trek_kills = 0;
+%trek_spawned = 0;
+%templetrek_last_event = ^trek_event_tentacles;
+if_close;
+mes("The ground gives out at the water, and there is a boat drawn up.");
+p_delay(2);
+p_teleport(^trek_r15_entry);
+~trek_clear_monsters;
+~trek_place_escort;
+@trek_event_tentacles_start;
+
+// ===================================================================== off the boat again
+// The boat carries its own ways out instead of Paths: op4 to go on, op5 to give up.
+[oploc4,templetrek_boat_dummy_poly]
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("It is somebody else's boat and there is nobody to row it.");
+    return;
+}
+if (%trek_event_done = 0) {
+    ~mesbox("The thing in the water has not finished with you.");
+    return;
+}
+%trek_leg = calc(%trek_leg + 1);
+if (%trek_leg >= ~trek_legs) {
+    @trek_arrive;
+}
+@trek_next_room;
+
+[oploc5,templetrek_boat_dummy_poly]
+p_arrivedelay;
+if (%trek_route = ^trek_route_none) {
+    ~mesbox("It is somebody else's boat and there is nobody to row it.");
+    return;
+}
+~trek_abandon("You go over the side and wade back the way you came.");
+
 [proc,trek_event](int $room)(int)
 switch_int ($room) {
+    case ^trek_room_boat : return(^trek_event_tentacles);
     case 1, 5, 9 : return(^trek_event_snakes);
     case 2, 6, 10 : return(^trek_event_ghasts);
     case 3, 7 : return(^trek_event_snails);

@@ -80,7 +80,12 @@
 ^trek_event_bridge = 6
 ^trek_event_vines = 7
 ^trek_event_samaritan = 8
+^trek_event_tentacles = 9
+// Fourteen rooms are drawn at random. The fifteenth is the boat, and it is not in the draw: it is
+// always the LAST leg of route 3, because the Hollows road ends in a boat trip and nothing else
+// about route 3 would otherwise tell it apart from the Salve bar the monsters being bigger.
 ^trek_rooms = 14
+^trek_room_boat = 15
 
 // Points, from Old School: a puzzle is 500, a kill is 325, 625 or 1,125 by route, and the total a
 // token pays out on runs from 325 to 8,000.
@@ -89,6 +94,9 @@
 ^trek_points_kill_salve = 625
 ^trek_points_kill_hollows = 1125
 ^trek_points_max = 8000
+// Old School gives the head and its four tentacles 4,000 points between them, which is five kills
+// at 800 rather than route 3's usual 1,125 - the event is worth less per kill and far more in total.
+^trek_points_tentacle = 800
 
 // ================================================================================ where it happens
 // Burgh de Rott, where the six stand, and the Paterdomus landing - the same tile the temple's own
@@ -160,6 +168,23 @@
 ^trek_r14_entry = 0_35_78_29_14
 ^trek_r14_success = 0_35_78_29_29
 ^trek_r14_fail = 0_35_78_29_12
+
+// THE BOAT, which is a room of a different shape. There is no Path loc anywhere near it: the deck
+// is six tiles on plane 2 at 2062-2063, z 5034-5036 - templetrek_boat_dummy_poly is 2x3 and
+// blockwalk=no, so you stand on it - and the boat itself carries op4=Continue-trek and
+// op5=Escape-event. The rowboat is drawn again on plane 1 underneath and the ripples on plane 0.
+^trek_r15_entry = 2_32_78_14_43        // 2062,5035 - amidships
+^trek_boat_loc = 2_32_78_14_42         // 2062,5034 - where the Boat loc is placed
+
+// The head and four tentacles come up out of the water, not onto the deck. npc_add does not need a
+// walkable tile, which is the only reason this works - every square round the boat is solid water
+// and an npc put there sits in it and reaches the deck, one tile away.
+^trek_tentacle_1 = 2_32_78_13_42       // 2061,5034 - off the port quarter
+^trek_tentacle_2 = 2_32_78_13_44       // 2061,5036 - port bow
+^trek_tentacle_3 = 2_32_78_16_42       // 2064,5034 - starboard quarter
+^trek_tentacle_4 = 2_32_78_16_44       // 2064,5036 - starboard bow
+^trek_tentacle_head = 2_32_78_14_45    // 2062,5037 - dead ahead
+^trek_tentacle_rise = 4                // how long the thing takes to come up
 
 // The broken bridge: the loc is on plane 1 and the far bank is a click away, not a walk.
 ^trek_bridge_loc = 1_32_78_42_47       // 2090,5039
