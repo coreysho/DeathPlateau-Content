@@ -1,0 +1,77 @@
+// ONE CASKET PER TIER, STACKABLE - Old School's shape, replacing 103 of them.
+//
+// WHAT WAS WRONG. The 377 cache carries a casket obj PER CLUE - trail_clue_easy_map001_casket,
+// _map002_casket, and so on, 103 of them across the three tiers - and every one of them is named
+// "Casket (easy)", "Casket (medium)" or "Casket (hard)". A player could not tell them apart and
+// never needed to, because nothing at runtime reads which one it is: progress_clue_easy takes the
+// casket, deletes it, and rolls a RANDOM next clue (game_trail/scripts/easy/trail_clue_easy.rs2).
+// The identity was dead weight that filled a bank with items that would not merge.
+//
+// Old School has one reward casket per tier for the same reason. These three are that, with the
+// 2006 names kept because in this build the casket is still the thing you DIG UP mid-trail - open
+// it and you get the next clue, or the reward if the trail is done - and "Reward casket" would be
+// a promise it does not make until the last step.
+//
+// STACKABLE, which Old School's are not. Asked for by name, and the reason it is safe here is the
+// same reason the identity was dead: two easy caskets are the same object in every way that the
+// game reads, so a stack of them cannot lose anything. What it does mean is that one bank slot
+// holds a trail's worth instead of one each.
+//
+// WEIGHT 0, and that is the one number that changed. The cache's caskets weigh 5kg each, which was
+// a fair cost when you could only be carrying a few; a stack of forty would be 200kg and would
+// pin a player to the floor. A pile of boxes you are allowed to keep should not be an anchor.
+//
+// THE OLD ONES STILL WORK and are deliberately left alone: all 103 keep their category, so the
+// [opheld1,_trail_casket_*] trigger that opens these opens those too, and anything already in a
+// bank opens exactly as it did. Nothing is migrated and nothing is deleted.
+
+[casket_easy]
+name=Casket (easy)
+desc=I hope there's treasure in it.
+model=obj_casket
+2dxof=3
+2dyof=-6
+2dzoom=1410
+2dyan=1592
+2dxan=164
+cost=50
+iop1=Open
+members=yes
+weight=0g
+stackable=yes
+category=trail_casket_easy
+tradeable=no
+
+[casket_medium]
+name=Casket (medium)
+desc=I hope there's treasure in it.
+model=obj_casket
+2dxof=3
+2dyof=-6
+2dzoom=1410
+2dyan=1592
+2dxan=164
+cost=50
+iop1=Open
+members=yes
+weight=0g
+stackable=yes
+category=trail_casket_medium
+tradeable=no
+
+[casket_hard]
+name=Casket (hard)
+desc=I hope there's treasure in it.
+model=obj_casket
+2dxof=3
+2dyof=-6
+2dzoom=1410
+2dyan=1592
+2dxan=164
+cost=50
+iop1=Open
+members=yes
+weight=0g
+stackable=yes
+category=trail_casket_hard
+tradeable=no

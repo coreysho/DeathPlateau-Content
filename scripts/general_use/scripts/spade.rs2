@@ -103,7 +103,15 @@ if(map_members = ^true) {
             }
         }
         inv_del(inv, $clue, 1);
-        def_namedobj $casket = oc_param($clue, trail_casket);
+        // ONE CASKET PER TIER rather than the clue's own - see game_trail/configs/casket.obj for
+        // why 103 of them became three. The clue still carries param=trail_casket and that param
+        // is still what says "this clue has a dig site" in trail_clue_helper.rs2; it is only the
+        // box handed over that changed. ~trail_casket_for_tier falls back to the clue's own one,
+        // so a clue outside the three tiers still digs up something.
+        def_namedobj $casket = ~trail_casket_for_tier(~trail_obj_tier($clue));
+        if ($casket = null) {
+            $casket = oc_param($clue, trail_casket);
+        }
         inv_add(inv, $casket, 1);
         ~trail_casket_obtained($casket);
         return;

@@ -262,6 +262,22 @@ while ($slot < inv_size(inv)) {
 }
 return (false);
 
+// WHICH CASKET A TIER DIGS UP. Three objs for all 103 clues (game_trail/configs/casket.obj): the
+// per-clue caskets in the cache were never read for anything but their category, and a bank full of
+// items that would not merge was the whole cost of keeping them. Anything not on a trail answers
+// null and the caller keeps the clue's own casket.
+[proc,trail_casket_for_tier](int $tier)(namedobj)
+if ($tier = ^trail_tier_easy) {
+    return(casket_easy);
+}
+if ($tier = ^trail_tier_medium) {
+    return(casket_medium);
+}
+if ($tier = ^trail_tier_hard) {
+    return(casket_hard);
+}
+return(null);
+
 [proc,trail_casket_obtained](namedobj $casket)
 ~objbox($casket, "You've found a casket!", 250, 0, divide(^objbox_height, 2));
 
