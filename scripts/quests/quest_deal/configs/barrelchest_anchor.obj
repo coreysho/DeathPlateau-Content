@@ -1,0 +1,58 @@
+// THE BARRELCHEST ANCHOR, imported from Old School (obj 10887) by tools/models/importosrs.py -
+// inventory model, manwear and womanwear, all three re-encoded into the 317 format.
+//
+// WHOSE REWARD IT REALLY IS. In Old School the anchor comes from The Great Brain Robbery, not from
+// Rum Deal - and The Great Brain Robbery is November 2006, after this cache: there is no
+// Barrelchest npc, no Harmony Island and no quest content for it anywhere in the 377 cache, which
+// was checked rather than assumed. Rum Deal is its neighbour in that story and is built here, so
+// the anchor is hung on Rum Deal's completion. That is a deliberate deviation and it is recorded
+// here so nobody later reads it as an accident.
+//
+// THE NUMBERS ARE THE WIKI'S, not a guess: stab -2, slash +10, crush +92, strength +100, no
+// defensive bonus at all, 6-tick attack speed, two-handed, 30kg, and it wants 60 Attack and 40
+// Strength (that requirement is a line in levelrequire/scripts/tier60.rs2, where every other
+// 60-Attack weapon's is). https://oldschool.runescape.wiki/w/Barrelchest_anchor
+//
+// NO SPECIAL ATTACK YET. Old School's is Sunder - 50% energy, double accuracy, +10% max hit, and a
+// drain of the target's Defence then Attack, Ranged and Magic by a tenth of the damage dealt. A
+// spec bar that does nothing is worse than none at all, so specwep is deliberately absent until
+// that is built the way skill_combat/.../specs builds the others.
+//
+// THE ANIMATIONS ARE THE GRANITE MAUL'S. This build has no anchor animations - they came with the
+// item in a cache that does not have the item - and the maul is the nearest thing it does have: a
+// two-handed blunt weapon swung with both hands. It is the same answer the other OSRS weapon
+// imports took.
+
+[barrelchest_anchor]
+name=Barrelchest anchor
+desc=This is likely to put my back out...
+model=obj_barrelchest_anchor
+manwear=obj_barrelchest_anchor_manwear,0
+womanwear=obj_barrelchest_anchor_womanwear,6
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1104
+2dxan=321
+2dyan=24
+2dxof=-5
+2dyof=2
+weight=30kg
+cost=230000
+members=yes
+tradeable=no
+iop2=Wield
+category=weapon_blunt
+param=stabattack,-2
+param=slashattack,10
+param=crushattack,92
+param=strengthbonus,100
+param=attackrate,6
+param=crushattack_anim,slayer_granite_maul_attack
+param=defend_anim,slayer_granite_maul_defend
+param=crush_sound,warhammer_crush
+param=ready_baseanim,slayer_granite_maul_ready
+param=walk_f_baseanim,slayer_granite_maul_walk
+param=walk_b_baseanim,slayer_granite_maul_walk
+param=walk_l_baseanim,slayer_granite_maul_walk
+param=walk_r_baseanim,slayer_granite_maul_walk
+param=running_baseanim,slayer_granite_maul_run

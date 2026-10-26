@@ -138,7 +138,21 @@ stat_advance(fishing, 70000);
 stat_advance(prayer, 70000);
 stat_advance(farming, 70000);
 session_log(^log_adventure, "Quest complete: Rum Deal");
-~send_quest_complete(questlist:deal, deal_wrench_blessed, 200, ^deal_questpoints, "You have completed\\nRum Deal!", "2 Quest Points|7,000 Fishing XP|7,000 Prayer XP|7,000 Farming XP|The holy wrench");
+// THE ANCHOR, and it is a deliberate deviation - in Old School it is The Great Brain Robbery's
+// reward, and that quest is November 2006, after this cache: no Barrelchest, no Harmony Island and
+// no content for it anywhere in the 377 files, which was checked rather than assumed. Rum Deal is
+// its neighbour in the same story and is the quest that exists, so it hands the anchor over.
+// configs/barrelchest_anchor.obj carries the rest of that argument and the wiki's numbers.
+//
+// TO THE BANK IF THE PACK IS FULL. A quest reward must not be able to vanish, and the player is
+// standing in a brewery at the end of a long errand with their hands full of buckets.
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, barrelchest_anchor, 1);
+} else {
+    inv_add(bank, barrelchest_anchor, 1);
+    mes("Your pack is full, so the anchor has been sent to your bank.");
+}
+~send_quest_complete(questlist:deal, barrelchest_anchor, 170, ^deal_questpoints, "You have completed\\nRum Deal!", "2 Quest Points|7,000 Fishing XP|7,000 Prayer XP|7,000 Farming XP|The holy wrench|The barrelchest anchor");
 
 // Braindeath's handouts, which all have the same two ways of going wrong.
 [proc,deal_handover](namedobj $obj, string $mes)()

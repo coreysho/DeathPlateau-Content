@@ -61,6 +61,9 @@
 
 // --- OSRS imports (2026-09-21) ---
 [opheld2,arkan_blade] @levelrequire_attack(60, last_slot);
+// Rum Deal's reward (2026-10-26). 60 Attack and 40 Strength - the one weapon in this file that
+// wants two stats. https://oldschool.runescape.wiki/w/Barrelchest_anchor
+[opheld2,barrelchest_anchor] @levelrequire_attack_and_strength(60, 40, last_slot);
 [opheld2,twinflame_staff] @levelrequire_magic(60, last_slot);
 
 // Repaints and renames of items already in this file, found by tools/wearreq.py:
