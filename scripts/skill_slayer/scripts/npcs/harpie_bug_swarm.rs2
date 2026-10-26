@@ -1,0 +1,32 @@
+// HARPIE BUG SWARMS, and the lantern you are supposed to need.
+//
+// Reported from the game as "dont need bug lantern to kill". You did not: nothing anywhere asked
+// about the lantern, so a swarm died to bare hands like anything else.
+//
+// "A lit bug lantern, which requires a Firemaking level of 33 to light, is required to damage
+// these monsters (the lantern MUST be lit and equipped)." (/w/Harpie_Bug_Swarm)
+//
+// REQUIRED TO DAMAGE, not to attack - so this is a max-hit rule and not a refusal, exactly as the
+// kurask and the turoth read the leaf-bladed spear. The three combat scripts ask ~harpie_lantern_missing
+// where they ask about those two, and a swarm fought without the lantern splats nothing but zeroes.
+//
+// The cache had the whole thing ready. slayer_buglan_off carries category=light_source_unlit and
+// param=product,slayer_buglan_on, so skill_firemaking's tinderbox has always been able to light
+// one; slayer_buglan_on carries wearpos=lefthand, so "equipped" means the shield slot and a
+// two-handed weapon costs you the task. Neither obj had a single line of script behind it.
+//
+// NOT CHANGED HERE: whether 33 Firemaking is needed to be ASSIGNED the task. The wiki says it is,
+// citing Mod Ash in 2017; skill_slayer/scripts/slayer_task.rs2 says it is not, citing the 25 April
+// 2013 patch notes that removed it. That is a real disagreement between two sources and somebody
+// has to pick - the existing code picked, with a citation, and this is not the report that
+// overturns it.
+
+/** Is this npc a harpie bug swarm being fought without a lit bug lantern in hand? */
+[proc,harpie_lantern_missing]()(boolean)
+if (npc_param(slayer_category) ! ^slayer_harpiebugswarm) {
+    return(false);
+}
+if (inv_total(worn, slayer_buglan_on) > 0) {
+    return(false);
+}
+return(true);

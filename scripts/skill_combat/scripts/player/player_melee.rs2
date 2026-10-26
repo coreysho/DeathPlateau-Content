@@ -57,6 +57,11 @@ if (~player_npc_hit_roll_boosted(%damagetype, $mask_num, $mask_div) = true
     if((npc_param(slayer_category) = ^slayer_kurask | npc_param(slayer_category) = ^slayer_turoth) & inv_total(worn, slayer_leafbladed_spear) = 0) {
         $maxhit = 0;
     }
+    // Harpie bug swarms want a lit bug lantern in hand, and take nothing from anybody without one
+    // (skill_slayer/scripts/npcs/harpie_bug_swarm.rs2).
+    if (~harpie_lantern_missing = true) {
+        $maxhit = 0;
+    }
     // Horror from the Deep - Dagannoth Mother (quest_horror) cycles through six elemental/combat-style
     // weaknesses every 18 seconds (see quests/quest_horror/scripts/quest_horror_combat.rs2). Melee only
     // damages her during her orange/melee-weakness phase (horror_dagganoth_melee); every other phase

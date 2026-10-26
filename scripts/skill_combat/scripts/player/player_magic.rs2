@@ -106,6 +106,11 @@ if (~dagmother_spell_splashes($spell) = false & ~player_npc_hit_roll_boosted(^ma
     if((npc_param(slayer_category) = ^slayer_kurask | npc_param(slayer_category) = ^slayer_turoth) & $spell ! ^magic_dart) {
         $maxhit = 0;
     }    
+    // Harpie bug swarms want a lit bug lantern in hand, and take nothing from anybody without one
+    // (skill_slayer/scripts/npcs/harpie_bug_swarm.rs2).
+    if (~harpie_lantern_missing = true) {
+        $maxhit = 0;
+    }
     ~pvm_spell_success($spell_data, $maxhit, $duration);
     ~pvm_stat_change_effect($spell_data);
     ~pvm_freeze_effect($spell_data);

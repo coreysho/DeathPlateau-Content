@@ -3,3 +3,7 @@
 // of its lit recipes and on neither of its unlit ones (/w/Candle_lantern). No experience either
 // way - the recipes all read skill1exp = 0.
 ^candle_lantern_lit_level = 4
+
+// "A lit bug lantern, which requires a Firemaking level of 33 to light"
+// (https://oldschool.runescape.wiki/w/Harpie_Bug_Swarm).
+^bug_lantern_light_level = 33
