@@ -20,13 +20,13 @@
 // Picked by tools/sim/courseplan.ts - each obstacle puts you down beside the next one.
 ^rellekka_land_wall = 3_40_57_62_21
 ^rellekka_land_gap1 = 3_40_57_62_10
-^rellekka_land_rope1 = 3_41_57_4_8
-^rellekka_land_gap2 = 3_41_57_18_6
-^rellekka_land_gap3 = 3_41_57_22_15
+^rellekka_land_rope1 = 3_41_57_5_7       // 2629,3655 (was 2628,3656)
+^rellekka_land_gap2 = 3_41_57_19_5       // 2643,3653 (was 2642,3654)
+^rellekka_land_gap3 = 3_41_57_19_9       // 2643,3657 (was 2646,3663)
 // NOT THE WEST SIDE. The pile of fish refuses an approach from 2653,3676 with "I can't reach
 // that!" and takes one from anywhere else, so the tightrope lands you north of it instead of
 // on the tile nearest where you came from.
-^rellekka_land_rope2 = 3_41_57_30_29
+^rellekka_land_rope2 = 3_41_57_31_28       // 2655,3676 (was 2654,3677)
 ^rellekka_land_fish = 0_41_57_31_28
 
 ^rellekka_mark_chance = 4
