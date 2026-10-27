@@ -598,9 +598,10 @@ session_log(^log_adventure, "Quest complete: Swan Song");
 // =========================================================================== Draynor
 //
 // Herman's letter goes to "a man in Draynor who is supposed to be the best magician alive and who
-// has spent thirty years pretending to be a pensioner", and until the Wise Old Man was placed at
-// 3088,3251 there was nobody there to read it. areas/area_draynor/scripts/wise_old_man.rs2 owns
-// [opnpc1] on him and calls this. He wants the runes the wiki's version wants - ten mist, ten lava,
+// has spent thirty years pretending to be a pensioner", and that man is the multinpc [wom_multi] in
+// his house at 3088,3255. ^swan_letter = 20 is one of the values wom_multi lists, so he is standing
+// there when the letter step is live. areas/area_draynor/scripts/wise_old_man.rs2 owns
+// [opnpc1,wom_multi] and calls this. He wants the runes the wiki's version wants - ten mist, ten lava,
 // five blood - and then he takes the morning boat himself.
 [proc,swan_wom_wants]()(boolean)
 if (%swansong = ^swan_letter) {

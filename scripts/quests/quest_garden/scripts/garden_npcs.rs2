@@ -270,9 +270,10 @@ if (%garden_bernald_varbit < 5) { return; }
 // =========================================================================== the Wise Old Man
 //
 // He enchants the Ring of Charos, which is the one part of the wiki's version of this quest that
-// could not be built until he was placed: he is npc 2253 and he was spawned nowhere at all. He is
-// at 3088,3251 in Draynor now (areas/area_draynor/scripts/wise_old_man.rs2 owns [opnpc1] on him and
-// calls this first).
+// could not be built until somebody found him. He is npc 2253 and he stands in his house in Draynor
+// at 3088,3255, spawned as the multinpc [wom_multi] - which is why a search for [wise_old_man] came
+// up empty. areas/area_draynor/scripts/wise_old_man.rs2 owns [opnpc1,wom_multi] and calls this
+// first. He is not in Draynor at all between ^swan_wom and ^swan_told, because Swan Song has him.
 //
 // Seven questions, six right. The scenarios are the ones the wiki's transcript gives - the goblins
 // and their armour, the dwarf with the kebab, Farming, the dwarf with the cannon, PKMaster0036,

@@ -1,40 +1,36 @@
 // The Wise Old Man, Draynor Village.
 //
-// He is npc 2253 in the cache, with a full model set, a walking stick and op1=Talk-to, and he was
-// placed nowhere at all - which two quests ran into from opposite ends. Garden of Tranquillity needs
-// him to enchant the Ring of Charos, and Swan Song needs him because Herman Caranos writes to "a
-// man in Draynor who is supposed to be the best magician alive and who has spent thirty years
-// pretending to be a pensioner". Both had been written round the gap. He is spawned at 3088,3251
-// (maps/m48_50.jm2), just north of the market.
+// REPORTED FROM THE GAME as "there are two wise old men in draynor", and there were. He was already
+// on the map and had been all along - not as [wise_old_man] but as [wom_multi], the multinpc at
+// 3088,3255 inside his own house, which resolves to wise_old_man at every Swan Song step it lists
+// and is who skillcape_shop.rs2 sells the Quest point cape through. A search for the npc by name
+// missed him, so a second one was spawned at 3088,3251 outside, four tiles from the first, and both
+// stood there with the same name and the same Talk-to. That spawn is gone from maps/m48_50.jm2 and
+// everything hangs off the one who was always there.
+//
+// Which also means the trigger name matters: Player.getOpTrigger reads NpcType.get(target.type) -
+// the shell standing in the world - so an [opnpc1] on the resolved child never fires. It has to be
+// wom_multi, which is why the cape dialogue was written on wom_multi in the first place.
+//
+// WHEN HE IS NOT HERE. wom_multi lists swansong 0, 5, 10, 15, 20, 190 and 200 and nothing between,
+// so from the moment he leaves for Piscatoris (^swan_wom = 30) until he is back and told about it
+// (^swan_told = 190) there is no Wise Old Man in Draynor at all. That is the quest's own doing and
+// it is right: he is at the fishing colony. It does mean Garden of Tranquillity cannot reach him
+// mid-Swan-Song, which was true before this too.
 //
 // The two quest hooks go first and each one answers only at the step that wants him, which is the
 // rule the Rat Catchers hook on Gertrude broke: a ~x_wants that keys on "my quest has not started"
-// takes the npc away from everybody for ever.
+// takes the npc away from everybody for ever. Garden of Tranquillity needs him to enchant the Ring
+// of Charos; Swan Song needs him because Herman Caranos writes to "a man in Draynor who is supposed
+// to be the best magician alive and who has spent thirty years pretending to be a pensioner".
 
-[opnpc1,wise_old_man]
+[opnpc1,wom_multi]
 if (~garden_wom_wants = true) {
     @garden_wom;
 }
 if (~swan_wom_wants = true) {
     @swan_wom_draynor_talk;
 }
-@wise_old_man_talk;
-
-[label,wise_old_man_talk]
-~chatplayer("<p,neutral>Hello.");
-switch_int (random(4)) {
-    case 0 :
-        ~chatnpc("<p,happy>Good afternoon. I am retired, you know. Thirty-one years.");
-        ~chatplayer("<p,quiz>Retired from what?");
-        ~chatnpc("<p,happy>Oh, this and that.");
-    case 1 :
-        ~chatnpc("<p,neutral>I am told the bank down the road is the least secure building in Misthalin.");
-        ~chatplayer("<p,quiz>Are you going to do anything about that?");
-        ~chatnpc("<p,happy>I am eighty-one. I am going to sit here and be right about it.");
-    case 2 :
-        ~chatnpc("<p,happy>You are the third person today to ask an old man in a dressing gown for advice.");
-        ~chatplayer("<p,quiz>And the other two?");
-        ~chatnpc("<p,neutral>Took it, in one case.");
-    case default :
-        ~chatnpc("<p,neutral>I do very little these days, and I do it extremely well.");
-}
+// His own conversation, which is the Quest point cape - it predates both quests and lives with the
+// other skillcape masters.
+@wom_cape_talk;

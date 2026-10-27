@@ -257,7 +257,9 @@ if (~fairy_martin = true) {
 
 // The Wise Old Man sells the Quest point cape to players who have finished every quest. He is
 // spawned as wom_multi (a multinpc on %swansong), and npc triggers resolve on the spawned type.
-[opnpc1,wom_multi]
+// [opnpc1,wom_multi] itself lives in areas/area_draynor/scripts/wise_old_man.rs2 now, because two
+// quests want a word with him before the cape comes up; it jumps here when neither does.
+[label,wom_cape_talk]
 ~chatnpc("<p,neutral>Greetings, adventurer. What brings you to the house of the Wise Old Man?");
 if (%qp >= ~max_questpoints) {
     if (~p_choice2("Can I buy a Quest point cape?", 1, "Nothing, thanks.", 2) = 1) {
