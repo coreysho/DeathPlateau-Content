@@ -40,17 +40,25 @@ GODS = [('saradomin', 'saradomin_cape', 'imbued_saradomin_cape', 'saradomin_staf
 # Which variant key belongs to which god, and whether it is the imbued one.
 GOD_OF = {'saradomin': 'saradomin', 'guthix': 'guthix', 'zamorak': 'zamorak',
           'imbued_saradomin': 'saradomin', 'imbued_guthix': 'guthix',
-          'imbued_zamorak': 'zamorak'}
-# THE ZAROS CAPES ARE COSMETIC COPIES and have to answer the same god as the cape they were made
-# from, or the ornament kit would quietly take away a god spell and a God Wars protection. They are
-# not max capes and do not come out of the variant scan, so they are named here.
-# See tools/genzaroscape.py and areas/area_mage_arena/configs/zaros_cape.obj.
-ZAROS = {'saradomin': 'imbued_zaros_cape_saradomin',
-         'guthix': 'imbued_zaros_cape_guthix',
-         'zamorak': 'imbued_zaros_cape_zamorak'}
+          'imbued_zamorak': 'zamorak',
+          # The three ancient max capes keep the god of the cape they were made from, which is
+          # the whole reason there are three of them rather than Old School's one.
+          'imbued_ancient_saradomin': 'saradomin', 'imbued_ancient_guthix': 'guthix',
+          'imbued_ancient_zamorak': 'zamorak'}
+# THE ANCIENT CAPES ARE COSMETIC COPIES and have to answer the same god as the cape they were made
+# from, or the ancient fabric would quietly take away a god spell and a God Wars protection. They
+# are not max capes and do not come out of the variant scan, so they are named here.
+# See areas/area_mage_arena/configs/ancient_cape.obj.
+ANCIENT = {'saradomin': 'imbued_ancient_cape_saradomin',
+           'guthix': 'imbued_ancient_cape_guthix',
+           'zamorak': 'imbued_ancient_cape_zamorak'}
 WEARPOS = ['hat', 'back', 'front', 'righthand', 'torso', 'lefthand', 'arms', 'legs',
            'head', 'hands', 'feet', 'jaw', 'ring', 'quiver']
-# The two variants whose models are their own. Everything else wears the plain cape's.
+# The two variants whose models are their own, named after their own key. Everything else wears
+# the plain cape's - unless it names models in the spec, which is what `models` is for: the three
+# ancient variants are one look shared by three records, so they point at one pair of meshes
+# instead of three identical copies. See tools/genancientmaxcape.py for why that look is baked
+# into models at all rather than written as recol= lines.
 OWN_MODELS = ('fire', 'infernal')
 # The comments this file writes are prose, so the counts in them are spelled out. A number that
 # can only be read as a digit is a comment nobody proofreads.
@@ -178,10 +186,13 @@ def build(spec):
         own = key in OWN_MODELS
         cape_local = '%s_max_cape' % key
         hood_local = '%s_max_hood' % key
+        shared = v.get('models')
         L += record(cape_local, v['cape'], v['bonuses'],
-                    cape_local if own else 'max_cape', False, v.get('gwd_prot')) + ['']
+                    shared + '_max_cape' if shared else (cape_local if own else 'max_cape'),
+                    False, v.get('gwd_prot')) + ['']
         L += record(hood_local, v['hood'], {},
-                    hood_local if own else 'max_hood', True) + ['']
+                    shared + '_max_hood' if shared else (hood_local if own else 'max_hood'),
+                    True) + ['']
         names += [cape_local, hood_local]
     return '\n'.join(L), names
 
@@ -258,8 +269,8 @@ def build_god(spec):
         L.append('val=%s,^god_%s' % (imbued, god))
         for name in by_god.get(god, []):
             L.append('val=%s,^god_%s' % (name, god))
-        if god in ZAROS:
-            L.append('val=%s,^god_%s' % (ZAROS[god], god))
+        if god in ANCIENT:
+            L.append('val=%s,^god_%s' % (ANCIENT[god], god))
     L += ['',
           '[god_staff_god]',
           'inputtype=obj',

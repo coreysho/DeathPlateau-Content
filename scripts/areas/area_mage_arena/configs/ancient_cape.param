@@ -1,0 +1,6 @@
+// Which imbued god cape an ancient cape was made from. Only the three results carry it, so it is
+// also how ~ancient_cape_make tells a remade cape from a plain one before it eats a second fabric
+// - the same check, for the same reason, as whip_from in area_wilderness/configs/whip_colours.param.
+[ancient_cape_from]
+type=namedobj
+default=null

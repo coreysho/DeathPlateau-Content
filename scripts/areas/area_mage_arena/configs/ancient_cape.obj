@@ -1,0 +1,133 @@
+// THE IMBUED ANCIENT CAPE and the ancient fabric that makes it.
+//
+// WHAT IT IS: Old School's own item, released 7 October 2026 - a cosmetic variant of an imbued god
+// cape, made by using an ancient fabric on one. There the fabric is a reward from Pete Kayer's last
+// challenge; here the Undertaker sells it for Death tokens, alongside the nine whip colours, which
+// is this server's shelf for exactly this kind of thing.
+//
+// THE MODELS ARE JAGEX'S, and getting them took a newer cache. The cape was released four weeks
+// after caches/newest cache was taken, so it is not in that item table at all; OpenRS2 cache 2746
+// (20 October 2026) has it, and the four models come from there - 62044 the cape, 62047/62049 the
+// worn pair, 62045 the fabric. The black body, the purple hem and Zaros's mark are all in the mesh
+// as plain coloured faces, with no texture anywhere, so the 377 client draws it as Old School does.
+//
+// THREE RECORDS AND NOT ONE, which is the one place this parts company with Old School. There the
+// three recipes all give the same single item, because its cape is Zarosian and Old School does not
+// gate anything on which god cape you are wearing. Here they do: a god spell needs that god's cape
+// AND that god's staff (area_mage_arena/scripts/god_gear.rs2, through configs/god_cape.enum), and
+// the Saradomin and Zamorak capes carry a God Wars protection param. One shared record would have
+// to drop both - quietly taking a spell and a protection off a player who bought a cosmetic - so
+// the fabric makes the ancient version OF THE CAPE IT WAS USED ON: same god, same params, same
+// everything but the look. All three are called "Imbued ancient cape" and are indistinguishable in
+// the bank; the examine text says which cape each one was, which is the only way to tell them
+// apart and the only time it matters.
+//
+// THE SHELF SELLS STATUS, NOT POWER (death_token_shop.inv). These three change no number at all -
+// they are field-for-field copies of the imbued capes in mage_arena_2.obj - and the fabric is
+// untradeable, so the look cannot become a market.
+//
+// NOT CARRIED ACROSS: Old School's cape is a Zarosian item and gives God Wars protection against
+// Zarosian npcs. There are none here - this build's God Wars Dungeon has four wings and no Ancient
+// Prison - so a gwd_prot_zaros param would be a param nothing reads. The +2% magic damage is left
+// out for the same kind of reason: this build has no magic damage percentage anywhere, in gear or
+// in the spell code, because 2006 had none.
+
+[ancient_fabric]
+name=Ancient fabric
+desc=Use it on an imbued god cape. Revert takes it back off.
+model=obj_ancient_fabric
+2dzoom=1360
+2dxan=456
+2dyan=183
+2dxof=1
+2dyof=4
+weight=453g
+// Old School values it at 1 coin. The Undertaker's shelf prices in Death tokens through its own
+// multiplier, and 500 is what every kit on that shelf carries, so it carries it too.
+cost=500
+members=yes
+tradeable=no
+category=ancient_fabric
+
+// ---------------------------------------------------------------- Saradomin
+[imbued_ancient_cape_saradomin]
+name=Imbued ancient cape
+desc=A Saradomin cape, remade in ancient fabric. Revert gives the Saradomin cape back.
+model=obj_imbued_ancient_cape
+manwear=obj_imbued_ancient_cape_manwear,0
+womanwear=obj_imbued_ancient_cape_womanwear,0
+wearpos=back
+2dzoom=1756
+2dxan=364
+2dyan=483
+2dxof=0
+2dyof=3
+weight=453g
+cost=80000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Revert
+category=armour_godcape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+param=gwd_prot_saradomin,1
+param=ancient_cape_from,imbued_saradomin_cape
+
+// ---------------------------------------------------------------- Guthix
+[imbued_ancient_cape_guthix]
+name=Imbued ancient cape
+desc=A Guthix cape, remade in ancient fabric. Revert gives the Guthix cape back.
+model=obj_imbued_ancient_cape
+manwear=obj_imbued_ancient_cape_manwear,0
+womanwear=obj_imbued_ancient_cape_womanwear,0
+wearpos=back
+2dzoom=1756
+2dxan=364
+2dyan=483
+2dxof=0
+2dyof=3
+weight=453g
+cost=80000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Revert
+category=armour_godcape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+param=ancient_cape_from,imbued_guthix_cape
+
+// ---------------------------------------------------------------- Zamorak
+[imbued_ancient_cape_zamorak]
+name=Imbued ancient cape
+desc=A Zamorak cape, remade in ancient fabric. Revert gives the Zamorak cape back.
+model=obj_imbued_ancient_cape
+manwear=obj_imbued_ancient_cape_manwear,0
+womanwear=obj_imbued_ancient_cape_womanwear,0
+wearpos=back
+2dzoom=1756
+2dxan=364
+2dyan=483
+2dxof=0
+2dyof=3
+weight=453g
+cost=80000
+members=yes
+tradeable=no
+iop2=Wear
+iop5=Revert
+category=armour_godcape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+param=gwd_prot_zamorak,1
+param=ancient_cape_from,imbued_zamorak_cape

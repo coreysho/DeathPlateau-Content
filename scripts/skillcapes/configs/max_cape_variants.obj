@@ -1,4 +1,4 @@
-// THE TEN MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
+// THE 13 MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
 //   python3 tools/genmaxvariants.py
 // The numbers come from tools/maxcapevariantspec.json, which took them out of the OSRS
 // item table rather than off the wiki. Every bonus below is its SOURCE cape's, which is
@@ -14,7 +14,7 @@
 // scripts reads the cape slot and asks maxvariant_source what it came from, so the
 // variant is an Ava's accumulator for bows, thrown weapons, the blowpipe and the magnet.
 //
-// The eight variants with no models of their own are the plain Max cape's model with five
+// The eleven variants with no models of their own are the plain Max cape's model with five
 // recolours, and the max hood's with six, exactly as OSRS has them.
 
 [fire_max_cape]
@@ -615,6 +615,131 @@ recol5s=13411
 recol5d=26425
 recol6s=18596
 recol6d=6373
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
+
+[imbued_ancient_saradomin_max_cape]
+name=Imbued ancient max cape
+desc=The cape worn by only the most experienced players, remade in ancient fabric. It was a Saradomin cape.
+model=obj_imbued_ancient_max_cape
+manwear=obj_imbued_ancient_max_cape_manwear,0
+womanwear=obj_imbued_ancient_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+param=gwd_prot_saradomin,1
+
+[imbued_ancient_saradomin_max_hood]
+name=Imbued ancient max hood
+desc=The hood worn by only the most experienced players, remade in ancient fabric.
+model=obj_imbued_ancient_max_hood
+manwear=obj_imbued_ancient_max_hood_manwear,0
+womanwear=obj_imbued_ancient_max_hood_womanwear,0
+manhead=obj_imbued_ancient_max_hood_manhead
+womanhead=obj_imbued_ancient_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
+
+[imbued_ancient_guthix_max_cape]
+name=Imbued ancient max cape
+desc=The cape worn by only the most experienced players, remade in ancient fabric. It was a Guthix cape.
+model=obj_imbued_ancient_max_cape
+manwear=obj_imbued_ancient_max_cape_manwear,0
+womanwear=obj_imbued_ancient_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+
+[imbued_ancient_guthix_max_hood]
+name=Imbued ancient max hood
+desc=The hood worn by only the most experienced players, remade in ancient fabric.
+model=obj_imbued_ancient_max_hood
+manwear=obj_imbued_ancient_max_hood_manwear,0
+womanwear=obj_imbued_ancient_max_hood_womanwear,0
+manhead=obj_imbued_ancient_max_hood_manhead
+womanhead=obj_imbued_ancient_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
+
+[imbued_ancient_zamorak_max_cape]
+name=Imbued ancient max cape
+desc=The cape worn by only the most experienced players, remade in ancient fabric. It was a Zamorak cape.
+model=obj_imbued_ancient_max_cape
+manwear=obj_imbued_ancient_max_cape_manwear,0
+womanwear=obj_imbued_ancient_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=magicattack,15
+param=stabdefence,3
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,15
+param=gwd_prot_zamorak,1
+
+[imbued_ancient_zamorak_max_hood]
+name=Imbued ancient max hood
+desc=The hood worn by only the most experienced players, remade in ancient fabric.
+model=obj_imbued_ancient_max_hood
+manwear=obj_imbued_ancient_max_hood_manwear,0
+womanwear=obj_imbued_ancient_max_hood_womanwear,0
+manhead=obj_imbued_ancient_max_hood_manhead
+womanhead=obj_imbued_ancient_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
 iop2=Wear
 members=yes
 tradeable=no

@@ -1002,7 +1002,168 @@
     "451": "Commune"
    },
    "god_param": null
-  }
+  },
+ {
+  "_custom": "NOT an Old School variant as a THREE, and that is where this parts company with it. Old School has one imbued ancient max cape (obj 34625, hood 34627, read out of OpenRS2 cache 2746) because its ancient cape is one item. Here the ancient cape is three, one per god cape it was made from, so that a cosmetic never quietly takes a god spell or a God Wars protection away - areas/area_mage_arena/configs/ancient_cape.obj sets out why. The max variant follows the cape: three records sharing one look, each keeping its god. All three are called 'Imbued ancient max cape' and are told apart only by their examine.",
+  "_models": "One pair of meshes for all three, named through `models` rather than written as recol pairs. Old School's recolour is TWELVE pairs for the cape and eleven for the hood - it repaints the emblem as well as the cloth - and an obj config holds six, so the colour is baked into models of its own by tools/genancientmaxcape.py. Every one of those twelve source colours is in this build's obj_max_cape, so six of twelve would have shipped a black cape with a Max cape's emblem still on it.",
+  "key": "imbued_ancient_saradomin",
+  "models": "imbued_ancient",
+  "source_cape": "imbued_ancient_cape_saradomin",
+  "cape": {
+   "osrs_name": "Imbued ancient max cape",
+   "zoom2d": 2232,
+   "xan2d": 687,
+   "yan2d": 27,
+   "yof2d": -5,
+   "desc": "The cape worn by only the most experienced players, remade in ancient fabric. It was a Saradomin cape.",
+   "weight": 453,
+   "cost": 99000,
+   "wearpos": 1,
+   "wearpos2": null,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "hood": {
+   "osrs_name": "Imbued ancient max hood",
+   "zoom2d": 720,
+   "xan2d": 21,
+   "yan2d": 18,
+   "desc": "The hood worn by only the most experienced players, remade in ancient fabric.",
+   "weight": 453,
+   "cost": null,
+   "wearpos": 0,
+   "wearpos2": 8,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "bonuses": {
+   "magicattack": 15,
+   "stabdefence": 3,
+   "slashdefence": 3,
+   "crushdefence": 3,
+   "magicdefence": 15
+  },
+  "osrs_params_not_bonuses": {
+   "40": 1,
+   "295": 1,
+   "299": 20
+  },
+  "god_param": 40,
+  "gwd_prot": "gwd_prot_saradomin"
+ },
+ {
+  "_custom": "NOT an Old School variant as a THREE, and that is where this parts company with it. Old School has one imbued ancient max cape (obj 34625, hood 34627, read out of OpenRS2 cache 2746) because its ancient cape is one item. Here the ancient cape is three, one per god cape it was made from, so that a cosmetic never quietly takes a god spell or a God Wars protection away - areas/area_mage_arena/configs/ancient_cape.obj sets out why. The max variant follows the cape: three records sharing one look, each keeping its god. All three are called 'Imbued ancient max cape' and are told apart only by their examine.",
+  "_models": "One pair of meshes for all three, named through `models` rather than written as recol pairs. Old School's recolour is TWELVE pairs for the cape and eleven for the hood - it repaints the emblem as well as the cloth - and an obj config holds six, so the colour is baked into models of its own by tools/genancientmaxcape.py. Every one of those twelve source colours is in this build's obj_max_cape, so six of twelve would have shipped a black cape with a Max cape's emblem still on it.",
+  "key": "imbued_ancient_guthix",
+  "models": "imbued_ancient",
+  "source_cape": "imbued_ancient_cape_guthix",
+  "cape": {
+   "osrs_name": "Imbued ancient max cape",
+   "zoom2d": 2232,
+   "xan2d": 687,
+   "yan2d": 27,
+   "yof2d": -5,
+   "desc": "The cape worn by only the most experienced players, remade in ancient fabric. It was a Guthix cape.",
+   "weight": 453,
+   "cost": 99000,
+   "wearpos": 1,
+   "wearpos2": null,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "hood": {
+   "osrs_name": "Imbued ancient max hood",
+   "zoom2d": 720,
+   "xan2d": 21,
+   "yan2d": 18,
+   "desc": "The hood worn by only the most experienced players, remade in ancient fabric.",
+   "weight": 453,
+   "cost": null,
+   "wearpos": 0,
+   "wearpos2": 8,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "bonuses": {
+   "magicattack": 15,
+   "stabdefence": 3,
+   "slashdefence": 3,
+   "crushdefence": 3,
+   "magicdefence": 15
+  },
+  "osrs_params_not_bonuses": {
+   "42": 1,
+   "295": 1,
+   "299": 20
+  },
+  "god_param": 42
+ },
+ {
+  "_custom": "NOT an Old School variant as a THREE, and that is where this parts company with it. Old School has one imbued ancient max cape (obj 34625, hood 34627, read out of OpenRS2 cache 2746) because its ancient cape is one item. Here the ancient cape is three, one per god cape it was made from, so that a cosmetic never quietly takes a god spell or a God Wars protection away - areas/area_mage_arena/configs/ancient_cape.obj sets out why. The max variant follows the cape: three records sharing one look, each keeping its god. All three are called 'Imbued ancient max cape' and are told apart only by their examine.",
+  "_models": "One pair of meshes for all three, named through `models` rather than written as recol pairs. Old School's recolour is TWELVE pairs for the cape and eleven for the hood - it repaints the emblem as well as the cloth - and an obj config holds six, so the colour is baked into models of its own by tools/genancientmaxcape.py. Every one of those twelve source colours is in this build's obj_max_cape, so six of twelve would have shipped a black cape with a Max cape's emblem still on it.",
+  "key": "imbued_ancient_zamorak",
+  "models": "imbued_ancient",
+  "source_cape": "imbued_ancient_cape_zamorak",
+  "cape": {
+   "osrs_name": "Imbued ancient max cape",
+   "zoom2d": 2232,
+   "xan2d": 687,
+   "yan2d": 27,
+   "yof2d": -5,
+   "desc": "The cape worn by only the most experienced players, remade in ancient fabric. It was a Zamorak cape.",
+   "weight": 453,
+   "cost": 99000,
+   "wearpos": 1,
+   "wearpos2": null,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "hood": {
+   "osrs_name": "Imbued ancient max hood",
+   "zoom2d": 720,
+   "xan2d": 21,
+   "yan2d": 18,
+   "desc": "The hood worn by only the most experienced players, remade in ancient fabric.",
+   "weight": 453,
+   "cost": null,
+   "wearpos": 0,
+   "wearpos2": 8,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true,
+   "recol": []
+  },
+  "bonuses": {
+   "magicattack": 15,
+   "stabdefence": 3,
+   "slashdefence": 3,
+   "crushdefence": 3,
+   "magicdefence": 15
+  },
+  "osrs_params_not_bonuses": {
+   "41": 1,
+   "295": 1,
+   "299": 20
+  },
+  "god_param": 41,
+  "gwd_prot": "gwd_prot_zamorak"
+ }
  ],
  "recolours": {
   "_what": "The god variants have no models of their own - they recolour the plain Max cape's and the max hood's. This records what the recolour sources actually hit, because a source that hits nothing makes the piece render as a plain Max cape and NOTHING else notices: not the config, not the linter, not the packed-data check.",
