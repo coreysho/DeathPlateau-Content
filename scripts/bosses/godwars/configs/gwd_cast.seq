@@ -1342,6 +1342,62 @@ frame12=anim_1575_59
 delay12=5
 frame13=anim_1575_57
 delay13=5
+[gwd_seq_6156]
+// The sergeants dying. 474 gives this rig no priority byte at all - not on the attack or
+// the block either - so "no priority-10 sequence" was never evidence there was no death
+// animation. Old School's own copy of seq 6156 carries priority=10, and it is the only one
+// of the nine on frame group 1575 that neither loops nor walk-merges and ends on a long
+// hold (50 ticks), which is what every other God Wars death here does.
+priority=10
+frame1=anim_1575_28
+delay1=5
+frame2=anim_1575_39
+delay2=5
+frame3=anim_1575_45
+delay3=5
+frame4=anim_1575_46
+delay4=5
+frame5=anim_1575_47
+delay5=5
+frame6=anim_1575_48
+delay6=5
+frame7=anim_1575_49
+delay7=5
+frame8=anim_1575_50
+delay8=5
+frame9=anim_1575_51
+delay9=5
+frame10=anim_1575_29
+delay10=5
+frame11=anim_1575_44
+delay11=5
+frame12=anim_1575_43
+delay12=5
+frame13=anim_1575_30
+delay13=5
+frame14=anim_1575_31
+delay14=5
+frame15=anim_1575_32
+delay15=5
+frame16=anim_1575_33
+delay16=5
+frame17=anim_1575_34
+delay17=5
+frame18=anim_1575_35
+delay18=5
+frame19=anim_1575_36
+delay19=5
+frame20=anim_1575_37
+delay20=5
+frame21=anim_1575_38
+delay21=5
+frame22=anim_1575_40
+delay22=5
+frame23=anim_1575_41
+delay23=5
+frame24=anim_1575_42
+delay24=50
+
 
 [gwd_seq_6375]
 priority=6

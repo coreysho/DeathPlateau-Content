@@ -1200,7 +1200,7 @@ huntmode=gwd_aggressive_bandos
 huntrange=8
 param=attack_anim,gwd_seq_6154
 param=defend_anim,gwd_seq_6155
-// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
+param=death_anim,gwd_seq_6156
 
 [gwd_steelwill]
 // rev 474 npc 6263
@@ -1224,7 +1224,7 @@ huntmode=gwd_aggressive_bandos
 huntrange=8
 param=attack_anim,gwd_seq_6154
 param=defend_anim,gwd_seq_6155
-// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
+param=death_anim,gwd_seq_6156
 
 [gwd_grimspike]
 // rev 474 npc 6265
@@ -1247,7 +1247,7 @@ huntmode=gwd_aggressive_bandos
 huntrange=8
 param=attack_anim,gwd_seq_6154
 param=defend_anim,gwd_seq_6155
-// No death animation: this rig carries no priority-10 sequence. Left unset rather than invented.
+param=death_anim,gwd_seq_6156
 
 [gwd_spiritual_ranger_bandos]
 // rev 474 npc 6276

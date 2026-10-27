@@ -1259,13 +1259,17 @@ ambient=35
 // five are the five.
 //
 // They were left out because all five models are in 474's NEWER model format, which
-// import474map.py refuses by design ("model 15550 is the newer format") and which osrs2ob2.py
-// cannot read either - its layout() returns None on every one of them, so the OSRS converter is
-// not a way round. Getting them in needs a decoder for that format, which would unblock every
-// future 474 import rather than just these five.
+// import474map.py refused by design ("model 15550 is the newer format") and which osrs2ob2.py
+// could not read either - its layout() returned None on every one of them, so the OSRS converter
+// was not a way round. tools/models/osrsmodel.py reads that format now, which is what let the
+// five in (see the ADDED LATER block at the end of this file).
 //
-// The Saradomin door is a different case: it came from the OSRS cache, not 474, and this container
-// has no XTEA key for its square (45_82), so nothing here says whether it is missing the same.
+// THE SARADOMIN DOOR IS A DIFFERENT CASE and stays where it is. Its square is 45_82, and the loc
+// file for it IS in the 474 cache - index 5 group 1861 - but it is XTEA encrypted and there is no
+// key for it: not in this container's keys-237.json, and not in OpenRS2's published key set
+// either. All 25,959 keys it publishes were tried against group 1861 on 2026-10-27 and not one
+// produces the gzip header the container must start with. Nothing says whether that door is
+// missing the same five, and nothing available will, so this is not a lead to chase again.
 [gwd_door_bandos]
 // rev 474 loc 26425 (import474map.py)
 name=Big door
