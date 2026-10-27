@@ -20,6 +20,11 @@
 @mm_daga_trade;
 
 [opnpc1,mm_daga]
+// He is a monkey in Marim like the rest of them: a human who speaks to him is taken, not served.
+// See quests/quest_mm/scripts/mm_marim.rs2.
+if (~mm_monkey_can_talk = false) {
+    return;
+}
 ~chatnpc("<p,happy>Ook ook! You want a blade?");
 def_int $choice = ~p_choice2("Yes please. What are you selling?", 1, "No thanks.", 2);
 if ($choice = 2) {

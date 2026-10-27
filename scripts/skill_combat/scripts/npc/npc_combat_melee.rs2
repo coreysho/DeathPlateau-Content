@@ -70,4 +70,12 @@ if (npc_type = fd_damis_tougher & $damage > 0) {
 if (npc_param(prayer_drain) ! null & $damage > 0) {
     queue(fightcave_prayer_drain, 0, npc_param(prayer_drain));
 }
+// Monkey Madness - the capture monkeys of Ape Atoll do not just wound you: "if they hit the player,
+// the player will appear in the Ape Atoll prison". Same queued shape as the drains above, which is
+// the only way anything reaches the player from in here, and keyed on the category so the five
+// named monkeys and the Monkey Guards share one line. Padulah is deliberately NOT in it: he has a
+// static spawn and is meant to be fought.
+if (npc_category = mm_captor & $damage > 0) {
+    queue(mm_arrested, 0, 0);
+}
 queue*(playerhit_n_retaliate, 0)(npc_uid);

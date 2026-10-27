@@ -153,3 +153,96 @@ data=loot,watermelon_seed,1,1,9,a watermelon seed
 data=loot_total,1000
 data=stall,seed stall
 data=pet_base,35815
+
+// ===================================================================================================
+// THE FIVE STALLS OF MARIM (27 October 2026)
+// ===================================================================================================
+// All five carried op2=Steal from in the cache and had no row and no trigger, so "Steal from" on
+// any of them did nothing at all. Levels, experience and respawns are the OSRS Thieving table's,
+// which lists them under Ape Atoll; respawn_ticks is stored at twice the Old School figure like
+// every row above, because ~scale_by_playercount halves it again.
+//
+// EXPERIENCE IS IN TENTHS, like every row above and like stat_advance itself - the baker's
+// stall's 16 experience is written 160. These five were written as 16, 20, 25, 90 and 210
+// first and paid a tenth of what they should; tools/sim/mmstalls.ts caught it by dividing the
+// experience paid by the number of items taken.
+//
+// NO OWNER. Every other stall in the game names the merchant who catches you, and the Marim five
+// deliberately do not: their owners stand at the counter, so naming them would make the stall
+// uncatchable at a range of one tile, and they are the two 65-Thieving stalls the skill is trained
+// on. Padulah is the guard instead - "he will accost players if he sees them stealing from various
+// stalls around the town" - and at eleven tiles from the nearest stall he only ever does so if he
+// has wandered over, which is the wiki's "if he sees them".
+//
+// No pet_base: the OSRS wiki gives a Rocky base chance per stall and gives none for these five.
+// Omitting it means ^skillpet_no_roll and no roll, which is better than inventing odds.
+
+[stealing_mm_food_stall]
+table=stealing
+data=loc,mm_stall_food
+data=guard,mm_padulah
+data=level,5
+data=experience,160
+data=respawn_ticks,12
+data=loot,banana,1,1,1,a banana
+data=loot_total,1
+data=stall,food stall
+
+[stealing_mm_crafting_stall]
+table=stealing
+data=loc,mm_stall_crafting
+data=guard,mm_padulah
+data=level,5
+data=experience,200
+data=respawn_ticks,16
+// No bracelet mould: bracelets are not 2006 jewellery and the cache has no mould for one. The
+// other five of the wiki's six are here.
+data=loot,ring_mould,1,1,1,a ring mould
+data=loot,necklace_mould,1,1,1,a necklace mould
+data=loot,amulet_mould,1,1,1,an amulet mould
+data=loot,chisel,1,1,1,a chisel
+data=loot,gold_bar,1,1,1,a gold bar
+data=loot_total,5
+data=stall,crafting stall
+
+[stealing_mm_general_stall]
+table=stealing
+data=loc,mm_stall_general
+data=guard,mm_padulah
+data=level,5
+data=experience,250
+data=respawn_ticks,16
+data=loot,pot_empty,1,1,1,a pot
+data=loot,hammer,1,1,1,a hammer
+data=loot,tinderbox,1,1,1,a tinderbox
+data=loot_total,3
+data=stall,general stall
+
+[stealing_mm_magic_stall]
+table=stealing
+data=loc,mm_stall_magic
+data=guard,mm_padulah
+data=level,65
+data=experience,900
+data=respawn_ticks,24
+data=loot,airrune,1,1,1,an air rune
+data=loot,earthrune,1,1,1,an earth rune
+data=loot,firerune,1,1,1,a fire rune
+data=loot,naturerune,1,1,1,a nature rune
+data=loot,lawrune,1,1,1,a law rune
+data=loot_total,5
+data=stall,magic stall
+
+[stealing_mm_scimitar_stall]
+table=stealing
+data=loc,mm_stall_scimitar
+data=guard,mm_padulah
+data=level,65
+data=experience,2100
+data=respawn_ticks,64
+data=loot,iron_scimitar,1,1,1,an iron scimitar
+data=loot,steel_scimitar,1,1,1,a steel scimitar
+data=loot,mithril_scimitar,1,1,1,a mithril scimitar
+data=loot,adamant_scimitar,1,1,1,an adamant scimitar
+data=loot_total,4
+data=stall,scimitar stall

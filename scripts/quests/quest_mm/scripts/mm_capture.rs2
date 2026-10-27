@@ -1,0 +1,129 @@
+// ===================================================================================================
+// THE CAPTURE - the second doorway into the Ape Atoll prison
+// ===================================================================================================
+// "Monkey Guards will appear if players talk to a monkey on Ape Atoll while in human form." One of
+// the five named ninja monkeys - Duke, Oipuis, Ouhai, Uodai, Uyoro - turns up with one or two
+// Monkey Guards behind him, and "if they hit the player, the player will appear in the Ape Atoll
+// prison".
+//
+// The cache has the whole cast and none of it was reachable. All six have no static spawn ANYWHERE,
+// which is correct - in Old School none of them has one either, because they are summoned - and
+// nothing summoned them, so six npcs with combat stats, drops, hunt modes and attack animations sat
+// in the configs doing nothing. The eleven monkeys of Marim meanwhile carried op1=Talk-to with no
+// [opnpc1] behind any of them, so the trigger for all of it was a click that said nothing at all.
+//
+// WHAT WAS ALREADY HERE: [label,mm_jail_arrest], reached from the gate. That is the one doorway the
+// jail had, and it is the wiki's step 13. This is the other one, and it is the one that matters
+// afterwards - the gate is a single scripted event on the way in, while this fires every time a
+// human speaks to a monkey, for the rest of the game.
+//
+// Four rules, all from the Monkey Guard (ninja) page:
+//   * ONE NAMED MONKEY, ONE OR TWO GUARDS. Not a swarm. ^mm_captor_named picks the named one.
+//   * A HIT ARRESTS YOU. Not kills - see the hook in skill_combat/scripts/npc/npc_combat_melee.rs2,
+//     which is where every npc melee hit on a player already funnels through.
+//   * THE GREEGREE ENDS IT. "the monkey guards will disappear when they try to attack you" once the
+//     greegree is back on. mm.hunt's check_invparam already stops one STARTING on a monkey; this is
+//     the other half, for one already swinging.
+//   * THEY GO AWAY. npc_add's own duration, so a player who runs does not drag them round Marim.
+//
+// And Karam, which is the fifth: "He instantly kills any monkeys trying to apprehend the player, as
+// long as he can see both the player and those monkeys." He is already standing in Marim twice over
+// (2758,2789 and 2767,2776) with nothing to do. This is what he is for, and it is also how a player
+// farms the bones - the wiki's own method is to stand where Karam can see you and take the greegree
+// off.
+
+// --------------------------------------------------------------------------------------------- the
+// A monkey has seen a human. Called from ~mm_monkey_can_talk, which every Marim monkey's Talk-to
+// asks first (mm_marim.rs2). A proc rather than a label because @label is a jump that never
+// returns, and the caller has to be able to stop afterwards on its own terms.
+[proc,mm_monkey_captured]
+if_close;
+mes("The monkey takes one look at your face and starts screaming.");
+sound_synth(monkeycalls, 1, 0);
+// A SWEEP THROUGH THE VILLAGE IS NOT FIVE AMBUSHES. %mm_guards_cooldown is the cache's own varp for
+// this and was unread until now. Without it, talking to Solihib, Ifaba, Hamab and Daga in one walk
+// across Marim stacks twelve level-149 monkeys on one tile.
+if (%mm_guards_cooldown > map_clock) {
+    mes("Something is already coming. You can hear it.");
+    return;
+}
+%mm_guards_cooldown = add(map_clock, ^mm_captor_cooldown);
+p_delay(2);
+~mm_captor_add(enum(int, npc, mm_captor_named, random(^mm_captor_named_count)));
+~mm_captor_add(mm_monkey_guard);
+// "One or two of these may appear" - so the second guard is a coin toss, not a given.
+if (random(2) = 0) {
+    ~mm_captor_add(mm_monkey_guard);
+}
+// A LINE, NOT A MODAL. An interface in the middle of an ambush is a box to close while three
+// level-149 monkeys walk up to you, and a modal holds queued scripts - which is what the arrest is.
+mes("The screaming is being answered, and it is getting closer.");
+
+// map_findsquare can hand back the centre tile when there is nothing free around it - Marim is
+// fences and huts and the jungle behind it is worse - and an npc_add onto the player's own tile is
+// an npc standing inside the player. Nothing is spawned in that case; one guard fewer is better
+// than one in the wrong place, and the named monkey is tried first so it is the one that gets the
+// best tile.
+[proc,mm_captor_add](npc $type)
+def_coord $spot = map_findsquare(coord, 1, ^mm_captor_spawn_range, ^map_findsquare_lineofwalk);
+if ($spot = coord) {
+    return;
+}
+npc_add($spot, $type, ^mm_captor_lifetime);
+%npc_aggressive_player = uid;
+npc_setmode(opplayer2);
+
+// --------------------------------------------------------------------------------------------- the
+// The greegree and Karam, both on the captor's attack rather than on a timer of its own.
+//
+// NOT A TIMER, deliberately. The default [ai_timer,_] is the npc poison tick, a category trigger
+// beats it, and these six are attackable - so a [ai_timer,_mm_captor] would mean a poisoned captor
+// never takes the poison, and npc_poison_start's own thirty-tick interval would fight whatever
+// interval the checks wanted. [ai_opplayer2] is also the better moment for both: it is the tick the
+// monkey actually swings at you, which is what "trying to apprehend the player" means.
+//
+// The engine runs an ai trigger as ScriptRunner.init(script, npc, target), so the player being
+// attacked is already the active one here - no finduid, which would only risk replacing them.
+[ai_opplayer2,_mm_captor]
+// THE GREEGREE ENDS IT. "the monkey guards will disappear when they try to attack you" once the
+// greegree is back on. mm.hunt's check_invparam already stops one STARTING on a monkey; this is the
+// other half, for one that is already swinging.
+if (~mm_is_monkey = true) {
+    @mm_captor_vanish;
+}
+// KARAM. "He instantly kills any monkeys trying to apprehend the player, as long as he can see both
+// the player and those monkeys." The secondary npc, not the active one, or finding him would make
+// him the thing being killed; checkvis 1 is the line of sight the wiki's "can see" asks for.
+if (.npc_find(npc_coord, mm_karam, ^mm_karam_reach, 1) = true) {
+    npc_say("Kkkhh-!");
+    // Through npc_damage rather than npc_del, so the ordinary death runs: the death animation and
+    // npc_param(death_drop), which is how the bones get onto the floor. Killing them is what Karam
+    // is for, and the bones are why a player wants him to.
+    npc_damage(^hitmark_damage, npc_stat(hitpoints));
+    return;
+}
+gosub(npc_default_attack);
+
+// No spotanim: in Old School they are simply not there the next tick, and the cache ships no
+// disappearance effect for them.
+[label,mm_captor_vanish]
+npc_del;
+
+// --------------------------------------------------------------------------------------------- the
+// The arrest, queued from the melee hook. The gate's version of this is [label,mm_jail_arrest] in
+// mm_stage3.rs2 and the two share everything after the first sentence - see [label,mm_jail_knockout].
+[queue,mm_arrested]
+// THREE OF THEM SWINGING IS THREE HITS AND ONE ARREST. The named monkey and one or two guards all
+// attack on their own four-tick clocks, so their hits arrive spread over several ticks and the
+// second and third would each wake you again and tell Lumo you had been caught three times for
+// walking into Marim once - which was measured, at a count of 5 for one ambush.
+//
+// TWO GUARDS, BECAUSE THE WINDOW HAS TWO HALVES. %mm_player_is_unconscious covers the three ticks
+// between the first hit and the telejump; after it, the player is standing on ^mm_jail_cell, and a
+// hit that landed just before the telejump queues an arrest that arrives just after it.
+if (%mm_player_is_unconscious = ^true | coord = ^mm_jail_cell) {
+    return;
+}
+if_close;
+mes("The flat of a scimitar catches you across the back of the head.");
+@mm_jail_knockout;

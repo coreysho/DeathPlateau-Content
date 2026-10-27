@@ -1536,35 +1536,75 @@ name=Lever
 desc=It's probably too risky to try pulling this.
 model=floorlever_off
 
+// THE FIVE STALLS OF MARIM, which advertised "Steal from" and did nothing until 27 October 2026.
+// scripts/skill_thieving/configs/stalls/stealing.dbrow now carries their levels, loot and timings
+// and skill_thieving/scripts/stalls/stealing.rs2 their triggers.
+//
+// EACH ONE NEEDS A PICKED-OVER TWIN. A stolen stall is loc_change'd for its respawn, and the
+// generic replacement is `market` - a 2x2 Varrock silver stall, which these 1x1 monkey tables are
+// not. The 377 cache ships no emptied monkey stall: there are five stall models and no sixth. So
+// each has a twin with the same model and no "Steal from" on it, which is the honest version -
+// the option goes away for the respawn and nothing on the island changes shape. The twin is named
+// in next_loc_stage, the same param the banana tree above uses for exactly this.
 [mm_stall_crafting]
 name=Crafting Stall
 desc=This table has crafting paraphernalia on it.
 model=mm_stall_crafting
 op2=Steal from
+param=next_loc_stage,mm_stall_crafting_stolen
+
+[mm_stall_crafting_stolen]
+name=Crafting Stall
+desc=Somebody has just been through this one.
+model=mm_stall_crafting
 
 [mm_stall_food]
 name=Food Stall
 desc=This table has ripe bananas on show.
 model=mm_stall_food
 op2=Steal from
+param=next_loc_stage,mm_stall_food_stolen
+
+[mm_stall_food_stolen]
+name=Food Stall
+desc=Somebody has just been through this one.
+model=mm_stall_food
 
 [mm_stall_general]
 name=General Stall
 desc=This table has items of a general nature on it.
 model=mm_stall_general
 op2=Steal from
+param=next_loc_stage,mm_stall_general_stolen
+
+[mm_stall_general_stolen]
+name=General Stall
+desc=Somebody has just been through this one.
+model=mm_stall_general
 
 [mm_stall_magic]
 name=Magic Stall
 desc=This table has runes on display.
 model=mm_stall_magic
 op2=Steal from
+param=next_loc_stage,mm_stall_magic_stolen
+
+[mm_stall_magic_stolen]
+name=Magic Stall
+desc=Somebody has just been through this one.
+model=mm_stall_magic
 
 [mm_stall_scimitar]
 name=Scimitar Stall
 desc=This table has a scimitar on it.
 model=mm_stall_scimitar
 op2=Steal from
+param=next_loc_stage,mm_stall_scimitar_stolen
+
+[mm_stall_scimitar_stolen]
+name=Scimitar Stall
+desc=Somebody has just been through this one.
+model=mm_stall_scimitar
 
 [mm_temple_trapdoor]
 name=Trapdoor

@@ -35927,6 +35927,24 @@ resizeh=180
 resizev=180
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
@@ -35948,6 +35966,24 @@ resizeh=180
 resizev=180
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
@@ -35969,6 +36005,24 @@ resizeh=180
 resizev=180
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
@@ -35990,6 +36044,24 @@ resizeh=180
 resizev=180
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
@@ -36011,6 +36083,24 @@ resizeh=180
 resizev=180
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
 
 param=death_drop,mm_medium_ninja_monkey_bones
@@ -36031,8 +36121,25 @@ readyanim=m_monkey_ready
 op1=Talk-to
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
 head1=npc_1441_head
-param=death_drop,mm_normal_monkey_bones
+// FIXED 2026-10-27: he dropped an ordinary monkey's bones. He is a ninja monkey, and the only one
+// of the six with a static spawn, so he is the one a player can actually kill for them: "His bones
+// can be used to make a medium ninja monkey greegree."
+param=death_drop,mm_medium_ninja_monkey_bones
 
 param=death_anim,m_monkey_death
 huntmode=mm_aggressive_melee
@@ -36145,14 +36252,37 @@ walkanim=m_monkey_walk
 readyanim=m_monkey_ready
 op2=Attack
 vislevel=149
+// FIXED 2026-10-27 (the capture event). A level-149 monster with NO COMBAT STATS AT ALL: no
+// hitpoints, no attack, no strength, no defence. The 2026-09 audit left a comment here saying the
+// numbers had been read off the wiki and then wrote none of them, so these seven - the five named
+// ninja monkeys, the ninja Monkey Guard and Padulah - had the engine's defaults and died to one
+// hit without ever landing one. Taken from the Monkey Guard (ninja) page, which is the same figures
+// for all of them: 130 across the board, 50 attack bonus, slash. 130 strength is what produces the
+// page's own max hit of 14.
+hitpoints=130
+attack=130
+strength=130
+defence=130
+magic=130
+param=attackbonus,50
+param=damagetype,^slash_style
+// THE CATEGORY IS THE CAPTURE. mm_captor is read in two places: the ai triggers in
+// quests/quest_mm/scripts/mm_capture.rs2, and the melee hook in
+// skill_combat/scripts/npc/npc_combat_melee.rs2 that turns a landed hit into the arrest.
+category=mm_captor
 head1=npc_1441_head
-moverestrict=nomove
+// FIXED 2026-10-27: moverestrict=nomove. A guard summoned beside a player to apprehend them has to
+// be able to reach them, and the wiki's own accounts of these turn on their pathing - "trapping
+// them behind an obstacle", "often stuck behind a jungle plant" at Solihib's hut.
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Monkey Archer (level 86), the same source this repo's drop
 // tables already cite. Anything the wiki does not supply is omitted so the engine default
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
-param=death_drop,mm_medium_ninja_monkey_bones
+// FIXED 2026-10-27: the drop. "Unlike the named ninja monkeys, the monkey guards only drop SMALL
+// ninja monkey bones" - the medium ones belong to Duke, Oipuis, Ouhai, Uodai, Uyoro and Padulah and
+// are what a MEDIUM ninja greegree is carved from, so this handed out the wrong greegree's bones.
+param=death_drop,mm_small_ninja_monkey_bones
 param=death_anim,m_monkey_death
 huntmode=mm_aggressive_melee
 huntrange=5

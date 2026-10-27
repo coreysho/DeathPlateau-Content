@@ -1,0 +1,13 @@
+// WHICH NAMED NINJA MONKEY COMES FOR YOU. "The named monkeys are Duke, Uodai, Ouhai, Oipuis, and
+// Uyoro" - one of the five, at random, each time a human speaks to a monkey on Ape Atoll. They are
+// identical in every stat and differ only in name, which is the joke: the island has five of the
+// same gaoler.
+[mm_captor_named]
+inputtype=int
+outputtype=npc
+default=mm_duke
+val=0,mm_duke
+val=1,mm_oipuis
+val=2,mm_ouhai
+val=3,mm_uodai
+val=4,mm_uyoro
