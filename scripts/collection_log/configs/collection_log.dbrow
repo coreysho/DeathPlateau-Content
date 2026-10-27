@@ -79,8 +79,10 @@ data=items,bosspet_giant_mole_item
 data=items,mole_skin
 data=items,mole_claw
 data=items,bosspet_kalphite_queen_item
-data=items,kq_head
 data=items,dragon_chainbody
+data=items,dragon_warhammer
+data=items,kq_head
+data=items,belles_folly
 data=items,bosspet_kbd_item
 data=items,draconic_visage
 data=items,kbd_head
@@ -697,6 +699,8 @@ data=entries,collection_log_cyclopes
 data=entries,collection_log_outfits_gathering
 data=entries,collection_log_graceful
 data=entries,collection_log_mage_arena
+data=entries,collection_log_dragons
+data=entries,collection_log_giants
 data=entries,collection_log_rare_drop_table
 data=entries,collection_log_random_events
 data=entries,collection_log_death_tokens
@@ -786,6 +790,10 @@ data=items,zamorak_cape
 data=items,imbued_saradomin_cape
 data=items,imbued_guthix_cape
 data=items,imbued_zamorak_cape
+data=items,arkan_blade
+data=items,belles_folly
+data=items,dragon_sword
+data=items,hill_giant_club
 data=items,rune_spear
 data=items,dragonshield_a
 data=items,dragon_spear
@@ -944,23 +952,26 @@ data=items,mole_skin
 data=items,mole_claw
 data=counters,"Giant Mole kills",11
 
-// Kalphite Queen: 4 items
+// Kalphite Queen: 5 items
 [collection_log_kq]
 table=collection_log_entry
 data=name,"Kalphite Queen"
 data=items,bosspet_kalphite_queen_item
-data=items,kq_head
 data=items,dragon_chainbody
 data=items,dragon_pickaxe
+data=items,dragon_warhammer
+data=items,kq_head
 data=counters,"Kalphite Queen kills",5
 
-// King Black Dragon: 4 items
+// King Black Dragon: 6 items
 [collection_log_kbd]
 table=collection_log_entry
 data=name,"King Black Dragon"
+data=items,belles_folly
 data=items,bosspet_kbd_item
 data=items,draconic_visage
 data=items,dragon_pickaxe
+data=items,dragon_warhammer
 data=items,kbd_head
 data=counters,"King Black Dragon kills",10
 
@@ -1735,6 +1746,20 @@ data=items,zamorak_cape
 data=items,imbued_saradomin_cape
 data=items,imbued_guthix_cape
 data=items,imbued_zamorak_cape
+
+// Dragons: 3 items
+[collection_log_dragons]
+table=collection_log_entry
+data=name,"Dragons"
+data=items,arkan_blade
+data=items,belles_folly
+data=items,dragon_sword
+
+// Giants: 1 items
+[collection_log_giants]
+table=collection_log_entry
+data=name,"Giants"
+data=items,hill_giant_club
 
 // Rare Drop Table: 3 items
 [collection_log_rare_drop_table]

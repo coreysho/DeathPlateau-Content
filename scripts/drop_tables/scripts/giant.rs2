@@ -3,6 +3,15 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
+// OBOR'S CLUB, WITHOUT OBOR. Old School puts it in the chest in Obor's lair at 1/118, opened with
+// a giant key the hill giants drop at about 1/128 - two rolls and a boss, and there is no Obor
+// here. One in fifteen thousand is those two rates multiplied: the same number of hill giants,
+// with the middle step taken out rather than made up.
+if (random(^hill_giant_club_rate) = 0) {
+    obj_add(npc_coord, hill_giant_club, 1, ^lootdrop_duration);
+    ~collection_log_add(hill_giant_club, 1);
+    ~broadcast_drop(hill_giant_club);
+}
 // Default drop from config.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
 

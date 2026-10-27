@@ -36,6 +36,18 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
+// The dragon sword, at this dragon's own rate (drop_tables/scripts/dragon_sword.rs2). An extra
+// roll before the ordinary table, so it can never be crowded out by it.
+~dragon_sword_roll;
+// THE ARKAN BLADE, and it is not a drop in Old School at all - there it is The Final Dawn's
+// reward from Prince Itzla Arkan, a 2024 quest in a region this cache has never heard of. The
+// item has been in this build since its special attack was written and nothing gave it out. The
+// owner's call is the lava dragons, which are the deepest thing in the Wilderness here.
+if (random(^arkan_blade_rate) = 0) {
+    obj_add(npc_coord, arkan_blade, 1, ^lootdrop_duration);
+    ~collection_log_add(arkan_blade, 1);
+    ~broadcast_drop(arkan_blade);
+}
 
 // Always. Old School's third guaranteed drop is the lava scale, which is out - see above.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);

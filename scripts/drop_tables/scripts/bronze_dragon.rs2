@@ -3,6 +3,17 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
+// The dragon sword, at this dragon's own rate (drop_tables/scripts/dragon_sword.rs2). An extra
+// roll before the ordinary table, so it can never be crowded out by it.
+~dragon_sword_roll;
+// Belle's folly, as it drops: tarnished, and polished with a hammer at 70 Smithing
+// (drop_tables/scripts/belles_folly.rs2). Old School's comes from the Shellbane Gryphon at 1/75,
+// which is a dedicated boss with nothing else on its table; a metal dragon is neither.
+if (random(^belles_folly_rate_metal) = 0) {
+    obj_add(npc_coord, belles_folly_tarnished, 1, ^lootdrop_duration);
+    ~collection_log_add(belles_folly, 1);
+    ~broadcast_drop(belles_folly_tarnished);
+}
 
 // Default drop from config.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);

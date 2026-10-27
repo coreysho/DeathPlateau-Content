@@ -1,4 +1,9 @@
 // Melee
+// The dragon sword is 60 Attack and the dragon warhammer 60 STRENGTH - which is the cache
+// record's own requirement param (434 names the skill, and 2 is Strength), and matches Old
+// School's 2021 change away from Attack.
+[opheld2,dragon_sword] @levelrequire_attack(60, last_slot);
+[opheld2,dragon_warhammer] @levelrequire_strength(60, last_slot);
 [opheld2,dragon_dagger] @levelrequire_zanaris_quest_attack(60, last_slot);
 [opheld2,dragon_dagger_p] @levelrequire_zanaris_quest_attack(60, last_slot);
 [opheld2,dragon_dagger_p+] @levelrequire_zanaris_quest_attack(60, last_slot);

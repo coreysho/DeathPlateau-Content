@@ -14,6 +14,9 @@
 // requirements to USE them on a tree or a rock rather than to hold them, and this file is about
 // holding. Wielding one at 65 Attack with 60 Woodcutting is correct.
 
+// Belle's folly, polished out of the tarnished blade the metal dragons drop.
+[opheld2,belles_folly] @levelrequire_attack(65, last_slot);
+
 // Melee armour: 65 Defence. The longsword: 65 Attack.
 [opheld2,third_age_full_helmet] @levelrequire_defence(65, last_slot);
 [opheld2,third_age_platebody] @levelrequire_defence(65, last_slot);

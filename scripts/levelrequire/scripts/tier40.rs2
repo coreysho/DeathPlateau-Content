@@ -1,4 +1,6 @@
 // Melee
+// Obor's club, hung on the hill giants themselves (drop_tables/scripts/giant.rs2).
+[opheld2,hill_giant_club] @levelrequire_attack(40, last_slot);
 [opheld2,rune_dagger] @levelrequire_attack(40, last_slot);
 [opheld2,rune_dagger_p] @levelrequire_attack(40, last_slot);
 [opheld2,rune_dagger_p+] @levelrequire_attack(40, last_slot);

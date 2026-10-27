@@ -11,5 +11,9 @@ switch_obj (last_useitem) {
     // for the God Wars grapple. bosses/godwars/scripts/gwd_grapple.rs2 has the other two and says
     // why the tip is made here rather than at the anvil the wiki uses.
     case mithril_bar : @gwd_grapple_tip;
+    // Belle's folly comes off the dragons tarnished and is polished with a hammer at 70 Smithing.
+    // Old School uses the Giants' Foundry's wheel, which is not in this build - the same note the
+    // grapple tip above carries. drop_tables/scripts/belles_folly.rs2 has the rules.
+    case belles_folly_tarnished : @belles_folly_polish;
     case default : ~displaymessage(^dm_default);
 }

@@ -1,0 +1,38 @@
+// BELLE'S FOLLY: the tarnished blade the dragons drop, and the hammer that finishes it.
+//
+// Old School polishes it on the wheel at the Giants' Foundry, with 70 Smithing and Sleeping
+// Giants behind it. There is no foundry and no Sleeping Giants here, so the work is done with a
+// hammer - which is how gwd_grapple.rs2 makes the mithril grapple tip, for the same reason, and
+// with the same note that Old School uses a different fixture. THE 70 SMITHING IS KEPT: it is the
+// only requirement on the item that is not an equip gate, and dropping it would turn a two-step
+// item into a one-step one.
+//
+// INSPECT SAYS WHAT IT NEEDS. The cache record ships iop1=Inspect and an option that answers
+// nothing is the fault this repo has spent whole rounds removing, so it answers.
+
+[opheld1,belles_folly_tarnished]
+mes("The blade is sound under the tarnish, but it will take work to bring out.");
+if (stat(smithing) < ^belles_folly_smithing) {
+    mes("A smith of level <tostring(^belles_folly_smithing)> could polish it with a hammer.");
+    return;
+}
+mes("A hammer and a steady hand would polish it.");
+
+[label,belles_folly_polish]
+if (stat(smithing) < ^belles_folly_smithing) {
+    mes("You need a Smithing level of <tostring(^belles_folly_smithing)> to polish this blade.");
+    return;
+}
+// last_useslot is where the BLADE is: [opheldu,hammer] is the trigger, so the engine has already
+// swapped the halves and last_item is the hammer. Writing the new blade into that slot keeps the
+// pack arrangement the player had, and cannot fail on a full inventory the way inv_add can.
+def_int $slot = last_useslot;
+if (inv_getobj(inv, $slot) ! belles_folly_tarnished) {
+    ~displaymessage(^dm_default);
+    return;
+}
+anim(human_smithing, 0);
+sound_synth(anvil_4, 1, 0);
+inv_setslot(inv, $slot, belles_folly, 1);
+~objbox(belles_folly, "You work the tarnish off. The gold underneath has not dulled at all.", 250, 0, 0);
+~smithing_xp(^belles_folly_smithing_xp);

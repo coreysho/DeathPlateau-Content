@@ -1,0 +1,40 @@
+// BELLE'S FOLLY. Old School polishes the tarnished blade at the Giants' Foundry wheel at 70
+// Smithing; the level is kept and the fixture is a hammer, because there is no foundry here.
+// The experience is this build's own: a thousand, the same as joining a godsword shard, which is
+// the nearest thing to it - one irreversible act of smithing on an item nobody makes in bulk.
+^belles_folly_smithing = 70
+^belles_folly_smithing_xp = 1000
+
+// THE DRAGON SWORD ACROSS EVERY DRAGON. The owner asked for "all dragons, better drop rate with
+// higher level", so the rates below are a ladder by difficulty rather than Old School's single
+// number - Old School drops it from Wyvern Cave wyrms, which do not exist here, at 1/2,000 for
+// the ordinary one and 1/2,000 for the Shadow Wyrm at level 259. That 1/2,000 is kept as the
+// value at the TOP of the ladder, on the King Black Dragon, and everything else is scaled down
+// from it. See drop_tables/scripts/dragon_sword.rs2.
+^dsword_rate_green = 6000
+^dsword_rate_blue = 6000
+^dsword_rate_bronze = 5000
+^dsword_rate_red = 5000
+^dsword_rate_black = 4000
+^dsword_rate_iron = 4000
+^dsword_rate_steel = 3000
+^dsword_rate_lava = 2500
+^dsword_rate_kbd = 2000
+
+// THE FOUR RATES THAT ARE NOT A LADDER.
+//
+// HILL GIANT CLUB: Old School's two rolls multiplied - a giant key at about 1/128 from a hill
+// giant, and 1/118 from the chest in Obor's lair - so the same number of hill giants as there,
+// with the boss in the middle taken out rather than made up.
+^hill_giant_club_rate = 15000
+// DRAGON WARHAMMER: Old School's Lizardman shaman rate exactly. There are no lizardmen here.
+^dwh_rate = 3000
+// BELLE'S FOLLY: Old School's is 1/75 from the Shellbane Gryphon, which is a dedicated boss with
+// nothing else on its table. A metal dragon is neither, so these are this build's own - and the
+// King Black Dragon is five times likelier than a metal dragon, which is the gap in difficulty.
+^belles_folly_rate_metal = 5000
+^belles_folly_rate_kbd = 1000
+// ARKAN BLADE: not a drop in Old School at all - The Final Dawn's quest reward. The owner's call
+// is the lava dragons, and this is the rate of a prestige drop off the deepest Wilderness monster
+// in the build.
+^arkan_blade_rate = 1000

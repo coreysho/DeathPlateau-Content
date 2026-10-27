@@ -1,0 +1,45 @@
+// THE DRAGON SWORD's special attack, Old School's "Wild Stab"
+// (oldschool.runescape.wiki/w/Dragon_sword): 40% energy, a quarter again on accuracy AND damage,
+// rolled against the target's STAB defence whatever style the attack was made in - and against a
+// player, it goes straight through Protect from Melee for that one attack.
+//
+// THE PRAYER IS THE WHOLE SPECIAL IN PvP, and it is why the roll below is written out instead of
+// going through ~pvp_spec_roll. That proc takes 40% off the maximum when the target is praying
+// melee, which is exactly what Wild Stab is supposed to ignore; calling it and then adding the
+// damage back would be arithmetic standing in for a rule, and would still be wrong because the
+// reduction is applied to the max before the roll rather than to the roll after it.
+//
+// IN PvM IT CHANGES NOTHING, because npcs have no prayers - so that half goes through the shared
+// proc like every other spec, with the stab defence passed as the style to roll against.
+
+[label,pvm_dragon_sword_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+$hit, $damage, $damage_capped = ~pvm_spec_roll(125, 125, ^stab_style);
+// The dragon dagger's puncture, which is this cache's only stab special.
+anim(puncture, 0);
+spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound), 1, 0);
+~pvm_spec_land($damage, 0);
+
+[label,pvp_dragon_sword_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+~set_pk_vars;
+// ~pvp_spec_roll's body, minus the Protect from Melee reduction. Everything else - the maximum,
+// the attack roll, the experience and the hero points - is the same, and the damage is capped at
+// what the target has left for the same reason it is there: tick eating existed.
+def_int $maxhit = scale(125, 100, %com_maxhit);
+def_int $attack_roll = scale(125, 100, ~player_attack_roll_specific(%damagetype));
+def_int $defence_roll = ~.player_defence_roll_specific(^stab_style);
+def_int $damage = 0;
+if (randominc($attack_roll) > randominc($defence_roll)) {
+    $damage = min(randominc($maxhit), .stat(hitpoints));
+    ~give_combat_experience_pvp(%damagestyle, $damage, ~pvp_xp_multiplier(~.player_combat_level));
+    both_heropoints($damage);
+}
+// The dragon dagger's puncture, which is this cache's only stab special.
+anim(puncture, 0);
+spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound));

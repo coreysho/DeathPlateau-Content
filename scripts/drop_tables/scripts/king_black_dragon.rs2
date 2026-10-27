@@ -3,6 +3,22 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
+// The dragon sword, at this dragon's own rate (drop_tables/scripts/dragon_sword.rs2). An extra
+// roll before the ordinary table, so it can never be crowded out by it.
+~dragon_sword_roll;
+// The King Black Dragon's own two, both asked for by name. The warhammer is Old School's
+// Lizardman shaman rate of 1/3,000 - there are no lizardmen here - and the tarnished blade is
+// five times likelier off him than off a metal dragon, which is the gap in difficulty.
+if (random(^dwh_rate) = 0) {
+    obj_add(npc_coord, dragon_warhammer, 1, ^lootdrop_duration);
+    ~collection_log_add(dragon_warhammer, 1);
+    ~broadcast_drop(dragon_warhammer);
+}
+if (random(^belles_folly_rate_kbd) = 0) {
+    obj_add(npc_coord, belles_folly_tarnished, 1, ^lootdrop_duration);
+    ~collection_log_add(belles_folly, 1);
+    ~broadcast_drop(belles_folly_tarnished);
+}
 
 // Boss pet roll. Immediately after npc_findhero so active_player is set, and before any other
 // drop so the pet can never be crowded out. See npc/configs/boss_pets.constant.
