@@ -12554,7 +12554,7 @@ data=bonus,torstol_seed,1,1,65,0
 [npc_drops_slayer_abyssal]
 table=npc_drops
 // [ai_queue3,slayer_abyssal]
-// assumed false: %legendsquest, coordz()
+// assumed false: %legendsquest, and(), bitcount(), coordz()
 data=npc,slayer_abyssal
 data=drop,ashes,Ashes,1,Always
 data=drop,coins,Coins,132,1/3.66
@@ -12608,6 +12608,7 @@ data=drop,rune_arrow,Rune arrow,42,1/1170
 data=drop,rune_sq_shield,Rune sq shield,1,1/1170
 data=drop,cert_silver_ore,Silver ore (noted),100,1/1170
 data=drop,steel_arrow,Steel arrow,150,1/1170
+data=drop,bludgeon_axon,Bludgeon axon,1,1/1500
 data=drop,uncut_ruby,Uncut ruby,1,1/1872
 data=drop,dragon_med_helm,Dragon med helm,1,1/2341
 data=drop,rune_kiteshield,Rune kiteshield,1,1/2341
@@ -12652,6 +12653,7 @@ data=bonus,unidentified_cadantine,1,1,46387,0
 data=bonus,unidentified_dwarf_weed,1,1,34790,0
 data=bonus,unidentified_lantadyme,1,1,34790,0
 data=bonus,abyssal_whip,1,1,19531,0
+data=bonus,bludgeon_axon,1,1,6667,0
 data=bonus,abyssal_head,1,1,1667,0
 
 [npc_drops_slayer_banshee_1]

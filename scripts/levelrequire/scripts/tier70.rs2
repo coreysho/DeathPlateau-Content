@@ -1,3 +1,7 @@
+// The abyssal bludgeon: 70 Attack AND 70 Strength, which is obj 13263's own pair of requirement
+// params. Three untradeable pieces off the abyssal demons make it - skill_slayer/scripts.
+[opheld2,abyssal_bludgeon] @levelrequire_attack_and_strength(70, 70, last_slot);
+
 // Melee
 [opheld2,abyssal_whip] @levelrequire_attack_caps(70, last_slot);
 

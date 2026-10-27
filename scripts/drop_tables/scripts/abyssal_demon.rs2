@@ -21,6 +21,11 @@ if (random(512) = 0) {
     ~collection_log_add(abyssal_whip, 1); // not broadcast, so the collection log is told here
 }
 
+// One of the three bludgeon pieces, and never one this player has already been given until all
+// three have been (skill_slayer/scripts/abyssal_bludgeon.rs2). Its own roll rather than a band in
+// the table below, like the whip above and the head below: a 1-in-1,500 does not fit in 128 slots.
+~abyssal_bludgeon_piece_roll;
+
 // The abyssal head: 1/6,000, which is OSRS's own rate, and what a red slayer helmet is made of
 // (skill_slayer/scripts/slayer_helm_colours.rs2, generated). Rolled separately from the 1/128
 // table below rather than folded into it, because a 1-in-6,000 does not fit in 128 slots.

@@ -1,0 +1,102 @@
+// THE ABYSSAL BLUDGEON and the three pieces it is made of.
+//
+// Imported from a modern OSRS cache by tools/models/importosrs.py (objs 13263, 13274, 13275,
+// 13276). Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+//
+// WHERE IT COMES FROM. Old School's three pieces come out of an unsired, which the Abyssal Sire
+// drops and which is handed to the Font of Consumption; there is no Sire and no font here, and
+// the owner asked for the abyssal demons to drop the pieces directly. They do, one at a time, and
+// never one the player already has until all three have been given out -
+// skill_slayer/scripts/abyssal_bludgeon.rs2 has that rule and says why it is written the way it
+// is. Old School's own average is about 619 Sire kills for a full set; here it is three rolls of
+// 1/1,500 off a monster that is a slayer task rather than a boss.
+//
+// +102 CRUSH AND +85 STRENGTH at four ticks makes this the hardest-hitting crush weapon in the
+// build by a distance, and the three pieces are untradeable, so the only way to one is to kill
+// abyssal demons. That is the whole design: the numbers are Old School's (obj 13263), and so is
+// the 70 Attack AND 70 Strength it takes to hold one.
+
+[abyssal_bludgeon]
+name=Abyssal bludgeon
+desc=Elements of deceased Abyssal Sires have been fused together.
+model=obj_abyssal_bludgeon
+manwear=obj_abyssal_bludgeon_manwear,0
+womanwear=obj_abyssal_bludgeon_womanwear,6
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=2611
+2dxan=1508
+2dyan=552
+2dxof=-17
+2dyof=3
+weight=6000g
+cost=260000
+members=yes
+tradeable=no
+iop2=Wield
+category=weapon_blunt
+param=attackrate,4
+param=crushattack,102
+param=strengthbonus,85
+param=crushattack_anim,slayer_granite_maul_attack
+param=defend_anim,slayer_granite_maul_defend
+param=crush_sound,warhammer_crush
+param=ready_baseanim,slayer_granite_maul_ready
+param=walk_f_baseanim,slayer_granite_maul_walk
+param=walk_b_baseanim,slayer_granite_maul_walk
+param=walk_l_baseanim,slayer_granite_maul_walk
+param=walk_r_baseanim,slayer_granite_maul_walk
+param=running_baseanim,slayer_granite_maul_run
+// Penance, 50% (skill_combat/scripts/player/specs/scripts/abyssal_bludgeon.rs2)
+param=specwep,^true
+param=sa_energy,500
+
+// The three pieces. Untradeable, worth nothing on their own, and each carries the bit it sets in
+// %abyssal_bludgeon_pieces so the drop code can ask an obj which piece it is instead of keeping
+// a second list somewhere.
+[bludgeon_spine]
+name=Bludgeon spine
+desc=The spine from a deceased Abyssal Sire.
+model=obj_bludgeon_spine
+2dzoom=1916
+2dxan=606
+2dyan=1092
+2dxof=0
+2dyof=2
+weight=1000g
+cost=100
+members=yes
+tradeable=no
+param=bludgeon_piece_bit,1
+
+[bludgeon_claw]
+name=Bludgeon claw
+desc=The claw from a deceased Abyssal Sire.
+model=obj_bludgeon_claw
+2dzoom=1916
+2dxan=606
+2dyan=1092
+2dxof=0
+2dyof=2
+weight=1000g
+cost=100
+members=yes
+tradeable=no
+param=bludgeon_piece_bit,2
+
+[bludgeon_axon]
+name=Bludgeon axon
+desc=The axon from a deceased Abyssal Sire.
+model=obj_bludgeon_axon
+2dzoom=1916
+2dxan=606
+2dyan=1092
+2dxof=0
+2dyof=2
+weight=1000g
+cost=100
+members=yes
+tradeable=no
+param=bludgeon_piece_bit,4

@@ -835,9 +835,13 @@ data=items,whip_kit_bloodbark
 data=items,whip_kit_tempest
 data=items,whip_kit_bone
 data=items,whip_kit_gravedigger
+data=items,abyssal_bludgeon
 data=items,abyssal_head
 data=items,abyssal_whip
 data=items,black_mask
+data=items,bludgeon_axon
+data=items,bludgeon_claw
+data=items,bludgeon_spine
 data=items,draconic_visage
 data=items,dragon_chainbody
 data=items,granite_body
@@ -1817,13 +1821,17 @@ data=items,whip_kit_tempest
 data=items,whip_kit_bone
 data=items,whip_kit_gravedigger
 
-// Slayer: 14 items
+// Slayer: 18 items
 [collection_log_slayer]
 table=collection_log_entry
 data=name,"Slayer"
+data=items,abyssal_bludgeon
 data=items,abyssal_head
 data=items,abyssal_whip
 data=items,black_mask
+data=items,bludgeon_axon
+data=items,bludgeon_claw
+data=items,bludgeon_spine
 data=items,draconic_visage
 data=items,dragon_chainbody
 data=items,granite_body
