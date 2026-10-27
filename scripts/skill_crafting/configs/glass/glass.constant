@@ -2,3 +2,7 @@
 // be: the panel's other three buttons pass 1, 5 and 10, and p_countdialog cannot return a
 // negative, so -1 is free.
 ^glass_make_x = -1
+
+// Make all: a count no inventory can hold, so ~crafting_glass runs until the molten glass is gone.
+// 28 is the whole pack, so any number above it would do; this one is obvious on sight.
+^glass_make_all = 100000

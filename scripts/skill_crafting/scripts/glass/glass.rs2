@@ -83,6 +83,19 @@ if_openmain(glass_crafting);
 // THE PANEL'S TWENTY-EIGHT BUTTONS: seven products, each with Make X, 10, 5 and 1 in that order,
 // which is the order glass_crafting.if numbers them in. ^glass_make_x is the count that means
 // "ask", and cannot collide with a real one.
+//
+// AND THE SEVEN PRODUCT ICONS, which are Make all. Wiring this panel took one-click-for-everything
+// away: before it, a pipe on molten glass worked the whole stack, and after it the nearest thing
+// was Make X and a number big enough. The icons were plain models doing nothing, so they carry it
+// now - ^glass_make_all is a count no inventory can reach, and ~crafting_glass stops when the
+// glass runs out either way.
+[if_button,glass_crafting:com_3] @crafting_glass(vial_empty, ^glass_make_all);
+[if_button,glass_crafting:com_4] @crafting_glass(stafforb, ^glass_make_all);
+[if_button,glass_crafting:com_5] @crafting_glass(beer_glass, ^glass_make_all);
+[if_button,glass_crafting:com_6] @crafting_glass(candle_lantern_empty, ^glass_make_all);
+[if_button,glass_crafting:com_7] @crafting_glass(oil_lamp_empty, ^glass_make_all);
+[if_button,glass_crafting:com_8] @crafting_glass(bullseye_lantern_lens, ^glass_make_all);
+[if_button,glass_crafting:com_9] @crafting_glass(fishbowl_empty, ^glass_make_all);
 
 [if_button,glass_crafting:com_10] @crafting_glass(vial_empty, ^glass_make_x);
 [if_button,glass_crafting:com_11] @crafting_glass(vial_empty, 10);

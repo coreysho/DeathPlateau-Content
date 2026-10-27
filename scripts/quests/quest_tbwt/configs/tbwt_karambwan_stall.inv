@@ -1,0 +1,23 @@
+// TIADECHE'S KARAMBWAN STALL, the last of this quest's dead clicks.
+//
+// Tiadeche carries op3=Trade once the Trio is over - the cache has had it all along - and nothing
+// answered it: no category, no owned_shop, no stock. "Tiadeche's Karambwan Stall is a store in Tai
+// Bwo Wannai owned by Tiadeche. It sells raw karambwan and karambwan vessels, and can only be
+// accessed after completion of Tai Bwo Wannai Trio, in which Tiadeche is shown how to fish."
+// (https://oldschool.runescape.wiki/w/Tiadeche%27s_Karambwan_Stall)
+//
+// The stock and the restock rates are the live shop's own. Raw karambwan restocks fast, which is
+// the whole reason the stall is worth walking to - the wiki's own page is mostly about people
+// emptying it.
+//
+// THE KARAMBWANJI ROW IS DELIBERATELY ABSENT. The live shop carries 50 of them now, and it did not
+// until the Fireworks and karambwan! update of 10 August 2017; this build is 2006. The two things
+// it sold on the day it opened are what it sells here.
+[tbwt_karambwan_stall]
+scope=shared
+size=8
+restock=yes
+stackall=yes
+allstock=no
+stock1=tbwt_raw_karambwan,10,10
+stock2=tbwt_karambwan_vessel,2,100

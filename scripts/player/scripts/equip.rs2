@@ -10,8 +10,21 @@ if (p_finduid(uid) = true) {
 [proc,equip](int $slot)
 if (p_finduid(uid) = true) {
     def_obj $obj = inv_getobj(inv, $slot);
+    // NOTHING TO WEAR IT IN. This used to print "[DEBUG]: No wearpos set on <debugname>" - a
+    // developer string, with the internal name in it, shown to whoever clicked.
+    //
+    // Reaching it at all takes an obj whose cache record says Wear or Wield and gives no wearpos.
+    // There are forty-one of those with names and none of them is a thing a player can hold: the
+    // cache's joke objs (Brass monkey, Sine wave, Nezikchened's mum), a few quest items that have
+    // their own opheld handler and never get here, and the broad arrows' count1-count4 stack-icon
+    // variants, which are drawn rather than carried - the base obj is what sits in the slot, and
+    // it has wearpos=quiver. Several hundred more are unnamed cache debris.
+    //
+    // So this is a message nobody should ever see, which is the argument for it being a sentence
+    // rather than a debug line: the day something does reach it, a player gets an answer and not
+    // a bug report.
     if (oc_wearpos($obj) = null) {
-        mes("[DEBUG]: No wearpos set on <oc_debugname($obj)>");
+        mes("You can't wear that.");
         return;
     }
     if (~duel_arena_equip_check($obj) = false) {

@@ -29059,6 +29059,8 @@ head1=npc_macro_geni_head
 head2=obj_headband_red_manhead
 
 [tbwt_tiadeche_final]
+// op3=Trade is this record's, and the shop behind it is wired onto the SHELL that renders it -
+// tbwt_tiadeche_multinpc_house, below. See the note there for why it cannot go here.
 name=Tiadeche
 desc=A rather depressed looking fisherman.
 model1=npc_tribesman
@@ -55278,6 +55280,27 @@ multinpc=4,tbwt_tiadeche
 multinpc=5,tbwt_tiadeche
 
 [tbwt_tiadeche_multinpc_house]
+// HIS KARAMBWAN STALL. op3=Trade comes from tbwt_tiadeche_final, which this shell renders once the
+// Trio is over, and nothing answered it: no category, no owned_shop, no stock. The option showed on
+// a finished quest and did nothing.
+//
+// IT HAS TO BE WIRED HERE AND NOT ON THE FINAL RECORD. OpNpcHandler resolves the multinpc to decide
+// whether the op EXISTS, but the script lookup is Player.getOpTrigger, which reads
+// NpcType.get(target.type) - the npc standing in the world, which is this shell - and takes its
+// category. npc_param inside ~openshop_activenpc reads the active npc the same way. A category on
+// the final record is never consulted.
+//
+// Harmless before stage 6: the multinpc is unmapped then, so this shell is its own type, it has no
+// ops at all, and OpNpcHandler throws the click away before any trigger runs.
+//
+// The multipliers are the live stall's (sell 550, buy 450, delta 10); the stock is
+// quests/quest_tbwt/configs/tbwt_karambwan_stall.inv.
+category=shop_keeper
+param=owned_shop,tbwt_karambwan_stall
+param=shop_sell_multiplier,550
+param=shop_buy_multiplier,450
+param=shop_delta,10
+param=shop_title,Tiadeche's Karambwan Stall
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 vislevel=1
