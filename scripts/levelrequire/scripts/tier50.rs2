@@ -7,6 +7,10 @@ if (stat_base(attack) < 50 | stat_base(strength) < 50) {
 }
 ~equip(last_slot);
 
+// The gargoyles' two granite weapons, both 50/50 like the maul they drop beside.
+[opheld2,granite_hammer] @levelrequire_attack_and_strength(50, 50, last_slot);
+[opheld2,granite_longsword] @levelrequire_attack_and_strength(50, 50, last_slot);
+
 [opheld2,slayer_leafbladed_spear]
 // intentional typo
 if (stat_base(slayer) < 55 | stat_base(attack) < 50) {

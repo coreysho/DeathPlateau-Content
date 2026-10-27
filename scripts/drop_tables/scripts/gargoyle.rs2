@@ -13,6 +13,26 @@ if (random(512) = 0) {
     obj_add(npc_coord, mystic_robe_top_dark, 1, ^lootdrop_duration);
     return;
 }
+// THE TWO GRANITE WEAPONS, AND WHERE OLD SCHOOL REALLY PUTS THEM. Neither is a gargoyle drop
+// there: the hammer belongs to the Grotesque Guardians at 2 x 1/750, and the longsword to the
+// four Wyvern Cave wyverns at 1/512. Neither source exists in a 377 cache - there are no
+// Guardians, and the cave's wyverns are 2017 npcs - so the owner's call is that they come from
+// the gargoyles, with the maul and the two granite armour pieces that are already here.
+//
+// THE RATES ARE OLD SCHOOL'S OWN, each taken from the monster that really drops it: 1/750 for
+// the hammer and 1/512 for the longsword. A superior marble gargoyle rolls this whole proc three
+// times (skill_slayer/scripts/superiors.rs2), so it is three chances at both - which is as close
+// as this build gets to the Guardians being the better source.
+if (random(750) = 0) {
+    obj_add(npc_coord, granite_hammer, 1, ^lootdrop_duration);
+    ~collection_log_add(granite_hammer, 1); // not broadcast, so the collection log is told here
+    return;
+}
+if (random(512) = 0) {
+    obj_add(npc_coord, granite_longsword, 1, ^lootdrop_duration);
+    ~collection_log_add(granite_longsword, 1);
+    return;
+}
 // THE TWO GRANITE PIECES NOTHING GAVE OUT. granite_body and granite_helm were in the pack and in
 // the costume room's store list and gated for wearing in tier50.rs2, and no shop, drop or recipe
 // produced either - while granite_legs, granite_maul and granite_shield are all dropped. The

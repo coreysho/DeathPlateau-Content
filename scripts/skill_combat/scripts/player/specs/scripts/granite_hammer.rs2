@@ -1,0 +1,69 @@
+// THE GRANITE HAMMER's special attack, Old School's "Hammer Blow"
+// (oldschool.runescape.wiki/w/Granite_hammer): 60% energy, one crush at +50% accuracy, and FIVE
+// DAMAGE THAT LANDS WHETHER THE ROLL CONNECTED OR NOT.
+//
+// THE FIVE ON A MISS IS THE WHOLE SPECIAL and it is the thing most likely to be got wrong,
+// because every other spec in this build adds its damage inside the roll. Hammer Blow has a
+// floor: a missed Hammer Blow still takes five hitpoints off. That is why the bonus is applied
+// outside the if, and why granitehammer.ts forces the roll to fail and then asserts the target
+// still lost five.
+//
+// THE ONE EXCEPTION is a monster that cannot be harmed by an ordinary attack at all. Old School
+// excludes those from the minimum; this build's stand-in is ~pvm_spec_roll's kurask/turoth check,
+// which zeroes the damage of anything swung at them without a leaf-bladed weapon, and the same
+// test is made here. Without it, Hammer Blow would be the one weapon in the game that kills a
+// kurask bare-handed, five at a time.
+//
+// THE EXPERIENCE FOR THOSE FIVE HAS TO BE GIVEN HERE. ~pvm_spec_roll pays out before it returns,
+// on the damage IT rolled, so anything added afterwards is free damage with no experience
+// attached - a hole nobody notices until somebody trains on it. The bonus is capped against what
+// the monster has left, for the same reason the roll is: experience is paid on damage DEALT.
+//
+// NOT BUILT: the 30% Golembane bonus. Old School's hammer hits golems 30% harder and 30% more
+// accurately, and this build has no golem category to test - the handful of golem-shaped monsters
+// here are each their own npc with nothing in common to match on. Inventing a list would be
+// inventing the mechanic.
+//
+// THE ANIMATION IS THE WEAPON'S OWN. Old School gives Hammer Blow a sequence of its own and 377
+// has nothing like it. The granite maul's special anim was the obvious substitute and is wrong:
+// it is a two-handed overhead swing and the hammer is one-handed, so the player would be swinging
+// a weapon that is not in both hands. The ordinary crush swing with the maul's impact graphic over
+// it reads as a harder version of the same hit, which is what the special is.
+
+[label,pvm_granite_hammer_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+$hit, $damage, $damage_capped = ~pvm_spec_roll(150, 100, ^crush_style);
+if (npc_param(slayer_category) ! ^slayer_kurask & npc_param(slayer_category) ! ^slayer_turoth) {
+    def_int $bonus = min(^granite_hammer_sa_damage, max(sub(npc_stat(hitpoints), $damage_capped), 0));
+    $damage = add($damage, ^granite_hammer_sa_damage);
+    if ($bonus > 0) {
+        ~give_combat_experience(%damagestyle, $bonus, %npc_combat_xp_multiplier);
+        npc_heropoints($bonus);
+    }
+}
+anim(oc_param(inv_getobj(worn, ^wearpos_rhand), crushattack_anim), 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
+~pvm_spec_land($damage, 0);
+
+// ~pvp_spec_roll caps its own damage at the target's hitpoints, so the five is capped the same way
+// here: a player cannot be hit for more than they have left. The floor applies in PvP too - there
+// is no immunity to stand in the way of it.
+[label,pvp_granite_hammer_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+~set_pk_vars;
+def_boolean $hit = false;
+def_int $damage = 0;
+$hit, $damage = ~pvp_spec_roll(150, 100, ^crush_style);
+def_int $bonus = min(^granite_hammer_sa_damage, max(sub(.stat(hitpoints), $damage), 0));
+if ($bonus > 0) {
+    $damage = add($damage, $bonus);
+    ~give_combat_experience_pvp(%damagestyle, $bonus, ~pvp_xp_multiplier(~.player_combat_level));
+    both_heropoints($bonus);
+}
+anim(oc_param(inv_getobj(worn, ^wearpos_rhand), crushattack_anim), 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));
