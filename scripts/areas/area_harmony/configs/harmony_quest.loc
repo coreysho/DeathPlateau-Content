@@ -1,0 +1,199 @@
+// Imported from the rev 474 cache by scratchpad/import474locs.py (import474map.import_loc).
+// The states no map square places: the quest swaps them in. The statue has three (plain, loose
+// after Brother Tranquility names it, moved aside once pulled), the ship's locker two, the tunnel's
+// east stairs a repaired one, and the crate at Fenkenstrain's castle four.
+
+[harmony_statue]
+// rev 474 loc 22352 (import474map.py)
+name=Statue
+model=harmony_statue
+model2=harmony_statue_2
+length=2
+active=yes
+mapscene=7
+ambient=20
+contrast=20
+
+[harmony_statue_moved]
+// rev 474 loc 22354 (import474map.py)
+name=Statue
+model=harmony_statue_moved
+model2=harmony_statue_moved_2
+length=2
+active=yes
+mapscene=7
+ambient=20
+contrast=20
+op1=Climb-down
+
+[harmony_ship_locker_open]
+// rev 474 loc 22299 (import474map.py)
+name=Locker
+model=harmony_ship_locker_open
+recol1s=19910
+recol1d=6340
+recol2s=7329
+recol2d=7397
+forceapproach=south
+op1=Search
+op2=Close
+
+[harmony_tunnel_up_east_fixed]
+// rev 474 loc 22369 (import474map.py)
+name=Stairs
+model=harmony_tunnel_up_east_fixed
+length=2
+active=yes
+sharelight=yes
+mapscene=7
+ambient=20
+contrast=20
+op2=Climb
+
+[tgbr_crate_space]
+// rev 474 loc 22457 (import474map.py)
+name=Crate
+// 474 puts this in its build-hotspot category; it is taken off here, because nothing at
+// Dr Fenkenstrain's castle is a player-owned house and the Construction hotspot scripts
+// answer that category.
+model=tgbr_crate_space
+ambient=10
+op1=Build
+
+[tgbr_crate_built]
+// rev 474 loc 22453 (import474map.py)
+name=Crate
+model=tgbr_crate_built
+ambient=30
+op1=Add-bottom
+
+[tgbr_crate_bottomed]
+// rev 474 loc 22454 (import474map.py)
+name=Crate
+model=tgbr_crate_bottomed
+ambient=30
+op1=Fill
+
+[tgbr_crate_filled]
+// rev 474 loc 22455 (import474map.py)
+name=Crate
+model=tgbr_crate_filled
+model2=tgbr_crate_filled_2
+ambient=30
+
+[harmony_stile]
+// rev 474 loc 22302 (import474map.py)
+name=Stile
+model=harmony_stile
+recol1s=10501
+recol1d=13603
+recol2s=8387
+recol2d=12546
+recol3s=12615
+recol3d=15717
+length=2
+blockrange=no
+hillskew=yes
+mapscene=70
+ambient=30
+contrast=30
+raiseobject=no
+op1=Climb-over
+
+// The blast's own states: the gate's two collapsed walls and the doorway left standing in
+// the gap, the rubble that fills the peephole, and the fuse - laid, then burning.
+
+[tgbr_gate_wall_s_down]
+// rev 474 loc 22109 (import474map.py)
+name=Collapsed wall
+model=tgbr_gate_wall_s_down
+active=yes
+sharelight=yes
+ambient=30
+contrast=30
+
+[tgbr_gate_wall_n_down]
+// rev 474 loc 22110 (import474map.py)
+name=Collapsed wall
+model=tgbr_gate_wall_n_down
+active=yes
+sharelight=yes
+ambient=30
+contrast=30
+
+// The one state of the gate you can walk through. Everything else about the gateway blocks: the
+// intact door, both walls and both of their ruins, which is what keeps the courtyard sealed until
+// the keg goes off.
+[tgbr_gate_door_blown]
+// rev 474 loc 22118 (import474map.py)
+name=Door
+model=tgbr_gate_door_blown
+blockwalk=no
+blockrange=no
+active=yes
+sharelight=yes
+ambient=30
+contrast=30
+op1=Open
+
+[tgbr_peephole_rubble]
+// rev 474 loc 22098 (import474map.py)
+name=Rubble
+model=tgbr_peephole_rubble
+active=yes
+sharelight=yes
+ambient=30
+contrast=30
+
+[tgbr_fuse_laid]
+// rev 474 loc 22483 (import474map.py)
+name=Fuse
+model=tgbr_fuse_laid
+blockwalk=no
+blockrange=no
+ambient=30
+contrast=30
+
+[tgbr_fuse_lit]
+// rev 474 loc 22484 (import474map.py)
+name=Fuse
+model=tgbr_fuse_lit
+blockwalk=no
+blockrange=no
+ambient=30
+contrast=30
+
+// ------------------------------------------------------------------ the open halves
+// The three doors on the island, opened. A door in this build is two loc records - ~open_door
+// deletes the closed one and adds its next_loc_stage a tile over, turned a quarter - and the open
+// half is never placed on a map square, so a map import cannot see it. Written by hand on the same
+// models, as Lunar Isle's and Keldagrim's are.
+[harmony_monastery_door_open]
+name=Door
+model=harmony_monastery_door
+active=yes
+ambient=30
+contrast=30
+op1=Close
+category=door_opened
+param=next_loc_stage,harmony_monastery_door
+
+[harmony_mill_door_l_open]
+name=Large door
+model=harmony_mill_door_l
+ambient=25
+contrast=25
+raiseobject=no
+op1=Close
+category=door_opened
+param=next_loc_stage,harmony_mill_door_l
+
+[harmony_mill_door_r_open]
+name=Large door
+model=harmony_mill_door_r
+ambient=25
+contrast=25
+raiseobject=no
+op1=Close
+category=door_opened
+param=next_loc_stage,harmony_mill_door_r

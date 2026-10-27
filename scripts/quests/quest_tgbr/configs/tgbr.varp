@@ -1,0 +1,40 @@
+// The Great Brain Robbery. quest_tgbr.constant has the values and says where they come from.
+
+// The stage, 0 to 130 in tens, as 474's varp 980 runs it. Transmitted, because four npcs on the
+// island are multis on it: Dr Fenkenstrain only exists in the cellar from 70, Mi-Gor only stands in
+// the monastery corridor at 90 and 100, and the clockwork cat and Barrelchest are never on the map
+// at all.
+[tgbr]
+scope=perm
+transmit=yes
+
+// The smaller state, as varbits (tgbr.varbit): the statue, the broken stairs, the gate, the fuse,
+// the peephole, the crate, and whether the monks have their own brains back. Every one of those
+// drives a multiloc or a multi npc, so this is transmitted too.
+[tgbr_bits]
+scope=perm
+transmit=yes
+
+// The surgery kit, handed over one piece at a time: a bit each for the clamp, the tongs, the jars
+// and the staples, so the doctor can say what is still missing. Not a multi on anything, so this
+// one is not transmitted.
+[tgbr_kit]
+scope=perm
+
+// map_clock when the last recital of the prayer book runs out. Nothing but the gas reads it, and a
+// logout is as good a reason as any to have to pray again, so it is temp.
+[tgbr_prayer_until]
+scope=temp
+
+// Set while the Barrelchest fight is on, so Mi-Gor cannot be confronted twice and the boss cannot
+// be left behind alive.
+[tgbr_fight]
+scope=temp
+type=boolean
+
+// Set while the blessed lamp is the item in the experience-lamp interface, so
+// general/scripts/xplamp/xplamp.rs2 can tell Old School's flat 5,000 from the genie lamp's
+// level-scaled award. temp: that interface is modal and the choice does not outlive it.
+[xplamp_blessed]
+scope=temp
+type=boolean

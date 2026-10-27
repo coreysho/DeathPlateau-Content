@@ -1,0 +1,291 @@
+// The Great Brain Robbery: getting Dr Fenkenstrain to Harmony Island.
+//
+// He will not teleport and he will not sail, so he is posted. That means Rufus the Canifis butcher
+// (who will only talk to somebody wearing the Ring of Charos), a crate built in the cell at the top
+// of Fenkenstrain's own castle, a false bottom in it, ten wooden cats on top of the false bottom so
+// that the crate rattles like a crate of cat toys, a wolf whistle to fetch Rufus for the inspection,
+// and a shipping order to put on the lid.
+//
+// THE CRATE IS A MULTILOC on tgbr_crate, 474's varbit 3390, standing at 3548,3555 on the top floor
+// of the castle - a tile the map had nothing on. Its four states carry Build, Add-bottom, Fill and
+// nothing, so one [oploc1] answers all four by looking at the varbit.
+//
+// WHERE THE CATS ARE MADE. The wiki's two pages disagree: the quest's quick guide says a
+// clockmaker's bench and the Wooden cat item page says a crafting table, 16 Crafting, one plank and
+// one fur, 15 experience. The item page wins, for a reason the guide cannot see: a clockmaker's
+// bench needs 42 Construction and this quest only asks for 30, so a player who exactly meets the
+// requirements could not build one. This build calls the Workshop's crafting table a Workbench
+// (skill_construction/configs/poh.loc, loc_13704 to loc_13708), and that is where they are carved.
+
+// =========================================================================== Dr Fenkenstrain
+// Hooked into quest_fenkenstrain's own trigger for the shell in the tower, which otherwise has
+// nothing to say through a bolted door.
+[proc,tgbr_doctor_tower]()(boolean)
+switch_int (%tgbr) {
+    case ^tgbr_prayed : return(~tgbr_doctor_hire);
+    case ^tgbr_doctor :
+        ~chatnpc("<p,angry>I told you. I am not stepping onto a boat and I am not being thrown about by a wizard.");
+        ~chatplayer("<p,quiz>Then how?");
+        ~chatnpc("<p,neutral>I have no idea. You are the one with the legs. Ask somebody who moves things for a living.");
+        return(true);
+    case ^tgbr_shipped, ^tgbr_kit_listed, ^tgbr_blown, ^tgbr_transplants, ^tgbr_confronted, ^tgbr_anchor, ^tgbr_complete :
+        return(false);
+    case default :
+        return(false);
+}
+return(true);
+
+[proc,tgbr_doctor_hire]()(boolean)
+~chatplayer("<p,quiz>Doctor. How are you with brains?");
+~chatnpc("<p,happy>...go on.");
+~chatplayer("<p,neutral>There is an island with a monastery on it. Every monk in it has had its brain taken out and something else put in.");
+~chatnpc("<p,shock>Taken OUT? Replaced? By whom?");
+~chatplayer("<p,neutral>A surgeon called Mi-Gor.");
+~chatnpc("<p,angry>Mi-Gor. That hack. That butcher. He could not sew a button on straight.");
+~chatnpc("<p,happy>Yes. Yes, I will come. I will put every one of them back and I will do it better than he took them out.");
+switch_int (~p_choice2("I can have you teleported there.", 1, "There is a ship from Port Phasmatys.", 2)) {
+    case 1 : ~chatplayer("<p,neutral>I can have you teleported there.");
+    case 2 : ~chatplayer("<p,neutral>There is a ship from Port Phasmatys.");
+}
+~chatnpc("<p,angry>Absolutely not. I was teleported once in 1 Rintra and I have never been entirely sure which bits came back.");
+~chatnpc("<p,neutral>And I do not sail. Find another way. I will be here; I am always here.");
+%tgbr = ^tgbr_doctor;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+return(true);
+
+// =========================================================================== Rufus
+// Hooked into areas/area_canafis/scripts/rufus.rs2. The Ring of Charos is what makes a werewolf
+// treat the player as one of their own, which is the whole reason this step wants it.
+[proc,tgbr_rufus_talk]()(boolean)
+if (%tgbr ! ^tgbr_doctor) {
+    return(false);
+}
+if (inv_total(worn, ring_of_charos) < 1) {
+    return(false);
+}
+if (%tgbr_crate ! ^tgbr_crate_none) {
+    ~chatnpc("<p,neutral>Build the crrrate, put the cats in it, and blow the whistle. I will come and look at it.");
+    return(true);
+}
+~chatplayer("<p,quiz>Do you ever send meat off the island?");
+~chatnpc("<p,happy>All the time, frrriend! Crrrates of it, all over Morrrytania.");
+~chatplayer("<p,neutral>Could you send something bigger than meat?");
+~chatnpc("<p,confused>How much bigger?");
+~chatplayer("<p,neutral>A man.");
+~chatnpc("<p,angry>I do not send men. Men complain, and men are noticed.");
+switch_int (~p_choice2("What do you send?", 1, "Never mind.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>Never mind.");
+        return(true);
+    case 1 :
+        ~chatplayer("<p,quiz>What do you send?");
+}
+~chatnpc("<p,happy>Toys! Wooden toys, carrrved cats mostly, by the crrrate. Nobody opens a crrrate of cat toys.");
+~chatnpc("<p,neutral>Build yourrrself a crrrate with a false bottom. Fill the top with cats. Then blow this, and I will come and inspect it, and if it rrrattles rrright I will give you a shipping orrrder.");
+~tgbr_handover(tgbr_crate_part, "Rufus gives you the parts of a crate.");
+~tgbr_handover(tgbr_wolf_whistle, "Rufus gives you a small silver whistle.");
+%tgbr_crate = ^tgbr_crate_space;
+return(true);
+
+// A handout that cannot be lost and cannot be doubled: this one is given at the butcher's counter
+// with a pack that may well be full of planks already.
+[proc,tgbr_handover](namedobj $obj, string $mes)
+if (~obj_gettotal($obj) > 0) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You do not have room for that.");
+    return;
+}
+inv_add(inv, $obj, 1);
+~objbox($obj, $mes, 250, 0, 0);
+
+// =========================================================================== the wooden cats
+// Offered at the Workbench alongside the flatpacks, while the quest wants cats. The Workbench's
+// Work-at is skill_construction/scripts/poh_flatpacks.rs2 and the choice is added there.
+[proc,tgbr_wants_cats]()(boolean)
+if (%tgbr ! ^tgbr_doctor) {
+    return(false);
+}
+if (%tgbr_crate = ^tgbr_crate_none) {
+    return(false);
+}
+return(true);
+
+[proc,tgbr_carve_cats]
+if (stat(crafting) < ^tgbr_req_crafting) {
+    mes("You need level <tostring(^tgbr_req_crafting)> Crafting to carve anything this fiddly.");
+    return;
+}
+while (inv_total(inv, plank) > 0 & inv_total(inv, fur) > 0) {
+    if (inv_freespace(inv) < 1 & inv_total(inv, wooden_cat) < 1) {
+        mes("You have no room for another cat.");
+        return;
+    }
+    anim(human_poh_build, 0);
+    sound_synth(saw_hit, 1, 0);
+    p_delay(3);
+    inv_del(inv, plank, 1);
+    inv_del(inv, fur, 1);
+    inv_add(inv, wooden_cat, 1);
+    stat_advance(crafting, 150);
+    mes("You carve a plank and a piece of fur into something that is nearly a cat.");
+    if (inv_total(inv, wooden_cat) >= ^tgbr_cats_wanted) {
+        mes("That should be enough cats.");
+        return;
+    }
+}
+if (inv_total(inv, plank) < 1) {
+    mes("You need a plank for each cat.");
+    return;
+}
+mes("You need a piece of fur for each cat.");
+
+// =========================================================================== the crate
+[oploc1,tgbr_multi_crate]
+switch_int (%tgbr_crate) {
+    case ^tgbr_crate_space : @tgbr_crate_build;
+    case ^tgbr_crate_built : @tgbr_crate_bottom;
+    case ^tgbr_crate_bottomed : @tgbr_crate_fill;
+    case default : return;
+}
+
+[label,tgbr_crate_build]
+if (~tgbr_crate_tools = false) {
+    return;
+}
+if (inv_total(inv, tgbr_crate_part) < 1) {
+    mes("You need the crate parts Rufus gave you.");
+    return;
+}
+p_arrivedelay;
+~tgbr_crate_hammer;
+inv_del(inv, tgbr_crate_part, 1);
+inv_del(inv, nails, ^tgbr_crate_nails);
+%tgbr_crate = ^tgbr_crate_built;
+stat_advance(construction, 3000);
+~mesbox("You nail the crate together. It is a perfectly ordinary crate, which is the point.");
+
+[label,tgbr_crate_bottom]
+if (~tgbr_crate_tools = false) {
+    return;
+}
+if (inv_total(inv, plank) < ^tgbr_crate_planks) {
+    mes("You need <tostring(^tgbr_crate_planks)> planks for the false bottom.");
+    return;
+}
+p_arrivedelay;
+~tgbr_crate_hammer;
+inv_del(inv, plank, ^tgbr_crate_planks);
+inv_del(inv, nails, ^tgbr_crate_nails);
+%tgbr_crate = ^tgbr_crate_bottomed;
+stat_advance(construction, 5000);
+~mesbox("You fit a second floor halfway up the crate. There is just enough room under it for a doctor who does not mind the dark.");
+
+[label,tgbr_crate_fill]
+if (inv_total(inv, wooden_cat) < ^tgbr_cats_wanted) {
+    mes("You need <tostring(^tgbr_cats_wanted)> wooden cats to fill the top.");
+    return;
+}
+p_arrivedelay;
+inv_del(inv, wooden_cat, ^tgbr_cats_wanted);
+%tgbr_crate = ^tgbr_crate_filled;
+~mesbox("You pack ten wooden cats into the top of the crate. It now sounds exactly like a crate of wooden cats.");
+~mesbox("Blow the whistle, and Rufus will come and say so.");
+
+[proc,tgbr_crate_tools]()(boolean)
+if (inv_total(inv, hammer) < 1) {
+    mes("You need a hammer.");
+    return(false);
+}
+if (inv_total(inv, nails) < ^tgbr_crate_nails) {
+    mes("You need at least <tostring(^tgbr_crate_nails)> nails.");
+    return(false);
+}
+return(true);
+
+[proc,tgbr_crate_hammer]
+anim(human_poh_build, 0);
+sound_synth(saw_hit, 1, 0);
+p_delay(4);
+anim(human_poh_build, 0);
+p_delay(4);
+
+// =========================================================================== the whistle
+[opheld1,tgbr_wolf_whistle]
+if (%tgbr_crate ! ^tgbr_crate_filled) {
+    if (%tgbr_crate = ^tgbr_crate_none) {
+        mes("You blow the whistle. Nothing answers it.");
+        return;
+    }
+    mes("You blow the whistle. Rufus will not come out for a crate that is not finished.");
+    return;
+}
+// The whistle cannot be blown through a fishbowl helmet, which is Old School's own joke and worth
+// keeping: a player who has just come off the island is wearing one.
+if (inv_total(worn, hundred_pirate_diving_helmet) > 0) {
+    mes("You cannot get your lips to the whistle through the fishbowl helmet.");
+    return;
+}
+if (~tgbr_near_crate = false) {
+    mes("You blow the whistle. There is nothing here worth Rufus's walk.");
+    return;
+}
+if (~obj_gettotal(tgbr_shipping_order) > 0) {
+    mes("You have the shipping order already.");
+    return;
+}
+if_close;
+sound_synth(whistle, 1, 0);
+mes("You blow the whistle. It makes no sound you can hear.");
+p_delay(4);
+def_coord $spot = map_findsquare(coord, 1, 5, ^map_findsquare_lineofwalk);
+if ($spot = coord) {
+    // The cell is small and the crate stands on one of its tiles, so a findsquare that wants a line
+    // of walk can come back with nothing at all. A fixed tile beside the crate rather than no Rufus:
+    // a summon that silently does not happen is the worst of the three outcomes.
+    $spot = ^tgbr_rufus_arrive;
+}
+// The whistled Rufus carries no ops at all - 474's npc 5612 has none, and neither does Old
+// School's - so he is not clicked. He turns up, inspects the crate and hands the order over on his
+// own, which is what the wiki describes him doing.
+npc_add($spot, tgbr_rufus_whistled, ^tgbr_rufus_lifetime);
+npc_say("Somebody whistled?");
+p_delay(3);
+~chatnpc("<p,happy>Let me see it, then.");
+~chatplayer("<p,neutral>It is just a crate of cat toys.");
+mes("Rufus walks round the crate twice, raps it, and listens.");
+p_delay(3);
+~chatnpc("<p,happy>Cats. Definitely cats. I can hearrr theirrr little wooden heads knocking togetherrr.");
+~chatnpc("<p,neutral>Herrre. Put this on the lid and it will be at the dock by morrrning.");
+~tgbr_handover(tgbr_shipping_order, "Rufus gives you a shipping order.");
+
+[proc,tgbr_near_crate]()(boolean)
+if (inzone(movecoord(^tgbr_crate_spot, -3, 0, -3), movecoord(^tgbr_crate_spot, 3, 0, 3), coord) = true) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the post
+[oplocu,tgbr_multi_crate]
+if (last_useitem ! tgbr_shipping_order) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (%tgbr_crate ! ^tgbr_crate_filled) {
+    mes("The crate is not ready to go anywhere.");
+    return;
+}
+if_close;
+p_arrivedelay;
+inv_del(inv, tgbr_shipping_order, 1);
+mes("You stick the shipping order to the lid.");
+p_delay(2);
+~mesbox("Dr Fenkenstrain climbs into the bottom half of the crate without being asked twice, and pulls the false floor down over himself.");
+p_delay(2);
+%tgbr_crate = ^tgbr_crate_none;
+%tgbr = ^tgbr_shipped;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+sound_synth(door_open, 1, 0);
+~mesbox("The crate is gone. There is a faint muffled complaining about the dark, going away down the stairs.");
+~mesbox("He will be in the windmill cellar on Harmony Island.");

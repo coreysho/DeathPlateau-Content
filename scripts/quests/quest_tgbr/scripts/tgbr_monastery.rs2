@@ -1,0 +1,327 @@
+// The Great Brain Robbery: the surgery kit, and getting into the monastery to find it.
+//
+// Dr Fenkenstrain, now in the windmill cellar, asks for brain tongs, a cranial clamp, three bell
+// jars, thirty skull staples and a hammer. All but the hammer are inside the monastery, carried by
+// Sorebones, and the monastery's gate is shut - so first a keg of gunpowder off the beached ship at
+// the north end of the island, a fuse out of its locker, and a tinderbox.
+//
+// THE FOUR PIECES ARE NOT RANDOM. Old School drops all four off any Sorebones and the wiki's own
+// advice is to pick each one up before killing the next, or you get duplicates. Here the monastery
+// keeps count instead (tgbr_drop_clamp and its three neighbours): a Sorebones drops a piece the
+// player has not had yet, and when all four are out they drop their ordinary table. Four kills, four
+// pieces, no shuffling.
+
+// =========================================================================== the doctor, below
+[opnpc1,tgbr_doctor_shell]
+switch_int (%tgbr) {
+    case ^tgbr_shipped : @tgbr_doctor_list;
+    case ^tgbr_kit_listed, ^tgbr_blown : @tgbr_doctor_handover;
+    case ^tgbr_transplants :
+        ~chatnpc("<p,happy>Done. Every one of them. Mi-Gor's stitching was a disgrace and I have told them so.");
+    case default :
+        ~chatnpc("<p,neutral>I am busy. Go and be busy somewhere else.");
+}
+
+[label,tgbr_doctor_list]
+~chatnpc("<p,angry>A cellar. He has put me in a cellar. There is a windmill directly above my head and it will not stop.");
+~chatplayer("<p,quiz>Can you do it?");
+~chatnpc("<p,happy>Of course I can do it. I need instruments, and I do not travel with instruments in a crate full of cats.");
+~chatnpc("<p,neutral>Brain tongs. A cranial clamp. Three bell jars - three, not two, somebody always sneezes. Thirty skull staples. And a hammer, your own.");
+~chatplayer("<p,quiz>Where would I find brain tongs on an island?");
+~chatnpc("<p,neutral>In the monastery, where that hack left them. Along with whatever is still walking about in there.");
+%tgbr = ^tgbr_kit_listed;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+
+[label,tgbr_doctor_handover]
+if (~tgbr_kit_complete = false) {
+    ~chatnpc("<p,angry>I still need <~tgbr_kit_missing>.");
+    return;
+}
+~chatnpc("<p,happy>All of it. Good. Now go away and let me work - this is not something anybody should watch.");
+if_close;
+inv_del(inv, tgbr_brain_tongs, 1);
+inv_del(inv, tgbr_cranial_clamp, 1);
+inv_del(inv, tgbr_bell_jar, ^tgbr_bell_jars);
+inv_del(inv, tgbr_skull_staple, ^tgbr_staples);
+p_delay(2);
+~tgbr_surgery;
+
+// The cat and the ball. Old School plays a cutscene here instead of the surgery, and what the
+// cutscene shows is a clockwork cat chasing a ball of wool round the cellar while the operating is
+// happening off camera. This build has no cutscene machinery, so the cat is real, it is added for a
+// few seconds, and the boxes carry the rest.
+[proc,tgbr_surgery]
+~mesbox("Dr Fenkenstrain lays the instruments out in a row, looks at them, and puts the third bell jar back one place to the left.");
+def_coord $spot = map_findsquare(coord, 1, 2, ^map_findsquare_lineofwalk);
+if ($spot ! coord) {
+    npc_add($spot, tgbr_clockwork_cat, ^tgbr_cat_lifetime);
+}
+~mesbox("'Hold that,' he says, and hands you a wooden cat. 'Wind it. I find it helps.'");
+p_delay(3);
+~mesbox("The cat walks the length of the cellar and falls over. You wind it again. This goes on for some time.");
+p_delay(3);
+~mesbox("When you look up, every jar is empty, every staple is gone, and the doctor is washing his hands in a bucket.");
+%tgbr = ^tgbr_transplants;
+%tgbr_restored = ^tgbr_on;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+~mesbox("Brother Tranquility will want to see this.");
+
+[proc,tgbr_kit_complete]()(boolean)
+if (inv_total(inv, tgbr_brain_tongs) < 1) return(false);
+if (inv_total(inv, tgbr_cranial_clamp) < 1) return(false);
+if (inv_total(inv, tgbr_bell_jar) < ^tgbr_bell_jars) return(false);
+if (inv_total(inv, tgbr_skull_staple) < ^tgbr_staples) return(false);
+return(true);
+
+[proc,tgbr_kit_missing]()(string)
+if (inv_total(inv, tgbr_brain_tongs) < 1) return("the brain tongs");
+if (inv_total(inv, tgbr_cranial_clamp) < 1) return("the cranial clamp");
+if (inv_total(inv, tgbr_bell_jar) < ^tgbr_bell_jars) return("three bell jars");
+return("thirty skull staples");
+
+// =========================================================================== the beached ship
+[oploc1,harmony_ship_locker]
+p_arrivedelay;
+loc_change(harmony_ship_locker_open, 100);
+sound_synth(door_open, 1, 0);
+
+[oploc2,harmony_ship_locker_open]
+p_arrivedelay;
+loc_change(harmony_ship_locker, 0);
+sound_synth(door_close, 1, 0);
+
+[oploc1,harmony_ship_locker_open]
+p_arrivedelay;
+if (%tgbr < ^tgbr_kit_listed) {
+    mes("Wet rope, a bent spoon, and somebody's boots.");
+    return;
+}
+if (~obj_gettotal(tgbr_fuse) > 0) {
+    mes("You already have the fuse.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("Your pack is full.");
+    return;
+}
+mes("You search the locker...");
+p_delay(2);
+inv_add(inv, tgbr_fuse, 1);
+~objbox(tgbr_fuse, "...and find a coil of fuse, still dry.", 250, 0, 0);
+
+// =========================================================================== through the gate
+// A MULTILOC CANNOT STOP BLOCKING. GameMap.loadLocations builds collision from the record that is on
+// the map - the parent - and OpLocHandler only resolves the child to decide whether the op is legal,
+// so the gate blocks its tile in every state. The way through is therefore a click: the blown
+// doorway steps the player across, and the whole courtyard is sealed until it is blown. 474's own
+// terrain has that tile flagged blocked anyway.
+[oploc1,tgbr_multi_gate_door]
+if (%tgbr_gate ! ^tgbr_gate_down) {
+    mes("The gate is barred from the inside, and the wall it is set in is two feet thick.");
+    return;
+}
+p_arrivedelay;
+if (coordx(coord) < coordx(^tgbr_gate_door)) {
+    ~harmony_climb(^tgbr_gate_inside, "You pick your way over the rubble.");
+    return;
+}
+~harmony_climb(^tgbr_gate_outside, "You pick your way back over the rubble.");
+
+// =========================================================================== the gate
+// The keg goes against the gate, then the fuse on the keg, then a tinderbox to the fuse. The fuse is
+// two tiles of multiloc running back west from the gate so that the player has somewhere to stand.
+[oplocu,tgbr_multi_gate_door]
+if (%tgbr_gate = ^tgbr_gate_down) {
+    mes("There is nothing left of that wall to blow up.");
+    return;
+}
+if (last_useitem = tgbr_keg) {
+    @tgbr_place_keg;
+}
+if (last_useitem = tgbr_fuse) {
+    @tgbr_place_fuse;
+}
+if (last_useitem = tinderbox) {
+    @tgbr_light_fuse;
+}
+~displaymessage(^dm_default);
+
+[label,tgbr_place_keg]
+if (%tgbr < ^tgbr_kit_listed) {
+    mes("There is no reason to blow the monastery open yet.");
+    return;
+}
+if (%tgbr_fuse ! ^tgbr_fuse_none) {
+    mes("The keg is already against the gate.");
+    return;
+}
+p_arrivedelay;
+inv_del(inv, tgbr_keg, 1);
+~mesbox("You set the keg of powder against the gate. Now it wants a fuse.");
+
+[label,tgbr_place_fuse]
+if (inv_total(inv, tgbr_keg) > 0) {
+    mes("Put the keg against the gate first.");
+    return;
+}
+if (%tgbr < ^tgbr_kit_listed | %tgbr_fuse ! ^tgbr_fuse_none) {
+    mes("There is nothing here to light.");
+    return;
+}
+p_arrivedelay;
+inv_del(inv, tgbr_fuse, 1);
+%tgbr_fuse = ^tgbr_fuse_laid;
+~mesbox("You run the fuse back along the path, well clear of the keg.");
+
+[label,tgbr_light_fuse]
+if (%tgbr_fuse ! ^tgbr_fuse_laid) {
+    mes("There is no fuse to light.");
+    return;
+}
+@tgbr_do_light;
+
+// The fuse itself can be lit, which is the sensible way round: the player is standing at the far
+// end of it rather than next to the powder.
+[oplocu,tgbr_multi_fuse_far]
+if (last_useitem ! tinderbox) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@tgbr_do_light;
+
+[oplocu,tgbr_multi_fuse_near]
+if (last_useitem ! tinderbox) {
+    ~displaymessage(^dm_default);
+    return;
+}
+@tgbr_do_light;
+
+[label,tgbr_do_light]
+if (%tgbr_fuse ! ^tgbr_fuse_laid) {
+    mes("There is no fuse to light.");
+    return;
+}
+p_arrivedelay;
+anim(human_createfire, 0);
+p_delay(2);
+%tgbr_fuse = ^tgbr_fuse_lit;
+sound_synth(fire_lit, 1, 0);
+mes("The fuse catches.");
+p_telejump(^tgbr_blast_stand);
+p_delay(4);
+~tgbr_blast;
+
+[proc,tgbr_blast]
+%tgbr_fuse = ^tgbr_fuse_none;
+%tgbr_gate = ^tgbr_gate_down;
+%tgbr_peephole = ^tgbr_on;
+spotanim_map(firebolt_impact, ^tgbr_gate_door, 0, 0);
+sound_synth(explosion, 1, 0);
+~mesbox("The gate comes off its wall and most of the wall comes with it. The hole you were looking through is under the rubble.");
+if (%tgbr = ^tgbr_kit_listed) {
+    %tgbr = ^tgbr_blown;
+    ~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+}
+
+// =========================================================================== the Sorebones
+[ai_queue3,tgbr_sorebones] @tgbr_sorebones_death;
+[ai_queue3,tgbr_sorebones_apron] @tgbr_sorebones_death;
+
+[label,tgbr_sorebones_death]
+gosub(npc_death);
+// npc_coord and the bones are read BEFORE npc_findhero, because that command moves the active
+// pointer off the npc.
+def_coord $where = npc_coord;
+def_namedobj $bones = npc_param(death_drop);
+if (npc_findhero = ^false) {
+    return;
+}
+// The quest's own varbits are protected, so the kit needs p_finduid as well as the hero.
+if (p_finduid(uid) = true & ~tgbr_sorebones_kit($where) = true) {
+    return;
+}
+obj_add($where, $bones, 1, ^lootdrop_duration);
+// The wiki's table, cut to what this build has: one roll out of 128.
+def_int $roll = random(128);
+if ($roll < 21) {
+    obj_add($where, coins, 38, ^lootdrop_duration);
+} else if ($roll < 31) {
+    obj_add($where, coins, 30, ^lootdrop_duration);
+} else if ($roll < 53) {
+    obj_add($where, fishing_bait, 10, ^lootdrop_duration);
+} else if ($roll < 56) {
+    obj_add($where, steel_bolts, calc(random(11) + 2), ^lootdrop_duration);
+} else if ($roll < 59) {
+    obj_add($where, mithril_scimitar, 1, ^lootdrop_duration);
+} else if ($roll < 61) {
+    obj_add($where, mithril_dagger, 1, ^lootdrop_duration);
+} else if ($roll < 64) {
+    obj_add($where, lawrune, 2, ^lootdrop_duration);
+} else if ($roll < 67) {
+    obj_add($where, cosmicrune, 5, ^lootdrop_duration);
+} else if ($roll < 69) {
+    obj_add($where, bodyrune, 6, ^lootdrop_duration);
+} else if ($roll < 70) {
+    obj_add($where, chaosrune, 7, ^lootdrop_duration);
+} else if ($roll < 71) {
+    obj_add($where, waterrune, 23, ^lootdrop_duration);
+} else if ($roll < 72) {
+    obj_add($where, deal_rusty_scimitar, 1, ^lootdrop_duration);
+} else if ($roll < 102) {
+    obj_add($where, ~randomherb, ^lootdrop_duration);
+} else if ($roll < 103) {
+    obj_add($where, ~megararetable, ^lootdrop_duration);
+}
+
+// A piece of the surgery kit, if the player is on that part of the quest and has not had this one
+// yet. Returns true when it dropped one, so the ordinary table is skipped for that kill.
+// Takes the tile rather than reading npc_coord: by the time this is called the active pointer is on
+// the player, not on the Sorebones.
+[proc,tgbr_sorebones_kit](coord $where)(boolean)
+if (%tgbr ! ^tgbr_blown) {
+    return(false);
+}
+if (%tgbr_drop_tongs = ^tgbr_off) {
+    %tgbr_drop_tongs = ^tgbr_on;
+    obj_add($where, tgbr_brain_tongs, 1, ^lootdrop_duration);
+    return(true);
+}
+if (%tgbr_drop_clamp = ^tgbr_off) {
+    %tgbr_drop_clamp = ^tgbr_on;
+    obj_add($where, tgbr_cranial_clamp, 1, ^lootdrop_duration);
+    return(true);
+}
+if (%tgbr_drop_jars = ^tgbr_off) {
+    %tgbr_drop_jars = ^tgbr_on;
+    obj_add($where, tgbr_bell_jar, ^tgbr_bell_jars, ^lootdrop_duration);
+    return(true);
+}
+if (%tgbr_drop_staples = ^tgbr_off) {
+    %tgbr_drop_staples = ^tgbr_on;
+    obj_add($where, tgbr_skull_staple, ^tgbr_staples, ^lootdrop_duration);
+    return(true);
+}
+return(false);
+
+// The zombie pirates share the Sorebones' bones and nothing else.
+[ai_queue3,tgbr_zombie_pirate] @tgbr_pirate_death;
+[ai_queue3,tgbr_zombie_pirate_2] @tgbr_pirate_death;
+[ai_queue3,tgbr_zombie_pirate_3] @tgbr_pirate_death;
+[ai_queue3,tgbr_zombie_pirate_4] @tgbr_pirate_death;
+[ai_queue3,tgbr_zombie_pirate_5] @tgbr_pirate_death;
+[ai_queue3,tgbr_zombie_pirate_6] @tgbr_pirate_death;
+
+[label,tgbr_pirate_death]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+def_int $roll = random(128);
+if ($roll < 24) {
+    obj_add(npc_coord, coins, calc(random(40) + 10), ^lootdrop_duration);
+} else if ($roll < 30) {
+    obj_add(npc_coord, bronze_dagger, 1, ^lootdrop_duration);
+} else if ($roll < 34) {
+    obj_add(npc_coord, iron_scimitar, 1, ^lootdrop_duration);
+}

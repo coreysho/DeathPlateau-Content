@@ -1,0 +1,204 @@
+// The Great Brain Robbery (20 November 2006) - oldschool.runescape.wiki/w/The_Great_Brain_Robbery.
+//
+// NOT IN THE 377 CACHE, and nothing about this quest was in this build: no Harmony Island, no
+// Underwater Tunnel, no Brother Tranquility, no Mi-Gor, no Barrelchest, no Sorebones, and none of
+// the fourteen items. The quest is November 2006 and this cache is September 2006. So the island
+// and the tunnel are imported from the rev 474 cache (October 2007), which is the nearest thing to
+// the real article that exists - a year after release, same engine family, models already in the
+// format the 377 client reads. See areas/area_harmony/configs/harmony_map.loc.
+//
+// WHERE THE STAGE VALUES COME FROM. 474's quest varp for this is 980 and it runs 0, 10, 20 ... 130
+// - fourteen stages - which is not a guess: three 474 npc records are multis on it and their tables
+// say so. 5606 shows Dr Fenkenstrain from 70 up, and 5667/5668 swap Brother Tranquility from his
+// first form to his second at 100. Those two pivots are kept exactly: 70 is the crate arriving with
+// the doctor in it, 100 is the transplants being made. The rest of the ladder is this build's
+// reading of the wiki's walkthrough, in the cache's own tens.
+//
+// WHERE THE SMALLER STATE COMES FROM. 474 keeps it in two bit-packed varps, 981 and 982, and the
+// multilocs that hang off them ARE the quest's mechanics. Every one of these was read out of the
+// cache rather than invented (archive 2 group 6, decoded by scratchpad probes over osrsloc.py):
+//
+//   varbit 3401  loc 22355 at 3795,2844   0 Statue/Pull | 1 Statue | 2 Statue/Climb-down
+//                so the statue offers Pull from the start - which is why the wiki says that going
+//                down it before the quest throws you off the island - and 2 is it shoved aside.
+//   varbit 3385  loc 22370 at 3829,9254   0 Stairs/Repair,Climb | 1 Stairs/Climb
+//                the broken stairs at the tunnel's far end. One bit: broken or mended.
+//   varbit 3393  locs 22111/22112/22119 at 3805,2843-2845
+//                0-4 Wall, Wall, Door/Open | 5 Collapsed wall, Collapsed wall, Door/Open
+//                the monastery's front gate. The keg takes the WALL down, not the door.
+//   varbit 3394  loc 22491 at 3804,2844    1 Fuse | 2 Fuse   -  the fuse laid away from the keg,
+//   varbit 3395  loc 22492 at 3803,2844    1 Fuse | 2 Fuse   -  two tiles of it, lit at 2.
+//   varbit 3404  locs 22100/22101/22102 at 3817,2843-2845
+//                0 Wall, Wall, Peephole/Peer-through | 1 Wall, Wall, Rubble
+//                the peephole is in the monastery's own west wall, and the blast fills it in.
+//   varbit 3390  loc 22489   1 Crate/Build | 2 Crate/Add-bottom | 3 Crate/Fill | 4 Crate
+//                the crate at Dr Fenkenstrain's castle, four states.
+//   varbit 3407  npcs 5669-5677            0 Zombie monk | 1 Monk
+//                the monks of Harmony, and Brother Tranquility with them, restored at the end.
+//
+// This build's own varbits carry the same meanings in the same order; the names are ours. See
+// tgbr.varbit.
+//
+// ---------------------------------------------------------------------------- the stages
+^tgbr_not_started = 0
+^tgbr_started = 10        // Brother Tranquility has explained, and has taken you to the island
+^tgbr_spied = 20          // through the peephole: Mi-Gor, and what is wearing the monks
+^tgbr_reported = 30       // told him what you saw; he names the prayer book
+^tgbr_book = 40           // the book is off the Edgeville shelf and read
+^tgbr_prayed = 50         // recited over the gas, and he has asked for a surgeon
+^tgbr_doctor = 60         // Dr Fenkenstrain has agreed to come, and will not teleport
+^tgbr_shipped = 70        // the crate has gone, and he is in the windmill cellar   (474: 70)
+^tgbr_kit_listed = 80     // he has named the five things he needs
+^tgbr_blown = 90          // the monastery gate is off its wall
+^tgbr_transplants = 100   // the kit is handed over and the surgery is done        (474: 100)
+^tgbr_confronted = 110    // Mi-Gor confronted, Barrelchest summoned
+^tgbr_anchor = 120        // Barrelchest dead and the anchor picked up
+^tgbr_complete = 130
+
+^tgbr_off = 0
+^tgbr_on = 1
+
+// ---------------------------------------------------------------------------- tgbr_statue, 474's 3401
+^tgbr_statue_loose = 0
+^tgbr_statue_fixed = 1
+^tgbr_statue_moved = 2
+
+// ---------------------------------------------------------------------------- tgbr_gate, 474's 3393
+^tgbr_gate_whole = 0
+^tgbr_gate_down = 5
+
+// ---------------------------------------------------------------------------- tgbr_fuse, 3394/3395
+^tgbr_fuse_none = 0
+^tgbr_fuse_laid = 1
+^tgbr_fuse_lit = 2
+
+// ---------------------------------------------------------------------------- tgbr_crate, 474's 3390
+^tgbr_crate_none = 0
+^tgbr_crate_space = 1
+^tgbr_crate_built = 2
+^tgbr_crate_bottomed = 3
+^tgbr_crate_filled = 4
+
+// ---------------------------------------------------------------------------- the requirements
+// The quest scroll's own list. None of them is boostable.
+^tgbr_req_crafting = 16
+^tgbr_req_construction = 30
+^tgbr_req_prayer = 50
+
+// What goes in the crate, and what the crate takes to build.
+^tgbr_cats_wanted = 10
+^tgbr_crate_nails = 4
+^tgbr_crate_planks = 4
+
+// The surgery kit, off the Sorebones. The wiki's own amounts.
+^tgbr_bell_jars = 3
+^tgbr_staples = 30
+
+// ---------------------------------------------------------------------------- the rewards
+^tgbr_xp_prayer = 60000       // 6,000.0
+^tgbr_xp_crafting = 30000     // 3,000.0
+^tgbr_xp_construction = 20000 // 2,000.0
+^tgbr_lamp_xp = 50000         // the blessed lamp's flat 5,000, in a skill already at level 30
+^tgbr_lamp_level = 30
+
+// ---------------------------------------------------------------------------- the gas
+// Harmony Island's air is the slugs' doing. Outside the windmill it poisons you unless you are
+// wearing Murphy's diving pair (Recipe for Disaster's fishbowl helmet and diving apparatus - this
+// quest wears the same two, there is only one set in the game) or have recited the prayer book
+// with a holy symbol on. The recital lasts ten minutes and can be renewed.
+^tgbr_gas_interval = 10        // ticks between breaths
+^tgbr_gas_damage = 2
+^tgbr_prayer_ticks = 1000      // ten minutes of clean air per recital
+
+// ---------------------------------------------------------------------------- the places
+// A gazetteer, as Rum Deal's is: every tile below was read off the imported squares or off the
+// booted world, and not every line is referenced by a script. Several are here so that the next
+// person reading this quest knows where its furniture is without opening a map.
+//
+// ---------------------------------------------------------------------------- Mos Le'Harmless
+^tgbr_tranquility_harmless = 0_57_46_21_35   // 3669,2979, a few tiles off Bill Teach's landing
+^tgbr_harmless_arrive = 0_57_46_22_35        // 3670,2979, beside him
+
+// ---------------------------------------------------------------------------- Harmony Island
+// m59_44. Everything here was read off the imported square, not worked out.
+// THE MILL'S FLOOR IS A RING round its machinery. 3786-3787,2826 reads as open terrain and is
+// walled off by the millstones and the hopper; the walkable pocket is 27 tiles and these two are
+// in it (tools/sim/tgbrspots.ts).
+^tgbr_mill_inside = 0_59_44_10_8             // 3786,2824, the windmill's ground floor
+^tgbr_tranquility_island = 0_59_44_11_8      // 3787,2824, where he waits, beside the landing tile
+^tgbr_mill_ladder_up = 0_59_44_8_10          // 3784,2826
+^tgbr_cellar_ladder_down = 0_59_44_13_10     // 3789,2826
+^tgbr_cellar_ladder_up = 0_59_144_13_10      // 3789,9226
+^tgbr_cellar_doctor = 0_59_144_10_8          // 3786,9224, Dr Fenkenstrain's table
+^tgbr_statue = 0_59_44_19_28                 // 3795,2844, length 2, angle 3
+^tgbr_statue_stand = 0_59_44_18_28           // 3794,2844
+^tgbr_gate_door = 0_59_44_29_28              // 3805,2844
+^tgbr_gate_wall_s = 0_59_44_29_27            // 3805,2843
+^tgbr_gate_wall_n = 0_59_44_29_29            // 3805,2845
+^tgbr_fuse_near = 0_59_44_28_28              // 3804,2844, the tile the keg's fuse lies on
+^tgbr_fuse_far = 0_59_44_27_28               // 3803,2844, the end you light
+^tgbr_blast_stand = 0_59_44_26_28            // 3802,2844, far enough back
+^tgbr_gate_inside = 0_59_44_30_28            // 3806,2844, the courtyard side of the gap
+^tgbr_gate_outside = 0_59_44_28_28           // 3804,2844, the island side
+// THE PEEPHOLE IS IN THE GATE, not in the monastery's inner wall where 474 has it. The tile beside
+// that one is inside a 5-tile pocket behind a door inside the sealed courtyard, so it cannot be
+// looked through until after the explosion - and the wiki looks through it long before. The gate's
+// own north wall stands on the open island and faces the courtyard Mi-Gor is in, and it still turns
+// to rubble in the blast, which is what 474's varbit 3404 is for. The monastery's own peephole is
+// left where the cache put it, as scenery.
+^tgbr_peephole = 0_59_44_41_28               // 3817,2844, where 474 has it
+^tgbr_monastery_door_s = 0_59_44_41_25       // 3817,2841
+^tgbr_monastery_door_n = 0_59_44_41_31       // 3817,2847
+// MI-GOR IS IN THE COURTYARD, which is the sealed part. The peephole at 3817,2844 is in the wall
+// between the brothers' corridor (3818-3823, reachable from the field to the south) and the walled
+// courtyard west of it (3807-3816, 2841-2847, whose only way in is the gate the keg takes down).
+// So the player peers west through the wall from the corridor, sees Mi-Gor, and has to blow the
+// gate to reach him. The courtyard is also the only piece of the monastery with room for a 3x3.
+^tgbr_migor = 0_59_44_32_28                  // 3808,2844
+// 3810-3812 x 2843-2845 are all clear, which is what a 3x3 needs.
+^tgbr_barrelchest = 0_59_44_35_28            // 3811,2844
+// THE SHIP IS A BRIDGE. Its level 1 carries the LINK_BELOW flag, and GameMap.loadLocations takes
+// level 1's flag as the answer for every level at that tile - so the lower deck, the locker and the
+// ladder are all on level 0, the deck above is level 1 and the top deck is level 2. A beached ship's
+// lower deck being at beach level is the one thing about this that works out: the locker is
+// reachable from the sand without climbing anything.
+^tgbr_ship_locker = 0_59_44_15_57            // 3791,2873, level 0
+^tgbr_locker_stand = 0_59_44_16_57           // 3792,2873, the tile you open it from
+^tgbr_ship_upper = 1_59_44_23_57             // 3799,2873, a deck up: the keg and the tinderbox
+^tgbr_ship_ladder = 0_59_44_26_57            // 3802,2873, the ladder between them
+^tgbr_ship_deck_1 = 1_59_44_26_58            // 3802,2874, beside it one deck up
+^tgbr_ship_deck_2 = 2_59_44_19_57            // 3795,2873, the top deck
+
+// ---------------------------------------------------------------------------- the tunnel, m59_144
+// Two small dry chambers on level 0 and the flooded tunnel between them on level 1. That is 474's
+// own arrangement, odd as it reads - going "down" the stairs moves you UP a plane - and it is kept,
+// because the heights are the cache's and the walls are drawn for it.
+^tgbr_chamber_west = 0_59_144_10_38          // 3786,9254, at the foot of the statue's hole
+^tgbr_tunnel_west = 1_59_144_13_38           // 3789,9254, in the water
+^tgbr_tunnel_east = 1_59_144_51_38           // 3827,9254, at the broken stairs
+^tgbr_chamber_east = 0_59_144_53_38          // 3829,9254
+^tgbr_ladder_east_top = 0_59_44_55_38        // 3831,2854, where that ladder comes up
+
+// ---------------------------------------------------------------------------- off the island
+^tgbr_bookcase = 0_47_54_41_27               // 3049,3483, Edgeville monastery's south-west shelf
+// A coord literal's last two numbers are LOCAL to the mapsquare, and these two were written as if
+// the square began at 3488 rather than 3520 - so they pointed at 3581,3579, thirty tiles away in
+// the wall. The crate's own placement on m55_55 had the same slip; both were caught by asking the
+// booted world where the loc had actually landed (tools/sim/tgbrcrate.ts).
+^tgbr_fenkenstrain_jail = 2_55_55_29_35      // 3549,3555, the cell at the top of his castle
+^tgbr_crate_spot = 2_55_55_28_35             // 3548,3555, beside him, where the crate is built
+// Where the whistled Rufus stands if map_findsquare cannot find him a tile. The cell is small and
+// a findsquare from a tile the crate itself blocks has no line of walk out of it, so it comes back
+// empty - which is the same trap [[a summon can miss]] records for Ape Atoll.
+^tgbr_rufus_arrive = 2_55_55_29_35           // 3549,3555
+^tgbr_rufus = 0_54_54_51_40                  // 3507,3496, the Canifis meat stall
+
+// How long the whistled Rufus hangs around for, the cutscene cat, and the boss.
+^tgbr_rufus_lifetime = 200
+^tgbr_cat_lifetime = 60
+^tgbr_barrelchest_lifetime = 2000
+
+// ---------------------------------------------------------------------------- NOT BUILT
+// Nothing from after 2006 is here: no Harmony Island Teleport (Arceuus, 2019), no Nightmare Zone
+// Barrelchest, and the anchor's Sunder special attack is still absent for the reason
+// quests/quest_deal/configs/barrelchest_anchor.obj gives.

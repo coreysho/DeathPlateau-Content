@@ -1,4 +1,9 @@
 [opnpc1,werewolfshopkeeper1]
+// The Great Brain Robbery posts Dr Fenkenstrain to Harmony Island in one of Rufus's crates, and
+// Rufus will only discuss it with somebody wearing the Ring of Charos (quests/quest_tgbr).
+if (~tgbr_rufus_talk = true) {
+    return;
+}
 ~chatplayer("<p,happy>Hi!");
 ~chatnpc("<p,happy>Grrreetings frrriend! Welcome to my worrrld famous food emporrrium! All my meats are so frrresh you'd swear you killed them yourrrself!");
 switch_int(~p_choice3("Why do you only sell meats?", 1, "Do you sell cooked food?", 2, "Can I buy some food?", 3)) {

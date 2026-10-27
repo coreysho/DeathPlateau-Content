@@ -196,3 +196,7 @@ if_settab(music, ^tab_musicplayer);
 // "Followers lose their food if you log out" - Old School's rule, and the simplest way to hold it
 // whatever scope the varp carries. minigames/game_templetrek/scripts/templetrek_events.rs2.
 ~trek_clear_pack;
+// Harmony Island's air is poisonous and the softtimer that applies it is started by a mapzone - and
+// a mapzone does not fire for somebody who logs in already standing on the square. The Great Brain
+// Robbery, areas/area_harmony/scripts/harmony.rs2; it does nothing anywhere else.
+~harmony_breathe_start;

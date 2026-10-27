@@ -1,0 +1,193 @@
+// The Great Brain Robbery: the statue, the flooded tunnel under the island, the broken stairs at
+// its far end, and the peephole in the monastery wall. See configs/quest_tgbr.constant.
+//
+// The shape of it, and all of it is 474's: a statue north of the windmill that is not as heavy as it
+// looks; a dry chamber under it; stairs down into the water; a tunnel east with dead pirates walking
+// about in it; stairs at the far end that are broken; a dry chamber above them; a ladder out; and a
+// hole in the monastery's west wall to look through.
+
+// =========================================================================== the statue
+// One op on the multiloc's parent answers both children, because both of them put their op on 1:
+// Pull on the statue that has not been moved, Climb-down on the one that has.
+[oploc1,tgbr_multi_statue]
+if (%tgbr_statue = ^tgbr_statue_moved) {
+    @tgbr_statue_descend;
+}
+p_arrivedelay;
+anim(human_pull_lever, 0);
+p_delay(2);
+%tgbr_statue = ^tgbr_statue_moved;
+sound_synth(door_open, 1, 0);
+~mesbox("The statue grinds a foot sideways and stops. There is a hole under it, and a ladder going down into the dark.");
+
+[label,tgbr_statue_descend]
+// Old School throws anyone who has not started the quest straight back to Mos Le'Harmless rather
+// than letting them wander about underneath it.
+if (%tgbr = ^tgbr_not_started) {
+    ~mesbox("You get three rungs down before something takes hold of your ankle, and a good deal of the next minute is missing.");
+    ~tgbr_teleport(^tgbr_harmless_arrive);
+    return;
+}
+~harmony_climb(^tgbr_chamber_west, "You climb down into the dark.");
+
+[oploc1,harmony_tunnel_ladder_west]
+~harmony_climb(^tgbr_statue_stand, "You climb up into the daylight.");
+
+// =========================================================================== into the water
+// The west stairs go down into the flooded part. 474 lays the tunnel out on level 1 and the two dry
+// chambers on level 0, so going "down" these stairs moves the player UP a plane; the heights are the
+// cache's and it looks right in the client.
+[oploc1,harmony_tunnel_stairs_west]
+if (~tgbr_diving_check = false) {
+    return;
+}
+~harmony_climb(^tgbr_tunnel_west, "You go down the steps into the water.");
+
+[oploc1,harmony_tunnel_up_west]
+~harmony_climb(^tgbr_chamber_west, "You climb out of the water.");
+
+[oploc1,harmony_tunnel_stairs_east]
+if (~tgbr_diving_check = false) {
+    return;
+}
+~harmony_climb(^tgbr_tunnel_east, "You go down the steps into the water.");
+
+[oploc1,harmony_tunnel_ladder_east]
+~harmony_climb(^tgbr_ladder_east_top, "You climb up into the daylight.");
+
+// Murphy's pair, from Recipe for Disaster's Freeing Pirate Pete. The same two items, not a second
+// set: ~hundred_pirate_wearing is that subquest's own test.
+[proc,tgbr_diving_check]()(boolean)
+if (~hundred_pirate_wearing = true) {
+    return(true);
+}
+if (~hundred_pirate_geared = true) {
+    mes("The tunnel ahead is full of water. The helmet and the apparatus are no use in your pack.");
+    return(false);
+}
+mes("The tunnel ahead is full of water. You would need Murphy's fishbowl helmet and diving apparatus to go any further.");
+return(false);
+
+// =========================================================================== the broken stairs
+// Op 1 is Repair on the broken child; op 2 is Climb on both. The mended one has no Repair, so the
+// first of these can only be reached while they are still broken.
+[oploc1,tgbr_multi_stairs]
+if (%tgbr_stairs = ^tgbr_on) {
+    return;
+}
+if (inv_total(inv, hammer) < 1) {
+    mes("You need a hammer to do anything with these.");
+    return;
+}
+if (inv_total(inv, nails) < ^tgbr_crate_nails) {
+    mes("You need at least <tostring(^tgbr_crate_nails)> nails to put these steps back together.");
+    return;
+}
+p_arrivedelay;
+mes("You start nailing the steps back onto the stringer.");
+anim(human_poh_build, 0);
+sound_synth(saw_hit, 1, 0);
+p_delay(4);
+anim(human_poh_build, 0);
+p_delay(4);
+inv_del(inv, nails, ^tgbr_crate_nails);
+%tgbr_stairs = ^tgbr_on;
+stat_advance(construction, 1000);
+~mesbox("The steps will hold. Whether they would hold a second time is another question.");
+
+[oploc2,tgbr_multi_stairs]
+if (%tgbr_stairs ! ^tgbr_on) {
+    mes("The steps are so much driftwood. You would go straight through them.");
+    return;
+}
+~harmony_climb(^tgbr_chamber_east, "You climb out of the water.");
+
+// =========================================================================== the peephole
+// The hole is in the monastery's gate, not in the inner wall 474 puts it in - see
+// configs/quest_tgbr.constant for why. Once the gate is off its hinges there is nothing to peer
+// through, and the blown doorway carries no second op, so this can only be reached while it stands.
+[oploc2,tgbr_multi_gate_door]
+if (%tgbr_gate = ^tgbr_gate_down) {
+    mes("There is a hole where the whole gate used to be.");
+    return;
+}
+p_arrivedelay;
+if (%tgbr < ^tgbr_started) {
+    mes("You can see a stone corridor and nothing moving in it.");
+    return;
+}
+if (%tgbr > ^tgbr_started) {
+    ~mesbox("Mi-Gor is still in there, and he is still talking to something you cannot see.");
+    return;
+}
+@tgbr_spy;
+
+// The scouting cutscene, as a run of boxes rather than a camera: this build has no cutscene
+// machinery and the wiki's own account of the step is a thing seen, not a thing done.
+[label,tgbr_spy]
+~mesbox("Through the hole: a walled yard, and four of Brother Tranquility's brothers standing in it perfectly still.");
+~mesbox("A man in a surgeon's apron walks down the line of them, lifts a hood, looks underneath, and puts it back.");
+~mesbox("'Not that one either,' he says. 'Mother, these are getting soft.'");
+~mesbox("One of the monks turns its head to look at him, and nothing behind its eyes looks back.");
+%tgbr = ^tgbr_spied;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+~mesbox("You should tell Brother Tranquility what you have seen.");
+
+// =========================================================================== the prayer book
+// Taken off the shelf at the Edgeville monastery, read, and then recited. The reciting is what makes
+// the island's air survivable without the diving gear, and it has to be done again every ten
+// minutes - which is the whole reason a player keeps the helmet on instead.
+// general_use/scripts/bookcases.rs2 answers every bookcase in the game off the shared category and
+// picks this one out by coordinate, which is how the exam centre's six are done. A trigger on the
+// `bookcase` TYPE would have taken all seventy-eight of them.
+[label,tgbr_bookcase_search]
+if (%tgbr < ^tgbr_reported) {
+    mes("Sermons, mostly.");
+    return;
+}
+if (~obj_gettotal(tgbr_prayer_book) > 0 | ~obj_gettotal(tgbr_prayer_book_unread) > 0) {
+    mes("You already have the book.");
+    return;
+}
+p_arrivedelay;
+mes("You search the bookcase...");
+p_delay(2);
+if (inv_freespace(inv) < 1) {
+    mes("...and have nowhere to put what you find.");
+    return;
+}
+inv_add(inv, tgbr_prayer_book_unread, 1);
+~objbox(tgbr_prayer_book_unread, "You find a thin book of prayers against poison, wedged behind the sermons.", 250, 0, 0);
+
+[opheld1,tgbr_prayer_book_unread]
+~mesbox("The prayer is four lines long and the last of them is in a language you do not have. You read it until you have it by heart.");
+inv_del(inv, tgbr_prayer_book_unread, 1);
+inv_add(inv, tgbr_prayer_book, 1);
+if (%tgbr = ^tgbr_reported) {
+    %tgbr = ^tgbr_book;
+    ~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+}
+
+[opheld1,tgbr_prayer_book]
+~mesbox("The prayer is four lines long and the last of them is in a language you do not have.");
+
+[opheld2,tgbr_prayer_book]
+if (inv_total(worn, blessedstar) < 1) {
+    mes("You need to be wearing a holy symbol for this.");
+    return;
+}
+if (~harmony_outdoors(coord) = false & ~tgbr_on_harmony = false) {
+    mes("There is nothing in the air here that needs praying away.");
+    return;
+}
+p_arrivedelay;
+anim(human_pray, 0);
+sound_synth(prayer_recharge, 1, 0);
+p_delay(3);
+%tgbr_prayer_until = add(map_clock, ^tgbr_prayer_ticks);
+~mesbox("You recite the prayer. The air stops tasting of anything at all.");
+if (%tgbr = ^tgbr_book) {
+    %tgbr = ^tgbr_prayed;
+    ~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+    ~mesbox("Brother Tranquility will want to know that worked.");
+}

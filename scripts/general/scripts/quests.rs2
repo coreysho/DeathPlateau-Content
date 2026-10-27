@@ -410,6 +410,9 @@ if (%eaglespeak >= ^eaglespeak_complete) {
 if (%animmag >= ^animmag_complete) {
     $questpoints = add($questpoints, ^animmag_questpoints);
 }
+if (%tgbr >= ^tgbr_complete) {
+    $questpoints = add($questpoints, ^tgbr_questpoints);
+}
 if (%lunar_quest >= ^lunar_complete) {
     $questpoints = add($questpoints, ^lunar_questpoints);
 }
@@ -467,6 +470,7 @@ $total = add($total, ^fairy_questpoints);
 $total = add($total, ^mt_questpoints);
 $total = add($total, ^eaglespeak_questpoints);
 $total = add($total, ^animmag_questpoints);
+$total = add($total, ^tgbr_questpoints);
 $total = add($total, ^runemysteries_questpoints);
 $total = add($total, ^doric_questpoints);
 $total = add($total, ^cook_questpoints);
@@ -677,6 +681,7 @@ if (testbit(%ibanmulti, ^upass_started_bit) = ^true & %upass ! ^upass_complete) 
 ~questlist_row(questlist:mourning2, %mourning_quest_main, ^mt_complete, $send);
 ~questlist_row(questlist:eaglespeak, %eaglespeak, ^eaglespeak_complete, $send);
 ~questlist_row(questlist:animmag, %animmag, ^animmag_complete, $send);
+~questlist_row(questlist:tgbr, %tgbr, ^tgbr_complete, $send);
 
 [proc,questlist_row](component $component, int $progress, int $complete_progress, boolean $send)
 %questlist_total = add(%questlist_total, 1);

@@ -1,0 +1,100 @@
+// The Great Brain Robbery: Mi-Gor, and the thing he keeps in the monastery.
+//
+// BARRELCHEST'S NUMBERS ARE THE WIKI'S, and they land the wiki's max hit through this engine's own
+// formula rather than by being told to: ~npc_melee_maxhit is
+//   maxhit = floor(((strength + 9) * (strengthbonus + 64) + 320) / 640)
+// and Old School's own 145 Strength with its own +80 aggressive strength bonus gives
+//   ((145 + 9) * (80 + 64) + 320) / 640 = 35, which is exactly the 35 the page quotes.
+// Level 190, 134 hitpoints, 170 Attack, 140 Defence, 90 Magic, five ticks, 3x3, and no defensive
+// bonuses at all. He is NOT undead, so a salve amulet does nothing to him - that is the page's own
+// trivia and it is why the Sorebones and the zombie pirates carry param=undead and he does not.
+// See ../../../areas/area_harmony/configs/harmony_npcs.npc.
+//
+// THE ANCHOR SWING IS THE MECHANIC. Every hit he lands "deactivates all prayers and drains prayer
+// points", and takes a little Attack and Defence with it. The hook is one line in
+// skill_combat/scripts/npc/npc_combat_melee.rs2, in [proc,playerhit_n_melee_max] - the single funnel
+// every npc melee hit on a player passes through, next to Damis's drain and the Fight Cave's.
+//
+// NOT BUILT: Old School fights him in an instance, and the ground-slam he uses on a player out of
+// melee range. There is no instancing for a fixed map square in this build, and a 25-damage typeless
+// ranged attack would need a projectile and an attack mode this npc does not have. What that costs
+// is the safespot; what it gains is a fight that works the way every other boss here works. The
+// anchor is handed straight over on his death rather than dropped, because the wiki's own warning
+// about that room is that anything on the floor in it is lost.
+
+// =========================================================================== Mi-Gor
+[opnpc1,tgbr_migor_shell]
+if (%tgbr < ^tgbr_transplants) {
+    ~chatnpc("<p,angry>Not now. I am working.");
+    return;
+}
+if (%tgbr_fight = true) {
+    mes("Mi-Gor is behind the thing he just whistled up.");
+    return;
+}
+~chatplayer("<p,angry>Mi-Gor.");
+~chatnpc("<p,happy>Ah. The diver. I wondered which of Tranquility's errands you were.");
+~chatplayer("<p,neutral>Every one of them has their own brain back.");
+~chatnpc("<p,angry>Then you have ruined a year of the finest work anybody has done on this continent.");
+switch_int (~p_choice2("You took their heads apart.", 1, "I am going to stop you.", 2)) {
+    case 1 : ~chatplayer("<p,angry>You took their heads apart.");
+    case 2 : ~chatplayer("<p,angry>I am going to stop you.");
+}
+~chatnpc("<p,laugh>Stop me. Yes. Let me introduce the reason nobody has.");
+if_close;
+@tgbr_summon_barrelchest;
+
+[label,tgbr_summon_barrelchest]
+%tgbr = ^tgbr_confronted;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+%tgbr_fight = true;
+// Mi-Gor is a shell on the quest stage and the stage has just moved past the values he exists at,
+// so he is gone from the corridor the moment this returns. Nothing has to delete him.
+sound_synth(growl, 1, 0);
+~mesbox("Something at the back of the corridor stands up, and keeps standing up.");
+def_coord $spot = map_findsquare(^tgbr_barrelchest, 0, 2, ^map_findsquare_lineofwalk);
+npc_add($spot, tgbr_barrelchest, ^tgbr_barrelchest_lifetime);
+%npc_aggressive_player = uid;
+npc_setmode(opplayer2);
+
+// =========================================================================== the anchor swing
+// Queued from [proc,playerhit_n_melee_max], which is the only shape anything reaches the player
+// from in there - the same shape as Damis's drain above it in that file.
+[queue,tgbr_anchor_hit](int $damage)
+~prayer_deactivate_all;
+if (stat(prayer) > 0) {
+    stat_sub(prayer, max(1, divide($damage, 2)), 0);
+    if (stat(prayer) = 0) {
+        mes("The anchor has knocked the last of your prayer out of you.");
+    } else {
+        mes("Your prayers are knocked out.");
+    }
+}
+if (stat(attack) > 1) {
+    stat_sub(attack, 1, 0);
+}
+if (stat(defence) > 1) {
+    stat_sub(defence, 1, 0);
+}
+
+// =========================================================================== the kill
+[ai_queue3,tgbr_barrelchest]
+gosub(npc_death);
+// An ai trigger runs with the npc active and no player at all. npc_findhero gives us the player who
+// did the killing - and active_player only; the quest varp is protected, so p_finduid is needed on
+// top of it. Zogre Flesh Eaters and Monkey Madness both carry this pair of lines for the same reason.
+if (npc_findhero = ^false) {
+    return;
+}
+if (p_finduid(uid) = false) {
+    return;
+}
+%tgbr_fight = false;
+if (%tgbr ! ^tgbr_confronted) {
+    return;
+}
+%tgbr = ^tgbr_anchor;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+~tgbr_reward_obj(barrelchest_anchor, "barrelchest anchor");
+~objbox(barrelchest_anchor, "You pull the anchor out of what is left of him. It is heavier than it looks, and it looked very heavy.", 170, 0, 0);
+~mesbox("Brother Tranquility is waiting in the windmill.");

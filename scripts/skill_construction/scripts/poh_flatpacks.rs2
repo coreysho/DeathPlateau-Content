@@ -36,6 +36,16 @@ if (instance_find(loc_coord) ! %poh_instance) {
     mes("You can only build in your own house.");
     return;
 }
+// The Great Brain Robbery carves its ten wooden cats here: one plank and one piece of fur each,
+// 16 Crafting, 15 experience (oldschool.runescape.wiki/w/Wooden_cat). The workbench IS Old School's
+// crafting table, and the quest's own guide calling it a clockmaker's bench cannot be right - a
+// clockmaker's bench wants 42 Construction and the quest only asks for 30.
+if (~tgbr_wants_cats = true) {
+    if (~p_choice2("Carve a wooden cat.", 1, "Make a flatpack.", 2) = 1) {
+        ~tgbr_carve_cats;
+        return;
+    }
+}
 if (inv_total(inv, hammer) < 1 | inv_total(inv, saw) < 1) {
     mes("You need a hammer and a saw to make a flatpack.");
     return;
