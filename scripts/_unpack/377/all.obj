@@ -62847,6 +62847,26 @@ cost=600
 iop2=Wield
 weight=3lb
 wearpos=righthand
+// A SPEAR WITH NO STATS UNTIL NOW. The cave goblin guards have carried this since the mines
+// were built and it has had a model, a name and not one bonus - so wielding it was worse than
+// wielding nothing. These are OSRS obj 5016's own numbers, and the animations are the dragon
+// spear's, which is this cache's spear set.
+category=weapon_spear
+param=attackrate,6
+param=stabattack,11
+param=slashattack,11
+param=crushattack,11
+param=stabdefence,1
+param=slashdefence,1
+param=strengthbonus,13
+param=ready_baseanim,human_staffready
+param=stabattack_anim,human_dspear_stab
+param=slashattack_anim,human_dspear_slash
+param=crushattack_anim,human_dspear_lunge
+param=defend_anim,human_dspear_block
+param=stab_sound,staff_stab
+param=slash_sound,staff_hit
+param=crush_sound,staff_hit
 
 [cert_cave_goblin_bone_spear]
 certlink=cave_goblin_bone_spear
@@ -62867,6 +62887,18 @@ cost=600
 iop2=Wield
 weight=2lb
 wearpos=righthand
+// OSRS obj 5018's own numbers, and the same story as the spear above: a model and a name and
+// nothing else. A crush weapon one notch under a bronze mace.
+category=weapon_blunt
+param=attackrate,6
+param=stabattack,-4
+param=slashattack,-4
+param=crushattack,16
+param=magicattack,-4
+param=strengthbonus,15
+param=crushattack_anim,human_blunt_pound
+param=defend_anim,human_blunt_block
+param=crush_sound,warhammer_crush
 
 [cert_cave_goblin_bone_club]
 certlink=cave_goblin_bone_club
