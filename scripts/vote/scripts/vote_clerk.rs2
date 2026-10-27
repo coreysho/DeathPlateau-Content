@@ -7,18 +7,37 @@
 
 [opnpc1,vote_clerk]
 ~chatnpc("<p,happy>Welcome. I keep the ledger of who has voted.");
-// Anything credited while the pack was full - see ~vote_grant_tickets. Before the balance, because
-// the tickets a player is about to redeem are the reason they came.
+// Anything the ledger owes - a vote credited while the player was offline, or while their pack was
+// full - before the balance, because the tickets a player is about to redeem are the reason they
+// came. ~vote_deliver is the ledger; ~vote_collect_pending is what the clerk is already holding.
+~vote_deliver;
 ~vote_collect_pending;
 if (%vote_points = 0) {
     ~chatnpc("<p,neutral>You have no vote points. Redeem a vote ticket and come back.");
 } else {
     ~chatnpc("<p,neutral>You have <~pluralise(%vote_points, "vote point")> to spend.");
 }
-def_int $choice = ~p_choice2("Let's see the rewards, then.", 1, "Maybe later.", 2);
-if ($choice = 2) {
+def_int $choice = ~p_choice4(
+    "Let's see the rewards, then.", 1,
+    "I've voted - can you check?", 2,
+    "Where can I vote?", 3,
+    "Maybe later.", 4);
+if ($choice = 4) {
     ~chatplayer("<p,neutral>Maybe later.");
     ~chatnpc("<p,neutral>The ledger will keep.");
+    return;
+}
+if ($choice = 2) {
+    ~chatplayer("<p,quiz>I've voted - can you check?");
+    @vote_claim_talk;
+}
+if ($choice = 3) {
+    ~chatplayer("<p,quiz>Where can I vote?");
+    if (vote_sitecount = 0) {
+        ~chatnpc("<p,neutral>Nowhere yet. When this server is listed somewhere, I'll be the one keeping count.");
+        return;
+    }
+    ~vote_sites_mesbox;
     return;
 }
 ~chatplayer("<p,happy>Let's see the rewards, then.");

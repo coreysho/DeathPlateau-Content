@@ -1204,3 +1204,17 @@
 // [command,inv_totalparam](inv $inv, param param)(int)
 // [command,inv_totalparam_stack](inv $inv, param param)(int)
 // [command,obj_adddelayed]
+
+// Vote claiming (custom, 2026-10-27). engine/src/engine/vote/.
+// A SITE is a toplist this server is listed on, configured in data/vote/sites.json - there are none
+// until somebody writes that file, and vote_sitecount is 0 until they do. A vote is credited to the
+// LEDGER (by the site calling our callback, or by vote_claim going and asking), and the ledger owes
+// tickets until vote_take hands them to ~vote_grant_tickets. vote_claim is a web request, so it
+// returns a ^vote_claim_* status at once and says what it found a second or two later.
+[command,vote_sitecount]()(int)
+[command,vote_sitename](int $index)(string)
+[command,vote_siteurl](int $index)(string)
+[command,vote_cooldown](int $index)(int)
+[command,vote_claim]()(int)
+[command,vote_owed]()(int)
+[command,vote_take](int $count)(int)

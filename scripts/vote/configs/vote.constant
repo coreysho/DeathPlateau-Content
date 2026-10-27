@@ -74,3 +74,11 @@
 ^vote_price_morytania_legs = 80
 ^vote_price_varrock_armour = 100
 ^vote_price_wilderness_sword = 60
+
+// ============================================================================ claiming (27 October)
+// What vote_claim answers with. It cannot answer the real question - "did you vote?" - because that
+// is a web request to somebody else's server and a script may not wait for one. So it says what it
+// has started doing, and the result arrives as a game message a second or two later.
+^vote_claim_started = 0
+^vote_claim_nosites = 1
+^vote_claim_busy = 2

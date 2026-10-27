@@ -1,0 +1,96 @@
+// CLAIMING A VOTE (27 October). The other side of vote_ticket.rs2: that file is about what a ticket
+// IS, this one is about how one arrives.
+//
+// NOTHING IN HERE DECIDES WHETHER YOU VOTED. That is a question about somebody else's website, and
+// the engine answers it two ways (engine/src/engine/vote/): the site calls our callback when you
+// vote, or vote_claim goes and asks the site. Either way the vote lands in a LEDGER outside the
+// save file - because a vote can be credited while you are offline - and the ledger OWES you
+// tickets until the game can hand them over.
+//
+// So this file is only the handing over, and it goes through ~vote_grant_tickets, which is the one
+// door and cannot fail. The order is take-then-grant, and that order is only safe because the grant
+// cannot fail: a full pack becomes %vote_tickets_pending and the clerk holds it. Granting first and
+// taking second would pay twice if anything went wrong in between.
+
+// ---------------------------------------------------------------------------------------------
+// Handing over what the ledger owes
+// ---------------------------------------------------------------------------------------------
+// The engine queues this the moment a vote is credited to somebody who is online, so a player
+// standing at a bank with the vote page still open in another window sees the ticket arrive.
+[queue,vote_deliver]
+~vote_deliver;
+
+[proc,vote_deliver]
+def_int $owed = vote_owed;
+if ($owed < 1) {
+    return;
+}
+// vote_take returns what it ACTUALLY took, which can be less than was asked for if a callback and
+// a claim landed either side of this line. Pay for what was taken.
+def_int $got = vote_take($owed);
+if ($got < 1) {
+    return;
+}
+~vote_grant_tickets($got);
+
+// Called from [login,_]. A vote credited while the player was away is waiting in the ledger, and
+// this is the first chance the game has had to hand it over.
+[proc,vote_login]
+~vote_deliver;
+
+// ---------------------------------------------------------------------------------------------
+// Asking the sites
+// ---------------------------------------------------------------------------------------------
+// WHY THIS SAYS SO LITTLE. vote_claim starts a web request and returns at once - a script cannot
+// wait for one - so there is no result to print here. The engine prints what it found when the
+// sites answer, a second or two later. All this does is set it going and not lie about what is
+// happening in the meantime.
+[label,vote_claim_talk]
+if (vote_sitecount = 0) {
+    ~chatnpc("<p,neutral>There's nowhere to vote yet. When this server is listed somewhere, I'll be the one keeping count.");
+    return;
+}
+def_int $status = vote_claim;
+if ($status = ^vote_claim_busy) {
+    ~chatnpc("<p,neutral>I'm already looking. Give me a moment.");
+    return;
+}
+if ($status = ^vote_claim_nosites) {
+    // Sites exist but none of them can be asked - they all report by calling us instead. Say where
+    // to vote rather than leaving the player clicking a button that does nothing.
+    ~chatnpc("<p,neutral>Those sites tell me themselves when you've voted - there's nothing for me to go and ask.");
+    ~vote_sites_mesbox;
+    return;
+}
+~chatnpc("<p,neutral>Let me check the ledger. I'll call over when I know.");
+
+// WHERE TO VOTE, as a message box rather than dialogue, because it is a list and it is the thing
+// the player came to read. The cooldown is per site and comes out of the ledger, so it is right
+// whether the last vote was claimed or reported by the site itself.
+[proc,vote_sites_mesbox]
+if (vote_sitecount = 0) {
+    return;
+}
+def_string $lines = "You can vote at:";
+def_int $i = 0;
+while ($i < vote_sitecount) {
+    def_int $left = vote_cooldown($i);
+    if ($left = 0) {
+        $lines = "<$lines>|<vote_sitename($i)> - <vote_siteurl($i)>";
+    } else {
+        $lines = "<$lines>|<vote_sitename($i)> - ready in <~vote_wait($left)>";
+    }
+    $i = calc($i + 1);
+}
+~mesbox($lines);
+
+// "3 hours", "12 minutes", "40 seconds" - the biggest unit that is not zero, because a cooldown is
+// read at a glance and nobody needs "2 hours, 51 minutes and 9 seconds".
+[proc,vote_wait](int $seconds)(string)
+if ($seconds >= 3600) {
+    return(~pluralise(calc($seconds / 3600), "hour"));
+}
+if ($seconds >= 60) {
+    return(~pluralise(calc($seconds / 60), "minute"));
+}
+return(~pluralise($seconds, "second"));
