@@ -1,0 +1,30 @@
+// SARADOMIN'S LIGHT INTO THE STAFF OF THE DEAD, which is the whole of the staff of light.
+//
+// Old School: "It can also be combined with a Staff of the Dead to make a Staff of Light, which
+// cannot be reversed." So there is no Revert here, unlike the ancient fabric and the whip kits -
+// and because it cannot be undone it asks first. Every other combine on this server gives its
+// ingredients back; this one does not, so the confirmation is the thing standing in for that.
+//
+// ONE TRIGGER, ON THE LIGHT. [opheldu,X] is looked up on both halves of a use and the engine swaps
+// last_item/last_useitem so last_item is always the half that carried the trigger
+// (network/game/client/handler/OpHeldUHandler.ts), so this catches the click whichever way round
+// the player does it.
+
+[opheldu,saradomins_light]
+if (last_useitem ! staff_of_the_dead) {
+    mes("The light only works on a staff of the dead.");
+    return;
+}
+def_int $slot = last_useslot;
+if (~p_choice2("Combine them? It cannot be undone.", 1, "No, leave them as they are.", 2) = 2) {
+    return;
+}
+// Read back rather than trusted: the choice above parks the script, and a player can move or drop
+// either half while the box is open. A mesbox parks a script - anything after it has not happened
+// yet - and this is the one place that matters here.
+if (inv_total(inv, saradomins_light) < 1 | inv_getobj(inv, $slot) ! staff_of_the_dead) {
+    return;
+}
+inv_del(inv, saradomins_light, 1);
+inv_setslot(inv, $slot, staff_of_light, 1);
+~objbox(staff_of_light, "You bind the light into the staff. It will not come out again.", 250, 0, 0);
