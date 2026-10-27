@@ -318,9 +318,19 @@ if_close;
 mes("An arrow goes past your ear and into the gatepost.");
 sound_synth(arrow_launch, 1, 0);
 p_delay(2);
-%mm_player_is_unconscious = ^true;
-%mm_jail_count = add(%mm_jail_count, 1);
 mes("The second one does not miss, and the ground comes up to meet you.");
+@mm_jail_knockout;
+
+// EVERYTHING AFTER THE FIRST SENTENCE IS SHARED. The gate shoots you; a captor in Marim clubs you
+// (scripts/mm_capture.rs2, [queue,mm_arrested]); and from there the two are the same event, which
+// is also why %mm_jail_count is incremented here rather than at either doorway.
+[label,mm_jail_knockout]
+%mm_player_is_unconscious = ^true;
+// mm_jail_count is eight bits (mm_misc, startbit 2 to endbit 9), so it stops at 255 rather than
+// wrapping round to nought and telling Lumo you have never been caught.
+if (%mm_jail_count < ^mm_jail_count_max) {
+    %mm_jail_count = add(%mm_jail_count, 1);
+}
 p_delay(3);
 p_telejump(^mm_jail_cell);
 %mm_player_is_unconscious = ^false;

@@ -644,7 +644,13 @@ if (~mm_can_speak_monkey = false) {
 ~chatplayer("<p,quiz>What's happening on this island?");
 ~chatnpc("<p,worried>Awowogei is what's happening. Ask at the temple, if you want to be a story the children tell.");
 
+// Two entry points for the same two lines. @mm_monkey_gibberish is a jump and ends the
+// conversation, which is what its three original callers want; ~mm_monkey_gibberish_lines returns,
+// which is what ~mm_monkey_can_talk needs so the caller can return on its own.
 [label,mm_monkey_gibberish]
+~mm_monkey_gibberish_lines;
+
+[proc,mm_monkey_gibberish_lines]
 ~chatnpc("<p,quiz>Ook ook. Eek?");
 ~chatplayer("<p,confused>I have absolutely no idea what that means.");
 

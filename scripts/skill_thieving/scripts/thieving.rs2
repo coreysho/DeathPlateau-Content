@@ -100,8 +100,16 @@ switch_loc (loc_type) {
 ~stealing_check_for_reward($data);
 ~thieving_xp($experience);
 ~skillpet_roll(skillpet_rocky_item, thieving, db_getfield($data, stealing:pet_base, 0));
+// WHAT A STOLEN STALL BECOMES. `market` is the 2x2 Varrock silver stall and fits every stall in
+// the game except the five 1x1 monkey tables in Marim, which would be replaced by a piece of
+// Varrock. Each of those names its own picked-over twin in next_loc_stage; everything else is
+// unchanged.
+def_loc $emptied = market;
+if (loc_param(next_loc_stage) ! null) {
+    $emptied = loc_param(next_loc_stage);
+}
 // Temp note: dur does not need updated
-loc_change(market, $respawn_ticks);
+loc_change($emptied, $respawn_ticks);
 
 [label,activate_trapped_chest]
 p_arrivedelay;

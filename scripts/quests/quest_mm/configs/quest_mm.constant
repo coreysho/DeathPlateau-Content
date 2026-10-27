@@ -87,8 +87,29 @@
 ^mm_caranock_spoken = 1          // %mm_caranock, the cache's own counter for him
 ^mm_narnode_briefed = 1          // %mm_narnode: he has written the orders
 ^mm_gandius_shipyard = 0_46_47_12_17   // 2956,3025  G.L.O. Caranock's office, north of the gate
-^mm_jail_cell = 0_43_43_27_42    // 2771,2794  inside the one cell with a lock worth picking
-^mm_jail_outside = 0_43_43_27_44 // 2771,2796  the other side of that door, which is inside Marim
+// WRONG BY EIGHT TILES UNTIL 27 OCTOBER 2026, which made the whole arrest free. A coord literal is
+// level_squarex_squarez_LOCALx_LOCALz, and 2771 on square 43 is local 19, not 27 - the comments were
+// right and the coords were not. The cell is a sealed 21-tile room (local x 18-24, z 41-43, with
+// straw on the floor and mm_jail_posts for bars); local 27,42 is a hut east of it that opens onto
+// the 747-tile region Marim itself is in. So being shot at the gate used to put you down already
+// outside, with the lockpick, the cell door and the whole of wiki steps 13-14 bypassed. Measured
+// with tools/sim/walkgraph.ts 2758 2792 2784 2810 0, which puts 2771,2794 in a 21-tile region with
+// NO ROUTE to anywhere and 2779,2794 in the big one.
+^mm_jail_cell = 0_43_43_19_42    // 2771,2794  inside the one cell with a lock worth picking
+^mm_jail_outside = 0_43_43_19_44 // 2771,2796  the other side of that door, which is inside Marim
+
+// --- The capture (scripts/mm_capture.rs2) ---
+// Talking to a monkey as a human brings one named ninja monkey and one or two Monkey Guards, and a
+// hit from any of them is the arrest. Numbers that the wiki does not give are kept deliberately
+// plain: a minute of chase, a minute of quiet afterwards, and a spawn no further off than the
+// monkey you were talking to.
+^mm_captor_named_count = 5        // Duke, Oipuis, Ouhai, Uodai, Uyoro - enum mm_captor_named
+^mm_captor_lifetime = 100         // npc_add's own duration: "they disappear after a while"
+^mm_captor_cooldown = 100         // %mm_guards_cooldown, so a walk through the village is one ambush
+^mm_captor_spawn_range = 3
+^mm_karam_reach = 8               // "as long as he can see both the player and those monkeys"
+^mm_jail_count_prize = 100        // Lumo's record. The prize itself is not built - see NOT BUILT
+^mm_jail_count_max = 255          // the varbit is eight bits wide and must not be wrapped
 
 // --- Coordinates ---
 // Each arrival tile was picked by reading the LOC section of the map square and finding a tile with
@@ -264,16 +285,37 @@
 //   in the four dungeon squares, so there is nowhere to shelter and nowhere to put a rock trap.
 //   Choosing a rate and inventing ledges would be inventing the step. What IS built is the ninety-one
 //   traps the 377 map actually places - see scripts/mm_dungeon.rs2.
-// * THE FOUR NAMED NINJA MONKEYS AND THE NINJA MONKEY GUARD. mm_oipuis, mm_ouhai, mm_uodai,
-//   mm_uyoro, mm_duke and mm_monkey_guard have no static spawn, and that is correct: in Old School
-//   none of them has one either. They are the capture event - "Monkey Guards will appear if players
-//   talk to a monkey on Ape Atoll while in human form", one named monkey plus one or two guards, and
-//   a hit from the named one puts you in the cell. The cell and the arrest ARE built
-//   ([label,mm_jail_arrest]); what is missing is that second doorway into it, and with it any
-//   dialogue for the eleven Marim monkeys, none of which has an opnpc1 at all.
-//   The temple's nine Monkey Guards are NOT missing: mm_religious_guard is named "Monkey Guard" at
-//   vislevel 167, and its nine placements on m43_43 are Old School's own nine coordinates for the
-//   Temple of Marimbo, tile for tile.
+// * LUMO'S PRIZE. "After a player's 100th capture, he gives them a stuffed monkey." There is no
+//   stuffed monkey in the cache - the only toy monkey in the obj list is mm_monkey_in_backpack,
+//   which is the live one from the zoo - so %mm_jail_count reaching ^mm_jail_count_prize gets the
+//   line about Bunkdo saying there should be a prize and nothing in your hands. Inventing an obj
+//   for it would be inventing the reward.
+// * TREFAJI AND ABERAB TURNING YOU ROUND. The two gorilla jail guards do more than stand there:
+//   "if a player in human form is outside the cell or near its walls, he deals damage (usually
+//   around 10 hitpoints, sometimes up to 20) and sends the player back inside." Both now have a
+//   Talk-to and neither has that. It wants a shape that does not make the escape impossible - the
+//   player comes out of that door as a human by design - and the wiki gives the damage and the
+//   effect but not the radius or the grace, which is three numbers to invent. Left out rather than
+//   guessed.
+//
+// --- BUILT 26-27 October 2026, and what it replaced in this list ---
+// MARIM'S FIVE STALLS used to be here as an unchecked line. All five carried op2=Steal from with no
+// row and no trigger; they are now in skill_thieving/configs/stalls/stealing.dbrow with Padulah as
+// the guard, and each has a picked-over twin above because the generic replacement for a robbed
+// stall is a 2x2 Varrock silver stall. See tools/sim/mmstalls.ts.
+// THE FOUR NAMED NINJA MONKEYS AND THE NINJA MONKEY GUARD used to be here. They are now
+// scripts/mm_capture.rs2: talking to any monkey of Marim in human form brings one of the five and
+// one or two Monkey Guards, a landed hit is the arrest, a greegree back on makes them vanish, and
+// Karam kills any of them he can see. All six still have no static spawn, which remains correct.
+// Four things were wrong underneath it and are fixed in all.npc:
+//   * ^mm_jail_cell pointed at local 27,42 instead of 19,42 - eight tiles out, in a hut that opens
+//     onto Marim - so the arrest put you down already free and the cell was never used.
+//   * all seven of these level-149 monsters had NO combat stats whatsoever.
+//   * the ninja Monkey Guard could not move, so it could never reach anybody.
+//   * it dropped medium ninja bones and Padulah dropped an ordinary monkey's.
+// The temple's nine Monkey Guards were never missing: mm_religious_guard is named "Monkey Guard" at
+// vislevel 167, and its nine placements on m43_43 are Old School's own nine coordinates for the
+// Temple of Marimbo, tile for tile.
 // * THE HANGAR PUZZLE. Unchanged from stage one - five mm_glider and five mm_bunker_lever in matched
 //   rows with nothing in the cache saying which lever drives which glider.
 // * THE REINITIALISATION PANEL and mm_reinitialisation_crate on the m37_154 copy.
