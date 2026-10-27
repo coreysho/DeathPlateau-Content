@@ -35,3 +35,16 @@ contrast=50
 model=osrsloc_19705
 ambient=10
 contrast=50
+
+// The Emporium's minimap icon, which the header above said the 377 client had no sprite for. It has
+// one now: OSRS's own Hunter shop icon, a kebbit (sprite 1513, reached from loc 19751's maparea 67),
+// written into mapfunction slot 71 by tools/models/genmapicon.py.
+//
+// An icon is always a loc of its own and never the building: the client only reads mapfunction off
+// GROUND DECORATION (shape 22), which is why Jagex marks shops with general_store_icon and the like -
+// an invisible model, forcedecor - and why this sits on its own tile. Placed in maps/m40_48.jm2 at
+// local 6,10, the tile OSRS places 19751 on, which is the floor just inside the door.
+[hunter_emporium_icon]
+model=minigame_start_icon
+forcedecor=yes
+mapfunction=71
