@@ -1,0 +1,209 @@
+// PYRAMID PLUNDER - https://oldschool.runescape.wiki/w/Pyramid_Plunder
+//
+// Thieving 21, eight rooms, five minutes, and a solid gold sceptre somewhere in the chests. It is
+// 17 July 2006 content, which is a fortnight after the cache this server is built on, so none of
+// it was here: the rooms, the urns, the chests, the sarcophagi, the spear traps, the tomb doors,
+// the Guardian mummy, the nine artefacts and the sceptre are all imported from a modern OSRS cache
+// (tools/models/importosrsmap.py, importosrs.py, importosrsnpc.py), and this is the design they
+// arrived with.
+//
+// ---------------------------------------------------------------------------------------------
+// THE ROOMS ARE NOT CONNECTED TO EACH OTHER, which is the thing to understand before reading the
+// doors. Jalsavrah is one map square, m30_69, holding eight sealed rooms and a web of corridors.
+// Each room has four Tomb Doors in its walls and behind every one of them is a single dead-end
+// tile - tools/sim/plundergraph.ts floods all thirty-two and every one comes back "corridor of 1
+// tile". So a door cannot lead anywhere by itself. Old School's own account agrees: the correct
+// door "is the same for all players, but it changes when a new player enters room 1", and a door
+// that changes which room it opens onto is not a door in a wall. Picking the right one MOVES you.
+//
+// Which room is which is therefore a decision rather than a map fact, and the one thing that pins
+// it is Old School's note that room 3 has twelve urns where every other room has thirteen. Exactly
+// one room here has twelve - the one at 1975,4458 - so that is room 3, and the rest are ordered to
+// walk the pyramid roughly south to north.
+//
+// THE SPEAR TRAP IS THE ROOM'S GATE. Every room is entered through a four-loc barrier across its
+// corridor, and that is where the Thieving level is checked: the corridors do interconnect, so
+// without it a level 21 player could walk to room 8's door and start there.
+//
+// ---------------------------------------------------------------------------------------------
+// WHAT IS NOT BUILT, and why
+// ---------------------------------------------------------------------------------------------
+// THE ABANDONED ROOM. Old School's three wrong doors into the pyramid open onto an empty chamber
+// you then walk out of. There is no such chamber in m30_69 and nothing in the cache for one, so a
+// wrong door here says what is behind it and leaves you outside. Nothing is lost but the walk.
+//
+// THE SNAKE CHARM is imported and sold, and charming a snake is built, but Old School's "check for
+// snakes first, and only below 51 Thieving" advice is about a rate this server does not publish.
+// The charm works; whether it is worth using is the player's arithmetic.
+
+^plunder_rooms = 8
+^plunder_level_1 = 21
+^plunder_level_2 = 31
+^plunder_level_3 = 41
+^plunder_level_4 = 51
+^plunder_level_5 = 61
+^plunder_level_6 = 71
+^plunder_level_7 = 81
+^plunder_level_8 = 91
+
+// FIVE MINUTES A RUN, which is five hundred ticks. The timer is a softtimer rather than a deadline
+// read off map_clock, because it has to fire whether the player is clicking or standing still.
+^plunder_run_ticks = 500
+^plunder_warn_ticks = 50
+
+// ---------------------------------------------------------------------------------------------
+// EXPERIENCE, in tenths of a point - ~thieving_xp and ~strength_xp both take xp * 10.
+// Old School's table, room by room. The sarcophagus is the odd one: it pays STRENGTH, because you
+// are heaving a stone lid off rather than picking anything.
+// ---------------------------------------------------------------------------------------------
+^plunder_xp_trap = 100                  // ten points, the same in every room
+
+^plunder_xp_urn_1 = 600
+^plunder_xp_urn_2 = 900
+^plunder_xp_urn_3 = 1500
+^plunder_xp_urn_4 = 2150
+^plunder_xp_urn_5 = 3000
+^plunder_xp_urn_6 = 4500
+^plunder_xp_urn_7 = 6750
+^plunder_xp_urn_8 = 8250
+
+^plunder_xp_chest_1 = 400
+^plunder_xp_chest_2 = 600
+^plunder_xp_chest_3 = 1000
+^plunder_xp_chest_4 = 1400
+^plunder_xp_chest_5 = 2000
+^plunder_xp_chest_6 = 3000
+^plunder_xp_chest_7 = 4500
+^plunder_xp_chest_8 = 5500
+
+// The door pays the same as the chest - and room 8 has no door, because it is the last room.
+^plunder_xp_door_1 = 400
+^plunder_xp_door_2 = 600
+^plunder_xp_door_3 = 1000
+^plunder_xp_door_4 = 1400
+^plunder_xp_door_5 = 2000
+^plunder_xp_door_6 = 3000
+^plunder_xp_door_7 = 4500
+
+// A LOCKPICK HALVES THE DOOR EXPERIENCE and makes the door easier, which is Old School's trade.
+^plunder_lockpick_bonus = 40
+
+^plunder_xp_sarc_1 = 200
+^plunder_xp_sarc_2 = 300
+^plunder_xp_sarc_3 = 500
+^plunder_xp_sarc_4 = 700
+^plunder_xp_sarc_5 = 1000
+^plunder_xp_sarc_6 = 1500
+^plunder_xp_sarc_7 = 2250
+^plunder_xp_sarc_8 = 2750
+
+// ---------------------------------------------------------------------------------------------
+// DAMAGE. Old School gives 1-4 for the spear trap, the snake and the chest's trap alike, and up to
+// 6 from a mummy out of a sarcophagus - which is a monster rather than a number, so it fights.
+// ---------------------------------------------------------------------------------------------
+^plunder_hit_low = 1
+^plunder_hit_high = 4
+
+// ---------------------------------------------------------------------------------------------
+// THE SCEPTRE. One in so-many per container, chest and sarcophagus alike, and finding one throws
+// you out of the pyramid on the spot.
+// ---------------------------------------------------------------------------------------------
+^plunder_sceptre_rate_1 = 4200
+^plunder_sceptre_rate_2 = 2800
+^plunder_sceptre_rate_3 = 1600
+^plunder_sceptre_rate_4 = 950
+^plunder_sceptre_rate_5 = 800
+^plunder_sceptre_rate_6 = 750
+^plunder_sceptre_rate_7 = 650
+^plunder_sceptre_rate_8 = 650
+
+// Rocky, rolled on opening the Grand Gold Chest and nowhere else - "even if a scarab swarm
+// appears", which is why the roll is before the trap.
+^plunder_rocky_1 = 41355
+^plunder_rocky_2 = 29540
+^plunder_rocky_3 = 25847
+^plunder_rocky_4 = 20678
+^plunder_rocky_5 = 20678
+^plunder_rocky_6 = 20678
+^plunder_rocky_7 = 10339
+^plunder_rocky_8 = 6893
+
+// ---------------------------------------------------------------------------------------------
+// WHERE EVERYTHING IS. All of these came out of tools/sim/plundergraph.ts, which floods each room
+// from beside its Grand Gold Chest and reports the standable tile on each side of its spear trap -
+// the corridor side is where a room is entered from, the room side is where passing the trap puts
+// you. Nothing here is read off a picture.
+// ---------------------------------------------------------------------------------------------
+^plunder_arrive_1 = 0_30_69_6_11        // 1926,4427
+^plunder_inside_1 = 0_30_69_6_13        // 1926,4429
+^plunder_arrive_2 = 0_30_69_24_8        // 1944,4424
+^plunder_inside_2 = 0_30_69_24_10       // 1944,4426
+^plunder_arrive_3 = 0_30_69_56_50       // 1976,4466
+^plunder_inside_3 = 0_30_69_56_48       // 1976,4464
+^plunder_arrive_4 = 0_30_69_54_7        // 1974,4423
+^plunder_inside_4 = 0_30_69_54_9        // 1974,4425
+^plunder_arrive_5 = 0_30_69_43_29       // 1963,4445
+^plunder_inside_5 = 0_30_69_40_29       // 1960,4445
+^plunder_arrive_6 = 0_30_69_9_37        // 1929,4453
+^plunder_inside_6 = 0_30_69_12_37       // 1932,4453
+^plunder_arrive_7 = 0_30_69_7_57        // 1927,4473
+^plunder_inside_7 = 0_30_69_7_55        // 1927,4471
+^plunder_arrive_8 = 0_30_69_34_58       // 1954,4474
+^plunder_inside_8 = 0_30_69_34_56       // 1954,4472
+
+// The lobby: the sealed chamber south of room 1's spear trap, which is the only dead end in the
+// square big enough to stand about in, and where the Guardian mummy waits.
+^plunder_lobby = 0_30_69_7_9            // 1927,4425
+^plunder_mummy_spot = 0_30_69_6_9       // 1926,4425
+
+// And outside, on the sand south of Jalsavrah in Sophanem.
+^plunder_outside = 0_51_43_26_35        // 3290,2787
+
+// THE FOUR ANONYMOUS DOORS, in Sophanem, one on each face of the pyramid at 3283-3298,2789-2800.
+// Which one is the way in changes every twenty-five minutes and is the same for everybody, so it
+// is read straight off the world clock rather than stored: 2,500 ticks is twenty-five minutes, and
+// nothing has to be rerolled, saved or kept in step between worlds.
+^plunder_entrance_period = 2500
+^plunder_door_south = 0_51_43_26_37     // 3290,2789
+^plunder_door_west = 0_51_43_19_42      // 3283,2794
+^plunder_door_north = 0_51_43_26_47     // 3290,2799
+^plunder_door_east = 0_51_43_33_42      // 3297,2794
+
+// ---------------------------------------------------------------------------------------------
+// THE SPEAR TRAPS. Four locs make each barrier - two 2x1 halves, doubled along the corridor - and
+// the engine will take a Pass from any of them, so all thirty-two are named. This is also the
+// table that says which room a player has just walked into, which is what the level check and
+// every loot tier afterwards are keyed on.
+// ---------------------------------------------------------------------------------------------
+^plunder_trap_1a = 0_30_69_5_11
+^plunder_trap_1b = 0_30_69_5_12
+^plunder_trap_1c = 0_30_69_7_11
+^plunder_trap_1d = 0_30_69_7_12
+^plunder_trap_2a = 0_30_69_23_8
+^plunder_trap_2b = 0_30_69_23_9
+^plunder_trap_2c = 0_30_69_25_8
+^plunder_trap_2d = 0_30_69_25_9
+^plunder_trap_3a = 0_30_69_55_49
+^plunder_trap_3b = 0_30_69_55_50
+^plunder_trap_3c = 0_30_69_57_49
+^plunder_trap_3d = 0_30_69_57_50
+^plunder_trap_4a = 0_30_69_53_7
+^plunder_trap_4b = 0_30_69_53_8
+^plunder_trap_4c = 0_30_69_55_7
+^plunder_trap_4d = 0_30_69_55_8
+^plunder_trap_5a = 0_30_69_41_27
+^plunder_trap_5b = 0_30_69_41_29
+^plunder_trap_5c = 0_30_69_42_27
+^plunder_trap_5d = 0_30_69_42_29
+^plunder_trap_6a = 0_30_69_10_35
+^plunder_trap_6b = 0_30_69_10_37
+^plunder_trap_6c = 0_30_69_11_35
+^plunder_trap_6d = 0_30_69_11_37
+^plunder_trap_7a = 0_30_69_6_56
+^plunder_trap_7b = 0_30_69_6_57
+^plunder_trap_7c = 0_30_69_8_56
+^plunder_trap_7d = 0_30_69_8_57
+^plunder_trap_8a = 0_30_69_33_57
+^plunder_trap_8b = 0_30_69_33_58
+^plunder_trap_8c = 0_30_69_35_57
+^plunder_trap_8d = 0_30_69_35_58

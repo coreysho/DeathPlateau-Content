@@ -1,0 +1,440 @@
+// OSRS locs imported by tools/models/importosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_6926]
+// OSRS loc 6926
+model=osrsloc_6926
+blockwalk=no
+blockrange=no
+active=no
+
+[osrsloc_20737]
+// OSRS loc 20737
+model=osrsloc_20737
+active=no
+hillskew=yes
+sharelight=yes
+
+[plunder_exit]
+// OSRS loc 20931
+name=Tomb Door
+model=plunder_exit
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+op1=Leave Tomb
+op2=Quick-leave
+
+[plunder_exit_plain]
+// OSRS loc 20932
+name=Tomb Door
+model=plunder_exit_plain
+active=yes
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+op1=Leave Tomb
+
+[osrsloc_20933]
+// OSRS loc 20933
+model=osrsloc_20933
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_20934]
+// OSRS loc 20934
+model=osrsloc_20934
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_20937]
+// OSRS loc 20937
+model=osrsloc_20937
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_20939]
+// OSRS loc 20939
+model=osrsloc_20939
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_20941]
+// OSRS loc 20941
+model=osrsloc_20941
+active=no
+hillskew=yes
+ambient=30
+contrast=127
+
+[osrsloc_20942]
+// OSRS loc 20942
+model=osrsloc_20942
+active=no
+hillskew=yes
+ambient=30
+contrast=127
+anim=osrsloc_anim_481
+
+[osrsloc_20943]
+// OSRS loc 20943
+model=osrsloc_20943
+active=no
+hillskew=yes
+ambient=30
+contrast=127
+
+[osrsloc_20944]
+// OSRS loc 20944
+model=osrsloc_20944
+active=no
+hillskew=yes
+ambient=30
+contrast=127
+
+[osrsloc_20945]
+// OSRS loc 20945
+model=osrsloc_20945
+active=no
+hillskew=yes
+ambient=30
+contrast=127
+
+[plunder_chest_closed]
+// OSRS loc 20946
+name=Grand Gold Chest
+model=plunder_chest_closed
+width=3
+offsety=12
+ambient=10
+contrast=50
+op1=Search
+
+[plunder_chest_open]
+// OSRS loc 20947
+name=Opened gold chest
+model=plunder_chest_open
+width=3
+offsety=12
+ambient=10
+contrast=50
+
+[plunder_door_locked]
+// OSRS loc 20948
+name=Tomb Door
+model=plunder_door_locked
+active=yes
+hillskew=yes
+forcedecor=yes
+op1=Pick-lock
+
+[plunder_door_open]
+// OSRS loc 20949
+name=Tomb Door
+model=plunder_door_open
+active=yes
+hillskew=yes
+forcedecor=yes
+op1=Enter
+anim=osrsloc_anim_4338
+
+[osrsloc_20950]
+// OSRS loc 20950
+model=osrsloc_20950
+hillskew=yes
+forcedecor=yes
+ambient=10
+
+[osrsloc_20951]
+// OSRS loc 20951
+model=osrsloc_20951
+hillskew=yes
+forcedecor=yes
+ambient=10
+
+[plunder_bust1]
+// OSRS loc 20953
+name=Bust
+model=plunder_bust1
+model2=plunder_bust1_2
+ambient=10
+
+[plunder_bust2]
+// OSRS loc 20954
+name=Bust
+model=plunder_bust2
+model2=plunder_bust2_2
+ambient=10
+
+[plunder_obelisk]
+// OSRS loc 20955
+name=Obelisk
+model=plunder_obelisk
+ambient=30
+contrast=100
+
+[plunder_sarcophagus_closed]
+// OSRS loc 21255
+name=Sarcophagus
+model=plunder_sarcophagus_closed
+model2=plunder_sarcophagus_closed_2
+width=2
+length=2
+blockrange=no
+active=yes
+ambient=10
+forceapproach=south
+op1=Open
+anim=osrsloc_anim_4336
+
+[plunder_sarcophagus_opened]
+// OSRS loc 21256
+name=Sarcophagus
+model=plunder_sarcophagus_opened
+model2=plunder_sarcophagus_opened_2
+width=2
+length=2
+blockrange=no
+active=yes
+ambient=10
+forceapproach=south
+op1=Search
+anim=osrsloc_anim_4336
+
+[plunder_sarcophagus_empty]
+// OSRS loc 21257
+name=Sarcophagus
+model=plunder_sarcophagus_empty
+model2=plunder_sarcophagus_empty_2
+width=2
+length=2
+blockrange=no
+active=yes
+ambient=10
+forceapproach=south
+anim=osrsloc_anim_4336
+
+[plunder_sarcophagus_b_closed]
+// OSRS loc 21258
+name=Sarcophagus
+model=plunder_sarcophagus_b_closed
+model2=plunder_sarcophagus_b_closed_2
+width=2
+length=2
+ambient=10
+forceapproach=south
+anim=osrsloc_anim_4336
+
+[plunder_sarcophagus_b_opened]
+// OSRS loc 21259
+name=Sarcophagus
+model=plunder_sarcophagus_b_opened
+model2=plunder_sarcophagus_b_opened_2
+width=2
+length=2
+ambient=10
+forceapproach=south
+anim=osrsloc_anim_4336
+
+[plunder_sarcophagus_b_empty]
+// OSRS loc 21260
+name=Sarcophagus
+model=plunder_sarcophagus_b_empty
+model2=plunder_sarcophagus_b_empty_2
+width=2
+length=2
+ambient=10
+forceapproach=south
+anim=osrsloc_anim_4336
+
+[plunder_urn_a_fresh]
+// OSRS loc 21261
+name=Urn
+model=plunder_urn_a_fresh
+model2=plunder_urn_a_fresh_2
+active=yes
+ambient=10
+op1=Search
+op2=Check for Snakes
+anim=osrsloc_anim_4335
+
+[plunder_urn_b_fresh]
+// OSRS loc 21262
+name=Urn
+model=plunder_urn_b_fresh
+model2=plunder_urn_b_fresh_2
+active=yes
+ambient=10
+op1=Search
+op2=Check for Snakes
+anim=osrsloc_anim_4335
+
+[plunder_urn_c_fresh]
+// OSRS loc 21263
+name=Urn
+model=plunder_urn_c_fresh
+model2=plunder_urn_c_fresh_2
+active=yes
+ambient=10
+op1=Search
+op2=Check for Snakes
+anim=osrsloc_anim_4335
+
+[plunder_urn_d_fresh]
+// OSRS loc 21264
+name=Urn
+model=plunder_urn_d_fresh
+model2=plunder_urn_d_fresh_2
+active=yes
+ambient=10
+anim=osrsloc_anim_4335
+
+[plunder_urn_a_checked]
+// OSRS loc 21265
+name=Urn
+model=plunder_urn_a_checked
+model2=plunder_urn_a_checked_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_b_checked]
+// OSRS loc 21266
+name=Urn
+model=plunder_urn_b_checked
+model2=plunder_urn_b_checked_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_c_checked]
+// OSRS loc 21267
+name=Urn
+model=plunder_urn_c_checked
+model2=plunder_urn_c_checked_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_d_checked]
+// OSRS loc 21268
+name=Urn
+model=plunder_urn_d_checked
+model2=plunder_urn_d_checked_2
+active=yes
+ambient=10
+anim=osrsloc_anim_4335
+
+[plunder_urn_a_snake]
+// OSRS loc 21269
+name=Urn
+model=plunder_urn_a_snake
+model2=plunder_urn_a_snake_2
+active=yes
+ambient=10
+op1=Search
+op3=Charm Snake
+anim=osrsloc_anim_4335
+
+[plunder_urn_b_snake]
+// OSRS loc 21270
+name=Urn
+model=plunder_urn_b_snake
+model2=plunder_urn_b_snake_2
+active=yes
+ambient=10
+op1=Search
+op3=Charm Snake
+anim=osrsloc_anim_4335
+
+[plunder_urn_c_snake]
+// OSRS loc 21273
+name=Urn
+model=plunder_urn_c_snake
+model2=plunder_urn_c_snake_2
+active=yes
+ambient=10
+op1=Search
+op3=Charm Snake
+anim=osrsloc_anim_4335
+
+[plunder_urn_d_snake]
+// OSRS loc 21275
+name=Urn
+model=plunder_urn_d_snake
+model2=plunder_urn_d_snake_2
+active=yes
+ambient=10
+op1=Search
+op3=Charm Snake
+anim=osrsloc_anim_4335
+
+[plunder_urn_a_empty]
+// OSRS loc 21276
+name=Urn
+model=plunder_urn_a_empty
+model2=plunder_urn_a_empty_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_b_empty]
+// OSRS loc 21277
+name=Urn
+model=plunder_urn_b_empty
+model2=plunder_urn_b_empty_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_c_empty]
+// OSRS loc 21278
+name=Urn
+model=plunder_urn_c_empty
+model2=plunder_urn_c_empty_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_urn_d_empty]
+// OSRS loc 21279
+name=Urn
+model=plunder_urn_d_empty
+model2=plunder_urn_d_empty_2
+active=yes
+ambient=10
+op1=Search
+anim=osrsloc_anim_4335
+
+[plunder_speartrap]
+// OSRS loc 21280
+name=Speartrap
+model=plunder_speartrap
+width=2
+blockwalk=no
+blockrange=no
+active=yes
+hillskew=yes
+op1=Pass
+anim=osrsloc_anim_459
+
+[plunder_mural]
+// OSRS loc 55775
+name=Mural
+model=plunder_mural
+length=2
+active=yes
+hillskew=yes
+sharelight=yes
+op1=Read
