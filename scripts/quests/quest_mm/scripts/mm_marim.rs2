@@ -1,0 +1,233 @@
+// ===================================================================================================
+// THE ELEVEN MONKEYS OF MARIM, AND THE GNOMES IN THE CELLS
+// ===================================================================================================
+// Twenty-two npcs in this quest carried op1=Talk-to with no [opnpc1] of any kind behind them, so
+// Talk-to on any of them did nothing whatsoever - no message, no dialogue, no refusal. Measured with
+// a sweep over all.npc against every [opnpc]/[apnpc] trigger in the repo.
+//
+// They fall into three groups and each group wanted a different thing:
+//
+//   THE MONKEYS OF MARIM - Uwogo, Muruwoi, Dugopul, the three temple priests, Padulah, the sleeping
+//   jail officer, and the two gorilla jail guards. For these, Talk-to is not primarily a
+//   conversation: it is the trigger for the capture (mm_capture.rs2). As a monkey they talk; as a
+//   human they are the reason you end up in the cell.
+//
+//   THE 10TH SQUAD IN THE CELLS - Lumo, Bunkdo and Carado, standing in the jail right now, at
+//   2775,2796 / 2775,2798 / 2775,2801, each in a six-tile cell behind an unpickable door, and each
+//   with nothing to say. They are the squad Garkor keeps talking about. They stay in prison by
+//   choice, gathering intelligence, and LUMO KEEPS THE COUNT - which is what %mm_jail_count, the
+//   cache's own eight-bit counter, is for. The arrest has been incrementing it since the gate was
+//   built and nothing has ever read it.
+//
+//   THE GNOMES ELSEWHERE - Karam under his invisibility, Bonzara, and Waymottin and Bunkwicket with
+//   their hands in the cave-wall paste.
+//
+// The shopkeepers (Solihib, Daga, Ifaba, Hamab, Tutab) are a fourth case: their Talk-to already
+// worked, through [opnpc1,_shop_keeper], so what they were missing was only the human-form half.
+// Each gets a named [opnpc1] - which beats the category - that captures a human and otherwise falls
+// straight through to the generic shopkeeper exchange.
+
+// ===================================================================================================
+// The monkeys
+// ===================================================================================================
+// Uwogo and Muruwoi stand either side of the road into the east of Marim, both nomove, both
+// "A smartly clothed large monkey".
+[opnpc1,mm_uwogo]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>You are new. Nobody is new.");
+~chatplayer("<p,quiz>Everybody is new once.");
+~chatnpc("<p,neutral>Not here. Here, everybody has always been here.");
+
+[opnpc1,mm_murowoi]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,quiz>Have you come about the road?");
+~chatplayer("<p,confused>What about the road?");
+~chatnpc("<p,neutral>Nothing. That is the problem with it.");
+
+// Dugopul is out at the burial ground south-east of the village, at 2802,2746, with a spade.
+[opnpc1,mm_dugopul]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>Digging.");
+~chatplayer("<p,quiz>Anyone in particular?");
+~chatnpc("<p,neutral>Not yet.");
+
+// The Temple of Marimbo, upstairs: Hafuba is the head priest, Denadu and Lofu carry the maces.
+[opnpc1,mm_hafuba]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>Marimbo is a goddess of appetite. Do not mistake her for a kind one.");
+~chatplayer("<p,quiz>What does she ask for?");
+~chatnpc("<p,neutral>Everything, eventually. In the meantime, bananas.");
+
+[opnpc1,mm_denadu]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>Hafuba says I am not to talk to anyone during the offering.");
+~chatplayer("<p,quiz>Is there an offering now?");
+~chatnpc("<p,neutral>There is always an offering. That is rather the point of Marimbo.");
+
+[opnpc1,mm_lofu]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,quiz>Are you here for the statue or the stairs?");
+~chatplayer("<p,neutral>The stairs, I think.");
+~chatnpc("<p,angry>Then do not touch the statue.");
+
+// Padulah guards the sacred statue of Marimbo and is the one named ninja monkey with a static
+// spawn, so unlike the other five he can simply be fought - he has op2=Attack and always has done.
+[opnpc1,mm_padulah]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,angry>Move along.");
+~chatplayer("<p,quiz>I only wanted to look at it.");
+~chatnpc("<p,angry>Everyone only wanted to look at it. Move along.");
+
+// The jail officer, asleep on his feet with a bat, and the cache ships him a liedown, a getup and a
+// ready stance of his own (m_monkey_jailofficer_*).
+[opnpc1,mm_sleeping_monkey_guard]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>...mmh. Nothing to report.");
+~chatplayer("<p,quiz>You were asleep.");
+~chatnpc("<p,neutral>Nothing to report.");
+
+// Trefaji and Aberab are the two gorilla jail guards, both examined as "He looks like a jail guard",
+// standing outside the big cell at 2768,2803 and 2764,2803.
+[opnpc1,mm_trefaji] @mm_jail_guard_talk;
+[opnpc1,mm_aberab] @mm_jail_guard_talk;
+
+[label,mm_jail_guard_talk]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+~chatnpc("<p,neutral>Four cells. Three of them want to be in there.");
+~chatplayer("<p,quiz>And the fourth?");
+~chatnpc("<p,happy>The fourth keeps coming back as well, so I have stopped asking.");
+
+// The shopkeepers. A named [opnpc1] beats [opnpc1,_shop_keeper], so each of these has to hand the
+// ordinary exchange back explicitly - that is what the label in shop/scripts/shop.rs2 is for.
+[opnpc1,mm_solihib] @mm_monkey_shopkeeper;
+[opnpc1,mm_ifaba] @mm_monkey_shopkeeper;
+[opnpc1,mm_hamab] @mm_monkey_shopkeeper;
+[opnpc1,mm_tutab] @mm_monkey_shopkeeper;
+
+[label,mm_monkey_shopkeeper]
+if (~mm_monkey_can_talk = false) {
+    return;
+}
+@shop_keeper_talk;
+
+// EVERY MONKEY IN MARIM SHARES THE FIRST TWO LINES OF ITS TALK-TO. A human gets taken; a monkey
+// without the amulet gets gibberish, which is the quest's own joke and already written. Only a
+// monkey who can speak monkey gets any further - and only then does the npc's own dialogue run,
+// which is why this returns a boolean instead of being a label. A label is a jump.
+[proc,mm_monkey_can_talk]()(boolean)
+if (~mm_is_monkey = false) {
+    ~mm_monkey_captured;
+    return(false);
+}
+if (~mm_can_speak_monkey = false) {
+    ~mm_monkey_gibberish_lines;
+    return(false);
+}
+return(true);
+
+// ===================================================================================================
+// The 10th Squad in the cells
+// ===================================================================================================
+// They are behind doors with no lock on the outside, so this is a conversation through bamboo. No
+// greegree is needed and no amulet either: they are gnomes.
+//
+// AND IT HAS TO BE AN APPROACH. tools/sim/beside.ts puts all four tiles beside Lumo inside his own
+// six-tile cell, so there is no tile outside the bars that counts as adjacent to him and [opnpc1]
+// alone would end in "I can't reach that" for ever - the same problem Kruk had in mm_stage3.rs2,
+// with the same answer. Bunkdo and Carado happened to measure as reachable only because all three
+// wander inside their cells and had drifted onto a door tile, which is not something to rely on.
+[opnpc1,mm_lumo] @mm_lumo_talk;
+[apnpc1,mm_lumo] @mm_lumo_talk;
+[opnpc1,mm_bunkdo] @mm_bunkdo_talk;
+[apnpc1,mm_bunkdo] @mm_bunkdo_talk;
+[opnpc1,mm_carado] @mm_carado_talk;
+[apnpc1,mm_carado] @mm_carado_talk;
+
+[label,mm_lumo_talk]
+~chatnpc("<p,happy>Through there. That is the one. Hello again.");
+if (%mm_jail_count <= 1) {
+    ~chatplayer("<p,quiz>Again? We have never met.");
+    ~chatnpc("<p,happy>You will be back. They all come back.");
+    ~chatnpc("<p,neutral>I am Lumo. 10th Squad. I keep the count.");
+    return;
+}
+~chatplayer("<p,quiz>The count of what?");
+~chatnpc("<p,happy>You. That is <tostring(%mm_jail_count)> times now.");
+if (%mm_jail_count >= ^mm_jail_count_prize) {
+    ~chatnpc("<p,happy>Bunkdo says that is a record. Bunkdo says there should be a prize.");
+    ~chatplayer("<p,quiz>Is there?");
+    ~chatnpc("<p,sad>Bunkdo says a lot of things.");
+    return;
+}
+~chatnpc("<p,neutral>Do not let it put you off. We are not going anywhere.");
+
+[label,mm_bunkdo_talk]
+~chatnpc("<p,quiz>You are the human Garkor has been promising us.");
+~chatplayer("<p,quiz>Why are you still in there? That door has no lock on my side either.");
+~chatnpc("<p,happy>Because in here they talk in front of us. Out there they would stop.");
+// THE DRAGON SQUARE SHIELD, which is the one line of Bunkdo and Lumo's bingo that the wiki still
+// records, and the only reason this check is here.
+if (inv_total(worn, dragon_sq_shield) > 0) {
+    ~chatnpc("<p,happy>Wow. Somebody with a dragon square shield. I win this game too.");
+    return;
+}
+~chatnpc("<p,neutral>Besides, Lumo owes me four games of bingo.");
+
+[label,mm_carado_talk]
+~chatnpc("<p,neutral>Mind the straw. It is the only furniture.");
+~chatplayer("<p,quiz>Can I get you out of there?");
+~chatnpc("<p,neutral>You could. We let ourselves be put back last time, and the time before.");
+~chatnpc("<p,happy>Talk to Garkor. He is the one with the plan. We are the ones with the straw.");
+
+// ===================================================================================================
+// The gnomes elsewhere
+// ===================================================================================================
+// Karam is the invisible one - "All you see is a glimmer of light and the suggestion of shadow" -
+// and the reason a captured player is sometimes rescued before the arrest lands. He is placed twice
+// in Marim and mm_karam_talker once more at 2781,2799.
+[opnpc1,mm_karam] @mm_karam_marim_talk;
+[opnpc1,mm_karam_talker] @mm_karam_marim_talk;
+
+[label,mm_karam_marim_talk]
+~chatnpc("<p,neutral>Do not look at me. Look past me. That is the trick of it.");
+~chatplayer("<p,quiz>How are you doing that?");
+~chatnpc("<p,neutral>Zooknock. He does the magic, I do the standing still.");
+~chatnpc("<p,neutral>I am getting my squad out of that jail. If the guards come for you where I can see you, I will see to them.");
+
+// Bonzara is a monkey priest, and the only one of them that is not on Ape Atoll at all: he is in
+// the late hangar copy at 2415,9910, which is the final battle's map.
+[opnpc1,mm_bonzara]
+if (~mm_can_speak_monkey = false) {
+    @mm_monkey_gibberish;
+}
+~chatnpc("<p,quiz>Is it over? Nobody tells the priest anything.");
+~chatplayer("<p,neutral>Not yet.");
+~chatnpc("<p,neutral>Then I shall keep praying and you shall keep doing whatever that is.");
+
+// Waymottin and Bunkwicket are both examined as "This Gnome is busy applying some kind of pasty
+// material to the cave walls", and both are in the tunnel at 2805,9147 and 2803,9148.
+[opnpc1,mm_waymottin] @mm_cave_gnome_talk;
+[opnpc1,mm_bunkwicket] @mm_cave_gnome_talk;
+
+[label,mm_cave_gnome_talk]
+~chatnpc("<p,neutral>Do not lean on it. It is wet.");
+~chatplayer("<p,quiz>What is it?");
+~chatnpc("<p,happy>It is what is holding the roof up, is what it is. Mind your head on the way past.");

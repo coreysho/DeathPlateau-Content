@@ -19,6 +19,22 @@
 [oploc2,silver_stall_stealing] // Silver stall
 @attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
 
+// THE FIVE IN MARIM, on Ape Atoll, which carried "Steal from" with nothing behind it.
+[oploc2,mm_stall_food] // Monkey food stall
+@attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
+
+[oploc2,mm_stall_crafting] // Monkey crafting stall
+@attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
+
+[oploc2,mm_stall_general] // Monkey general stall
+@attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
+
+[oploc2,mm_stall_magic] // Monkey magic stall
+@attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
+
+[oploc2,mm_stall_scimitar] // Monkey scimitar stall
+@attempt_steal_from_stall(loc_type, loc_coord, loc_angle, loc_shape);
+
 [label,attempt_steal_from_stall](loc $loc, coord $loc_coord, int $loc_angle, locshape $loc_shape)
 p_arrivedelay;
 
@@ -91,6 +107,11 @@ while (npc_findnext = true) {
 
 [proc,stealing_check_for_owner](dbrow $data)(boolean)
 def_npc $owner = db_getfield($data, stealing:owner, 0);
+// A STALL WITH NOBODY MINDING IT. Marim's five name no owner on purpose - see the rows - and
+// npc_find for a null type is asking the engine to look for nothing in particular.
+if ($owner = null) {
+    return(false);
+}
 if (npc_find(coord, $owner, 5, 0) = true & lineofsight(npc_coord, coord) = true) {
     npc_say("Hey! Get your hands off there!");
     return(true);
