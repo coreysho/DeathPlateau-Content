@@ -17741,7 +17741,10 @@ param=strengthbonus,10
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17784,7 +17787,10 @@ param=strengthbonus,14
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17825,7 +17831,10 @@ param=strengthbonus,22
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17868,7 +17877,10 @@ param=strengthbonus,26
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17911,7 +17923,10 @@ param=strengthbonus,31
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17954,7 +17969,10 @@ param=strengthbonus,44
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -17997,7 +18015,10 @@ param=strengthbonus,70
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 // osrs 2h sword defend human_dhsword_block
@@ -83701,7 +83722,10 @@ param=prayerbonus,1
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 param=ready_baseanim,human_dh_weapon_ready
@@ -90201,7 +90225,10 @@ param=strengthbonus,93
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 param=ready_baseanim,human_dh_weapon_ready
@@ -94063,7 +94090,10 @@ param=strengthbonus,26
 param=attackrate,7
 param=slashattack_anim,human_dhsword_slash
 param=crushattack_anim,human_dhsword_chop
-param=defend_anim,human_sword_def
+// human_dhsword_block, not human_sword_def: this is a TWO-handed sword and 410 is the
+// two-handed block, native to this cache and unused until now. The beta-world dump gives
+// the dragon 2h sword 410, and every 2h sword here carried the one-handed 388.
+param=defend_anim,human_dhsword_block
 param=slash_sound,2H_slash
 param=crush_sound,2H_crush
 param=ready_baseanim,human_dh_weapon_ready
