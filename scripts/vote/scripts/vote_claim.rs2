@@ -98,6 +98,12 @@ if (vote_sitecount = 0) {
     return;
 }
 def_int $status = vote_claim;
+if ($status = ^vote_claim_unavailable) {
+    // The ledger is down. Say so plainly rather than "no votes found", which would read as "you
+    // did not vote" - the one thing it does not mean.
+    ~chatnpc("<p,sad>I can't get at the ledger just now. Your votes aren't lost - come back and I'll look again.");
+    return;
+}
 if ($status = ^vote_claim_busy) {
     ~chatnpc("<p,neutral>I'm already looking. Give me a moment.");
     return;

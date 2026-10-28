@@ -83,6 +83,11 @@
 ^vote_claim_nosites = 1
 ^vote_claim_busy = 2
 
+// The ledger itself would not open - a disk or permissions fault on the server, not anything the
+// player did and not anything they can do about it. It is its own answer because the other three
+// would all be lies: nothing was started, sites may well be configured, and nobody is busy.
+^vote_claim_unavailable = 3
+
 // ============================================================================ the reminder (28 October)
 // A player who CAN vote is told so in the chatbox, now and then. A player who has voted is told
 // nothing at all - which is the whole point of doing it this way round rather than broadcasting
