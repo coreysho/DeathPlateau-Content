@@ -62,6 +62,14 @@ switch_int ($i) {
         if_sethide(collection_log:row12, $hide);
         if_settext(collection_log:r12name, $text);
         if_setcolour(collection_log:r12box, $fill);
+    case 13 :
+        if_sethide(collection_log:row13, $hide);
+        if_settext(collection_log:r13name, $text);
+        if_setcolour(collection_log:r13box, $fill);
+    case 14 :
+        if_sethide(collection_log:row14, $hide);
+        if_settext(collection_log:r14name, $text);
+        if_setcolour(collection_log:r14box, $fill);
 }
 
 // One tab: its fill and its label, bright for the open one.
@@ -136,3 +144,5 @@ switch_int ($id) {
 [if_button,collection_log:r10box] ~collection_log_select_entry(10);
 [if_button,collection_log:r11box] ~collection_log_select_entry(11);
 [if_button,collection_log:r12box] ~collection_log_select_entry(12);
+[if_button,collection_log:r13box] ~collection_log_select_entry(13);
+[if_button,collection_log:r14box] ~collection_log_select_entry(14);

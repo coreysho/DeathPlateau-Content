@@ -3,7 +3,7 @@
     "_items_are_global": "The log is keyed by ITEM, not by page, the way Old School's is: an item that sits on two pages (dragon pickaxe on the Kalphite Queen, Chaos Elemental and King Black Dragon pages, dragon chainbody on the Kalphite Queen and Slayer) is obtained on both the moment it is obtained once. So adding an item to a page never needs a new hook if something already logs it, and removing one never loses a player's record of it.",
     "_what_logs_an_item": "An item is logged only where it is DROPPED or HANDED OUT - a drop table, a casket, a chest, a shop that pays in tickets - by a call to ~collection_log_add. Picking something up does not log it, so a traded or found item does not count, as in Old School. See scripts/collection_log/scripts/collection_log.rs2 for the list of call sites; a new item whose source is not one of them needs a ~collection_log_add line beside the obj_add / inv_add that gives it.",
     "_counters": "boss:<key> is a kill count from tools/bosskillspec.json (read with ~boss_kill_get). Any other name is one of the log's own perm counters, declared under own_counters below; the generator gives each a varp and an id.",
-    "capacity": 800,
+    "capacity": 900,
     "_capacity": "Slots in the perm inv that holds the log: one per DISTINCT item ever obtained, so this is the ceiling on the number of different items the whole log can list. The generator fails if the log lists more. It can be raised freely; it must never be lowered below a size that has shipped, because the save keeps a slot index per item and a slot past the new end would not load.",
     "own_counters": [
         {
@@ -93,7 +93,8 @@
                         "armadyl_crossbow",
                         "godsword_shard_1",
                         "godsword_shard_2",
-                        "godsword_shard_3"
+                        "godsword_shard_3",
+                        "saradomins_light"
                     ]
                 },
                 {
@@ -205,7 +206,7 @@
                     ],
                     "_items": "No KBD heads and no draconic visage in this build, so the pet and the 1/1,000 dragon pickaxe are all there is.",
                     "items": [
-                        "belles_folly",
+                        "belles_folly_tarnished",
                         "bosspet_kbd_item",
                         "draconic_visage",
                         "dragon_pickaxe",
@@ -264,7 +265,8 @@
                         "zamorak_hilt",
                         "godsword_shard_1",
                         "godsword_shard_2",
-                        "godsword_shard_3"
+                        "godsword_shard_3",
+                        "staff_of_the_dead"
                     ]
                 },
                 {
@@ -929,6 +931,15 @@
                         "castlewars_hood_zamorak_prize",
                         "castlewars_cloak_zamorak_prize"
                     ]
+                },
+                {
+                    "key": "pyramid_plunder",
+                    "name": "Pyramid Plunder",
+                    "counters": [],
+                    "_why": "The sceptre is the only thing the tomb pays out that a player keeps; Old School lists it the same way.",
+                    "items": [
+                        "pharaohs_sceptre"
+                    ]
                 }
             ]
         },
@@ -1054,8 +1065,18 @@
                         "graceful_legs",
                         "graceful_gloves",
                         "graceful_boots",
-                        "graceful_cape"
-                    ]
+                        "graceful_cape",
+                        "graceful_kit_draynor",
+                        "graceful_kit_alkharid",
+                        "graceful_kit_varrock",
+                        "graceful_kit_canifis",
+                        "graceful_kit_falador",
+                        "graceful_kit_seers",
+                        "graceful_kit_pollnivneach",
+                        "graceful_kit_rellekka",
+                        "graceful_kit_ardougne"
+                    ],
+                    "_why": "The six worn pieces come from the Agility courses; the nine recolour kits are Grace's, bought with Marks of grace, and one is the only way its colour exists - the same rule the Undertaker's shelf is listed under."
                 },
                 {
                     "key": "mage_arena",
@@ -1074,10 +1095,10 @@
                     "key": "dragons",
                     "name": "Dragons",
                     "counters": [],
-                    "_why": "The three weapons that come off dragons generally rather than off one named boss: the dragon sword from every dragon in the build at a rate that follows the dragon, Belle's folly tarnished from the metal dragons, and the arkan blade from the lava dragons. The King Black Dragon keeps its own page; these are the ones with no single owner.",
+                    "_why": "Belle's folly is listed TARNISHED because that is what the dragons drop. The polished sword is made with a hammer, and this log does not record a craft - so listing the clean one left a slot nothing could ever fill.",
                     "items": [
                         "arkan_blade",
-                        "belles_folly",
+                        "belles_folly_tarnished",
                         "dragon_sword"
                     ]
                 },
@@ -1133,7 +1154,7 @@
                 {
                     "key": "death_tokens",
                     "name": "The Undertaker",
-                    "_why": "Everything he sells for Death tokens, which is the whole of the Wilderness Slayer reward set now that there is no Wilderness Slayer master. The Scroll of imbuing is deliberately NOT here: he sells it, but it is a drop first and belongs to Slayer. The nine whip colour kits are here on the same rule the rest of the shelf is: buying one is the only way it exists.",
+                    "_why": "Everything he sells for Death tokens, which is the whole of the Wilderness Slayer reward set now that there is no Wilderness Slayer master. The Scroll of imbuing is deliberately NOT here: he sells it, but it is a drop first and belongs to Slayer. The nine whip colour kits and the ancient fabric are here on the same rule the rest of the shelf is: buying one is the only way it exists.",
                     "counters": [],
                     "items": [
                         "undertaker_hat",
@@ -1144,6 +1165,7 @@
                         "undertaker_cape",
                         "gravedigger_kit",
                         "royal_seed_pod",
+                        "ancient_fabric",
                         "whip_kit_volcanic",
                         "whip_kit_frozen",
                         "whip_kit_venom",
@@ -1177,7 +1199,35 @@
                         "granite_maul",
                         "imbued_heart",
                         "kraken_tentacle_item",
+                        "slayer_imbue_scroll",
                         "trident_of_the_seas_uncharged"
+                    ]
+                },
+                {
+                    "key": "fountain_of_rune",
+                    "name": "Fountain of Rune",
+                    "counters": [],
+                    "_why": "One item, and one is enough: the amulet of eternal glory is the only thing the fountain gives that is not just a recharge.",
+                    "items": [
+                        "amulet_of_eternal_glory"
+                    ]
+                },
+                {
+                    "key": "vote_shop",
+                    "name": "The Vote Shop",
+                    "counters": [],
+                    "_why": "The elite diary items, which the Vote clerk is the only source of - there is no achievement diary here to hand them out. Vote tickets and points are not listed: a currency is not a collectible.",
+                    "items": [
+                        "explorers_ring_4",
+                        "varrock_armour_4",
+                        "ardougne_cloak_4",
+                        "falador_shield_4",
+                        "morytania_legs_4",
+                        "karamja_gloves_4",
+                        "wilderness_sword_4",
+                        "desert_amulet_4",
+                        "fremennik_sea_boots_4",
+                        "kandarin_headgear_4"
                     ]
                 }
             ]

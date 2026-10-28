@@ -60,10 +60,21 @@ mes("Spirits of deceased evildoers offer you their protection.");
 // weapon-change path never sees - a death, a disarm, an inventory the engine empties.
 [proc,sotd_spec_active]()(boolean)
 if (%sotd_spec > map_clock) {
-    def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
-    if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+    if (~sotd_spec_weapon(inv_getobj(worn, ^wearpos_rhand)) = true) {
         return(true);
     }
+}
+return(false);
+
+// WHICH STAVES CARRY IT, in one place because there are four of them now: the staff of the dead,
+// the staff of light, and both records of the toxic staff of the dead (area_zulrah/configs/
+// toxic_staff.obj) - a fang on a staff of the dead does not take its special attack off it.
+// A NAME TEST AND NOT A PARAM: this runs on every melee hit the player takes, and oc_param on an
+// empty hand THROWS rather than returning null.
+[proc,sotd_spec_weapon](obj $weapon)(boolean)
+if ($weapon = staff_of_the_dead | $weapon = staff_of_light
+    | $weapon = toxic_staff_uncharged | $weapon = toxic_staff_of_the_dead) {
+    return(true);
 }
 return(false);
 
@@ -72,8 +83,7 @@ return(false);
 // ~.check_protect_prayer already is in pvp_melee.rs2.
 [proc,.sotd_spec_active]()(boolean)
 if (.%sotd_spec > map_clock) {
-    def_obj $weapon = .inv_getobj(worn, ^wearpos_rhand);
-    if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+    if (~sotd_spec_weapon(.inv_getobj(worn, ^wearpos_rhand)) = true) {
         return(true);
     }
 }
@@ -86,7 +96,7 @@ return(false);
 if (%sotd_spec = 0) {
     return;
 }
-if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+if (~sotd_spec_weapon($weapon) = true) {
     return;
 }
 %sotd_spec = 0;

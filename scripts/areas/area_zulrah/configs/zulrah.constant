@@ -411,3 +411,18 @@
 // per kill rather than per roll: the wiki's number is a KILL rate and Zulrah rolls its table
 // twice, so putting it on a roll would hand them out at double the rate.
 ^zulrah_mutagen_rate = 13106
+
+// The toxic staff of the dead
+// ---------------------------------------------------------------------------------------------
+// 59 Crafting and a chisel to put a magic fang on a staff of the dead, and it comes apart again
+// while it is uncharged. 75 Attack and 75 Magic to wield - the staff of the dead's own. 11,000
+// scales, spent the serpentine helm's way: ten on entering combat and ten more every interval
+// still in it. The wiki calls that interval a minute; this uses the helm's 90 ticks rather than
+// 100 so that the two things in this build that drain scales drain them on the same beat.
+^toxic_staff_crafting_level = 59
+^toxic_staff_level = 75
+^toxic_staff_max_charges = 11000
+^toxic_staff_charge_cost = 10
+^toxic_staff_charge_interval = 90
+// "A 25% chance to envenom" - one in four, which is also the toxic blowpipe's rate here.
+^toxic_staff_venom_chance = 4

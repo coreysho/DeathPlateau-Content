@@ -47,3 +47,9 @@ scope=perm
 // when a new death fills it.
 [zulrah_recovery_paid]
 scope=perm
+
+// The toxic staff of the dead's charges - the player's, like every other scale count here.
+// 0..11,000 scales. Unlike the trident of the swamp's, these come back out: Uncharge returns
+// every unused scale, which is Old School's rule for this one.
+[toxic_staff_charges]
+scope=perm

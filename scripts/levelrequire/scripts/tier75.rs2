@@ -2,6 +2,10 @@
 // pair of requirement params (435/437 and 434/436) rather than the wiki's prose.
 [opheld2,staff_of_the_dead] @levelrequire_magic_and_attack(75, 75, last_slot);
 [opheld2,staff_of_light] @levelrequire_magic_and_attack(75, 75, last_slot);
+// The toxic staff of the dead, both records - the staff of the dead's own requirement, kept by the
+// fang (area_zulrah/configs/toxic_staff.obj).
+[opheld2,toxic_staff_uncharged] @levelrequire_magic_and_attack(75, 75, last_slot);
+[opheld2,toxic_staff_of_the_dead] @levelrequire_magic_and_attack(75, 75, last_slot);
 
 // God Wars Dungeon - godswords
 [opheld2,armadyl_godsword] @levelrequire_attack(75, last_slot);

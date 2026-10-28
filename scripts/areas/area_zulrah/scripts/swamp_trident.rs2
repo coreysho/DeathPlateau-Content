@@ -24,10 +24,28 @@
 // trigger handles the pairs it can, and ~trident_charge in area_kraken_cove/scripts/trident.rs2
 // hands a magic fang straight here rather than saying "nothing interesting happens" to it.
 
+// TWO THINGS THE FANG GOES ON NOW, so a fang used on a CHISEL is ambiguous - it says which tool,
+// not which weapon. The trigger picks by what is in the pack, trident first because the trident
+// was here first and because a player carrying both and meaning the staff can use the fang on the
+// staff, which is unambiguous and is what Old School's own interface does.
 [opheldu,magic_fang]
-if (last_useitem = chisel | last_useitem = trident_of_the_seas_uncharged) {
+if (last_useitem = trident_of_the_seas_uncharged) {
     ~swamp_trident_join;
     return;
+}
+if (last_useitem = staff_of_the_dead) {
+    ~toxic_staff_join; // area_zulrah/scripts/toxic_staff.rs2
+    return;
+}
+if (last_useitem = chisel) {
+    if (inv_total(inv, trident_of_the_seas_uncharged) > 0) {
+        ~swamp_trident_join;
+        return;
+    }
+    if (inv_total(inv, staff_of_the_dead) > 0) {
+        ~toxic_staff_join;
+        return;
+    }
 }
 ~displaymessage(^dm_default);
 

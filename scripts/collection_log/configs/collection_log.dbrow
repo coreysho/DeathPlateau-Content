@@ -57,6 +57,7 @@ data=items,armadyl_crossbow
 data=items,godsword_shard_1
 data=items,godsword_shard_2
 data=items,godsword_shard_3
+data=items,saradomins_light
 data=items,bosspet_dagannoth_prime_item
 data=items,bosspet_dagannoth_supreme_item
 data=items,bosspet_dagannoth_rex_item
@@ -82,7 +83,7 @@ data=items,bosspet_kalphite_queen_item
 data=items,dragon_chainbody
 data=items,dragon_warhammer
 data=items,kq_head
-data=items,belles_folly
+data=items,belles_folly_tarnished
 data=items,bosspet_kbd_item
 data=items,draconic_visage
 data=items,kbd_head
@@ -98,6 +99,7 @@ data=items,armadyl_hilt
 data=items,bosspet_kril_item
 data=items,zamorakian_spear
 data=items,zamorak_hilt
+data=items,staff_of_the_dead
 data=items,bosspet_snakeling_item
 data=items,tanzanite_fang
 data=items,magic_fang
@@ -667,6 +669,7 @@ data=tab,2
 data=name,Minigames
 data=entries,collection_log_agility_arena
 data=entries,collection_log_castle_wars
+data=entries,collection_log_pyramid_plunder
 data=items,piratehook
 data=items,castlewars_med_helm
 data=items,castlewars_armour_body
@@ -687,6 +690,7 @@ data=items,castlewars_hood_saradomin_prize
 data=items,castlewars_cloak_saradomin_prize
 data=items,castlewars_hood_zamorak_prize
 data=items,castlewars_cloak_zamorak_prize
+data=items,pharaohs_sceptre
 
 [collection_log_tab_3]
 table=collection_log_tab
@@ -705,6 +709,8 @@ data=entries,collection_log_rare_drop_table
 data=entries,collection_log_random_events
 data=entries,collection_log_death_tokens
 data=entries,collection_log_slayer
+data=entries,collection_log_fountain_of_rune
+data=entries,collection_log_vote_shop
 data=items,bosspet_tzrek_jad_item
 data=items,bosspet_kril_item
 data=items,bosspet_graardor_item
@@ -784,6 +790,15 @@ data=items,graceful_legs
 data=items,graceful_gloves
 data=items,graceful_boots
 data=items,graceful_cape
+data=items,graceful_kit_draynor
+data=items,graceful_kit_alkharid
+data=items,graceful_kit_varrock
+data=items,graceful_kit_canifis
+data=items,graceful_kit_falador
+data=items,graceful_kit_seers
+data=items,graceful_kit_pollnivneach
+data=items,graceful_kit_rellekka
+data=items,graceful_kit_ardougne
 data=items,saradomin_cape
 data=items,guthix_cape
 data=items,zamorak_cape
@@ -791,7 +806,7 @@ data=items,imbued_saradomin_cape
 data=items,imbued_guthix_cape
 data=items,imbued_zamorak_cape
 data=items,arkan_blade
-data=items,belles_folly
+data=items,belles_folly_tarnished
 data=items,dragon_sword
 data=items,hill_giant_club
 data=items,rune_spear
@@ -826,6 +841,7 @@ data=items,undertaker_cane
 data=items,undertaker_cape
 data=items,gravedigger_kit
 data=items,royal_seed_pod
+data=items,ancient_fabric
 data=items,whip_kit_volcanic
 data=items,whip_kit_frozen
 data=items,whip_kit_venom
@@ -852,7 +868,19 @@ data=items,granite_longsword
 data=items,granite_maul
 data=items,imbued_heart
 data=items,kraken_tentacle_item
+data=items,slayer_imbue_scroll
 data=items,trident_of_the_seas_uncharged
+data=items,amulet_of_eternal_glory
+data=items,explorers_ring_4
+data=items,varrock_armour_4
+data=items,ardougne_cloak_4
+data=items,falador_shield_4
+data=items,morytania_legs_4
+data=items,karamja_gloves_4
+data=items,wilderness_sword_4
+data=items,desert_amulet_4
+data=items,fremennik_sea_boots_4
+data=items,kandarin_headgear_4
 
 // Barrows Chests: 25 items
 [collection_log_barrows]
@@ -893,7 +921,7 @@ data=items,dragon_2h_sword
 data=items,dragon_pickaxe
 data=counters,"Chaos Elemental kills",6
 
-// Commander Zilyana: 7 items
+// Commander Zilyana: 8 items
 [collection_log_zilyana]
 table=collection_log_entry
 data=name,"Commander Zilyana"
@@ -904,6 +932,7 @@ data=items,armadyl_crossbow
 data=items,godsword_shard_1
 data=items,godsword_shard_2
 data=items,godsword_shard_3
+data=items,saradomins_light
 data=counters,"Commander Zilyana kills",3
 
 // Dagannoth Kings: 10 items
@@ -971,7 +1000,7 @@ data=counters,"Kalphite Queen kills",5
 [collection_log_kbd]
 table=collection_log_entry
 data=name,"King Black Dragon"
-data=items,belles_folly
+data=items,belles_folly_tarnished
 data=items,bosspet_kbd_item
 data=items,draconic_visage
 data=items,dragon_pickaxe
@@ -1003,7 +1032,7 @@ data=items,godsword_shard_2
 data=items,godsword_shard_3
 data=counters,"Kree'arra kills",4
 
-// K'ril Tsutsaroth: 6 items
+// K'ril Tsutsaroth: 7 items
 [collection_log_kril]
 table=collection_log_entry
 data=name,"K'ril Tsutsaroth"
@@ -1013,6 +1042,7 @@ data=items,zamorak_hilt
 data=items,godsword_shard_1
 data=items,godsword_shard_2
 data=items,godsword_shard_3
+data=items,staff_of_the_dead
 data=counters,"K'ril Tsutsaroth kills",1
 
 // Zulrah: 8 items
@@ -1631,6 +1661,12 @@ data=items,castlewars_cloak_saradomin_prize
 data=items,castlewars_hood_zamorak_prize
 data=items,castlewars_cloak_zamorak_prize
 
+// Pyramid Plunder: 1 items
+[collection_log_pyramid_plunder]
+table=collection_log_entry
+data=name,"Pyramid Plunder"
+data=items,pharaohs_sceptre
+
 // All Pets: 21 items
 [collection_log_pets]
 table=collection_log_entry
@@ -1729,7 +1765,7 @@ data=items,rogue_trousers
 data=items,rogue_boots
 data=items,rogue_gloves
 
-// Graceful: 6 items
+// Graceful: 15 items
 [collection_log_graceful]
 table=collection_log_entry
 data=name,"Graceful"
@@ -1739,6 +1775,15 @@ data=items,graceful_legs
 data=items,graceful_gloves
 data=items,graceful_boots
 data=items,graceful_cape
+data=items,graceful_kit_draynor
+data=items,graceful_kit_alkharid
+data=items,graceful_kit_varrock
+data=items,graceful_kit_canifis
+data=items,graceful_kit_falador
+data=items,graceful_kit_seers
+data=items,graceful_kit_pollnivneach
+data=items,graceful_kit_rellekka
+data=items,graceful_kit_ardougne
 
 // Mage Arena: 6 items
 [collection_log_mage_arena]
@@ -1756,7 +1801,7 @@ data=items,imbued_zamorak_cape
 table=collection_log_entry
 data=name,"Dragons"
 data=items,arkan_blade
-data=items,belles_folly
+data=items,belles_folly_tarnished
 data=items,dragon_sword
 
 // Giants: 1 items
@@ -1799,7 +1844,7 @@ data=items,macro_prince_legs
 data=items,macro_princess_torso
 data=items,macro_princess_legs
 
-// The Undertaker: 17 items
+// The Undertaker: 18 items
 [collection_log_death_tokens]
 table=collection_log_entry
 data=name,"The Undertaker"
@@ -1811,6 +1856,7 @@ data=items,undertaker_cane
 data=items,undertaker_cape
 data=items,gravedigger_kit
 data=items,royal_seed_pod
+data=items,ancient_fabric
 data=items,whip_kit_volcanic
 data=items,whip_kit_frozen
 data=items,whip_kit_venom
@@ -1821,7 +1867,7 @@ data=items,whip_kit_tempest
 data=items,whip_kit_bone
 data=items,whip_kit_gravedigger
 
-// Slayer: 18 items
+// Slayer: 19 items
 [collection_log_slayer]
 table=collection_log_entry
 data=name,"Slayer"
@@ -1842,7 +1888,29 @@ data=items,granite_longsword
 data=items,granite_maul
 data=items,imbued_heart
 data=items,kraken_tentacle_item
+data=items,slayer_imbue_scroll
 data=items,trident_of_the_seas_uncharged
+
+// Fountain of Rune: 1 items
+[collection_log_fountain_of_rune]
+table=collection_log_entry
+data=name,"Fountain of Rune"
+data=items,amulet_of_eternal_glory
+
+// The Vote Shop: 10 items
+[collection_log_vote_shop]
+table=collection_log_entry
+data=name,"The Vote Shop"
+data=items,explorers_ring_4
+data=items,varrock_armour_4
+data=items,ardougne_cloak_4
+data=items,falador_shield_4
+data=items,morytania_legs_4
+data=items,karamja_gloves_4
+data=items,wilderness_sword_4
+data=items,desert_amulet_4
+data=items,fremennik_sea_boots_4
+data=items,kandarin_headgear_4
 
 // REWARDS. See collection_log.dbtable for the columns and collection_log.rs2
 // (~collection_log_rewards) for how they are paid. Each needs its OWN bit, forever.
