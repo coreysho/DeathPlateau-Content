@@ -55,3 +55,17 @@ scope=perm
 protect=no
 type=int
 
+
+// POWER OF DEATH / POWER OF LIGHT. The map_clock tick the staff of the dead's (or staff of
+// light's) minute of halved incoming melee runs out at, 0 when it is not up - the same shape
+// %action_delay uses, which is how everything else in combat measures a window.
+//
+// temp: Old School's wears off at a logout, and nothing client-side reads this.
+//
+// protect=no for the reason the killcounts above carry it: the halving is applied in
+// [proc,playerhit_n_melee_max], which runs with the npc active, and the PvP half reads it off the
+// OPPONENT as .%sotd_spec. Neither of those has the p_active_player a protected varp wants.
+[sotd_spec]
+scope=temp
+protect=no
+type=int

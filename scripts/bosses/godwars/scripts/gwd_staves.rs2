@@ -28,3 +28,65 @@ if (inv_total(inv, saradomins_light) < 1 | inv_getobj(inv, $slot) ! staff_of_the
 inv_del(inv, saradomins_light, 1);
 inv_setslot(inv, $slot, staff_of_light, 1);
 ~objbox(staff_of_light, "You bind the light into the staff. It will not come out again.", 250, 0, 0);
+
+
+// POWER OF DEATH, and POWER OF LIGHT, which is the same mechanic under the staff of light's name:
+// 100% of the special attack energy for one minute during which "all of the opponent's melee
+// damage against the player is halved". It stacks with Protect from Melee rather than replacing
+// it, so both reductions apply and neither is aware of the other.
+//
+// Reached from [if_button,combat_staff_2:specbar] (skill_combat/scripts/player/specwep.rs2), not
+// from player_special_attack's switch_obj: this lands no hit, needs no target and adds no attack
+// delay, which is exactly the shape Excalibur's Sanctuary and the dragon battleaxe's rage already
+// have on their own tabs' buttons.
+//
+// THE GRAPHIC IS THIS BUILD'S OWN, DELIBERATELY. The four specials imported this week each had
+// their Old School seq and spotanim decoded and checked before use; I could not confirm an id for
+// this one from the cache or the wiki, and guessing one is how the warhammer ended up "close but
+// not quite". So it uses sp_attackglow_blue and the Sanctuary jingle - the 377 cache's own
+// self-buff pair, and what Excalibur's special puts on the player. Say the word and Old School's
+// can be imported like the rest of them.
+[label,sotd_power_of_death]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+%sotd_spec = add(map_clock, ^sotd_spec_ticks);
+anim(sanctuary, 0);
+spotanim_pl(sp_attackglow_blue, 0, 0);
+sound_synth(sanctuary, 1, 0);
+mes("Spirits of deceased evildoers offer you their protection.");
+
+// Whether the minute is running AND the staff is still in hand. The hand check is not redundant
+// with ~sotd_spec_drop below: the drop is what makes unequipping LOSE the effect rather than pause
+// it, while this is what makes the effect stop the moment the staff is gone for any reason the
+// weapon-change path never sees - a death, a disarm, an inventory the engine empties.
+[proc,sotd_spec_active]()(boolean)
+if (%sotd_spec > map_clock) {
+    def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+    if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+        return(true);
+    }
+}
+return(false);
+
+// The same question asked of the other player, for the PvP half: there the ATTACKER's script rolls
+// the damage, so the reduction belongs to the opponent and is read with the `.` prefix, the way
+// ~.check_protect_prayer already is in pvp_melee.rs2.
+[proc,.sotd_spec_active]()(boolean)
+if (.%sotd_spec > map_clock) {
+    def_obj $weapon = .inv_getobj(worn, ^wearpos_rhand);
+    if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+        return(true);
+    }
+}
+return(false);
+
+// From ~update_weapon_category, on every change of the right hand. "The effect is immediately lost
+// if players unequip the staff" - lost, not suspended, so the clock is zeroed and re-equipping
+// inside the minute gets nothing back.
+[proc,sotd_spec_drop](obj $weapon)
+if (%sotd_spec = 0) {
+    return;
+}
+if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+    return;
+}
+%sotd_spec = 0;

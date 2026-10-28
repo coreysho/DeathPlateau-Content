@@ -214,6 +214,9 @@ if ($previous = null | $obj = null | oc_category($previous) ! oc_category($obj))
     // osrs keeps track of selected per category
     ~player_autocast_reset;
 }
+// The staff of the dead's minute of halved melee is lost the moment the staff leaves your hand,
+// and this proc is where the hand changing is already noticed.
+~sotd_spec_drop($obj);
 if (~inzone_coord_pair_table(gnomeball_zones, coord) = true) {
     if_settab(gnomeball, 0);
     return;
@@ -247,7 +250,7 @@ switch_category (oc_category($obj)) {
         }
     case weapon_salamander : ~weapon_category_tab_attack(combat_salamander:name, combat_salamander, $obj, combat_salamander:specbar_layer);
     // magic
-    case weapon_staff : ~weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, null);
+    case weapon_staff : ~weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, combat_staff_2:specbar_layer);
     case weapon_powered_staff : ~weapon_category_tab_attack(combat_powered_staff:name, combat_powered_staff, $obj, null);
     // unarmed everything else
     case default : ~weapon_category_tab_attack_unarmed($obj);
@@ -327,7 +330,7 @@ switch_category (oc_category($obj)) {
         }
     case weapon_salamander : ~.weapon_category_tab_attack(combat_salamander:name, combat_salamander, $obj, combat_salamander:specbar_layer);
     // magic
-    case weapon_staff : ~.weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, null);
+    case weapon_staff : ~.weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, combat_staff_2:specbar_layer);
     case weapon_powered_staff : ~.weapon_category_tab_attack(combat_powered_staff:name, combat_powered_staff, $obj, null);
     // unarmed everything else
     case default : ~.weapon_category_tab_attack_unarmed($obj);

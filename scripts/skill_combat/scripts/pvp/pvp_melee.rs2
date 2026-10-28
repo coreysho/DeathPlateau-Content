@@ -38,6 +38,17 @@ if (~pvp_hit_roll(%damagetype) = true | $verac = true) {
     }
     $hit_max = $maxhit;
     $damage = min(randominc($maxhit), .stat(hitpoints)); // tick eating existed! https://oldschool.runescape.wiki/w/Update:The_Wintertodt
+    // POWER OF DEATH / POWER OF LIGHT, the DEFENDER's: it halves the melee damage they take, so it
+    // is read off the opponent with the `.` prefix the way the protection prayer above is, and it
+    // stacks with that prayer rather than replacing it.
+    //
+    // On the rolled damage rather than on $maxhit, because Old School halves the damage dealt and
+    // not the maximum - and because the experience, the hero points and Guthan's heal below all
+    // read $damage, and every one of them should see the number that actually landed.
+    if (~.sotd_spec_active = true) {
+        $damage = calc($damage / 2);
+        $hit_max = calc($hit_max / 2);
+    }
     ~give_combat_experience_pvp(%damagestyle, $damage, ~pvp_xp_multiplier(~.player_combat_level));
     both_heropoints($damage);
     // Guthan's heal and Torag's energy drain.
