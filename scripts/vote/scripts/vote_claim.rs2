@@ -37,6 +37,53 @@ if ($got < 1) {
 // this is the first chance the game has had to hand it over.
 [proc,vote_login]
 ~vote_deliver;
+~vote_reminder_start;
+
+// ---------------------------------------------------------------------------------------------
+// Reminding somebody who has not voted
+// ---------------------------------------------------------------------------------------------
+// INSTEAD OF BROADCASTING EVERY VOTE. A server-wide "X just voted!" tells the one person it is
+// about nothing they did not know, and tells everybody else about somebody else. This is the other
+// way round: nothing is said to a player who has voted, and the only player who hears anything is
+// one who could vote right now and has not.
+//
+// IT COSTS NOTHING WHEN THERE IS NOWHERE TO VOTE. With no sites configured the timer is never set,
+// so an unlisted server - which is this one today - has no reminder and no timer running for it.
+
+[proc,vote_reminder_start]
+if (vote_sitecount = 0 | %vote_reminders_off = 1) {
+    clearsofttimer(vote_reminder);
+    return;
+}
+softtimer(vote_reminder, ^vote_reminder_first);
+
+[softtimer,vote_reminder]
+// Re-read both every time rather than trusting the state the timer was set in: a site list is
+// loaded at boot, but the player can turn reminders off between two firings, and a timer that only
+// checked at login would keep talking until they logged out.
+if (vote_sitecount = 0 | %vote_reminders_off = 1) {
+    clearsofttimer(vote_reminder);
+    return;
+}
+// Settle into the long interval. The first one is short so a player finds out early; after that
+// this is a thing that happens twice an hour, not something that nags.
+softtimer(vote_reminder, ^vote_reminder_ticks);
+if (~vote_reminder_due = false) {
+    return;
+}
+mes("You can vote again. Ask the Vote clerk at the Edgeville bank where, and what it is worth.");
+
+// True when at least one site's cooldown has run out for this player - which includes somebody who
+// has never voted at all, because vote_cooldown reads 0 when the ledger holds nothing for them.
+[proc,vote_reminder_due]()(boolean)
+def_int $i = 0;
+while ($i < vote_sitecount) {
+    if (vote_cooldown($i) = 0) {
+        return(true);
+    }
+    $i = calc($i + 1);
+}
+return(false);
 
 // ---------------------------------------------------------------------------------------------
 // Asking the sites

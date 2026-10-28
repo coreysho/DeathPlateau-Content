@@ -82,3 +82,19 @@
 ^vote_claim_started = 0
 ^vote_claim_nosites = 1
 ^vote_claim_busy = 2
+
+// ============================================================================ the reminder (28 October)
+// A player who CAN vote is told so in the chatbox, now and then. A player who has voted is told
+// nothing at all - which is the whole point of doing it this way round rather than broadcasting
+// every vote to the world: the message only ever goes to somebody it is useful to.
+//
+// "CAN VOTE" IS READ OFF THE LEDGER, not off a clock. It means at least one configured site whose
+// cooldown has run out for this player, so somebody who has never voted qualifies, somebody who
+// voted twelve hours ago qualifies again, and somebody who voted ten minutes ago does not. With a
+// 24-hour cooldown that is exactly "hasn't voted today"; with a 12-hour one it is better than it.
+//
+// TWO INTERVALS. The first is short, so a player who logs in and votes nowhere finds out in the
+// first few minutes rather than half an hour later; after that it settles into the long one. Both
+// are in ticks (100 ticks is a minute) and both are one number used nowhere else.
+^vote_reminder_first = 500      // 5 minutes after logging in
+^vote_reminder_ticks = 3000     // and every 30 minutes after that

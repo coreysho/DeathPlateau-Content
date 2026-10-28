@@ -38,7 +38,31 @@ if ($choice = 3) {
         return;
     }
     ~vote_sites_mesbox;
-    return;
+    @vote_reminder_ask;
 }
 ~chatplayer("<p,happy>Let's see the rewards, then.");
 ~openshop_activenpc;
+
+// THE OFF SWITCH FOR THE REMINDER, and it lives here because this is where somebody annoyed by it
+// comes. It is the tail of "Where can I vote?" rather than a fifth menu option because p_choice4 is
+// four, and because a player who does not want to be reminded is a player asking about voting.
+[label,vote_reminder_ask]
+if (%vote_reminders_off = 1) {
+    if (~p_choice2("Remind me when I can vote again.", 1, "No, leave it.", 2) ! 1) {
+        ~chatplayer("<p,neutral>No, leave it.");
+        return;
+    }
+    ~chatplayer("<p,neutral>Remind me when I can vote again.");
+    %vote_reminders_off = 0;
+    ~vote_reminder_start;
+    ~chatnpc("<p,happy>I'll give you a nudge.");
+    return;
+}
+if (~p_choice2("Thanks.", 1, "Stop reminding me about this.", 2) ! 2) {
+    ~chatplayer("<p,neutral>Thanks.");
+    return;
+}
+~chatplayer("<p,neutral>Stop reminding me about this.");
+%vote_reminders_off = 1;
+~vote_reminder_start;
+~chatnpc("<p,neutral>Not another word. Ask me here if you change your mind.");
