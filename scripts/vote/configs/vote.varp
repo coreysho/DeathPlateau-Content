@@ -21,3 +21,11 @@ scope=perm
 [vote_tickets_pending]
 type=int
 scope=perm
+
+// THE REMINDER, OFF SWITCH FOR. 0 is on, which is the default for everybody including accounts that
+// existed before reminders did - an unset varp reads 0 and that is the behaviour we want.
+//
+// scope=perm because "stop telling me this" is a thing a player says once, not once per login.
+[vote_reminders_off]
+type=int
+scope=perm
