@@ -19,8 +19,10 @@ def_int $damage = 0;
 def_int $damage_capped = 0;
 $hit, $damage, $damage_capped = ~pvm_spec_roll(125, 125, ^stab_style);
 // The dragon dagger's puncture, which is this cache's only stab special.
-anim(puncture, 0);
-spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+// OSRS seq 7515 and spotanim 1369. This borrowed `puncture`, which is the DRAGON DAGGER's
+// 2006 special - right family, wrong weapon, and the dragon sword is 2017 content with its own.
+anim(osrs_dsword_spec, 0);
+spotanim_pl(dsword_spec, 96, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
@@ -40,6 +42,6 @@ if (randominc($attack_roll) > randominc($defence_roll)) {
     both_heropoints($damage);
 }
 // The dragon dagger's puncture, which is this cache's only stab special.
-anim(puncture, 0);
-spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+anim(osrs_dsword_spec, 0);
+spotanim_pl(dsword_spec, 96, 0);
 ~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound));

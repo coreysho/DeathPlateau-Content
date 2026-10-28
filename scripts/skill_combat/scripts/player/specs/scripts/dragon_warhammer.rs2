@@ -29,8 +29,10 @@ if ($hit = true & $damage_capped > 0) {
         npc_statsub(defence, $take, 0);
     }
 }
-anim(human_blunt_pound, 0);
-spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+// OSRS seq 1378 and spotanim 1292. This played human_blunt_pound - the hammer's ORDINARY
+// swing - so a Smash was indistinguishable from a normal hit.
+anim(osrs_dwh_spec, 0);
+spotanim_pl(dwh_spec, 96, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
@@ -48,6 +50,6 @@ if ($hit = true & $damage > 0) {
         .stat_sub(defence, $take, 0);
     }
 }
-anim(human_blunt_pound, 0);
-spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+anim(osrs_dwh_spec, 0);
+spotanim_pl(dwh_spec, 96, 0);
 ~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));

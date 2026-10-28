@@ -44,8 +44,12 @@ if (npc_param(slayer_category) ! ^slayer_kurask & npc_param(slayer_category) ! ^
         npc_heropoints($bonus);
     }
 }
-anim(oc_param(inv_getobj(worn, ^wearpos_rhand), crushattack_anim), 0);
-spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+// OSRS seq 1378 and spotanim 1450. Jagex gives the granite hammer the dragon warhammer's
+// animation and changes only the graphic - the same sharing Statius's warhammer has - so this
+// is the same seq as the warhammer above with a different burst over it. It used to read
+// crushattack_anim off its own obj, which is the weapon's ordinary swing.
+anim(osrs_dwh_spec, 0);
+spotanim_pl(granite_hammer_spec, 96, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
@@ -64,6 +68,6 @@ if ($bonus > 0) {
     ~give_combat_experience_pvp(%damagestyle, $bonus, ~pvp_xp_multiplier(~.player_combat_level));
     both_heropoints($bonus);
 }
-anim(oc_param(inv_getobj(worn, ^wearpos_rhand), crushattack_anim), 0);
-spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+anim(osrs_dwh_spec, 0);
+spotanim_pl(granite_hammer_spec, 96, 0);
 ~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));
