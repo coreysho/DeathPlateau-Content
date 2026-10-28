@@ -19,6 +19,7 @@ if (npc_param(min_attackrange) > 0
 }
 ~barrows_combat_entry; // equipment degradation - see degrade/scripts/degrade.rs2
 ~serpentine_helm_combat_entry; // ten scales on entering combat - area_zulrah/scripts/serpentine_helm.rs2
+~toxic_staff_combat_entry; // and the toxic staff of the dead burns its ten the same way
 if (~player_in_combat_check = false) {
     return;
 }

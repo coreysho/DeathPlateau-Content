@@ -40,3 +40,14 @@ default=null
 [mutagen_restore]
 type=namedobj
 default=null
+
+// THE TOXIC STAFF OF THE DEAD, on the same two-record pattern the helms use above
+// (configs/toxic_staff.obj). On the charged staff: what the last scale leaves behind.
+[toxic_staff_uncharged]
+type=namedobj
+default=null
+
+// On the uncharged staff: what the first scale makes of it.
+[toxic_staff_charged]
+type=namedobj
+default=null

@@ -315,6 +315,7 @@ return(true);
 [proc,pvm_spell_cast](dbrow $spell_data)(int)
 ~barrows_combat_entry; // casting at a monster is combat too - Ahrim's degrades (degrade/scripts/degrade.rs2)
 ~serpentine_helm_combat_entry; // and it burns the serpentine helm's scales too (area_zulrah/scripts/serpentine_helm.rs2)
+~toxic_staff_combat_entry; // and a charged toxic staff's (area_zulrah/scripts/toxic_staff.rs2)
 ~delete_spell_runes($spell_data);
 ~give_spell_xp($spell_data);
 
@@ -431,6 +432,10 @@ if ($maxhit ! null) {
     npc_heropoints($damage_capped);
     // Ahrim's Strength drain, which is magic-only, and Guthan's heal, which is not.
     ~barrows_set_hit_npc($damage_capped, ^magic_style);
+    // "Players using combat spells when wielding the staff have a 25% chance of inflicting venom"
+    // - the toxic staff of the dead, which is the only weapon here that envenoms with a SPELL
+    // (area_zulrah/scripts/toxic_staff.rs2).
+    ~toxic_staff_venom($damage_capped);
     // Ancient Magicks - Blood spells heal the caster by heal_percent% of the damage dealt, Smoke spells
     // have a poison_chance in poison_chance (1-in-N) chance to poison for poison_severity. Data-driven
     // off the dbrow columns rather than a spell-name switch, so any future spell can opt in via data

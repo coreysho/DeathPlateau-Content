@@ -1,0 +1,119 @@
+// THE TOXIC STAFF OF THE DEAD - what the magic fang's OTHER half is for. OSRS's, per the wiki
+// (oldschool.runescape.wiki/w/Toxic_Staff_of_the_Dead, read 28 October 2026):
+//
+//   * a magic fang on a STAFF OF THE DEAD, 59 Crafting and a chisel, and "this process is
+//     reversible, provided that the staff is uncharged";
+//   * 75 Attack and 75 Magic to wield, which is the staff of the dead's own requirement;
+//   * charged with Zulrah's scales, 11,000 of them, and it spends them exactly as the serpentine
+//     helm does: ten on entering combat and ten more every interval still in it;
+//   * charged, it is "+8 magic attack bonus" over the uncharged one - 17 becomes 25, which is
+//     what the cache's own item table says too;
+//   * a 25% chance to envenom what it hits;
+//   * "players may uncharge the staff at any time to recover all unused scales", which is NOT the
+//     bargain the trident of the swamp makes - that one spends its scales for good.
+//
+// Imported from the OSRS cache by tools/models/importosrs.py (objs 12902 and 12904). Models are
+// RE-ENCODED into the 317-family format (tools/models/osrs2ob2.py), round-trip verified.
+//
+// THE BONUSES ARE THE STAFF OF THE DEAD'S, field for field, because that is what it is made from -
+// see bosses/godwars/configs/gwd_staves.obj for where each number comes from and for the three
+// things that staff does NOT carry across here (the +15% magic damage, the 1/8 rune saving and
+// Power of Death). All three are absent from this one for the same reasons; the fang adds venom
+// and eight magic attack and nothing else.
+//
+// THE RECOLOUR IS A NO-OP AND IS KEPT ANYWAY. The cache gives both records one recolour pair,
+// 17467 -> 21947, and that source colour is on NONE of the six models - not in our conversion and
+// not in Jagex's originals either (checked face by face). It is a stale line in their item table.
+// Kept so the import matches the cache rather than quietly differing from it; if it ever stops
+// being a no-op, that is the cache changing and not this file.
+//
+// THE OPS ARE THE CACHE'S OWN and they are not the trident of the swamp's. Dismantle is op4 on the
+// uncharged staff where the trident has it on op5, and Uncharge is op5 on the charged one where
+// the trident has op4. The cache is the authority on an imported item's ops, so these stay as they
+// came; scripts/toxic_staff.rs2 hangs its triggers off what is written here.
+
+[toxic_staff_uncharged]
+name=Toxic staff (uncharged)
+desc=It needs to be charged with Zulrah's scales.
+model=obj_toxic_staff_uncharged
+manwear=obj_toxic_staff_uncharged_manwear,0
+womanwear=obj_toxic_staff_uncharged_womanwear,0
+wearpos=righthand
+2dzoom=2150
+2dxan=512
+2dyan=1010
+2dzan=229
+recol1s=14861
+recol1d=9865
+weight=1500g
+cost=1000006
+members=yes
+iop2=Wield
+iop4=Dismantle
+category=weapon_staff
+param=attackrate,4
+param=stabattack,55
+param=slashattack,70
+param=magicattack,17
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,17
+param=strengthbonus,72
+param=ready_baseanim,human_staffready
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=stab_sound,staff_stab
+param=slash_sound,staff_hit
+param=crush_sound,staff_hit
+// Still a Zamorakian item with a fang on it - cache param 41, as on the staff of the dead.
+param=gwd_prot_zamorak,1
+// What the first scale turns it into.
+param=toxic_staff_charged,toxic_staff_of_the_dead
+
+[toxic_staff_of_the_dead]
+name=Toxic Staff of the Dead
+desc=A ghastly weapon with evil origins, with a toxic fang attached.
+model=obj_toxic_staff_of_the_dead
+manwear=obj_toxic_staff_of_the_dead_manwear,0
+womanwear=obj_toxic_staff_of_the_dead_womanwear,0
+wearpos=righthand
+2dzoom=2150
+2dxan=512
+2dyan=1010
+2dzan=229
+recol1s=14861
+recol1d=9865
+weight=1500g
+cost=1000006
+members=yes
+// Untradeable while it holds scales, which is Old School's rule: "removing the fang, or trading
+// the staff to other players is only possible while the staff is uncharged".
+tradeable=no
+iop2=Wield
+iop3=Check
+iop5=Uncharge
+wearop1=Check
+category=weapon_staff
+param=attackrate,4
+param=stabattack,55
+param=slashattack,70
+// THE ONLY NUMBER THE FANG CHANGES: +8 over the uncharged staff, 17 -> 25.
+param=magicattack,25
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,17
+param=strengthbonus,72
+param=ready_baseanim,human_staffready
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=stab_sound,staff_stab
+param=slash_sound,staff_hit
+param=crush_sound,staff_hit
+param=gwd_prot_zamorak,1
+// What the last scale turns it back into. The serpentine helm family does the same with
+// serpentine_uncharged, and for the same reason: the code asks the item rather than naming it.
+param=toxic_staff_uncharged,toxic_staff_uncharged

@@ -1,0 +1,227 @@
+// THE TOXIC STAFF OF THE DEAD - the magic fang's other half. What it is, what it costs and where
+// every number comes from is in configs/toxic_staff.obj and configs/zulrah.constant; this is how
+// it is made, taken apart, charged, checked, uncharged and spent.
+//
+// IT IS THE SERPENTINE HELM'S CHARGE MODEL, NOT THE TRIDENT'S, and the difference is worth saying
+// out loud because the two sit next to each other in this folder. The trident spends a scale per
+// CAST and its scales never come back. This spends ten on entering combat and ten more every
+// interval still in it, and Uncharge gives every unused scale back - which is Old School's rule
+// for this staff and the helm, and not for the trident.
+//
+// IT ASKS THE ITEM, NOT THE NAME. toxic_staff_charged and toxic_staff_uncharged are params on the
+// two records (configs/zulrah_mutagen.param, where the helm family's pair lives too), so nothing
+// below names a record twice and a future mutated variant would work without touching this file.
+
+// ---------------------------------------------------------------------------------------------
+// Making one, and taking it apart
+// ---------------------------------------------------------------------------------------------
+// ONLY ONE SIDE OF EACH PAIR IS DECLARED. [opheldu,chisel] belongs to skill_crafting's gem cutting
+// and [opheldu,magic_fang] to the trident of the swamp, both declared first; so the staff's own
+// trigger takes the pairs it can, and swamp_trident.rs2 hands a staff of the dead over here.
+
+[opheldu,staff_of_the_dead]
+if (last_useitem = magic_fang | last_useitem = chisel) {
+    ~toxic_staff_join;
+    return;
+}
+~displaymessage(^dm_default);
+
+[proc,toxic_staff_join]
+if (inv_total(inv, magic_fang) < 1 | inv_total(inv, staff_of_the_dead) < 1
+    | inv_total(inv, chisel) < 1) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (stat(crafting) < ^toxic_staff_crafting_level) {
+    ~objbox(magic_fang, "You need a Crafting level of <tostring(^toxic_staff_crafting_level)> to attach the fang to a staff.", 250, 0, divide(^objbox_height, 2));
+    return;
+}
+sound_synth(chisel, 1, 0);
+inv_del(inv, magic_fang, 1);
+inv_del(inv, staff_of_the_dead, 1);
+inv_add(inv, toxic_staff_uncharged, 1);
+mes("You fix the fang to the staff.");
+
+// "Reversible, provided that the staff is uncharged" - so only the uncharged record comes apart,
+// and the charged one is told why. $chisel is whether one is needed: a chisel used on the staff
+// needs the chisel, the Dismantle option does not.
+[proc,toxic_staff_split](boolean $chisel)
+if (inv_total(inv, toxic_staff_uncharged) < 1) {
+    return;
+}
+if ($chisel = ^true & inv_total(inv, chisel) < 1) {
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need another free inventory space to take the fang off.");
+    return;
+}
+sound_synth(chisel, 1, 0);
+inv_del(inv, toxic_staff_uncharged, 1);
+inv_add(inv, staff_of_the_dead, 1);
+inv_add(inv, magic_fang, 1);
+mes("You prise the fang back off the staff.");
+
+[opheld4,toxic_staff_uncharged] ~toxic_staff_split(^false);
+
+// ---------------------------------------------------------------------------------------------
+// Wielding, checking, charging, uncharging
+// ---------------------------------------------------------------------------------------------
+// The level requirement is in levelrequire/scripts/tier75.rs2 beside the staff of the dead's and
+// the staff of light's, which is where every 75/75 weapon's is.
+
+[opheld3,toxic_staff_of_the_dead] ~toxic_staff_check;
+[label,wearop1_toxic_staff_of_the_dead] ~toxic_staff_check;
+
+[proc,toxic_staff_check]
+if (%toxic_staff_charges = 1) {
+    mes("Your staff has 1 scale in it.");
+    return;
+}
+mes("Your staff has <tostring(%toxic_staff_charges)> scales in it.");
+
+[opheldu,toxic_staff_uncharged]
+if (last_useitem = chisel) {
+    ~toxic_staff_split(^true);
+    return;
+}
+@toxic_staff_charge(last_item, last_useitem, last_slot, last_useslot);
+
+[opheldu,toxic_staff_of_the_dead] @toxic_staff_charge(last_item, last_useitem, last_slot, last_useslot);
+
+// Scales and nothing else. One scale is one charge, which is the whole of this item's economy.
+[label,toxic_staff_charge](obj $a, obj $b, int $aslot, int $bslot)
+def_int $slot = $aslot;
+def_obj $other = $b;
+if (oc_param($b, toxic_staff_charged) ! null | oc_param($b, toxic_staff_uncharged) ! null) {
+    $slot = $bslot;
+    $other = $a;
+}
+if ($other ! zulrahs_scales) {
+    ~displaymessage(^dm_default);
+    return;
+}
+def_int $room = sub(^toxic_staff_max_charges, %toxic_staff_charges);
+if ($room <= 0) {
+    mes("Your staff can't hold any more scales.");
+    return;
+}
+def_int $n = min($room, inv_total(inv, zulrahs_scales));
+if ($n <= 0) {
+    mes("You need some of Zulrah's scales to charge the staff.");
+    return;
+}
+inv_del(inv, zulrahs_scales, $n);
+%toxic_staff_charges = add(%toxic_staff_charges, $n);
+// The record in the slot becomes the charged one the item itself names.
+def_namedobj $charged = oc_param(inv_getobj(inv, $slot), toxic_staff_charged);
+if ($charged ! null) {
+    inv_setslot(inv, $slot, $charged, 1);
+}
+sound_synth(snake_hit, 1, 0);
+mes("You add <tostring($n)> scale<~toxic_staff_plural($n)> to the staff. It now holds <tostring(%toxic_staff_charges)>.");
+
+[proc,toxic_staff_plural](int $n)(string)
+if ($n = 1) {
+    return("");
+}
+return("s");
+
+// "Players may uncharge the staff at any time to recover all unused scales" - every one of them,
+// which is where this parts company with the trident of the swamp.
+[opheld5,toxic_staff_of_the_dead]
+def_int $slot = last_slot;
+def_int $n = %toxic_staff_charges;
+if ($n > 0 & inv_total(inv, zulrahs_scales) = 0 & inv_freespace(inv) < 1) {
+    mes("You need another free inventory space to take the scales out of the staff.");
+    return;
+}
+def_namedobj $bare = oc_param(inv_getobj(inv, $slot), toxic_staff_uncharged);
+if ($bare = null) {
+    return;
+}
+if ($n > 0) {
+    inv_add(inv, zulrahs_scales, $n);
+}
+%toxic_staff_charges = 0;
+inv_setslot(inv, $slot, $bare, 1);
+mes("You uncharge the staff.");
+
+// ---------------------------------------------------------------------------------------------
+// What a charged staff does
+// ---------------------------------------------------------------------------------------------
+// Wielded and holding scales. Everything below is gated on this and nothing else, and it is the
+// same shape as ~serpentine_helm_charged: a charged record is the one with an uncharged record to
+// fall back to. Guard the empty slot first - oc_param(null, ...) THROWS rather than returning
+// null, and this runs on every swing in the game.
+[proc,toxic_staff_charged]()(boolean)
+def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+if ($weapon = null) {
+    return(false);
+}
+if (oc_param($weapon, toxic_staff_uncharged) ! null & %toxic_staff_charges > 0) {
+    return(true);
+}
+return(false);
+
+// Ten on entering combat, and the timer takes ten more for as long as the fight lasts. Called
+// from skill_combat/scripts/player/player_combat.rs2 and player_magic.rs2, beside the serpentine
+// helm's.
+[proc,toxic_staff_combat_entry]
+def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+if ($weapon = null) {
+    return;
+}
+if (oc_param($weapon, toxic_staff_uncharged) = null) {
+    return;
+}
+if (gettimer(toxic_staff) ! -1) {
+    return; // already in combat, the timer is doing the work
+}
+settimer(toxic_staff, ^toxic_staff_charge_interval);
+~toxic_staff_burn; // entering combat costs its ten straight away
+
+[timer,toxic_staff]
+// The same 8-tick idle window the helm's timer reads, which is npc_combat.rs2's own.
+if (add(%barrows_lastcombat, 8) < map_clock) {
+    cleartimer(toxic_staff);
+    return;
+}
+~toxic_staff_burn;
+
+[proc,toxic_staff_burn]
+def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+if ($weapon = null) {
+    cleartimer(toxic_staff);
+    return;
+}
+def_namedobj $bare = oc_param($weapon, toxic_staff_uncharged);
+if ($bare = null) {
+    cleartimer(toxic_staff);
+    return;
+}
+%toxic_staff_charges = max(0, sub(%toxic_staff_charges, ^toxic_staff_charge_cost));
+if (%toxic_staff_charges > 0) {
+    return;
+}
+// Run dry in the hands: it stays wielded as the uncharged staff, which still casts and still
+// swings - it has simply stopped being toxic.
+inv_setslot(worn, ^wearpos_rhand, $bare, 1);
+~update_all(inv_getobj(worn, ^wearpos_rhand));
+cleartimer(toxic_staff);
+mes("@red@Your staff has run out of scales.");
+
+// "A 25% chance to envenom." Called from the one place that knows a melee hit LANDED
+// (skill_combat/scripts/player/player_melee.rs2) and from the one that knows a combat spell did
+// (player_magic.rs2), beside the serpentine helm's own roll.
+[proc,toxic_staff_venom](int $damage)
+if ($damage <= 0) {
+    return;
+}
+if (~toxic_staff_charged = false) {
+    return;
+}
+if (random(^toxic_staff_venom_chance) ! 0) {
+    return;
+}
+~npc_venom_start;
