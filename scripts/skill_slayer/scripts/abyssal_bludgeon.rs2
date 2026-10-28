@@ -1,0 +1,107 @@
+// THE THREE BLUDGEON PIECES: how they drop, why a duplicate cannot, and the join.
+//
+// THE RULE, in the owner's words: "can't get dupe pieces until all 3 have been dropped". So the
+// roll picks from the pieces this player has NEVER BEEN GIVEN, and only once all three have been
+// handed over do later rolls become free to repeat.
+//
+// THE COLLECTION LOG IS THE RECORD, and that is not a shortcut - it is the only record of the
+// right shape. "Ever been given" is exactly what the log stores, it is written the moment the
+// piece hits the floor, and it is never cleared. The two alternatives are both wrong:
+//
+//   COUNTING THE PACK would mean a player who made a bludgeon, banked a piece or died with one
+//   started receiving duplicates of pieces they no longer hold, which is the opposite of the rule.
+//
+//   A VARP OF THREE BITS would say the same thing in a second place, and writing a varp from a
+//   death script needs protected access the [ai_queue3] path does not have - the build says so,
+//   which is how this came to be written the right way round.
+//
+// The cost is that losing a piece means it is gone. That is also Old School's answer, where the
+// pieces are untradeable and the Sire is the only source.
+//
+// THE BIT IS STILL A PARAM ON THE OBJ (bludgeon_piece_bit) because the pieces are looked at as a
+// set below, and a param lets the obj carry its own place in that set.
+
+[proc,abyssal_bludgeon_piece_roll]
+if (random(^bludgeon_piece_rate) ! 0) {
+    return;
+}
+def_namedobj $piece = ~abyssal_bludgeon_next_piece;
+obj_add(npc_coord, $piece, 1, ^lootdrop_duration);
+~collection_log_add($piece, 1);
+~broadcast_drop($piece);
+
+// WHICH PIECE TO GIVE: one of the ones the log has never seen, or any of the three once it has
+// seen all of them.
+[proc,abyssal_bludgeon_next_piece]()(namedobj)
+def_int $have = 0;
+if (inv_total(collection_log, bludgeon_spine) > 0) {
+    $have = or($have, oc_param(bludgeon_spine, bludgeon_piece_bit));
+}
+if (inv_total(collection_log, bludgeon_claw) > 0) {
+    $have = or($have, oc_param(bludgeon_claw, bludgeon_piece_bit));
+}
+if (inv_total(collection_log, bludgeon_axon) > 0) {
+    $have = or($have, oc_param(bludgeon_axon, bludgeon_piece_bit));
+}
+if ($have = ^bludgeon_all_pieces) {
+    // Everything has been given once, so duplicates are allowed from here on.
+    switch_int (random(3)) {
+        case 0 : return(bludgeon_spine);
+        case 1 : return(bludgeon_claw);
+    }
+    return(bludgeon_axon);
+}
+// Count what is missing, then walk the same order again and take the nth of them. Two passes
+// rather than one because a list is not a type this language has.
+//
+// THE ROLL IS SPELT OUT PER COUNT rather than written as random(sub(3, bitcount($have))),
+// which is the same number and reads better. tools/gennpcdrops.py cannot follow a random() of
+// an expression, and the first version of this quietly took the whole abyssal demon page out of
+// the npc browser - the generator says "random() of arithmetic" and drops the table rather than
+// guessing at it. A literal in each branch keeps the choice uniform and the browser working.
+def_int $pick = 0;
+if (bitcount($have) = 1) {
+    $pick = random(2);
+} else if (bitcount($have) = 0) {
+    $pick = random(3);
+}
+if (and($have, oc_param(bludgeon_spine, bludgeon_piece_bit)) = 0) {
+    if ($pick = 0) {
+        return(bludgeon_spine);
+    }
+    $pick = sub($pick, 1);
+}
+if (and($have, oc_param(bludgeon_claw, bludgeon_piece_bit)) = 0) {
+    if ($pick = 0) {
+        return(bludgeon_claw);
+    }
+    $pick = sub($pick, 1);
+}
+return(bludgeon_axon);
+
+// ---------------------------------------------------------------------------------------------
+// The join
+// ---------------------------------------------------------------------------------------------
+// Any piece on any other piece, which is how Old School's Overseer behaves once you have all
+// three - and there is no Overseer here to ask. All three are consumed; the bludgeon is
+// untradeable too, so nothing is created that could be sold.
+
+[opheldu,bludgeon_spine] ~abyssal_bludgeon_join;
+[opheldu,bludgeon_claw] ~abyssal_bludgeon_join;
+[opheldu,bludgeon_axon] ~abyssal_bludgeon_join;
+
+[proc,abyssal_bludgeon_join]
+if (oc_param(last_useitem, bludgeon_piece_bit) = 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_total(inv, bludgeon_spine) < 1 | inv_total(inv, bludgeon_claw) < 1
+    | inv_total(inv, bludgeon_axon) < 1) {
+    mes("You need all three pieces - the spine, the claw and the axon - to make a bludgeon.");
+    return;
+}
+inv_del(inv, bludgeon_spine, 1);
+inv_del(inv, bludgeon_claw, 1);
+inv_del(inv, bludgeon_axon, 1);
+inv_add(inv, abyssal_bludgeon, 1);
+~objbox(abyssal_bludgeon, "You fuse the three pieces. The abyss hums through the haft.", 250, 0, 0);

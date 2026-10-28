@@ -1,0 +1,79 @@
+// THE TWO DORGESHUUN SPECIAL ATTACKS, Backstab and Snipe
+// (oldschool.runescape.wiki/w/Bone_dagger, /Dorgeshuun_crossbow). Both are the same idea at 75%
+// energy: an attack that CANNOT MISS against a target nobody has hurt yet, which then takes the
+// damage it dealt off the target's Defence.
+//
+// "A TARGET NOBODY HAS HURT YET" IS A PROXY, and it is worth saying which one. Old School's rule
+// is "the target has not been damaged, or you were not the last one to damage it" - the second
+// half of which is about who hit it, and this engine's npcs do not remember that. What they do
+// remember is their hitpoints, so a monster still at full health is one nobody has hurt. For a
+// solo player that is the same rule; for two players on one monster it is stricter than Old
+// School's, which is the right way round for a guess to be wrong.
+//
+// THE DRAIN ONLY APPLIES ONCE, which is Old School's own condition - "only if the target's
+// Defence isn't already lowered" - and is what stops a crossbow with 75% energy from stacking a
+// monster's Defence down to nothing over a fight. It is tested the same way: a Defence below its
+// base has already been drained.
+//
+// BOTH HALVES OF BOTH WEAPONS LAND HERE because they are one mechanic. The crossbow fires its
+// bolt rather than swinging, so it goes through the ranged spec path and the dagger through the
+// melee one; everything after the roll is shared.
+
+[proc,dorgeshuun_drain](int $damage)
+if ($damage < 1) {
+    return;
+}
+if (npc_stat(defence) < npc_basestat(defence)) {
+    return;                                    // already lowered: Old School drains it once
+}
+npc_statsub(defence, min($damage, npc_stat(defence)), 0);
+
+[proc,dorgeshuun_unhurt]()(boolean)
+// Full health is this engine's stand-in for "nobody has damaged it".
+if (npc_stat(hitpoints) = npc_basestat(hitpoints)) {
+    return(true);
+}
+return(false);
+
+// ------------------------------------------------------------------ Bone dagger: Backstab
+[label,pvm_bone_dagger_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+if (~dorgeshuun_unhurt = true) {
+    // Cannot miss: the roll is skipped entirely rather than given a huge accuracy, because "never
+    // misses" and "almost never misses" are different promises and only one of them is the wiki's.
+    $damage = randominc(min(%com_maxhit, npc_param(max_dealt)));
+    $damage_capped = min($damage, npc_stat(hitpoints));
+    ~give_combat_experience(%damagestyle, $damage_capped, %npc_combat_xp_multiplier);
+    npc_heropoints($damage_capped);
+    $hit = true;
+} else {
+    $hit, $damage, $damage_capped = ~pvm_spec_roll(100, 100, ^stab_style);
+}
+~dorgeshuun_drain($damage_capped);
+anim(puncture, 0);
+spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound), 1, 0);
+~pvm_spec_land($damage, 0);
+
+// ------------------------------------------------------------------ Dorgeshuun crossbow: Snipe
+[label,pvm_dorgeshuun_crossbow_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+if (~dorgeshuun_unhurt = true) {
+    $damage = randominc(min(%com_maxhit, npc_param(max_dealt)));
+    $damage_capped = min($damage, npc_stat(hitpoints));
+    ~give_combat_experience(%damagestyle, $damage_capped, %npc_combat_xp_multiplier);
+    npc_heropoints($damage_capped);
+    $hit = true;
+} else {
+    $hit, $damage, $damage_capped = ~pvm_spec_roll(100, 100, ^ranged_style);
+}
+~dorgeshuun_drain($damage_capped);
+anim(oc_param(inv_getobj(worn, ^wearpos_rhand), rangeattack_anim), 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), rangeattack_sound), 1, 0);
+~pvm_spec_land($damage, 0);

@@ -1,0 +1,7 @@
+// Smash, the dragon warhammer's special attack (oldschool.runescape.wiki/w/Dragon_warhammer).
+//
+// Thirty per cent of the target's CURRENT Defence, which is the part worth naming: the drain
+// compounds rather than adds, so a second Smash takes 30% of what the first one left. Rounded
+// down, as Old School rounds it - on a monster with three Defence that is nothing at all, and
+// that is the rule rather than a case to round away.
+^dwh_defence_drain_pct = 30

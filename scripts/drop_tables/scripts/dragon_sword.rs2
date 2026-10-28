@@ -1,0 +1,44 @@
+// THE DRAGON SWORD, off every dragon in the build, at a rate that follows the dragon.
+//
+// Old School drops it from the Wyvern Cave's wyrms - a 2019 monster in a 2019 cave, neither of
+// which can exist in a 377 cache - at 1/2,000. The owner asked for "all dragons, better drop rate
+// with higher level", so that 1/2,000 is kept as the value at the TOP of the ladder, on the King
+// Black Dragon, and the rest scale down from it by how hard the dragon is. The numbers are in
+// configs/drop_weapons.constant, named one per dragon, so the ladder can be read and changed in
+// one place rather than nine.
+//
+// AN EXTRA ROLL, NOT A REPLACEMENT. It is called straight after npc_findhero in each dragon's
+// own [ai_queue3] - before the ordinary table, so it can never be crowded out by it, and without
+// returning, so a kill that does not give the sword still gives everything else. That is the same
+// shape ~bosspet_roll uses, and for the same reason.
+//
+// NINE DRAGONS, NOT TWELVE. Elvarg and the three baby dragons have no death script at all, so
+// they have no drops of any kind and this cannot be hung on them without inventing a table for
+// them first. ~dragon_sword_roll is deliberately silent for anything not in the switch: a dragon
+// added later gets no sword until somebody gives it a rate, which is better than a default.
+
+[proc,dragon_sword_rate]()(int)
+switch_npc (npc_type) {
+    case green_dragon : return(^dsword_rate_green);
+    case blue_dragon : return(^dsword_rate_blue);
+    case bronze_dragon : return(^dsword_rate_bronze);
+    case red_dragon : return(^dsword_rate_red);
+    case black_dragon : return(^dsword_rate_black);
+    case iron_dragon : return(^dsword_rate_iron);
+    case steel_dragon : return(^dsword_rate_steel);
+    case lava_dragon : return(^dsword_rate_lava);
+    case king_dragon : return(^dsword_rate_kbd);
+}
+return(0);
+
+[proc,dragon_sword_roll]
+def_int $rate = ~dragon_sword_rate;
+if ($rate = 0) {
+    return;
+}
+if (random($rate) ! 0) {
+    return;
+}
+obj_add(npc_coord, dragon_sword, 1, ^lootdrop_duration);
+~collection_log_add(dragon_sword, 1); // not broadcast, so the collection log is told here
+~broadcast_drop(dragon_sword);

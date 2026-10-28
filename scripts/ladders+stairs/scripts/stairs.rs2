@@ -1181,15 +1181,27 @@ switch_coord (loc_coord) {
     case default : @unhandled_stairs(loc_coord);
 }
 
+// THE AGILITY PYRAMID'S SIX FLIGHTS. The course is in skill_agility/scripts/pyramid_course.rs2;
+// these two triggers live here because this file already owns both loc types. The top flight of
+// the desert square lands in m47_73, which is where storeys 4 and 5 are - see
+// skill_agility/configs/pyramid_course.constant.
 [oploc1,agility_pyramid_steps1]
-// arrive delay?
 switch_coord (loc_coord) {
+    case 0_52_44_26_15 : @pyramid_stairs(^pyramid_land_up_1);   // 3354,2831 sand    -> storey 1
+    case 1_52_44_28_17 : @pyramid_stairs(^pyramid_land_up_2);   // 3356,2833 storey 1 -> storey 2
+    case 2_52_44_30_19 : @pyramid_stairs(^pyramid_land_up_3);   // 3358,2835 storey 2 -> storey 3
+    case 3_52_44_32_21 : @pyramid_stairs(^pyramid_land_up_4);   // 3360,2837 storey 3 -> storey 4
+    case 2_47_73_34_23 : @pyramid_stairs(^pyramid_land_up_5);   // 3042,4695 storey 4 -> the apex
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,agility_pyramid_steps_top_hotspot]
-// arrive delay?
 switch_coord (loc_coord) {
+    case 1_52_44_26_15 : @pyramid_stairs(^pyramid_land_down_0); // 3354,2831 storey 1 -> sand
+    case 2_52_44_28_17 : @pyramid_stairs(^pyramid_land_down_1); // 3356,2833 storey 2 -> storey 1
+    case 3_52_44_30_19 : @pyramid_stairs(^pyramid_land_down_2); // 3358,2835 storey 3 -> storey 2
+    case 2_47_73_32_21 : @pyramid_stairs(^pyramid_land_down_3); // 3040,4693 storey 4 -> storey 3
+    case 3_47_73_34_23 : @pyramid_stairs(^pyramid_land_down_4); // 3042,4695 the apex -> storey 4
     case default : @unhandled_stairs(loc_coord);
 }
 

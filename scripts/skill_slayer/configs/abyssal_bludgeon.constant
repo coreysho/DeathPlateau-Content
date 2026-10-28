@@ -1,0 +1,10 @@
+// THE THREE BLUDGEON PIECES (skill_slayer/scripts/abyssal_bludgeon.rs2).
+//
+// Old School's pieces come out of an unsired at the Font of Consumption and take about 619
+// Abyssal Sire kills for a full set. There is no Sire here and the owner asked for the abyssal
+// demons, which are a slayer task rather than a boss - so the rate is this build's own: three
+// rolls of one in fifteen hundred, which is a long task list for the hardest-hitting crush
+// weapon in the game.
+^bludgeon_piece_rate = 1500
+// All three bits set: 1 spine | 2 claw | 4 axon.
+^bludgeon_all_pieces = 7

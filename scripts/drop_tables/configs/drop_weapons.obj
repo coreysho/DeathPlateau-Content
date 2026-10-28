@@ -1,0 +1,202 @@
+// FOUR WEAPONS OFF THE DROP TABLES, and the tarnished blade one of them starts as.
+//
+// Imported from a modern OSRS cache by tools/models/importosrs.py (objs 20756, 31248, 31245,
+// 13576, 21009). Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+//
+// EVERY BONUS, SPEED AND REQUIREMENT BELOW IS THE CACHE RECORD'S OWN, read by
+// tools/models/fillosrsstats.py out of the item table and checked against it afterwards. That
+// last part is not a formality: the filler matched dragon_sword to dragon_2h_sword as a repaint
+// and copied the two-hander's 92 slash, 93 strength and seven-tick swing onto a one-handed stab
+// sword. They share four letters of a name and nothing else. If an import here ever looks like a
+// weapon one tier up from what it should be, that is the shape of the mistake.
+//
+// WHERE THEY COME FROM HERE, and where Old School really puts them. Three of the four are hung on
+// monsters this build has rather than on the ones that drop them there, because those do not
+// exist in a 377 cache. The RATES are still Old School's own in every case - taken from the
+// monster that really drops the item - so the only thing invented is the address.
+//
+//   HILL GIANT CLUB: Old School's comes from the chest in Obor's lair, 1/118, opened with a giant
+//   key that hill giants drop at about 1/128. Two rolls, and there is no Obor here. So the hill
+//   giants drop it directly at ONE IN FIFTEEN THOUSAND, which is those two rates multiplied -
+//   the same number of hill giants, without the boss in the middle.
+//
+//   BELLE'S FOLLY: Old School's tarnished blade drops from the Shellbane Gryphon at 1/75 and is
+//   polished at the Giants' Foundry with 70 Smithing. No gryphon and no foundry here, and the
+//   owner's call is metal dragons and the King Black Dragon. The tarnished blade is what drops,
+//   and it is still polished - on any anvil, at the same 70 Smithing - so the two-step shape of
+//   the item survives even though neither end of it is in the same place.
+//
+//   DRAGON WARHAMMER: Old School's is the Lizardman shaman's at 1/3,000, and there are no
+//   lizardmen. The Kalphite Queen and the King Black Dragon drop it here, which is where the
+//   owner asked for it, at that same 1/3,000 each.
+//
+//   DRAGON SWORD is the one that moved for a reason other than absence: Old School's wyrms do not
+//   exist either, but the owner asked for "all dragons, better drop rate with higher level", so
+//   it is a scaled table across every dragon in the build. See drop_tables/scripts/dragon_sword.rs2.
+
+// ---------------------------------------------------------------- Hill giant club
+// Two-handed, seven ticks, and the only crush weapon worth carrying at 40 Attack. The animation
+// set is the granite maul's, which is this cache's only two-handed club.
+[hill_giant_club]
+name=Hill giant club
+desc=A brutal weapon popular among giants.
+model=obj_hill_giant_club
+manwear=obj_hill_giant_club_manwear,0
+womanwear=obj_hill_giant_club_womanwear,6
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1130
+2dxan=396
+2dyan=952
+2dxof=3
+2dyof=-4
+weight=3628g
+cost=60000
+members=yes
+iop2=Wield
+category=weapon_blunt
+param=attackrate,7
+param=stabattack,-4
+param=slashattack,50
+param=crushattack,65
+param=magicattack,-4
+param=rangedefence,-1
+param=strengthbonus,70
+param=crushattack_anim,slayer_granite_maul_attack
+param=defend_anim,slayer_granite_maul_defend
+param=crush_sound,warhammer_crush
+param=ready_baseanim,slayer_granite_maul_ready
+param=walk_f_baseanim,slayer_granite_maul_walk
+param=walk_b_baseanim,slayer_granite_maul_walk
+param=walk_l_baseanim,slayer_granite_maul_walk
+param=walk_r_baseanim,slayer_granite_maul_walk
+param=running_baseanim,slayer_granite_maul_run
+
+// ---------------------------------------------------------------- Belle's folly
+// A stab sword with real defensive bonuses, which almost nothing in this build has: +20 stab
+// defence on a WEAPON. 65 Attack, five ticks, and no special attack - Old School calls it the
+// only one of its family without one.
+[belles_folly]
+name=Belle's folly
+desc=A well balanced blade adorned with gold.
+model=obj_belles_folly
+manwear=obj_belles_folly_manwear,0
+womanwear=obj_belles_folly_womanwear,0
+wearpos=righthand
+2dzoom=2064
+2dxan=207
+2dyan=1335
+2dzan=619
+2dxof=-6
+2dyof=-100
+weight=1360g
+cost=45000
+members=yes
+iop2=Wield
+category=weapon_stab
+param=attackrate,5
+param=stabattack,100
+param=slashattack,78
+param=crushattack,-3
+param=stabdefence,20
+param=slashdefence,15
+param=crushdefence,-9
+param=strengthbonus,102
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=stab_sound,stabsword_stab
+param=slash_sound,stabsword_slash
+
+// The blade as it drops. Not wearable, no bonuses, and its one option says what it needs rather
+// than nothing at all - see drop_tables/scripts/belles_folly.rs2.
+[belles_folly_tarnished]
+name=Belle's folly (tarnished)
+desc=This blade needs some work before it will be useable.
+model=obj_belles_folly_tarnished
+2dzoom=2064
+2dxan=207
+2dyan=1335
+2dzan=619
+2dxof=-6
+2dyof=-100
+weight=1360g
+cost=45000
+members=yes
+iop1=Inspect
+
+// ---------------------------------------------------------------- Dragon warhammer
+// 95 crush and 85 strength at six ticks, on 60 STRENGTH rather than Attack - which is the cache
+// record's own requirement param (434 is the skill, and 2 is Strength), and matches Old School's
+// 2021 change. Smash is built: skill_combat/scripts/player/specs/scripts/dragon_warhammer.rs2.
+[dragon_warhammer]
+name=Dragon warhammer
+desc=Spikey, close combat weapon.
+model=obj_dragon_warhammer
+manwear=obj_dragon_warhammer_manwear,0
+womanwear=obj_dragon_warhammer_womanwear,0
+wearpos=righthand
+2dzoom=1600
+2dxan=1510
+2dyan=1785
+2dzan=821
+2dxof=9
+2dyof=-4
+weight=2000g
+cost=120000
+members=yes
+iop2=Wield
+category=weapon_blunt
+param=attackrate,6
+param=stabattack,-4
+param=slashattack,-4
+param=crushattack,95
+param=magicattack,-4
+param=strengthbonus,85
+param=crushattack_anim,human_blunt_pound
+param=defend_anim,human_blunt_block
+param=crush_sound,warhammer_crush
+// Smash, 50%
+param=specwep,^true
+param=sa_energy,500
+
+// ---------------------------------------------------------------- Dragon sword
+// Four ticks and 65 stab, which makes it the fastest stab weapon in the build - and the reason
+// its numbers are worth reading twice, because the filler got them wrong once already. Wild Stab
+// is built: skill_combat/scripts/player/specs/scripts/dragon_sword.rs2.
+[dragon_sword]
+name=Dragon sword
+desc=A razor sharp sword.
+model=obj_dragon_sword
+manwear=obj_dragon_sword_manwear,0
+womanwear=obj_dragon_sword_womanwear,6
+wearpos=righthand
+2dzoom=1168
+2dxan=691
+2dyan=478
+2dxof=3
+2dyof=1
+recol1s=15855
+recol1d=6476
+weight=1814g
+cost=72001
+members=yes
+iop2=Wield
+category=weapon_stab
+param=attackrate,4
+param=stabattack,65
+param=slashattack,55
+param=crushattack,-2
+param=slashdefence,2
+param=crushdefence,1
+param=strengthbonus,63
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=defend_anim,human_sword_def
+param=stab_sound,stabsword_stab
+param=slash_sound,stabsword_slash
+// Wild Stab, 40%
+param=specwep,^true
+param=sa_energy,400

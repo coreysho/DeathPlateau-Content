@@ -1,0 +1,28 @@
+// OSRS locs imported by tools/models/importosrslocs.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+// THE FOUR DOORS INTO JALSAVRAH. The cache ships them with no option at all, because in Old School
+// the server puts one on them; here the Open is written in. One of the four is the way in and the
+// other three are not - which one changes every twenty-five minutes, read straight off the world
+// clock so that every player agrees without anything being stored (scripts/plunder.rs2).
+[plunder_anon_door]
+// OSRS loc 20956
+name=An anonymous looking door
+desc=One of these leads into the pyramid. They all look the same.
+model=plunder_anon_door
+width=2
+length=2
+offsety=176
+op1=Open
+active=yes
+anim=osrsloc_anim_4339
+
+[plunder_anon_door_open]
+// OSRS loc 20974
+name=An anonymous looking door
+model=plunder_anon_door_open
+width=2
+length=2
+offsety=176
+op1=Search
+anim=osrsloc_anim_4339

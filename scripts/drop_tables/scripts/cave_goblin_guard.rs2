@@ -1,0 +1,46 @@
+// CAVE GOBLIN GUARD - the five bone weapons, off the goblins carrying them.
+//
+// The guards had no drop table at all: killing one gave nothing, not even the bones every other
+// cave goblin leaves. Old School sells four of these five at Nardok's in the Dorgeshuun Mines
+// after Death to the Dorgeshuun, and neither the shop nor the quest is in this build - so the
+// owner's call is that the goblins drop them, and the guards are the ones already holding a bone
+// spear in both hands.
+//
+// THE RATES ARE THIS BUILD'S OWN, because Old School has none to take: a shop price is not a drop
+// rate. They are ordered the way the weapons are: the spear the guard is visibly carrying is the
+// commonest, the crossbow that outranges everything before rune is the rarest, and the bolts come
+// in a handful rather than one at a time because ammunition that drops singly is not ammunition.
+//
+// ONE ROLL OF 128, so the five are alternatives to each other rather than five separate chances -
+// the same shape as cave_goblin_miner_drop_table next door, and the reason a guard is worth
+// killing without being worth farming.
+
+[ai_queue3,cave_goblin_guard1] @cave_goblin_guard_drop_table;
+[ai_queue3,cave_goblin_guard2] @cave_goblin_guard_drop_table;
+
+[label,cave_goblin_guard_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+
+def_int $random = random(128);
+if ($random < 8) {
+    obj_add(npc_coord, cave_goblin_bone_spear, 1, ^lootdrop_duration);
+} else if ($random < 13) {
+    obj_add(npc_coord, cave_goblin_bone_club, 1, ^lootdrop_duration);
+} else if ($random < 16) {
+    obj_add(npc_coord, bone_bolts, ~random_range(8, 20), ^lootdrop_duration);
+} else if ($random < 18) {
+    obj_add(npc_coord, bone_dagger, 1, ^lootdrop_duration);
+} else if ($random < 19) {
+    obj_add(npc_coord, dorgeshuun_crossbow, 1, ^lootdrop_duration);
+} else if ($random < 40) {
+    obj_add(npc_coord, coins, ~random_range(5, 30), ^lootdrop_duration);
+} else if ($random < 55) {
+    obj_add(npc_coord, iron_ore, 1, ^lootdrop_duration);
+} else if ($random < 62) {
+    obj_add(npc_coord, coal, 1, ^lootdrop_duration);
+}
+// 62-127: nothing, which is about half, as the miners' table is

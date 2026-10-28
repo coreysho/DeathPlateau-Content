@@ -61,3 +61,18 @@ while ($choice ! null) {
     }
 }
 ~chatplayer("<p,neutral>That's all thanks.");
+
+// Old School's second option on the gem: the count, without the conversation.
+//
+// op2 ON AN OBJ WITH NO WEARPOS IS A TRAP. [opheld2,_] in player/scripts/equip.rs2 is a
+// global, so an op2 that does not say Wear runs the equip code unless something more
+// specific claims the trigger - and a gem has nowhere to be worn, so the player would be
+// shown ~equip's debug line instead of a count. This trigger is what claims it.
+[opheld2,slayer_gem]
+if (%slayer_count <= 0) {
+    mes("You need something new to hunt.");
+    return;
+}
+// Worded as the Slayer Master words it over the gem, so there is one phrasing to change.
+mes("You're assigned to kill <lowercase(~slayer_taskname)>; only <tostring(%slayer_count)> more to go.");
+mes("You have <tostring(%slayer_points)> Slayer points and a streak of <tostring(%slayer_streak)> tasks.");

@@ -1,0 +1,115 @@
+// THE DORGESHUUN BONE WEAPONS, three of the five.
+//
+// Imported from a modern OSRS cache by tools/models/importosrs.py (objs 8872, 8880, 8882).
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+//
+// THE OTHER TWO ARE ALREADY HERE. The bone spear and the bone club are in the 377 cache - the
+// cave goblin guards have been carrying the spear since the mines were built - with a model, a
+// name and not one combat bonus between them. They are given the same cache numbers as these
+// three, in scripts/_unpack/377/all.obj where they live.
+//
+// FILLOSRSSTATS GOT THE DAGGER WRONG AND IT IS WORTH RECORDING WHY: it matched bone_dagger to
+// bronze_dagger as a repaint and copied bronze's 4/2/-4 and its POISON CHAIN, so a poisoned bone
+// dagger would have turned into a bronze dagger (p). The second half of that is the dangerous
+// half - a wrong bonus is a wrong number, a wrong weapon_poisoned is an item quietly swapped for
+// another. Both are gone; the numbers below are obj 8872's own.
+//
+// WHERE THEY COME FROM. Old School sells four of them at Nardok's Bone Weapons in the Dorgeshuun
+// Mines, after Death to the Dorgeshuun. Neither Nardok nor that quest is in this build, and the
+// owner asked for the cave goblins to drop them - so the GUARDS do, which are the ones carrying
+// the spear in the first place. drop_tables/scripts/cave_goblin_guard.rs2 has the table.
+
+[bone_dagger]
+name=Bone dagger
+desc=A powerful dagger.
+model=obj_bone_dagger
+manwear=obj_bone_dagger_manwear,0
+womanwear=obj_bone_dagger_womanwear,0
+wearpos=righthand
+2dzoom=976
+2dxan=576
+2dyan=30
+weight=453g
+cost=2000
+members=yes
+iop2=Wield
+// Obj 8872's own, not bronze's.
+category=weapon_stab
+param=attackrate,4
+param=stabattack,5
+param=slashattack,3
+param=crushattack,-4
+param=magicattack,1
+param=magicdefence,1
+param=strengthbonus,4
+param=stabattack_anim,human_ddagger_lunge
+param=slashattack_anim,human_ddagger_hack
+param=defend_anim,human_ddagger_block
+param=stab_sound,stabsword_stab
+param=slash_sound,stabsword_slash
+// Backstab, 75% (skill_combat/scripts/player/specs/scripts/bone_weapons.rs2)
+param=specwep,^true
+param=sa_energy,750
+
+[dorgeshuun_crossbow]
+name=Dorgeshuun crossbow
+desc=This fires crossbow bolts.
+model=obj_dorgeshuun_crossbow
+manwear=obj_dorgeshuun_crossbow_manwear,0
+womanwear=obj_dorgeshuun_crossbow_womanwear,0
+wearpos=righthand
+2dzoom=1104
+2dxan=444
+2dyan=1658
+2dxof=2
+2dyof=8
+weight=2267g
+cost=2000
+members=yes
+iop2=Wield
+// +42 ranged attack at 28 Ranged, which is obj 8880's own pair - the strongest crossbow a player
+// can hold before the rune one, and forty levels earlier.
+category=weapon_crossbow
+param=rangeattack,42
+param=levelrequire,28
+param=attackrate,5
+param=attackrange,7
+param=rangeattack_anim,osrs_crossbow_fire
+param=ready_baseanim,osrs_crossbow_ready
+param=turnonspot_baseanim,osrs_human_turnonspot
+param=walk_f_baseanim,osrs_crossbow_walk
+param=walk_b_baseanim,osrs_crossbow_walk
+param=walk_l_baseanim,osrs_crossbow_walk
+param=walk_r_baseanim,osrs_crossbow_walk
+param=running_baseanim,osrs_crossbow_run
+param=defend_anim,human_unarmedblock
+param=rangeattack_sound,crossbow
+// Snipe, 75% (skill_combat/scripts/player/specs/scripts/bone_weapons.rs2)
+param=specwep,^true
+param=sa_energy,750
+
+[bone_bolts]
+name=Bone bolts
+desc=Good if you have a bone crossbow!
+model=obj_bone_bolts
+wearpos=quiver
+2dzoom=1215
+2dxan=444
+2dyan=1943
+2dxof=18
+2dyof=9
+weight=18g
+cost=3
+members=yes
+stackable=yes
+iop2=Wield
+// 49 ranged strength at 28 Ranged, obj 8882's own: between this build's steel and mithril bolts,
+// and the only ammunition in the game a player can be handed before 31 Ranged that is worth
+// carrying.
+category=bolts
+param=rangebonus,49
+param=levelrequire,28
+param=proj_launch,osrs_crossbowbolt_launch
+param=proj_travel,crossbowbolt_travel

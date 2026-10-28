@@ -1,0 +1,43 @@
+// Animations converted from the OSRS cache by tools/models/animconvosrs.py.
+// They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
+// only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+
+[osrsloc_anim_4339]
+// OSRS seq 4339
+loops=18
+frame1=anim_osrs_12746_1
+delay1=21
+frame2=anim_osrs_12746_2
+delay2=5
+frame3=anim_osrs_12746_3
+delay3=5
+frame4=anim_osrs_12746_4
+delay4=5
+frame5=anim_osrs_12746_5
+delay5=5
+frame6=anim_osrs_12746_6
+delay6=5
+frame7=anim_osrs_12746_7
+delay7=3
+frame8=anim_osrs_12746_8
+delay8=2
+frame9=anim_osrs_12746_9
+delay9=1
+frame10=anim_osrs_12746_10
+delay10=20
+frame11=anim_osrs_12746_9
+delay11=1
+frame12=anim_osrs_12746_8
+delay12=2
+frame13=anim_osrs_12746_7
+delay13=3
+frame14=anim_osrs_12746_6
+delay14=5
+frame15=anim_osrs_12746_5
+delay15=5
+frame16=anim_osrs_12746_4
+delay16=5
+frame17=anim_osrs_12746_3
+delay17=5
+frame18=anim_osrs_12746_2
+delay18=5

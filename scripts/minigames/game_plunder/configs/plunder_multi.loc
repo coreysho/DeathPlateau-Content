@@ -1,0 +1,214 @@
+// The Pyramid Plunder multilocs, which importosrsmap.py cannot write: it follows a multiloc
+// to its default child and places THAT, so all fifteen urn slots arrive as three ids and the
+// chest, the sarcophagus and the four doors arrive stuck in their opening state.
+//
+// Every one of these is a varbit, and a varbit is per player - which is the point. Two people
+// in the same room each see their own urns; a loc_change would show one of them the other's.
+//
+// The children are the imported art, one 377 loc per state, and the order is Jagex's own:
+//   urn          0 untouched (Search / Check for Snakes)  1 checked and safe  2 checked, snake  3 emptied
+//   chest        0 shut (Search)                          1 open
+//   sarcophagus  0 shut (Open)                            1 opened (Search)   2 emptied
+//   tomb door    0 locked (Pick-lock)                     1 open (Enter)
+
+[plunder_urn_1]
+// OSRS loc 26580
+blockrange=no
+active=yes
+multivar=plunder_urn_1_state
+multiloc=0,plunder_urn_a_fresh
+multiloc=1,plunder_urn_a_checked
+multiloc=2,plunder_urn_a_snake
+multiloc=3,plunder_urn_a_empty
+
+[plunder_urn_2]
+// OSRS loc 26600
+blockrange=no
+active=yes
+multivar=plunder_urn_2_state
+multiloc=0,plunder_urn_a_fresh
+multiloc=1,plunder_urn_a_checked
+multiloc=2,plunder_urn_a_snake
+multiloc=3,plunder_urn_a_empty
+
+[plunder_urn_3]
+// OSRS loc 26601
+blockrange=no
+active=yes
+multivar=plunder_urn_3_state
+multiloc=0,plunder_urn_a_fresh
+multiloc=1,plunder_urn_a_checked
+multiloc=2,plunder_urn_a_snake
+multiloc=3,plunder_urn_a_empty
+
+[plunder_urn_4]
+// OSRS loc 26602
+blockrange=no
+active=yes
+multivar=plunder_urn_4_state
+multiloc=0,plunder_urn_a_fresh
+multiloc=1,plunder_urn_a_checked
+multiloc=2,plunder_urn_a_snake
+multiloc=3,plunder_urn_a_empty
+
+[plunder_urn_5]
+// OSRS loc 26603
+blockrange=no
+active=yes
+multivar=plunder_urn_5_state
+multiloc=0,plunder_urn_a_fresh
+multiloc=1,plunder_urn_a_checked
+multiloc=2,plunder_urn_a_snake
+multiloc=3,plunder_urn_a_empty
+
+[plunder_urn_6]
+// OSRS loc 26604
+blockrange=no
+active=yes
+multivar=plunder_urn_6_state
+multiloc=0,plunder_urn_b_fresh
+multiloc=1,plunder_urn_b_checked
+multiloc=2,plunder_urn_b_snake
+multiloc=3,plunder_urn_b_empty
+
+[plunder_urn_7]
+// OSRS loc 26605
+blockrange=no
+active=yes
+multivar=plunder_urn_7_state
+multiloc=0,plunder_urn_b_fresh
+multiloc=1,plunder_urn_b_checked
+multiloc=2,plunder_urn_b_snake
+multiloc=3,plunder_urn_b_empty
+
+[plunder_urn_8]
+// OSRS loc 26606
+blockrange=no
+active=yes
+multivar=plunder_urn_8_state
+multiloc=0,plunder_urn_b_fresh
+multiloc=1,plunder_urn_b_checked
+multiloc=2,plunder_urn_b_snake
+multiloc=3,plunder_urn_b_empty
+
+[plunder_urn_9]
+// OSRS loc 26607
+blockrange=no
+active=yes
+multivar=plunder_urn_9_state
+multiloc=0,plunder_urn_b_fresh
+multiloc=1,plunder_urn_b_checked
+multiloc=2,plunder_urn_b_snake
+multiloc=3,plunder_urn_b_empty
+
+[plunder_urn_10]
+// OSRS loc 26608
+blockrange=no
+active=yes
+multivar=plunder_urn_10_state
+multiloc=0,plunder_urn_b_fresh
+multiloc=1,plunder_urn_b_checked
+multiloc=2,plunder_urn_b_snake
+multiloc=3,plunder_urn_b_empty
+
+[plunder_urn_11]
+// OSRS loc 26609
+blockrange=no
+active=yes
+multivar=plunder_urn_11_state
+multiloc=0,plunder_urn_c_fresh
+multiloc=1,plunder_urn_c_checked
+multiloc=2,plunder_urn_c_snake
+multiloc=3,plunder_urn_c_empty
+
+[plunder_urn_12]
+// OSRS loc 26610
+blockrange=no
+active=yes
+multivar=plunder_urn_12_state
+multiloc=0,plunder_urn_c_fresh
+multiloc=1,plunder_urn_c_checked
+multiloc=2,plunder_urn_c_snake
+multiloc=3,plunder_urn_c_empty
+
+[plunder_urn_13]
+// OSRS loc 26611
+blockrange=no
+active=yes
+multivar=plunder_urn_13_state
+multiloc=0,plunder_urn_c_fresh
+multiloc=1,plunder_urn_c_checked
+multiloc=2,plunder_urn_c_snake
+multiloc=3,plunder_urn_c_empty
+
+[plunder_urn_14]
+// OSRS loc 26612
+blockrange=no
+active=yes
+multivar=plunder_urn_14_state
+multiloc=0,plunder_urn_c_fresh
+multiloc=1,plunder_urn_c_checked
+multiloc=2,plunder_urn_c_snake
+multiloc=3,plunder_urn_c_empty
+
+[plunder_urn_15]
+// OSRS loc 26613
+blockrange=no
+active=yes
+multivar=plunder_urn_15_state
+multiloc=0,plunder_urn_c_fresh
+multiloc=1,plunder_urn_c_checked
+multiloc=2,plunder_urn_c_snake
+multiloc=3,plunder_urn_c_empty
+
+[plunder_chest]
+// OSRS loc 26616
+width=3
+blockrange=no
+active=yes
+multivar=plunder_chest_state
+multiloc=0,plunder_chest_closed
+multiloc=1,plunder_chest_open
+
+[plunder_sarcophagus]
+// OSRS loc 26626
+width=2
+length=2
+blockrange=no
+active=yes
+multivar=plunder_sarcophagus_state
+multiloc=0,plunder_sarcophagus_closed
+multiloc=1,plunder_sarcophagus_opened
+multiloc=2,plunder_sarcophagus_empty
+
+[plunder_door_1]
+// OSRS loc 26618
+anim=osrsloc_anim_4338
+active=yes
+multivar=plunder_door_1_state
+multiloc=0,plunder_door_locked
+multiloc=1,plunder_door_open
+
+[plunder_door_2]
+// OSRS loc 26619
+anim=osrsloc_anim_4338
+active=yes
+multivar=plunder_door_2_state
+multiloc=0,plunder_door_locked
+multiloc=1,plunder_door_open
+
+[plunder_door_3]
+// OSRS loc 26620
+anim=osrsloc_anim_4338
+active=yes
+multivar=plunder_door_3_state
+multiloc=0,plunder_door_locked
+multiloc=1,plunder_door_open
+
+[plunder_door_4]
+// OSRS loc 26621
+anim=osrsloc_anim_4338
+active=yes
+multivar=plunder_door_4_state
+multiloc=0,plunder_door_locked
+multiloc=1,plunder_door_open

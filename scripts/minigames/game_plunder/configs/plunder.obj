@@ -1,0 +1,261 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[plunder_ivory_comb]
+name=Ivory comb
+desc=Gets knots and kinks out of your hair.
+model=obj_plunder_ivory_comb
+2dzoom=868
+2dxan=498
+2dyan=147
+2dxof=4
+2dyof=3
+weight=10g
+members=yes
+cost=50
+tradeable=yes
+
+[plunder_pottery_scarab]
+name=Pottery scarab
+desc=Little ornament in the shape of a scarab.
+model=obj_plunder_pottery_scarab
+2dzoom=976
+2dxan=431
+2dyan=30
+2dxof=6
+2dyof=7
+recol1s=20000
+recol1d=20898
+recol2s=25284
+recol2d=13604
+weight=10g
+members=yes
+cost=75
+tradeable=yes
+
+[plunder_pottery_statuette]
+name=Pottery statuette
+desc=A small statuette.
+model=obj_plunder_pottery_statuette
+2dzoom=1872
+2dxan=156
+2dyan=1718
+2dxof=6
+2dyof=-9
+recol1s=28386
+recol1d=20898
+recol2s=26338
+recol2d=13602
+recol3s=23104
+recol3d=17761
+recol4s=11554
+recol4d=15616
+weight=100g
+members=yes
+cost=100
+tradeable=yes
+
+[plunder_stone_seal]
+name=Stone seal
+desc=A seal. Made out of stone obviously.
+model=obj_plunder_stone_seal
+2dzoom=912
+2dxan=663
+2dyan=198
+2dxof=-3
+2dyof=2
+weight=10g
+members=yes
+cost=150
+tradeable=yes
+
+[plunder_stone_scarab]
+name=Stone scarab
+desc=Little ornament in the shape of a scarab.
+model=obj_plunder_stone_scarab
+2dzoom=976
+2dxan=431
+2dyan=30
+2dxof=6
+2dyof=7
+recol1s=20000
+recol1d=11626
+recol2s=25284
+recol2d=6341
+weight=10g
+members=yes
+cost=175
+tradeable=yes
+
+[plunder_stone_statuette]
+name=Stone statuette
+desc=A small statuette.
+model=obj_plunder_stone_statuette
+2dzoom=1872
+2dxan=156
+2dyan=1718
+2dxof=6
+2dyof=-9
+recol1s=28386
+recol1d=11626
+recol2s=26338
+recol2d=14795
+recol3s=23104
+recol3d=9512
+recol4s=11554
+recol4d=7398
+weight=100g
+members=yes
+cost=200
+tradeable=yes
+
+[plunder_gold_seal]
+name=Gold seal
+desc=A seal. It's gold.
+model=obj_plunder_gold_seal
+2dzoom=912
+2dxan=663
+2dyan=198
+2dxof=-3
+2dyof=2
+recol1s=11626
+recol1d=28386
+recol2s=6342
+recol2d=6336
+weight=10g
+members=yes
+cost=750
+tradeable=yes
+
+[plunder_golden_scarab]
+name=Golden scarab
+desc=Little ornament in the shape of a scarab.
+model=obj_plunder_golden_scarab
+2dzoom=976
+2dxan=431
+2dyan=30
+2dxof=6
+2dyof=7
+weight=10g
+members=yes
+cost=1000
+tradeable=yes
+
+[plunder_golden_statuette]
+name=Golden statuette
+desc=A small golden statuette.
+model=obj_plunder_golden_statuette
+2dzoom=1872
+2dxan=156
+2dyan=1718
+2dxof=6
+2dyof=-9
+weight=100g
+members=yes
+cost=1250
+tradeable=yes
+
+[pharaohs_sceptre]
+name=Pharaoh's sceptre
+desc=An ancient and powerful sceptre.
+model=obj_pharaohs_sceptre
+manwear=obj_pharaohs_sceptre_manwear,0
+womanwear=obj_pharaohs_sceptre_womanwear,0
+wearpos=righthand
+2dzoom=1744
+2dxan=285
+2dyan=1508
+2dxof=-1
+2dyof=46
+weight=2000g
+cost=100
+members=yes
+tradeable=no
+// three charges
+iop1=Teleport
+iop2=Check
+tradeable=no
+
+[plunder_snake_charm]
+name=Snake charm
+desc=Makes a hissing sound.
+model=obj_plunder_snake_charm
+manwear=obj_plunder_snake_charm_manwear,0
+womanwear=obj_plunder_snake_charm_womanwear,0
+wearpos=righthand
+wearpos2=lefthand
+2dzoom=1170
+2dxan=304
+2dyan=56
+2dxof=-3
+weight=100g
+members=yes
+tradeable=no
+iop1=Play
+tradeable=yes
+
+[pharaohs_sceptre_2]
+name=Pharaoh's sceptre
+desc=An ancient and powerful sceptre.
+model=obj_pharaohs_sceptre_2
+manwear=obj_pharaohs_sceptre_2_manwear,0
+womanwear=obj_pharaohs_sceptre_2_womanwear,0
+wearpos=righthand
+2dzoom=1744
+2dxan=285
+2dyan=1508
+2dxof=-1
+2dyof=46
+weight=2000g
+cost=100
+members=yes
+tradeable=no
+// two charges
+iop1=Teleport
+iop2=Check
+tradeable=no
+
+[pharaohs_sceptre_1]
+name=Pharaoh's sceptre
+desc=An ancient and powerful sceptre.
+model=obj_pharaohs_sceptre_1
+manwear=obj_pharaohs_sceptre_1_manwear,0
+womanwear=obj_pharaohs_sceptre_1_womanwear,0
+wearpos=righthand
+2dzoom=1744
+2dxan=285
+2dyan=1508
+2dxof=-1
+2dyof=46
+weight=2000g
+cost=100
+members=yes
+tradeable=no
+// one charge
+iop1=Teleport
+iop2=Check
+tradeable=no
+
+[pharaohs_sceptre_0]
+name=Pharaoh's sceptre
+desc=An ancient and powerful sceptre.
+model=obj_pharaohs_sceptre_0
+manwear=obj_pharaohs_sceptre_0_manwear,0
+womanwear=obj_pharaohs_sceptre_0_womanwear,0
+wearpos=righthand
+2dzoom=1744
+2dxan=285
+2dyan=1508
+2dxof=-1
+2dyof=46
+weight=2000g
+cost=100
+members=yes
+tradeable=no
+// spent
+iop1=Teleport
+iop2=Check
+tradeable=no
+

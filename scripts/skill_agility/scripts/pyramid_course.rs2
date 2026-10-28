@@ -1,0 +1,457 @@
+// The Agility Pyramid - https://oldschool.runescape.wiki/w/Agility_Pyramid
+//
+// Agility 30. Six storeys of ring walkway spiralling up through two map squares, twenty-four
+// obstacles, and a solid gold capstone at the top that Simon Templeton pays 10,000 coins for.
+//
+// configs/pyramid_course.constant has the layout: which square holds which storeys, why the five
+// stone blocks needed a map fix before they could be clicked at all, which two obstacles of Old
+// School's are deliberately not built, and where every landing and every fall comes from.
+//
+// THE SPIRAL IS ONE-WAY BY CONSTRUCTION. Each storey's arrival tile is cut off from the flight of
+// stairs that leaves it - the two 2x2 stair blocks sit corner to corner and the diagonal between
+// them is closed - so a lap is a full circuit of every ring. Nothing here enforces that; the map
+// does.
+//
+// EVERY OBSTACLE IS TWO-WAY, because the engine takes a click from both sides of all of them and
+// Old School lets you walk a lap backwards. The direction is read off the player's position
+// against loc_coord rather than stored.
+
+// ---------------------------------------------------------------------------------------------
+// Stone blocks - Old School's "Stone block", 12 experience, five of them
+// ---------------------------------------------------------------------------------------------
+// You step onto the block, it rolls, and it throws you off the far side. The roll is the cache's
+// own: each multiloc switches between agility_pyramid_tilting_floor (which carries the anim) and
+// _noanim on its own agility_pyramid_tilt_N varbit, so setting the varbit IS the animation. The
+// varp is per-player, so only the player crossing sees their block move.
+
+[oploc1,agility_pyramid_tilting_floor_multi_1] // storey 1, the west walk
+@pyramid_stone_block(^pyramid_fall_s1_stone_w, 1);
+
+[oploc1,agility_pyramid_tilting_floor_multi_3] // storey 1, the east walk
+@pyramid_stone_block(^pyramid_fall_s1_stone_e, 3);
+
+[oploc1,agility_pyramid_tilting_floor_multi_2] // storey 2, the north walk
+@pyramid_stone_block(^pyramid_fall_s2_stone_n, 2);
+
+[oploc1,agility_pyramid_tilting_floor_multi_4] // storey 4, the east walk
+@pyramid_stone_block(^pyramid_fall_s4_stone_e, 4);
+
+[oploc1,agility_pyramid_tilting_floor_multi_5] // storey 5, the north walk
+@pyramid_stone_block(^pyramid_fall_s5_stone_n, 5);
+
+[label,pyramid_stone_block](coord $fall, int $which)
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_coord $to = null;
+def_int $dir = 0;
+$to, $dir = ~pyramid_across(3, 2);
+mes("You step onto the stone block...");
+// ~forcemove rather than ~forcewalk2: the multiloc parent blocks its own two tiles - that is what
+// makes the block an obstacle rather than scenery you can stroll past - and a clipped walk will
+// not step onto it.
+def_int $step_x = ~pyramid_step_x($dir);
+def_int $step_z = ~pyramid_step_z($dir);
+~forcemove(movecoord(coord, $step_x, 0, $step_z));
+~pyramid_tilt($which, 1);
+sound_synth(stone_impact, 1, 0);
+p_delay(1);
+if (~pyramid_slipped = true) {
+    ~pyramid_tilt($which, 0);
+    anim(agility_pyramid_tilt_fall, 0);
+    p_delay(2);
+    ~pyramid_fall($fall, ^pyramid_hit_stone_block, "...and it rolls you clean off the side.");
+    return;
+}
+mes("...and it tips you across.");
+~agility_exactmove(human_steppingstonejump, 0, 2, coord, $to, 0, 60, $dir, false);
+~pyramid_tilt($which, 0);
+sound_synth(land_flat, 1, 0);
+~agility_xp(^pyramid_xp_stone_block);
+
+// The five blocks are five separate varbits, which is the whole reason there are five of them in
+// the cache rather than one loc placed five times.
+[proc,pyramid_tilt](int $which, int $state)
+switch_int ($which) {
+    case 1 : %agility_pyramid_tilt_1 = $state;
+    case 2 : %agility_pyramid_tilt_2 = $state;
+    case 3 : %agility_pyramid_tilt_3 = $state;
+    case 4 : %agility_pyramid_tilt_4 = $state;
+    case 5 : %agility_pyramid_tilt_5 = $state;
+}
+
+// ---------------------------------------------------------------------------------------------
+// Low walls - 8 experience, four of them
+// ---------------------------------------------------------------------------------------------
+// The one obstacle a slip does NOT drop you off: it is a wall you are climbing over, so you scrape
+// yourself and stay where you were.
+
+[oploc1,agility_pyramid_low_wall]
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+// A low wall is one tile thick, and the two laid across a north-south walk are one tile deep
+// in z while the two laid across an east-west walk are two - that is the 1x2 footprint turned by
+// the placement angle, and it is what tells ~pyramid_across which axis to read.
+def_int $zthick = 2;
+switch_coord (loc_coord) {
+    case 1_52_44_26_33 : $zthick = 1;   // 3354,2849 storey 1, the west walk
+    case 3_52_44_30_23 : $zthick = 1;   // 3358,2839 storey 3, the west walk
+    case 2_52_44_42_17 : $zthick = 2;   // 3370,2833 storey 2, the south walk
+    case 2_47_73_39_21 : $zthick = 2;   // 3047,4693 storey 4, the south walk
+    case default : return;
+}
+def_coord $to = null;
+def_int $dir = 0;
+$to, $dir = ~pyramid_across(2, $zthick);
+mes("You climb over the low wall...");
+sound_synth(forest_lowwall, 1, 0);
+if (~pyramid_slipped = true) {
+    anim(human_lowwall_fail, 0);
+    p_delay(2);
+    ~damage_self(^pyramid_hit_low_wall);
+    mes("...and scrape yourself badly on the way over.");
+    return;
+}
+~agility_exactmove(human_lowwall, 0, 2, coord, $to, 0, 60, $dir, false);
+~agility_xp(^pyramid_xp_low_wall);
+
+// ---------------------------------------------------------------------------------------------
+// Gaps you jump - 22 experience, six of them
+// ---------------------------------------------------------------------------------------------
+
+[oploc1,agility_pyramid_jump_hotspot]
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_coord $fall = null;
+switch_coord (loc_coord) {
+    case 2_52_44_28_31 : $fall = ^pyramid_fall_s2_jump_w;   // 3356,2847 storey 2, the west walk
+    case 2_52_44_36_17 : $fall = ^pyramid_fall_s2_jump_s;   // 3364,2833 storey 2, the south walk
+    case 3_52_44_42_25 : $fall = ^pyramid_fall_s3_jump_e;   // 3370,2841 storey 3, the east walk
+    case 2_47_73_32_25 : $fall = ^pyramid_fall_s4_jump_w;   // 3040,4697 storey 4, the west walk
+    case 2_47_73_40_23 : $fall = ^pyramid_fall_s4_jump_e;   // 3048,4695 storey 4, the east walk
+    case 3_47_73_38_25 : $fall = ^pyramid_fall_s5_jump_e;   // 3046,4697 storey 5, the east walk
+    case default : return;
+}
+def_coord $to = null;
+def_int $dir = 0;
+$to, $dir = ~pyramid_across(3, 2);
+if (~pyramid_slipped = true) {
+    anim(agility_pyramid_gap_jump_fall, 0);
+    p_delay(2);
+    ~pyramid_fall($fall, ^pyramid_hit_gap, "You misjudge the leap and drop through the gap.");
+    return;
+}
+mes("You leap the gap.");
+~agility_exactmove(agility_pyramid_gap_jump, 0, 2, coord, $to, 0, 60, $dir, false);
+sound_synth(jump, 1, 0);
+~agility_xp(^pyramid_xp_gap_jump);
+
+// ---------------------------------------------------------------------------------------------
+// Gaps you cross - the wall hangs. Old School's "Gap (cross)", 56.4 experience, three of them
+// ---------------------------------------------------------------------------------------------
+// Each is two 2x2 ground hotspots over a four-tile span PLUS a pair of wall decorations at the
+// ends. The decorations are shape 4 and the engine will only take a click from their own tile, so
+// they are the same obstacle reached by clicking the wall rather than the floor - and they get the
+// same handler, because an option that does nothing is worse than no option.
+
+[oploc1,agility_pyramid_wallhang_start_south_hotspot] @pyramid_hang_s1;
+[oploc1,agility_pyramid_wallhang_end_south_hotspot] @pyramid_hang_s1;
+[oploc1,agility_pyramid_wallhang_start_west_hotspot] @pyramid_hang_w2;
+[oploc1,agility_pyramid_wallhang_end_west_hotspot] @pyramid_hang_w2;
+[oploc1,agility_pyramid_wallhang_start_hotspot_ground] @pyramid_hang_n2;
+[oploc1,agility_pyramid_wallhang_end_hotspot_ground] @pyramid_hang_n2;
+
+// The two wall faces are placed three times each, once per hang, so these pick by coordinate.
+[oploc1,agility_pyramid_wallhang_start_hotspot]
+switch_coord (loc_coord) {
+    case 1_52_44_44_16 : @pyramid_hang_s1;   // 3372,2832
+    case 2_52_44_29_20 : @pyramid_hang_w2;   // 3357,2836
+    case 2_52_44_31_33 : @pyramid_hang_n2;   // 3359,2849
+}
+
+[oploc1,agility_pyramid_wallhang_end_hotspot]
+switch_coord (loc_coord) {
+    case 1_52_44_39_16 : @pyramid_hang_s1;   // 3367,2832
+    case 2_52_44_29_25 : @pyramid_hang_w2;   // 3357,2841
+    case 2_52_44_36_33 : @pyramid_hang_n2;   // 3364,2849
+}
+
+[label,pyramid_hang_s1] // storey 1, the south walk - 3368-3371 at z 2831
+@pyramid_hang(^pyramid_hang_s1_west, ^pyramid_hang_s1_east, 3370, ^pyramid_fall_s1_hang_s);
+
+[label,pyramid_hang_w2] // storey 2, the west walk - 3356-3357 over z 2837-2840
+@pyramid_hang(^pyramid_hang_w2_south, ^pyramid_hang_w2_north, 2838, ^pyramid_fall_s2_hang_w);
+
+[label,pyramid_hang_n2] // storey 2, the north walk - 3360-3363 at z 2849
+@pyramid_hang(^pyramid_hang_n2_west, ^pyramid_hang_n2_east, 3361, ^pyramid_fall_s2_hang_n);
+
+// $low and $high are the two landings; $mid is the middle of the span on the axis of travel, which
+// is the only thing needed to work out which way the player is going. A hang laid out along z
+// passes a z for $mid and the two landings differ in z; one laid out along x passes an x.
+[label,pyramid_hang](coord $low, coord $high, int $mid, coord $fall)
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_coord $to = $high;
+if (coordx($low) = coordx($high)) {
+    if (coordz(coord) > $mid) { $to = $low; }
+} else if (coordx(coord) > $mid) {
+    $to = $low;
+}
+mes("You reach out for the handholds...");
+anim(human_into_sidestep, 0);
+p_delay(1);
+if (~pyramid_slipped = true) {
+    anim(agility_pyramid_sidestep_fall, 0);
+    p_delay(2);
+    ~pyramid_fall($fall, ^pyramid_hit_gap, "...and your fingers slip off the stone.");
+    return;
+}
+sound_synth(climbing_loop, 2, 0);
+~agility_force_move(^pyramid_xp_gap_cross, human_walk_sidestep, $to);
+anim(human_outof_sidestep, 0);
+~update_bas;
+mes("...and edge your way across the gap.");
+
+// ---------------------------------------------------------------------------------------------
+// Ledges - 52 experience, four of them
+// ---------------------------------------------------------------------------------------------
+// Two hotspot pairs are named ledge_hotspot and two are named ledgebalance_*; they are the same
+// obstacle with different models, and Old School counts four Ledges.
+//
+// WHICH SHOULDER IS AGAINST THE WALL. The cache ships a left set and a right set of every ledge
+// animation. Walking a lap the right way round - anticlockwise - the pyramid is always on your
+// right, on all four sides, so the anticlockwise direction takes the right-hand set and a player
+// walking the lap backwards takes the left.
+
+[oploc1,agility_pyramid_ledge_hotspot]
+switch_coord (loc_coord) {
+    // Storey 1, the north walk: 3364-3367 at z 2851. Anticlockwise is east.
+    case 1_52_44_36_35 : @pyramid_ledge(^pyramid_ledge_n1_west, ^pyramid_ledge_n1_east, 3365, ^pyramid_fall_s1_ledge_n, true);
+    case 1_52_44_38_35 : @pyramid_ledge(^pyramid_ledge_n1_west, ^pyramid_ledge_n1_east, 3365, ^pyramid_fall_s1_ledge_n, true);
+    // Storey 2, the east walk: 3372-3373 over z 2837-2840. Anticlockwise is south.
+    case 2_52_44_44_21 : @pyramid_ledge(^pyramid_ledge_e2_south, ^pyramid_ledge_e2_north, 2838, ^pyramid_fall_s2_ledge_e, false);
+    case 2_52_44_44_23 : @pyramid_ledge(^pyramid_ledge_e2_south, ^pyramid_ledge_e2_north, 2838, ^pyramid_fall_s2_ledge_e, false);
+}
+
+// Storey 1, the south walk: 3360-3363 at z 2831. Anticlockwise is west.
+[oploc1,agility_pyramid_ledgebalance_start_south_hotspot] @pyramid_ledge(^pyramid_ledge_s1_west, ^pyramid_ledge_s1_east, 3361, ^pyramid_fall_s1_ledge_s, false);
+[oploc1,agility_pyramid_ledgebalance_end_south_hotspot] @pyramid_ledge(^pyramid_ledge_s1_west, ^pyramid_ledge_s1_east, 3361, ^pyramid_fall_s1_ledge_s, false);
+
+// Storey 3, the west walk: 3358-3359 over z 2843-2846. Anticlockwise is north.
+[oploc1,agility_pyramid_ledgebalance_start_west_hotspot] @pyramid_ledge(^pyramid_ledge_w3_south, ^pyramid_ledge_w3_north, 2844, ^pyramid_fall_s3_ledge_w, true);
+[oploc1,agility_pyramid_ledgebalance_end_west_hotspot] @pyramid_ledge(^pyramid_ledge_w3_south, ^pyramid_ledge_w3_north, 2844, ^pyramid_fall_s3_ledge_w, true);
+
+// $forward_is_high says which of the two landings is the anticlockwise one, so that the right-hand
+// animations go with a lap walked the right way round.
+[label,pyramid_ledge](coord $low, coord $high, int $mid, coord $fall, boolean $forward_is_high)
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_coord $to = $high;
+def_boolean $going_high = true;
+if (coordx($low) = coordx($high)) {
+    if (coordz(coord) > $mid) { $to = $low; $going_high = false; }
+} else if (coordx(coord) > $mid) {
+    $to = $low;
+    $going_high = false;
+}
+def_boolean $right = false;
+if ($going_high = $forward_is_high) { $right = true; }
+mes("You put a foot on the narrow ledge...");
+if ($right = true) {
+    anim(agility_pyramid_ledge_on_right, 0);
+} else {
+    anim(agility_pyramid_ledge_on_left, 0);
+}
+p_delay(1);
+if (~pyramid_slipped = true) {
+    if ($right = true) {
+        anim(agility_pyramid_ledge_fall_right, 0);
+    } else {
+        anim(agility_pyramid_ledge_fall_left, 0);
+    }
+    p_delay(2);
+    ~pyramid_fall($fall, ^pyramid_hit_ledge, "...and your footing goes from under you.");
+    return;
+}
+sound_synth(balancing_ledge, 2, 0);
+if ($right = true) {
+    ~agility_force_move(^pyramid_xp_ledge, agility_pyramid_ledge_walk_right, $to);
+    anim(agility_pyramid_ledge_off_right, 0);
+} else {
+    ~agility_force_move(^pyramid_xp_ledge, agility_pyramid_ledge_walk_left, $to);
+    anim(agility_pyramid_ledge_off_left, 0);
+}
+~update_bas;
+mes("...and shuffle along it to the far side.");
+
+// ---------------------------------------------------------------------------------------------
+// Planks - 56.4 experience, two of them
+// ---------------------------------------------------------------------------------------------
+// The plank's two ends are single-tile locs and the engine takes a click from the end tile itself,
+// so the tile you click from is also the tile you would land on coming the other way.
+
+[oploc1,agility_pyramid_plank_start] @pyramid_plank;
+[oploc1,agility_pyramid_plank_end] @pyramid_plank;
+
+[label,pyramid_plank]
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_coord $low = null;
+def_coord $high = null;
+def_int $mid = 0;
+def_coord $fall = null;
+switch_coord (loc_coord) {
+    // Storey 1, the east walk: 3375, z 2840 to 2845.
+    case 1_52_44_47_24 : $low = ^pyramid_plank_e1_north; $high = ^pyramid_plank_e1_south; $mid = 2842; $fall = ^pyramid_fall_s1_plank_e;
+    case 1_52_44_47_29 : $low = ^pyramid_plank_e1_north; $high = ^pyramid_plank_e1_south; $mid = 2842; $fall = ^pyramid_fall_s1_plank_e;
+    // Storey 3, the south walk: z 2835, x 3365 to 3370.
+    case 3_52_44_37_19 : $low = ^pyramid_plank_s3_west; $high = ^pyramid_plank_s3_east; $mid = 3367; $fall = ^pyramid_fall_s3_plank_s;
+    case 3_52_44_42_19 : $low = ^pyramid_plank_s3_west; $high = ^pyramid_plank_s3_east; $mid = 3367; $fall = ^pyramid_fall_s3_plank_s;
+    case default : return;
+}
+def_coord $to = $high;
+if (coordx($low) = coordx($high)) {
+    if (coordz(coord) > $mid) { $to = $low; }
+} else if (coordx(coord) > $mid) {
+    $to = $low;
+}
+// Step onto the plank first if the click came from beside it, so the balance starts at the end
+// rather than from the walkway.
+~forcewalk2(~pyramid_plank_foot($low, $high, $to));
+mes("You start across the plank.");
+if (~pyramid_slipped = true) {
+    anim(agility_pyramid_logfall_r, 0);
+    p_delay(2);
+    ~pyramid_fall($fall, ^pyramid_hit_plank, "The plank rolls under your foot and you go with it.");
+    return;
+}
+sound_synth(log_balance, 2, 0);
+~agility_force_move(^pyramid_xp_plank, human_walk_logbalance, $to);
+~update_bas;
+
+// The end you set out from is whichever of the two is NOT the destination.
+[proc,pyramid_plank_foot](coord $low, coord $high, coord $to)(coord)
+if ($to = $high) {
+    return($low);
+}
+return($high);
+
+// ---------------------------------------------------------------------------------------------
+// The apex: the climbing rocks and the doorway
+// ---------------------------------------------------------------------------------------------
+// The capstone sits on a little shrine in the middle of the top ring, and the climbing rocks on
+// its west wall are what you go up to reach it. agility_pyramid_top_climb is the cache's own
+// animation for it - a reach up and back down, with whatever you are holding hidden - and the
+// agility_pyramid_top varbit swaps the shrine's multiloc from the capped model to the bare one.
+
+[oploc1,agility_pyramid_wall_rocks]
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+if (%agility_pyramid_top = 1) {
+    mes("You have already taken the top of this pyramid.");
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    ~mesbox("You don't have enough room in your inventory.");
+    return;
+}
+mes("You climb the rocky outcrop and reach for the top of the pyramid...");
+anim(agility_pyramid_top_climb, 0);
+sound_synth(climb_wall, 1, 0);
+p_delay(3);
+%agility_pyramid_top = 1;
+inv_add(inv, agility_pyramid_gold_pyramid, 1);
+~objbox(agility_pyramid_gold_pyramid, "You lift the solid gold top off the pyramid. Simon Templeton will want to see this.", 250, 0, 0);
+
+[oploc1,agility_pyramid_door_hotspot] @pyramid_doorway;
+[oploc1,agility_pyramid_door_hotspot_mirror] @pyramid_doorway;
+
+// THE LAP IS PAID HERE AND ONLY WITH THE CAPSTONE IN HAND. There is no progress counter anywhere
+// in this course, because the capstone IS the counter: it can only be taken at the apex, it can
+// only be taken once per climb, and the doorway is the only way back down from the apex. Old
+// School says entering the doorway without it takes you to the bottom for nothing, and that the
+// capstone does not come back until you do.
+[label,pyramid_doorway]
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+def_boolean $carrying = false;
+if (inv_total(inv, agility_pyramid_gold_pyramid) > 0) { $carrying = true; }
+mes("You climb down into the pyramid...");
+anim(agility_climbing_down, 0);
+sound_synth(down_stone_stairs, 1, 0);
+p_delay(2);
+%agility_pyramid_top = 0;
+p_telejump(^pyramid_door_exit);
+mes("...and come out at the bottom.");
+if ($carrying = false) {
+    return;
+}
+~agility_xp(~pyramid_lap_xp);
+~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_pyramid);
+
+// 300 + 8 x Agility, capped at 1,000 - in tenths, and off the base level, because Old School says
+// a boost does not count towards it. The cap is reached at level 88.
+[proc,pyramid_lap_xp]()(int)
+return(min(add(^pyramid_xp_lap_base, multiply(^pyramid_xp_lap_per_level, stat_base(agility))), ^pyramid_xp_lap_cap));
+
+// ---------------------------------------------------------------------------------------------
+// The staircases
+// ---------------------------------------------------------------------------------------------
+// Reached from the switch_coord in ladders+stairs/scripts/stairs.rs2, which already owns
+// [oploc1,agility_pyramid_steps1] and [oploc1,agility_pyramid_steps_top_hotspot]. They pay nothing
+// and cannot be failed; the level check is here so that there is no way onto the course without it.
+
+[label,pyramid_stairs](coord $to)
+if (~pyramid_blocked = true) { return; }
+p_arrivedelay;
+sound_synth(down_stone_stairs, 1, 0);
+p_telejump($to);
+
+// ---------------------------------------------------------------------------------------------
+// The shared parts
+// ---------------------------------------------------------------------------------------------
+
+[proc,pyramid_blocked]()(boolean)
+if (stat(agility) < ^pyramid_level) {
+    ~mesbox("You need an Agility level of <tostring(^pyramid_level)> to climb the pyramid.");
+    return(true);
+}
+return(false);
+
+[proc,pyramid_slipped]()(boolean)
+if (stat_random(agility, ^pyramid_roll_low, ^pyramid_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// A fall drops you a storey and hurts. ~agility_instant_fail telejumps, damages and prints in that
+// order, which is what the fall animations above have already finished doing by the time it runs.
+[proc,pyramid_fall](coord $to, int $damage, string $message)
+~update_bas;
+~agility_instant_fail($to, $damage, $message);
+sound_synth(fall_land, 1, 0);
+
+// WHICH WAY ACROSS. Every straight obstacle on the pyramid is a band across a two-wide walkway,
+// and loc_coord is its low corner, so the player is either below it on one axis or above it. The
+// axis is whichever one they are outside on, and $span carries them to the tile beyond the band
+// while keeping the other coordinate - which is what makes both lanes of the walkway work.
+[proc,pyramid_across](int $span, int $zthick)(coord, int)
+if (coordz(coord) < coordz(loc_coord)) {
+    return(movecoord(coord, 0, 0, $span), ^exact_north);
+}
+if (coordz(coord) > add(coordz(loc_coord), sub($zthick, 1))) {
+    return(movecoord(coord, 0, 0, calc(0 - $span)), ^exact_south);
+}
+if (coordx(coord) < coordx(loc_coord)) {
+    return(movecoord(coord, $span, 0, 0), ^exact_east);
+}
+return(movecoord(coord, calc(0 - $span), 0, 0), ^exact_west);
+
+[proc,pyramid_step_x](int $dir)(int)
+if ($dir = ^exact_east) { return(1); }
+if ($dir = ^exact_west) { return(-1); }
+return(0);
+
+[proc,pyramid_step_z](int $dir)(int)
+if ($dir = ^exact_north) { return(1); }
+if ($dir = ^exact_south) { return(-1); }
+return(0);

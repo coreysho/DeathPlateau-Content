@@ -1,0 +1,181 @@
+// The Agility Pyramid - https://oldschool.runescape.wiki/w/Agility_Pyramid
+//
+// Agility 30, six storeys, twenty-four obstacles and a solid gold capstone at the top. Every piece
+// of it was already modelled and placed and not one loc had a trigger, so a player could climb the
+// first flight of stairs and then stand on a walkway clicking at scenery.
+//
+// THE PYRAMID IS BUILT ACROSS TWO MAP SQUARES, which is the first thing to know about it and the
+// thing that makes it look half-finished from either end. A map square has four planes and the
+// pyramid has six storeys, so Jagex split it:
+//
+//   m52_44, planes 1-3    storeys 1, 2 and 3 - the wide rings, in the desert at 3354-3375,2831-2852
+//   m47_73, planes 2-3    storeys 4 and 5 - the narrow rings and the apex, parked at 3040-3049,4693-4702
+//
+// The top staircase of m52_44 plane 3 lands in m47_73 plane 2 and its Climb-down comes back. So
+// the summit doorway, the climbing rocks and the capstone are NOT missing from the desert square:
+// they are in the other one, and a sweep of m52_44 alone concludes the pyramid has no top.
+//
+// m52_44 plane 0 and m47_73 planes 0-1 are the solid body - blocked everywhere, drawn as the
+// pyramid's faces. Nothing stands on them.
+//
+// ---------------------------------------------------------------------------------------------
+// THE FIVE STONE BLOCKS WERE BURIED, which took a map fix rather than a script.
+// ---------------------------------------------------------------------------------------------
+// Old School's obstacle table has five Stone blocks, and the cache has exactly five
+// agility_pyramid_tilting_floor_multi_1..5 - one varbit each, animated or still. Every one of them
+// was written ONE PLANE BELOW the ring walkway it belongs to:
+//
+//   multi_1  3354,2841  plane 0 -> storey 1, the west walk     multi_4  3048,4699  plane 1 -> storey 4, the east walk
+//   multi_3  3374,2835  plane 0 -> storey 1, the east walk     multi_5  3044,4699  plane 2 -> storey 5, the north walk
+//   multi_2  3368,2849  plane 1 -> storey 2, the north walk
+//
+// Five for five, on five different storeys, each landing exactly on a two-wide walkway when lifted
+// by one - and severing it, because the multiloc parent blocks where its two drawn children do not.
+// That is not a coincidence, it is the bridge rule: both the client (World.method27) and the engine
+// (GameMap.loadLocations) lower a loc by one plane when the tile at PLANE 1 carries LINK_BELOW, and
+// none of these tiles does. So the blocks sat inside the solid pyramid, on blocked tiles, where no
+// player could click them and no client could draw them.
+//
+// The five map lines are lifted by one plane (tools/pyrmap.py records the exact edits), and the two
+// stone-block models carry op1=Cross - the parents have no model and no name, and the 377 client
+// reads the menu off the RESOLVED CHILD while sending the parent's id, so the option has to be on
+// the children and the trigger on the parents.
+//
+// ---------------------------------------------------------------------------------------------
+// WHAT IS NOT BUILT, and why
+// ---------------------------------------------------------------------------------------------
+// THE TWO PYRAMID BLOCKS. Old School has two sliding blocks that shunt a mistimed player off the
+// side. They are npcs - agility_pyramid_penny_waterfall_npc_north and _east, "Pyramid block", size
+// 2, vislevel hidden - and both are already spawned by the map's own NPC section. They pay NO
+// EXPERIENCE, they are the one obstacle a high Agility level cannot skip, and they need a moving
+// hazard with a path and a timing window rather than a click. They also sit ambiguously: the east
+// one lifts onto storey 2 cleanly, the north one would lift onto a storey that is in the other map
+// square. Left out deliberately; the lap is continuous without them.
+//
+// ONE LOW WALL. Old School counts five; four are placed here, one on each of storeys 1 to 4. The
+// fifth is not in either square. Nothing is invented to make the number up.
+//
+// So a clean lap pays 714 rather than Old School's 722, and the difference is exactly that wall.
+//
+// ---------------------------------------------------------------------------------------------
+// EXPERIENCE - in tenths of a point, because ~agility_xp takes xp * 10.
+// ---------------------------------------------------------------------------------------------
+^pyramid_level = 30
+^pyramid_xp_stone_block = 120           // x5
+^pyramid_xp_low_wall = 80               // x4 here, x5 in Old School
+^pyramid_xp_ledge = 520                 // x4
+^pyramid_xp_plank = 564                 // x2
+^pyramid_xp_gap_cross = 564             // x3
+^pyramid_xp_gap_jump = 220              // x6
+
+// THE LAP BONUS IS PAID AT THE DOORWAY AND ONLY WITH THE CAPSTONE IN HAND: 300 + 8 x Agility,
+// capped at 1,000, which is reached at level 88. Old School says temporary boosts do not count, so
+// it is read off stat_base. Clicking the doorway without the capstone takes you down for nothing.
+^pyramid_xp_lap_base = 3000
+^pyramid_xp_lap_per_level = 80
+^pyramid_xp_lap_cap = 10000
+
+// DAMAGE ON A FAILURE, from Old School's own table. Everything but the low wall also drops you one
+// storey; the low wall is a wall you are climbing over, so a slip leaves you where you stood.
+^pyramid_hit_stone_block = 6
+^pyramid_hit_low_wall = 4
+^pyramid_hit_ledge = 10
+^pyramid_hit_plank = 10
+^pyramid_hit_gap = 8
+
+// ONE ROLL FOR THE WHOLE COURSE, the same shape the Ape Atoll course uses. stat_random's value is
+// floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1 against a 0-255 roll, so
+// 200 and 275 is 222 at level 30 - a fall about one try in eight - and 256 at level 75, which can
+// no longer be beaten. Old School publishes no per-obstacle rate; it publishes a course level and
+// the fact that the obstacles stop being failable, and that is those two numbers.
+^pyramid_roll_low = 200
+^pyramid_roll_high = 275
+
+// ---------------------------------------------------------------------------------------------
+// THE STAIRCASES. Four in the desert square, two in the other, and the landings are the tiles the
+// engine says the flight above and below can be reached from (tools/sim/pyrprobe.ts). Each arrival
+// is cut off from the flight that leaves the same storey - the two 2x2 stair blocks sit corner to
+// corner and the diagonal between them is closed - so the climb is a one-way spiral and you cannot
+// step straight back onto the stairs you came up.
+// ---------------------------------------------------------------------------------------------
+^pyramid_land_up_1 = 1_52_44_27_17      // 3355,2833 - onto storey 1
+^pyramid_land_down_0 = 0_52_44_27_14    // 3355,2830 - back out to the sand
+^pyramid_land_up_2 = 2_52_44_29_19      // 3357,2835
+^pyramid_land_down_1 = 1_52_44_29_16    // 3357,2832
+^pyramid_land_up_3 = 3_52_44_31_21      // 3359,2837
+^pyramid_land_down_2 = 2_52_44_31_18    // 3359,2834
+^pyramid_land_up_4 = 2_47_73_33_23      // 3041,4695 - and over into the other map square
+^pyramid_land_down_3 = 3_52_44_33_20    // 3361,2836 - and back
+^pyramid_land_up_5 = 3_47_73_35_25      // 3043,4697 - the apex
+^pyramid_land_down_4 = 2_47_73_35_22    // 3043,4694
+
+// WHERE THE DOORWAY PUTS YOU: beside the blocked doorway at the foot of the pyramid, where Simon
+// Templeton is standing.
+^pyramid_door_exit = 0_52_44_37_13      // 3365,2829
+
+// ---------------------------------------------------------------------------------------------
+// THE LEDGES. Four of them, each a pair of hotspots over a four-tile span with a two-tile pocket
+// in the middle that nothing can walk into. The two landings are the tiles on either side.
+// ---------------------------------------------------------------------------------------------
+^pyramid_ledge_n1_west = 1_52_44_35_35  // 3363,2851
+^pyramid_ledge_n1_east = 1_52_44_40_35  // 3368,2851
+^pyramid_ledge_s1_east = 1_52_44_36_16  // 3364,2832
+^pyramid_ledge_s1_west = 1_52_44_31_16  // 3359,2832
+^pyramid_ledge_e2_south = 2_52_44_44_20 // 3372,2836
+^pyramid_ledge_e2_north = 2_52_44_44_25 // 3372,2841
+^pyramid_ledge_w3_south = 3_52_44_31_26 // 3359,2842
+^pyramid_ledge_w3_north = 3_52_44_31_31 // 3359,2847
+
+// THE THREE WALL HANGS, Old School's Gap (cross). Each is two 2x2 ground hotspots over a four-tile
+// span PLUS a pair of wall decorations at the ends - loc_12863/12864 - which the engine will only
+// take a click from on their own tile. Both faces are handled; they are the same obstacle.
+^pyramid_hang_s1_east = 1_52_44_44_16   // 3372,2832
+^pyramid_hang_s1_west = 1_52_44_39_16   // 3367,2832
+^pyramid_hang_w2_south = 2_52_44_29_20  // 3357,2836
+^pyramid_hang_w2_north = 2_52_44_29_25  // 3357,2841
+^pyramid_hang_n2_west = 2_52_44_31_33   // 3359,2849
+^pyramid_hang_n2_east = 2_52_44_36_33   // 3364,2849
+
+// THE TWO PLANKS. The start and end locs are single tiles and the engine takes a click from the
+// tile itself, so these are both the clicked tile and the landing.
+^pyramid_plank_e1_north = 1_52_44_47_24 // 3375,2840
+^pyramid_plank_e1_south = 1_52_44_47_29 // 3375,2845
+^pyramid_plank_s3_west = 3_52_44_37_19  // 3365,2835
+^pyramid_plank_s3_east = 3_52_44_42_19  // 3370,2835
+
+// ---------------------------------------------------------------------------------------------
+// WHERE A FALL PUTS YOU. One storey down, and "one storey down" is not the tile beneath you: the
+// rings are concentric and each is two tiles further out than the one above, so the tile under an
+// obstacle is usually inside the solid pyramid. Every one of these is the nearest tile on the ring
+// below that the engine will let a player stand on and walk off (tools/sim/pyrfall.ts).
+//
+// Storey 1 falls land in the sand outside the base, because storey 1 IS the first walkway.
+// Storey 4 falls land on storey 3, which is in the other map square - m47_73's own plane 1 is
+// solid, so there is nothing below storey 4 in its own square to land on.
+// ---------------------------------------------------------------------------------------------
+^pyramid_fall_s1_stone_w = 0_52_44_25_24  // 3353,2840
+^pyramid_fall_s1_ledge_n = 0_52_44_36_37  // 3364,2853
+^pyramid_fall_s1_plank_e = 0_52_44_48_29  // 3376,2845
+^pyramid_fall_s1_stone_e = 0_52_44_48_19  // 3376,2835
+^pyramid_fall_s1_hang_s = 0_52_44_44_14   // 3372,2830
+^pyramid_fall_s1_ledge_s = 0_52_44_36_14  // 3364,2830
+
+^pyramid_fall_s2_hang_w = 1_52_44_27_20   // 3355,2836
+^pyramid_fall_s2_jump_w = 1_52_44_27_30   // 3355,2846
+^pyramid_fall_s2_hang_n = 1_52_44_31_35   // 3359,2851
+// NOT the nearest tile, which is 3366,2851: that is one of the two pocket tiles inside the storey 1
+// ledge, and a player dropped in there can only leave by crossing the ledge they never chose.
+^pyramid_fall_s2_stone_n = 1_52_44_40_36  // 3368,2852
+^pyramid_fall_s2_ledge_e = 1_52_44_46_24  // 3374,2840
+^pyramid_fall_s2_jump_s = 1_52_44_38_16   // 3366,2832
+
+^pyramid_fall_s3_ledge_w = 2_52_44_29_26  // 3357,2842
+^pyramid_fall_s3_jump_e = 2_52_44_44_27   // 3372,2843
+^pyramid_fall_s3_plank_s = 2_52_44_41_18  // 3369,2834
+
+^pyramid_fall_s4_jump_w = 3_52_44_30_31   // 3358,2847
+^pyramid_fall_s4_stone_e = 3_52_44_43_31  // 3371,2847
+^pyramid_fall_s4_jump_e = 3_52_44_42_24   // 3370,2840
+
+^pyramid_fall_s5_stone_n = 2_47_73_33_27  // 3041,4699
+^pyramid_fall_s5_jump_e = 2_47_73_38_29   // 3046,4701

@@ -1,0 +1,6 @@
+// WHICH OF THE THREE a bludgeon piece is, as the bit it sets in %abyssal_bludgeon_pieces: 1 the
+// spine, 2 the claw, 4 the axon. A param on the obj rather than a switch in the drop code, so the
+// piece carries its own identity and there is no second list to keep in step with the first.
+[bludgeon_piece_bit]
+type=int
+default=0

@@ -1,0 +1,6 @@
+// Hammer Blow, the granite hammer's special attack
+// (oldschool.runescape.wiki/w/Granite_hammer). One number, named rather than written into the
+// script, because it IS the special: +50% accuracy is a modifier like every other spec's, and the
+// five - which lands even when the attack misses - is what makes this one worth 60% of the bar on
+// a weapon whose max hit is otherwise unremarkable.
+^granite_hammer_sa_damage = 5

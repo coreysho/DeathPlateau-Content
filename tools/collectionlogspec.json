@@ -188,9 +188,10 @@
                     ],
                     "items": [
                         "bosspet_kalphite_queen_item",
-                        "kq_head",
                         "dragon_chainbody",
-                        "dragon_pickaxe"
+                        "dragon_pickaxe",
+                        "dragon_warhammer",
+                        "kq_head"
                     ]
                 },
                 {
@@ -204,9 +205,11 @@
                     ],
                     "_items": "No KBD heads and no draconic visage in this build, so the pet and the 1/1,000 dragon pickaxe are all there is.",
                     "items": [
+                        "belles_folly",
                         "bosspet_kbd_item",
                         "draconic_visage",
                         "dragon_pickaxe",
+                        "dragon_warhammer",
                         "kbd_head"
                     ]
                 },
@@ -1068,6 +1071,26 @@
                     ]
                 },
                 {
+                    "key": "dragons",
+                    "name": "Dragons",
+                    "counters": [],
+                    "_why": "The three weapons that come off dragons generally rather than off one named boss: the dragon sword from every dragon in the build at a rate that follows the dragon, Belle's folly tarnished from the metal dragons, and the arkan blade from the lava dragons. The King Black Dragon keeps its own page; these are the ones with no single owner.",
+                    "items": [
+                        "arkan_blade",
+                        "belles_folly",
+                        "dragon_sword"
+                    ]
+                },
+                {
+                    "key": "giants",
+                    "name": "Giants",
+                    "counters": [],
+                    "_why": "One item, and one is enough: the hill giant club is the only thing a hill giant drops that a player would keep. Old School hangs it off Obor's chest; there is no Obor here, so it comes from the giants themselves at the two Old School rates multiplied.",
+                    "items": [
+                        "hill_giant_club"
+                    ]
+                },
+                {
                     "key": "rare_drop_table",
                     "name": "Rare Drop Table",
                     "counters": [],
@@ -1137,14 +1160,20 @@
                     "name": "Slayer",
                     "counters": [],
                     "items": [
+                        "abyssal_bludgeon",
                         "abyssal_head",
                         "abyssal_whip",
                         "black_mask",
+                        "bludgeon_axon",
+                        "bludgeon_claw",
+                        "bludgeon_spine",
                         "draconic_visage",
                         "dragon_chainbody",
                         "granite_body",
+                        "granite_hammer",
                         "granite_helm",
                         "granite_legs",
+                        "granite_longsword",
                         "granite_maul",
                         "imbued_heart",
                         "kraken_tentacle_item",

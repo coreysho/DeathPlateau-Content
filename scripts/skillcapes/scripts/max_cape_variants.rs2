@@ -83,20 +83,23 @@ anim(human_fletching, 0);
 [opheldu,imbued_zamorak_max_cape] @maxvariant_split;
 [opheldu,undertaker_max_cape] @maxvariant_split;
 [opheldu,accumulator_max_cape] @maxvariant_split;
+[opheldu,imbued_ancient_saradomin_max_cape] @maxvariant_split;
+[opheldu,imbued_ancient_guthix_max_cape] @maxvariant_split;
+[opheldu,imbued_ancient_zamorak_max_cape] @maxvariant_split;
 
-// EVERY ONE OF THE ten NEEDS THE NINETY-NINES, which is the one thing they all had in
+// EVERY ONE OF THE 13 NEEDS THE NINETY-NINES, which is the one thing they all had in
 // common and the one thing none of them checked. A variant IS a Max cape - it is the
 // same cape with a source cape fused into it - so the gate is the plain cape's own, the
 // count of 99s against the skills that have a cape (skillcapes/scripts/skillcape_equip
 // .rs2, [opheld2,max_cape]), read the same way so the two cannot disagree.
 //
-// IT WAS NOT A HOLE IN SIX OF THEM, IT WAS A HOLE IN ALL TEN. The six god variants went
+// IT WAS NOT A HOLE IN SIX OF THEM, IT WAS A HOLE IN ALL 13. The nine god variants went
 // straight to @god_cape_equip, which asks about the staff in your hand and nothing
 // else; the other four had no trigger at all and fell through to [opheld2,_], which wears
 // anything. Either way a brand new account could wear one, and did - reported from the
 // game as "max cape equippable at 1 def".
 //
-// THE SIX GOD VARIANTS STILL EQUIP LIKE A GOD CAPE on top of that, so the staff of
+// THE NINE GOD VARIANTS STILL EQUIP LIKE A GOD CAPE on top of that, so the staff of
 // another god refuses them: @god_cape_equip is a jump, so it ends this label and does
 // the staff check and the equip itself. ^god_none is the rest of them, and means there
 // is no god to conflict with rather than "no check".
@@ -123,11 +126,14 @@ if ($god ! ^god_none) {
 [opheld2,imbued_zamorak_max_cape] @maxvariant_equip(^god_zamorak);
 [opheld2,undertaker_max_cape] @maxvariant_equip(^god_none);
 [opheld2,accumulator_max_cape] @maxvariant_equip(^god_none);
+[opheld2,imbued_ancient_saradomin_max_cape] @maxvariant_equip(^god_saradomin);
+[opheld2,imbued_ancient_guthix_max_cape] @maxvariant_equip(^god_guthix);
+[opheld2,imbued_ancient_zamorak_max_cape] @maxvariant_equip(^god_zamorak);
 
 // Every variant cape and every variant hood this player owns, anywhere (inventory, bank,
 // worn) - for ~maxcape_missing in skillcape_shop.rs2: a variant is a Max cape, not a lost one.
 [proc,maxvariant_owned_capes]()(int)
-return(calc(~obj_gettotal(fire_max_cape) + ~obj_gettotal(infernal_max_cape) + ~obj_gettotal(saradomin_max_cape) + ~obj_gettotal(guthix_max_cape) + ~obj_gettotal(zamorak_max_cape) + ~obj_gettotal(imbued_saradomin_max_cape) + ~obj_gettotal(imbued_guthix_max_cape) + ~obj_gettotal(imbued_zamorak_max_cape) + ~obj_gettotal(undertaker_max_cape) + ~obj_gettotal(accumulator_max_cape)));
+return(calc(~obj_gettotal(fire_max_cape) + ~obj_gettotal(infernal_max_cape) + ~obj_gettotal(saradomin_max_cape) + ~obj_gettotal(guthix_max_cape) + ~obj_gettotal(zamorak_max_cape) + ~obj_gettotal(imbued_saradomin_max_cape) + ~obj_gettotal(imbued_guthix_max_cape) + ~obj_gettotal(imbued_zamorak_max_cape) + ~obj_gettotal(undertaker_max_cape) + ~obj_gettotal(accumulator_max_cape) + ~obj_gettotal(imbued_ancient_saradomin_max_cape) + ~obj_gettotal(imbued_ancient_guthix_max_cape) + ~obj_gettotal(imbued_ancient_zamorak_max_cape)));
 
 [proc,maxvariant_owned_hoods]()(int)
-return(calc(~obj_gettotal(fire_max_hood) + ~obj_gettotal(infernal_max_hood) + ~obj_gettotal(saradomin_max_hood) + ~obj_gettotal(guthix_max_hood) + ~obj_gettotal(zamorak_max_hood) + ~obj_gettotal(imbued_saradomin_max_hood) + ~obj_gettotal(imbued_guthix_max_hood) + ~obj_gettotal(imbued_zamorak_max_hood) + ~obj_gettotal(undertaker_max_hood) + ~obj_gettotal(accumulator_max_hood)));
+return(calc(~obj_gettotal(fire_max_hood) + ~obj_gettotal(infernal_max_hood) + ~obj_gettotal(saradomin_max_hood) + ~obj_gettotal(guthix_max_hood) + ~obj_gettotal(zamorak_max_hood) + ~obj_gettotal(imbued_saradomin_max_hood) + ~obj_gettotal(imbued_guthix_max_hood) + ~obj_gettotal(imbued_zamorak_max_hood) + ~obj_gettotal(undertaker_max_hood) + ~obj_gettotal(accumulator_max_hood) + ~obj_gettotal(imbued_ancient_saradomin_max_hood) + ~obj_gettotal(imbued_ancient_guthix_max_hood) + ~obj_gettotal(imbued_ancient_zamorak_max_hood)));

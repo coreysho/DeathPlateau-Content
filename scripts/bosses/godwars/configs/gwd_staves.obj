@@ -1,0 +1,140 @@
+// THE TWO GOD WARS STAVES AND THE LIGHT THAT JOINS THEM.
+//
+// Imported from a modern OSRS cache by tools/models/importosrs.py (objs 11791, 13256, 22296).
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+//
+// THE BONUSES AND THE REQUIREMENTS ARE THE CACHE'S OWN, read by tools/models/fillosrsstats.py out
+// of the item table rather than transcribed from the wiki: 55 stab, 70 slash, +17 magic attack,
+// +72 strength, and 75 Attack with 75 Magic to wield (params 434/436 and 435/437).
+//
+// NOT CARRIED ACROSS, and both for the same reason - there is nothing here to carry them into:
+//
+//   THE +15% MAGIC DAMAGE. This build has no magic damage percentage anywhere, in gear or in the
+//   spell code, because 2006 had none. A param nothing reads would be a promise in an examine box.
+//
+//   THE RUNE SAVING. Old School's staff of the dead has a 1/8 chance to cast a combat spell for
+//   free. That is a hook in the rune cost path rather than a number on an obj, and it is not built.
+//
+//   POWER OF DEATH, the special attack, which halves the melee damage you take for a minute. That
+//   one is not a modifier on the attack - it changes every incoming melee hit for a hundred ticks -
+//   so it belongs in the player-hit path in skill_combat, not here, and a spec bar that does
+//   nothing is worse than none. specwep is therefore absent and the bar stays grey.
+//
+// WHAT IS CARRIED: the God Wars alignment, which this build does read. The staff of the dead is a
+// Zamorakian item (cache param 41) and the staff of light is BOTH Zamorakian and Saradominist
+// (params 41 and 40) - the only item in the dungeon that walks through two doors.
+//
+// THE CRUSH PAIR IS NOT DECORATION. rs2check rule 19 caught both of these shipping without it:
+// category=weapon_staff means the combat tab draws the STAFF table, and every style on that
+// table is a crush - so the stab and slash animations above are what the bonuses describe, and
+// the crush animation and sound are what the player will actually swing. Without crush_sound,
+// sound_synth is handed a null the first time anyone attacks with it and the session ends.
+//
+// THE ANIMATIONS ARE A COMPROMISE AND WORTH SAYING SO. These are one-handed BLADED staves, and 377
+// has no animation for such a thing: its staff animations are a two-handed pummel. So the ready
+// pose and the block are the staff's, and the stab and the slash are the sword's, which is the
+// nearest the cache has to a blade on the end of a stick. The spear's animations were the other
+// candidate and are wrong - they are two-handed, and this is held in one.
+
+[staff_of_the_dead]
+name=Staff of the Dead
+desc=A ghastly weapon with evil origins.
+model=obj_staff_of_the_dead
+manwear=obj_staff_of_the_dead_manwear,0
+womanwear=obj_staff_of_the_dead_womanwear,0
+wearpos=righthand
+2dzoom=1490
+2dxan=138
+2dyan=1300
+2dxof=-5
+2dyof=2
+recol1s=14861
+recol1d=15950
+recol2s=27483
+recol2d=15950
+recol3s=15681
+recol3d=15950
+recol4s=15855
+recol4d=15950
+weight=1500g
+cost=1000005
+members=yes
+iop2=Wield
+// Nothing in this build to copy from, so these are Old School's own.
+category=weapon_staff
+param=attackrate,4
+param=stabattack,55
+param=slashattack,70
+param=magicattack,17
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,17
+param=strengthbonus,72
+param=ready_baseanim,human_staffready
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=stab_sound,staff_stab
+param=slash_sound,staff_hit
+param=crush_sound,staff_hit
+param=gwd_prot_zamorak,1
+
+// Zilyana's, and the only thing it does here is make the staff of light. Old School's Consume -
+// which permanently lifts the darkness in Zamorak's fortress - is NOT given an op, because this
+// build's God Wars Dungeon has no darkness to lift: an option that says nothing is the fault this
+// repo has spent whole rounds removing.
+[saradomins_light]
+name=Saradomin's light
+desc=The starlight enlightens your mind to dispel the darkness of Zamorakian evil.
+model=obj_saradomins_light
+2dzoom=905
+2dxan=374
+2dyan=270
+2dxof=3
+2dyof=1
+weight=250g
+cost=34600
+members=yes
+
+[staff_of_light]
+name=Staff of Light
+desc=A ghastly weapon with evil origins combined with a holy light.
+model=obj_staff_of_light
+manwear=obj_staff_of_light_manwear,0
+womanwear=obj_staff_of_light_womanwear,0
+wearpos=righthand
+2dzoom=1853
+2dxan=364
+2dyan=1508
+2dxof=1
+2dyof=21
+weight=1500g
+cost=1000005
+members=yes
+iop2=Wield
+// Field for field the staff of the dead's, which is what Old School's own table says: combining
+// changes the look, the autocast and the alignment, and no number at all.
+category=weapon_staff
+param=attackrate,4
+param=stabattack,55
+param=slashattack,70
+param=magicattack,17
+param=slashdefence,3
+param=crushdefence,3
+param=magicdefence,17
+param=strengthbonus,72
+param=ready_baseanim,human_staffready
+param=stabattack_anim,human_sword_stab
+param=slashattack_anim,human_sword_slash
+param=crushattack_anim,human_staff_pummel
+param=defend_anim,human_staff_block
+param=stab_sound,staff_stab
+param=slash_sound,staff_hit
+param=crush_sound,staff_hit
+// BOTH GODS, which is the whole point of making one: cache params 40 and 41 together. In this
+// dungeon that is a Saradomin door and a Zamorak door open to the same player.
+param=gwd_prot_saradomin,1
+param=gwd_prot_zamorak,1

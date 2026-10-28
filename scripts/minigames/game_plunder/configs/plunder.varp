@@ -1,0 +1,15 @@
+// Two varps carry a run. Both are scope=temp: a run is five minutes and does not survive a
+// logout, and Old School does not carry one across either.
+
+[plunder_urns]
+// Fifteen urn slots, two bits each - exactly thirty of the thirty-two. Each slot is the same
+// varbit in every room, which is Jagex's own arrangement and is safe because you are only ever
+// in one room: the spiral of tomb doors never lets you back.
+transmit=yes
+scope=temp
+
+[plunder]
+// The room you are in, the chest, the sarcophagus, the four doors, and the two counters that
+// decide which door opens.
+transmit=yes
+scope=temp

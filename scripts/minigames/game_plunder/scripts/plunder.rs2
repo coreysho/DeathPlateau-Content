@@ -1,0 +1,800 @@
+// PYRAMID PLUNDER - https://oldschool.runescape.wiki/w/Pyramid_Plunder
+//
+// Thieving 21, eight rooms, five minutes, and a solid gold sceptre somewhere in the chests.
+// configs/plunder.constant has the layout, the experience table, the rates, and the two things
+// deliberately left out.
+//
+// THE WHOLE RUN IS TWO VARPS AND NOTHING ELSE. plunder_urns carries fifteen urn states at two bits
+// each; plunder carries the room, the chest, the sarcophagus, the four doors, which of them is the
+// way on, which have been tried, and the half-minutes left. Both are per player and scope=temp, so
+// two people can loot the same room without seeing each other's urns and a logout ends the run -
+// which is what Old School does too.
+
+// =============================================================================================
+// Getting in: the four anonymous doors in Sophanem
+// =============================================================================================
+// One of the four is the way in and the other three are not. Which one changes every twenty-five
+// minutes and is the same for everybody, so it is read off the world clock rather than stored:
+// nothing to reroll, nothing to save, and every player in the world agrees without being told.
+
+[oploc1,plunder_anon_door]
+p_arrivedelay;
+if (stat(thieving) < ^plunder_level_1) {
+    ~mesbox("You need a Thieving level of <tostring(^plunder_level_1)> to get into the pyramid.");
+    return;
+}
+if (loc_coord ! ~plunder_way_in) {
+    mes("You force the door open...");
+    anim(human_pickpocket, 0);
+    sound_synth(door_open, 1, 0);
+    p_delay(2);
+    mes("...and find nothing but an empty chamber. This is not the way in.");
+    return;
+}
+mes("You force the door open...");
+anim(human_pickpocket, 0);
+sound_synth(door_open, 1, 0);
+p_delay(2);
+// The door is the right one; getting past it is still a Thieving roll, and Old School stuns you
+// for failing it.
+if (stat_random(thieving, 100, 255) = false) {
+    mes("...and the frame comes down on you.");
+    spotanim_pl(stunned_thieving, 124, 0);
+    anim(%com_defendanim, 0);
+    sound_synth(stunned, 1, 0);
+    ~damage_self(~plunder_small_hit);
+    %action_delay = calc(map_clock + 4);
+    return;
+}
+mes("...and squeeze through into the pyramid.");
+p_telejump(^plunder_lobby);
+
+// Twenty-five minutes is 2,500 ticks, and map_clock counts ticks since the world started.
+[proc,plunder_way_in]()(coord)
+switch_int (modulo(divide(map_clock, ^plunder_entrance_period), 4)) {
+    case 0 : return(^plunder_door_south);
+    case 1 : return(^plunder_door_west);
+    case 2 : return(^plunder_door_north);
+}
+return(^plunder_door_east);
+
+// =============================================================================================
+// The Guardian mummy
+// =============================================================================================
+
+[opnpc1,plunder_guardian_mummy]
+~chatnpc("<p,neutral>You wish to plunder the tombs of my masters?");
+def_int $option = ~p_choice3("Yes - let me in.", 1, "Can you recharge my sceptre?", 2, "No, I'll leave them be.", 3);
+if ($option = 1) {
+    ~chatplayer("<p,happy>Yes - let me in.");
+    @plunder_start;
+} else if ($option = 2) {
+    @plunder_recharge;
+} else {
+    ~chatplayer("<p,neutral>No, I'll leave them be.");
+    ~chatnpc("<p,happy>A wise choice. The dead keep what is theirs.");
+}
+
+[opnpc3,plunder_guardian_mummy] @plunder_start;
+
+[label,plunder_start]
+if (stat(thieving) < ^plunder_level_1) {
+    ~mesbox("You need a Thieving level of <tostring(^plunder_level_1)> to plunder the pyramid.");
+    return;
+}
+if_close;
+%plunder_room = 1;
+%plunder_time_left = 10;
+~plunder_reset_room;
+~plunder_roll_correct_door;
+settimer(plunder_timer, 50);
+mes("The mummy waves you towards the first chamber. You have five minutes.");
+p_telejump(^plunder_arrive_1);
+
+// THE TIMER IS A SOFTTIMER rather than a deadline read off map_clock, because it has to fire with
+// the player standing still - and a run ends on time whether they are clicking or not. Every fifty
+// ticks is half a minute, which is also fine grain enough for the warning.
+[timer,plunder_timer]
+if (%plunder_room = 0) {
+    cleartimer(plunder_timer);
+    return;
+}
+%plunder_time_left = max(sub(%plunder_time_left, 1), 0);
+if (%plunder_time_left = 2) {
+    mes("The torches are guttering. You have a minute left.");
+    return;
+}
+if (%plunder_time_left > 0) {
+    return;
+}
+mes("Your time in the pyramid is up.");
+~plunder_eject;
+
+[proc,plunder_eject]
+cleartimer(plunder_timer);
+%plunder_room = 0;
+%plunder_time_left = 0;
+~plunder_reset_room;
+p_telejump(^plunder_outside);
+
+// Every per-room field, back to its opening state. The urns are the whole of the other varp, so
+// that one is simply zeroed.
+[proc,plunder_reset_room]
+%plunder_urns = 0;
+%plunder_chest_state = 0;
+%plunder_sarcophagus_state = 0;
+%plunder_door_1_state = 0;
+%plunder_door_2_state = 0;
+%plunder_door_3_state = 0;
+%plunder_door_4_state = 0;
+%plunder_doors_tried = 0;
+
+[proc,plunder_roll_correct_door]
+%plunder_correct_door = add(random(4), 1);
+
+// =============================================================================================
+// Leaving
+// =============================================================================================
+
+[oploc1,plunder_exit] @plunder_leave;
+[oploc2,plunder_exit] @plunder_leave;
+[oploc1,plunder_exit_plain] @plunder_leave;
+
+[label,plunder_leave]
+p_arrivedelay;
+if (%plunder_room = 0) {
+    mes("The door will not budge.");
+    return;
+}
+mes("You slip out of the pyramid.");
+~plunder_eject;
+
+// =============================================================================================
+// The spear trap, which is how a room is entered - and where its level is checked
+// =============================================================================================
+// The corridors of Jalsavrah all join up, so without this a level 21 player could walk round to
+// room 8's chamber and start there. The trap is the gate: it only opens onto the room the run says
+// you are up to, and it wants that room's Thieving level.
+
+[oploc1,plunder_speartrap]
+p_arrivedelay;
+def_int $room = ~plunder_trap_room(loc_coord);
+if ($room = 0) { return; }
+if (%plunder_room ! $room) {
+    mes("The spears move too fast. You have no business in this chamber.");
+    return;
+}
+if (stat(thieving) < ~plunder_room_level($room)) {
+    ~mesbox("You need a Thieving level of <tostring(~plunder_room_level($room))> to get past these spears.");
+    return;
+}
+mes("You try to slip past the spears...");
+anim(human_pickpocket, 0);
+p_delay(2);
+if (stat_random(thieving, 120, 256) = false) {
+    mes("...and one of them catches you.");
+    sound_synth(speartrap, 1, 0);
+    ~damage_self(~plunder_small_hit);
+    return;
+}
+mes("...and get through unscratched.");
+~thieving_xp(^plunder_xp_trap);
+p_telejump(~plunder_inside($room));
+
+[proc,plunder_trap_room](coord $at)(int)
+switch_coord ($at) {
+    case ^plunder_trap_1a, ^plunder_trap_1b, ^plunder_trap_1c, ^plunder_trap_1d : return(1);
+    case ^plunder_trap_2a, ^plunder_trap_2b, ^plunder_trap_2c, ^plunder_trap_2d : return(2);
+    case ^plunder_trap_3a, ^plunder_trap_3b, ^plunder_trap_3c, ^plunder_trap_3d : return(3);
+    case ^plunder_trap_4a, ^plunder_trap_4b, ^plunder_trap_4c, ^plunder_trap_4d : return(4);
+    case ^plunder_trap_5a, ^plunder_trap_5b, ^plunder_trap_5c, ^plunder_trap_5d : return(5);
+    case ^plunder_trap_6a, ^plunder_trap_6b, ^plunder_trap_6c, ^plunder_trap_6d : return(6);
+    case ^plunder_trap_7a, ^plunder_trap_7b, ^plunder_trap_7c, ^plunder_trap_7d : return(7);
+    case ^plunder_trap_8a, ^plunder_trap_8b, ^plunder_trap_8c, ^plunder_trap_8d : return(8);
+}
+return(0);
+
+// =============================================================================================
+// The urns - thirteen a room, and the one obstacle that bites back
+// =============================================================================================
+// Four states, and they are the cache's own: 0 untouched, 1 checked and safe, 2 checked with a
+// snake in it, 3 emptied. The resolved child carries the options, so op1 is Search in every state
+// and op2 is "Check for Snakes" at 0 and "Charm Snake" at 2 - which is why both are one handler
+// branching on the state rather than two sets of triggers.
+
+[oploc1,plunder_urn_1] @plunder_urn_search(1);
+[oploc1,plunder_urn_2] @plunder_urn_search(2);
+[oploc1,plunder_urn_3] @plunder_urn_search(3);
+[oploc1,plunder_urn_4] @plunder_urn_search(4);
+[oploc1,plunder_urn_5] @plunder_urn_search(5);
+[oploc1,plunder_urn_6] @plunder_urn_search(6);
+[oploc1,plunder_urn_7] @plunder_urn_search(7);
+[oploc1,plunder_urn_8] @plunder_urn_search(8);
+[oploc1,plunder_urn_9] @plunder_urn_search(9);
+[oploc1,plunder_urn_10] @plunder_urn_search(10);
+[oploc1,plunder_urn_11] @plunder_urn_search(11);
+[oploc1,plunder_urn_12] @plunder_urn_search(12);
+[oploc1,plunder_urn_13] @plunder_urn_search(13);
+[oploc1,plunder_urn_14] @plunder_urn_search(14);
+[oploc1,plunder_urn_15] @plunder_urn_search(15);
+
+[oploc2,plunder_urn_1] @plunder_urn_check(1);
+[oploc2,plunder_urn_2] @plunder_urn_check(2);
+[oploc2,plunder_urn_3] @plunder_urn_check(3);
+[oploc2,plunder_urn_4] @plunder_urn_check(4);
+[oploc2,plunder_urn_5] @plunder_urn_check(5);
+[oploc2,plunder_urn_6] @plunder_urn_check(6);
+[oploc2,plunder_urn_7] @plunder_urn_check(7);
+[oploc2,plunder_urn_8] @plunder_urn_check(8);
+[oploc2,plunder_urn_9] @plunder_urn_check(9);
+[oploc2,plunder_urn_10] @plunder_urn_check(10);
+[oploc2,plunder_urn_11] @plunder_urn_check(11);
+[oploc2,plunder_urn_12] @plunder_urn_check(12);
+[oploc2,plunder_urn_13] @plunder_urn_check(13);
+[oploc2,plunder_urn_14] @plunder_urn_check(14);
+[oploc2,plunder_urn_15] @plunder_urn_check(15);
+
+[oploc3,plunder_urn_1] @plunder_urn_charm(1);
+[oploc3,plunder_urn_2] @plunder_urn_charm(2);
+[oploc3,plunder_urn_3] @plunder_urn_charm(3);
+[oploc3,plunder_urn_4] @plunder_urn_charm(4);
+[oploc3,plunder_urn_5] @plunder_urn_charm(5);
+[oploc3,plunder_urn_6] @plunder_urn_charm(6);
+[oploc3,plunder_urn_7] @plunder_urn_charm(7);
+[oploc3,plunder_urn_8] @plunder_urn_charm(8);
+[oploc3,plunder_urn_9] @plunder_urn_charm(9);
+[oploc3,plunder_urn_10] @plunder_urn_charm(10);
+[oploc3,plunder_urn_11] @plunder_urn_charm(11);
+[oploc3,plunder_urn_12] @plunder_urn_charm(12);
+[oploc3,plunder_urn_13] @plunder_urn_charm(13);
+[oploc3,plunder_urn_14] @plunder_urn_charm(14);
+[oploc3,plunder_urn_15] @plunder_urn_charm(15);
+
+[label,plunder_urn_search](int $urn)
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+def_int $state = ~plunder_urn_state($urn);
+if ($state = 3) {
+    mes("You've already emptied this urn.");
+    return;
+}
+anim(human_pickpocket, 0);
+p_delay(1);
+if ($state = 2) {
+    @plunder_snake_bites($urn);
+    return;
+}
+if ($state = 0 & ~plunder_snake_inside = true) {
+    // The snake was in there all along; searching blind is how you find out.
+    ~plunder_set_urn($urn, 2);
+    @plunder_snake_bites($urn);
+    return;
+}
+~plunder_set_urn($urn, 3);
+~thieving_xp(~plunder_urn_xp(%plunder_room));
+~plunder_give_artefact;
+
+[label,plunder_urn_check](int $urn)
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+if (~plunder_urn_state($urn) ! 0) {
+    ~displaymessage(^dm_default);
+    return;
+}
+// No experience and no risk - it only tells you which of the two the urn is.
+anim(human_pickpocket, 0);
+p_delay(1);
+if (~plunder_snake_inside = true) {
+    ~plunder_set_urn($urn, 2);
+    mes("There's a snake coiled up inside this one.");
+    return;
+}
+~plunder_set_urn($urn, 1);
+mes("Nothing in there but whatever you came for.");
+
+[label,plunder_urn_charm](int $urn)
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+if (~plunder_urn_state($urn) ! 2) {
+    ~displaymessage(^dm_default);
+    return;
+}
+// Old School sells the charm rather than giving it away, so a snake is only free to deal with if
+// you were willing to be bitten.
+if (inv_total(inv, plunder_snake_charm) < 1) {
+    mes("You'd need a snake charm to coax it out of there.");
+    return;
+}
+anim(human_pickpocket, 0);
+sound_synth(snake_hiss, 1, 0);
+p_delay(2);
+~plunder_set_urn($urn, 1);
+mes("You charm the snake out of the urn.");
+
+[label,plunder_snake_bites](int $urn)
+mes("A snake strikes out of the urn!");
+sound_synth(snake_hiss, 1, 0);
+anim(%com_defendanim, 0);
+~damage_self(~plunder_small_hit);
+queue(poison_player, 0, ^plunder_hit_high);
+
+// The snake is a Thieving roll, which is why checking first is worth more at a low level than a
+// high one - Old School says the same, without publishing a rate.
+[proc,plunder_snake_inside]()(boolean)
+if (stat_random(thieving, 150, 256) = false) {
+    return(true);
+}
+return(false);
+
+[proc,plunder_urn_state](int $urn)(int)
+switch_int ($urn) {
+    case 1 : return(%plunder_urn_1_state);
+    case 2 : return(%plunder_urn_2_state);
+    case 3 : return(%plunder_urn_3_state);
+    case 4 : return(%plunder_urn_4_state);
+    case 5 : return(%plunder_urn_5_state);
+    case 6 : return(%plunder_urn_6_state);
+    case 7 : return(%plunder_urn_7_state);
+    case 8 : return(%plunder_urn_8_state);
+    case 9 : return(%plunder_urn_9_state);
+    case 10 : return(%plunder_urn_10_state);
+    case 11 : return(%plunder_urn_11_state);
+    case 12 : return(%plunder_urn_12_state);
+    case 13 : return(%plunder_urn_13_state);
+    case 14 : return(%plunder_urn_14_state);
+}
+return(%plunder_urn_15_state);
+
+[proc,plunder_set_urn](int $urn, int $state)
+switch_int ($urn) {
+    case 1 : %plunder_urn_1_state = $state;
+    case 2 : %plunder_urn_2_state = $state;
+    case 3 : %plunder_urn_3_state = $state;
+    case 4 : %plunder_urn_4_state = $state;
+    case 5 : %plunder_urn_5_state = $state;
+    case 6 : %plunder_urn_6_state = $state;
+    case 7 : %plunder_urn_7_state = $state;
+    case 8 : %plunder_urn_8_state = $state;
+    case 9 : %plunder_urn_9_state = $state;
+    case 10 : %plunder_urn_10_state = $state;
+    case 11 : %plunder_urn_11_state = $state;
+    case 12 : %plunder_urn_12_state = $state;
+    case 13 : %plunder_urn_13_state = $state;
+    case 14 : %plunder_urn_14_state = $state;
+    case 15 : %plunder_urn_15_state = $state;
+}
+
+// =============================================================================================
+// The Grand Gold Chest
+// =============================================================================================
+// Rocky is rolled here and nowhere else, and Old School is explicit that the roll happens "even if
+// a scarab swarm appears" - so it goes before the trap rather than after it.
+
+[oploc1,plunder_chest]
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+if (%plunder_chest_state ! 0) {
+    mes("You've already had this one open.");
+    return;
+}
+%plunder_chest_state = 1;
+anim(human_pickpocket, 0);
+sound_synth(chest_open, 1, 0);
+p_delay(1);
+~skillpet_roll(skillpet_rocky_item, thieving, ~plunder_rocky_base(%plunder_room));
+if (~plunder_sceptre_roll = true) { return; }
+if (random(4) = 0) {
+    mes("The lid was wired. Scarabs pour out of the chest!");
+    ~damage_self(~plunder_small_hit);
+    npc_add(coord, plunder_scarab_swarm, 200);
+    npc_setmode(opplayer2);
+    // The artefact is still yours - Old School gives it, and only withholds the experience.
+    ~plunder_give_artefact;
+    return;
+}
+~thieving_xp(~plunder_chest_xp(%plunder_room));
+~plunder_give_artefact;
+
+// =============================================================================================
+// The sarcophagus - the one container that pays Strength
+// =============================================================================================
+// You are heaving a stone lid off rather than picking anything, so Old School pays Strength for
+// it, and it takes long enough that a scarab swarm will not interrupt you.
+
+[oploc1,plunder_sarcophagus]
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+if (%plunder_sarcophagus_state = 2) {
+    mes("There's nothing left in there.");
+    return;
+}
+if (%plunder_sarcophagus_state = 1) {
+    @plunder_sarcophagus_search;
+    return;
+}
+mes("You put your shoulder to the lid...");
+anim(human_pickpocket, 0);
+sound_synth(coffin_open, 1, 0);
+p_delay(5);
+%plunder_sarcophagus_state = 1;
+stat_advance(strength, ~plunder_sarc_xp(%plunder_room));
+// A mummy, more often the deeper you are - which is Old School's own shape for it.
+if (random(10) < %plunder_room) {
+    mes("...and something sits up inside it.");
+    npc_add(coord, plunder_mummy, 200);
+    npc_setmode(opplayer2);
+    return;
+}
+mes("...and it grinds open.");
+
+[label,plunder_sarcophagus_search]
+mes("You search the sarcophagus.");
+anim(human_pickpocket, 0);
+p_delay(1);
+%plunder_sarcophagus_state = 2;
+if (~plunder_sceptre_roll = true) { return; }
+~plunder_give_artefact;
+
+// =============================================================================================
+// The tomb doors - four a room, one of them the way on
+// =============================================================================================
+// Which one is the way on is rerolled when you reach a room. Failing a door costs nothing, and
+// after three WRONG doors the fourth always opens - Old School added that quietly and it is the
+// difference between a run ending on a bad guess and a run ending on the clock. The three tried
+// are remembered as a four-bit mask rather than a count, so spamming one wrong door gets you
+// nowhere.
+
+[oploc1,plunder_door_1] @plunder_door(1);
+[oploc1,plunder_door_2] @plunder_door(2);
+[oploc1,plunder_door_3] @plunder_door(3);
+[oploc1,plunder_door_4] @plunder_door(4);
+
+[label,plunder_door](int $door)
+p_arrivedelay;
+if (~plunder_running = false) { return; }
+if (~plunder_door_state($door) = 1) {
+    @plunder_door_enter;
+}
+if (%plunder_room >= ^plunder_rooms) {
+    mes("This is the last chamber. There is nothing but rock beyond it.");
+    return;
+}
+if ($door ! %plunder_correct_door & bitcount(%plunder_doors_tried) < 3) {
+    %plunder_doors_tried = setbit(%plunder_doors_tried, sub($door, 1));
+    mes("You work at the lock, but this door leads nowhere.");
+    anim(human_pickpocket, 0);
+    p_delay(2);
+    return;
+}
+def_boolean $lockpick = false;
+if (inv_total(inv, lockpick) > 0) { $lockpick = true; }
+mes("You pick at the lock...");
+anim(human_pickpocket, 0);
+p_delay(2);
+def_int $low = 80;
+if ($lockpick = true) { $low = add($low, ^plunder_lockpick_bonus); }
+if (stat_random(thieving, $low, 256) = false) {
+    mes("...and the tumblers will not fall.");
+    return;
+}
+mes("...and the door swings open.");
+sound_synth(door_open, 1, 0);
+~plunder_set_door($door, 1);
+// A LOCKPICK HALVES THE EXPERIENCE, which is Old School's price for the better odds.
+def_int $xp = ~plunder_door_xp(%plunder_room);
+if ($lockpick = true) { $xp = divide($xp, 2); }
+~thieving_xp($xp);
+
+[label,plunder_door_enter]
+if (%plunder_room >= ^plunder_rooms) {
+    mes("This is the last chamber.");
+    return;
+}
+mes("You slip through into the next passage.");
+sound_synth(door_open, 1, 0);
+p_delay(1);
+%plunder_room = add(%plunder_room, 1);
+~plunder_reset_room;
+~plunder_roll_correct_door;
+p_telejump(~plunder_arrive(%plunder_room));
+
+[proc,plunder_door_state](int $door)(int)
+switch_int ($door) {
+    case 1 : return(%plunder_door_1_state);
+    case 2 : return(%plunder_door_2_state);
+    case 3 : return(%plunder_door_3_state);
+}
+return(%plunder_door_4_state);
+
+[proc,plunder_set_door](int $door, int $state)
+switch_int ($door) {
+    case 1 : %plunder_door_1_state = $state;
+    case 2 : %plunder_door_2_state = $state;
+    case 3 : %plunder_door_3_state = $state;
+    case 4 : %plunder_door_4_state = $state;
+}
+
+// =============================================================================================
+// What comes out: the artefacts and the sceptre
+// =============================================================================================
+// Old School publishes which artefacts a room can give but no weights for them, so each room picks
+// evenly among the ones it can give. That is a stated choice rather than a guess at a table that
+// has never been published.
+
+[proc,plunder_give_artefact]
+def_namedobj $artefact = ~plunder_artefact(%plunder_room);
+if (inv_freespace(inv) < 1) {
+    obj_add(coord, $artefact, 1, ^lootdrop_duration);
+    mes("You find <oc_name($artefact)>, and drop it - your pack is full.");
+    return;
+}
+inv_add(inv, $artefact, 1);
+mes("You find <oc_name($artefact)>.");
+
+[proc,plunder_artefact](int $room)(namedobj)
+switch_int ($room) {
+    case 1 : return(~plunder_pick6(plunder_ivory_comb, plunder_pottery_scarab, plunder_pottery_statuette, plunder_stone_seal, plunder_stone_scarab, plunder_stone_statuette));
+    case 2 : return(~plunder_pick5(plunder_ivory_comb, plunder_pottery_statuette, plunder_stone_seal, plunder_stone_scarab, plunder_stone_statuette));
+    case 3 : return(~plunder_pick5(plunder_pottery_statuette, plunder_stone_seal, plunder_stone_scarab, plunder_stone_statuette, plunder_gold_seal));
+    case 4 : return(~plunder_pick4(plunder_stone_seal, plunder_stone_scarab, plunder_stone_statuette, plunder_gold_seal));
+    case 5 : return(~plunder_pick5(plunder_stone_seal, plunder_stone_scarab, plunder_stone_statuette, plunder_gold_seal, plunder_golden_scarab));
+    case 6 : return(~plunder_pick4(plunder_stone_scarab, plunder_stone_statuette, plunder_gold_seal, plunder_golden_scarab));
+    case 7 : return(~plunder_pick5(plunder_stone_scarab, plunder_stone_statuette, plunder_gold_seal, plunder_golden_scarab, plunder_golden_statuette));
+}
+return(~plunder_pick4(plunder_stone_statuette, plunder_gold_seal, plunder_golden_scarab, plunder_golden_statuette));
+
+// THE ROLL IS SPELT OUT PER SIZE rather than written as random(n) over a list, because this
+// language has no list - and because tools/gennpcdrops.py reads these tables and cannot follow a
+// random() of an expression (it drops the whole page rather than guessing).
+[proc,plunder_pick4](namedobj $a, namedobj $b, namedobj $c, namedobj $d)(namedobj)
+switch_int (random(4)) {
+    case 0 : return($a);
+    case 1 : return($b);
+    case 2 : return($c);
+}
+return($d);
+
+[proc,plunder_pick5](namedobj $a, namedobj $b, namedobj $c, namedobj $d, namedobj $e)(namedobj)
+switch_int (random(5)) {
+    case 0 : return($a);
+    case 1 : return($b);
+    case 2 : return($c);
+    case 3 : return($d);
+}
+return($e);
+
+[proc,plunder_pick6](namedobj $a, namedobj $b, namedobj $c, namedobj $d, namedobj $e, namedobj $f)(namedobj)
+switch_int (random(6)) {
+    case 0 : return($a);
+    case 1 : return($b);
+    case 2 : return($c);
+    case 3 : return($d);
+    case 4 : return($e);
+}
+return($f);
+
+// FINDING THE SCEPTRE ENDS THE RUN ON THE SPOT, which is Old School's own behaviour and the reason
+// the drop is worth more than the artefact it replaces: you lose the rest of the five minutes.
+[proc,plunder_sceptre_roll]()(boolean)
+if (random(~plunder_sceptre_rate(%plunder_room)) ! 0) {
+    return(false);
+}
+~broadcast_drop(pharaohs_sceptre);
+~collection_log_add(pharaohs_sceptre, 1);
+if (inv_freespace(inv) < 1) {
+    // Old School drops it on the ground outside rather than losing it, and so does this.
+    ~plunder_eject;
+    obj_add(coord, pharaohs_sceptre, 1, ^lootdrop_duration);
+    ~mesbox("Your hand closes on something far older than pottery - a sceptre of solid gold. Your pack was full, so it lies at your feet.");
+    return(true);
+}
+inv_add(inv, pharaohs_sceptre, 1);
+~plunder_eject;
+~objbox(pharaohs_sceptre, "Your hand closes on something far older than pottery - a sceptre of solid gold. The pyramid spits you out.", 250, 0, 0);
+return(true);
+
+// =============================================================================================
+// The sceptre itself: three charges, and the mummy puts them back
+// =============================================================================================
+
+[opheld1,pharaohs_sceptre] @plunder_sceptre_teleport(3);
+[opheld1,pharaohs_sceptre_2] @plunder_sceptre_teleport(2);
+[opheld1,pharaohs_sceptre_1] @plunder_sceptre_teleport(1);
+[opheld1,pharaohs_sceptre_0] @plunder_sceptre_teleport(0);
+
+[label,plunder_sceptre_teleport](int $charges)
+if ($charges = 0) {
+    mes("The sceptre is spent. The Guardian mummy can put the charges back.");
+    return;
+}
+if (~charged_jewellery_allowed(^diary_tele_wildy_max) = false) {
+    return;
+}
+inv_del(inv, ~plunder_sceptre_obj($charges), 1);
+inv_add(inv, ~plunder_sceptre_obj(sub($charges, 1)), 1);
+mes("The sceptre crumbles a little. <tostring(sub($charges, 1))> charges left.");
+~player_teleport_normal(^plunder_lobby);
+
+[opheld2,pharaohs_sceptre] @plunder_sceptre_check(3);
+[opheld2,pharaohs_sceptre_2] @plunder_sceptre_check(2);
+[opheld2,pharaohs_sceptre_1] @plunder_sceptre_check(1);
+[opheld2,pharaohs_sceptre_0] @plunder_sceptre_check(0);
+
+[label,plunder_sceptre_check](int $charges)
+mes("The sceptre has <tostring($charges)> charges left.");
+
+[proc,plunder_sceptre_obj](int $charges)(namedobj)
+switch_int ($charges) {
+    case 3 : return(pharaohs_sceptre);
+    case 2 : return(pharaohs_sceptre_2);
+    case 1 : return(pharaohs_sceptre_1);
+}
+return(pharaohs_sceptre_0);
+
+// THE MUMMY TAKES ARTEFACTS FOR CHARGES, one artefact a charge, which is what Old School does.
+[label,plunder_recharge]
+~chatplayer("<p,quiz>Can you recharge my sceptre?");
+def_int $charges = ~plunder_sceptre_charges;
+if ($charges < 0) {
+    ~chatnpc("<p,neutral>You have no sceptre to charge.");
+    return;
+}
+if ($charges = 3) {
+    ~chatnpc("<p,neutral>It is already full.");
+    return;
+}
+def_namedobj $paid = ~plunder_take_artefact;
+if ($paid = null) {
+    ~chatnpc("<p,neutral>Bring me what you took from my masters, and I will fill it.|One trinket, one charge.");
+    return;
+}
+~chatnpc("<p,happy>A fair trade.");
+inv_del(inv, ~plunder_sceptre_obj($charges), 1);
+inv_add(inv, ~plunder_sceptre_obj(add($charges, 1)), 1);
+mes("The mummy takes <oc_name($paid)> and the sceptre glows.");
+
+[proc,plunder_sceptre_charges]()(int)
+if (inv_total(inv, pharaohs_sceptre) > 0) { return(3); }
+if (inv_total(inv, pharaohs_sceptre_2) > 0) { return(2); }
+if (inv_total(inv, pharaohs_sceptre_1) > 0) { return(1); }
+if (inv_total(inv, pharaohs_sceptre_0) > 0) { return(0); }
+return(-1);
+
+// The cheapest artefact in the pack, so a player is not surprised by losing the golden one.
+[proc,plunder_take_artefact]()(namedobj)
+def_namedobj $take = null;
+if (inv_total(inv, plunder_ivory_comb) > 0) { $take = plunder_ivory_comb; }
+else if (inv_total(inv, plunder_pottery_scarab) > 0) { $take = plunder_pottery_scarab; }
+else if (inv_total(inv, plunder_pottery_statuette) > 0) { $take = plunder_pottery_statuette; }
+else if (inv_total(inv, plunder_stone_seal) > 0) { $take = plunder_stone_seal; }
+else if (inv_total(inv, plunder_stone_scarab) > 0) { $take = plunder_stone_scarab; }
+else if (inv_total(inv, plunder_stone_statuette) > 0) { $take = plunder_stone_statuette; }
+else if (inv_total(inv, plunder_gold_seal) > 0) { $take = plunder_gold_seal; }
+else if (inv_total(inv, plunder_golden_scarab) > 0) { $take = plunder_golden_scarab; }
+else if (inv_total(inv, plunder_golden_statuette) > 0) { $take = plunder_golden_statuette; }
+if ($take = null) { return(null); }
+inv_del(inv, $take, 1);
+return($take);
+
+// =============================================================================================
+// The tables
+// =============================================================================================
+
+[proc,plunder_running]()(boolean)
+if (%plunder_room = 0) {
+    mes("Nothing happens.");
+    return(false);
+}
+return(true);
+
+[proc,plunder_small_hit]()(int)
+return(add(^plunder_hit_low, random(add(sub(^plunder_hit_high, ^plunder_hit_low), 1))));
+
+[proc,plunder_room_level](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_level_1);
+    case 2 : return(^plunder_level_2);
+    case 3 : return(^plunder_level_3);
+    case 4 : return(^plunder_level_4);
+    case 5 : return(^plunder_level_5);
+    case 6 : return(^plunder_level_6);
+    case 7 : return(^plunder_level_7);
+}
+return(^plunder_level_8);
+
+[proc,plunder_arrive](int $room)(coord)
+switch_int ($room) {
+    case 1 : return(^plunder_arrive_1);
+    case 2 : return(^plunder_arrive_2);
+    case 3 : return(^plunder_arrive_3);
+    case 4 : return(^plunder_arrive_4);
+    case 5 : return(^plunder_arrive_5);
+    case 6 : return(^plunder_arrive_6);
+    case 7 : return(^plunder_arrive_7);
+}
+return(^plunder_arrive_8);
+
+[proc,plunder_inside](int $room)(coord)
+switch_int ($room) {
+    case 1 : return(^plunder_inside_1);
+    case 2 : return(^plunder_inside_2);
+    case 3 : return(^plunder_inside_3);
+    case 4 : return(^plunder_inside_4);
+    case 5 : return(^plunder_inside_5);
+    case 6 : return(^plunder_inside_6);
+    case 7 : return(^plunder_inside_7);
+}
+return(^plunder_inside_8);
+
+[proc,plunder_urn_xp](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_xp_urn_1);
+    case 2 : return(^plunder_xp_urn_2);
+    case 3 : return(^plunder_xp_urn_3);
+    case 4 : return(^plunder_xp_urn_4);
+    case 5 : return(^plunder_xp_urn_5);
+    case 6 : return(^plunder_xp_urn_6);
+    case 7 : return(^plunder_xp_urn_7);
+}
+return(^plunder_xp_urn_8);
+
+[proc,plunder_chest_xp](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_xp_chest_1);
+    case 2 : return(^plunder_xp_chest_2);
+    case 3 : return(^plunder_xp_chest_3);
+    case 4 : return(^plunder_xp_chest_4);
+    case 5 : return(^plunder_xp_chest_5);
+    case 6 : return(^plunder_xp_chest_6);
+    case 7 : return(^plunder_xp_chest_7);
+}
+return(^plunder_xp_chest_8);
+
+// Room 8 has no door onward, so it has no door experience either.
+[proc,plunder_door_xp](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_xp_door_1);
+    case 2 : return(^plunder_xp_door_2);
+    case 3 : return(^plunder_xp_door_3);
+    case 4 : return(^plunder_xp_door_4);
+    case 5 : return(^plunder_xp_door_5);
+    case 6 : return(^plunder_xp_door_6);
+    case 7 : return(^plunder_xp_door_7);
+}
+return(0);
+
+[proc,plunder_sarc_xp](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_xp_sarc_1);
+    case 2 : return(^plunder_xp_sarc_2);
+    case 3 : return(^plunder_xp_sarc_3);
+    case 4 : return(^plunder_xp_sarc_4);
+    case 5 : return(^plunder_xp_sarc_5);
+    case 6 : return(^plunder_xp_sarc_6);
+    case 7 : return(^plunder_xp_sarc_7);
+}
+return(^plunder_xp_sarc_8);
+
+[proc,plunder_sceptre_rate](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_sceptre_rate_1);
+    case 2 : return(^plunder_sceptre_rate_2);
+    case 3 : return(^plunder_sceptre_rate_3);
+    case 4 : return(^plunder_sceptre_rate_4);
+    case 5 : return(^plunder_sceptre_rate_5);
+    case 6 : return(^plunder_sceptre_rate_6);
+    case 7 : return(^plunder_sceptre_rate_7);
+}
+return(^plunder_sceptre_rate_8);
+
+[proc,plunder_rocky_base](int $room)(int)
+switch_int ($room) {
+    case 1 : return(^plunder_rocky_1);
+    case 2 : return(^plunder_rocky_2);
+    case 3 : return(^plunder_rocky_3);
+    case 4 : return(^plunder_rocky_4);
+    case 5 : return(^plunder_rocky_5);
+    case 6 : return(^plunder_rocky_6);
+    case 7 : return(^plunder_rocky_7);
+}
+return(^plunder_rocky_8);

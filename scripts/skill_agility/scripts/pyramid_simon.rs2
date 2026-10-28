@@ -1,0 +1,50 @@
+// SIMON TEMPLETON, standing at the foot of the Agility Pyramid at 3363,2829 - already spawned by
+// the map's own NPC section, and until now with nothing to say.
+//
+// He is the only thing a pyramid top is good for: 10,000 coins each. Old School's advice is to
+// sell it on the spot rather than carry it, because the thing weighs 11kg and that is run energy
+// out of the next lap - and he is standing beside the doorway the summit drops you out of, which
+// is exactly why.
+//
+// The capstone is untradeable in nothing and stackable in nothing, so a player can be carrying
+// several; he takes the lot in one go rather than one a conversation.
+
+[opnpc1,agility_pyramid_simon]
+def_int $tops = inv_total(inv, agility_pyramid_gold_pyramid);
+if ($tops > 0) {
+    @simon_sell($tops);
+}
+if (%agility_pyramid_simon_named = 0) {
+    ~chatnpc("<p,happy>Hello there. Simon Templeton, archaeologist.|I'm excavating this pyramid - or I would be, if I could get up it.");
+    %agility_pyramid_simon_named = 1;
+    ~chatplayer("<p,quiz>What's so interesting about it?");
+    ~chatnpc("<p,happy>The top, mostly. Solid gold, and it's been sat up there for four thousand years.|I'll give you ten thousand coins for one if you can fetch it down.");
+    ~chatplayer("<p,quiz>Why don't you climb up and get it yourself?");
+    ~chatnpc("<p,sad>I'm an archaeologist, not an acrobat.");
+    return;
+}
+~chatnpc("<p,happy>Still ten thousand coins for a pyramid top, if you can get one down.");
+def_int $option = ~p_choice2("How do I get to the top?", 1, "I'll keep that in mind.", 2);
+if ($option = 1) {
+    ~chatplayer("<p,quiz>How do I get to the top?");
+    ~chatnpc("<p,neutral>Up the stairs on the west corner, and keep going round and up.|You'll want an Agility level of at least thirty, and a long memory for where the gaps are.|The top comes off in your hands. Then take the doorway at the summit - it'll drop you back here.");
+    return;
+}
+~chatplayer("<p,neutral>I'll keep that in mind.");
+
+[opnpcu,agility_pyramid_simon]
+if (last_useitem = agility_pyramid_gold_pyramid) {
+    @simon_sell(inv_total(inv, agility_pyramid_gold_pyramid));
+}
+~displaymessage(^dm_default);
+
+[label,simon_sell](int $tops)
+~chatplayer("<p,happy>I've got the top of the pyramid here.");
+if ($tops = 1) {
+    ~chatnpc("<p,happy>So you have! Ten thousand coins, as promised.");
+} else {
+    ~chatnpc("<p,happy><tostring($tops)> of them! Ten thousand coins apiece, as promised.");
+}
+inv_del(inv, agility_pyramid_gold_pyramid, $tops);
+inv_add(inv, coins, calc($tops * 10000));
+mes("Simon Templeton hands you <tostring(calc($tops * 10000))> coins.");

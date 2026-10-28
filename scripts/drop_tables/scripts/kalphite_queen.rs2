@@ -17,6 +17,15 @@ if (random(128) = 0) {
     ~collection_log_add(kq_head, 1); // not broadcast, so the collection log is told here
 }
 
+// The dragon warhammer, at Old School's Lizardman shaman rate of 1/3,000 - there are no
+// lizardmen here, and the owner asked for the Kalphite Queen and the King Black Dragon. Its own
+// roll beside the head and the pickaxe, for the same reason those two have one.
+if (random(^dwh_rate) = 0) {
+    obj_add(npc_coord, dragon_warhammer, 1, ^lootdrop_duration);
+    ~collection_log_add(dragon_warhammer, 1);
+    ~broadcast_drop(dragon_warhammer);
+}
+
 // The dragon pickaxe, 1/400, its own roll rather than a band in the cascade below - exactly the
 // shape kq_head above uses, and for the same two reasons: every threshold in that cascade is a
 // calibrated 128th that inserting a band would shift, and in OSRS the pickaxe is not an

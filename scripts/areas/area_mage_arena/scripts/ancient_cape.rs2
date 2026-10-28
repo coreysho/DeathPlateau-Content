@@ -1,0 +1,86 @@
+// REMAKING AN IMBUED GOD CAPE IN ANCIENT FABRIC, and taking it back off.
+//
+// The fabric comes off the Undertaker's shelf for Death tokens, like the nine whip colours, and
+// this is the same two clicks: use it on the cape, or Revert the cape. configs/ancient_cape.obj
+// carries the three results and says why there are three; configs/ancient_cape.enum pairs them
+// with the capes they are made from.
+//
+// REVERT IS A DEVIATION FROM OLD SCHOOL and a deliberate one. There the change is irreversible.
+// Here the fabric sits on the same shelf as nine whip kits, a graceful kit and the gravedigger
+// kit, every one of which comes back off - so a player who buys this one has every reason to
+// expect the same, and an irreversible item hiding among ten reversible ones is a trap rather
+// than a faithful detail.
+//
+// ONE TRIGGER FOR THE USE, ON THE FABRIC ITSELF. [opheldu,X] is looked up on both halves of a use
+// and the engine swaps last_item/last_useitem so last_item is always the half that carried the
+// trigger (network/game/client/handler/OpHeldUHandler.ts), so this catches the click whichever way
+// round the player does it. There is one fabric, so it is named rather than given a category.
+//
+// THREE TRIGGERS FOR THE REVERT, and it has to be three. An obj has ONE category and a result's is
+// armour_godcape, inherited from the cape it copies and what the god-cape code reads; a
+// category=ancient_cape line would REPLACE that (the packer writes code 94 per category= line and
+// ObjType.decode assigns), which would take the cape out of every check that looks for a god cape.
+// whip_revert.rs2 has the same three paragraphs for the same reason, at nine lines instead of
+// three.
+
+[opheldu,ancient_fabric]
+~ancient_cape_make(last_item, last_useitem, last_useslot);
+
+// $fabric is the fabric, $cape what it was used on and $capeslot where that is in the pack.
+[proc,ancient_cape_make](obj $fabric, obj $cape, int $capeslot)
+// ALREADY REMADE IS CHECKED FIRST. A result is a copy of the imbued cape's record, so it keeps
+// category=armour_godcape and would pass the test below - and a second fabric on it would be eaten
+// with no message and no way to get it back. param=ancient_cape_from is the thing only a remade
+// cape carries.
+if (oc_param($cape, ancient_cape_from) ! null) {
+    mes("That cape is already ancient. Revert it first.");
+    return;
+}
+def_namedobj $into = enum(obj, namedobj, ancient_cape_result, $cape);
+if ($into = null) {
+    mes("The fabric only works on an imbued god cape.");
+    return;
+}
+inv_del(inv, $fabric, 1);
+inv_setslot(inv, $capeslot, $into, 1);
+~objbox($into, "You work the ancient fabric into the cape.", 250, 0, 0);
+
+// ---------------------------------------------------------------------------------------------
+// Revert
+// ---------------------------------------------------------------------------------------------
+// Hands back BOTH the god cape and the fabric, so the look can be moved from cape to cape for
+// nothing - the promise the whip kits, the graceful kits and ornament_kit.rs2 all make, and the
+// reason none of them needs a confirmation box on the way in.
+//
+// TWO ITEMS ARRIVE WHERE ONE LEFT, so a full pack needs a free slot. Checked before anything is
+// deleted: the alternative is a fabric on the floor, and this is the one place a player would not
+// be looking for it.
+
+// WEARING ONE NEEDS ITS OWN TRIGGER, and finding that out is what the client harness is for. A god
+// cape is not equipped by the generic Wear handler: god_gear.rs2 carries an [opheld2] per cape so
+// it can refuse the cape of one god while the staff of another is in hand, and an obj with no
+// trigger of its own simply does nothing when you click Wear. The six Max cape variants are hooked
+// up the same way from skillcapes/scripts/max_cape_variants.rs2, into these same two labels.
+[opheld2,imbued_ancient_cape_saradomin] @god_cape_equip(^god_saradomin);
+[opheld2,imbued_ancient_cape_guthix] @god_cape_equip(^god_guthix);
+[opheld2,imbued_ancient_cape_zamorak] @god_cape_equip(^god_zamorak);
+
+[opheld5,imbued_ancient_cape_saradomin] @ancient_cape_revert;
+[opheld5,imbued_ancient_cape_guthix] @ancient_cape_revert;
+[opheld5,imbued_ancient_cape_zamorak] @ancient_cape_revert;
+
+[label,ancient_cape_revert]
+def_obj $item = last_item;
+def_int $slot = last_slot;
+def_namedobj $plain = oc_param($item, ancient_cape_from);
+if ($plain = null) {
+    ~displaymessage(^dm_default);
+    return;
+}
+if (inv_freespace(inv) < 1) {
+    mes("You need a free inventory space to unpick the fabric.");
+    return;
+}
+inv_setslot(inv, $slot, $plain, 1);
+inv_add(inv, ancient_fabric, 1);
+~objbox(ancient_fabric, "You unpick the ancient fabric from the cape.", 250, 0, 0);

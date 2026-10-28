@@ -1,3 +1,8 @@
+// God Wars Dungeon - the two staves. 75 Magic AND 75 Attack, which is the cache record's own
+// pair of requirement params (435/437 and 434/436) rather than the wiki's prose.
+[opheld2,staff_of_the_dead] @levelrequire_magic_and_attack(75, 75, last_slot);
+[opheld2,staff_of_light] @levelrequire_magic_and_attack(75, 75, last_slot);
+
 // God Wars Dungeon - godswords
 [opheld2,armadyl_godsword] @levelrequire_attack(75, last_slot);
 [opheld2,bandos_godsword] @levelrequire_attack(75, last_slot);

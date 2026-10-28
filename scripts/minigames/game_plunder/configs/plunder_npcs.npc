@@ -1,0 +1,113 @@
+// OSRS npcs imported by tools/models/importosrsnpc.py. Models re-encoded by osrs2ob2.py with
+// the npc recolours baked in; stats and level from the cache, the rest by hand.
+
+// The mummy that keeps the tombs. Talk to it to start a run or to have a sceptre filled; its
+// Start-minigame option is the same thing without the conversation.
+[plunder_guardian_mummy]
+// OSRS npc 1779
+name=Guardian mummy
+desc=It guards the tombs of its masters.
+model1=npc_plunder_guardian_mummy_1
+head1=npc_plunder_guardian_mummy_head1
+resizeh=140
+resizev=138
+op1=Talk-to
+op3=Start-minigame
+wanderrange=0
+vislevel=hide
+
+// Old School's mummy turns sour once you have taken a sceptre off it. Imported for the day that
+// is built; nothing places it yet.
+[plunder_guardian_mummy_cross]
+// OSRS npc 1780
+name=Annoyed guardian mummy
+desc=It has not forgiven you for the sceptre.
+model1=npc_plunder_guardian_mummy_1
+head1=npc_plunder_guardian_mummy_head1
+resizeh=140
+resizev=138
+wanderrange=0
+vislevel=hide
+
+// WHAT COMES OUT OF A WIRED CHEST. Old School's numbers: level 98, 25 hitpoints, up to 1 damage
+// every tick, and it only ever goes for the player who sprung the trap - which is why it is
+// spawned by the script with opplayer2 rather than given a hunt mode of its own.
+//
+// The animations are the 377 cache's scarab set, from Desert Treasure. They fit: it is the same
+// beetle, and importing a second copy of four animations to say so would be waste.
+[plunder_scarab_swarm]
+// OSRS npc 1782
+name=Scarab Swarm
+desc=I think they're some kind of beetle...
+model1=npc_plunder_scarab_swarm_1
+walkanim=scarab_swarming
+readyanim=scarab_ready
+op2=Attack
+vislevel=98
+attack=255
+defence=30
+strength=5
+hitpoints=25
+ranged=1
+magic=1
+param=stabdefence,0
+param=slashdefence,0
+param=crushdefence,0
+param=magicdefence,0
+param=rangedefence,0
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^stab_style
+param=attackrate,1
+param=attackrange,1
+param=poison_severity,6
+param=attack_anim,scarab_attack
+param=defend_anim,scarab_parry
+param=death_anim,scarab_spiral
+respawnrate=100
+wanderrange=2
+maxrange=6
+
+// AND WHAT SITS UP IN A SARCOPHAGUS. Old School's is level 84 and hits up to 6. The art is the
+// 377 cache's own Desert Treasure mummy, which is the same wrapped monster.
+[plunder_mummy]
+name=Mummy
+desc=A tightly wrapped monster.
+model1=npc_1961
+recol1s=16911
+recol1d=12615
+recol2s=27447
+recol2d=21036
+recol3s=29595
+recol3d=20971
+recol4s=0
+recol4d=7296
+recol5s=28504
+recol5d=20971
+walkanim=deserttreasure_mummy_walk
+readyanim=deserttreasure_mummy_ready
+op2=Attack
+vislevel=84
+hitpoints=80
+attack=70
+strength=50
+defence=70
+magic=1
+ranged=1
+param=stabdefence,0
+param=slashdefence,0
+param=crushdefence,0
+param=magicdefence,0
+param=rangedefence,0
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,deserttreasure_mummy_attack
+param=defend_anim,deserttreasure_mummy_block
+param=death_anim,deserttreasure_mummy_death
+param=death_drop,ashes
+respawnrate=100
+wanderrange=3
+maxrange=8

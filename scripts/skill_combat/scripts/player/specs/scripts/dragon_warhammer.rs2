@@ -1,0 +1,53 @@
+// THE DRAGON WARHAMMER's special attack, Old School's "Smash"
+// (oldschool.runescape.wiki/w/Dragon_warhammer): 50% energy, no accuracy bonus, HALF AGAIN THE
+// DAMAGE, and the target's CURRENT Defence cut by 30% on a hit that actually dealt damage.
+//
+// THE THREE WORDS THAT MATTER ARE "CURRENT", "30%" AND "DEALT".
+//
+//   CURRENT, not base: a second Smash takes 30% of what is left after the first, so the drains
+//   compound rather than add. Three specs leave 34% of the Defence, not 10%.
+//
+//   30% ROUNDED DOWN, which Old School says explicitly. On a monster with 3 Defence that is 0 -
+//   the drain does nothing at all - and that is correct rather than a bug to round away.
+//
+//   DEALT, not rolled: a hit that connects for zero drains nothing. That is why the test below is
+//   on the CAPPED damage and not on $hit, and it is the difference between a spec that works on a
+//   monster with one hitpoint left and one that does not.
+//
+// The drain is ~pvm_bgs_drain's shape turned around - the godsword takes a fixed number of points
+// off a list of stats, this takes a share off one - so npc_statsub is reached the same way.
+
+[label,pvm_dragon_warhammer_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+$hit, $damage, $damage_capped = ~pvm_spec_roll(100, 150, ^crush_style);
+if ($hit = true & $damage_capped > 0) {
+    def_int $take = scale(^dwh_defence_drain_pct, 100, npc_stat(defence));
+    if ($take > 0) {
+        npc_statsub(defence, $take, 0);
+    }
+}
+anim(human_blunt_pound, 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
+~pvm_spec_land($damage, 0);
+
+// In PvP the same share comes off the opponent's Defence level. ~pvp_spec_roll has already capped
+// the damage at what they have left, so $damage is what was dealt.
+[label,pvp_dragon_warhammer_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+~set_pk_vars;
+def_boolean $hit = false;
+def_int $damage = 0;
+$hit, $damage = ~pvp_spec_roll(100, 150, ^crush_style);
+if ($hit = true & $damage > 0) {
+    def_int $take = scale(^dwh_defence_drain_pct, 100, .stat(defence));
+    if ($take > 0) {
+        .stat_sub(defence, $take, 0);
+    }
+}
+anim(human_blunt_pound, 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));

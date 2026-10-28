@@ -1,0 +1,39 @@
+// THE ABYSSAL BLUDGEON's special attack, Old School's "Penance"
+// (oldschool.runescape.wiki/w/Abyssal_bludgeon): 50% energy, and HALF A PER CENT MORE DAMAGE FOR
+// EVERY PRAYER POINT THE WIELDER IS MISSING.
+//
+// Missing, not spent - the difference matters for anyone who has drunk a prayer potion above
+// their level or had their Prayer drained below it. It is the gap between the base level and the
+// current one, floored at zero, so a boosted Prayer is not a negative bonus.
+//
+// AT 99 PRAYER AND NOTHING LEFT THAT IS HALF AGAIN THE DAMAGE, which is the weapon's whole
+// character: it rewards finishing a fight on an empty prayer book rather than husbanding points.
+// The accuracy is untouched - Penance is damage only.
+
+[label,pvm_abyssal_bludgeon_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+def_boolean $hit = false;
+def_int $damage = 0;
+def_int $damage_capped = 0;
+$hit, $damage, $damage_capped = ~pvm_spec_roll(100, ~abyssal_bludgeon_damage_pct, ^crush_style);
+anim(slayer_granite_maul_special_attack, 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
+~pvm_spec_land($damage, 0);
+
+[label,pvp_abyssal_bludgeon_sa]
+~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
+~set_pk_vars;
+def_boolean $hit = false;
+def_int $damage = 0;
+$hit, $damage = ~pvp_spec_roll(100, ~abyssal_bludgeon_damage_pct, ^crush_style);
+anim(slayer_granite_maul_special_attack, 0);
+spotanim_pl(sp_attack_maul_spotanim, 96, 0);
+~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));
+
+// 100% plus half a per cent per missing prayer point. Integer division, so two missing points
+// buy one per cent and an odd point buys nothing until it is paired - which is the same rounding
+// Old School applies and the reason this is one proc rather than an expression written twice.
+[proc,abyssal_bludgeon_damage_pct]()(int)
+def_int $missing = max(sub(stat_base(prayer), stat(prayer)), 0);
+return(add(100, divide($missing, 2)));

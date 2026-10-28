@@ -3,6 +3,9 @@ gosub(npc_death);
 if (npc_findhero = ^false) {
     return;
 }
+// The dragon sword, at this dragon's own rate (drop_tables/scripts/dragon_sword.rs2). An extra
+// roll before the ordinary table, so it can never be crowded out by it.
+~dragon_sword_roll;
 
 // Default drop from config.
 obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);

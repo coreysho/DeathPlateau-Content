@@ -1,0 +1,75 @@
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[granite_hammer]
+name=Granite hammer
+desc=Hammer time.
+model=obj_granite_hammer
+manwear=obj_granite_hammer_manwear,0
+womanwear=obj_granite_hammer_womanwear,0
+wearpos=righthand
+2dzoom=1984
+2dxan=17
+2dyan=1668
+2dzan=400
+2dxof=8
+2dyof=-14
+weight=5000g
+cost=64000
+members=yes
+iop2=Wield
+tradeable=yes
+// Nothing in this build to copy from, so these are Old School's own (cache obj 21742): a crush
+// weapon that swings at FOUR ticks, which is what makes it worth carrying over a rune warhammer
+// at six for one more crush. 50 Attack and 50 Strength, from the same record's requirement params.
+category=weapon_blunt
+param=attackrate,4
+param=crushattack,57
+param=magicattack,-3
+param=rangeattack,-1
+param=strengthbonus,56
+param=crushattack_anim,human_blunt_pound
+param=defend_anim,human_blunt_block
+param=crush_sound,warhammer_crush
+// Hammer Blow, 60% (skill_combat/scripts/player/specs/scripts/granite_hammer.rs2)
+param=specwep,^true
+param=sa_energy,600
+
+[granite_longsword]
+name=Granite longsword
+desc=A razor sharp longsword made of stone.
+model=obj_granite_longsword
+manwear=obj_granite_longsword_manwear,0
+womanwear=obj_granite_longsword_womanwear,6
+wearpos=righthand
+2dzoom=1500
+2dxan=544
+2dyan=1000
+2dzan=96
+2dxof=1
+2dyof=-2
+recol1s=15855
+recol1d=6476
+weight=2721g
+cost=32000
+members=yes
+iop2=Wield
+tradeable=yes
+// Nothing in this build to copy from, so these are Old School's own (cache obj 21646). The shape
+// of a longsword, one tier above rune: 56/65 against rune's 38/47, at the same 5-tick speed.
+// 50 Attack and 50 Strength, from the same record's requirement params. No special attack.
+category=weapon_slash
+param=attackrate,5
+param=stabattack,56
+param=slashattack,65
+param=crushattack,-2
+param=slashdefence,3
+param=crushdefence,2
+param=strengthbonus,62
+param=slashattack_anim,human_sword_slash
+param=stabattack_anim,human_sword_stab
+param=defend_anim,human_sword_def
+param=slash_sound,hacksword_slash
+param=stab_sound,hacksword_stab

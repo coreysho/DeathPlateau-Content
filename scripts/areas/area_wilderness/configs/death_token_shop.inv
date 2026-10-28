@@ -43,8 +43,11 @@
 //
 // restock=yes, one at a time: the shelf refills, so the shop is a tap and not a race.
 //
-// NINETEEN ROWS AS OF 26 OCTOBER: the eighteen below plus the Zaros cape kit, which repaints an
-// imbued god cape and changes nothing else about it (areas/area_mage_arena/configs/zaros_cape.obj).
+// NINETEEN ROWS AS OF 26 OCTOBER: the eighteen below plus the ancient fabric, which remakes an
+// imbued god cape in Old School's ancient colours and changes nothing else about it
+// (areas/area_mage_arena/configs/ancient_cape.obj). In Old School the fabric is a reward from Pete
+// Kayer's last challenge; there is no such challenge here, and this shelf is where this server
+// puts a thing that is bought with Death tokens and sells status rather than power.
 //
 // SEVENTEEN ROWS AS OF 13 OCTOBER: the eight he already sold, plus one abyssal whip colour kit per
 // row (areas/area_wilderness/configs/whip_colours.obj, generated). Nine of the seventeen are the
@@ -74,4 +77,4 @@ stock15=whip_kit_tempest,1000,1
 stock16=whip_kit_bone,1000,1
 stock17=whip_kit_gravedigger,1000,1
 stock18=royal_seed_pod,1000,1
-stock19=zaros_cape_kit,1000,1
+stock19=ancient_fabric,1000,1
