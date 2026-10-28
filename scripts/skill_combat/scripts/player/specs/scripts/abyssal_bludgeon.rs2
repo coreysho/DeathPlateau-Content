@@ -19,7 +19,7 @@ $hit, $damage, $damage_capped = ~pvm_spec_roll(100, ~abyssal_bludgeon_damage_pct
 // OSRS seq 3299 and spotanim 1284 - the abyssal burst, whose model carries the recolours
 // that make it purple. This borrowed the granite maul's special animation and graphic.
 anim(osrs_bludgeon_spec, 0);
-spotanim_pl(bludgeon_spec, 96, 0);
+spotanim_npc(bludgeon_spec, 0, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
@@ -30,7 +30,7 @@ def_boolean $hit = false;
 def_int $damage = 0;
 $hit, $damage = ~pvp_spec_roll(100, ~abyssal_bludgeon_damage_pct, ^crush_style);
 anim(osrs_bludgeon_spec, 0);
-spotanim_pl(bludgeon_spec, 96, 0);
+.spotanim_pl(bludgeon_spec, 0, 0);
 ~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));
 
 // 100% plus half a per cent per missing prayer point. Integer division, so two missing points

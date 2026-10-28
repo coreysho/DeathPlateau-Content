@@ -49,7 +49,7 @@ if (npc_param(slayer_category) ! ^slayer_kurask & npc_param(slayer_category) ! ^
 // is the same seq as the warhammer above with a different burst over it. It used to read
 // crushattack_anim off its own obj, which is the weapon's ordinary swing.
 anim(osrs_dwh_spec, 0);
-spotanim_pl(granite_hammer_spec, 96, 0);
+spotanim_npc(granite_hammer_spec, 0, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
@@ -69,5 +69,5 @@ if ($bonus > 0) {
     both_heropoints($bonus);
 }
 anim(osrs_dwh_spec, 0);
-spotanim_pl(granite_hammer_spec, 96, 0);
+.spotanim_pl(granite_hammer_spec, 0, 0);
 ~pvp_spec_land($damage, oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound));
