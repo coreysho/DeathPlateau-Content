@@ -1,0 +1,129 @@
+// The Great Brain Robbery's multilocs. The tables are 474's own - quest_tgbr.constant lists the
+// cache records every one of them was read out of - and the children are the imported states in
+// areas/area_harmony/configs/harmony_map.loc (whatever a map square already places) and
+// harmony_quest.loc (the states no square places).
+//
+// THE TRIGGER GOES ON THE PARENT. Engine-TS/src/network/game/client/handler/OpLocHandler.ts
+// resolves the multi to decide whether the op is legal, and then hands the trigger the loc that is
+// actually on the map - the parent. So a script answers [oploc1,tgbr_multi_statue], never
+// [oploc1,harmony_statue_moved]. Cabin Fever's cannon is wired the same way.
+//
+// ACTIVE=YES ON EVERY PARENT. A loc with no op of its own is not interactive, so it is never added
+// to a zone and never picked by the client - and a multiloc parent deliberately has no ops, because
+// the client resolves the child and builds the menu from the CHILD's. Without this line the statue,
+// the stairs, the gate, the fuse, the peephole and the crate are all invisible to a click. Cabin
+// Fever's cannon does not need it only because its parent happens to carry an op of its own.
+
+// ---------------------------------------------------------------------------- the statue
+// 3795,2844, two tiles long, facing west. Pull is offered from the start, which is how a player who
+// has not begun the quest gets as far as the hole and is thrown off the island.
+[tgbr_multi_statue]
+length=2
+active=yes
+multivar=tgbr_statue
+multiloc=0,loc474_22353
+multiloc=1,harmony_statue
+multiloc=2,harmony_statue_moved
+
+// ---------------------------------------------------------------------------- the broken stairs
+// 3829,9254, on the flooded tunnel's level. loc474_22368 carries Repair and Climb; the mended one
+// carries Climb alone.
+
+[tgbr_multi_stairs]
+length=2
+active=yes
+multivar=tgbr_stairs
+multiloc=0,loc474_22368
+multiloc=1,harmony_tunnel_up_east_fixed
+
+// ---------------------------------------------------------------------------- the monastery gate
+// Three tiles at 3805,2843-2845: a wall, the doorway, a wall. The keg brings the WALLS down and
+// leaves the doorway standing in the gap, which is 474's own staging and reads better than a door
+// simply unlocking. 474's table has an intermediate 4 for both walls that nothing here sets.
+//
+// The names of the two collapsed halves come from the importer and read the other way round from
+// the tiles they belong on: 474 loc 22109 (tgbr_gate_wall_s_down) is the NORTH wall's ruin and
+// 22110 (tgbr_gate_wall_n_down) is the SOUTH wall's. The ids are what matter; this says so rather
+// than renaming a model for it.
+// NOT PLACED. The peephole took this tile: see ^tgbr_peephole in quest_tgbr.constant for why it
+// had to move out of the monastery's inner wall and onto the gate. The record is left here
+// rather than deleted, because its loc.pack id is already handed out.
+
+[tgbr_multi_gate_wall_north]
+active=yes
+multivar=tgbr_gate
+multiloc=0,loc474_22105
+multiloc=1,loc474_22105
+multiloc=2,loc474_22105
+multiloc=3,loc474_22105
+multiloc=4,loc474_22105
+multiloc=5,tgbr_gate_wall_s_down
+
+[tgbr_multi_gate_wall_south]
+active=yes
+multivar=tgbr_gate
+multiloc=0,loc474_22107
+multiloc=1,loc474_22107
+multiloc=2,loc474_22107
+multiloc=3,loc474_22107
+multiloc=4,loc474_22107
+multiloc=5,tgbr_gate_wall_n_down
+
+[tgbr_multi_gate_door]
+op1=Open
+op2=Peer-through
+multivar=tgbr_gate
+multiloc=0,loc474_22114
+multiloc=1,loc474_22114
+multiloc=2,loc474_22114
+multiloc=3,loc474_22114
+multiloc=4,loc474_22114
+multiloc=5,tgbr_gate_door_blown
+
+// ---------------------------------------------------------------------------- the fuse
+// Two tiles of it, 3804,2844 and 3803,2844, trailing west from the keg to where you stand to light
+// it. Value 0 is not listed, so there is no fuse on the ground until one is laid - 474 does the
+// same.
+// blockwalk=no on the PARENT, not just on the children: the record that goes on the map is the
+// parent and it is the parent's flags the server builds collision from, so without this the two
+// tiles the fuse lies on are walled off for ever - fuse or no fuse.
+
+[tgbr_multi_fuse_near]
+blockwalk=no
+blockrange=no
+active=yes
+multivar=tgbr_fuse
+multiloc=1,tgbr_fuse_laid
+multiloc=2,tgbr_fuse_lit
+
+[tgbr_multi_fuse_far]
+blockwalk=no
+blockrange=no
+active=yes
+multivar=tgbr_fuse
+multiloc=1,tgbr_fuse_laid
+multiloc=2,tgbr_fuse_lit
+
+// ---------------------------------------------------------------------------- the peephole
+// NOT PLACED, and the quest does not use it. 474 puts the peephole at 3817,2844 in the monastery's
+// inner wall; that tile is blocked and has exactly one free neighbour, which the route finder
+// refuses (tools/sim/tgbrreach.ts tried all four sides), so the hole the quest looks through is the
+// closed gate's own Peer-through instead. This record stays because its loc.pack id is handed out,
+// and 474's peephole stays on the map at 3817,2844 as scenery with a line of its own.
+[tgbr_multi_peephole]
+active=yes
+multivar=tgbr_peephole
+multiloc=0,loc474_22097
+multiloc=1,tgbr_peephole_rubble
+
+// ---------------------------------------------------------------------------- the crate
+// Beside Dr Fenkenstrain in the cell at the top of his castle. Value 0 is not listed: there is
+// nothing there until Rufus has handed over the parts and the doctor has agreed to be posted.
+
+[tgbr_multi_crate]
+active=yes
+multivar=tgbr_crate
+multiloc=1,tgbr_crate_space
+multiloc=2,tgbr_crate_built
+multiloc=3,tgbr_crate_bottomed
+multiloc=4,tgbr_crate_filled

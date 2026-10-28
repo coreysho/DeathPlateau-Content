@@ -25,6 +25,11 @@ switch_int (%fenk_quest) {
 // At stage 8 this shell is the one standing in the tower, and there is nothing left to say through
 // a bolted door.
 [opnpc1,fenk_fenkenstrain_in_tower]
+// The Great Brain Robbery needs him out of this cell and onto Harmony Island, which is the one
+// thing he will open the door for (quests/quest_tgbr/scripts/tgbr_doctor.rs2).
+if (~tgbr_doctor_tower = true) {
+    return;
+}
 ~chatnpc("<p,angry>Go away! The door is bolted and it is staying bolted!");
 ~chatplayer("<p,happy>Take your time.");
 

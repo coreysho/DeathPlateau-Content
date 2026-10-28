@@ -5,6 +5,8 @@ p_arrivedelay;
 //mes(~coord_tostring(loc_coord));
 switch_coord (loc_coord) {
     case 0_52_52_38_4, 0_52_52_36_4, 0_52_52_36_6, 0_52_52_38_7, 0_52_52_36_7, 0_52_52_39_8 : @exam_centre_bookcase; // exam centre bookcases
+    case ^tgbr_bookcase : @tgbr_bookcase_search; // Edgeville monastery's south-west shelf,
+        // which holds The Great Brain Robbery's prayer book (quests/quest_tgbr)
     case default : @search_bookcase;
 }
 

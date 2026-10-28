@@ -78,4 +78,10 @@ if (npc_param(prayer_drain) ! null & $damage > 0) {
 if (npc_category = mm_captor & $damage > 0) {
     queue(mm_arrested, 0, 0);
 }
+// The Great Brain Robbery - every hit of Barrelchest's anchor "deactivates all prayers and drains
+// prayer points", and takes a point of Attack and Defence with it. Same queued shape as the drains
+// above; quests/quest_tgbr/scripts/tgbr_barrelchest.rs2 has the effect.
+if (npc_type = tgbr_barrelchest & $damage > 0) {
+    queue(tgbr_anchor_hit, 0, $damage);
+}
 queue*(playerhit_n_retaliate, 0)(npc_uid);

@@ -1,0 +1,633 @@
+// Imported from the rev 474 cache by tools/models/importnpc474batch.py: models copied
+// byte-for-byte, chatheads brought across, and one copy of each model shared between
+// every npc that wears it. Combat stats, huntmode and drops are by hand - the cache
+// carries none of them.
+
+[tgbr_tranquility]
+// rev 474 npc 5616
+name=Brother Tranquility
+model1=npc_tgbr_tranquility_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_head1
+readyanim=harmony_tranquility_ready
+walkanim=harmony_robed_walk
+op1=Talk-to
+op3=Transport
+recol1s=21093
+recol1d=10337
+desc=A monk of Harmony Island.
+wanderrange=0
+
+[tgbr_tranquility_after]
+// rev 474 npc 5617
+name=Brother Tranquility
+model1=npc_tgbr_tranquility_after_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_after_head1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+op1=Talk-to
+op3=Transport
+recol1s=17010
+recol1d=24075
+recol2s=15953
+recol2d=24075
+recol3s=12782
+recol3d=24075
+recol4s=21093
+recol4d=10337
+desc=A monk of Harmony Island, himself again.
+wanderrange=0
+
+[tgbr_migor]
+// rev 474 npc 5613
+name=Mi-Gor
+model1=npc_tgbr_migor_1
+head1=npc_tgbr_migor_head1
+readyanim=tgbr_migor_ready
+walkanim=tgbr_migor_walk
+op1=Confront
+desc=He is not a monkey, whatever he says.
+wanderrange=0
+
+[tgbr_barrelchest]
+// rev 474 npc 5666
+name=Barrelchest
+model1=npc_tgbr_barrelchest_1
+size=3
+readyanim=tgbr_barrelchest_ready
+walkanim=tgbr_barrelchest_walk
+vislevel=190
+desc=It smells of rum and old blood.
+op2=Attack
+hitpoints=134
+attack=170
+strength=145
+defence=140
+magic=90
+ranged=1
+param=attackbonus,80
+param=strengthbonus,80
+param=damagetype,^crush_style
+param=attackrate,5
+param=attackrange,1
+param=attack_anim,tgbr_barrelchest_attack
+param=defend_anim,tgbr_barrelchest_block
+param=death_anim,tgbr_barrelchest_death
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=100
+wanderrange=4
+maxrange=12
+
+[tgbr_sorebones]
+// rev 474 npc 5627
+name=Sorebones
+model1=npc_tgbr_sorebones_1
+model2=npc_tgbr_sorebones_2
+model3=npc_tgbr_sorebones_3
+model4=npc_tgbr_sorebones_4
+model5=npc_tgbr_sorebones_5
+model6=npc_tgbr_sorebones_6
+model7=npc_tgbr_sorebones_7
+head1=npc_tgbr_sorebones_head1
+size=1
+readyanim=tgbr_sorebones_ready
+walkanim=tgbr_sorebones_walk
+vislevel=57
+desc=A pile of bones that would rather be left alone.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,tgbr_sorebones_attack
+param=defend_anim,tgbr_sorebones_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=slayer_category,^slayer_zombie
+param=retreat,0
+respawnrate=25
+wanderrange=3
+maxrange=6
+
+[tgbr_sorebones_apron]
+// rev 474 npc 5628
+name=Sorebones
+model1=npc_tgbr_sorebones_1
+model2=npc_tgbr_sorebones_apron_2
+model3=npc_tgbr_sorebones_3
+model4=npc_tgbr_sorebones_4
+model5=npc_tgbr_sorebones_5
+model6=npc_tgbr_sorebones_apron_6
+model7=npc_tgbr_sorebones_apron_7
+head1=npc_tgbr_sorebones_head1
+size=1
+readyanim=tgbr_sorebones_ready
+walkanim=tgbr_sorebones_walk
+vislevel=57
+desc=A pile of bones that would rather be left alone.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,tgbr_sorebones_attack
+param=defend_anim,tgbr_sorebones_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=slayer_category,^slayer_zombie
+param=retreat,0
+respawnrate=25
+wanderrange=3
+maxrange=6
+
+[tgbr_zombie_pirate]
+// rev 474 npc 5629
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_1
+model2=npc_tgbr_zombie_pirate_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_6
+model7=npc_tgbr_sorebones_apron_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[tgbr_zombie_pirate_2]
+// rev 474 npc 5630
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_1
+model2=npc_tgbr_zombie_pirate_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_6
+model7=npc_tgbr_sorebones_apron_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[tgbr_zombie_pirate_3]
+// rev 474 npc 5631
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_3_1
+model2=npc_tgbr_zombie_pirate_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_3_6
+model7=npc_tgbr_sorebones_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[tgbr_zombie_pirate_4]
+// rev 474 npc 5632
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_3_1
+model2=npc_tgbr_zombie_pirate_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_3_6
+model7=npc_tgbr_sorebones_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[tgbr_zombie_pirate_5]
+// rev 474 npc 5633
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_5_1
+model2=npc_tgbr_zombie_pirate_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_5_6
+model7=npc_tgbr_sorebones_apron_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[tgbr_zombie_pirate_6]
+// rev 474 npc 5634
+name=Zombie pirate
+model1=npc_tgbr_zombie_pirate_6_1
+model2=npc_tgbr_zombie_pirate_6_2
+model3=npc_tgbr_zombie_pirate_3
+model4=npc_tgbr_zombie_pirate_4
+model5=npc_tgbr_zombie_pirate_5
+model6=npc_tgbr_zombie_pirate_3_6
+model7=npc_tgbr_sorebones_7
+size=1
+readyanim=harmony_shamble_ready
+walkanim=harmony_shamble_walk
+recol1s=3203
+recol1d=4164
+recol2s=4260
+recol2d=6278
+recol3s=5317
+recol3d=5221
+recol4s=6374
+recol4d=6278
+recol5s=7431
+recol5d=7335
+recol6s=6307
+recol6d=4164
+vislevel=57
+desc=A dead pirate that has not noticed.
+op2=Attack
+hitpoints=52
+attack=49
+strength=50
+defence=50
+magic=1
+ranged=1
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attackrate,4
+param=attackrange,1
+param=attack_anim,harmony_shamble_attack
+param=defend_anim,harmony_shamble_block
+param=death_anim,tgbr_sorebones_death
+param=undead,^true
+param=death_drop,bones
+param=retreat,0
+huntmode=aggressive_melee
+respawnrate=50
+wanderrange=5
+maxrange=8
+
+[harmony_zombie_monk]
+// rev 474 npc 5623
+name=Zombie monk
+model1=npc_tgbr_zombie_pirate_1
+model2=npc_harmony_zombie_monk_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_harmony_zombie_monk_6
+model7=npc_tgbr_tranquility_7
+head1=npc_harmony_zombie_monk_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+desc=Something is very wrong with this monk.
+op1=Talk-to
+wanderrange=2
+
+[harmony_zombie_monk_2]
+// rev 474 npc 5624
+name=Zombie monk
+model1=npc_tgbr_tranquility_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_harmony_zombie_monk_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=21093
+recol1d=20045
+desc=Something is very wrong with this monk.
+op1=Talk-to
+wanderrange=2
+
+[harmony_zombie_monk_3]
+// rev 474 npc 5625
+name=Zombie monk
+model1=npc_tgbr_zombie_pirate_1
+model2=npc_harmony_zombie_monk_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_harmony_zombie_monk_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=21093
+recol1d=6279
+desc=Something is very wrong with this monk.
+op1=Talk-to
+wanderrange=2
+
+[harmony_zombie_monk_4]
+// rev 474 npc 5626
+name=Zombie monk
+model1=npc_tgbr_tranquility_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=21093
+recol1d=1185
+desc=Something is very wrong with this monk.
+op1=Talk-to
+wanderrange=2
+
+[harmony_monk]
+// rev 474 npc 5608
+name=Monk
+model1=npc_tgbr_tranquility_after_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_after_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=17010
+recol1d=24075
+recol2s=15953
+recol2d=24075
+recol3s=12782
+recol3d=24075
+desc=One of the brothers of Harmony.
+op1=Talk-to
+wanderrange=3
+
+[harmony_monk_2]
+// rev 474 npc 5609
+name=Monk
+model1=npc_harmony_monk_2_1
+model2=npc_harmony_zombie_monk_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_tgbr_tranquility_6
+model7=npc_tgbr_tranquility_7
+head1=npc_harmony_monk_2_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=17010
+recol1d=24075
+recol2s=15953
+recol2d=24075
+recol3s=12782
+recol3d=24075
+desc=One of the brothers of Harmony.
+op1=Talk-to
+wanderrange=3
+
+[harmony_monk_3]
+// rev 474 npc 5610
+name=Monk
+model1=npc_tgbr_tranquility_after_1
+model2=npc_tgbr_tranquility_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_harmony_zombie_monk_6
+model7=npc_tgbr_tranquility_7
+head1=npc_tgbr_tranquility_after_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=17010
+recol1d=13605
+recol2s=15953
+recol2d=13605
+recol3s=12782
+recol3d=13605
+recol4s=24075
+recol4d=13605
+recol5s=21961
+recol5d=13605
+recol6s=18790
+recol6d=10434
+desc=One of the brothers of Harmony.
+op1=Talk-to
+wanderrange=3
+
+[harmony_monk_4]
+// rev 474 npc 5611
+name=Monk
+model1=npc_harmony_monk_2_1
+model2=npc_harmony_zombie_monk_2
+model3=npc_tgbr_tranquility_3
+model4=npc_tgbr_tranquility_4
+model5=npc_tgbr_tranquility_5
+model6=npc_harmony_zombie_monk_6
+model7=npc_tgbr_tranquility_7
+head1=npc_harmony_monk_2_head1
+readyanim=harmony_robed_ready
+walkanim=harmony_robed_walk
+recol1s=17010
+recol1d=13605
+recol2s=15953
+recol2d=13605
+recol3s=12782
+recol3d=13605
+recol4s=24075
+recol4d=13605
+recol5s=21961
+recol5d=13605
+recol6s=18790
+recol6d=4228
+desc=One of the brothers of Harmony.
+op1=Talk-to
+wanderrange=3
+
+[harmony_puffin]
+// rev 474 npc 5614
+name=Puffin
+model1=npc_harmony_puffin_1
+readyanim=harmony_puffin_ready
+walkanim=harmony_puffin_walk
+desc=A puffin.
+wanderrange=4
+
+[harmony_puffin_2]
+// rev 474 npc 5615
+name=Puffin
+model1=npc_harmony_puffin_2_1
+readyanim=harmony_puffin_ready
+walkanim=harmony_puffin_walk
+desc=A puffin.
+wanderrange=4
+
+[tgbr_rufus_whistled]
+// rev 474 npc 5612
+name=Rufus
+model1=npc_tgbr_rufus_whistled_1
+model2=npc_tgbr_rufus_whistled_2
+model3=npc_tgbr_rufus_whistled_3
+model4=npc_tgbr_rufus_whistled_4
+model5=npc_tgbr_rufus_whistled_5
+head1=npc_tgbr_rufus_whistled_head1
+size=1
+readyanim=human_ready
+walkanim=human_walk_f
+desc=The butcher of Canifis, a long way from his shop.
+wanderrange=0
+
+[tgbr_clockwork_cat]
+// rev 474 npc 5605
+name=Clockwork cat
+model1=npc_tgbr_clockwork_cat_1
+model2=npc_tgbr_clockwork_cat_2
+size=1
+readyanim=cat_ready
+walkanim=cat_walk
+resizeh=60
+resizev=60
+desc=It is not a real cat.
+wanderrange=0

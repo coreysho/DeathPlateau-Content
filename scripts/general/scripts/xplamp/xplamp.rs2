@@ -1,5 +1,14 @@
 [opheld1,macro_genilamp]
 %xplamp = ^xplamp_none;
+%xplamp_blessed = ^false;
+if_openmain(xplamp);
+
+// The Great Brain Robbery's blessed lamp is NOT a genie lamp. Old School's grants a flat 5,000
+// experience in one skill the player already has level 30 in, where the genie lamp scales with the
+// skill's own level, so the two cannot share a payout - only the interface.
+[opheld1,tgbr_blessed_lamp]
+%xplamp = ^xplamp_none;
+%xplamp_blessed = ^true;
 if_openmain(xplamp);
 
 [if_button,xplamp:attack] @xplamp_select(attack);
@@ -115,10 +124,21 @@ if (map_members = ^false & ~stat_members($stat) = ^true) {
     return;
 }
 
+if (%xplamp_blessed = ^true & stat_base($stat) < ^tgbr_lamp_level) {
+    mes("The blessed lamp will only answer for a skill you are already level <tostring(^tgbr_lamp_level)> in.");
+    return;
+}
 if_close;
 ~xplamp_consume;
 %xplamp = ^xplamp_none;
 
+if (%xplamp_blessed = ^true) {
+    %xplamp_blessed = ^false;
+    stat_advance($stat, ^tgbr_lamp_xp);
+    sound_synth(found_gem, 1, 0);
+    ~mesbox("The lamp goes out.|You have been awarded 5,000 <enum(stat, string, stat_names, $stat)> experience!");
+    return;
+}
 def_int $base_level = stat_base($stat);
 stat_advance($stat, multiply($base_level, 100)); // stat level * 10
 sound_synth(found_gem, 1, 0);
@@ -131,6 +151,10 @@ sound_synth(found_gem, 1, 0);
 // and rubbing the RFD one loses the genie lamp instead; the two grant identical experience, so the
 // only visible difference is which icon leaves the inventory.
 [proc,xplamp_consume]
+if (inv_total(inv, tgbr_blessed_lamp) > 0) {
+    inv_del(inv, tgbr_blessed_lamp, 1);
+    return;
+}
 if (inv_total(inv, hundred_rewardlamp) > 0) {
     inv_del(inv, hundred_rewardlamp, 1);
     return;

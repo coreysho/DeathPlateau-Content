@@ -1,0 +1,79 @@
+// The Great Brain Robbery's quest journal.
+
+[if_button,questlist:tgbr]
+def_string $text;
+switch_int (%tgbr) {
+    case ^tgbr_not_started :
+        $text = "@dbl@I can start this quest by speaking to @dre@Brother Tranquility@dbl@ on|";
+        $text = append($text, "@dre@Mos Le'Harmless@dbl@.||");
+        $text = append($text, "@dbl@To complete this quest I will need:|");
+        $text = append($text, "@dre@Level <tostring(^tgbr_req_crafting)> Crafting|");
+        $text = append($text, "@dre@Level <tostring(^tgbr_req_construction)> Construction|");
+        $text = append($text, "@dre@Level <tostring(^tgbr_req_prayer)> Prayer|");
+        $text = append($text, "@dre@Cabin Fever|");
+        $text = append($text, "@dre@Creature of Fenkenstrain");
+    case ^tgbr_started :
+        $text = "@str@Brother Tranquility is the last monk of Harmony Island who is still|";
+        $text = append($text, "@str@himself. Something is wearing the others.||");
+        $text = append($text, "@dbl@North of the windmill there is a @dre@statue@dbl@ I can pull aside. The|");
+        $text = append($text, "@dbl@tunnel under it is flooded, so I will need @dre@Murphy's fishbowl|");
+        $text = append($text, "@dre@helmet and diving apparatus@dbl@, a @dre@hammer@dbl@ and some @dre@nails@dbl@ for the|");
+        $text = append($text, "@dbl@broken steps at the far end, and then I should look through the|");
+        $text = append($text, "@dre@peephole@dbl@ in the monastery wall.");
+    case ^tgbr_spied :
+        $text = "@str@I pulled the statue aside, crossed the flooded tunnel and looked|";
+        $text = append($text, "@str@through the peephole. A surgeon called @dre@Mi-Gor@str@ is in there|");
+        $text = append($text, "@str@going through the monks one at a time.||");
+        $text = append($text, "@dbl@I should tell @dre@Brother Tranquility@dbl@ what I saw.");
+    case ^tgbr_reported :
+        $text = "@str@Mi-Gor has taken the brains out of every monk on the island.||";
+        $text = append($text, "@dbl@The air there is poisonous. There is a @dre@prayer book@dbl@ against poison|");
+        $text = append($text, "@dbl@in a bookcase in the south-west corner of the @dre@monastery near|");
+        $text = append($text, "@dre@Edgeville@dbl@. I need to read it and wear a @dre@holy symbol@dbl@.");
+    case ^tgbr_book :
+        $text = "@str@I have the prayer book and I have read it.||";
+        $text = append($text, "@dbl@Now I should go back to the island, wear a @dre@holy symbol@dbl@, and|");
+        $text = append($text, "@dbl@@dre@recite the prayer@dbl@ where the air is worst.");
+    case ^tgbr_prayed :
+        $text = "@str@The prayer holds the gas off for a while.||";
+        $text = append($text, "@dbl@Putting the monks back wants a surgeon. @dre@Dr Fenkenstrain@dbl@ is in|");
+        $text = append($text, "@dbl@the cell at the top of his castle, north-east of @dre@Canifis@dbl@.");
+    case ^tgbr_doctor :
+        $text = "@str@Dr Fenkenstrain will come, but he will not teleport and he will|";
+        $text = append($text, "@str@not sail. He will have to be posted.||");
+        $text = append($text, "@dbl@@dre@Rufus@dbl@ the Canifis butcher sends crates. He will only talk to me|");
+        $text = append($text, "@dbl@if I am wearing the @dre@Ring of Charos@dbl@. Then I will need a crate with|");
+        $text = append($text, "@dbl@a @dre@false bottom@dbl@ and @dre@ten wooden cats@dbl@ in the top of it - a plank|");
+        $text = append($text, "@dbl@and a piece of fur each, at a @dre@workbench@dbl@ in my house.");
+    case ^tgbr_shipped :
+        $text = "@str@The crate has gone, with the doctor in the bottom of it.||";
+        $text = append($text, "@dbl@He is in the @dre@windmill cellar@dbl@ on Harmony Island. I should ask him|");
+        $text = append($text, "@dbl@what he needs.");
+    case ^tgbr_kit_listed :
+        $text = "@str@Dr Fenkenstrain wants brain tongs, a cranial clamp, three bell|";
+        $text = append($text, "@str@jars, thirty skull staples and my own hammer. They are all inside|");
+        $text = append($text, "@str@the monastery, and the gate is shut.||");
+        $text = append($text, "@dbl@There is a @dre@keg of powder@dbl@ and a @dre@tinderbox@dbl@ on the beached ship|");
+        $text = append($text, "@dbl@north of the mill, and a @dre@fuse@dbl@ in its locker.");
+    case ^tgbr_blown :
+        $text = "@str@The monastery gate is off its wall.||";
+        $text = append($text, "@dbl@Four of the @dre@Sorebones@dbl@ inside are carrying what the doctor asked|");
+        $text = append($text, "@dbl@for. I should take all of it down to the cellar.");
+    case ^tgbr_transplants :
+        $text = "@str@Every monk on the island has their own brain back.||";
+        $text = append($text, "@dbl@@dre@Mi-Gor@dbl@ is still in the monastery. I should go in by the front|");
+        $text = append($text, "@dbl@and @dre@confront@dbl@ him - and take everything I have.");
+    case ^tgbr_confronted :
+        $text = "@str@Mi-Gor whistled up something called @dre@Barrelchest@str@.||";
+        $text = append($text, "@dbl@Every time it lands a hit my prayers go out. I should kill it.");
+    case ^tgbr_anchor :
+        $text = "@str@Barrelchest is dead and I have its anchor.||";
+        $text = append($text, "@dbl@I should tell @dre@Brother Tranquility@dbl@ it is over.");
+    case default :
+        $text = "@str@I crossed the flooded tunnel under Harmony Island, posted a mad|";
+        $text = append($text, "@str@doctor to it in a crate of cat toys, blew the monastery open with|");
+        $text = append($text, "@str@a keg of powder and killed the thing Mi-Gor kept in it.||");
+        $text = append($text, "@dbl@Every brother of Harmony has their own brain back.||");
+        $text = append($text, "@red@QUEST COMPLETE!");
+}
+~quest_journal("The Great Brain Robbery", $text);

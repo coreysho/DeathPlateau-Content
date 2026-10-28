@@ -1,0 +1,150 @@
+// HARMONY ISLAND, and the Underwater Tunnel under it. The island is m59_44 and the tunnel and the
+// windmill cellar are m59_144, both imported from the rev 474 cache
+// (configs/harmony_map.loc says how). Nothing here existed in this build before: the quest that
+// opens the island is The Great Brain Robbery, November 2006, and this cache is September 2006.
+//
+// This file is the ISLAND - the things that are there whether the quest is running or not: its
+// ladders, its stairs, its doors, the gas in its air, and the monks. The quest itself is
+// quests/quest_tgbr.
+//
+// NOT BUILT, and said here rather than left as a dead click: the mill works in Old School (a hopper,
+// a lever, millstones and a flour bin on three floors) and it does nothing here. general_use/
+// windmills.rs2 drives the mainland mills off loc names of its own and the imported Harmony pieces
+// are different records; wiring them is a job about flour, not about this quest. The wheat and
+// cabbage fields and the allotment and herb patches are likewise scenery.
+
+// =========================================================================== the gas
+// The island's air is what the slugs breathe out. Outside - anywhere on m59_44 that is not inside
+// the mill - it takes a point or two off you every few ticks unless you are either wearing Murphy's
+// diving pair from Recipe for Disaster (the fishbowl helmet AND the diving apparatus; one without
+// the other is a daft hat) or have recited the prayer book with a holy symbol on.
+//
+// A softtimer rather than a [zone] trigger, started by the mapzone and also by the quest's own
+// teleport: a sim player fires no zone triggers at all, so a mechanic that only a mapzone can start
+// is a mechanic no sim can see.
+[mapzone,0_59_44] ~harmony_breathe_start;
+[mapzoneexit,0_59_44] ~harmony_breathe_start;
+
+[proc,harmony_breathe_start]
+if (~harmony_outdoors(coord) = true) {
+    softtimer(harmony_gas, ^tgbr_gas_interval);
+    return;
+}
+clearsofttimer(harmony_gas);
+
+[softtimer,harmony_gas]
+if (~harmony_outdoors(coord) = false) {
+    clearsofttimer(harmony_gas);
+    return;
+}
+if (~harmony_can_breathe = true) {
+    return;
+}
+mes("The air here is thick and sweet and absolutely foul.");
+~damage_self(^tgbr_gas_damage);
+
+// Above ground on the island, and not inside the windmill. The mill is the one building on the
+// island whose door shuts.
+[proc,harmony_outdoors](coord $c)(boolean)
+if (inzone(0_59_44_0_0, 0_59_44_63_63, $c) = false) {
+    return(false);
+}
+if (inzone(0_59_44_9_6, 0_59_44_12_11, $c) = true) {
+    return(false);
+}
+return(true);
+
+[proc,harmony_can_breathe]()(boolean)
+if (~hundred_pirate_wearing = true) {
+    return(true);
+}
+if (%tgbr_prayer_until > map_clock) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the windmill
+// Three floors and a cellar. 474 puts the cellar on m59_144's level 0, a long way from the tunnel on
+// the same square.
+[oploc1,harmony_mill_ladder_g] ~harmony_climb(1_59_44_8_10, "You climb up the ladder.");
+[oploc2,harmony_mill_ladder_1] ~harmony_climb(2_59_44_8_10, "You climb up the ladder.");
+[oploc3,harmony_mill_ladder_1] ~harmony_climb(0_59_44_8_10, "You climb down the ladder.");
+[oploc1,harmony_mill_ladder_2] ~harmony_climb(1_59_44_8_10, "You climb down the ladder.");
+
+[oploc1,harmony_cellar_ladder_down] ~harmony_climb(^tgbr_cellar_ladder_up, "You climb down into the cellar.");
+// The mill is a ring round its own machinery; this is one of its 27 walkable tiles.
+[oploc1,harmony_cellar_ladder_up] ~harmony_climb(^tgbr_cellar_ladder_down, "You climb up out of the cellar.");
+
+// harmony_mill_ladder_1 is the only one of the three with more than one op: 474 gives it Climb,
+// Climb-up and Climb-down, and Climb on its own would be ambiguous on a middle floor. Op 1 is
+// answered as "up", which is what the bare Climb means everywhere else in this build.
+[oploc1,harmony_mill_ladder_1] ~harmony_climb(2_59_44_8_10, "You climb up the ladder.");
+
+// =========================================================================== the monastery
+[oploc1,harmony_monastery_ladder_up] ~harmony_climb(1_59_44_42_36, "You climb up the ladder.");
+[oploc1,harmony_monastery_ladder_down] ~harmony_climb(0_59_44_42_36, "You climb down the ladder.");
+
+// 22164, a Climb-down inside the monastery, has nowhere to go: 474 puts no room under it on either
+// of the island's two squares. Rather than drop the player through the floor it says so.
+[oploc1,harmony_monastery_trapdoor]
+mes("The shaft below is full of seawater.");
+
+// =========================================================================== the beached ship
+// EVERY LEVEL HERE IS ONE LOWER THAN THE CACHE'S. The ship's level 1 is flagged LINK_BELOW, and
+// GameMap.loadLocations reads level 1's flag as the answer for every level at that tile, so the
+// whole ship came down a plane: the lower deck and this ladder are on level 0, the deck above is
+// level 1, the top deck is level 2. The landing tiles are standable ones off
+// tools/sim/tgbrspots.ts rather than the tile directly above the ladder, which the deck's own
+// barrels and rails sit on.
+[oploc1,harmony_ship_ladder_1] ~harmony_climb(^tgbr_ship_deck_1, "You climb up the ladder.");
+[oploc1,harmony_ship_ladder_2] ~harmony_climb(^tgbr_ship_ladder, "You climb down the ladder.");
+[oploc1,harmony_ship_stairs_up_a] ~harmony_climb(^tgbr_ship_deck_2, "You climb the stairs.");
+[oploc1,harmony_ship_stairs_up_b] ~harmony_climb(^tgbr_ship_deck_2, "You climb the stairs.");
+[oploc1,harmony_ship_stairs_up_c] ~harmony_climb(^tgbr_ship_deck_2, "You climb the stairs.");
+[oploc1,harmony_ship_stairs_dn_a] ~harmony_climb(^tgbr_ship_upper, "You climb down the stairs.");
+[oploc1,harmony_ship_stairs_dn_b] ~harmony_climb(^tgbr_ship_upper, "You climb down the stairs.");
+[oploc1,harmony_ship_stairs_dn_c] ~harmony_climb(^tgbr_ship_upper, "You climb down the stairs.");
+
+// The monastery's own peephole, in a wall nothing can reach: 474 puts it at 3817,2844, inside the
+// courtyard, and the quest's one is in the gate instead (quests/quest_tgbr). Answered rather than
+// left as a dead op.
+[oploc1,loc474_22097]
+mes("You can see a stone corridor through the hole, and nothing moving in it.");
+
+[proc,harmony_climb](coord $to, string $mes)
+p_arrivedelay;
+anim(human_reachforladder, 0);
+p_delay(1);
+p_telejump($to);
+mes($mes);
+~harmony_breathe_start;
+
+// =========================================================================== the doors
+// Nothing here: the three doors on the island carry category=door_closed and a next_loc_stage
+// param (configs/harmony_map.loc), so doors/scripts/doors.rs2 answers all of them off the shared
+// category, and the open halves are written beside them in configs/harmony_quest.loc.
+
+// =========================================================================== the brothers
+// Four of them, each a shell that is a zombie monk until the transplants are made and a monk of
+// Harmony afterwards (quests/quest_tgbr/configs/tgbr.npc).
+[opnpc1,harmony_monk_shell_1] ~harmony_monk_talk;
+[opnpc1,harmony_monk_shell_2] ~harmony_monk_talk;
+[opnpc1,harmony_monk_shell_3] ~harmony_monk_talk;
+[opnpc1,harmony_monk_shell_4] ~harmony_monk_talk;
+
+[proc,harmony_monk_talk]
+if (%tgbr_restored = ^tgbr_on) {
+    switch_int (random(3)) {
+        case 0 : ~chatnpc("<p,happy>I have been singing the same four hours over and over for a year and I did not know it. Thank you.");
+        case 1 : ~chatnpc("<p,happy>Brother Tranquility says you went into the water for us. In the water!");
+        case default : ~chatnpc("<p,neutral>Something was in my head. I could hear myself agreeing with it.");
+    }
+    return;
+}
+// Before the surgery they answer, after a fashion. OSRS gives them one line each and none of it is
+// theirs.
+switch_int (random(3)) {
+    case 0 : ~chatnpc("<p,neutral>The harvest. The harvest. The harvest must be brought in.");
+    case 1 : ~chatnpc("<p,neutral>All is well. All is well. All is well here.");
+    case default : ~chatnpc("<p,neutral>Mother says the fields are not finished.");
+}

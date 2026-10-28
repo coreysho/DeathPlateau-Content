@@ -1,0 +1,186 @@
+// The Great Brain Robbery (20 November 2006) - Brother Tranquility, the stage ladder and the
+// reward. configs/quest_tgbr.constant is the design document: where every stage value and every
+// multiloc table came from.
+//
+// Where the rest of it lives:
+//   tgbr_tunnel.rs2       the statue, the flooded tunnel, the broken stairs, the peephole, the gas
+//   tgbr_doctor.rs2       Dr Fenkenstrain in his cell, Rufus, the wooden cats, the crate, the post
+//   tgbr_monastery.rs2    the beached ship, the keg and the fuse, the blast, the Sorebones' kit
+//   tgbr_barrelchest.rs2  Mi-Gor, the fight and the anchor
+//   tgbr_journal.rs2      the quest journal
+//   ../../areas/area_harmony/scripts/harmony.rs2   the island itself: its ladders, doors and monks
+
+// =========================================================================== Brother Tranquility
+// One record stands in two places - beside Bill Teach's landing on Mos Le'Harmless and inside the
+// Harmony windmill - so which one the player is talking to is a question about where they are
+// standing, not about which npc it is.
+[proc,tgbr_on_harmony]()(boolean)
+return(inzone(0_59_44_0_0, 3_59_44_63_63, coord));
+
+[opnpc1,tgbr_tranquility_shell]
+if (~tgbr_on_harmony = true) {
+    @tgbr_tranquility_island;
+}
+@tgbr_tranquility_harmless;
+
+[apnpc1,tgbr_tranquility_shell]
+if (~tgbr_on_harmony = true) {
+    @tgbr_tranquility_island;
+}
+@tgbr_tranquility_harmless;
+
+// Transport: he teleports the player to the island and back. OSRS gives him the option on both
+// spawns, and it is the only way on or off Harmony Island.
+[opnpc3,tgbr_tranquility_shell]
+if (%tgbr = ^tgbr_not_started) {
+    ~chatnpc("<p,neutral>There is nothing on that island for you yet, friend.");
+    return;
+}
+if (~tgbr_on_harmony = true) {
+    @tgbr_tranquility_ferry(^tgbr_harmless_arrive, "Mos Le'Harmless");
+}
+@tgbr_tranquility_ferry(^tgbr_mill_inside, "Harmony Island");
+
+[label,tgbr_tranquility_ferry](coord $to, string $where)
+~chatplayer("<p,quiz>Could you take me to <$where>?");
+~chatnpc("<p,neutral>Hold still. This is quicker than the boat and a good deal drier.");
+~tgbr_teleport($to);
+
+// The ordinary spellbook teleport, which already handles closing the dialogue, the animation that
+// holds its last frame and a landing tile that is not free (~p_telejump_safe).
+[proc,tgbr_teleport](coord $to)
+~player_teleport_normal($to);
+~harmony_breathe_start;
+
+// --------------------------------------------------------------------------- on Mos Le'Harmless
+[label,tgbr_tranquility_harmless]
+switch_int (%tgbr) {
+    case ^tgbr_not_started : @tgbr_start;
+    case ^tgbr_spied :
+        ~chatplayer("<p,shock>Your monks are not your monks. There is a man in there called Mi-Gor, and the things wearing their habits are not alive.");
+        ~chatnpc("<p,sad>Mi-Gor. I had hoped he had drowned with the rest of them.");
+        ~chatnpc("<p,neutral>The air on that island is thick with something the slugs breathe out. You held your breath; you will not manage it twice.");
+        ~chatnpc("<p,neutral>There is a book at the monastery near Edgeville - a prayer against poison. Find it, read it, and bring a holy symbol.");
+        %tgbr = ^tgbr_reported;
+        ~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+    case ^tgbr_reported :
+        ~chatnpc("<p,neutral>The monastery north of Edgeville. A bookcase in the south-west corner, and wear a holy symbol when you recite it.");
+    case ^tgbr_book :
+        ~chatnpc("<p,happy>You have it. Good. Recite it where the air is worst - inside the mill will do - and the gas will leave you alone for a while.");
+    case default :
+        ~chatnpc("<p,neutral>Take me back to the island when you are ready, friend. There is nothing more to do here.");
+}
+
+[label,tgbr_start]
+~chatplayer("<p,quiz>You seem a long way from a monastery.");
+~chatnpc("<p,sad>I am. I am Brother Tranquility, and I am the only one of us left off the island.");
+switch_int (~p_choice2("What island?", 1, "I am sorry to hear it.", 2)) {
+    case 2 :
+        ~chatplayer("<p,sad>I am sorry to hear it.");
+        ~chatnpc("<p,sad>So am I.");
+        return;
+    case 1 :
+        ~chatplayer("<p,quiz>What island?");
+}
+~chatnpc("<p,neutral>Harmony. A day south of here, and a quiet place until the sea came up the beach and would not go back down.");
+~chatnpc("<p,sad>My brothers walk about and tend the fields and sing the hours, and not one of them is in there any more. Something else is wearing them.");
+switch_int (~p_choice2("I will come and look.", 1, "That sounds like somebody else's problem.", 2)) {
+    case 2 :
+        ~chatplayer("<p,neutral>That sounds like somebody else's problem.");
+        ~chatnpc("<p,sad>It was mine first.");
+        return;
+    case 1 :
+        ~chatplayer("<p,neutral>I will come and look.");
+}
+if (stat_base(crafting) < ^tgbr_req_crafting) {
+    ~chatnpc("<p,neutral>You will be building a thing or two before this is over. Come back when you can craft a little better - level <tostring(^tgbr_req_crafting)> will do.");
+    return;
+}
+if (stat_base(construction) < ^tgbr_req_construction) {
+    ~chatnpc("<p,neutral>And you will be building something bigger than a stool. Level <tostring(^tgbr_req_construction)> Construction, friend.");
+    return;
+}
+if (stat_base(prayer) < ^tgbr_req_prayer) {
+    ~chatnpc("<p,neutral>There is praying in this, and a great deal of it. Level <tostring(^tgbr_req_prayer)> Prayer before you set foot there.");
+    return;
+}
+if (%fever_quest < ^fever_complete) {
+    ~chatnpc("<p,neutral>You have not sailed with Bill Teach yet. Do that first; the man knows these waters and you do not.");
+    return;
+}
+if (%fenk_quest < ^fenk_complete) {
+    ~chatnpc("<p,neutral>One more thing. There is a doctor in Morytania who stitches the dead back together. You will need him, and he will not talk to a stranger.");
+    return;
+}
+~chatnpc("<p,happy>Then hold still. I can put us both on the beach, and you can see for yourself.");
+%tgbr = ^tgbr_started;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
+~tgbr_teleport(^tgbr_mill_inside);
+~mesbox("You are standing in a windmill. Outside it the air is a faint, shifting green.");
+
+// --------------------------------------------------------------------------- on Harmony Island
+[label,tgbr_tranquility_island]
+switch_int (%tgbr) {
+    case ^tgbr_not_started :
+        ~chatnpc("<p,confused>How did you get here?");
+    case ^tgbr_started :
+        ~chatnpc("<p,neutral>Do not go out of that door breathing. North of here there is a statue that is not as heavy as it looks; pull it, and go down.");
+        ~chatnpc("<p,neutral>The tunnel under the island comes up behind the monastery wall. There is a hole in that wall. Look through it and tell me what you see.");
+    case ^tgbr_spied, ^tgbr_reported, ^tgbr_book :
+        ~chatnpc("<p,neutral>Take me back to Mos Le'Harmless, friend. There is nothing you can do here until you have that book.");
+    case ^tgbr_prayed :
+        ~chatnpc("<p,neutral>The gas will leave you alone now. What it will not do is put my brothers back. For that we need somebody who has done it before.");
+        ~chatnpc("<p,quiz>You said there was a doctor.");
+    case ^tgbr_doctor :
+        ~chatnpc("<p,neutral>He will not teleport? Then he will have to be posted. Ask in Canifis - the butcher sends crates about.");
+    case ^tgbr_shipped :
+        ~chatnpc("<p,happy>He is down in the cellar already, swearing at the light. Go and ask him what he needs.");
+    case ^tgbr_kit_listed :
+        ~chatnpc("<p,neutral>Then it is in the monastery, and so is the door we cannot open. There is powder on the beached ship, north of here.");
+    case ^tgbr_blown :
+        ~chatnpc("<p,neutral>Four of the things in there are carrying what the doctor asked for. Bring him all of it.");
+    case ^tgbr_transplants : @tgbr_tranquility_before_fight;
+    case ^tgbr_confronted :
+        ~chatnpc("<p,shock>Then it is out, and it is between you and him. Mind the anchor.");
+    case ^tgbr_anchor : @tgbr_finish;
+    case default :
+        ~chatnpc("<p,happy>They are all themselves again, and half of them have not stopped talking since. Thank you, friend.");
+}
+
+[label,tgbr_tranquility_before_fight]
+~chatnpc("<p,happy>They are themselves. Every one of them.");
+~chatplayer("<p,quiz>And Mi-Gor?");
+~chatnpc("<p,sad>Still in there. He has nothing left to hide behind now, which makes him more dangerous rather than less.");
+~chatnpc("<p,neutral>Go in by the front and confront him. Take everything you have, and keep the helmet on - the air in there is no better.");
+
+// =========================================================================== the reward
+// OSRS wiki: 2 quest points, 6,000 Prayer, 3,000 Crafting, 2,000 Construction, a blessed lamp, the
+// barrelchest anchor, and the prayer book is kept.
+//
+// THE ANCHOR IS THIS QUEST'S. It was hung on Rum Deal's completion when Rum Deal was built, because
+// this quest did not exist in the cache and the item did; quest_deal.rs2 said so in a comment and
+// quest_deal/configs/barrelchest_anchor.obj argued the case at length. Both have been corrected and
+// Rum Deal no longer hands it over. The anchor itself comes off Barrelchest in
+// tgbr_barrelchest.rs2 - this is the lamp and the experience.
+[label,tgbr_finish]
+~chatplayer("<p,happy>It is done. Mi-Gor is not coming back.");
+~chatnpc("<p,happy>No. And neither is whatever he was feeding.");
+~chatnpc("<p,neutral>Keep the book. You will meet worse air than ours. And take this - it was the monastery's, and the monastery would rather you had it.");
+if_close;
+%tgbr = ^tgbr_complete;
+stat_advance(prayer, ^tgbr_xp_prayer);
+stat_advance(crafting, ^tgbr_xp_crafting);
+stat_advance(construction, ^tgbr_xp_construction);
+~tgbr_reward_obj(tgbr_blessed_lamp, "blessed lamp");
+session_log(^log_adventure, "Quest complete: The Great Brain Robbery");
+~send_quest_complete(questlist:tgbr, barrelchest_anchor, 170, ^tgbr_questpoints, "You have completed\\nThe Great Brain Robbery!", "2 Quest Points|6,000 Prayer XP|3,000 Crafting XP|2,000 Construction XP|A blessed lamp|The barrelchest anchor");
+
+// A reward must not be able to vanish. The player finishes this one standing in a windmill with a
+// pack full of surgical instruments, so a full inventory is the normal case rather than the odd one.
+[proc,tgbr_reward_obj](namedobj $obj, string $what)
+if (inv_freespace(inv) > 0) {
+    inv_add(inv, $obj, 1);
+    return;
+}
+inv_add(bank, $obj, 1);
+mes("Your pack is full, so the <$what> has been sent to your bank.");

@@ -1,0 +1,97 @@
+// The Great Brain Robbery - see tgbr.varp. The meanings and the widths are 474's own (varps 981
+// and 982); quest_tgbr.constant lists the cache tables they were read out of.
+
+// The statue north of the windmill: 0 loose and pullable, 1 standing (never used by this build, and
+// kept because 474 has it), 2 shoved aside with the hole open. 474's varbit 3401.
+[tgbr_statue]
+basevar=tgbr_bits
+startbit=0
+endbit=1
+
+// The stairs at the far end of the flooded tunnel: 0 broken, 1 mended with a hammer and nails.
+// 474's varbit 3385.
+[tgbr_stairs]
+basevar=tgbr_bits
+startbit=2
+endbit=2
+
+// The monastery's front gate: 0 whole, 5 a collapsed wall with the doorway standing in the gap.
+// Three bits, because 474's own table runs 0 to 5. 474's varbit 3393.
+[tgbr_gate]
+basevar=tgbr_bits
+startbit=3
+endbit=5
+
+// The two tiles of fuse trailing west from the keg, 0 none, 1 laid, 2 burning. 474 gives each tile
+// its own varbit (3394 and 3395); one is enough here, because nothing lays half a fuse.
+[tgbr_fuse]
+basevar=tgbr_bits
+startbit=6
+endbit=7
+
+// The peephole in the monastery's west wall: 0 a peephole, 1 rubble, once the blast has gone off.
+// 474's varbit 3404.
+[tgbr_peephole]
+basevar=tgbr_bits
+startbit=8
+endbit=9
+
+// The crate at Dr Fenkenstrain's castle: 0 nothing, 1 the space to build in, 2 built, 3 with its
+// false bottom, 4 full of cats. 474's varbit 3390.
+[tgbr_crate]
+basevar=tgbr_bits
+startbit=10
+endbit=12
+
+// The monks of Harmony, and Brother Tranquility with them: 0 wearing a sea slug, 1 themselves
+// again. 474's varbit 3407.
+[tgbr_restored]
+basevar=tgbr_bits
+startbit=13
+endbit=13
+
+// ---------------------------------------------------------------------------- tgbr_kit
+// Which pieces of the surgery kit Dr Fenkenstrain already has, so that handing him the tongs twice
+// is answered with what is still missing rather than with thanks.
+[tgbr_kit_clamp]
+basevar=tgbr_kit
+startbit=0
+endbit=0
+
+[tgbr_kit_tongs]
+basevar=tgbr_kit
+startbit=1
+endbit=1
+
+[tgbr_kit_jars]
+basevar=tgbr_kit
+startbit=2
+endbit=2
+
+[tgbr_kit_staples]
+basevar=tgbr_kit
+startbit=3
+endbit=3
+
+// Which of the four the Sorebones have already given up, so the fourth kill cannot hand out a
+// fifth clamp. The wiki's own advice - "pick the drops up after each kill to avoid duplicates" -
+// is what this replaces: here the monastery simply never drops the same piece twice.
+[tgbr_drop_clamp]
+basevar=tgbr_kit
+startbit=4
+endbit=4
+
+[tgbr_drop_tongs]
+basevar=tgbr_kit
+startbit=5
+endbit=5
+
+[tgbr_drop_jars]
+basevar=tgbr_kit
+startbit=6
+endbit=6
+
+[tgbr_drop_staples]
+basevar=tgbr_kit
+startbit=7
+endbit=7

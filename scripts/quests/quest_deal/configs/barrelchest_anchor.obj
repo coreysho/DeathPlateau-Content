@@ -1,12 +1,14 @@
 // THE BARRELCHEST ANCHOR, imported from Old School (obj 10887) by tools/models/importosrs.py -
 // inventory model, manwear and womanwear, all three re-encoded into the 317 format.
 //
-// WHOSE REWARD IT REALLY IS. In Old School the anchor comes from The Great Brain Robbery, not from
-// Rum Deal - and The Great Brain Robbery is November 2006, after this cache: there is no
-// Barrelchest npc, no Harmony Island and no quest content for it anywhere in the 377 cache, which
-// was checked rather than assumed. Rum Deal is its neighbour in that story and is built here, so
-// the anchor is hung on Rum Deal's completion. That is a deliberate deviation and it is recorded
-// here so nobody later reads it as an accident.
+// WHOSE REWARD IT IS. The Great Brain Robbery's, and it is that quest's again. This file used to
+// argue the other way, and the argument was sound at the time: the quest is November 2006 and this
+// cache is September 2006, so there was no Barrelchest, no Harmony Island and no content for any of
+// it, while Rum Deal - its neighbour in the same story - was built and could hand the item over.
+// All of that was built on 2026-10-27 out of the rev 474 cache (quests/quest_tgbr, and
+// areas/area_harmony for the island), Barrelchest drops the anchor where it belongs, and Rum Deal
+// gives what Rum Deal gives. The old reasoning is left here rather than deleted because a reader
+// who finds the item in this directory should know why it is filed under the wrong quest.
 //
 // THE NUMBERS ARE THE WIKI'S, not a guess: stab -2, slash +10, crush +92, strength +100, no
 // defensive bonus at all, 6-tick attack speed, two-handed, 30kg, and it wants 60 Attack and 40

@@ -1,0 +1,67 @@
+// The Great Brain Robbery's npc shells. The cast itself is
+// areas/area_harmony/configs/harmony_npcs.npc, imported from the rev 474 cache; these are the
+// records that go ON the map, so that what is standing there depends on the quest.
+//
+// THE TRIGGER GOES ON THE SHELL, not on the npc it resolves to:
+// Engine-TS/src/network/game/client/handler/OpNpcHandler.ts checks the op against the resolved
+// child and then hands the trigger the npc that is on the map. Eagles' Peak wires Nickolaus the
+// same way.
+//
+// A value the table does not list means NOBODY IS THERE, which is how Dr Fenkenstrain is absent
+// from the windmill cellar until his crate arrives and how Mi-Gor is not in the monastery before
+// the gate comes down. 474 does it the same way (npc 5606 lists 70 to 130 and nothing below).
+
+// ---------------------------------------------------------------------------- Brother Tranquility
+// Two spawns of this: one on Mos Le'Harmless near Bill Teach's landing, one inside the Harmony
+// windmill. He swaps to his second form when the monks get their brains back - 474's npcs 5667 and
+// 5668 do that on the quest varp at 100; here it hangs off the same varbit as the monks, because
+// the two things are one event.
+[tgbr_tranquility_shell]
+multivar=tgbr_restored
+multinpc=0,tgbr_tranquility
+multinpc=1,tgbr_tranquility_after
+
+// ---------------------------------------------------------------------------- Dr Fenkenstrain
+// In the windmill cellar from the moment the crate is posted, and never before. 474's own
+// threshold, read off npc 5606's table: 70 and up.
+[tgbr_doctor_shell]
+multivar=tgbr
+multinpc=70,fenk_fenkenstrain_model
+multinpc=80,fenk_fenkenstrain_model
+multinpc=90,fenk_fenkenstrain_model
+multinpc=100,fenk_fenkenstrain_model
+multinpc=110,fenk_fenkenstrain_model
+multinpc=120,fenk_fenkenstrain_model
+multinpc=130,fenk_fenkenstrain_model
+
+// ---------------------------------------------------------------------------- Mi-Gor
+// He is in the corridor the peephole looks into. You can see him through it from the start, but he
+// is only standing there to be confronted once the gate is down - and he is gone the moment
+// Barrelchest is summoned, which is the point at which the quest stage leaves 100.
+[tgbr_migor_shell]
+multivar=tgbr
+multinpc=90,tgbr_migor
+multinpc=100,tgbr_migor
+
+// ---------------------------------------------------------------------------- the monks of Harmony
+// Four of them, each a zombie monk until the transplants are made. 474's varbit 3407 and its npcs
+// 5669-5672, which have exactly these two states.
+[harmony_monk_shell_1]
+multivar=tgbr_restored
+multinpc=0,harmony_zombie_monk
+multinpc=1,harmony_monk
+
+[harmony_monk_shell_2]
+multivar=tgbr_restored
+multinpc=0,harmony_zombie_monk_2
+multinpc=1,harmony_monk_2
+
+[harmony_monk_shell_3]
+multivar=tgbr_restored
+multinpc=0,harmony_zombie_monk_3
+multinpc=1,harmony_monk_3
+
+[harmony_monk_shell_4]
+multivar=tgbr_restored
+multinpc=0,harmony_zombie_monk_4
+multinpc=1,harmony_monk_4

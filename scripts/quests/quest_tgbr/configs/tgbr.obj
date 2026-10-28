@@ -1,0 +1,198 @@
+// The Great Brain Robbery (20 November 2006). Items imported from the rev 474 cache (474 obj
+// 10884-10904) by tools/models/import474.py; models copied byte-for-byte, since 474 writes the
+// same model format the 377 client reads. The examine strings and the weights are the OSRS
+// cache's own records for the same ids - the 474 obj records carry no examine opcode.
+//
+// NOT IMPORTED, because the 377 cache already has them: the fishbowl helmet and the diving
+// apparatus are obj 7534 and 7535 here too (hundred_pirate_diving_helmet and
+// hundred_pirate_diving_backpack, Recipe for Disaster's Freeing Pirate Pete, which Murphy hands
+// out at Port Khazard). The import appended a second pair before that was noticed; the configs
+// were deleted again and the two obj.pack ids they took, 11513 and 11514, are left as a gap.
+// This quest wears Murphy's pair, so there is one set of diving gear in the game.
+//
+// The barrelchest anchor itself is quests/quest_deal/configs/barrelchest_anchor.obj, imported from
+// Old School when Rum Deal was built. It was hung on Rum Deal's completion then, because this
+// quest did not exist; it is this quest's reward now, and that file says so.
+
+// THE PRAYER BOOK, in two states. 474 obj 10886 carries no ops at all and 10890 carries Read and
+// Recite-prayer, which leaves no way to read the first one, so the Read on the unread copy is
+// added here by hand: the wiki's order is take it off the shelf, read it, and only then can it be
+// recited. Both records are the cache's art.
+[tgbr_prayer_book_unread]
+name=Prayer book
+desc=Used to cure poison through prayer.
+model=obj_tgbr_prayer_book
+recol1s=13504
+recol1d=8354
+iop1=Read
+weight=100g
+members=yes
+tradeable=no
+
+[tgbr_prayer_book]
+name=Prayer book
+desc=Used to cure poison through prayer.
+model=obj_tgbr_prayer_book_read
+2dzoom=854
+2dxan=277
+2dyan=1936
+iop1=Read
+iop2=Recite-prayer
+weight=50g
+members=yes
+tradeable=no
+
+// THE BLESSED LAMP. Old School's grants 5,000 experience in one skill the player already has
+// level 30 in, which is not what the genie lamp does (that one scales with the skill's level), so
+// general/scripts/xplamp/xplamp.rs2 was taught the difference rather than this being pointed at
+// the existing lamp.
+[tgbr_blessed_lamp]
+name=Blessed lamp
+desc=This will answer my prayers.
+model=obj_tgbr_blessed_lamp
+2dxof=2
+2dyof=-2
+2dzoom=840
+2dxan=28
+2dyan=228
+iop1=Pray-over
+iop5=Destroy
+weight=100g
+members=yes
+tradeable=no
+
+// ------------------------------------------------------------------ the crate at the castle
+[tgbr_crate_part]
+name=Crate part
+desc=Part of a crate.
+model=obj_tgbr_crate_part
+2dzoom=2256
+2dxan=270
+2dyan=1967
+cost=0
+weight=2kg
+members=yes
+stackable=yes
+tradeable=no
+
+[tgbr_wolf_whistle]
+name=Wolf whistle
+desc=A silver whistle.
+model=obj_tgbr_wolf_whistle
+2dxof=4
+2dyof=8
+2dzoom=300
+2dxan=290
+2dyan=1438
+iop1=Blow
+weight=1g
+members=yes
+tradeable=no
+
+[tgbr_shipping_order]
+name=Shipping order
+desc=A shipping order list.
+model=obj_tgbr_shipping_order
+2dxof=1
+2dyof=4
+2dzoom=465
+2dxan=318
+2dyan=166
+weight=1g
+members=yes
+tradeable=no
+
+// The wooden cat is the one tradeable thing here - 474 marks it tradeable and Old School sells it
+// on the Grand Exchange - and it is a Construction product: ten of them go in the crate, made on a
+// clockmaker's bench out of a plank and a bit of fur (skill_construction/scripts/poh_games.rs2).
+[wooden_cat]
+name=Wooden cat
+desc=A wooden cat toy.
+model=obj_wooden_cat
+2dzoom=848
+2dxan=55
+2dyan=1784
+weight=30g
+cost=500
+members=yes
+
+// ------------------------------------------------------------------ the beached ship
+[tgbr_fuse]
+name=Fuse
+desc=Burns very well.
+model=obj_tgbr_fuse
+2dxof=-2
+2dyof=-30
+2dzoom=1240
+2dxan=188
+2dyan=1976
+recol1s=11524
+recol1d=27448
+recol2s=9410
+recol2d=25334
+cost=52
+weight=7g
+members=yes
+tradeable=no
+
+[tgbr_keg]
+name=Keg
+desc=A small keg of gunpowder.
+model=obj_tgbr_keg
+2dzoom=789
+2dxan=222
+2dyan=1868
+weight=12kg
+members=yes
+tradeable=no
+
+// ------------------------------------------------------------------ the surgery, off the Sorebones
+[tgbr_cranial_clamp]
+name=Cranial clamp
+desc=A cranial clamp.
+model=obj_tgbr_cranial_clamp
+2dxof=1
+2dyof=11
+2dzoom=1438
+2dxan=456
+2dyan=41
+weight=10g
+members=yes
+tradeable=no
+
+[tgbr_brain_tongs]
+name=Brain tongs
+desc=Some tongs for use with brains.
+model=obj_tgbr_brain_tongs
+2dxof=-1
+2dyof=7
+2dzoom=720
+2dxan=453
+2dyan=788
+weight=20g
+members=yes
+tradeable=no
+
+[tgbr_bell_jar]
+name=Bell jar
+desc=A bell jar for covering things.
+model=obj_tgbr_bell_jar
+2dyof=-1
+2dzoom=984
+weight=1kg
+members=yes
+tradeable=no
+
+[tgbr_skull_staple]
+name=Skull staple
+desc=One skull staple.
+model=obj_tgbr_skull_staple
+2dyof=1
+2dzoom=400
+2dxan=55
+2dyan=1715
+cost=0
+weight=1g
+members=yes
+stackable=yes
+tradeable=no
