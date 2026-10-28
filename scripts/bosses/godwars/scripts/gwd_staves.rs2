@@ -40,19 +40,31 @@ inv_setslot(inv, $slot, staff_of_light, 1);
 // delay, which is exactly the shape Excalibur's Sanctuary and the dragon battleaxe's rage already
 // have on their own tabs' buttons.
 //
-// THE GRAPHIC IS THIS BUILD'S OWN, DELIBERATELY. The four specials imported this week each had
-// their Old School seq and spotanim decoded and checked before use; I could not confirm an id for
-// this one from the cache or the wiki, and guessing one is how the warhammer ended up "close but
-// not quite". So it uses sp_attackglow_blue and the Sanctuary jingle - the 377 cache's own
-// self-buff pair, and what Excalibur's special puts on the player. Say the word and Old School's
-// can be imported like the rest of them.
+// TWO ANIMATIONS, NOT ONE, which is the thing I had wrong twice. The beta-world dump gives the
+// staff of light its own special - and the graphics are the same model on the same animation with
+// different recolours, which is why Power of Light is Power of Death in another colour:
+//
+//     staff of the dead / toxic   anim 7083  gfx 1228   osrs_sotd_spec / sotd_spec_gfx
+//     staff of light              anim 7967  gfx 1516   osrs_sol_spec  / sol_spec_gfx
+//
+// Both imported into configs/staff_specs.seq and .spotanim. This used sp_attackglow_blue and the
+// Sanctuary jingle, because I had not found an id and would not guess at one; the dump had both
+// all along.
 [label,sotd_power_of_death]
 ~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
 %sotd_spec = add(map_clock, ^sotd_spec_ticks);
-anim(sanctuary, 0);
-spotanim_pl(sp_attackglow_blue, 0, 0);
+if (inv_getobj(worn, ^wearpos_rhand) = staff_of_light) {
+    anim(osrs_sol_spec, 0);
+    spotanim_pl(sol_spec_gfx, 0, 0);
+} else {
+    anim(osrs_sotd_spec, 0);
+    spotanim_pl(sotd_spec_gfx, 0, 0);
+}
 sound_synth(sanctuary, 1, 0);
 mes("Spirits of deceased evildoers offer you their protection.");
+// Nothing was watching the minute end - the halving just stopped reading true - so there was no
+// way to say the line Old School says. The queue is what gives it one.
+queue(sotd_spec_fade, ^sotd_spec_ticks, 0);
 
 // Whether the minute is running AND the staff is still in hand. The hand check is not redundant
 // with ~sotd_spec_drop below: the drop is what makes unequipping LOSE the effect rather than pause
@@ -100,3 +112,18 @@ if (~sotd_spec_weapon($weapon) = true) {
     return;
 }
 %sotd_spec = 0;
+mes("Your protection fades away.");
+
+// THE MINUTE RUNNING OUT, queued by the special itself. Old School says "Your protection fades
+// away" when it ends, and this is the only thing that knows it has.
+//
+// Guarded twice over, because a queue cannot be cancelled. If the clock is still in the future a
+// SECOND special was used inside the minute and this is the first one's queue arriving early - say
+// nothing and let the later one speak. If the clock is already 0 the protection was ended by
+// ~sotd_spec_drop, which has said the line itself.
+[queue,sotd_spec_fade]
+if (%sotd_spec = 0 | %sotd_spec > map_clock) {
+    return;
+}
+%sotd_spec = 0;
+mes("Your protection fades away.");

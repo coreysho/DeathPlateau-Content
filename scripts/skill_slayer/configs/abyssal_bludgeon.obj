@@ -40,15 +40,22 @@ category=weapon_blunt
 param=attackrate,4
 param=crushattack,102
 param=strengthbonus,85
-param=crushattack_anim,slayer_granite_maul_attack
+// ITS OWN ANIMATIONS, which this build has had all along and this obj was not using. Reported
+// from play as "swinging like a gmaul", and it was: every one of these was the granite maul's.
+// all.seq already defines the whole set at the ids the OSRS beta-world dump gives for it -
+// abyssal_bludgeon_ready 1652, _walk 3293, _run 2847, _crush 3298, _special_attack 3299.
+//
+// The defence animation is the exception and does NOT move: the dump gives 1666 for the bludgeon,
+// and 1666 IS slayer_granite_maul_defend. Jagex shares that one.
+param=crushattack_anim,abyssal_bludgeon_crush
 param=defend_anim,slayer_granite_maul_defend
 param=crush_sound,warhammer_crush
-param=ready_baseanim,slayer_granite_maul_ready
-param=walk_f_baseanim,slayer_granite_maul_walk
-param=walk_b_baseanim,slayer_granite_maul_walk
-param=walk_l_baseanim,slayer_granite_maul_walk
-param=walk_r_baseanim,slayer_granite_maul_walk
-param=running_baseanim,slayer_granite_maul_run
+param=ready_baseanim,abyssal_bludgeon_ready
+param=walk_f_baseanim,abyssal_bludgeon_walk
+param=walk_b_baseanim,abyssal_bludgeon_walk
+param=walk_l_baseanim,abyssal_bludgeon_walk
+param=walk_r_baseanim,abyssal_bludgeon_walk
+param=running_baseanim,abyssal_bludgeon_run
 // Penance, 50% (skill_combat/scripts/player/specs/scripts/abyssal_bludgeon.rs2)
 param=specwep,^true
 param=sa_energy,500

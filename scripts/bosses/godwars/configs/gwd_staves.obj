@@ -34,11 +34,16 @@
 // defensive. Fend still needs crush_sound, which rs2check rule 19 caught both of these shipping
 // without - sound_synth handed a null ends the session on the first attack.
 //
-// THE ANIMATIONS ARE A COMPROMISE AND WORTH SAYING SO. These are one-handed BLADED staves, and 377
-// has no animation for such a thing: its staff animations are a two-handed pummel. So the ready
-// pose and the block are the staff's, and the stab and the slash are the sword's, which is the
-// nearest the cache has to a blade on the end of a stick. The spear's animations were the other
-// candidate and are wrong - they are two-handed, and this is held in one.
+// THE ANIMATIONS ARE OLD SCHOOL'S OWN, and every one of the five ids is already in the 377 cache.
+// From the beta-world dump (rune-server 697435): stance 813, stab 428, slash 440, crush 419,
+// defence 420 - human_staffready, human_spear_spike, human_scythe_sweep, human_stafforb_pummel
+// and human_stafforb_block.
+//
+// The note that used to sit here reasoned its way to the one-handed SWORD's stab and slash and
+// called the spear's "wrong because two-handed". It was wrong twice: Jagex uses the spear's spike
+// for Jab and the scythe's sweep for Swipe, and it was the crush and the block that were borrowed
+// from somewhere else entirely - 414 and 415, which the same dump names as the Kodai wand's. So
+// this was a staff swinging a sword and blocking like a wand.
 
 [staff_of_the_dead]
 name=Staff of the Dead
@@ -75,10 +80,10 @@ param=crushdefence,3
 param=magicdefence,17
 param=strengthbonus,72
 param=ready_baseanim,human_staffready
-param=stabattack_anim,human_sword_stab
-param=slashattack_anim,human_sword_slash
-param=crushattack_anim,human_staff_pummel
-param=defend_anim,human_staff_block
+param=stabattack_anim,human_spear_spike
+param=slashattack_anim,human_scythe_sweep
+param=crushattack_anim,human_stafforb_pummel
+param=defend_anim,human_stafforb_block
 param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
@@ -137,10 +142,10 @@ param=crushdefence,3
 param=magicdefence,17
 param=strengthbonus,72
 param=ready_baseanim,human_staffready
-param=stabattack_anim,human_sword_stab
-param=slashattack_anim,human_sword_slash
-param=crushattack_anim,human_staff_pummel
-param=defend_anim,human_staff_block
+param=stabattack_anim,human_spear_spike
+param=slashattack_anim,human_scythe_sweep
+param=crushattack_anim,human_stafforb_pummel
+param=defend_anim,human_stafforb_block
 param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
