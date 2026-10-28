@@ -98,6 +98,11 @@ KEEP = {
     'dragon_scimitar':  {'defend': 'as the dragon sword: 4177 is the later rework.'},
     'dragon_dagger':    {'defend': 'as the dragon sword: 4177 is the later rework.'},
     'bone_dagger':      {'defend': 'as the dragon sword: 4177 is the later rework.'},
+    'saradomin_sword':  {'spec': 'OSRS 1132 and 1133 are THE SAME ANIMATION - 28 frames, the '
+                                 'same frame ids, the same delays - differing only in '
+                                 'replaceheldleft/right, which name an OSRS item to force into '
+                                 'the hand and which animconvosrs drops because an OSRS item id '
+                                 'means nothing here. Frame for frame this IS 1133.'},
     'barrelchest_anchor': {'spec': 'Rejuvenate is not built - the obj says specwep is deliberately '
                                    'absent until the effect exists. osrs_anchor_spec is imported '
                                    'and waiting.',

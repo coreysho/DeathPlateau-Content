@@ -37,8 +37,23 @@
 //   it is a scaled table across every dragon in the build. See drop_tables/scripts/dragon_sword.rs2.
 
 // ---------------------------------------------------------------- Hill giant club
-// Two-handed, seven ticks, and the only crush weapon worth carrying at 40 Attack. The animation
-// set is the granite maul's, which is this cache's only two-handed club.
+// Two-handed, seven ticks, and the only crush weapon worth carrying at 40 Attack.
+//
+// THE ANIMATIONS ARE THE TWO-HANDED SET, not the granite maul's. Reported from play as swinging
+// like a gmaul, and nobody publishes this weapon's ids - it is 2021 content, added after the OSRS
+// beta-world dump (rune-server 697435) was taken, and the wiki's infobox carries no animation
+// fields. The wiki answers it from the other side instead: its Category:Walk animation modifiers
+// lists all 86 items that change how the player walks or runs, the abyssal bludgeon, the
+// barrelchest anchor, the elder maul and Dharok's greataxe among them - and NEITHER the granite
+// maul NOR the hill giant club is on it. So the club has no walk or run of its own, and the maul's
+// stance, walk and run were a modifier it should never have carried.
+//
+// What the infobox does say is slot = 2h, combatstyle = Blunt. So it takes the two-handed carry
+// and the two-handed crush, which is what the dragon 2h sword uses and what the dump gives the 2h
+// family: stance 2561, crush 406, defence 410.
+//
+// STILL NOT MEASURED. This is the set it belongs to, not the set it was observed at. If its own
+// ids ever surface, they go here.
 [hill_giant_club]
 name=Hill giant club
 desc=A brutal weapon popular among giants.
@@ -64,15 +79,15 @@ param=crushattack,65
 param=magicattack,-4
 param=rangedefence,-1
 param=strengthbonus,70
-param=crushattack_anim,slayer_granite_maul_attack
-param=defend_anim,slayer_granite_maul_defend
+param=crushattack_anim,human_dhsword_chop
+param=defend_anim,human_dhsword_block
 param=crush_sound,warhammer_crush
-param=ready_baseanim,slayer_granite_maul_ready
-param=walk_f_baseanim,slayer_granite_maul_walk
-param=walk_b_baseanim,slayer_granite_maul_walk
-param=walk_l_baseanim,slayer_granite_maul_walk
-param=walk_r_baseanim,slayer_granite_maul_walk
-param=running_baseanim,slayer_granite_maul_run
+param=ready_baseanim,human_dh_weapon_ready
+param=walk_f_baseanim,human_dh_weapon_walk
+param=walk_b_baseanim,human_dh_weapon_walk
+param=walk_l_baseanim,human_dh_weapon_walk
+param=walk_r_baseanim,human_dh_weapon_walk
+param=running_baseanim,human_dh_weapon_run
 
 // ---------------------------------------------------------------- Belle's folly
 // A stab sword with real defensive bonuses, which almost nothing in this build has: +20 stab

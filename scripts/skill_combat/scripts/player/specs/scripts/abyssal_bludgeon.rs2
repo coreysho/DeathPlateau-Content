@@ -19,10 +19,14 @@ $hit, $damage, $damage_capped = ~pvm_spec_roll(100, ~abyssal_bludgeon_damage_pct
 // OSRS seq 3299 and spotanim 1284 - the abyssal burst, whose model carries the recolours that
 // make it purple. This borrowed the granite maul's special animation and graphic.
 //
-// abyssal_bludgeon_special_attack is the build's OWN copy of 3299, in all.seq along with the rest
-// of the bludgeon's set; osrs_bludgeon_spec was a second import of the same animation, made
-// without noticing. Same frames either way, and this is the one that belongs to the weapon.
-anim(abyssal_bludgeon_special_attack, 0);
+// osrs_bludgeon_spec is OSRS 3299, converted by animconvosrs into melee/osrs_spec_anims.seq.
+//
+// IT WAS ALREADY RIGHT AND I CHANGED IT. Last round I moved this to all.seq's
+// abyssal_bludgeon_special_attack, on the reasoning that the build's own copy beats a second
+// import of the same id. The build's own copy is a CORRUPT import: it forces a bronze axe into
+// the left hand and hides the right, which OSRS 3299 does not do, and it has no walkmerge or
+// priority. This one has both and no held-model swap. See the note on the obj.
+anim(osrs_bludgeon_spec, 0);
 spotanim_npc(bludgeon_spec, 0, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), crush_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
