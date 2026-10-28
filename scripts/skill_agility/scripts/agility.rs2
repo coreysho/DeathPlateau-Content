@@ -42,6 +42,8 @@ if (coordy($end) ! coordy(coord)) {
 // loop point back to its last frame, because bas.rs2 uses it as a WALK seq. Played one-shot it
 // loops on that frame for ever and the player reaches the street stuck in a climbing pose.
 // agility_climbing_down is the same motion and timings with nothing to loop back to.
+// NOT ROOF-SPECIFIC, despite the name: this is the only climb-down helper there is, and the gnome
+// course's tree descent uses it too.
 [proc,agility_roof_climb_down](int $xp, coord $coord)
 anim(agility_climbing_down, 0);
 p_delay(1);

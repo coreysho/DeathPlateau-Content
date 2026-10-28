@@ -40,7 +40,16 @@ sound_synth(tightrope, 5, 0);
 [label,climbdown_gnome_tree_branch]
 mes("You climb down the tree...");
 p_arrivedelay;
-~agility_climb_up(50, 0_38_53_55_28);
+// A DESCENT PLAYS A DESCENT. This called ~agility_climb_up, which is human_reachforladder - a reach
+// upward and a step up - so climbing down the tree drew the player hauling themselves up it. This
+// build has already been told about this exact fault on the rooftops, and the proc below is the one
+// it wrote to fix it: "playing the climbing-UP animation at it reads as the player hauling
+// themselves up thin air. Reported from play on Draynor's crate."
+//
+// ~agility_roof_climb_down is not roof-specific despite the name; it is the only climb-down helper,
+// and it plays agility_climbing_down rather than human_climbing_down because that one carries a
+// loop point and sticks the player in a climbing pose for ever when played one-shot.
+~agility_roof_climb_down(50, 0_38_53_55_28);
 mes("You land on the ground.");
 ~update_gnome_varp(5);
 
