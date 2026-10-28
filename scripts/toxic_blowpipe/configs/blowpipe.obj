@@ -54,7 +54,10 @@ param=levelrequire,75
 param=attackrate,3
 param=attackrange,5
 param=rangeattack_anim,osrs_blowpipe_attack
-param=defend_anim,human_unarmedblock
+// 430, which the beta-world dump gives the blowpipe (and the dragon hasta, the halberd and
+// Guthan's spear - it is the two-handed polearm block). This was human_unarmedblock, 424,
+// which is what an empty-handed player blocks with.
+param=defend_anim,human_spear_block
 param=rangeattack_sound,dart
 param=specwep,^true
 param=sa_energy,500
@@ -97,7 +100,10 @@ param=levelrequire,75
 param=attackrate,3
 param=attackrange,5
 param=rangeattack_anim,osrs_blowpipe_attack
-param=defend_anim,human_unarmedblock
+// 430, which the beta-world dump gives the blowpipe (and the dragon hasta, the halberd and
+// Guthan's spear - it is the two-handed polearm block). This was human_unarmedblock, 424,
+// which is what an empty-handed player blocks with.
+param=defend_anim,human_spear_block
 param=rangeattack_sound,dart
 param=specwep,^true
 param=sa_energy,500

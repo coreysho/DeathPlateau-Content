@@ -130,7 +130,8 @@ if ($weapon = dragon_pickaxe) {
     if (p_finduid(uid) = true) {
         ~set_sa_vars(oc_param($weapon, sa_energy));
         say("Smashing!");
-        anim(dragon_pickaxe_anim, 0);
+        // OSRS 7138. dragon_pickaxe_anim is 2661, the pickaxe's ordinary swing.
+        anim(osrs_dpick_spec, 0);
         ~skilling_spec_boost(mining);
     }
     return;

@@ -49,12 +49,20 @@ param=slashattack,10
 param=crushattack,92
 param=strengthbonus,100
 param=attackrate,6
-param=crushattack_anim,slayer_granite_maul_attack
+// ITS OWN ANIMATIONS. Every one of these was the granite maul's - the same defect the abyssal
+// bludgeon had, on a weapon nobody had looked at. The OSRS beta-world dump (rune-server 697435)
+// gives the anchor a set of its own: stance 5869, walk 5867, run 5868, and 5865 for both stab and
+// crush, which is one swing for both styles because it is a swing with an anchor.
+//
+// The defence animation stays the maul's: the dump lists none for the anchor, and guessing one is
+// what this file is being corrected for.
+param=stabattack_anim,osrs_anchor_attack
+param=crushattack_anim,osrs_anchor_attack
 param=defend_anim,slayer_granite_maul_defend
 param=crush_sound,warhammer_crush
-param=ready_baseanim,slayer_granite_maul_ready
-param=walk_f_baseanim,slayer_granite_maul_walk
-param=walk_b_baseanim,slayer_granite_maul_walk
-param=walk_l_baseanim,slayer_granite_maul_walk
-param=walk_r_baseanim,slayer_granite_maul_walk
-param=running_baseanim,slayer_granite_maul_run
+param=ready_baseanim,osrs_anchor_ready
+param=walk_f_baseanim,osrs_anchor_walk
+param=walk_b_baseanim,osrs_anchor_walk
+param=walk_l_baseanim,osrs_anchor_walk
+param=walk_r_baseanim,osrs_anchor_walk
+param=running_baseanim,osrs_anchor_run

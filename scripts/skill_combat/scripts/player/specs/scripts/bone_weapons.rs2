@@ -53,8 +53,15 @@ if (~dorgeshuun_unhurt = true) {
     $hit, $damage, $damage_capped = ~pvm_spec_roll(100, 100, ^stab_style);
 }
 ~dorgeshuun_drain($damage_capped);
-anim(puncture, 0);
-spotanim_pl(sp_attack_puncture_spotanim, 96, 0);
+// BACKSTAB'S OWN: OSRS seq 4198 and spotanim 704. This played `puncture` with spotanim 252, and
+// the beta-world dump names both of those as the DRAGON DAGGER's - "dragon dagger ... special
+// attack anim: 1062 gfx: 252". The note that justified it said the 377 cache has no animation for
+// this special "so there is nothing period-correct to switch to", which was true while nobody had
+// the id and is not a reason to keep another weapon's.
+//
+// On the player at ground height, as the dump writes it: a plain "gfx", not an "enemy entity gfx".
+anim(osrs_bone_dagger_spec, 0);
+spotanim_pl(bone_dagger_spec_gfx, 0, 0);
 sound_synth(oc_param(inv_getobj(worn, ^wearpos_rhand), stab_sound), 1, 0);
 ~pvm_spec_land($damage, 0);
 
