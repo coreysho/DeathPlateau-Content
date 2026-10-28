@@ -160,8 +160,11 @@ if (~duel_arena_spec_check = false) {
 if (~sa_enough_energy = false) {
     return;
 }
+// ~sotd_spec_weapon rather than a name test of its own: there are four of these staves now -
+// the staff of the dead, the staff of light and the toxic staff charged and uncharged - and that
+// proc is the one place the list lives (bosses/godwars/scripts/gwd_staves.rs2).
 def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
-if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+if (~sotd_spec_weapon($weapon) = true) {
     if (p_finduid(uid) = true) { // as above: settings-shaped, so it does not queue
         @sotd_power_of_death; // bosses/godwars/scripts/gwd_staves.rs2
     }

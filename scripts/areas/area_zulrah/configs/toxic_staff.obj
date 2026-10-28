@@ -50,7 +50,11 @@ cost=1000006
 members=yes
 iop2=Wield
 iop4=Dismantle
-category=weapon_staff
+// weapon_bladed_staff, not weapon_staff: Jab, Swipe and Fend - stab, slash and crush - which is
+// what makes the 55 stab and 70 slash below mean anything. A fang on a staff of the dead does not
+// take its blade off, so this is the same class the staff it was made from is in. On weapon_staff
+// all three melee styles roll crush and both bonuses are decoration.
+category=weapon_bladed_staff
 param=attackrate,4
 param=stabattack,55
 param=slashattack,70
@@ -102,7 +106,11 @@ iop2=Wield
 iop3=Check
 iop5=Uncharge
 wearop1=Check
-category=weapon_staff
+// weapon_bladed_staff, not weapon_staff: Jab, Swipe and Fend - stab, slash and crush - which is
+// what makes the 55 stab and 70 slash below mean anything. A fang on a staff of the dead does not
+// take its blade off, so this is the same class the staff it was made from is in. On weapon_staff
+// all three melee styles roll crush and both bonuses are decoration.
+category=weapon_bladed_staff
 param=attackrate,4
 param=stabattack,55
 param=slashattack,70
