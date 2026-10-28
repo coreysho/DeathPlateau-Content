@@ -27,11 +27,12 @@
 // Zamorakian item (cache param 41) and the staff of light is BOTH Zamorakian and Saradominist
 // (params 41 and 40) - the only item in the dungeon that walks through two doors.
 //
-// THE CRUSH PAIR IS NOT DECORATION. rs2check rule 19 caught both of these shipping without it:
-// category=weapon_staff means the combat tab draws the STAFF table, and every style on that
-// table is a crush - so the stab and slash animations above are what the bonuses describe, and
-// the crush animation and sound are what the player will actually swing. Without crush_sound,
-// sound_synth is handed a null the first time anyone attacks with it and the session ends.
+// ALL THREE ATTACK ANIMATIONS AND SOUNDS ARE REACHABLE NOW. These used to be weapon_staff, whose
+// table is three crushes - Bash, Pound and Focus - so whatever style you picked the hit rolled
+// crush and swung the crush animation, and the 55 stab and 70 slash below were bonuses on nothing.
+// weapon_bladed_staff is Old School's Jab, Swipe and Fend: stab accurate, slash aggressive, crush
+// defensive. Fend still needs crush_sound, which rs2check rule 19 caught both of these shipping
+// without - sound_synth handed a null ends the session on the first attack.
 //
 // THE ANIMATIONS ARE A COMPROMISE AND WORTH SAYING SO. These are one-handed BLADED staves, and 377
 // has no animation for such a thing: its staff animations are a two-handed pummel. So the ready
@@ -64,7 +65,7 @@ cost=1000005
 members=yes
 iop2=Wield
 // Nothing in this build to copy from, so these are Old School's own.
-category=weapon_staff
+category=weapon_bladed_staff
 param=attackrate,4
 param=stabattack,55
 param=slashattack,70
@@ -126,7 +127,7 @@ members=yes
 iop2=Wield
 // Field for field the staff of the dead's, which is what Old School's own table says: combining
 // changes the look, the autocast and the alignment, and no number at all.
-category=weapon_staff
+category=weapon_bladed_staff
 param=attackrate,4
 param=stabattack,55
 param=slashattack,70

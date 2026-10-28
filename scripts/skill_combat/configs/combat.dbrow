@@ -164,6 +164,25 @@ data=damagetype,^crush_style
 data=damagetype,^magic_style
 data=damagetype,^magic_style
 
+// A BLADED STAFF - the staff of the dead and the staff of light. The staff table above with its
+// three crushes replaced by Old School's Jab, Swipe and Fend: stab accurate, slash aggressive,
+// crush defensive. That is the whole point of the category - on weapon_staff_table every style
+// rolled crush, so a staff of the dead's 55 stab and 70 slash were bonuses on nothing.
+// The two Spell rows are the staff table's unchanged, modes 3 and 4, so autocast and defensive
+// casting work exactly as they do with any other staff.
+[weapon_bladed_staff_table]
+table=combat_style_table
+data=damagestyle,^style_melee_accurate
+data=damagestyle,^style_melee_aggressive
+data=damagestyle,^style_melee_defensive
+data=damagestyle,^style_magic_normal
+data=damagestyle,^style_magic_defensive
+data=damagetype,^stab_style
+data=damagetype,^slash_style
+data=damagetype,^crush_style
+data=damagetype,^magic_style
+data=damagetype,^magic_style
+
 // the trident of the seas: OSRS's powered staff - Accurate, Accurate, Longrange, all magic. Longrange
 // trains Magic and Defence and reaches 2 further (area_kraken_cove/scripts/trident.rs2).
 [weapon_powered_staff_table]

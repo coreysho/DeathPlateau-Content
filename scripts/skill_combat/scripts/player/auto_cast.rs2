@@ -8,6 +8,10 @@
 // (~set_attackstyle in player_attackstyles.rs2).
 [if_button,combat_staff_2:auto_cast] @open_autocast_interface(3);
 [if_button,combat_staff_2:auto_defensive] @open_autocast_interface(4);
+// and the same two boxes on the bladed staff tab, which is that tab relabelled: a staff of the
+// dead casts exactly as any other staff does, and modes 3 and 4 mean the same on both tables.
+[if_button,combat_bladed_staff:auto_cast] @open_autocast_interface(3);
+[if_button,combat_bladed_staff:auto_defensive] @open_autocast_interface(4);
 [if_button,staff_spells:ssb0] @set_autocast_spell(^wind_strike);
 [if_button,staff_spells:ssb1] @set_autocast_spell(^water_strike);
 [if_button,staff_spells:ssb2] @set_autocast_spell(^earth_strike);

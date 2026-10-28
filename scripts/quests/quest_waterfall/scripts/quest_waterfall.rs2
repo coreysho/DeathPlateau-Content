@@ -43,7 +43,8 @@ mes("only visitors with peaceful intent can enter.");
 
 [proc,waterfall_can_enter_glarials_tomb]()(boolean)
 if ((inv_totalcat(inv, armour_hands) > 0 | inv_totalcat(worn, armour_hands) > 0)
-    | (inv_totalcat(inv, weapon_staff) > 0 | inv_totalcat(worn, weapon_staff) > 0) 
+    | (inv_totalcat(inv, weapon_staff) > 0 | inv_totalcat(worn, weapon_staff) > 0)
+    | (inv_totalcat(inv, weapon_bladed_staff) > 0 | inv_totalcat(worn, weapon_bladed_staff) > 0) 
     | (inv_totalcat(inv, armour_helmet) > 0 | inv_totalcat(worn, armour_helmet) > 0) 
     | (inv_totalcat(inv, armour_body) > 0 | inv_totalcat(worn, armour_body) > 0) 
     | (inv_totalcat(inv, armour_legs) > 0 | inv_totalcat(worn, armour_legs) > 0) 

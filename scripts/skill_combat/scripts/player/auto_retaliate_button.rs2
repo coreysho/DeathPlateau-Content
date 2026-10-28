@@ -31,4 +31,5 @@ if (%option_nodef = ^player_auto_retaliate_on) {
 [if_button,combat_unarmed:auto_retaliate] ~toggle_auto_retaliate;
 [if_button,combat_whip:auto_retaliate] ~toggle_auto_retaliate;
 [if_button,combat_staff_2:auto_retaliate] ~toggle_auto_retaliate;
+[if_button,combat_bladed_staff:auto_retaliate] ~toggle_auto_retaliate;
 [if_button,combat_powered_staff:auto_retaliate] ~toggle_auto_retaliate;

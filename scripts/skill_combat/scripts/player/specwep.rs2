@@ -146,7 +146,14 @@ stat_boost($stat, 3, 0);
 // the dead and the staff of light do - Power of Death and Power of Light - and like Excalibur and
 // the two dragon tools above, theirs is not an attack: it takes no target and lands no hit, so it
 // runs here on the click instead of going through player_special_attack.
-[if_button,combat_staff_2:specbar]
+// The two staves are on the BLADED tab - combat_staff_2.if relabelled, see
+// player_attackstyles.rs2 - so that is where the click comes from. combat_staff_2's own bar stays
+// wired to the same handler for the day a plain staff gets a special; until then its layer is
+// hidden, because no weapon_staff obj carries specwep.
+[if_button,combat_bladed_staff:specbar] @staff_specbar;
+[if_button,combat_staff_2:specbar] @staff_specbar;
+
+[label,staff_specbar]
 if (~duel_arena_spec_check = false) {
     return;
 }
@@ -160,7 +167,7 @@ if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
     }
     return;
 }
-// Every other staff has no special, so the bar is hidden and this cannot be reached - but if one
+// Any other staff has no special, so its bar is hidden and this cannot be reached - but if one
 // ever does, it toggles like the rest.
 @toggle_sa;
 

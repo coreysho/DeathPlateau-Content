@@ -81,6 +81,11 @@
 [if_button,combat_staff_2:staff2a] ~set_attackstyle(0);
 [if_button,combat_staff_2:staff2b] ~set_attackstyle(1);
 [if_button,combat_staff_2:staff2c] ~set_attackstyle(2);
+// The bladed staff tab is combat_staff_2.if relabelled, component names and all, so its three
+// boxes are the same staff2a/b/c - Jab, Swipe and Fend rather than Bash, Pound and Focus.
+[if_button,combat_bladed_staff:staff2a] ~set_attackstyle(0);
+[if_button,combat_bladed_staff:staff2b] ~set_attackstyle(1);
+[if_button,combat_bladed_staff:staff2c] ~set_attackstyle(2);
 
 [if_button,combat_claw:claw0] ~set_attackstyle(0);
 [if_button,combat_claw:claw1] ~set_attackstyle(1);
@@ -154,7 +159,11 @@ switch_category (oc_category($weapon)) {
     case weapon_thrown, weapon_javelin : return(%atkstyle_thrown);
     case weapon_salamander : return(%atkstyle_salamander);
     // magic
-    case weapon_staff : return(%atkstyle_staff);
+    // A bladed staff shares the staff's slot on purpose: the two tabs have the same five
+    // styles in the same order, so a mode carried across from one to the other is always valid
+    // and means the same thing - and swapping between a mystic staff and a staff of the dead
+    // keeping your Focus/Fend is what a player would expect.
+    case weapon_staff, weapon_bladed_staff : return(%atkstyle_staff);
     case weapon_powered_staff : return(%atkstyle_powered_staff);
     // unarmed everything else
     case default : return(%atkstyle_unarmed);
@@ -185,7 +194,7 @@ switch_category (oc_category($weapon)) {
     case weapon_thrown, weapon_javelin : %atkstyle_thrown = $style;
     case weapon_salamander : %atkstyle_salamander = $style;
     // magic
-    case weapon_staff : %atkstyle_staff = $style;
+    case weapon_staff, weapon_bladed_staff : %atkstyle_staff = $style;
     case weapon_powered_staff : %atkstyle_powered_staff = $style;
     // unarmed everything else
     case default : %atkstyle_unarmed = $style;
@@ -251,6 +260,7 @@ switch_category (oc_category($obj)) {
     case weapon_salamander : ~weapon_category_tab_attack(combat_salamander:name, combat_salamander, $obj, combat_salamander:specbar_layer);
     // magic
     case weapon_staff : ~weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, combat_staff_2:specbar_layer);
+    case weapon_bladed_staff : ~weapon_category_tab_attack(combat_bladed_staff:name, combat_bladed_staff, $obj, combat_bladed_staff:specbar_layer);
     case weapon_powered_staff : ~weapon_category_tab_attack(combat_powered_staff:name, combat_powered_staff, $obj, null);
     // unarmed everything else
     case default : ~weapon_category_tab_attack_unarmed($obj);
@@ -331,6 +341,7 @@ switch_category (oc_category($obj)) {
     case weapon_salamander : ~.weapon_category_tab_attack(combat_salamander:name, combat_salamander, $obj, combat_salamander:specbar_layer);
     // magic
     case weapon_staff : ~.weapon_category_tab_attack(combat_staff_2:name, combat_staff_2, $obj, combat_staff_2:specbar_layer);
+    case weapon_bladed_staff : ~.weapon_category_tab_attack(combat_bladed_staff:name, combat_bladed_staff, $obj, combat_bladed_staff:specbar_layer);
     case weapon_powered_staff : ~.weapon_category_tab_attack(combat_powered_staff:name, combat_powered_staff, $obj, null);
     // unarmed everything else
     case default : ~.weapon_category_tab_attack_unarmed($obj);
@@ -387,7 +398,7 @@ switch_category (oc_category($weapon)) {
     case weapon_thrown, weapon_javelin : return(.%atkstyle_thrown);
     case weapon_salamander : return(.%atkstyle_salamander);
     // magic
-    case weapon_staff : return(.%atkstyle_staff);
+    case weapon_staff, weapon_bladed_staff : return(.%atkstyle_staff);
     case weapon_powered_staff : return(.%atkstyle_powered_staff);
     // unarmed everything else
     case default : return(.%atkstyle_unarmed);
