@@ -141,6 +141,29 @@ if ($weapon = dragon_pickaxe) {
 // still treat anything above 99 as 99 - the engine's stat_random clamps the level itself.
 [proc,skilling_spec_boost](stat $stat)
 stat_boost($stat, 3, 0);
+// THE STAFF TAB'S BAR, which until now did not exist: 474's interface 90 draws one and
+// portcombat474.py used to delete it, because no staff in 2008 had a special attack. The staff of
+// the dead and the staff of light do - Power of Death and Power of Light - and like Excalibur and
+// the two dragon tools above, theirs is not an attack: it takes no target and lands no hit, so it
+// runs here on the click instead of going through player_special_attack.
+[if_button,combat_staff_2:specbar]
+if (~duel_arena_spec_check = false) {
+    return;
+}
+if (~sa_enough_energy = false) {
+    return;
+}
+def_obj $weapon = inv_getobj(worn, ^wearpos_rhand);
+if ($weapon = staff_of_the_dead | $weapon = staff_of_light) {
+    if (p_finduid(uid) = true) { // as above: settings-shaped, so it does not queue
+        @sotd_power_of_death; // bosses/godwars/scripts/gwd_staves.rs2
+    }
+    return;
+}
+// Every other staff has no special, so the bar is hidden and this cannot be reached - but if one
+// ever does, it toggles like the rest.
+@toggle_sa;
+
 [if_button,combat_whip:specbar] @toggle_sa;
 [if_button,combat_claw:specbar] @toggle_sa;
 [if_button,combat_unarmed:specbar] @toggle_sa;

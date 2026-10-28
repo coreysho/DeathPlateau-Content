@@ -17,10 +17,11 @@
 //   THE RUNE SAVING. Old School's staff of the dead has a 1/8 chance to cast a combat spell for
 //   free. That is a hook in the rune cost path rather than a number on an obj, and it is not built.
 //
-//   POWER OF DEATH, the special attack, which halves the melee damage you take for a minute. That
-//   one is not a modifier on the attack - it changes every incoming melee hit for a hundred ticks -
-//   so it belongs in the player-hit path in skill_combat, not here, and a spec bar that does
-//   nothing is worse than none. specwep is therefore absent and the bar stays grey.
+// POWER OF DEATH IS NOW BUILT, and the note that used to sit here was right about why it could not
+// be: it is not a modifier on the attack, so it could not live in the spec dispatch, and a bar that
+// did nothing would have been worse than no bar. Both halves exist now - the effect in the
+// player-hit path and the click on the tab's own button - and the two params below are what joins
+// them. See the params on each staff.
 //
 // WHAT IS CARRIED: the God Wars alignment, which this build does read. The staff of the dead is a
 // Zamorakian item (cache param 41) and the staff of light is BOTH Zamorakian and Saradominist
@@ -81,6 +82,14 @@ param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
 param=gwd_prot_zamorak,1
+// POWER OF DEATH (and POWER OF LIGHT on the staff of light, the same mechanic renamed): 100% of
+// the special attack energy for one minute of halved incoming melee. It is NOT a modifier on the
+// attack - it changes every melee hit you take for 100 ticks - so the effect itself lives in the
+// player-hit path (skill_combat/scripts/npc/npc_combat_melee.rs2 and scripts/pvp/pvp_melee.rs2)
+// and the click lives on the spec bar's own button, not in player_special_attack's switch_obj.
+// These two params are only what puts the bar on the tab and prices the click.
+param=specwep,^true
+param=sa_energy,1000
 
 // Zilyana's, and the only thing it does here is make the staff of light. Old School's Consume -
 // which permanently lifts the darkness in Zamorak's fortress - is NOT given an op, because this
@@ -138,3 +147,11 @@ param=crush_sound,staff_hit
 // dungeon that is a Saradomin door and a Zamorak door open to the same player.
 param=gwd_prot_saradomin,1
 param=gwd_prot_zamorak,1
+// POWER OF DEATH (and POWER OF LIGHT on the staff of light, the same mechanic renamed): 100% of
+// the special attack energy for one minute of halved incoming melee. It is NOT a modifier on the
+// attack - it changes every melee hit you take for 100 ticks - so the effect itself lives in the
+// player-hit path (skill_combat/scripts/npc/npc_combat_melee.rs2 and scripts/pvp/pvp_melee.rs2)
+// and the click lives on the spec bar's own button, not in player_special_attack's switch_obj.
+// These two params are only what puts the bar on the tab and prices the click.
+param=specwep,^true
+param=sa_energy,1000

@@ -69,6 +69,13 @@ param=slash_sound,staff_hit
 param=crush_sound,staff_hit
 // Still a Zamorakian item with a fang on it - cache param 41, as on the staff of the dead.
 param=gwd_prot_zamorak,1
+// POWER OF DEATH comes with the staff, fang or no fang - Old School's toxic staff of the dead has
+// the same special attack as the staff it is made from. The effect itself lives in the player-hit
+// path and the click on the spec bar's own button; these two params are what puts the bar on the
+// tab and prices it. See bosses/godwars/scripts/gwd_staves.rs2, where ~sotd_spec_weapon now names
+// all four staves that carry it.
+param=specwep,^true
+param=sa_energy,1000
 // What the first scale turns it into.
 param=toxic_staff_charged,toxic_staff_of_the_dead
 
@@ -114,6 +121,13 @@ param=stab_sound,staff_stab
 param=slash_sound,staff_hit
 param=crush_sound,staff_hit
 param=gwd_prot_zamorak,1
+// POWER OF DEATH comes with the staff, fang or no fang - Old School's toxic staff of the dead has
+// the same special attack as the staff it is made from. The effect itself lives in the player-hit
+// path and the click on the spec bar's own button; these two params are what puts the bar on the
+// tab and prices it. See bosses/godwars/scripts/gwd_staves.rs2, where ~sotd_spec_weapon now names
+// all four staves that carry it.
+param=specwep,^true
+param=sa_energy,1000
 // What the last scale turns it back into. The serpentine helm family does the same with
 // serpentine_uncharged, and for the same reason: the code asks the item rather than naming it.
 param=toxic_staff_uncharged,toxic_staff_uncharged
