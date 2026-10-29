@@ -42,4 +42,9 @@
 ^falador_land_ledge5 = 3_47_52_16_4      // 3024,3332
 ^falador_land_edge = 0_47_52_18_4        // 3026,3332 - the street
 
+// One tile of a ledge, in client cycles. human_walk_sidestep runs 30 of them - SeqType
+// .duration, which tools/sim/agilityglide.ts prints - so a 30-cycle window per tile is the
+// animation playing exactly once and nothing left over to slide through.
+^falador_sidestep_cycles = 30
+
 ^falador_mark_chance = 4
