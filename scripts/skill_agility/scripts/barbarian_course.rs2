@@ -138,7 +138,12 @@ if(%barb_obstacle_pipe_used >= map_clock) {
     return;
 }
 %barb_obstacle_pipe_used = calc(map_clock + 4);
-~agility_exactmove(human_doublepipesqueeze, 30, 3, $start_coord, movecoord($start_coord, 0, 0, $dist), 30, 126, $dir, true);
+// THE CRAWL FITS THE LEG. human_doublepipesqueeze runs 80 cycles and move_delay 3 gives the leg
+// 90, so starting it at cycle 30 ran it to 110 - past the end of the leg - while the glide ran to
+// 126, past the end of the crawl. Starting at 0 and gliding 0->80 puts both inside the 90 with ten
+// to spare. The move_delay is untouched, so this takes exactly as long as it did; what goes is a
+// tick of standing at the pipe mouth, and the player has already been walked there by this point.
+~agility_exactmove(human_doublepipesqueeze, 0, 3, $start_coord, movecoord($start_coord, 0, 0, $dist), 0, 80, $dir, true);
 sound_synth(squeeze_in, 1, 0);
 ~agility_xp(100);
 p_delay(0);

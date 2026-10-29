@@ -68,11 +68,16 @@ if(%upass_area1_pipe_used >= map_clock) {
 mes("You open the grating.");
 // Temp note: dur updated!!! nice even number :)
 loc_change(upass_pipe5, 10);
-~agility_exactmove(human_doublepipesqueeze, 30, 3, coord, movecoord(coord, 0, 0, 3), 30, 126, ^exact_north, true);
+// THE CRAWL FITS THE LEG. human_doublepipesqueeze runs 80 cycles and move_delay 3 gives the leg
+// 90, so starting it at cycle 30 ran it to 110 - past the end of the leg - while the glide ran to
+// 126, past the end of the crawl. Starting at 0 and gliding 0->80 puts both inside the 90 with ten
+// to spare. The move_delay is untouched, so this takes exactly as long as it did; what goes is a
+// tick of standing at the pipe mouth, and the player has already been walked there by this point.
+~agility_exactmove(human_doublepipesqueeze, 0, 3, coord, movecoord(coord, 0, 0, 3), 0, 80, ^exact_north, true);
 sound_synth(squeeze_in, 1, 0);
 mes("You crawl through the pipe.");
 ~change_merged_loc(movecoord(coord, 0, 0, 1));
-~agility_exactmove(human_doublepipesqueeze, 30, 3, coord, movecoord(coord, 0, 0, 3), 30, 126, ^exact_north, true);
+~agility_exactmove(human_doublepipesqueeze, 0, 3, coord, movecoord(coord, 0, 0, 3), 0, 80, ^exact_north, true);
 mes("You hear the grating slam shut behind you.");
 stat_advance(agility, 30);
 sound_synth(squeeze_in, 1, 0);
@@ -346,7 +351,7 @@ if(%upass_area2_pipe_used >= map_clock) {
     return;
 }
 %upass_area2_pipe_used = calc(map_clock + 6);
-~agility_exactmove(human_doublepipesqueeze, 30, 3, coord, movecoord(coord, calc(3 * $mod), 0, 0), 30, 126, $dir, true);
+~agility_exactmove(human_doublepipesqueeze, 0, 3, coord, movecoord(coord, calc(3 * $mod), 0, 0), 0, 80, $dir, true);
 sound_synth(squeeze_in, 1, 0);
 p_delay(4);
 mes("You crawl through the pipe.");
@@ -362,7 +367,7 @@ if($dir = ^exact_west) {
 } else {
     ~change_merged_loc(movecoord(coord, $mod, 0, 0));
 }
-~agility_exactmove(human_doublepipesqueeze, 30, 3, coord, movecoord(coord, calc(3 * $mod), 0, 0), 30, 126, $dir, true);
+~agility_exactmove(human_doublepipesqueeze, 0, 3, coord, movecoord(coord, calc(3 * $mod), 0, 0), 0, 80, $dir, true);
 sound_synth(squeeze_in, 1, 0);
 p_delay(0);
 stat_advance(agility, 30);

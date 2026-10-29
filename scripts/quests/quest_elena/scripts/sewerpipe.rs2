@@ -39,7 +39,11 @@ if(%elena_pipe_used >= map_clock) {
 %elena_pipe_used = calc(map_clock + 5);
 sound_synth(squeeze_in, 1, 0);
 mes("You climb through the sewer pipe.");
-~agility_exactmove(human_doublepipesqueeze, 30, 5, coord, movecoord(coord, 0, 0, -3), 30, 126, ^exact_south, true);
+// THE GLIDE IS AS LONG AS THE CRAWL. human_doublepipesqueeze runs 80 cycles from the 30 it starts
+// at, so it is over at 110 and the glide to 126 carried the player on for sixteen cycles in an
+// idle pose. move_delay 5 gives this leg 150, so unlike the shorter pipes the lead-in is
+// affordable and only the far end needed pulling in.
+~agility_exactmove(human_doublepipesqueeze, 30, 5, coord, movecoord(coord, 0, 0, -3), 30, 110, ^exact_south, true);
 p_telejump(^quest_elena_west_ardy_manhole_tele_coord);
 // AUDIT 2026-09-24: Edmond goes back up to his garden once you are through. He was left showing in
 // the sewer (plaguecity_can_see_edmond_up_top = 1) until the player climbed the mud pile, so anyone
