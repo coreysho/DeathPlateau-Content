@@ -44,6 +44,50 @@ if (coordy($end) ! coordy(coord)) {
 // agility_climbing_down is the same motion and timings with nothing to loop back to.
 // NOT ROOF-SPECIFIC, despite the name: this is the only climb-down helper there is, and the gnome
 // course's tree descent uses it too.
+// A LEDGE IS SHUFFLED ALONG A TILE AT A TIME, not glided across in one go.
+//
+// ~agility_roof_move above hands p_exactmove a fixed 0->50 window whatever the obstacle is. That
+// suits human_walk_logbalance, which runs 48 cycles, and is plainly what the 50 was picked for. A
+// sidestep is 30, so Falador's hand holds and its five ledges each spent their last twenty cycles
+// carrying the player in an idle pose - and a fixed window also means a one-tile ledge takes as
+// long as a seven-tile one.
+//
+// A WALK BAS WILL NOT FIX IT, which is the obvious answer and a wrong one: the client's
+// startForceMovement pins the movement sequence to frame 0 for the whole of an exact move, so a
+// bas is frozen there while only a one-shot seq animates. ~agility_force_move does animate,
+// because it walks a tile a tick instead of gliding - it is how Draynor crosses its tightropes -
+// but it carries no facing, and a sidestep played while the player faces the way they are going is
+// a sidestep pointed the wrong way.
+//
+// So this is the Agility Arena's way, which has been in the build all along: one p_exactmove per
+// tile, each window the length of the animation, and the facing worked out once from the whole
+// crossing and held for every step. The animation plays once a tile, the pace no longer depends on
+// how long the ledge is, and nothing is left over to slide through.
+[proc,agility_roof_shuffle](int $xp, coord $end, seq $anim, int $cycles)
+~agility_roof_shuffle_step($end, $anim, $cycles, ~agility_facing(coord, $end));
+~agility_xp($xp);
+
+[proc,agility_roof_shuffle_step](coord $end, seq $anim, int $cycles, int $dir)
+def_int $change_x = calc(coordx($end) - coordx(coord));
+def_int $change_z = calc(coordz($end) - coordz(coord));
+if ($change_x = 0 & $change_z = 0) {
+    return;
+}
+def_int $move_x = 0;
+def_int $move_z = 0;
+if ($change_x >= 1) {
+    $move_x = 1;
+} else if ($change_x <= -1) {
+    $move_x = -1;
+}
+if ($change_z >= 1) {
+    $move_z = 1;
+} else if ($change_z <= -1) {
+    $move_z = -1;
+}
+~agility_exactmove($anim, 0, 1, coord, movecoord(coord, $move_x, 0, $move_z), 0, $cycles, $dir, false);
+~agility_roof_shuffle_step($end, $anim, $cycles, $dir);
+
 [proc,agility_roof_climb_down](int $xp, coord $coord)
 anim(agility_climbing_down, 0);
 p_delay(1);
