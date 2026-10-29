@@ -173,7 +173,14 @@
 ^sotd_spec_ticks = 100
 
 // How far off the ground the spirit is drawn. Both graphics are Old School model 6737, which hangs
-// from its origin - y -82..178, so 178 of its 260 units sit below the point it is drawn from. At 0
-// the spirit is two thirds underground and reads as a smudge around the player's shins; 96 stands
-// it on the player, and is the height every other imported Old School special graphic here uses.
-^sotd_spec_gfx_height = 96
+// from its origin - y -82..178, so 178 of its 260 units sit below the point it is drawn from, and
+// at 0 the spirit is two thirds underground and reads as a smudge around the player's shins.
+//
+// IT DOES NOT STAND ON THE PLAYER, IT HANGS OVER THEM. 96 was wrong for the same reason 0 was:
+// guessed from what the other imported specials use rather than measured. Old School's own picture
+// of Power of Death has the face clear above the player's head, and that picture can be measured
+// without knowing anything about its camera, because the graphic is its own ruler: how far the
+// spirit's top sits above the ground, divided by how wide the spirit is, is the same number in any
+// orthographic view. That ratio is 2.63, the model is 136 wide and its top is 82 above its origin,
+// so 2.63 x 136 - 82 = 276. 280 is that, rounded.
+^sotd_spec_gfx_height = 280
