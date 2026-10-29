@@ -299,3 +299,183 @@ scope=perm
 
 [farming_store_curepot]
 scope=perm
+
+// THE COUNTDOWN THE CLIENT COULD NOT WORK OUT FOR ITSELF (29 October 2026).
+//
+// A patch's appearance transmits, so the client has always known a crop's stage and whether it is
+// diseased or ready. Its CLOCK did not: farming_time_N is the minute a patch last advanced and
+// farming_flags_N holds the crop, and neither reaches the client - so "ready in 28 minutes" was
+// not something any plugin could compute, only estimate by watching a patch change twice.
+//
+// farming_due_N is that answer, worked out here where the growth rules already live and sent over
+// as one number: the world minute at which this patch next advances. 0 means nothing is coming -
+// dead, a stump, or a fully grown plant with no produce to regrow.
+//
+// WHY THE MINUTE AND NOT "MINUTES LEFT". Minutes left would have to be rewritten every minute for
+// every patch, which is 39 varp updates a minute per player forever. A due minute changes only
+// when the patch does. The client subtracts it from farming_world_minute below.
+//
+// scope=temp, because this is derived: ~farming_update recomputes it from farming_time_N and the
+// crop, and farming_login runs that for every patch before the player can see anything.
+[farming_due_0]
+transmit=yes
+scope=temp
+
+[farming_due_1]
+transmit=yes
+scope=temp
+
+[farming_due_2]
+transmit=yes
+scope=temp
+
+[farming_due_3]
+transmit=yes
+scope=temp
+
+[farming_due_4]
+transmit=yes
+scope=temp
+
+[farming_due_5]
+transmit=yes
+scope=temp
+
+[farming_due_6]
+transmit=yes
+scope=temp
+
+[farming_due_7]
+transmit=yes
+scope=temp
+
+[farming_due_8]
+transmit=yes
+scope=temp
+
+[farming_due_9]
+transmit=yes
+scope=temp
+
+[farming_due_10]
+transmit=yes
+scope=temp
+
+[farming_due_11]
+transmit=yes
+scope=temp
+
+[farming_due_12]
+transmit=yes
+scope=temp
+
+[farming_due_13]
+transmit=yes
+scope=temp
+
+[farming_due_14]
+transmit=yes
+scope=temp
+
+[farming_due_15]
+transmit=yes
+scope=temp
+
+[farming_due_16]
+transmit=yes
+scope=temp
+
+[farming_due_17]
+transmit=yes
+scope=temp
+
+[farming_due_18]
+transmit=yes
+scope=temp
+
+[farming_due_19]
+transmit=yes
+scope=temp
+
+[farming_due_20]
+transmit=yes
+scope=temp
+
+[farming_due_21]
+transmit=yes
+scope=temp
+
+[farming_due_22]
+transmit=yes
+scope=temp
+
+[farming_due_23]
+transmit=yes
+scope=temp
+
+[farming_due_24]
+transmit=yes
+scope=temp
+
+[farming_due_25]
+transmit=yes
+scope=temp
+
+[farming_due_26]
+transmit=yes
+scope=temp
+
+[farming_due_27]
+transmit=yes
+scope=temp
+
+[farming_due_28]
+transmit=yes
+scope=temp
+
+[farming_due_29]
+transmit=yes
+scope=temp
+
+[farming_due_30]
+transmit=yes
+scope=temp
+
+[farming_due_31]
+transmit=yes
+scope=temp
+
+[farming_due_32]
+transmit=yes
+scope=temp
+
+[farming_due_33]
+transmit=yes
+scope=temp
+
+[farming_due_34]
+transmit=yes
+scope=temp
+
+[farming_due_35]
+transmit=yes
+scope=temp
+
+[farming_due_36]
+transmit=yes
+scope=temp
+
+[farming_due_37]
+transmit=yes
+scope=temp
+
+[farming_due_38]
+transmit=yes
+scope=temp
+
+// The server's own clock, so the client can turn a due minute into a countdown. Minutes since
+// 1 January 2025 UTC, as world_minute counts them. Written once a minute by ~farming_update_all,
+// which is one varp a minute per player and the reason farming_due_N does not have to be.
+[farming_world_minute]
+transmit=yes
+scope=temp
