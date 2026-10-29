@@ -50,15 +50,22 @@ inv_setslot(inv, $slot, staff_of_light, 1);
 // Both imported into configs/staff_specs.seq and .spotanim. This used sp_attackglow_blue and the
 // Sanctuary jingle, because I had not found an id and would not guess at one; the dump had both
 // all along.
+//
+// HEIGHT 96, NOT 0. Model 6737 - which is both graphics, recoloured - is authored HANGING FROM ITS
+// ORIGIN: its vertices run y -82..178, so 178 of its 260 units are below the point it is drawn
+// from. Played at ground height, two thirds of the spirit is under the floor and all a player sees
+// is the top of its hood around their shins, which is what shipped. The animation does not lift it
+// either - OSRS seq 7084's transforms are all +-16 - so the height is the only thing that can, and
+// 96 is what every other imported Old School special graphic in skill_combat/pvp/specs uses.
 [label,sotd_power_of_death]
 ~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
 %sotd_spec = add(map_clock, ^sotd_spec_ticks);
 if (inv_getobj(worn, ^wearpos_rhand) = staff_of_light) {
     anim(osrs_sol_spec, 0);
-    spotanim_pl(sol_spec_gfx, 0, 0);
+    spotanim_pl(sol_spec_gfx, ^sotd_spec_gfx_height, 0);
 } else {
     anim(osrs_sotd_spec, 0);
-    spotanim_pl(sotd_spec_gfx, 0, 0);
+    spotanim_pl(sotd_spec_gfx, ^sotd_spec_gfx_height, 0);
 }
 sound_synth(sanctuary, 1, 0);
 mes("Spirits of deceased evildoers offer you their protection.");
