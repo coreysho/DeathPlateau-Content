@@ -76,13 +76,18 @@ if(%gnome_obstacle_pipe_used >= map_clock) {
     return;
 }
 %gnome_obstacle_pipe_used = calc(map_clock + 5);
-~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, -1), movecoord(loc_coord, 0, 0, 2), 30, 126, ^exact_north, true);
+// THE CRAWL LASTS AS LONG AS THE CARRY. human_doublepipesqueeze starts at cycle 30 and runs 80,
+// so it is over at 110, and move_delay 4 gives each leg 120 cycles. These glided to 126 and - in
+// the middle leg - to 158, which is past the leg's own budget, so the p_teleport below arrived
+// while the client was still drawing the glide. 30->110 is the animation's own length, finished
+// before anything else happens. The move_delays are untouched, so the pipe takes just as long.
+~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, -1), movecoord(loc_coord, 0, 0, 2), 30, 110, ^exact_north, true);
 sound_synth(squeeze_in, 1, 0);
-~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, 2), movecoord(loc_coord, -3, 0, 2), 30, 158, ^exact_west, false);
+~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, 2), movecoord(loc_coord, -3, 0, 2), 30, 110, ^exact_west, false);
 p_teleport(movecoord(loc_coord, -3, 0, 3));
 p_delay(0);
 ~change_merged_loc(movecoord(coord, 0, 0, 1));
-~agility_exactmove(human_doublepipesqueeze, 30, 4, coord, movecoord(coord, 0, 0, 3), 30, 126, ^exact_north, true);
+~agility_exactmove(human_doublepipesqueeze, 30, 4, coord, movecoord(coord, 0, 0, 3), 30, 110, ^exact_north, true);
 sound_synth(squeeze_in, 1, 0);
 ~agility_xp(75);
 ~update_gnome_varp(7);
@@ -99,13 +104,18 @@ if(%gnome_obstacle_pipe_used >= map_clock) {
     return;
 }
 %gnome_obstacle_pipe_used = calc(map_clock + 5);
-~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, -1), movecoord(loc_coord, 0, 0, 2), 30, 126, ^exact_north, true);
+// THE CRAWL LASTS AS LONG AS THE CARRY. human_doublepipesqueeze starts at cycle 30 and runs 80,
+// so it is over at 110, and move_delay 4 gives each leg 120 cycles. These glided to 126 and - in
+// the middle leg - to 158, which is past the leg's own budget, so the p_teleport below arrived
+// while the client was still drawing the glide. 30->110 is the animation's own length, finished
+// before anything else happens. The move_delays are untouched, so the pipe takes just as long.
+~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, -1), movecoord(loc_coord, 0, 0, 2), 30, 110, ^exact_north, true);
 sound_synth(squeeze_in, 1, 0);
-~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, 2), movecoord(loc_coord, 3, 0, 2), 30, 158, ^exact_east, false);
+~agility_exactmove(human_doublepipesqueeze, 30, 4, movecoord(loc_coord, 0, 0, 2), movecoord(loc_coord, 3, 0, 2), 30, 110, ^exact_east, false);
 p_teleport(movecoord(loc_coord, 3, 0, 3));
 p_delay(0);
 ~change_merged_loc(movecoord(coord, 0, 0, 1));
-~agility_exactmove(human_doublepipesqueeze, 30, 4, coord, movecoord(coord, 0, 0, 3), 30, 126, ^exact_north, true);
+~agility_exactmove(human_doublepipesqueeze, 30, 4, coord, movecoord(coord, 0, 0, 3), 30, 110, ^exact_north, true);
 sound_synth(squeeze_in, 1, 0);
 ~agility_xp(75);
 ~update_gnome_varp(7);
