@@ -559,7 +559,11 @@ if(coordz(coord) > coordz(loc_coord)) {
 def_coord $walk_coord = movecoord($end_coord, 0, 0, 0);
 p_teleport($start_coord);
 p_delay(0);
-~agility_exactmove(human_crawling, 30, 2, $start_coord, $end_coord, 30, 94, $dir, true);
+// THE WINDOW ENDS WHEN THE CRAWL DOES. This copied 30->94 from ~climb_stile and ~hurdle_wall
+// beside it, where it is exactly right - human_walk_style is 64 cycles and human_jump_hurdle
+// 63, so from 30 they finish at 94 and 93. human_crawling is 40, so it was over at 70 and the
+// last 24 cycles carried the player on through the fence in an idle pose.
+~agility_exactmove(human_crawling, 30, 2, $start_coord, $end_coord, 30, 70, $dir, true);
 p_teleport($walk_coord);
 
 // ---------------------------------------------------------------- under-wall tunnels
