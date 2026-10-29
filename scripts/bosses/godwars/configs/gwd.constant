@@ -171,3 +171,9 @@
 
 // Power of Death / Power of Light: "lasts for one minute", which is 100 ticks.
 ^sotd_spec_ticks = 100
+
+// How far off the ground the spirit is drawn. Both graphics are Old School model 6737, which hangs
+// from its origin - y -82..178, so 178 of its 260 units sit below the point it is drawn from. At 0
+// the spirit is two thirds underground and reads as a smudge around the player's shins; 96 stands
+// it on the player, and is the height every other imported Old School special graphic here uses.
+^sotd_spec_gfx_height = 96
