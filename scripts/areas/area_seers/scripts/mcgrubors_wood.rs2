@@ -19,8 +19,14 @@ if(~check_axis(coord, loc_coord, loc_angle) = true) {
     $dir = ^exact_west;
 }
 mes("You squeeze through the loose railing.");
-// OSRS uses an anim not in 225, just guessing here
-~agility_exactmove(human_into_sidestep, 30, 2, $start, movecoord($start, $mod, 0, 0), 15, 90, $dir, false);
+// THE RAILING'S OWN ANIMATION. This said "OSRS uses an anim not in 225, just guessing here"
+// and guessed with human_into_sidestep - the twenty-cycle ENTRY into a sidestep, which every
+// other caller in the build uses as an entry and follows with a sidestep walk. Played alone
+// over a glide that runs to cycle 90 it left the player sliding forty cycles in their idle
+// pose. railing_squeeze is in this cache, used by nothing, named for this obstacle, and at
+// seq 3844 - the id a RuneLite plugin's list gives OSRS's own RAILING_SQUEEZE. It lasts 91
+// cycles, so the 15->90 glide now sits inside it rather than running past the end.
+~agility_exactmove(railing_squeeze, 0, 3, $start, movecoord($start, $mod, 0, 0), 15, 90, $dir, false);
 
 [oploc1,_red_vine] @dig_red_vine;
 
