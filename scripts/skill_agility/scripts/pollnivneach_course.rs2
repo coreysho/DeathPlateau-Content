@@ -52,7 +52,23 @@ mes("You climb the rough wall.");
 if (~pollnivneach_blocked = true) { return; }
 p_arrivedelay;
 mes("You swing across the monkeybars.");
-~pollnivneach_move(^pollnivneach_xp_bars, ^pollnivneach_land_bars, human_ropeswing_long);
+// ON MONKEY BARS, not on a rope. This played human_ropeswing_long - grab a rope, swing, let go -
+// for an obstacle whose own message says monkeybars. The cache has the whole set (on, off, walk,
+// ready) and this build already uses all four correctly on the Ape Atoll course, in the Agility
+// Arena and on the Yanille dungeon shortcut: stance, _on to take hold, cross, _off, stance back.
+//
+// Those three cross with ~forcemove, which moves a tile a tick. These bars are eleven tiles, so
+// copying that would turn a one-second crossing into six and a half and change what a lap is
+// worth - a gameplay decision rather than an animation one - so the movement is left alone and
+// only what is drawn changes. The stance carries the player across hand over hand; _on and _off
+// bracket it.
+~bas_set(human_monkeybars_ready, human_monkeybars_ready, human_monkeybars_walk,
+         human_monkeybars_ready, human_monkeybars_ready, human_monkeybars_ready, null);
+sound_synth(monkeybars_on, 1, 0);
+~pollnivneach_move(^pollnivneach_xp_bars, ^pollnivneach_land_bars, human_monkeybars_on);
+anim(human_monkeybars_off, 0);
+sound_synth(monkeybars_off, 1, 0);
+~update_bas;
 ~pollnivneach_progress(7);
 
 [oploc1,osrsloc_14944]
