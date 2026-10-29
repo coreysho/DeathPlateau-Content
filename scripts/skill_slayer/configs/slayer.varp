@@ -1,15 +1,31 @@
+// WHAT THE CLIENT IS TOLD ABOUT A SLAYER TASK (29 October 2026).
+//
+// None of this used to leave the server, so a client knew nothing about the task a player was on:
+// not the monster, not how many were left, not who gave it. The five marked transmit below are
+// what a slayer page needs and nothing more - no block list, no unlock bits, no imbued heart
+// clock, because a page that does not show a thing has no business being sent it.
+//
+// THEY ARE ALL SMALL INTS AND THAT IS THE POINT. slayer_target is a hand-assigned number from
+// skill_slayer/configs/slayer.constant - 1 is monkeys, 2 goblins - so it is stable in the way a
+// loc id is not, and the client turns it into "Goblins" through a table generated from
+// task_name.enum. The name itself cannot be sent: a varp is an int.
+
 [slayer_count]
+transmit=yes
 scope=perm
 
 [slayer_target]
+transmit=yes
 scope=perm
 
 // Slayer points (skill_slayer/scripts/slayer_points.rs2), added 2026-09-10.
 [slayer_points]
+transmit=yes
 scope=perm
 
 // tasks completed in a row; Turael swapping a task resets it
 [slayer_streak]
+transmit=yes
 scope=perm
 
 // tasks completed, ever - %slayer_streak is reset by Turael, so it is not this. Counted by
@@ -19,6 +35,7 @@ scope=perm
 
 // who gave the current task: 1 Turael, 2 Mazchna, 3 Vannaka, 4 Chaeldar, 5 Duradel (0 = before this existed)
 [slayer_task_master]
+transmit=yes
 scope=perm
 
 // blocked tasks (^slayer_* values, 0 = empty slot)
