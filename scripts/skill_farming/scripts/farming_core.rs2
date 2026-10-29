@@ -195,8 +195,71 @@ if (oc_param($seed, farming_family) = ^farming_family_bush) {
 }
 return(max(1, divide($cycle, 4)));
 
-// Bring one patch up to date. Safe to call as often as you like.
+// Bring one patch up to date, and then work out when it next moves. Safe to call as often as
+// you like.
+//
+// THE DUE TIME IS WRITTEN HERE, AROUND THE WORK, not inside it: ~farming_update_state returns
+// from a dozen places - dead, stump, nothing planted, nothing to do yet - and a due time written
+// at each of them is a dozen chances to forget one. A patch whose countdown is missing looks
+// exactly like a patch that is not growing.
 [proc,farming_update](int $patch)
+~farming_update_state($patch);
+~farming_set_due($patch, ~farming_due_minute($patch));
+
+// WHEN THIS PATCH NEXT ADVANCES, as a world minute, or 0 when nothing is coming.
+//
+// It mirrors the branching of ~farming_update_state below, and reuses the same procs for every
+// interval rather than repeating a number: ~farming_growth_minutes for a growing plant and
+// ~farming_regrow_minutes for produce, which are the only two places those rates exist. Say what
+// the picture is rather than second-guessing it - the patch has just been brought up to date, so
+// farming_time_N is current and the arithmetic is one addition.
+[proc,farming_due_minute](int $patch)(int)
+if ($patch >= ^farming_compost_bin_first) {
+    return(0);
+}
+def_int $last = ~farming_get_time($patch);
+if ($last = 0) {
+    return(0);
+}
+def_int $crop = ~farming_crop_id($patch);
+if ($crop = 0) {
+    // Bare soil is as far back as a patch goes, so nothing is due from there.
+    if (~farming_get_state($patch) <= ^farming_state_weeds_full) {
+        return(0);
+    }
+    return(add($last, max(1, divide(^farming_weed_regrow_minutes, ^farming_speed_divisor))));
+}
+def_namedobj $seed = ~farming_crop_obj($crop);
+if ($seed = null) {
+    return(0);
+}
+def_int $stages = oc_param($seed, farming_stages);
+def_int $stage;
+def_int $condition;
+def_int $watered;
+$stage, $condition, $watered = ~farming_decode($patch, $seed);
+if ($condition = ^farming_dead | $condition = ^farming_stump) {
+    return(0);
+}
+if ($stage >= $stages & $condition = ^farming_healthy) {
+    // Grown. From here the clock belongs to produce, and a plant with none is finished.
+    def_int $max = oc_param($seed, farming_produce_max);
+    if ($max <= 0 | oc_param($seed, farming_family) = ^farming_family_mushroom) {
+        return(0);
+    }
+    if (~farming_checked($patch) = false) {
+        return(0);
+    }
+    def_int $full = oc_param($seed, farming_checked_state);
+    if (~farming_get_state($patch) >= add($full, $max)) {
+        // Full of fruit; nothing more comes until some is picked.
+        return(0);
+    }
+    return(add($last, max(1, divide(~farming_regrow_minutes($seed), ^farming_speed_divisor))));
+}
+return(add($last, ~farming_growth_minutes($seed)));
+
+[proc,farming_update_state](int $patch)
 // Compost bins share the patch numbering and the same two varps, but their "crop id" field holds
 // which kind of bin it is, not a crop. Running the growth engine over one would read that 1 as
 // "potato" and stamp a vegetable patch over the bin, so they are excluded here and handled entirely
@@ -431,6 +494,9 @@ while ($i < ^farming_patch_count) {
     $i = add($i, 1);
 }
 %farming_last_tick = ~farming_now;
+// The server's clock, so the client can turn farming_due_N into a countdown. One varp a minute
+// per player, which is why the due times themselves can be written only when they change.
+%farming_world_minute = ~farming_now;
 
 // Once a minute while online. Every growth cycle in the game is a whole number of minutes and the
 // shortest is five, so nothing can slip past at this resolution.

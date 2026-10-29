@@ -348,3 +348,92 @@ switch_int($patch) {
     case ^farming_patch_compost_bin_4 : return(0);
     case default : return(0);
 }
+
+// The world minute this patch next advances, or 0 when nothing is coming. Transmitted, so a
+// plugin can show a real countdown instead of guessing one.
+[proc,farming_get_due](int $patch)(int)
+switch_int($patch) {
+    case ^farming_patch_veg_patch_1 : return(%farming_due_0);
+    case ^farming_patch_veg_patch_2 : return(%farming_due_1);
+    case ^farming_patch_veg_patch_3 : return(%farming_due_2);
+    case ^farming_patch_veg_patch_4 : return(%farming_due_3);
+    case ^farming_patch_veg_patch_5 : return(%farming_due_4);
+    case ^farming_patch_veg_patch_6 : return(%farming_due_5);
+    case ^farming_patch_veg_patch_7 : return(%farming_due_6);
+    case ^farming_patch_veg_patch_8 : return(%farming_due_7);
+    case ^farming_patch_hops_patch_1 : return(%farming_due_8);
+    case ^farming_patch_hops_patch_2 : return(%farming_due_9);
+    case ^farming_patch_hops_patch_3 : return(%farming_due_10);
+    case ^farming_patch_hops_patch_4 : return(%farming_due_11);
+    case ^farming_patch_flower_patch_1 : return(%farming_due_12);
+    case ^farming_patch_flower_patch_2 : return(%farming_due_13);
+    case ^farming_patch_flower_patch_3 : return(%farming_due_14);
+    case ^farming_patch_flower_patch_4 : return(%farming_due_15);
+    case ^farming_patch_herb_patch_1 : return(%farming_due_16);
+    case ^farming_patch_herb_patch_2 : return(%farming_due_17);
+    case ^farming_patch_herb_patch_3 : return(%farming_due_18);
+    case ^farming_patch_herb_patch_4 : return(%farming_due_19);
+    case ^farming_patch_bush_patch_1 : return(%farming_due_20);
+    case ^farming_patch_bush_patch_2 : return(%farming_due_21);
+    case ^farming_patch_bush_patch_3 : return(%farming_due_22);
+    case ^farming_patch_bush_patch_4 : return(%farming_due_23);
+    case ^farming_patch_tree_patch_1 : return(%farming_due_24);
+    case ^farming_patch_tree_patch_2 : return(%farming_due_25);
+    case ^farming_patch_tree_patch_3 : return(%farming_due_26);
+    case ^farming_patch_tree_patch_4 : return(%farming_due_27);
+    case ^farming_patch_fruit_tree_patch_1 : return(%farming_due_28);
+    case ^farming_patch_fruit_tree_patch_2 : return(%farming_due_29);
+    case ^farming_patch_fruit_tree_patch_3 : return(%farming_due_30);
+    case ^farming_patch_fruit_tree_patch_4 : return(%farming_due_31);
+    case ^farming_patch_spirit_tree_patch_1 : return(%farming_due_32);
+    case ^farming_patch_spirit_tree_patch_2 : return(%farming_due_33);
+    case ^farming_patch_spirit_tree_patch_3 : return(%farming_due_34);
+    case ^farming_patch_calquat_tree_patch : return(%farming_due_35);
+    case ^farming_patch_cactus_patch : return(%farming_due_36);
+    case ^farming_patch_mushroom_patch : return(%farming_due_37);
+    case ^farming_patch_belladonna_patch : return(%farming_due_38);
+}
+return(0);
+
+[proc,farming_set_due](int $patch, int $due)
+switch_int($patch) {
+    case ^farming_patch_veg_patch_1 : %farming_due_0 = $due;
+    case ^farming_patch_veg_patch_2 : %farming_due_1 = $due;
+    case ^farming_patch_veg_patch_3 : %farming_due_2 = $due;
+    case ^farming_patch_veg_patch_4 : %farming_due_3 = $due;
+    case ^farming_patch_veg_patch_5 : %farming_due_4 = $due;
+    case ^farming_patch_veg_patch_6 : %farming_due_5 = $due;
+    case ^farming_patch_veg_patch_7 : %farming_due_6 = $due;
+    case ^farming_patch_veg_patch_8 : %farming_due_7 = $due;
+    case ^farming_patch_hops_patch_1 : %farming_due_8 = $due;
+    case ^farming_patch_hops_patch_2 : %farming_due_9 = $due;
+    case ^farming_patch_hops_patch_3 : %farming_due_10 = $due;
+    case ^farming_patch_hops_patch_4 : %farming_due_11 = $due;
+    case ^farming_patch_flower_patch_1 : %farming_due_12 = $due;
+    case ^farming_patch_flower_patch_2 : %farming_due_13 = $due;
+    case ^farming_patch_flower_patch_3 : %farming_due_14 = $due;
+    case ^farming_patch_flower_patch_4 : %farming_due_15 = $due;
+    case ^farming_patch_herb_patch_1 : %farming_due_16 = $due;
+    case ^farming_patch_herb_patch_2 : %farming_due_17 = $due;
+    case ^farming_patch_herb_patch_3 : %farming_due_18 = $due;
+    case ^farming_patch_herb_patch_4 : %farming_due_19 = $due;
+    case ^farming_patch_bush_patch_1 : %farming_due_20 = $due;
+    case ^farming_patch_bush_patch_2 : %farming_due_21 = $due;
+    case ^farming_patch_bush_patch_3 : %farming_due_22 = $due;
+    case ^farming_patch_bush_patch_4 : %farming_due_23 = $due;
+    case ^farming_patch_tree_patch_1 : %farming_due_24 = $due;
+    case ^farming_patch_tree_patch_2 : %farming_due_25 = $due;
+    case ^farming_patch_tree_patch_3 : %farming_due_26 = $due;
+    case ^farming_patch_tree_patch_4 : %farming_due_27 = $due;
+    case ^farming_patch_fruit_tree_patch_1 : %farming_due_28 = $due;
+    case ^farming_patch_fruit_tree_patch_2 : %farming_due_29 = $due;
+    case ^farming_patch_fruit_tree_patch_3 : %farming_due_30 = $due;
+    case ^farming_patch_fruit_tree_patch_4 : %farming_due_31 = $due;
+    case ^farming_patch_spirit_tree_patch_1 : %farming_due_32 = $due;
+    case ^farming_patch_spirit_tree_patch_2 : %farming_due_33 = $due;
+    case ^farming_patch_spirit_tree_patch_3 : %farming_due_34 = $due;
+    case ^farming_patch_calquat_tree_patch : %farming_due_35 = $due;
+    case ^farming_patch_cactus_patch : %farming_due_36 = $due;
+    case ^farming_patch_mushroom_patch : %farming_due_37 = $due;
+    case ^farming_patch_belladonna_patch : %farming_due_38 = $due;
+}
