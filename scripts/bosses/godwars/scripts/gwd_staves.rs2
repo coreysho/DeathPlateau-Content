@@ -51,12 +51,12 @@ inv_setslot(inv, $slot, staff_of_light, 1);
 // Sanctuary jingle, because I had not found an id and would not guess at one; the dump had both
 // all along.
 //
-// HEIGHT 96, NOT 0. Model 6737 - which is both graphics, recoloured - is authored HANGING FROM ITS
-// ORIGIN: its vertices run y -82..178, so 178 of its 260 units are below the point it is drawn
-// from. Played at ground height, two thirds of the spirit is under the floor and all a player sees
-// is the top of its hood around their shins, which is what shipped. The animation does not lift it
-// either - OSRS seq 7084's transforms are all +-16 - so the height is the only thing that can, and
-// 96 is what every other imported Old School special graphic in skill_combat/pvp/specs uses.
+// THE SPIRIT HANGS OVER THE PLAYER, it does not stand on them - see ^sotd_spec_gfx_height for the
+// number and how it was measured. Model 6737, which is both graphics recoloured, is authored
+// HANGING FROM ITS ORIGIN: its vertices run y -82..178, so 178 of its 260 units are below the
+// point it is drawn from, and at ground height two thirds of it is under the floor. The animation
+// does not lift it either - Old School seq 7084's transforms are all within +-16 - so the height
+// is the only thing that can.
 [label,sotd_power_of_death]
 ~set_sa_vars(oc_param(inv_getobj(worn, ^wearpos_rhand), sa_energy));
 %sotd_spec = add(map_clock, ^sotd_spec_ticks);

@@ -173,7 +173,22 @@
 ^sotd_spec_ticks = 100
 
 // How far off the ground the spirit is drawn. Both graphics are Old School model 6737, which hangs
-// from its origin - y -82..178, so 178 of its 260 units sit below the point it is drawn from. At 0
-// the spirit is two thirds underground and reads as a smudge around the player's shins; 96 stands
-// it on the player, and is the height every other imported Old School special graphic here uses.
-^sotd_spec_gfx_height = 96
+// from its origin - y -82..178, so 178 of its 260 units sit below the point it is drawn from, and
+// at 0 the spirit is two thirds underground and reads as a smudge around the player's shins.
+//
+// IT DOES NOT STAND ON THE PLAYER, IT HANGS OVER THEM. 96 was wrong for the same reason 0 was,
+// and 280 after it: all three were worked out from something other than the game. 280 came from
+// measuring Old School's own picture with the spirit's WIDTH as the ruler, which looked sound and
+// was not - the widest part of the hood is the part the player stands in front of, so it is the
+// one measurement the picture cannot give you.
+//
+// 370 IS CALIBRATED AGAINST A SHOT OF THIS GAME AT A KNOWN HEIGHT. With 280 live, a screenshot of
+// it fixes the scale exactly - the spirit's top is h+82 = 362 units above the ground and 239
+// pixels above it, so 1.515 units per pixel, and the player in that shot is 214 units tall. The
+// player in Old School's picture is the same 214 units and 180 pixels of it, which gives that
+// picture's scale without needing to know its camera; its spirit's top is 383 pixels up, so 454
+// units, so 454 - 82 = 372.
+//
+// The one soft number is where the player's head ends in each shot, which is worth about +-12
+// either way: 360 if the helm's top is a row lower, 385 if it is a row higher. 370 is the middle.
+^sotd_spec_gfx_height = 370
