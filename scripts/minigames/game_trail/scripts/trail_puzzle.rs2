@@ -5,7 +5,12 @@ if(inv_freespace(trail_puzzleinv) > 1) {
     inv_clear(trail_puzzleinv); // prob shouldn't ever need this
     ~init_trail_puzzle;
 }
-inv_transmit(trail_puzzleinv, trail_puzzle:com_3);
+// com_2, THE 5x5 GRID. This said com_3, which is the Hint button - a model, and the client
+// only gives an inventory array to the two inv component types. UPDATE_INV_FULL writes
+// straight into that array with no null check, so the packet threw inside readPacket and
+// the catch at the bottom of it calls logout(): opening a puzzle box threw the player out
+// of the game. tools/invtransmit.py checks every transmit in the tree for the same thing.
+inv_transmit(trail_puzzleinv, trail_puzzle:com_2);
 if_openmain(trail_puzzle);
 
 [proc,init_trail_puzzle]
