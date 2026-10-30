@@ -435,6 +435,7 @@ GENUM = read('scripts/areas/area_mage_arena/configs/god_cape.enum')
 VRS2 = read('scripts/skillcapes/scripts/max_cape_variants.rs2')
 PERKS = read('scripts/skillcapes/scripts/skillcape_perks.rs2')
 GODGEAR = read('scripts/areas/area_mage_arena/scripts/god_gear.rs2')
+ANCIENTCAPE = read('scripts/areas/area_mage_arena/scripts/ancient_cape.rs2')
 MACONST = read('scripts/areas/area_mage_arena/configs/mage_arena.constant')
 KEYS = [v['key'] for v in VSPEC['variants']]
 NAMES = ['%s_max_%s' % (k, part) for k in KEYS for part in ('cape', 'hood')]
@@ -472,7 +473,10 @@ for _rel in ('scripts/_unpack/377/all.obj',
              'scripts/quests/quest_animmag/configs/animmag.obj',
              # the Undertaker's cape, this build's own source cape and the first one that is not
              # an Old School item
-             'scripts/areas/area_wilderness/configs/undertaker_outfit.obj'):
+             'scripts/areas/area_wilderness/configs/undertaker_outfit.obj',
+             # the three imbued ancient capes, added 30 October; without this file three source
+             # capes read as missing and SIX checks here fail on a build that is correct
+             'scripts/areas/area_mage_arena/configs/ancient_cape.obj'):
     ALLOBJ.update(blocks(read(_rel)))
 def _params(f):
     out = {}
@@ -481,14 +485,27 @@ def _params(f):
         if n.lstrip('-').isdigit():
             out[k] = int(n)
     return out
-# A CUSTOM VARIANT IS MEASURED AGAINST THE PLAIN MAX CAPE, not against its source cape. The nine
-# Old School variants inherit their source cape's bonuses because that is what Old School did - a
-# Saradomin max cape is a Saradomin cape's stats in a Max cape's shape. The Undertaker's source is a
-# 400-token COSMETIC with no bonuses at all, so that rule would force the choice between giving a
-# shop cosmetic a max cape's defence (selling power) and giving the variant nothing (a capstone
-# strictly worse than the cape it upgrades). Neither is right. It is a Max cape in a different
-# colour, so it is the Max cape's own numbers, and this says so rather than letting it drift.
-_PLAIN = _params(blocks(read('scripts/skillcapes/configs/max_cape.obj'))['max_cape'])
+# A VARIANT'S BONUSES ARE ITS SOURCE CAPE'S, except where the source cape has none. The Old School
+# variants inherit their source's bonuses because that is what Old School did - a Saradomin max cape
+# is a Saradomin cape's stats in a Max cape's shape. The Undertaker's source is a 400-token COSMETIC
+# with no combat bonuses at all, so that rule would force the choice between giving a shop cosmetic
+# a max cape's defence (selling power) and giving the variant nothing (a capstone strictly worse
+# than the cape it upgrades). Neither is right. It is a Max cape in a different colour, so it is the
+# Max cape's own numbers.
+#
+# THE RULE IS READ OFF THE SOURCE, NOT OFF A FLAG, and the three imbued ancient capes are why. This
+# keyed off the spec's _custom field, which means "not an Old School item" - true of the Undertaker
+# cape AND of those three, which do carry their source's bonuses and must keep them. One field was
+# answering two questions. "Has the source any combat bonuses" answers the only one that matters
+# here, and answers it for whatever is added next.
+_PLAIN_BLOCK = blocks(read('scripts/skillcapes/configs/max_cape.obj'))['max_cape']
+_PLAIN = _params(_PLAIN_BLOCK)
+# a param is a COMBAT bonus if some variant's spec names it, or it is the God Wars flag; the
+# Undertaker's cape carries pvp_token_bounty, which is numeric and is not a bonus
+_BONUSKEYS = {k for v in VSPEC['variants'] for k in v['bonuses']} | \
+    {v['gwd_prot'] for v in VSPEC['variants'] if v.get('gwd_prot')}
+def _combat(f):
+    return {k: n for k, n in _params(f).items() if k in _BONUSKEYS}
 _bad = []
 for v in VSPEC['variants']:
     src = ALLOBJ.get(v['source_cape'])
@@ -496,8 +513,8 @@ for v in VSPEC['variants']:
     if src is None or var is None:
         _bad.append('%s: cannot find both records' % v['key'])
         continue
-    want = _PLAIN if v.get('_custom') else _params(src)
-    got = _params(var)
+    want = _combat(src) or _combat(_PLAIN_BLOCK)
+    got = _combat(var)
     if got != want:
         _bad.append('%s: variant %s, source %s' % (v['key'], got, want))
 check(not _bad,
@@ -519,11 +536,17 @@ check(not _sbad,
       "...and the same numbers the spec took out of OSRS's item table, plus the God Wars flag the "
       'spec carries itself, so source and variant cannot have drifted together: %s'
       % (_sbad[:2] or 'all %d' % len(KEYS)))
-# and only the two gods whose door God Wars has
+# and only the two gods whose door God Wars has. Which variants that is follows from their SOURCE
+# capes rather than from a list here - a Saradomin max cape has to be let through any door the
+# Saradomin cape it was made from is let through, and no Guthix cape carries one because the
+# dungeon has no Guthix room.
 _gods = sorted(v['key'] for v in VSPEC['variants'] if v.get('gwd_prot'))
-check(_gods == ['imbued_saradomin', 'imbued_zamorak', 'saradomin', 'zamorak'],
-      'and the flag is on the four Saradomin and Zamorak capes and no others - God Wars has no '
-      'Guthix room: %s' % ', '.join(_gods))
+_gwant = sorted(v['key'] for v in VSPEC['variants']
+                if any(k.startswith('gwd_prot_') for k in _params(ALLOBJ.get(v['source_cape'], {}))))
+check(_gods == _gwant and not any('guthix' in g for g in _gods),
+      'the God Wars flag is on exactly the variants whose source cape carries one, and on no '
+      'Guthix cape - the dungeon has no Guthix room: %s'
+      % (', '.join(_gods) if _gods == _gwant else 'spec %s, sources %s' % (_gods, _gwant)))
 check(not [n for n, f in VOBJ.items() if n.endswith('_max_hood') and f.get('param')],
       'no hood carries a combat bonus, which is what every skillcape hood in this build does')
 
@@ -569,16 +592,30 @@ check('$cape = max_cape | enum(obj, namedobj, maxvariant_source, $cape) ! null' 
 # ---- THE GOD TABLE: twelve capes, not six
 _gblock = GENUM.split('[god_cape_god]', 1)[1].split('\n[', 1)[0] if '[god_cape_god]' in GENUM else ''
 _gvals = dict(re.findall(r'^val=(\w+),\^god_(\w+)$', _gblock, re.M))
+# WHICH CAPES THOSE ARE IS DERIVED, not listed. It was a list of twelve - three plain, three
+# imbued, six Max variants - and the three imbued ancient capes plus their three Max variants made
+# it a list of eighteen, which is six checks failing on a build that was right. A god cape is a
+# plain or imbued god cape, anything made FROM one (an ancient cape says so with
+# ancient_cape_from), or a Max variant whose key names a god; nothing here needs editing when a
+# fourth kind is added.
+_GODS = ('saradomin', 'guthix', 'zamorak')
+def _godof(n):
+    return next((g for g in _GODS if n.endswith(g) or ('_%s_' % g) in n), None)
 _wantgod = {}
-for _g in ('saradomin', 'guthix', 'zamorak'):
+for _g in _GODS:
     _wantgod['%s_cape' % _g] = _g
     _wantgod['imbued_%s_cape' % _g] = _g
-    _wantgod['%s_max_cape' % _g] = _g
-    _wantgod['imbued_%s_max_cape' % _g] = _g
+for _n, _f in ALLOBJ.items():
+    if any(x.startswith('ancient_cape_from,') for x in _f.get('param', [])):
+        _wantgod[_n] = _godof(_n)
+for _v in VSPEC['variants']:
+    if _godof(_v['key']):
+        _wantgod['%s_max_cape' % _v['key']] = _godof(_v['key'])
 check(_gvals == _wantgod,
-      'god_cape_god maps TWELVE capes to their god - three plain, three imbued and the six Max '
-      'cape variants - and nothing else: %s'
-      % (sorted(set(_gvals.items()) ^ set(_wantgod.items()))[:3] or 'exactly the twelve'))
+      'god_cape_god maps each god cape to its god and nothing else - the plain and imbued three, '
+      'everything remade from one, and every Max variant whose key names a god, %d in all: %s'
+      % (len(_wantgod),
+         sorted(set(_gvals.items()) ^ set(_wantgod.items()))[:3] or 'exactly those'))
 _sblock = GENUM.split('[god_staff_god]', 1)[1].split('\n[', 1)[0] if '[god_staff_god]' in GENUM else ''
 _svals = dict(re.findall(r'^val=(\w+),\^god_(\w+)$', _sblock, re.M))
 check(_svals == {'saradomin_staff': 'saradomin', 'guthix_staff': 'guthix',
@@ -641,15 +678,19 @@ check('check_conflicting_god_cape' not in GODGEAR
 # as an argument and jumps to @god_cape_equip once it has the 99s - because a variant needs both
 # and a plain god cape needs only the staff test. Counted together here, since what matters is that
 # all twelve reach it.
+# BOTH FILES, because a trigger counts wherever it is declared. The three imbued ancient capes
+# keep theirs beside the rest of their own item in ancient_cape.rs2 rather than in god_gear.rs2,
+# and reading only the one file said three god capes had no equip trigger at all - a bug report
+# about a build where every trigger was present.
 _gcape_triggers = re.findall(r'^\[opheld2,(\w+)\] @god_cape_equip\(\^god_(\w+)\);$',
-                             GODGEAR, re.M)
+                             GODGEAR + '\n' + ANCIENTCAPE, re.M)
 _vgod_triggers = re.findall(r'^\[opheld2,(\w+)\] @maxvariant_equip\(\^god_(\w+)\);$',
                             VRS2, re.M)
 check(sorted(_gcape_triggers + [t for t in _vgod_triggers if t[1] != 'none'])
       == sorted((n, g) for n, g in _wantgod.items()),
-      'and all twelve god capes have an equip trigger that refuses the staff of another god - the '
-      'six variants reaching it through @maxvariant_equip: %d of 12'
-      % len(_gcape_triggers + [t for t in _vgod_triggers if t[1] != 'none']))
+      'and every god cape has an equip trigger that refuses the staff of another god - the Max '
+      'variants reaching it through @maxvariant_equip: %d of %d'
+      % (len(_gcape_triggers + [t for t in _vgod_triggers if t[1] != 'none']), len(_wantgod)))
 _gstaff = re.findall(r'^\[opheld2,(\w+)\] @god_staff_equip\(\^god_(\w+)\);$',
                      nocomment(GODGEAR), re.M)
 check(sorted(_gstaff) == [('guthix_staff', 'guthix'), ('saradomin_staff', 'saradomin'),
@@ -664,7 +705,9 @@ check(sorted(_gstaff) == [('guthix_staff', 'guthix'), ('saradomin_staff', 'sarad
 # than a count, so a mutation that drops one trigger is caught by the check that names it.
 _vnames = re.findall(r'^val=(\w+_max_cape),\w+$', VENUM.split('[maxvariant_source]', 1)[1], re.M) \
     if '[maxvariant_source]' in VENUM else []
-check(len(_vnames) == 10, 'there are ten variants to account for: %d' % len(_vnames))
+check(len(_vnames) == len(VSPEC['variants']),
+      'the enum accounts for every variant the spec declares, %d of %d'
+      % (len(_vnames), len(VSPEC['variants'])))
 for _vn in _vnames:
     check('[opheld2,%s] @maxvariant_equip(^god_' % _vn in VRS2,
           '  %s is gated on the Max cape\'s own ninety-nines' % _vn)
