@@ -9,8 +9,9 @@
 # which is the same as having no CI at all.
 #
 # What runs now, on every push:
-#   pack       - rs2check, then a full build against THIS fork's engine, then a check that the
-#                packed interfaces really do count the rune pouch's runes
+#   pack       - rs2check and the inv_transmit sweep, then a full build against THIS fork's
+#                engine, then a check that the packed interfaces really do count the rune
+#                pouch's runes
 #   batteries  - the ten check batteries, one runner each so a failure names itself
 #
 # What runs when asked (Actions -> Verify Content -> Run workflow):
@@ -82,6 +83,14 @@ jobs:
     - name: rs2check
       working-directory: content/scripts
       run: python ../tools/rs2check.py
+
+    # Also seconds, and also needs no build: every inv_transmit must name a component the client
+    # will give an inventory array to. One did not - the puzzle box transmitted to its Hint model
+    # - and the symptom was not an empty window but a logout, because UPDATE_INV_FULL writes into
+    # that array with no null check and readPacket's catch calls logout().
+    - name: Every inv_transmit names an inv component
+      working-directory: content
+      run: python tools/invtransmit.py
 
     - uses: oven-sh/setup-bun@v2
       with:
