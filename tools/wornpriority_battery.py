@@ -32,7 +32,7 @@ Measure with tools/models/WearSweep.java: --selfdiff for what a change does to t
 --culprits for the individual faces at fault, both against the AUTHORED bytes and a gender-matched
 kit.
 """
-import os, re, sys
+import hashlib, os, re, sys
 
 C = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TABLE = os.path.join(C, 'tools', 'wornpriorities.txt')
@@ -48,6 +48,11 @@ def g1(b, o): return b[o]
 def g2(b, o): return (b[o] << 8) | b[o + 1]
 
 
+def raw(path):
+    with open(path, 'rb') as fh:
+        return fh.read()
+
+
 def priorities(path):
     """The per-face priority of a 377 .ob2, as a {priority: faces} histogram.
 
@@ -56,7 +61,7 @@ def priorities(path):
     flag bytes appear in; what matters here is only that the priority section, when there is one,
     sits straight after the face types.
     """
-    b = open(path, 'rb').read()
+    b = raw(path)
     h = len(b) - 18
     vcount, fcount, tcount = g2(b, h), g2(b, h + 2), g1(b, h + 4)
     f_pri = g1(b, h + 6)
@@ -71,6 +76,8 @@ def priorities(path):
 
 # every slot a player can wear something in; a model is listed once however many slots name it
 SLOTS = ('hat', 'back', 'front', 'righthand', 'torso', 'lefthand', 'legs', 'head', 'hands', 'feet')
+WEAR_KEYS = ('manwear', 'manwear2', 'manwear3', 'manhead', 'manhead2',
+             'womanwear', 'womanwear2', 'womanwear3', 'womanhead', 'womanhead2')
 
 
 def wornmodels():
@@ -89,7 +96,10 @@ def wornmodels():
                     flush(); back, models = False, []
                 elif ln.startswith('wearpos=') and ln.split('=', 1)[1].strip() in SLOTS:
                     back = True
-                elif ln.startswith('manwear=') or ln.startswith('womanwear='):
+                elif ln.split('=', 1)[0] in WEAR_KEYS:
+                    # manwear2/womanwear2 are the ARMS, named by their own config key, and they
+                    # are where the wrist labels went wrong - a listing that reads only manwear=
+                    # misses the half of the model the gloves actually meet
                     v = ln.split('=', 1)[1].split(',')[0].strip()
                     if v: models.append(v)
             flush()
@@ -100,8 +110,34 @@ def wornmodels():
     return out
 
 
+def vertexlabels(path):
+    """A checksum of the model's per-vertex animation labels, or '-' where it has none.
+
+    THE OTHER HALF OF WHAT MAKES ONE WORN MODEL MEET ANOTHER. A priority says what covers what;
+    a label says which bone a vertex follows, and two models that share a vertex POSITION but not
+    its label come apart the moment the limb bends. The Armadyl and Bandos chestplates' arms each
+    carried a wrist ring labelled 67/68 where all 78 hands models label the same ring 27/28 - 636
+    mismatched vertices across the slot - and that is a gap at the wrist no draw order can close.
+    A checksum rather than a histogram because a label change is never something to skim: it is
+    read by opening the model.
+    """
+    m = raw(path)
+    h = len(m) - 18
+    vcount, fcount = g2(m, h), g2(m, h + 2)
+    f_tex, f_pri, f_alpha, f_flabel, f_vlabel = (g1(m, h + 5), g1(m, h + 6), g1(m, h + 7),
+                                                 g1(m, h + 8), g1(m, h + 9))
+    if f_vlabel != 1:
+        return '-'
+    o = vcount + fcount                       # vertex flags, then face types
+    if f_pri == 255: o += fcount
+    if f_flabel == 1: o += fcount
+    if f_tex == 1: o += fcount
+    return hashlib.sha1(m[o:o + vcount]).hexdigest()[:8]
+
+
 def histogram(path):
-    return ' '.join('%d:%d' % kv for kv in sorted(priorities(path).items()))
+    return '%s lab=%s' % (' '.join('%d:%d' % kv for kv in sorted(priorities(path).items())),
+                          vertexlabels(path))
 
 
 def main():
@@ -139,7 +175,8 @@ def main():
 
     moved = [n for n in sorted(rows) if n in want and rows[n] != want[n]]
     check(not moved,
-          'no worn model\'s face priorities have moved without the table moving with them%s'
+          'no worn model\'s face priorities or animation labels have moved without the table '
+          'moving with them%s'
           % ('' if not moved else ': ' + ', '.join(
               '%s %s -> %s' % (n, want[n], rows[n]) for n in moved[:4])))
 
@@ -147,8 +184,11 @@ def main():
     # every cape in the depth-sorted group. The table above would catch it, but it is worth
     # saying out loud which models are allowed to be there. Hands and weapons live at 10 and 11
     # by the client's own convention, so this is a count that has to match, not a small number.
-    at10 = sorted(n for n in rows if rows[n] == '10:%d' % sum(priorities(models[n]).values()))
-    allowed = sorted(n for n in want if want[n].startswith('10:') and ' ' not in want[n])
+    def pri_only(v): return v.split(' lab=')[0]
+    at10 = sorted(n for n in rows
+                  if pri_only(rows[n]) == '10:%d' % sum(priorities(models[n]).values()))
+    allowed = sorted(n for n in want
+                     if pri_only(want[n]).startswith('10:') and ' ' not in pri_only(want[n]))
     check(at10 == allowed,
           'the %d models wholly in the depth-sorted group are the ones the table allows%s'
           % (len(allowed), '' if at10 == allowed else
