@@ -17,6 +17,10 @@ mes("You climb onto the basket.");
 if (~pollnivneach_blocked = true) { return; }
 p_arrivedelay;
 mes("You jump onto the market stall.");
+if (~pollnivneach_slipped = true) {
+    ~pollnivneach_fall(^pollnivneach_fall_stall, "You misjudge the jump and fall to the ground below.");
+    return;
+}
 ~pollnivneach_move(^pollnivneach_xp_stall, ^pollnivneach_land_stall, human_spot_jump);
 ~pollnivneach_progress(2);
 
@@ -99,6 +103,23 @@ return(false);
 // pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,pollnivneach_move](int $xp, coord $end, seq $anim)
 ~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
+
+// WHETHER THIS ATTEMPT FAILS. The numbers live in pollnivneach_course.constant,
+// where the curve they describe is written out.
+[proc,pollnivneach_slipped]()(boolean)
+if (stat_random(agility, ^pollnivneach_roll_low, ^pollnivneach_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^pollnivneach_fall_stall)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,pollnivneach_fall](coord $to, string $message)
+%pollnivneach_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^pollnivneach_hit_low + random(^pollnivneach_hit_span)), $message);
 
 [proc,pollnivneach_progress](int $completed)
 if (calc(%pollnivneach_course_progress + 1) >= $completed) {

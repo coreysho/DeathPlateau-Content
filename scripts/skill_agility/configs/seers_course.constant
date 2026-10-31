@@ -24,3 +24,24 @@
 ^seers_land_edge = 0_42_54_16_5    // 2704,3461 - the street
 
 ^seers_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^seers_fall_gap1 = 0_42_54_32_36
+^seers_fall_rope = 0_42_54_21_33
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 225 at level 60 (87.9% pass) and
+// 256 at level 79, which can no longer be beaten. Failable at 78, impossible at 79.
+//
+// Stop level 79 is published, for both the first gap and the tightrope. Falador's and
+// Draynor's tightropes stopped being failable in 2024 and this one did not, so it stays.
+^seers_roll_low = 133
+^seers_roll_high = 287
+
+// A fall costs 3-8 hitpoints.
+^seers_hit_low = 3
+^seers_hit_span = 6

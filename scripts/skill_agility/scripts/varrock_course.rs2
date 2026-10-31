@@ -28,6 +28,10 @@ if (~varrock_blocked = true) {
 p_arrivedelay;
 mes("You carefully cross the clothes line.");
 sound_synth(tightrope, 5, 0);
+if (~varrock_slipped = true) {
+    ~varrock_fall(^varrock_fall_clothesline, "You lose your footing and fall to the ground below.");
+    return;
+}
 ~varrock_cross(^varrock_xp_clothesline, ^varrock_clothesline_start, ^varrock_land_clothesline);
 ~varrock_progress(2);
 
@@ -119,6 +123,25 @@ if (coordy($end) ! coordy(coord)) {
     ~agility_exactmove(human_spot_jump, 0, 2, coord, $end, 0, 50, $direction, false);
 }
 ~agility_xp($xp);
+
+// ---------------------------------------------------------------- failing
+//
+// WHETHER THIS ATTEMPT FAILS. The numbers live in varrock_course.constant,
+// where the curve they describe is written out.
+[proc,varrock_slipped]()(boolean)
+if (stat_random(agility, ^varrock_roll_low, ^varrock_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^varrock_fall_clothesline)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,varrock_fall](coord $to, string $message)
+%varrock_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^varrock_hit_low + random(^varrock_hit_span)), $message);
 
 // ---------------------------------------------------------------- the lap
 [proc,varrock_progress](int $completed)

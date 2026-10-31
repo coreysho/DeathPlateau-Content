@@ -27,3 +27,24 @@
 ^canifis_land_gap6 = 0_54_54_54_29   // 3510,3485 - the street, where the lap ends
 
 ^canifis_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^canifis_fall_gap3 = 0_54_54_29_43
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 225 at level 40 (87.9% pass) and
+// 256 at level 64, which can no longer be beaten. Failable at 63, impossible at 64.
+//
+// THE ONE RATE OLD SCHOOL PUBLISHES: the third gap, "around 88% at level 40 Agility, up
+// to a 100% success rate at level 64". 225 of 256 is 87.9%, and every other course on
+// this list is fitted to the same shape against its own entry and stop levels.
+^canifis_roll_low = 177
+^canifis_roll_high = 299
+
+// A fall costs 3-8 hitpoints.
+^canifis_hit_low = 3
+^canifis_hit_span = 6

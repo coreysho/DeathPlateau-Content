@@ -48,3 +48,22 @@
 ^falador_sidestep_cycles = 30
 
 ^falador_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^falador_fall_handholds = 0_47_52_42_22
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 225 at level 50 (87.9% pass) and
+// 256 at level 66, which can no longer be beaten. Failable at 65, impossible at 66.
+//
+// Stop level 66 and 3-8 damage on the hand holds are both published.
+^falador_roll_low = 131
+^falador_roll_high = 319
+
+// A fall costs 3-8 hitpoints.
+^falador_hit_low = 3
+^falador_hit_span = 6

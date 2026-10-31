@@ -24,3 +24,24 @@
 ^ardougne_land_gap4 = 0_41_51_33_32
 
 ^ardougne_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^ardougne_fall_gap1 = 0_41_51_46_46
+^ardougne_fall_gap2 = 0_41_51_29_53
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 242 at level 90 (94.5% pass) and
+// 256 at level 95, which can no longer be beaten. Failable at 94, impossible at 95.
+//
+// Stop level 95 is published. Like Rellekka the window is five levels, so the entry rate is
+// 94% rather than 88%.
+^ardougne_roll_low = 0
+^ardougne_roll_high = 266
+
+// A fall costs 3-8 hitpoints.
+^ardougne_hit_low = 3
+^ardougne_hit_span = 6

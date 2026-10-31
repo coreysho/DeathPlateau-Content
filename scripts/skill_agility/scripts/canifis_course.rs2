@@ -34,10 +34,11 @@ mes("You jump across the gap.");
 if (~canifis_blocked = true) { return; }
 p_arrivedelay;
 mes("You jump across the gap.");
+if (~canifis_slipped = true) {
+    ~canifis_fall(^canifis_fall_gap3, "You miss the jump and fall to the ground below.");
+    return;
+}
 ~canifis_jump(^canifis_xp_gap3, ^canifis_land_gap3, ^exact_west);
-// The one Old School lets you fail. A slip costs hitpoints and nothing else here - see the note
-// in alkharid_course.rs2; a fall needs a street tile per obstacle and that is guesswork.
-~canifis_slip;
 ~canifis_progress(4);
 
 [oploc1,osrsloc_14846]
@@ -78,10 +79,22 @@ return(false);
 [proc,canifis_jump](int $xp, coord $end, int $direction)
 ~agility_roof_move($xp, $end, human_spot_jump, $direction);
 
-[proc,canifis_slip]
-if (random(^canifis_mark_chance) ! 0) { return; }
-mes("You slip, and catch yourself just in time.");
-~damage_self(calc(1 + random(5)));
+// WHETHER THIS ATTEMPT FAILS. The numbers live in canifis_course.constant,
+// where the curve they describe is written out.
+[proc,canifis_slipped]()(boolean)
+if (stat_random(agility, ^canifis_roll_low, ^canifis_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^canifis_fall_gap3)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,canifis_fall](coord $to, string $message)
+%canifis_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^canifis_hit_low + random(^canifis_hit_span)), $message);
 
 [proc,canifis_progress](int $completed)
 if (calc(%canifis_course_progress + 1) >= $completed) {

@@ -25,6 +25,10 @@ mes("You leap across the gap.");
 if (~rellekka_blocked = true) { return; }
 p_arrivedelay;
 mes("You carefully cross the tightrope.");
+if (~rellekka_slipped = true) {
+    ~rellekka_fall(^rellekka_fall_rope1, "You lose your footing and fall to the ground below.");
+    return;
+}
 ~rellekka_move(^rellekka_xp_rope1, ^rellekka_land_rope1, human_walk_logbalance);
 ~rellekka_progress(3);
 
@@ -68,6 +72,23 @@ return(false);
 // pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,rellekka_move](int $xp, coord $end, seq $anim)
 ~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
+
+// WHETHER THIS ATTEMPT FAILS. The numbers live in rellekka_course.constant,
+// where the curve they describe is written out.
+[proc,rellekka_slipped]()(boolean)
+if (stat_random(agility, ^rellekka_roll_low, ^rellekka_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^rellekka_fall_rope1)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,rellekka_fall](coord $to, string $message)
+%rellekka_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^rellekka_hit_low + random(^rellekka_hit_span)), $message);
 
 [proc,rellekka_progress](int $completed)
 if (calc(%rellekka_course_progress + 1) >= $completed) {

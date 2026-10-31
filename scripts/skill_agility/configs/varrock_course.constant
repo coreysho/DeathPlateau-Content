@@ -39,3 +39,24 @@
 ^varrock_wall_z = 3415
 
 ^varrock_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^varrock_fall_clothesline = 0_50_53_12_22
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 225 at level 30 (87.9% pass) and
+// 256 at level 50, which can no longer be beaten. Failable at 49, impossible at 50.
+//
+// Old School does NOT publish a stop level for this course, and 50 is a choice - 20 above
+// the entry level, the shape of the four it does publish. The 3-8 damage IS published,
+// for the clothes line; the Wall it also lets you fail is not placed in this build.
+^varrock_roll_low = 181
+^varrock_roll_high = 330
+
+// A fall costs 3-8 hitpoints.
+^varrock_hit_low = 3
+^varrock_hit_span = 6

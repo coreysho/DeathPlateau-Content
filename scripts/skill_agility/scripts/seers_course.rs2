@@ -16,6 +16,10 @@ mes("...and pull yourself onto the roof.");
 if (~seers_blocked = true) { return; }
 p_arrivedelay;
 mes("You jump across the gap.");
+if (~seers_slipped = true) {
+    ~seers_fall(^seers_fall_gap1, "You miss the jump and fall to the ground below.");
+    return;
+}
 ~seers_move(^seers_xp_gap1, ^seers_land_gap1, human_spot_jump);
 ~seers_progress(2);
 
@@ -24,6 +28,10 @@ if (~seers_blocked = true) { return; }
 p_arrivedelay;
 mes("You carefully cross the tightrope.");
 sound_synth(tightrope, 5, 0);
+if (~seers_slipped = true) {
+    ~seers_fall(^seers_fall_rope, "You lose your footing and fall to the ground below.");
+    return;
+}
 ~seers_move(^seers_xp_rope, ^seers_land_rope, human_walk_logbalance);
 ~seers_progress(3);
 
@@ -60,6 +68,23 @@ return(false);
 // pass ^exact_north, so a crossing heading west slid along facing north.
 [proc,seers_move](int $xp, coord $end, seq $anim)
 ~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
+
+// WHETHER THIS ATTEMPT FAILS. The numbers live in seers_course.constant,
+// where the curve they describe is written out.
+[proc,seers_slipped]()(boolean)
+if (stat_random(agility, ^seers_roll_low, ^seers_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^seers_fall_gap1, ^seers_fall_rope)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,seers_fall](coord $to, string $message)
+%seers_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^seers_hit_low + random(^seers_hit_span)), $message);
 
 [proc,seers_progress](int $completed)
 if (calc(%seers_course_progress + 1) >= $completed) {

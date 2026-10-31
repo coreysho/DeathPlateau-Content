@@ -11,10 +11,12 @@
 // tools/models/graftosrsmap.py. Only the course corridor was taken: the town's ground floor, and
 // everything outside the zip line's own box at levels 1 and 2, is this build's.
 //
-// FAILING COSTS HITPOINTS AND NOTHING ELSE. The wiki records the tightrope and the zip line as
-// failable for 1-5 damage and says a fail does not stop your progress, so that is what this does.
-// If Old School in fact drops you to the street, the fall coordinate is the only thing missing -
-// the roll and the damage are already here.
+// AND A FAILURE DROPS YOU INTO THE STREET. This file used to say "if Old School in fact drops
+// you to the street, the fall coordinate is the only thing missing" - it does: "failing the
+// obstacle will drop the player below, requiring them to start the course over". So the
+// tightrope and the zip line, the two the wiki records as failable for 1-5 damage, now roll
+// against Agility, reset the lap and put the player on a street tile that
+// tools/sim/coursefall.ts derived and the course cam photographs.
 
 // ---------------------------------------------------------------- 1. the rough wall
 [oploc1,osrsloc_11633]
@@ -39,8 +41,11 @@ if (~alkharid_blocked = true) {
 p_arrivedelay;
 mes("You carefully cross the tightrope.");
 sound_synth(tightrope, 5, 0);
+if (~alkharid_slipped = true) {
+    ~alkharid_fall(^alkharid_fall_rope1, "You lose your footing and fall to the ground below.");
+    return;
+}
 ~alkharid_cross(^alkharid_xp_rope1, ^alkharid_rope1_start, ^alkharid_land_rope1);
-~alkharid_slip(5);
 ~alkharid_progress(2);
 
 // ---------------------------------------------------------------- 3. the cable
@@ -61,9 +66,12 @@ if (~alkharid_blocked = true) {
 }
 p_arrivedelay;
 mes("You grip the zip line with your teeth...");
+if (~alkharid_slipped = true) {
+    ~alkharid_fall(^alkharid_fall_zip, "You lose your grip on the zip line and fall to the ground below.");
+    return;
+}
 ~alkharid_swing(^alkharid_xp_zip, ^alkharid_land_zip, ^exact_east);
 mes("...and let go at the far end.");
-~alkharid_slip(5);
 ~alkharid_progress(4);
 
 // ---------------------------------------------------------------- 5. the tropical tree
@@ -163,13 +171,24 @@ if (coordy($end) ! coordy(coord)) {
 }
 ~agility_xp($xp);
 
-// A slip costs hitpoints and nothing else - see the note at the top.
-[proc,alkharid_slip](int $max)
-if (random(^alkharid_mark_chance) ! 0) {
-    return;
+// ---------------------------------------------------------------- failing
+//
+// WHETHER THIS ATTEMPT FAILS. The numbers live in alkharid_course.constant, where the curve they
+// describe is written out.
+[proc,alkharid_slipped]()(boolean)
+if (stat_random(agility, ^alkharid_roll_low, ^alkharid_roll_high) = false) {
+    return(true);
 }
-mes("You slip, and catch yourself just in time.");
-~damage_self(calc(1 + random($max)));
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^alkharid_fall_rope1, ^alkharid_fall_zip)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,alkharid_fall](coord $to, string $message)
+%alkharid_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^alkharid_hit_low + random(^alkharid_hit_span)), $message);
 
 // ---------------------------------------------------------------- the lap
 //

@@ -3,9 +3,10 @@
 // Agility 90, seven obstacles, 889 experience a lap - the last of them and the fastest, which is
 // most of the reason anyone trains Agility past 80.
 //
-// Old School lets you fail the first and second gaps until 95 Agility. A fall needs a street tile
-// per obstacle and guessing one is worse than leaving it out, so a slip here costs hitpoints and
-// nothing else - the same choice as Al Kharid and Canifis.
+// Old School lets you fail the first and second gaps until 95 Agility, and a failure "will drop
+// the player below, requiring them to start the course over". The street tile each one drops you
+// to is derived by tools/sim/coursefall.ts rather than guessed, which is what this course used to
+// leave out. The course opens at 90, so the curve has five levels to run and starts at 94%.
 
 [oploc1,osrsloc_15608]
 if (~ardougne_blocked = true) { return; }
@@ -18,8 +19,11 @@ mes("You climb the wooden beams.");
 if (~ardougne_blocked = true) { return; }
 p_arrivedelay;
 mes("You jump across the gap.");
+if (~ardougne_slipped = true) {
+    ~ardougne_fall(^ardougne_fall_gap1, "You miss the jump and fall to the ground below.");
+    return;
+}
 ~ardougne_move(^ardougne_xp_gap1, ^ardougne_land_gap1, human_spot_jump);
-~ardougne_slip;
 ~ardougne_progress(2);
 
 [oploc1,osrsloc_26635]
@@ -33,8 +37,11 @@ mes("You walk carefully along the plank.");
 if (~ardougne_blocked = true) { return; }
 p_arrivedelay;
 mes("You jump across the gap.");
+if (~ardougne_slipped = true) {
+    ~ardougne_fall(^ardougne_fall_gap2, "You miss the jump and fall to the ground below.");
+    return;
+}
 ~ardougne_move(^ardougne_xp_gap2, ^ardougne_land_gap2, human_spot_jump);
-~ardougne_slip;
 ~ardougne_progress(4);
 
 [oploc1,osrsloc_15611]
@@ -71,12 +78,22 @@ return(false);
 [proc,ardougne_move](int $xp, coord $end, seq $anim)
 ~agility_roof_move($xp, $end, $anim, ~agility_facing(coord, $end));
 
-// Old School stops you failing at 95, so this does too.
-[proc,ardougne_slip]
-if (stat(agility) >= 95) { return; }
-if (random(^ardougne_mark_chance) ! 0) { return; }
-mes("You slip, and catch yourself just in time.");
-~damage_self(calc(1 + random(5)));
+// WHETHER THIS ATTEMPT FAILS. The numbers live in ardougne_course.constant,
+// where the curve they describe is written out.
+[proc,ardougne_slipped]()(boolean)
+if (stat_random(agility, ^ardougne_roll_low, ^ardougne_roll_high) = false) {
+    return(true);
+}
+return(false);
+
+// AND A FALL IS A LANDING. "Failing the obstacle will drop the player below, requiring them to
+// start the course over" - so the lap progress goes, no experience is paid, and the player ends
+// up on a street tile derived by tools/sim/coursefall.ts (^ardougne_fall_gap1, ^ardougne_fall_gap2)
+// rather than guessed. ~agility_delay_fail stumbles, turns them towards the drop, waits a tick,
+// telejumps, damages and prints, in that order.
+[proc,ardougne_fall](coord $to, string $message)
+%ardougne_course_progress = 0;
+~agility_delay_fail($to, $to, calc(^ardougne_hit_low + random(^ardougne_hit_span)), $message);
 
 [proc,ardougne_progress](int $completed)
 if (calc(%ardougne_course_progress + 1) >= $completed) {

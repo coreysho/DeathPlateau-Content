@@ -30,3 +30,24 @@
 ^rellekka_land_fish = 0_41_57_31_28
 
 ^rellekka_mark_chance = 4
+// WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
+// the obstacle that the client draws a floor for, that the engine does not block, that a
+// neighbour can step onto, and that is in the same walkable region as the course start - so
+// a player who falls can walk back and start the lap over, which is what Old School makes
+// them do. Re-derive rather than hand-edit.
+^rellekka_fall_rope1 = 0_40_57_63_10
+
+// THE FAIL CURVE. stat_random's value is
+//   floor(low * (99 - level) / 98) + floor(high * (level - 1) / 98) + 1
+// against a 0-255 roll, so these two numbers ARE the curve: 241 at level 80 (94.1% pass) and
+// 256 at level 85, which can no longer be beaten. Failable at 84, impossible at 85.
+//
+// Stop level 85 is published. The course opens at 80, so the curve has only five levels to
+// run and cannot reach 88% at the entry level - it settles at 94%, which is what a
+// five-level window gives.
+^rellekka_roll_low = 14
+^rellekka_roll_high = 296
+
+// A fall costs 3-8 hitpoints.
+^rellekka_hit_low = 3
+^rellekka_hit_span = 6
