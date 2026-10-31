@@ -4930,10 +4930,16 @@ check(not _unget, 'and every relic the table asks for can be got: %s'
 
 # THE TWO NEW DROPS ARE JUSTIFIED BY THE CACHE'S OWN MODELS, not by a guess. The bearded gorilla's
 # bones came off nothing: the guard wearing the bearded body (npc_1438) dropped the normal
-# gorilla's. And the level-149 ninja guards wearing npc_1441 dropped nothing, while the level-86
-# archers wearing the same body drop the SMALL ninja bones.
+# gorilla's.
+#
+# THE NINJA GUARD DROPS SMALL, which is the opposite of what this check first asked for. 757c2065
+# ("The arrest that left you standing outside") went through the whole cast and found the guards
+# were dropping MEDIUM ninja bones when they should not: medium belongs to the seven named ninja
+# monkeys - Kruk, the Duke and the five Padulah-and-company - and the guard wearing npc_1441 drops
+# small, like the archers wearing the same body. The check follows the content it was written to
+# watch, rather than the arrangement that was there before it was looked at.
 for _npc, _bones, _body in (('mm_religious_trapdoor_guard', 'mm_bearded_gorilla_monkey_bones', 'npc_1438'),
-                            ('mm_monkey_guard', 'mm_medium_ninja_monkey_bones', 'npc_1441')):
+                            ('mm_monkey_guard', 'mm_small_ninja_monkey_bones', 'npc_1441')):
     _blk = ALLNPC.split('[%s]' % _npc, 1)[1].split('\n[', 1)[0]
     check('param=death_drop,%s' % _bones in _blk,
           '%s drops %s' % (_npc, _bones))

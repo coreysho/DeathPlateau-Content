@@ -179,7 +179,7 @@ if (multiply(npc_stat(hitpoints), 2) <= npc_basestat(hitpoints)) {
   '7 ~shop_wallet_name asks which wallet this shop uses and falls through to the obj one'),
  (SHOP, '%shop_currency = npc_param(shop_currency);',
         '%shop_currency = npc_param(shop_currency);\n%shop_currency = coins;',
-  '7 ...and the currency is set in exactly those two places and nowhere else'),
+  '7 ...and the currency is set in exactly those three places and nowhere else'),
  (SHOP, '%shop_currency = coins;\n%shop_wallet = ^shop_wallet_inv;\n', '',
   '7 ~openshop still sets coins, so its 38 callers did not have to change'),
  (SHOP, '%shop_currency = npc_param(shop_currency);\n', '',

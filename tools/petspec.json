@@ -273,6 +273,7 @@
       "pickpocket_hero": 99175,
       "pickpocket_knight_of_ardougne": 257211,
       "pickpocket_man": 257211,
+      "pickpocket_master_farmer": 257211,
       "pickpocket_paladin": 127056,
       "pickpocket_rogue": 257211,
       "pickpocket_warrior": 257211,
@@ -296,7 +297,7 @@
      }
     }
    ],
-   "note": "Every one of this server's twelve pickpocket targets and eight stalls is named explicitly in one of the wiki's bands, so nothing is assigned by resemblance. The seed stall is the eighth, and its 35,815 is the number the game carries: b8699796 built the Draynor seed stall off the wiki's own figures and put pet_base,35815 in the row, a band none of the other seven is in, so it is named here rather than inherited from a neighbour - and the check that asked for it is pet_battery's 'nothing else in stealing.dbrow carries a base the spec does not know'. The H.A.M. member is the twelfth, added when 71a89ad7 gave both walking members the Pickpocket op they had carried in the cache all along; the wiki lists \"H.A.M. Member\" by name in the 257,211 band with Man/Woman, Farmer, Warrior, Rogue, Guard and the rest, so it is named here rather than inherited from the row beside it. Note the gnome is its OWN band at 108,718 - it is not in with the hero and the elf at 99,175, which is what an earlier pass of this spec had. The trapped chests get no roll: the wiki lists pickpocketing, stalls, Pyramid Plunder's chests and the Sorceress's Garden, and nothing else."
+   "note": "Every one of this server's twelve pickpocket targets and eight stalls is named explicitly in one of the wiki's bands, so nothing is assigned by resemblance. The seed stall is the eighth, and its 35,815 is the number the game carries: b8699796 built the Draynor seed stall off the wiki's own figures and put pet_base,35815 in the row, a band none of the other seven is in, so it is named here rather than inherited from a neighbour - and the check that asked for it is pet_battery's 'nothing else in stealing.dbrow carries a base the spec does not know'. The H.A.M. member is the twelfth, added when 71a89ad7 gave both walking members the Pickpocket op they had carried in the cache all along; the wiki lists \"H.A.M. Member\" by name in the 257,211 band with Man/Woman, Farmer, Warrior, Rogue, Guard and the rest, so it is named here rather than inherited from the row beside it. The Master Farmer is the thirteenth, and the wiki lists \"Master Farmer\" by name in that same 257,211 band - so again named rather than inherited, even though every row around it in pickpocket.dbrow carries the same number. Note the gnome is its OWN band at 108,718 - it is not in with the hero and the elf at 99,175, which is what an earlier pass of this spec had. The trapped chests get no roll: the wiki lists pickpocketing, stalls, Pyramid Plunder's chests and the Sorceress's Garden, and nothing else."
   },
   "skillpet_chinchompa": {
    "stat": "hunter",

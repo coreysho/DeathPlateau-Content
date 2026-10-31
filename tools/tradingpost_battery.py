@@ -55,9 +55,18 @@ IFS = {n: read('scripts/tradingpost/interfaces/%s.if' % n)
        for n in ('tradingpost', 'tradingpost_listing', 'tradingpost_offer', 'tradingpost_side')}
 
 print('the barter inv goes back')
+# THE HANDBACK IS A PROC NOW, and it had to become one. if_openmain_side swaps the main window
+# without running the old one's [if_close], so Back - which opens the listing over the offer - left
+# the items in tp_barter, an inv that is not saved: gone at logout. Every window that can replace
+# the offer calls ~tp_barter_return, and so does the close. Checked where the moveallinv actually
+# is rather than inside the close handler, or this would be red for a fix.
 close = block(RS2, '[if_close,tradingpost_offer]')
-check('~moveallinv(tp_barter, inv)' in close, '[if_close,tradingpost_offer] empties tp_barter into the inventory')
-check(close.count('\n') < 6, 'and does little else - it runs unprotected, whatever closed the window')
+handback = block(RS2, '[proc,tp_barter_return]')
+check('~tp_barter_return' in close,
+      '[if_close,tradingpost_offer] hands tp_barter back through ~tp_barter_return')
+check('~moveallinv(tp_barter, inv)' in handback, '...and that proc empties tp_barter into the inventory')
+check(len([l for l in close.split('\n') if l.strip() and not l.strip().startswith('//')]) < 4,
+      'and the close does little else - it runs unprotected, whatever closed the window')
 refresh = block(RS2, '[proc,tp_offer_refresh]')
 check('if_openmain' not in refresh, 'refreshing the offer window does not reopen it (reopening would close it, and hand the items back)')
 inv = read('scripts/tradingpost/configs/tradingpost.inv')

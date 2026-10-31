@@ -384,9 +384,17 @@ for _proc, _fallback in (('shop_wallet_name', 'oc_name(%shop_currency)'),
           and (_fallback is None or _fallback in _b),
           '~%s asks which wallet this shop uses%s'
           % (_proc, '' if _fallback is None else ' and falls through to the obj one'))
-check(SHOP.count('%shop_currency =') == 2,
-      '...and the currency is set in exactly those two places and nowhere else: %d'
+# THREE PLACES, not two, since ~openshop_obj landed. A shop's currency comes from ~openshop (coins,
+# for its 38 callers), from the npc's own param (~openshop_activenpc), and now from an argument -
+# because owned_shop names a single inv, so a shopkeeper offering two counters, as Gabooty of Tai
+# Bwo Wannai does, can only put one of them on a param and has to open the other itself. The point
+# of counting at all is that nothing ELSE sets it: a fourth would be a shop whose till nobody
+# declared.
+check(SHOP.count('%shop_currency =') == 3,
+      '...and the currency is set in exactly those three places and nowhere else: %d'
       % SHOP.count('%shop_currency ='))
+check('%shop_currency = $currency;' in SHOP.split('[proc,openshop_obj]', 1)[-1].split('\n[', 1)[0],
+      '...the third being ~openshop_obj, which takes it as an argument for a two-counter shopkeeper')
 check('%shop_currency = coins;' in SHOP.split('[proc,openshop]', 1)[-1].split('\n[', 1)[0],
       '~openshop still sets coins, so its 38 callers did not have to change')
 check('%shop_currency = npc_param(shop_currency);' in SHOP,
