@@ -253,7 +253,7 @@ MUTS = [
  (TALK, '~follower_refollow;', '',
   '8 and the pet goes back to following afterwards'),
  (TALK, '[proc,pettalk_default]', '[proc,pettalk_default]\nnpc_setmode(playerfollow);',
-  "8 follow mode is set in the slot's own file, for the cats' vermin hunt in the cat quest, for a teased larupia and for Ivan Strom's escort"),
+  "8 follow mode is set in the slot's own file, for the cats' vermin hunt in the cat quest, for a teased larupia, for Ivan Strom's escort and for Temple Trek's"),
  # 9 - the looks that are not a right-click
  (VARENUM, 'val=blurite_ore,skillpet_rock_golem_blurite\n', '',
   '9 the golem answers to 11 ores and a plain rock, and nothing else'),

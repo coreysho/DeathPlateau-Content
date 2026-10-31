@@ -205,7 +205,7 @@ MUTS += [
 
  # --- the god table
  (_GEN, 'val=imbued_guthix_max_cape,^god_guthix', 'val=imbued_guthix_max_cape,^god_zamorak',
-  '13 god_cape_god maps TWELVE capes to their god'),
+  '13 god_cape_god maps each god cape to its god and nothing else'),
  (_GEN, 'val=zamorak_staff,^god_zamorak', 'val=zamorak_staff,^god_guthix',
   '13 and god_staff_god maps the three staves'),
  (_MAC, '^god_none = 0', '^god_none = 1',
@@ -230,7 +230,7 @@ MUTS += [
  # A god variant's trigger goes to @maxvariant_equip and not straight to @god_cape_equip: it needs
  # the ninety-nines AND the staff test, where a plain god cape needs only the staff test.
  (_VRS, '[opheld2,imbued_guthix_max_cape] @maxvariant_equip(^god_guthix);', '',
-  '13 and all twelve god capes have an equip trigger that refuses the staff of another god'),
+  '13 and every god cape has an equip trigger that refuses the staff of another god'),
  (_VRS, '[opheld2,imbued_zamorak_max_cape] @maxvariant_equip(^god_zamorak);', '',
   "13 imbued_zamorak_max_cape is gated on the Max cape's own ninety-nines"),
  # ...and a variant belonging to no god has nothing but that gate, which is what let a one-defence
@@ -293,7 +293,7 @@ MUTS += [
  (_VOBJ, 'param=magicdefence,10\nparam=gwd_prot_zamorak,1', 'param=magicdefence,10',
   "13 each variant cape's combat bonuses are exactly its SOURCE cape's"),
  (_SPC, '"key": "guthix"', '"key": "guthix", "gwd_prot": "gwd_prot_guthix"',
-  '13 and the flag is on the four Saradomin and Zamorak capes and no others'),
+  '13 the God Wars flag is on exactly the variants whose source cape carries one'),
  (_AVA, 'if (%avas_attract_off = true) {\n    return;\n}\ndef_namedobj $device = ~avas_device;',
         'if (%avas_attract_off = true) {\n    return;\n}\ndef_obj $device = inv_getobj(worn, ^wearpos_back);',
   '13 ...and neither reads the cape slot itself any more'),
