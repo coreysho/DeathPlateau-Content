@@ -1,0 +1,14 @@
+// MARKS OF GRACE - the parts that are the same on every rooftop course.
+//
+// Old School gates the roll on time since the last mark SPAWNED, not on the lap: "upon
+// completing a lap after the timer has expired". Three minutes for every course here - the
+// two-minute variants are all achievement diary rewards and this build has no diaries.
+// 300 ticks is three minutes at 0.6s a tick.
+^mark_grace_wait = 300
+
+// "If the unboosted Agility level of the player is 20 levels or more over the course
+// requirement, the chances of getting a mark are 80% lower" - a fifth of the rate, and the
+// threshold is 20 or MORE, not more than 20. Canifis is exempt by a Jagex coding error, so
+// its course passes false for the penalty rather than having a different number here.
+^mark_grace_over = 20
+^mark_grace_penalty = 5

@@ -41,4 +41,7 @@
 ^draynor_wall_z = 3279
 
 // No published rate for Draynor, so this is ours and it is named rather than buried: one lap in four.
-^draynor_mark_chance = 4
+// A mark spawns 2 times in 6 on a completed lap, once the three-minute timer is up.
+// See marks.constant and ~agility_mark_roll.
+^draynor_mark_num = 2
+^draynor_mark_den = 6

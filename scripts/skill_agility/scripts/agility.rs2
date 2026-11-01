@@ -303,3 +303,42 @@ if ($dz > 0) {
     return(^exact_northwest);
 }
 return(^exact_southwest);
+
+// A MARK OF GRACE, rolled the way Old School rolls one.
+//
+// Three things, all from the wiki's "Spawning mechanics":
+//
+//   THE RATE IS PER COURSE. 2/3 on Canifis and Ardougne, 2/5 on Rellekka, 2/6 everywhere
+//   else. This used to be a flat 1/4 on all nine.
+//
+//   THE ROLL IS GATED ON TIME, not on the lap: "upon completing a lap after the timer has
+//   expired", three minutes from the last mark that SPAWNED. Without it 2/3 a lap is several
+//   times Old School's rate, because a lap takes under a minute - the gate is what makes the
+//   published fractions mean what they say.
+//
+//   AND A HIGH LEVEL ON A LOW COURSE IS PAID A FIFTH. "If the unboosted Agility level of the
+//   player is 20 levels or more over the course requirement, the chances of getting a mark
+//   are 80% lower." Unboosted, hence stat_base; 20 or MORE, hence >=. Canifis passes false:
+//   "due to a coding error, this rate reduction does not apply to the Canifis Rooftop Course",
+//   and that error is the reason anyone trains there.
+//
+// The cooldown is set when the roll SUCCEEDS, before the pack is looked at, because what the
+// timer measures in Old School is the mark appearing - a full inventory does not buy another.
+[proc,agility_mark_roll](int $num, int $den, int $req, boolean $penalty)
+if (map_clock < %mark_grace_cooldown & %mark_grace_cooldown <= add(map_clock, ^mark_grace_wait)) {
+    return;
+}
+def_int $den_now = $den;
+if ($penalty = true & stat_base(agility) >= add($req, ^mark_grace_over)) {
+    $den_now = calc($den * ^mark_grace_penalty);
+}
+if (random($den_now) >= $num) {
+    return;
+}
+%mark_grace_cooldown = add(map_clock, ^mark_grace_wait);
+if (inv_freespace(inv) < 1) {
+    mes("You notice a mark of grace, but you have no room for it.");
+    return;
+}
+inv_add(inv, mark_of_grace, 1);
+mes("You pick up a mark of grace.");

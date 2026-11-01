@@ -97,13 +97,4 @@ if (calc(%rellekka_course_progress + 1) >= $completed) {
 if (%rellekka_course_progress < ^rellekka_obstacles) { return; }
 %rellekka_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_rellekka);
-~rellekka_mark_roll;
-
-[proc,rellekka_mark_roll]
-if (random(^rellekka_mark_chance) ! 0) { return; }
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^rellekka_mark_num, ^rellekka_mark_den, ^rellekka_level, true);

@@ -23,7 +23,10 @@
 ^seers_land_gap3 = 2_42_54_14_5    // 2702,3461
 ^seers_land_edge = 0_42_54_16_5    // 2704,3461 - the street
 
-^seers_mark_chance = 4
+// A mark spawns 2 times in 6 on a completed lap, once the three-minute timer is up.
+// See marks.constant and ~agility_mark_roll.
+^seers_mark_num = 2
+^seers_mark_den = 6
 // WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
 // the obstacle that the client draws a floor for, that the engine does not block, that a
 // neighbour can step onto, and that is in the same walkable region as the course start - so

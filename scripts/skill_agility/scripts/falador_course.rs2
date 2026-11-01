@@ -152,13 +152,4 @@ if (calc(%falador_course_progress + 1) >= $completed) {
 if (%falador_course_progress < ^falador_obstacles) { return; }
 %falador_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_falador);
-~falador_mark_roll;
-
-[proc,falador_mark_roll]
-if (random(^falador_mark_chance) ! 0) { return; }
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^falador_mark_num, ^falador_mark_den, ^falador_level, true);

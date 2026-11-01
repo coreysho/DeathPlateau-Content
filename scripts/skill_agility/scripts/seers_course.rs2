@@ -93,13 +93,4 @@ if (calc(%seers_course_progress + 1) >= $completed) {
 if (%seers_course_progress < ^seers_obstacles) { return; }
 %seers_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_seers);
-~seers_mark_roll;
-
-[proc,seers_mark_roll]
-if (random(^seers_mark_chance) ! 0) { return; }
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^seers_mark_num, ^seers_mark_den, ^seers_level, true);

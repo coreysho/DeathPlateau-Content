@@ -128,13 +128,4 @@ if (calc(%pollnivneach_course_progress + 1) >= $completed) {
 if (%pollnivneach_course_progress < ^pollnivneach_obstacles) { return; }
 %pollnivneach_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_pollnivneach);
-~pollnivneach_mark_roll;
-
-[proc,pollnivneach_mark_roll]
-if (random(^pollnivneach_mark_chance) ! 0) { return; }
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^pollnivneach_mark_num, ^pollnivneach_mark_den, ^pollnivneach_level, true);

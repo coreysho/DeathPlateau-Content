@@ -26,3 +26,12 @@ scope=temp
 
 [ardougne_course_progress]
 scope=temp
+
+// WHEN A MARK MAY NEXT SPAWN, as a map_clock deadline. scope=perm because Old School says
+// "this timer persists even after logging out or changing worlds".
+//
+// map_clock is world uptime and resets when the server restarts, so a deadline saved before
+// a restart would sit in the future for ever and silently switch marks off. ~agility_mark_roll
+// treats a deadline further away than the wait itself as stale and rolls anyway.
+[mark_grace_cooldown]
+scope=perm

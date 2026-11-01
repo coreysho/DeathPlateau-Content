@@ -111,21 +111,14 @@ if (%draynor_course_progress < ^draynor_obstacles) {
 // The crate's 79 experience IS the lap bonus - the wiki counts it as the obstacle's own, and the
 // seven add to the 120 a lap is worth. Nothing extra is paid here.
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_draynor);
-~draynor_mark_roll;
+~agility_mark_roll(^draynor_mark_num, ^draynor_mark_den, 1, true);
 
 // A MARK OF GRACE A LAP, SOMETIMES. Old School spawns marks on the rooftop ahead of you during a
 // lap; this gives one at the end instead, which is the same reward with none of the machinery for
 // placing and expiring a ground item nobody may walk over.
 //
-// The wiki publishes no exact rate for Draynor, so ^draynor_mark_chance is this build's number and
-// is named rather than buried: one lap in four.
-[proc,draynor_mark_roll]
-if (random(^draynor_mark_chance) ! 0) {
-    return;
-}
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+// THE RATE IS PUBLISHED AFTER ALL. This used to say "the wiki publishes no exact rate for Draynor,
+// so this is this build's number: one lap in four". It does publish one - Draynor is covered by
+// "2/6 for all other rooftop courses" - and the flat quarter was wrong on every course. The roll
+// is ~agility_mark_roll now, with the three-minute timer and the 20-levels-over penalty that go
+// with those fractions.

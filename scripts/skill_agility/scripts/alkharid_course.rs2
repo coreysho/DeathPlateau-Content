@@ -205,15 +205,4 @@ if (%alkharid_course_progress < ^alkharid_obstacles) {
 // The gap's 36 experience is the last obstacle's, not a bonus: the eight add to the 216 a lap is
 // worth and nothing extra is paid here.
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_alkharid);
-~alkharid_mark_roll;
-
-[proc,alkharid_mark_roll]
-if (random(^alkharid_mark_chance) ! 0) {
-    return;
-}
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^alkharid_mark_num, ^alkharid_mark_den, ^alkharid_level, true);

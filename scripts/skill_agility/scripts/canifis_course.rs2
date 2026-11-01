@@ -103,13 +103,4 @@ if (calc(%canifis_course_progress + 1) >= $completed) {
 if (%canifis_course_progress < ^canifis_obstacles) { return; }
 %canifis_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_canifis);
-~canifis_mark_roll;
-
-[proc,canifis_mark_roll]
-if (random(^canifis_mark_chance) ! 0) { return; }
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^canifis_mark_num, ^canifis_mark_den, ^canifis_level, false);

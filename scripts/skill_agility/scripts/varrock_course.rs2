@@ -153,15 +153,4 @@ if (%varrock_course_progress < ^varrock_obstacles) {
 }
 %varrock_course_progress = 0;
 ~skillpet_roll(skillpet_squirrel_item, agility, ^skillpet_squirrel_varrock);
-~varrock_mark_roll;
-
-[proc,varrock_mark_roll]
-if (random(^varrock_mark_chance) ! 0) {
-    return;
-}
-if (inv_freespace(inv) < 1) {
-    mes("You notice a mark of grace, but you have no room for it.");
-    return;
-}
-inv_add(inv, mark_of_grace, 1);
-mes("You pick up a mark of grace.");
+~agility_mark_roll(^varrock_mark_num, ^varrock_mark_den, ^varrock_level, true);

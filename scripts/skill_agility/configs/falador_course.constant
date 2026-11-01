@@ -47,7 +47,10 @@
 // animation playing exactly once and nothing left over to slide through.
 ^falador_sidestep_cycles = 30
 
-^falador_mark_chance = 4
+// A mark spawns 2 times in 6 on a completed lap, once the three-minute timer is up.
+// See marks.constant and ~agility_mark_roll.
+^falador_mark_num = 2
+^falador_mark_den = 6
 // WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
 // the obstacle that the client draws a floor for, that the engine does not block, that a
 // neighbour can step onto, and that is in the same walkable region as the course start - so

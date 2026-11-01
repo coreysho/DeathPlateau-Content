@@ -38,7 +38,10 @@
 // The rough wall is climbed from the street; from the roof you are past it.
 ^varrock_wall_z = 3415
 
-^varrock_mark_chance = 4
+// A mark spawns 2 times in 6 on a completed lap, once the three-minute timer is up.
+// See marks.constant and ~agility_mark_roll.
+^varrock_mark_num = 2
+^varrock_mark_den = 6
 // WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
 // the obstacle that the client draws a floor for, that the engine does not block, that a
 // neighbour can step onto, and that is in the same walkable region as the course start - so

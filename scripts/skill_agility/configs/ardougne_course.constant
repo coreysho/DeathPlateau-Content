@@ -23,7 +23,10 @@
 ^ardougne_land_roof = 3_41_51_31_32   // 2655,3296 - an island on purpose: you land and click gap 4 beside you
 ^ardougne_land_gap4 = 0_41_51_33_32
 
-^ardougne_mark_chance = 4
+// A mark spawns 2 times in 3 on a completed lap, once the three-minute timer is up.
+// See marks.constant and ~agility_mark_roll.
+^ardougne_mark_num = 2
+^ardougne_mark_den = 3
 // WHERE A FAILURE DROPS YOU, derived by tools/sim/coursefall.ts: the nearest street tile to
 // the obstacle that the client draws a floor for, that the engine does not block, that a
 // neighbour can step onto, and that is in the same walkable region as the course start - so
