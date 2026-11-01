@@ -381,7 +381,11 @@ if ($count < 1) {
     return;
 }
 ~bf_ore_set($ore, sub(~bf_ore($ore), multiply($count, $per)));
-stat_advance(agility, ^bf_pedal_xp); // the pedals' XP, for a turn that carried ore in ([label,bf_pedal])
+~agility_xp(^bf_pedal_xp); // the pedals' XP, for a turn that carried ore in ([label,bf_pedal])
+// THROUGH THE PROC AND NOT stat_advance, like every other agility source: ~agility_xp is
+// where ~outfit_roll(^outfit_graceful) lives, so a direct award is agility XP that earns no
+// Graceful progress - silently, and only at the furnace. The roll is proportional to the XP,
+// so 25 a turn buys a 25-a-turn chance and nothing is unbalanced by routing it.
 if ($second ! null) {
     ~bf_ore_set($second, sub(~bf_ore($second), multiply($count, $second_per)));
 }
