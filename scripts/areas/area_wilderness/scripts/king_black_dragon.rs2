@@ -17,6 +17,13 @@ if (~npc_check_notcombat_self = false) {
 // out of melee reach (npc_canreach: beside it, not across a corner or a safespot's wall), it breathes
 if (npc_canreach = false) {
     ~kbd_dragonfire_far;
+    // AND IT STAYS THERE BREATHING. Without this return it dropped straight into opplayer2 below,
+    // which is "go and interact" - so it breathed exactly once, walked into melee, and from then
+    // on only ever acted when it could reach you. Reported as "only attacks when it is within
+    // melee range". applayer2's own range is the npc's attackrange (15), so staying in it means
+    // it keeps breathing at whatever distance it found you, which is what the comment above this
+    // branch has always said it does.
+    return;
 }
 npc_sethuntmode(aggressive_melee);
 npc_setmode(opplayer2);
@@ -32,6 +39,17 @@ if (~npc_check_notcombat = false) {
     return;
 }
 if (~npc_check_notcombat_self = false) {
+    return;
+}
+// AND THE SAME TEST ON THIS SIDE. ai_applayer2 hands over to opplayer2 once it can reach you, and
+// opplayer2 is where it stays - so anything that puts you out of reach AFTER the fight has started
+// left it with no branch that attacks: ~kbd_random_attack's three attacks are all close-quarters,
+// and the far breath lives in the trigger it had already left. A wall between you and it is the
+// case the comment at the top of this file has always described ("can also be safespoted"), and it
+// is the one that was reported: it only ever acted when it could reach you.
+if (npc_canreach = false) {
+    ~kbd_dragonfire_far;
+    npc_setmode(applayer2);
     return;
 }
 ~kbd_random_attack;
