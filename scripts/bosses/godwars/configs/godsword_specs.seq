@@ -1,9 +1,17 @@
 // Animations converted from the OSRS cache by tools/models/animconvosrs.py.
 // They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
 // only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+//
+// CROSSSKELETON=PRIMARY ON THE SPECIALS. These never merge - that is what the line above says -
+// and the client's default when it cannot merge is to keep the MOVEMENT frame, so a special fired
+// while walking showed no swing at all. A special is one tick and the swing is the whole point of
+// the key the player pressed, so these keep their own animation and the legs hold still for it.
+// Opcode 13; the reasoning in full, and why this is not done by deleting walkmerge, is in
+// scripts/skill_combat/configs/melee/osrs_spec_anims.seq.
 
 [osrs_ags_spec]
 // OSRS seq 7644
+crossskeleton=primary
 walkmerge=label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_194,label_195,label_196,label_198,label_199,label_209,label_210,label_211,label_212,label_213,label_214,label_216,label_218,label_219,label_220,label_221
 reachforward=yes
 priority=6
@@ -74,6 +82,7 @@ delay31=3
 
 [osrs_bgs_spec]
 // OSRS seq 7642
+crossskeleton=primary
 walkmerge=label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_194,label_195,label_196,label_198,label_199,label_209,label_210,label_211,label_212,label_213,label_214,label_216,label_218,label_219,label_220,label_221
 reachforward=yes
 priority=6
@@ -127,6 +136,7 @@ delay23=2
 
 [osrs_sgs_spec]
 // OSRS seq 7640
+crossskeleton=primary
 walkmerge=label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_194,label_195,label_196,label_198,label_199,label_209,label_210,label_211,label_212,label_213,label_214,label_216,label_218,label_219,label_220,label_221
 reachforward=yes
 priority=6
@@ -202,6 +212,7 @@ delay34=2
 
 [osrs_zgs_spec]
 // OSRS seq 7638
+crossskeleton=primary
 walkmerge=label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_194,label_195,label_196,label_198,label_199,label_209,label_210,label_211,label_212,label_213,label_214,label_216,label_218,label_219,label_220,label_221
 reachforward=yes
 priority=6
@@ -259,6 +270,7 @@ delay25=2
 
 [osrs_sara_sword_spec]
 // OSRS seq 1132
+crossskeleton=primary
 walkmerge=label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_194,label_195,label_196,label_198,label_199,label_209,label_210,label_211,label_212,label_213,label_214,label_216,label_218,label_219,label_220,label_221
 reachforward=yes
 priority=6

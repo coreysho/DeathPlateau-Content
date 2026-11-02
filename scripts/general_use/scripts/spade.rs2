@@ -72,14 +72,19 @@ if(map_members = ^true) {
 
     if($clue ! null) {
         def_int $tier = ~trail_obj_tier($clue);
-        def_boolean $sextant_clue = oc_param($clue, trail_sextant);
         // for coord clues, https://www.youtube.com/watch?v=rcNbwik5-Ig looking at wiki and this 2013 video you can be 1 tile off and it will still work
         // todo: try and confirm this behaviour for 2004, this pre dec-2006 video also has this behaviour https://www.youtube.com/watch?v=yH6YaavzuMc
         // also https://www.youtube.com/watch?v=QhdRJd-g438 for maps
-        //here is the req for watch sextant to dig a coordinate clue
-        if ($sextant_clue = true) {
-            if (~can_dig_coordinate_clue() = false) return;
-        }
+        //
+        // NO SEXTANT, CHART OR WATCH NEEDED TO DIG. This read the three off the inventory and
+        // refused the dig without them, which is what the live game does. It is dropped on
+        // purpose: the three are an inventory tax on a step the player has already solved, and
+        // four slots out of twenty-eight is most of what a coordinate clue costs you.
+        //
+        // The three items are untouched otherwise. The sextant still opens and still reads your
+        // position off watch and chart (game_trail/scripts/trail_sextant.rs2), and the miniquest
+        // that hands them out - Murphy, Brother Kojo and the Observatory professor - still runs,
+        // so anyone who wants to navigate the old way still can.
         if(oc_param($clue, trail_guardian) ! null) {
             def_npc $guard = oc_param($clue, trail_guardian);
             if($guard = trail_hard & ~trail_guardian_defeated($tier) = false) {
@@ -119,10 +124,3 @@ if(map_members = ^true) {
 }
 ~displaymessage(^dm_default);
 
-
-[proc,can_dig_coordinate_clue]()(boolean)
-if((inv_total(inv, trail_watch) = 0 | inv_total(inv, trail_chart) = 0 | inv_total(inv, trail_sextant) = 0)) {
-    ~displaymessage(^dm_default);
-    return (false);
-}
-return (true);
