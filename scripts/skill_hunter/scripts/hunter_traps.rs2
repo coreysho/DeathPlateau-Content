@@ -333,6 +333,28 @@ mes("You reset the trap.");
 
 // ---------------------------------------------------------------------------------- a catch
 
+// THE BIRD ARRIVES, or it does not. ~hunter_trap_spring points a lured bird at the snare and books
+// this for ^hunter_trap_walkin_ticks later; everything that decides whether it was caught is here,
+// and none of it trusts the walk.
+//
+// The catch happens only if this bird is STANDING on a snare that is still laid. So a trap the
+// owner picked up mid-walk, a route the bird could not finish, and a second bird sent to a snare
+// that has already shut all end the same way: no catch, no bird deleted in mid-air, and the bird
+// put back to wandering. Losing the occasional roll that way is the right trade - the roll is what
+// the old code cashed in the instant it passed, three tiles from the trap, which is the bug.
+[label,hunter_bird_enters_snare](loc $catching)
+if (loc_find(npc_coord, hunter_snare_laid) = false) {
+    npc_setmode(wander);
+    return;
+}
+npc_del;
+loc_change($catching, ^hunter_trap_duration);
+
+[ai_queue5,hunter_crimson_swift] @hunter_bird_enters_snare(hunter_snare_catching_swift);
+[ai_queue5,hunter_tropical_wagtail] @hunter_bird_enters_snare(hunter_snare_catching_wagtail);
+[ai_queue5,hunter_golden_warbler] @hunter_bird_enters_snare(hunter_snare_catching_warbler);
+[ai_queue5,hunter_cerulean_twitch] @hunter_bird_enters_snare(hunter_snare_catching_twitch);
+
 [oploc1,hunter_boxtrap_shaking_chinchompa] @hunter_trap_takeup(^hunter_catch_chinchompa);
 [oploc1,hunter_boxtrap_shaking_chinchompa_red] @hunter_trap_takeup(^hunter_catch_chinchompa_red);
 [oploc1,hunter_boxtrap_shaking_ferret] @hunter_trap_takeup(^hunter_catch_ferret);
@@ -565,17 +587,17 @@ if (random(^hunter_trap_lure_chance) ! 0) {
 }
 def_int $lvl = stat(hunter);
 if ($lvl >= ^hunter_chinchompa_red_level & npc_find($at, hunter_chinchompa_red, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_boxtrap_catching_chinchompa_red, hunter_boxtrap_collapsed, ^hunter_chinchompa_red_low, ^hunter_chinchompa_red_high);
+    ~hunter_trap_spring(hunter_boxtrap_catching_chinchompa_red, hunter_boxtrap_collapsed, ^hunter_chinchompa_red_low, ^hunter_chinchompa_red_high, false);
     return;
 }
 if ($lvl >= ^hunter_chinchompa_level & npc_find($at, hunter_chinchompa, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_boxtrap_catching_chinchompa, hunter_boxtrap_collapsed, ^hunter_chinchompa_low, ^hunter_chinchompa_high);
+    ~hunter_trap_spring(hunter_boxtrap_catching_chinchompa, hunter_boxtrap_collapsed, ^hunter_chinchompa_low, ^hunter_chinchompa_high, false);
     return;
 }
 // A ferret only goes for the trap of somebody who has done Eagles' Peak (2006: "can be caught in a box
 // trap with level 27 Hunter after completing the quest"); OSRS's gate on box traps themselves is 2018's.
 if ($lvl >= ^hunter_ferret_level & ~eaglespeak_can_trap_ferret = true & npc_find($at, hunter_ferret, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_boxtrap_catching_ferret, hunter_boxtrap_collapsed, ^hunter_ferret_low, ^hunter_ferret_high);
+    ~hunter_trap_spring(hunter_boxtrap_catching_ferret, hunter_boxtrap_collapsed, ^hunter_ferret_low, ^hunter_ferret_high, false);
     return;
 }
 
@@ -588,19 +610,19 @@ if (~hunter_pisc_lure_snare($at) = true) { // the copper longtail (hunter_piscat
     return;
 }
 if ($lvl >= ^hunter_wagtail_level & npc_find($at, hunter_tropical_wagtail, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_snare_catching_wagtail, hunter_snare_springing, ^hunter_wagtail_low, ^hunter_wagtail_high);
+    ~hunter_trap_spring(hunter_snare_catching_wagtail, hunter_snare_springing, ^hunter_wagtail_low, ^hunter_wagtail_high, true);
     return;
 }
 if ($lvl >= ^hunter_warbler_level & npc_find($at, hunter_golden_warbler, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_snare_catching_warbler, hunter_snare_springing, ^hunter_warbler_low, ^hunter_warbler_high);
+    ~hunter_trap_spring(hunter_snare_catching_warbler, hunter_snare_springing, ^hunter_warbler_low, ^hunter_warbler_high, true);
     return;
 }
 if ($lvl >= ^hunter_twitch_level & npc_find($at, hunter_cerulean_twitch, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_snare_catching_twitch, hunter_snare_springing, ^hunter_twitch_low, ^hunter_twitch_high);
+    ~hunter_trap_spring(hunter_snare_catching_twitch, hunter_snare_springing, ^hunter_twitch_low, ^hunter_twitch_high, true);
     return;
 }
 if ($lvl >= ^hunter_swift_level & npc_find($at, hunter_crimson_swift, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_snare_catching_swift, hunter_snare_springing, ^hunter_swift_low, ^hunter_swift_high);
+    ~hunter_trap_spring(hunter_snare_catching_swift, hunter_snare_springing, ^hunter_swift_low, ^hunter_swift_high, true);
     return;
 }
 
@@ -612,33 +634,51 @@ if (random(^hunter_trap_lure_chance) ! 0) {
 }
 def_int $lvl = stat(hunter);
 if ($lvl >= ^hunter_sabretooth_kebbit_level & npc_find($at, hunter_sabretooth_kebbit, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_deadfall_sabretooth, hunter_deadfall_collapsed, ^hunter_sabretooth_kebbit_low, ^hunter_sabretooth_kebbit_high);
+    ~hunter_trap_spring(hunter_deadfall_sabretooth, hunter_deadfall_collapsed, ^hunter_sabretooth_kebbit_low, ^hunter_sabretooth_kebbit_high, false);
     return;
 }
 if (~hunter_pisc_lure_deadfall($at) = true) { // the prickly kebbit (hunter_piscatoris.rs2)
     return;
 }
 if ($lvl >= ^hunter_barbtailed_kebbit_level & npc_find($at, hunter_barbtailed_kebbit, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_deadfall_barbtailed, hunter_deadfall_collapsed, ^hunter_barbtailed_kebbit_low, ^hunter_barbtailed_kebbit_high);
+    ~hunter_trap_spring(hunter_deadfall_barbtailed, hunter_deadfall_collapsed, ^hunter_barbtailed_kebbit_low, ^hunter_barbtailed_kebbit_high, false);
     return;
 }
 if ($lvl >= ^hunter_wild_kebbit_level & npc_find($at, hunter_wild_kebbit, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_deadfall_wild, hunter_deadfall_collapsed, ^hunter_wild_kebbit_low, ^hunter_wild_kebbit_high);
+    ~hunter_trap_spring(hunter_deadfall_wild, hunter_deadfall_collapsed, ^hunter_wild_kebbit_low, ^hunter_wild_kebbit_high, false);
     return;
 }
 
 // active_npc is the prey npc_find settled on and active_loc is the trap; both are still set.
-[proc,hunter_trap_spring](loc $catching, loc $failed, int $low, int $high)
+// $walk_in: whether the prey walks to the trap before it is caught, or is simply taken where it
+// stands. Snares pass true; box traps and deadfalls pass false and are unchanged.
+[proc,hunter_trap_spring](loc $catching, loc $failed, int $low, int $high, boolean $walk_in)
 sound_synth(springtrap_release, 1, 0);
 if (stat_random(hunter, $low, $high) = false) {
     loc_change($failed, ^hunter_trap_duration);
     return;
 }
 // A static map npc: npc_del schedules its respawn at the type's respawnrate rather than destroying
-// it, exactly as a netted butterfly does. The prey is not walked into the trap - the catching loc's
-// own model has the animal in it, and its animation is the animal going in and the trap closing.
-npc_del;
-loc_change($catching, ^hunter_trap_duration);
+// it, exactly as a netted butterfly does.
+if ($walk_in = false) {
+    npc_del;
+    loc_change($catching, ^hunter_trap_duration);
+    return;
+}
+// THE BIRD WALKS IN. It used to vanish where it stood - the roll reaches three tiles, so a bird
+// could be deleted in mid-air well away from the snare and the trap would shut on nothing you had
+// seen arrive. Reported as "you don't see the bird land on the snare".
+//
+// Nothing is decided here beyond pointing it at the trap. The catch is finished by
+// ~hunter_bird_enters_snare when the deadline comes round, and it is finished only if the bird is
+// actually STANDING on a snare that is still laid - so a trap taken up mid-walk, a blocked route,
+// or a second bird lured to a snare that has already shut all end in no catch and no vanished bird.
+//
+// The wander has to be turned off or the npc's own AI walks it somewhere else on the next tick;
+// the queue turns it back on for the birds it did not catch.
+npc_setmode(none);
+npc_walk(loc_coord);
+npc_queue(5, 0, ^hunter_trap_walkin_ticks);
 
 // ------------------------------------------------------------------------------------- logout
 
