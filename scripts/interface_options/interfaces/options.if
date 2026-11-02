@@ -635,3 +635,27 @@ y=57
 width=39
 height=40
 text=Accept Aid (currently off)
+
+// THE LEVEL-UP POPUP SWITCH, and the only place in 474's tab it could go. The six-button grid is
+// full - mouse, chat effects and split chat at y=152, accept aid, run and house at y=206 - and the
+// panel is 190x261 (Client.java clamps its menus to exactly that), so the lowest pixel any of them
+// reaches, 246, leaves fifteen rows and no room for a seventh 40x40 icon. A p11_full line is
+// thirteen of those fifteen.
+//
+// Its text is the state: the server writes "Level-up popup: On" or "Off" through ~options_tooltips,
+// which already runs at login and after every other setting changes. One component rather than the
+// hidden on/off layer pair the icons use, because a line of text can simply say which it is.
+[levelup_popup]
+type=text
+x=16
+y=247
+buttontype=normal
+width=155
+height=13
+center=yes
+font=p11_full
+shadowed=yes
+text=Level-up popup: On
+colour=0xFF9800
+overcolour=0xFFFFFF
+option=Toggle Level-up Popup
