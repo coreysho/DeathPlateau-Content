@@ -1,0 +1,262 @@
+// The Werewolf Agility Course - https://oldschool.runescape.wiki/w/Werewolf_Agility_Course
+//
+// Under the Haunted Woods east of Canifis, through a trapdoor a werewolf guards. Agility 60,
+// Creature of Fenkenstrain finished, and a ring of Charos on your finger - the course is for
+// werewolves and the ring is what persuades him you are one.
+//
+// EVERYTHING HERE IS THE 377 CACHE'S. The obstacles were already on m55_154 with their names and
+// their options; nothing was invented and nothing was grafted from Old School:
+//
+//   loc_5138  Stepping stone   Jump-to            five, out in the water
+//   loc_5133/5134/5135  Hurdle  Jump              three lanes of three
+//   loc_5152  Pipe             Squeeze-through    three
+//   loc_5136  Skull slope      Climb-up           three
+//   loc_5139/5140/5141  Zip line  Teeth-grip      three - the deathslide
+//   loc_5130  Ladder           Climb-up           the way out, and not an obstacle: the wiki is
+//                                                 explicit that the course "consists of five"
+//
+// AND THE MAP ENFORCES THE ORDER. Every stretch is a sealed walkable pocket and the only way from
+// one to the next is the obstacle between them - measured by tools/sim/werewolfland.ts, not
+// assumed:
+//
+//   the entry pocket (1007 tiles, holding the exit ladder and the skullball field)
+//     -> stepping stones -> 84 -> hurdle -> 16 -> hurdle -> 15 -> hurdle -> 43
+//     -> pipe -> 73 -> skull slope -> 14 (the top) -> zip line -> back to the entry
+//
+// All three lanes of each obstacle join the same two pockets, so the lane is a matter of taste.
+// None of the scripts below is written per lane: each works from the loc that was clicked and the
+// side the player is standing on.
+//
+// ONE TILE OF THE MAP WAS CHANGED AND IT IS WORTH KNOWING WHY. 3538,9874, the tile the wiki calls
+// "directly in front of the first stepping stone", was flagged blocked. With it blocked the course
+// cannot be entered at all on this engine: reachLoc finds no stepping stone clickable from any of
+// the nine bank tiles, sending the op anyway runs nothing at all, and the only stone that can be clicked
+// is the last - from inside a pocket there is no other way into. The rev236 and newest Old School
+// caches both have that tile blocked too, identically, so this is the map as it has always been
+// and Old School simply lets a click on a stepping stone carry across the water where this engine
+// wants a path. Only the collision flag was cleared; the tile keeps its height, overlay and
+// underlay and draws exactly as before.
+//
+// NOT DONE YET, and deliberately: the deathslide cannot be failed here. Old School makes it the
+// one failable obstacle on the course, for upwards of 30 damage that does not scale with
+// hitpoints, on a roll that reads weight, Agility and Strength - but it does not say where a
+// failed slide puts the player down, and that is a coordinate rather than a number. Skullball is
+// its own minigame with its own boss and is not in this file at all.
+
+// ---------------------------------------------------------------- 1. the stepping stones
+//
+// ONE CLICK, FIVE HOPS. The stones are two tiles apart and standing on one the next cannot be
+// clicked, so the crossing is driven rather than clicked through - which is also how the wiki
+// scores it, a single 50 for the lot.
+[oploc1,loc_5138]
+if (~werewolf_blocked = true) {
+    return;
+}
+p_arrivedelay;
+if (coordz(coord) <= coordz(^werewolf_stone_1)) {
+    mes("You leap onto the first stepping stone...");
+    ~werewolf_hop(^werewolf_stone_1, ^exact_north);
+    ~werewolf_hop(^werewolf_stone_2, ^exact_north);
+    ~werewolf_hop(^werewolf_stone_3, ^exact_east);
+    ~werewolf_hop(^werewolf_stone_4, ^exact_north);
+    ~werewolf_hop(^werewolf_stone_5, ^exact_north);
+    ~werewolf_hop(^werewolf_bank_north, ^exact_north);
+    mes("...and across to the far bank.");
+    ~agility_xp(^werewolf_xp_stones);
+    return;
+}
+// and back the other way, because the stones are a crossing rather than a turnstile
+mes("You leap back onto the stepping stones...");
+~werewolf_hop(^werewolf_stone_5, ^exact_south);
+~werewolf_hop(^werewolf_stone_4, ^exact_south);
+~werewolf_hop(^werewolf_stone_3, ^exact_south);
+~werewolf_hop(^werewolf_stone_2, ^exact_west);
+~werewolf_hop(^werewolf_stone_1, ^exact_south);
+~werewolf_hop(^werewolf_bank_south, ^exact_south);
+mes("...and back to the bank.");
+
+// ---------------------------------------------------------------- 2. the hurdles
+//
+// Three of them up each lane, at z 9893, 9896 and 9899, and each one puts you two tiles past it.
+// Which way depends on which side you came at it from, so a player who turns round can come back.
+[oploc1,loc_5133]
+~werewolf_hurdle;
+
+[oploc1,loc_5134]
+~werewolf_hurdle;
+
+[oploc1,loc_5135]
+~werewolf_hurdle;
+
+// ---------------------------------------------------------------- 3. the pipe
+//
+// In at z 9905 and out at z 9909, one tile east of the pipe: 3538,9908 has nothing standable
+// directly north of it and the tile beside it does, which is true of all three pipes.
+[oploc1,loc_5152]
+if (~werewolf_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You squeeze through the pipe.");
+// AS A DELTA FROM WHERE THEY ARE STANDING, not as a coordinate built out of parts. The approach
+// tile is always the pipe's own x at z 9904, and the far end is one tile east at z 9909, so the
+// move is the same five north and one east whichever of the three pipes was clicked. movecoord
+// takes an offset; handing it an absolute x sent the first attempt three thousand tiles away.
+if (coordz(coord) < coordz(loc_coord)) {
+    ~werewolf_crawl(movecoord(coord, ^werewolf_pipe_dx, 0, ^werewolf_pipe_dz));
+    ~agility_xp(^werewolf_xp_pipe);
+    return;
+}
+~werewolf_crawl(movecoord(coord, calc(0 - ^werewolf_pipe_dx), 0, calc(0 - ^werewolf_pipe_dz)));
+
+// ---------------------------------------------------------------- 4. the skull slope
+//
+// The column x 3532, three of them. The foot is 3533 and the top is 3531, and the climb keeps
+// whichever row the player was already on.
+[oploc1,loc_5136]
+if (~werewolf_blocked = true) {
+    return;
+}
+p_arrivedelay;
+if (coordx(coord) > coordx(loc_coord)) {
+    mes("You scramble up the slope of skulls.");
+    ~agility_roof_climb(^werewolf_xp_slope, movecoord(coord, -2, 0, 0));
+    return;
+}
+mes("You climb back down the slope of skulls.");
+~agility_roof_climb_down(0, movecoord(coord, 2, 0, 0));
+
+// ---------------------------------------------------------------- 5. the zip line
+//
+// The deathslide. All three hang over the west end of the top platform and all three land in the
+// same place, thirteen tiles south down the western corridor - the nearest tile of the entry
+// pocket to the slide, and the only one it can reach.
+[oploc1,loc_5139]
+~werewolf_zip;
+
+[oploc1,loc_5140]
+~werewolf_zip;
+
+[oploc1,loc_5141]
+~werewolf_zip;
+
+// ---------------------------------------------------------------- the shared parts
+[proc,werewolf_blocked]()(boolean)
+if (stat(agility) < ^werewolf_level) {
+    ~mesbox("You need an Agility level of <tostring(^werewolf_level)> to use this course.");
+    return(true);
+}
+return(false);
+
+// ONE HOP OF THE STONE CROSSING. p_exactmove glides the player and already puts them at the far
+// end before the mask is set, so there is no telejump behind it - the same lesson the rooftop
+// courses learned, where a jump and a telejump together dragged the player back mid-animation.
+[proc,werewolf_hop](coord $to, int $dir)
+~agility_exactmove(human_steppingstonejump, 20, 2, coord, $to, 48, 60, $dir, false);
+
+[proc,werewolf_hurdle]
+if (~werewolf_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You leap the hurdle.");
+def_int $hop = ^werewolf_hurdle_hop;
+if (coordz(coord) > coordz(loc_coord)) {
+    $hop = calc(0 - ^werewolf_hurdle_hop);
+}
+~agility_exactmove(human_spot_jump, 0, 2, coord, movecoord(coord, 0, 0, $hop), 0, 50,
+                   ~agility_facing(coord, movecoord(coord, 0, 0, $hop)), false);
+~agility_xp(^werewolf_xp_hurdle);
+
+// THE SAME SQUEEZE THE GNOME AND BARBARIAN PIPES USE, animation and all: human_doublepipesqueeze
+// over an exactmove, merged with the loc so the player is drawn inside the pipe rather than
+// sliding along the top of it.
+[proc,werewolf_crawl](coord $to)
+~agility_exactmove(human_doublepipesqueeze, 30, 4, coord, $to, 30, 110, ~agility_facing(coord, $to), true);
+
+[proc,werewolf_zip]
+if (~werewolf_blocked = true) {
+    return;
+}
+p_arrivedelay;
+mes("You grip the zip line with your teeth...");
+~agility_exactmove(human_ropeswing_long, 0, 3, coord, ^werewolf_zip_land, 0, 70, ^exact_south, false);
+~agility_xp(^werewolf_xp_zip);
+mes("...and let go at the bottom.");
+
+// ---------------------------------------------------------------- the way in and out
+//
+// THE CAST IS ALREADY ON THE MAP. m55_154's own NPC section spawns all of them from the 377 data -
+// the Agility Boss at 3540,9873 where a lap starts, Agility Trainers along the course, the one
+// with Give-Stick at 3528,9865 where the deathslide puts you down, and the Skullball Boss and his
+// trainers over the east field. Nothing here spawns anybody; they were waiting.
+//
+// The werewolf on the surface wants to see a ring of Charos, because the course is for werewolves
+// and the ring is what persuades him you are one.
+[oploc1,loc_5131]
+if (~werewolf_refused = true) {
+    return;
+}
+p_arrivedelay;
+mes("You pull the trapdoor open.");
+loc_change(loc_5132, 500);
+
+[oploc2,loc_5132]
+p_arrivedelay;
+mes("You pull the trapdoor shut.");
+loc_change(loc_5131, 500);
+
+[oploc1,loc_5132]
+if (~werewolf_refused = true) {
+    return;
+}
+p_arrivedelay;
+mes("You climb down into the dark.");
+p_telejump(^werewolf_entry);
+~werewolf_drop_stick;
+
+[oploc1,loc_5130]
+p_arrivedelay;
+mes("You climb the ladder back up to the woods.");
+p_telejump(^werewolf_exit);
+
+[proc,werewolf_refused]()(boolean)
+if (%fenk_quest < ^fenk_complete) {
+    ~mesbox("A werewolf is standing over the trapdoor. He bares his teeth at you and does not move aside.");
+    return(true);
+}
+if (inv_total(worn, ring_of_charos) = 0 & inv_total(worn, ring_of_charos_unlocked) = 0) {
+    ~mesbox("The werewolf guarding the trapdoor growls at you. This course is for werewolves, and without the ring of Charos on your finger you are plainly not one of them.");
+    return(true);
+}
+return(false);
+
+// ---------------------------------------------------------------- the stick
+//
+// It lies between the hurdles and the pipes, which is what the wiki means by "crawl through the
+// pipe that is closest to the stick", and it is what the bonus at the end is paid for: "without
+// this, the bonus at the end of the course will not be rewarded". One at a time, and it rots if
+// it is left lying - "if left on the ground for too long, it will disappear".
+[proc,werewolf_drop_stick]
+if (inv_total(inv, waa_stick) > 0) {
+    return;
+}
+obj_add(^werewolf_stick_spawn, waa_stick, 1, ^werewolf_stick_life);
+
+[opnpc1,werewolf_trainer_stick]
+p_arrivedelay;
+if (inv_total(inv, waa_stick) = 0) {
+    ~chatnpc("Bring me the stick from the course and I'll see you right.");
+    return;
+}
+// THE EXPERIENCE BEFORE THE DIALOGUE, not after it. ~chatnpc parks the script until the player
+// clicks Continue, so a payout written underneath it has not happened yet - the sim caught this
+// taking the stick and paying nothing for it.
+inv_del(inv, waa_stick, 1);
+~agility_xp(^werewolf_xp_stick);
+~chatnpc("Good running. Here's what you've earned.");
+
+// AND THE BOSS AT THE START will tell you what the place is, which is all he does in 2006.
+[opnpc1,werewolf_trainer_start]
+p_arrivedelay;
+~chatnpc("This is the werewolf agility course. Cross the stones, take the hurdles, through a pipe, up the skulls and down the deathslide. Bring the stick back to my colleague at the bottom and I'll call it a lap.");
