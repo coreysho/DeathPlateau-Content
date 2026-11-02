@@ -1,0 +1,66 @@
+// Werewolf Skullball - https://oldschool.runescape.wiki/w/Werewolf_Skullball
+//
+// Behind the same trapdoor as the Werewolf Agility Course, out on the east field. Agility 25,
+// Creature of Fenkenstrain, and a ring of Charos - and the wiki is specific that those are only
+// wanted when you ASK the boss for a ball: "the player can still kick the ball while drained
+// below 25 Agility".
+
+^skullball_level = 25
+
+// ---------------------------------------------------------------------------- the ten goals
+//
+// THE ORDER WAS DERIVED, not guessed, and it checks out at every step. The map has ten goals, each
+// three loc pieces wide, but nothing in the cache says which is first. The wiki's route table does
+// not name coordinates either - it is a list of moves, "shoot north", "tap east twice" - and its
+// tile markers are the ball's RESTING places between shots rather than the goals themselves.
+//
+// Walking the route's moves from marker to marker lands exactly on the next marker every time, and
+// passes one goal on the way each time. Marker 1 is 3555,9869; shoot north nine and the ball stops
+// on 3555,9878, which is marker 2, having rolled through the goal at 3555,9870. Kick north four,
+// tap east, kick north four from there and it stops on 3556,9886, marker 3, through the goal at
+// 3556,9883. And so on for all ten. That is the order below.
+^skullball_goal_1 = 0_55_154_35_14         // 3555,9870
+^skullball_goal_2 = 0_55_154_36_27         // 3556,9883
+^skullball_goal_3 = 0_55_154_38_35         // 3558,9891
+^skullball_goal_4 = 0_55_154_37_44         // 3557,9900
+^skullball_goal_5 = 0_55_154_38_50         // 3558,9906
+^skullball_goal_6 = 0_55_154_43_55         // 3563,9911
+^skullball_goal_7 = 0_55_154_55_49         // 3575,9905
+^skullball_goal_8 = 0_55_154_54_32         // 3574,9888
+^skullball_goal_9 = 0_55_154_55_22         // 3575,9878
+^skullball_goal_10 = 0_55_154_48_8         // 3568,9864
+^skullball_goals_total = 10
+
+// Where the boss puts the skull down. The wiki says it comes "out of one of four chutes on the
+// wall south of the first goal" and that you then nudge it into place "between the first arrow on
+// the ground and the centre of the first goal" - which is marker 1, so the ball simply starts
+// there and the chutes are left as scenery.
+^skullball_spawn = 0_55_154_35_13          // 3555,9869
+^skullball_life = 2000
+
+// ---------------------------------------------------------------------------- moving it
+//
+// "Tap - Moves the Skullball 1 square ahead. Kick - Moves the Skullball 4 squares ahead. Shoot -
+// Moves the Skullball 9 squares ahead." The Skullball Boss's own page says five and ten for the
+// last two; the activity's page says four and nine, the route table is built on four and nine, and
+// the route only works with four and nine, so those are what is here.
+^skullball_tap = 1
+^skullball_kick = 4
+^skullball_shoot = 9
+
+// A goal is three tiles wide, so the ball counts as through it anywhere in the three - which is
+// one tile either side of the middle, on either axis, since two of the ten are turned side-on.
+^skullball_goal_reach = 1
+
+// ---------------------------------------------------------------------------- the clock
+//
+// "You will gain 750 Agility experience if you complete the game in under 4 minutes. For every 3
+// seconds over 4 minutes, you'll lose 8 experience." Four minutes is 400 ticks at 0.6s, three
+// seconds is 5, and the experience is in tenths. "The timer does not start until the ball is
+// kicked through the first goal."
+//
+// No floor is published, so it stops at nothing rather than going negative.
+^skullball_par = 400
+^skullball_step = 5
+^skullball_penalty = 80
+^skullball_reward = 7500
