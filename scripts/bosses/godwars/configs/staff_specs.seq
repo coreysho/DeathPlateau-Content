@@ -1,9 +1,17 @@
 // Animations converted from the OSRS cache by tools/models/animconvosrs.py.
 // They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
 // only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+//
+// CROSSSKELETON=PRIMARY ON THE SPECIALS. These never merge - that is what the line above says -
+// and the client's default when it cannot merge is to keep the MOVEMENT frame, so a special fired
+// while walking showed no swing at all. A special is one tick and the swing is the whole point of
+// the key the player pressed, so these keep their own animation and the legs hold still for it.
+// Opcode 13; the reasoning in full, and why this is not done by deleting walkmerge, is in
+// scripts/skill_combat/configs/melee/osrs_spec_anims.seq.
 
 [osrs_sotd_spec]
 // OSRS seq 7083
+crossskeleton=primary
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45,label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_197,label_198,label_199,label_205,label_207,label_208,label_219,label_220,label_221,label_222
 priority=6
 // OSRS also carried: replaceheldright - not transferable
@@ -42,6 +50,7 @@ delay16=4
 
 [osrs_sol_spec]
 // OSRS seq 7967
+crossskeleton=primary
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45,label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_197,label_198,label_199,label_205,label_207,label_208,label_219,label_220,label_221,label_222
 priority=6
 // OSRS also carried: replaceheldright - not transferable

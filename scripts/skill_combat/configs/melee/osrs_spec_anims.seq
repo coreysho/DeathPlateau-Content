@@ -1,9 +1,25 @@
 // Animations converted from the OSRS cache by tools/models/animconvosrs.py.
 // They play on the OSRS player skeleton (base_osrs_*), not the 377 one: the client
 // only walk-merges two animations that share a base (ClientPlayer/NpcType patch).
+//
+// CROSSSKELETON=PRIMARY ON THE THREE THAT WALK-MERGE, because "only walk-merges two animations
+// that share a base" settles that these never merge and says nothing about what plays instead.
+// The client's answer was the movement frame, which is right for a gesture - that rule exists
+// because eating while walking used to leave the player sliding with a spoon at their mouth -
+// and wrong for a special attack, which is one tick long and is the whole point of the key the
+// player just pressed. With the flag the swing plays and the legs hold still for that tick,
+// which is what standing still already looked like. Opcode 13; see Model.method368.
+//
+// NOT BY DELETING WALKMERGE, which would look identical today and is the wrong edit twice over.
+// The lists below are OSRS's own, and the day these frames get a 377-skeleton counterpart the
+// merge starts working and gives legs AND swing, which is what Old School actually shows -
+// deleting them throws that away. It would also change two other things by accident: a seq with
+// no walkmerge defaults preanim_move and postanim_move to 0 (delaymove) instead of 2 (merge),
+// so the specials would start and end by stopping the player dead rather than blending.
 
 [osrs_dwh_spec]
 // OSRS seq 1378
+crossskeleton=primary
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45,label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_197,label_198,label_199,label_205,label_207,label_208,label_219,label_220,label_221,label_222
 reachforward=yes
 priority=6
@@ -36,6 +52,7 @@ delay13=3
 
 [osrs_bludgeon_spec]
 // OSRS seq 3299
+crossskeleton=primary
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45,label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_197,label_198,label_199,label_205,label_207,label_208,label_219,label_220,label_221,label_222
 reachforward=yes
 priority=6
@@ -75,6 +92,7 @@ delay16=3
 
 [osrs_dsword_spec]
 // OSRS seq 7515
+crossskeleton=primary
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45,label_168,label_169,label_171,label_172,label_174,label_175,label_177,label_178,label_180,label_181,label_183,label_184,label_186,label_188,label_189,label_191,label_192,label_197,label_198,label_199,label_205,label_207,label_208,label_219,label_220,label_221,label_222
 reachforward=yes
 priority=6
