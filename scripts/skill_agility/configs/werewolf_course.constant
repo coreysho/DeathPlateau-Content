@@ -1,0 +1,79 @@
+// The Werewolf Agility Course, under the Haunted Woods east of Canifis.
+//
+// EVERY COORDINATE HERE WAS MEASURED, not read off a map picture. tools/sim/werewolfland.ts walks
+// the square and reports, for each obstacle, which tiles a player can stand on and which walkable
+// pocket each belongs to; tools/sim/werewolfexits.ts gives the nearest standable tile in the
+// pocket on the far side, which is where a crossing has to land.
+
+^werewolf_level = 60
+
+// ---------------------------------------------------------------------------- experience
+//
+// The wiki's obstacle table, in TENTHS as stat_advance wants them: stepping stone 50, hurdle 60
+// for the set of three, pipe 15, skull slope 25, zip line 200, and the stick handed in at the end.
+//
+// THE STICK IS THE 2006 NUMBER, NOT TODAY'S. "The Werewolf Agility Course in Canifis now rewards
+// players with twice the number of experience when handing in the stick. This sees the increase
+// in Agility experience rise from 190 to 380" - 12 July 2018, long after this build's era. So 190
+// here, and a lap is 540 rather than the 730 the wiki prints. Marks of grace were added to this
+// course in May 2024 and are not here either.
+^werewolf_xp_stones = 500
+^werewolf_xp_hurdle = 200      // three hurdles at 20 each is the published 60 for the set
+^werewolf_xp_pipe = 150
+^werewolf_xp_slope = 250
+^werewolf_xp_zip = 2000
+^werewolf_xp_stick = 1900
+^werewolf_lap = 5400
+
+// ---------------------------------------------------------------------------- the stepping stones
+//
+// Five stones two tiles apart in the water, from the south bank to the north. They cannot be
+// clicked one after another - the engine wants a path to a tile beside the loc and there is none
+// out in the water - so one click drives the whole crossing, which is also why the wiki scores the
+// five of them as a single 50.
+^werewolf_bank_south = 0_55_154_18_17      // 3538,9873
+^werewolf_stone_1 = 0_55_154_18_19         // 3538,9875
+^werewolf_stone_2 = 0_55_154_18_21         // 3538,9877
+^werewolf_stone_3 = 0_55_154_20_21         // 3540,9877
+^werewolf_stone_4 = 0_55_154_20_23         // 3540,9879
+^werewolf_stone_5 = 0_55_154_20_25         // 3540,9881
+^werewolf_bank_north = 0_55_154_20_26      // 3540,9882
+
+// ---------------------------------------------------------------------------- the rest of it
+//
+// The hurdles, the pipes and the slopes each come in three side by side, and all three of each
+// join the same two pockets - which is why the wiki only ever calls the middle one a time-saver.
+// So none of them is written down by lane: the scripts work from the loc the player clicked and
+// the side they are standing on, and every lane behaves the same.
+//
+// The hurdles sit on z 9893, 9896 and 9899 and put the player two tiles beyond.
+// The pipes run from z 9905 to z 9908 and come out one tile east of the pipe at z 9909.
+// The slopes are the column x 3532; the foot is 3533 and the top is 3531.
+^werewolf_hurdle_hop = 2
+
+// The pipe, as an offset from the tile the player squeezes in at: the approach is the pipe's own
+// x at z 9904 and the far end is one east at z 9909, for all three pipes. werewolfexits.ts picked
+// the east tile because the one directly north of each pipe is not standable.
+^werewolf_pipe_dx = 1
+^werewolf_pipe_dz = 5
+
+// THE DEATHSLIDE, and the only landing on this course that is not simply the far side of
+// something. The three zip lines hang over the west end of the top platform, a fourteen-tile
+// pocket, and the slide carries the player south down the western corridor into the big entry
+// pocket - 3527,9897 is the nearest tile of it to the slide, thirteen tiles away, and the only
+// one the course can reach. See tools/sim/werewolfpockets.ts.
+^werewolf_zip_land = 0_55_154_7_41         // 3527,9897
+
+// Where the stick lies: after the hurdles and before the pipes, which is the pocket the wiki means
+// by "crawl through the pipe that is closest to the stick". One tile east of the Agility Trainer
+// who is already standing there in the 377 map, so it is not under his feet.
+^werewolf_stick_spawn = 0_55_154_21_46     // 3541,9902
+^werewolf_stick_life = 500
+
+// ---------------------------------------------------------------------------- in and out
+//
+// The trapdoor is on the surface at 3543,3462 in the Haunted Woods and the course is underneath.
+// The landing is the entry pocket, measured standable by tools/sim/werewolfland.ts, and the exit
+// ladder at 3549,9864 climbs back out beside the trapdoor.
+^werewolf_entry = 0_55_154_23_6            // 3543,9862
+^werewolf_exit = 0_55_54_23_7              // 3543,3463
