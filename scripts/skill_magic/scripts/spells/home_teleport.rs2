@@ -14,9 +14,26 @@
 // puts them there and has no thirty-minute wait. Two ways to the same square is one of them wasted;
 // one to Lumbridge and one to Edgeville is two destinations.
 //
-// LUNAR STILL GOES TO EDGEVILLE and that is a choice, not an oversight: Old School's Lunar Home
-// Teleport lands on Lunar Isle, which this build has, but it has never gone anywhere else here and
-// moving it is a new decision rather than a restored one.
+// LUNAR GOES TO LUNAR ISLE, which is Old School's own destination for it ("next to the bank on
+// Lunar Isle") and the one of the three that is not a restoration - it had only ever gone to
+// Edgeville here. 0_32_61_50_15 is (2098, 3919), the square directly SOUTH of the middle of the
+// three lunar_bankbooth tiles at 2097-2099, 3920.
+//
+// SOUTH, AND THE FIRST ATTEMPT WAS NORTH, which is worth writing down because both sides look
+// identical to every test but one. The booths block their own three tiles, and the three squares
+// behind them (2097-2099, 3921) are walled in on the other three sides - they are the strip the
+// banker stands in, a sealed pocket of three squares. A player put there is walkable, is beside
+// the bank, and can click the booth; they just cannot leave. What caught it was flood-filling from
+// the landing square to the rest of the island (a1lib's connected, in the sim) - "next to the
+// bank" and "on the island" are two different questions and only the second one noticed.
+//
+// So do not read the side off sirsal_banker, who spawns at 2099, 3919 on the public side. Read it
+// off the collision map.
+//
+// NO EXTRA GATE ON IT. Reaching Lunar Isle needs Lunar Diplomacy in Old School, and so does the
+// spellbook this spell is cast from - anyone who can press the button has already been there. The
+// Seal of Passage governs talking to Moonclan, not standing on their island, and Moonclan Teleport
+// already lands players there without asking for one.
 //
 // The cast is 474's, in five stages, with 474's five graphics (spotanims 800-804, imported into
 // skill_magic/configs/home_teleport.seq and .spotanim): a circle drawn in the dirt, a book, rings of
@@ -34,13 +51,14 @@
 // is only ever wanted inside one cast: a varp would outlive the teleport it belongs to and have to
 // be cleared on every path that abandons one.
 
-// Written out rather than named, the way the rest of this build writes these two squares:
+// Written out rather than named, the way the rest of this build writes these squares:
 // 0_50_50_21_18 is the Lumbridge courtyard that death.rs2, ring_of_life.rs2 and the macro-event
-// fallback already land on, and 0_48_54_15_40 is the Edgeville square ::home uses.
+// fallback already land on, 0_48_54_15_40 is the Edgeville square ::home uses, and 0_32_61_50_15
+// is the tile in front of the Lunar Isle bank.
 [if_button,magic:home_teleport] @home_teleport(0_50_50_21_18);
 [if_button,ancient_magic:home_teleport] @home_teleport(0_48_54_15_40);
 // and Lunar's, which 474 calls Lunar Home Teleport - see the note above
-[if_button,lunar_magic:lunar_home_teleport] @home_teleport(0_48_54_15_40);
+[if_button,lunar_magic:lunar_home_teleport] @home_teleport(0_32_61_50_15);
 
 [label,home_teleport](coord $dest)
 if_close;
