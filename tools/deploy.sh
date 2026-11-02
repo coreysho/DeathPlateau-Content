@@ -601,6 +601,26 @@ npm run build
 say "Browser client"
 webclient_jar "$ENGINE"
 
+# ---------------------------------------------------------------- the website
+#
+# OPTIONAL AND NEVER FATAL. The site is its own repository with its own deploy script under
+# $ROOT/web, called from here only so that one command updates everything. A website that will
+# not build must not stop the world being updated: the game is the point, and deploy-web.sh
+# builds before it restarts, so a failure there leaves the old site serving.
+#
+# BEFORE the restart below rather than after, because the last thing this script does is tail
+# the journal and never return.
+#
+# It also regenerates the site's figures from the content checkout this deploy just pulled, so
+# the drop tables and counts on the website cannot drift from the world.
+#
+# SKIP_WEB=1 leaves the site alone.
+WEB_DEPLOY=${WEB_DEPLOY:-$ROOT/web/deploy/deploy-web.sh}
+if [ -z "${SKIP_WEB:-}" ] && [ -x "$WEB_DEPLOY" ]; then
+    say "Website"
+    "$WEB_DEPLOY" || say "the website deploy FAILED - the game deploy carries on"
+fi
+
 # systemctl, never a manual npm start - that starts a second unsupervised world that
 # collides on port 43594 and dies with the SSH session.
 if [ -n "$COUNTDOWN" ] && systemctl is-active --quiet "$SERVICE"; then
