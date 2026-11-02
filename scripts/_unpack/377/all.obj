@@ -86633,6 +86633,37 @@ iop5=Destroy
 wearpos=righthand
 wearpos2=lefthand
 weight=7lb
+// NO CATEGORY MEANT UNARMED. combat_get_weapon_style_data switches on oc_category and falls to
+// weapon_unarmed_table when there is none, so wielding this showed Punch, Kick and Block on the
+// combat tab - and swung with them too, because stabattack_anim and slashattack_anim default to
+// human_unarmedpunch and crushattack_anim to human_unarmedkick. Reported as "attack options are
+// incorrect - showing punch, kick", which is both halves of the same missing line.
+//
+// TWO-HANDED SWORD, because that is what it is made of: Devious Minds builds it from a MITHRIL 2H
+// SWORD on Doric's whetstone with a bow string added, and it wears righthand+lefthand here exactly
+// as rune_2h_sword does. The animation, sound and stance params below are that weapon's, unchanged.
+// A 2h sword's styles are Chop, Slash, Smash and Block, so there is no stab animation to give.
+//
+// attackrate 7 is the 2h sword's. It is not decoration: the param defaults to 4, so without a line
+// here a quest trinket with no offensive bonuses at all would swing faster than every real 2h sword
+// in the game.
+//
+// NO COMBAT BONUSES, deliberately. Old School calls this "not equipable" and publishes no stats for
+// it, so there is nothing to copy; giving it the mithril 2h sword's numbers would be inventing a
+// weapon rather than fixing one. It hits like a bare fist and looks like a sword doing it.
+category=weapon_2h_sword
+param=attackrate,7
+param=slashattack_anim,human_dhsword_slash
+param=crushattack_anim,human_dhsword_chop
+param=defend_anim,human_dhsword_block
+param=slash_sound,2H_slash
+param=crush_sound,2H_crush
+param=ready_baseanim,human_dh_weapon_ready
+param=walk_f_baseanim,human_dh_weapon_walk
+param=walk_b_baseanim,human_dh_weapon_walk
+param=walk_l_baseanim,human_dh_weapon_walk
+param=walk_r_baseanim,human_dh_weapon_walk
+param=running_baseanim,human_dh_weapon_run
 
 [devious_glowingpouch]
 name=Large pouch
