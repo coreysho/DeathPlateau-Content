@@ -8,6 +8,10 @@ $effective_ranged = add($effective_ranged, 9); // 'style bonus' of 1
 return(~combat_stat($effective_ranged, $rangeattack));
 
 [proc,npc_ranged_maxhit]()(int)
+// A published max hit wins over the derived one - see the max_hit param.
+if (npc_param(max_hit) >= 0) {
+    return(npc_param(max_hit));
+}
 def_int $rangebonus = npc_param(rangebonus);
 //npcs are essentially always on controlled
 def_int $effective_ranged = ~combat_effective_stat(npc_stat(ranged), 100); // no prayerbonus

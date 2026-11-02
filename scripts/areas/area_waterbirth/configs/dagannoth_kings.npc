@@ -50,6 +50,11 @@ magic=0
 ranged=255
 param=attackbonus,255
 param=strengthbonus,255
+// 26 and 30 and 50 are Old School's published numbers. Derived from the stats above they come out
+// at 131 - measured, not guessed: a king was stood next to a player for six hundred ticks and the
+// biggest hit recorded. The stats are right and stay; the max hit is a field in Old School and is
+// one here now too (max_hit, skill_combat/configs/npc_combat.param).
+param=max_hit,26
 param=stabdefence,255
 param=slashdefence,255
 param=crushdefence,255
@@ -97,6 +102,7 @@ defence=255
 magic=255
 ranged=0
 param=magicattack,255
+param=max_hit,50
 param=stabdefence,255
 param=slashdefence,255
 param=crushdefence,255
@@ -142,6 +148,7 @@ magic=255
 ranged=255
 param=rangeattack,255
 param=rangebonus,255
+param=max_hit,30
 param=stabdefence,10
 param=slashdefence,10
 param=crushdefence,10
