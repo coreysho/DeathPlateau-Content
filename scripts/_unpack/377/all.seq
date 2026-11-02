@@ -62791,7 +62791,18 @@ frame4=anim_21734
 frame5=anim_21735
 frame6=anim_21736
 
+// THE THREE KINGS' ATTACKS OUTRANK THEIR BLOCK (priority 6 against the block's 5), which is what
+// every other fighting npc in this cache does - 830 of them carry 6 on the attack and 979 carry 5
+// on the block - and these three were left on the default 5 because nothing in the raw dump sets it.
+//
+// WHY IT SHOWED UP AS "THE WRONG ANIMATION". Client.java replaces a running animation whenever the
+// new one's priority is >= the current one's, and a king is sent its block the tick AFTER it swings.
+// At equal priority the block therefore cut every attack short and played over it, so the only
+// attack a player ever saw in full was the FIRST one - the one thrown before they had landed a hit
+// and started the blocks coming. Reported as Dagannoth Prime showing its magic attack once and
+// something else from then on; it was its own block, every time.
 [dagannoth_meganoth_attack_melee]
+priority=6
 frame1=anim_21766
 frame2=anim_21773
 frame3=anim_21774
@@ -62809,6 +62820,7 @@ frame14=anim_21771
 frame15=anim_21772
 
 [dagannoth_meganoth_attack_mage]
+priority=6
 frame1=anim_21737
 frame2=anim_21738
 frame3=anim_21739
@@ -62819,6 +62831,7 @@ frame7=anim_21743
 frame8=anim_21744
 
 [dagannoth_meganoth_attack_range]
+priority=6
 frame1=anim_21745
 frame2=anim_21748
 frame3=anim_21749

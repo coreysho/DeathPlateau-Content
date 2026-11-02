@@ -40,7 +40,12 @@ if (~npc_check_notcombat_self = false) {
 }
 if_close;
 npc_anim(npc_param(magicattack_anim), 0);
-spotanim_npc(dagannoth_spine_spotanim_travel, 92, 0);
+// NO SPINE OUT OF ITS BODY. This threw dagannoth_spine_spotanim_travel as a launch burst on Prime
+// itself, which is the wrong graphic twice over: it is a projectile rather than a burst, it is now
+// Supreme's projectile (configs/dagannoth_kings.npc), and a spine leaving the MAGIC king's body is
+// half of why Prime was reported as doing a ranged attack. The travelling graphic below stays -
+// dagannoth_water_creature_spine_travel is the closest thing this cache has to the Water Wave
+// lookalike Old School gives Prime.
 %npc_action_delay = add(map_clock, npc_param(attackrate));
 def_int $duration = ~player_projectile(npc_coord, coord, uid, dagannoth_spine_spotanim_travel2, 40, 36, 32, 15, 0, 11, 5);
 

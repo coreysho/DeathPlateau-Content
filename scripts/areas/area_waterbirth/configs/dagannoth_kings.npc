@@ -159,7 +159,18 @@ param=attackrange,7
 param=attack_anim,dagannoth_meganoth_attack_range
 // TODO: confirm a real synth name for rangeattack_sound - no all.synth dump was available to verify
 // one against the 377 cache, leaving it at its param default (null) rather than guessing.
-param=proj_travel,dagannoth_arrow_spotanim_travel
+//
+// THE SPINE, NOT THE ARROW. This fired dagannoth_arrow_spotanim_travel, which is the RANK AND FILE
+// dagannoth's projectile - the Horror from the Deep ones, the lighthouse ones and a slayer spawn all
+// throw it, and it looks like what it is called. A king throwing the common mob's arrow was reported
+// in those words: "supreme has a coloured arrow for its attack".
+//
+// dagannoth_spine_spotanim_travel is the cache's own dagannoth spine (all.spotanim:
+// anim=dagannoth_spine_travel) and nothing else in the build fires it, which is the other half of
+// the argument: the ranged king is who it was drawn for. Not travel2 - that one's animation is
+// dagannoth_water_creature_spine_travel and it belongs to the Spinolyp, whose internal name is
+// dagannoth_water_creature.
+param=proj_travel,dagannoth_spine_spotanim_travel
 param=proj_height,40
 param=defend_anim,dagannoth_meganoth_defend
 param=death_anim,dagannoth_meganoth_death
