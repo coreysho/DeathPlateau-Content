@@ -598,6 +598,40 @@ if [ -n "$DEV" ]; then
 fi
 npm run build
 
+# ---------------------------------------------------------------- database migrations
+# LIVE GETS THEM TOO. Until this line, `npm run sqlite:migrate` ran on the --dev path only - so a
+# live deploy carried new code onto a database with the old shape, and any table a new feature
+# needed was simply not there. Saved logins found it: the engine makes its own account_token table
+# at startup for exactly this reason, which is a patch over the hole rather than a reason to keep
+# it, and the next feature will not think to do the same.
+#
+# WHERE THIS SITS IS DELIBERATE. After the build, so a compile error stops the deploy before the
+# database is touched; before the restart, so the new code never starts against the old shape. The
+# old world is still up and serving while it runs, which is fine for a migration that only ADDS -
+# a table, a nullable column - and that is all prisma has generated for this project so far. One
+# that drops or rewrites a column does not belong here: stop the world first, by hand.
+#
+# A FAILURE STOPS THE DEPLOY with the live world untouched and still running on old code, the same
+# way a compile error does. The likely cause the first time is a database nobody has ever migrated
+# through prisma: it keeps its own _prisma_migrations table, and without that `migrate deploy`
+# refuses with P3005, "the database schema is not empty".
+#
+# Baselining it is a one-off, from $ENGINE, and the thing to get right is that it is EVERY
+# migration the database already has, oldest first - not just the first one:
+#
+#   ls prisma/singleworld/migrations
+#   npx prisma migrate resolve --applied <name> --schema prisma/singleworld/schema.prisma
+#
+# Resolving only the baseline would leave the rest PENDING, and the next deploy would apply them to
+# a database that already has their changes. One of them - 20260901010000_friendlist_by_username -
+# drops and recreates the friendlist table, so that mistake costs every player's friend list. When
+# the right set is resolved, `migrate deploy` says "No pending migrations to apply" and this step
+# is a no-op from then on. Checked against a copy of the schema and a database with its
+# bookkeeping removed: P3005 before, clean after.
+say "Database migrations"
+CHECKPOINT_DISABLE=1 npm run sqlite:migrate \
+    || die "the migrations failed - the live world is untouched and still on old code. If this is the first deploy to run them, the database needs baselining once: read the comment above this step in tools/deploy.sh before running anything, because resolving the wrong set drops the friendlist table."
+
 say "Browser client"
 webclient_jar "$ENGINE"
 
