@@ -2,6 +2,20 @@
 type=int
 default=2
 
+// A PUBLISHED MAX HIT, for the npcs whose real one cannot be derived from their stats.
+//
+// ~npc_melee_maxhit and ~npc_ranged_maxhit work the number out of the npc's strength or ranged
+// level and its bonus, the way a player's is worked out. That is right for most of the book, and
+// it cannot reproduce a boss: Dagannoth Rex has strength 255 and a strength bonus of 255 because
+// those are the numbers Jagex published, and the same two numbers through the player formula give
+// a max hit of 131 against the 26 he actually hits for. Old School does not derive a monster's max
+// hit at all - it is a field - and there is no pair of stats that gives 255/255 and 26 together.
+//
+// -1 means derive it, which is every npc that does not set this.
+[max_hit]
+type=int
+default=-1
+
 [attack_anim]
 type=seq
 default=human_unarmedpunch

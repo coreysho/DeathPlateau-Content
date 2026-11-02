@@ -161,12 +161,15 @@ mes("You've caught a common kebbit.");
 // the catch is the loop's own takeup.
 
 [oploc1,hunter_snare_caught_longtail] @hunter_trap_takeup(^hunter_catch_copper_longtail);
+
+// The longtail walks into its snare like the other four (~hunter_bird_enters_snare, hunter_traps.rs2).
+[ai_queue5,hunter_copper_longtail] @hunter_bird_enters_snare(hunter_snare_catching_longtail);
 [oploc1,hunter_deadfall_prickly] @hunter_trap_takeup(^hunter_catch_prickly_kebbit);
 
 // Called by ~hunter_trap_lure_snare with the snare as active_loc. True when a longtail was tried.
 [proc,hunter_pisc_lure_snare](coord $at)(boolean)
 if (stat(hunter) >= ^hunter_longtail_level & npc_find($at, hunter_copper_longtail, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_snare_catching_longtail, hunter_snare_springing, ^hunter_longtail_low, ^hunter_longtail_high);
+    ~hunter_trap_spring(hunter_snare_catching_longtail, hunter_snare_springing, ^hunter_longtail_low, ^hunter_longtail_high, true);
     return(true);
 }
 return(false);
@@ -174,7 +177,7 @@ return(false);
 // Called by ~hunter_trap_lure_deadfall with the deadfall as active_loc.
 [proc,hunter_pisc_lure_deadfall](coord $at)(boolean)
 if (stat(hunter) >= ^hunter_prickly_kebbit_level & npc_find($at, hunter_prickly_kebbit, ^hunter_trap_lure_radius, 0) = true) {
-    ~hunter_trap_spring(hunter_deadfall_prickly, hunter_deadfall_collapsed, ^hunter_prickly_kebbit_low, ^hunter_prickly_kebbit_high);
+    ~hunter_trap_spring(hunter_deadfall_prickly, hunter_deadfall_collapsed, ^hunter_prickly_kebbit_low, ^hunter_prickly_kebbit_high, false);
     return(true);
 }
 return(false);

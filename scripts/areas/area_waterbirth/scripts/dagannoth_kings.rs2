@@ -40,14 +40,19 @@ if (~npc_check_notcombat_self = false) {
 }
 if_close;
 npc_anim(npc_param(magicattack_anim), 0);
-// NO SPINE OUT OF ITS BODY. This threw dagannoth_spine_spotanim_travel as a launch burst on Prime
-// itself, which is the wrong graphic twice over: it is a projectile rather than a burst, it is now
-// Supreme's projectile (configs/dagannoth_kings.npc), and a spine leaving the MAGIC king's body is
-// half of why Prime was reported as doing a ranged attack. The travelling graphic below stays -
-// dagannoth_water_creature_spine_travel is the closest thing this cache has to the Water Wave
-// lookalike Old School gives Prime.
+// IT CASTS WATER WAVE, because that is what Old School says it throws: "its projectile resembles
+// Water Wave" (oldschool.runescape.wiki/w/Dagannoth_Prime). This threw dagannoth_spine_* instead -
+// a launch burst that was really a projectile, and a travelling graphic whose own animation is
+// named dagannoth_water_creature_spine_travel and belongs to the SPINOLYP, whose internal name is
+// dagannoth_water_creature. A pale spike leaving the MAGIC king's body is why Prime kept being
+// reported as doing a ranged attack, and a screenshot of the spike in flight is what settled it.
+//
+// This cache has no dagannoth magic projectile of its own, but it has Water Wave's three graphics,
+// and the wiki names that spell rather than a shape - so they are the right ones rather than the
+// nearest ones.
+spotanim_npc(waterwave_casting, 92, 0);
 %npc_action_delay = add(map_clock, npc_param(attackrate));
-def_int $duration = ~player_projectile(npc_coord, coord, uid, dagannoth_spine_spotanim_travel2, 40, 36, 32, 15, 0, 11, 5);
+def_int $duration = ~player_projectile(npc_coord, coord, uid, waterwave_travel, 43, 31, 51, 16, -5, 64, 10);
 
 def_int $damage = 0;
 def_int $attack_roll = ~npc_magic_attack_roll;
@@ -61,5 +66,9 @@ queue*(playerhit_n_retaliate, calc($duration / 30))(npc_uid);
 
 [proc,dagannoth_prime_maxhit]()(int)
 // https://oldschool.runescape.wiki/w/Dagannoth_Prime - 50 max hit at 2005 launch (no mitigation item
-// existed for this in the 2006 era, unlike KBD's antidragonbreathshield/prayer reductions)
-return(50);
+// existed for this in the 2006 era, unlike KBD's antidragonbreathshield/prayer reductions).
+//
+// Read off the npc rather than written here, so all three kings keep their max hit in the same
+// place. Prime was the only one that already had the right number, because it was the only one not
+// deriving it from its stats; the other two came out at 131.
+return(npc_param(max_hit));

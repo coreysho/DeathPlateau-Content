@@ -1,5 +1,10 @@
 // returns the calculated max hit for this npc
 [proc,npc_melee_maxhit]()(int)
+// A published max hit wins over the derived one - see the max_hit param. Nothing that leaves it
+// alone is affected: the default is -1.
+if (npc_param(max_hit) >= 0) {
+    return(npc_param(max_hit));
+}
 def_int $strengthbonus = npc_param(strengthbonus);
 //npcs are essentially always on controlled
 def_int $effective_strength = ~combat_effective_stat(npc_stat(strength), 100); // no prayerbonus

@@ -125,6 +125,12 @@
 // clock again, because loc_change takes a fresh duration.
 ^hunter_trap_duration = 200
 
+// HOW LONG THE PREY IS GIVEN TO WALK INTO THE TRAP. The lure reaches ^hunter_trap_lure_radius
+// tiles and a bird walks one tile a tick, so three ticks covers the farthest it can be called from.
+// It is a deadline and not a duration: the catch is finished by whether the bird is STANDING on the
+// trap when this runs, so arriving early costs nothing and arriving late is a miss.
+^hunter_trap_walkin_ticks = 3
+
 // Walk further than this from a trap (tiles, or change level) and it collapses, as in OSRS.
 ^hunter_trap_leash = 20
 
