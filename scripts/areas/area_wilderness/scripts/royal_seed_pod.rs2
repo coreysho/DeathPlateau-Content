@@ -36,11 +36,26 @@ mes("You open the seed pod.");
 // ~player_teleport_normal's shape with the pod's own graphic in place of teleport_casting. Copied
 // rather than called because the ONLY difference is the spotanim, and a proc that took one as an
 // argument would be a change to every teleport in the game to serve this one item.
+//
+// AT GROUND LEVEL, AND THAT IS THE WHOLE OF IT. This passed 92, which is what it was copied from:
+// 92 is the build's standard height for a spell graphic and seventy-odd calls use it, because a
+// spell bursts at the caster's chest. The pod is not a burst. Its model runs y 0 to -279 with the
+// ORIGIN AT ITS BASE - it is built to stand on the ground and grow up around you, which is what
+// Old School shows: the pod rises, closes over the player's head, and takes them with it.
+//
+// Raised 92 it hangs from the waist instead. The model is 279 tall and a dressed player is 207
+// (y +6 at the heel to -201 at the top of the head), so at 0 the pod encloses the player with 78
+// units to spare; at 92 its base sits above the knees and its tip 170 units clear of the head -
+// a pod floating in the air with the player's legs sticking out of the bottom.
+//
+// Same shape of mistake as the staff of the dead's special, which spent two attempts at the wrong
+// height for the same reason: spotanim_pl's height is measured from the player's feet and means
+// nothing until you know where the model's own origin sits.
 [proc,royal_seed_pod_teleport](coord $coord)
 if_close;
 p_stopaction;
 sound_synth(teleport_all, 1, 0);
 anim(human_castteleport, 0);
-spotanim_pl(royal_seed_pod_tele, 92, 0);
+spotanim_pl(royal_seed_pod_tele, 0, 0);
 p_delay(2);
 ~p_telejump_safe($coord);
