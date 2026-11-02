@@ -260,3 +260,19 @@ inv_del(inv, waa_stick, 1);
 [opnpc1,werewolf_trainer_start]
 p_arrivedelay;
 ~chatnpc("This is the werewolf agility course. Cross the stones, take the hurdles, through a pipe, up the skulls and down the deathslide. Bring the stick back to my colleague at the bottom and I'll call it a lap.");
+
+// AND THE WEREWOLF ON THE TRAPDOOR HAS A TONGUE. The cache gives him op1=Talk-To and nothing
+// answered it, so he stood there being described by the refusal messages and saying nothing when
+// spoken to. He is at 3545,3461, beside the trapdoor, and what he says depends on whether he can
+// see the ring.
+[opnpc1,waa_werewolf_guard]
+p_arrivedelay;
+if (%fenk_quest < ^fenk_complete) {
+    ~chatnpc("Grrrr. Humans. Keep walking.");
+    return;
+}
+if (inv_total(worn, ring_of_charos) = 0 & inv_total(worn, ring_of_charos_unlocked) = 0) {
+    ~chatnpc("The course below is for our kind, not yours. Come back when you look more like one of us.");
+    return;
+}
+~chatnpc("Down you go then. Mind the deathslide - it has had better men than you.");
