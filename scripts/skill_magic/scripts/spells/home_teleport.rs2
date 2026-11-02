@@ -1,6 +1,22 @@
-// HOME TELEPORT, the first spell in both of 474's books. It takes you to Edgeville from either book.
-// No runes; it can only be cast once every thirty real minutes (%home_teleport_last, in
-// date_minutes, so the wait runs while you are logged out too).
+// HOME TELEPORT, the first spell in all three of 474's books. No runes; it can only be cast once
+// every thirty real minutes (%home_teleport_last, in date_minutes, so the wait runs while you are
+// logged out too).
+//
+// WHERE IT GOES IS THE BOOK'S, not the spell's, which is why the destination is an argument rather
+// than a line at the bottom. The normal book goes to Lumbridge and the Ancient Magicks to
+// Edgeville, which is 474's own split - the Ancient book's imported panel names it outright ("Level
+// 0 : Edgeville Home Teleport", "Teleports you to Edgeville"), and the normal book's does not name
+// anywhere because in 474 "home" was Lumbridge and needed no saying.
+//
+// BOTH WENT TO EDGEVILLE FOR A WHILE (ce2abdace, September) and that is what this undoes. The
+// reason it made sense then was that Edgeville is where a player wants to arrive - bank, altar,
+// furnace, and the Wilderness ditch - and the reason it does not any more is ::home, which already
+// puts them there and has no thirty-minute wait. Two ways to the same square is one of them wasted;
+// one to Lumbridge and one to Edgeville is two destinations.
+//
+// LUNAR STILL GOES TO EDGEVILLE and that is a choice, not an oversight: Old School's Lunar Home
+// Teleport lands on Lunar Isle, which this build has, but it has never gone anywhere else here and
+// moving it is a new decision rather than a restored one.
 //
 // The cast is 474's, in five stages, with 474's five graphics (spotanims 800-804, imported into
 // skill_magic/configs/home_teleport.seq and .spotanim): a circle drawn in the dirt, a book, rings of
@@ -13,13 +29,20 @@
 // lasts its movement and a moment of the held pose it ends on - every one of these seqs ends on a
 // frame held for up to 200 client ticks, and waiting out those holds (41 ticks in all) was a slow
 // teleport that stood still between stages. Stage lengths 7, 6, 3, 5 and 3.
+//
+// The destination rides the queue with the stage number rather than sitting in a varp, because it
+// is only ever wanted inside one cast: a varp would outlive the teleport it belongs to and have to
+// be cleared on every path that abandons one.
 
-[if_button,magic:home_teleport] @home_teleport;
-[if_button,ancient_magic:home_teleport] @home_teleport;
-// and Lunar's, which 474 calls Lunar Home Teleport and this build also takes to Edgeville
-[if_button,lunar_magic:lunar_home_teleport] @home_teleport;
+// Written out rather than named, the way the rest of this build writes these two squares:
+// 0_50_50_21_18 is the Lumbridge courtyard that death.rs2, ring_of_life.rs2 and the macro-event
+// fallback already land on, and 0_48_54_15_40 is the Edgeville square ::home uses.
+[if_button,magic:home_teleport] @home_teleport(0_50_50_21_18);
+[if_button,ancient_magic:home_teleport] @home_teleport(0_48_54_15_40);
+// and Lunar's, which 474 calls Lunar Home Teleport - see the note above
+[if_button,lunar_magic:lunar_home_teleport] @home_teleport(0_48_54_15_40);
 
-[label,home_teleport]
+[label,home_teleport](coord $dest)
 if_close;
 if (p_finduid(uid) = false) {
     return;
@@ -42,42 +65,42 @@ if (%home_teleport_last > 0 & $wait > 0) {
     return;
 }
 p_stopaction;
-~home_teleport_stage(1);
+~home_teleport_stage(1, $dest);
 
 // one stage: its animation and graphic now, and the next stage when this one has played out
-[proc,home_teleport_stage](int $stage)
+[proc,home_teleport_stage](int $stage, coord $dest)
 if ($stage = 1) {
     // drawing the circle with a stick (5 ticks of movement)
     anim(human_hometele_1, 0);
     spotanim_pl(hometele_1, 0, 0);
-    weakqueue(home_teleport_next, 7, 2);
+    weakqueue*(home_teleport_next, 7)(2, $dest);
 } else if ($stage = 2) {
     // reading the book, over the circle's glow (which loops for 6.7 ticks)
     anim(human_hometele_2, 0);
     spotanim_pl(hometele_2, 0, 0);
-    weakqueue(home_teleport_next, 6, 3);
+    weakqueue*(home_teleport_next, 6)(3, $dest);
 } else if ($stage = 3) {
     anim(human_hometele_3, 0);
     spotanim_pl(hometele_3, 0, 0);
-    weakqueue(home_teleport_next, 3, 4);
+    weakqueue*(home_teleport_next, 3)(4, $dest);
 } else if ($stage = 4) {
     anim(human_hometele_4, 0);
     spotanim_pl(hometele_4, 0, 0);
-    weakqueue(home_teleport_next, 5, 5);
+    weakqueue*(home_teleport_next, 5)(5, $dest);
 } else {
     anim(human_hometele_5, 0);
     spotanim_pl(hometele_5, 0, 0);
-    weakqueue(home_teleport_arrive, 3, 6);
+    weakqueue*(home_teleport_arrive, 3)($dest);
 }
 
-[queue,home_teleport_next](int $stage)
+[queue,home_teleport_next](int $stage, coord $dest)
 if (~pre_tele_checks(coord) = false) {
     anim(null, 0);
     return;
 }
-~home_teleport_stage($stage);
+~home_teleport_stage($stage, $dest);
 
-[queue,home_teleport_arrive](int $stage)
+[queue,home_teleport_arrive](coord $dest)
 if (~pre_tele_checks(coord) = false) {
     anim(null, 0);
     return;
@@ -86,4 +109,4 @@ if (~pre_tele_checks(coord) = false) {
 // stage 5 has already carried you off, so no ordinary teleport cast on top of it
 anim(null, 0);
 sound_synth(teleport_all, 1, 0);
-~p_telejump_safe(map_findsquare(0_48_54_15_40, 0, 2, ^map_findsquare_lineofwalk));
+~p_telejump_safe(map_findsquare($dest, 0, 2, ^map_findsquare_lineofwalk));
