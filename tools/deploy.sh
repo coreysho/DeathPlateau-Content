@@ -596,7 +596,12 @@ if [ -n "$DEV" ]; then
     say "Deployed the dev world. Tailing its log - Ctrl-C to stop (the server keeps running)."
     exec journalctl -u "$SERVICE" -f
 fi
-npm run build
+# set -euo pipefail stops the deploy here on a failure already; this is so the one build failure
+# that is not a compile error says what to do about itself. Build.ts reads the packed cache back
+# through the engine's own reader, and two builds against one checkout leave chains running through
+# each other's blocks - which last time was found days later, from a client stuck at 30%.
+npm run build \
+    || die "the build failed - the live world is untouched and still running on old code. If it says the cache cannot be read back, delete $ENGINE/data/pack and deploy again."
 
 # ---------------------------------------------------------------- database migrations
 # LIVE GETS THEM TOO. Until this line, `npm run sqlite:migrate` ran on the --dev path only - so a
