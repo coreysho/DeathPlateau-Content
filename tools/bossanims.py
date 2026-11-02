@@ -132,6 +132,57 @@ def model_labels(path):
     return max(b[o:o + vcount], default=-1) + 1
 
 
+# Files that NAME every npc in the game without spawning any of them. An npc that appears only in
+# these is a record nothing can ever put in front of a player, and its animations cannot be a bug.
+CATALOGUES = ('npc_drops.dbrow', 'npc_browser_ui.rs2', 'elemental_weakness.enum', 'npcdrops',
+              'slayer_tasks.dbrow', 'task_name.enum', 'bossart', 'collectionlog')
+
+
+def spawn_counts(names):
+    """npc name -> (static map spawns, scripts that name it other than a catalogue)."""
+    ids = {}
+    with open(os.path.join(ROOT, 'pack', 'npc.pack'), encoding='utf-8') as fh:
+        for line in fh:
+            line = line.strip()
+            if '=' in line:
+                i, n = line.split('=', 1)
+                if n in names:
+                    ids[int(i)] = n
+    onmap = {n: 0 for n in names}
+    maps = os.path.join(ROOT, 'maps')
+    if os.path.isdir(maps):
+        for fn in os.listdir(maps):
+            if not fn.endswith('.jm2'):
+                continue
+            with open(os.path.join(maps, fn), encoding='utf-8', errors='replace') as fh:
+                sec = None
+                for line in fh:
+                    if line.startswith('===='):
+                        sec = line.strip().strip('= ')
+                        continue
+                    if sec != 'NPC' or ':' not in line:
+                        continue
+                    try:
+                        nid = int(line.split(':', 1)[1])
+                    except ValueError:
+                        continue
+                    if nid in ids:
+                        onmap[ids[nid]] += 1
+    inscript = {n: 0 for n in names}
+    want = re.compile(r'(' + '|'.join(re.escape(n) for n in names) + r')') if names else None
+    for dirpath, _d, files in os.walk(SCRIPTS):
+        for fn in files:
+            if not fn.endswith(('.rs2', '.enum', '.dbrow')):
+                continue
+            if any(c in fn for c in CATALOGUES):
+                continue
+            with open(os.path.join(dirpath, fn), encoding='utf-8', errors='replace') as fh:
+                body = fh.read()
+            for m in set(want.findall(body)) if want else ():
+                inscript[m] += 1
+    return onmap, inscript
+
+
 def config_blocks(ext):
     for dirpath, _dirs, files in os.walk(SCRIPTS):
         for fn in files:
@@ -161,19 +212,28 @@ def main():
     ap.add_argument('--level', type=int, default=0)
     ap.add_argument('--npc')
     ap.add_argument('--verbose', action='store_true')
+    ap.add_argument('--kit', metavar='NPC',
+                    help='instead of auditing, list every sequence on this npc own rig - that is, '
+                         'everything it could be wired to')
     a = ap.parse_args()
 
     anim_ids = {n: i for i, n in packmap('anim').items()}
     sets = anim_sets()
 
     # ---------------------------------------------------------------- sequences -> label groups
-    seq_groups, seq_bad = {}, {}
+    seq_groups, seq_bad, seq_frames, seq_meta = {}, {}, {}, {}
     for name, body, _p in config_blocks('seq'):
-        groups, unknown = set(), []
+        groups, unknown, frames = set(), [], []
+        bits = []
+        for k in ('priority', 'replayoff', 'walkmerge', 'stretches'):
+            if k in body:
+                bits.append('%s=%s' % (k, body[k][0]))
+        seq_meta[name] = ' '.join(bits)
         for key, vals in body.items():
             if not re.match(r'^frame\d+$', key):
                 continue
             for v in vals:
+                frames.append(v)
                 fid = anim_ids.get(v)
                 hit = sets.get(fid) if fid is not None else None
                 if hit is None:
@@ -181,6 +241,7 @@ def main():
                 else:
                     groups |= hit[1]
         seq_groups[name] = groups
+        seq_frames[name] = frames
         if unknown:
             seq_bad[name] = unknown
 
@@ -197,6 +258,37 @@ def main():
             p = model_file.get(model_name)
             label_cache[model_name] = model_labels(p) if p else None
         return label_cache[model_name]
+
+    # ---------------------------------------------------------------- --kit
+    # What is there to wire? A creature's sequences all live on the same frame set, so the set its
+    # cache-stated readyanim uses is the shelf to look on. This is tools/models/seqfind474.py's
+    # question asked of this build's own packed animations.
+    if a.kit:
+        for name, body, path in config_blocks('npc'):
+            if name != a.kit:
+                continue
+            own = set()
+            for key in ('readyanim', 'walkanim'):
+                for v in body.get(key, []):
+                    for seq in v.split(','):
+                        own |= {st for st, _g in
+                                (sets[anim_ids[f]] for f in seq_frames.get(seq.strip(), [])
+                                 if f in anim_ids and anim_ids[f] in sets)}
+            print('%s stands and walks on %s (%s)' % (name, '/'.join(sorted(own)) or '?', path))
+            for key in ('readyanim', 'walkanim', 'param'):
+                for v in body.get(key, []):
+                    if key != 'param' or 'anim' in v:
+                        print('    %-10s %s' % (key, v))
+            print('')
+            print('every sequence on that rig:')
+            for seq in sorted(seq_frames):
+                seq_sets = {st for st, _g in (sets[anim_ids[f]] for f in seq_frames[seq]
+                                              if f in anim_ids and anim_ids[f] in sets)}
+                if seq_sets & own:
+                    print('    %-40s %3d frames  %s' % (seq, len(seq_frames[seq]), seq_meta.get(seq, '')))
+            return 0
+        print('no npc called %s' % a.kit)
+        return 2
 
     rows = []
     for name, body, path in config_blocks('npc'):
@@ -277,9 +369,49 @@ def main():
                                'stand and walk fit exactly'
                                % (param, using, how, len(outside), len(groups), table,
                                   ','.join(map(str, outside[:6]))))
-        rows.append((lvl, name, table, dead, suspect, bool(own_outside), os.path.relpath(path, ROOT), off))
+        # WHAT IS SITTING ON ITS RIG UNUSED. A creature's sequences are authored as a set on one
+        # frame set, so the shelf to look on is the set its own stand and walk use. Only a name is
+        # proposed - never applied - and only when the word in it says what it is for.
+        shelf = []
+        if dead or suspect:
+            # A param that is SET to the wrong thing needs a proposal just as much as a missing one.
+            # cave_goblin_guard1 was wired by hand to human_blunt_pound, which misses 106 of the 157
+            # groups its mesh has, and the shelf stayed silent because the param was not empty - so
+            # the one npc whose fix was already written down read as unfixable.
+            flagged = {f.split('=')[0] for f in dead + suspect}
+            own_sets = {st for st, _g in (sets[anim_ids[f]] for seq in
+                                          [v.strip() for key in ('readyanim', 'walkanim')
+                                           for vv in body.get(key, []) for v in vv.split(',')]
+                                          for f in seq_frames.get(seq, [])
+                                          if f in anim_ids and anim_ids[f] in sets)}
+            for seq in sorted(seq_frames):
+                seq_sets = {st for st, _g in (sets[anim_ids[f]] for f in seq_frames[seq]
+                                              if f in anim_ids and anim_ids[f] in sets)}
+                if not (seq_sets & own_sets):
+                    continue
+                low = seq.lower()
+                for word, param in (('attack', 'attack_anim'), ('defend', 'defend_anim'),
+                                    ('block', 'defend_anim'), ('parry', 'defend_anim'),
+                                    ('death', 'death_anim'), ('die', 'death_anim'),
+                                    ('sink', 'death_anim')):
+                    if word in low and (param in flagged or not any(
+                            v.startswith(param + ',') for v in body.get('param', []))):
+                        shelf.append('%s,%s' % (param, seq))
+                        break
+        rows.append((lvl, name, table, dead, suspect, bool(own_outside), os.path.relpath(path, ROOT),
+                     off, sorted(set(shelf))))
+
+    # NOTHING THAT IS NEVER SPAWNED IS A BUG. Three of the first dozen findings were records nothing
+    # can reach: a second Ket-Zek left on the old animations after the live one was reimported, a
+    # Swan Song kalphite named only by the drop tables, and Echned Zekin, who has 150 hitpoints, no
+    # Attack option and is only ever talked to. The catalogues that list every npc in the game are
+    # excluded, or everything looks spawned.
+    onmap, inscript = spawn_counts({r[1] for r in rows if r[3] or r[4]})
+    rows = [r + (onmap.get(r[1], 0), inscript.get(r[1], 0)) for r in rows]
 
     rows.sort(key=lambda r: (-r[0], r[1]))
+    unreachable = [r for r in rows if (r[3] or r[4]) and not r[9] and not r[10]]
+    rows = [r for r in rows if r not in unreachable]
     dead_rows = [r for r in rows if r[3]]
     susp_rows = [r for r in rows if r[4] and not r[3]]
     loose = sum(1 for r in rows if r[5])
@@ -290,9 +422,14 @@ def main():
             continue
         print('==== %s' % title)
         for row in group:
-            print('%-34s level %-5s labels %-4s %s' % (row[1][:34], row[0] or '-', row[2], row[6]))
+            where = ('%d on the map' % row[9]) if row[9] else ('%d script%s' % (row[10], '' if row[10] == 1 else 's'))
+            print('%-34s level %-5s labels %-4s %-14s %s' % (row[1][:34], row[0] or '-', row[2], where, row[6]))
             for p in row[key]:
                 print('    %s' % p)
+            if row[8]:
+                print('    ON ITS OWN RIG, UNUSED: %s' % '  '.join(row[8]))
+            else:
+                print('    nothing on its own rig to wire: this creature has no such animation here')
         print('')
     if a.verbose:
         print('==== fine')
@@ -310,6 +447,12 @@ def main():
     print('  %d whose animation cannot play at all' % len(dead_rows))
     print('  %d on an animation that misses more than half this mesh, where its own stand fits' % len(susp_rows))
     print('  %d with an animation deliberately set to null' % len(offs))
+    print('  %d set aside: flagged, but nothing on any map or in any script spawns them' % len(unreachable))
+    if a.verbose and unreachable:
+        print('')
+        print('==== NEVER SPAWNED, so not a bug')
+        for row in unreachable:
+            print('%-34s level %-5s %s' % (row[1][:34], row[0] or '-', row[6]))
     print('  %d whose own cache-stated stand or walk also reaches past it, which is why a partial'
           % loose)
     print('    overshoot on its own is not reported: one frame set serves a whole family.')

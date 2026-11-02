@@ -51,6 +51,11 @@ param=magicdefence,5
 param=rangedefence,10
 param=slayer_category,^slayer_cavebug
 param=death_drop,null
+// Wired 2026-11-02 by tools/bossanims.py: its own three. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=attack_anim,cave_bug_attack
+param=defend_anim,cave_bug_defend
+param=death_anim,cave_bug_death
 
 [slayer_lizard_massive]
 name=Lizard
@@ -368,6 +373,9 @@ param=damagetype,^crush_style
 huntmode=cowardly
 param=death_drop,null
 param=slayer_category,^slayer_harpiebugswarm
+// Wired 2026-11-02 by tools/bossanims.py: its own death. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=death_anim,slayer_harpie_death
 
 [slayer_crawling_hand_1]
 name=Crawling Hand

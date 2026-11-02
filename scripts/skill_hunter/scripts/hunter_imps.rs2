@@ -92,7 +92,7 @@ if (~hunter_imp_baited($slot) = true) {
     $low = calc($low + ^hunter_imp_bait_bonus);
     $high = calc($high + ^hunter_imp_bait_bonus);
 }
-~hunter_trap_spring(hunter_magicbox_catching, hunter_magicbox_failed, $low, $high);
+~hunter_trap_spring(hunter_magicbox_catching, hunter_magicbox_failed, $low, $high, false);
 
 [proc,hunter_imp_baited](int $slot)(boolean)
 if (testbit(%hunter_imp_bait, calc($slot - 1)) = ^true) {
