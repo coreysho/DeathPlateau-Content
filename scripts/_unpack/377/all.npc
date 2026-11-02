@@ -30294,6 +30294,11 @@ ranged=1
 param=damagetype,^stab_style
 huntmode=cowardly
 param=death_drop,null
+// Wired 2026-11-02 by tools/bossanims.py: its own three, used by nothing until now. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=attack_anim,leechattack
+param=defend_anim,leechblock
+param=death_anim,leechdeath
 
 [vampire_flyer]
 name=Vampire
@@ -30779,6 +30784,9 @@ category=shade_shadow
 huntmode=aggressive_melee
 huntrange=5
 param=next_npc_type,shade_level1
+// Wired 2026-11-02 by tools/bossanims.py: it sinks; its rig has no attack or block. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=death_anim,shadeshadow_sink
 
 [shade_level1]
 name=Loar Shade
@@ -30849,6 +30857,7 @@ category=shade_shadow
 huntmode=aggressive_melee
 huntrange=5
 param=next_npc_type,shade_level2
+param=death_anim,shadeshadow_sink
 
 [shade_level2]
 name=Phrin Shade
@@ -30905,6 +30914,7 @@ category=shade_shadow
 huntmode=aggressive_melee
 huntrange=5
 param=next_npc_type,shade_level3
+param=death_anim,shadeshadow_sink
 
 [shade_level3]
 name=Riyl Shade
@@ -30961,6 +30971,7 @@ category=shade_shadow
 huntmode=aggressive_melee
 huntrange=5
 param=next_npc_type,shade_level4
+param=death_anim,shadeshadow_sink
 
 [shade_level4]
 name=Asyn Shade
@@ -31015,6 +31026,7 @@ category=shade_shadow
 huntmode=aggressive_melee
 huntrange=5
 param=next_npc_type,shade_level5
+param=death_anim,shadeshadow_sink
 
 [shade_level5]
 name=Fiyr Shade
@@ -36800,6 +36812,9 @@ resizev=32
 op2=Attack
 vislevel=38
 param=death_drop,null
+// Wired 2026-11-02 by tools/bossanims.py: as the other four scorpions. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=defend_anim,scorpion_parry
 
 param=attack_anim,scorpion_attack
 param=death_anim,scorpion_death
@@ -44711,6 +44726,7 @@ readyanim=locust_ready
 op2=Attack
 vislevel=18
 param=death_drop,null
+param=defend_anim,locust_parry
 
 param=attack_anim,locust_attack
 param=attack_sound,locust_attack
@@ -46412,6 +46428,11 @@ param=attackrate,6
 param=damagetype,^crush_style
 huntmode=cowardly
 param=death_drop,zogre_bones
+// Wired 2026-11-02 by tools/bossanims.py: the ogre set, as the other 31 ogres use it. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=attack_anim,ogre_attack
+param=defend_anim,ogre_block
+param=death_anim,ogre_death
 
 [zogre_skele]
 name=Skogre
@@ -82548,6 +82569,7 @@ param=attack_anim,fear_attack
 param=death_anim,fear_death
 huntmode=cowardly
 param=death_drop,null
+param=defend_anim,fear_parry
 
 [soulbane_conf_beast]
 name=Confusion beast
@@ -82573,6 +82595,9 @@ ranged=1
 param=damagetype,^crush_style
 huntmode=cowardly
 param=death_drop,null
+param=attack_anim,confattack
+param=defend_anim,confparry
+param=death_anim,confdeath
 
 [soulbane_less_beast3]
 name=Hopeless creature
@@ -82597,6 +82622,11 @@ param=strengthbonus,6
 param=damagetype,^stab_style
 huntmode=cowardly
 param=death_drop,null
+// Wired 2026-11-02 by tools/bossanims.py: the lesser demon set its mesh comes from. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=attack_anim,lessattack
+param=defend_anim,lessparry
+param=death_anim,lessdeath
 
 [soulbane_less_beast2]
 name=Hopeless beast

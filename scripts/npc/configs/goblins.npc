@@ -773,6 +773,9 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+// Wired 2026-11-02 by tools/bossanims.py: the plain block: a miner holds a pick. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=defend_anim,cave_goblin_defend
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
@@ -808,6 +811,7 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+param=defend_anim,cave_goblin_defend
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
@@ -845,6 +849,7 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+param=defend_anim,cave_goblin_defend
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Cave goblin miner (level 11), the same source this repo's drop
@@ -884,6 +889,7 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+param=defend_anim,cave_goblin_defend
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Stat block copied verbatim from [jailguard]: Cave goblin guard 26 <- Jail guard 26.
@@ -924,9 +930,15 @@ param=crushdefence,10
 param=magicdefence,4
 param=rangedefence,9
 param=damagetype,^crush_style
-param=attack_anim,human_blunt_pound
-param=defend_anim,human_blunt_block
-param=attack_sound,mace_crush
+// Wired 2026-11-02 by tools/bossanims.py: these three were a human mace wielder's, and 106 of the 157 label
+// groups they move are not on this mesh, so the guard stood still and swung nothing. It carries a bone spear -
+// its own readyanim and walkanim say so - and [cave_goblin_guard2], the same creature, already uses this pair.
+param=attack_anim,cave_goblin_bone_spear_attack
+param=defend_anim,cave_goblin_bone_spear_block
+param=attack_sound,cave_goblin_attack
+// Wired 2026-11-02 by tools/bossanims.py: as the other eight cave goblins. Without it this falls back to
+// combat.param's human animation, whose label groups this mesh does not have.
+param=death_anim,cave_goblin_death
 
 // FIXED 2026-09-08 (combat-stat audit): op2=Attack and no combat stats at all - unkillable.
 // Levels and bonuses read off the OSRS wiki page for Cave goblin guard (level 24), the same source this repo's drop
@@ -958,6 +970,7 @@ param=attackrate,6
 param=slashdefence,15
 param=crushdefence,19
 param=damagetype,^crush_style
+param=death_anim,cave_goblin_death
 
 param=attack_anim,cave_goblin_bone_spear_attack
 param=defend_anim,cave_goblin_bone_spear_block
@@ -1014,6 +1027,7 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+param=defend_anim,cave_goblin_defend
 
 param=attack_anim,cave_goblin_attack
 param=attack_sound,cave_goblin_attack
@@ -1081,6 +1095,7 @@ attack=10
 strength=12
 defence=7
 param=damagetype,^crush_style
+param=defend_anim,cave_goblin_defend
 
 param=attack_anim,cave_goblin_attack
 param=attack_sound,cave_goblin_attack
