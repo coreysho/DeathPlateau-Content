@@ -38697,6 +38697,20 @@ vislevel=hide
 head1=obj_pickpocket_guide_man
 head2=obj_mystic_hat_manhead
 head3=idk_man_jaw_long_head
+// THE ROBE STORE NEVER OPENED. This npc has carried op1=Talk-to and op3=Trade since the 377 cache
+// and had neither a trigger nor a shop behind them, so both clicks did nothing - reported as "can't
+// trade robe store owner in magic guild".
+//
+// magicguildshop2 is the stock list that was already sitting in the 727 dump unused, and it is the
+// right one: hat, top, bottom, gloves and boots, which is the mystic set and nothing else. The
+// multipliers and the haggle delta are magic_store_owner's, its neighbour in the same guild, so the
+// two tills behave alike.
+category=shop_keeper
+param=owned_shop,magicguildshop2
+param=shop_sell_multiplier,1000
+param=shop_buy_multiplier,600
+param=shop_delta,10
+param=shop_title,Magic Guild Robe Store
 
 [waa_skullball]
 name=Skullball
