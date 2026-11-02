@@ -596,10 +596,69 @@ if [ -n "$DEV" ]; then
     say "Deployed the dev world. Tailing its log - Ctrl-C to stop (the server keeps running)."
     exec journalctl -u "$SERVICE" -f
 fi
-npm run build
+# set -euo pipefail stops the deploy here on a failure already; this is so the one build failure
+# that is not a compile error says what to do about itself. Build.ts reads the packed cache back
+# through the engine's own reader, and two builds against one checkout leave chains running through
+# each other's blocks - which last time was found days later, from a client stuck at 30%.
+npm run build \
+    || die "the build failed - the live world is untouched and still running on old code. If it says the cache cannot be read back, delete $ENGINE/data/pack and deploy again."
+
+# ---------------------------------------------------------------- database migrations
+# LIVE GETS THEM TOO. Until this line, `npm run sqlite:migrate` ran on the --dev path only - so a
+# live deploy carried new code onto a database with the old shape, and any table a new feature
+# needed was simply not there. Saved logins found it: the engine makes its own account_token table
+# at startup for exactly this reason, which is a patch over the hole rather than a reason to keep
+# it, and the next feature will not think to do the same.
+#
+# WHERE THIS SITS IS DELIBERATE. After the build, so a compile error stops the deploy before the
+# database is touched; before the restart, so the new code never starts against the old shape. The
+# old world is still up and serving while it runs, which is fine for a migration that only ADDS -
+# a table, a nullable column - and that is all prisma has generated for this project so far. One
+# that drops or rewrites a column does not belong here: stop the world first, by hand.
+#
+# A FAILURE STOPS THE DEPLOY with the live world untouched and still running on old code, the same
+# way a compile error does. The likely cause the first time is a database nobody has ever migrated
+# through prisma: it keeps its own _prisma_migrations table, and without that `migrate deploy`
+# refuses with P3005, "the database schema is not empty".
+#
+# Baselining it is a one-off, from $ENGINE, and the thing to get right is that it is EVERY
+# migration the database already has, oldest first - not just the first one:
+#
+#   ls prisma/singleworld/migrations
+#   npx prisma migrate resolve --applied <name> --schema prisma/singleworld/schema.prisma
+#
+# Resolving only the baseline would leave the rest PENDING, and the next deploy would apply them to
+# a database that already has their changes. One of them - 20260901010000_friendlist_by_username -
+# drops and recreates the friendlist table, so that mistake costs every player's friend list. When
+# the right set is resolved, `migrate deploy` says "No pending migrations to apply" and this step
+# is a no-op from then on. Checked against a copy of the schema and a database with its
+# bookkeeping removed: P3005 before, clean after.
+say "Database migrations"
+CHECKPOINT_DISABLE=1 npm run sqlite:migrate \
+    || die "the migrations failed - the live world is untouched and still on old code. If this is the first deploy to run them, the database needs baselining once: read the comment above this step in tools/deploy.sh before running anything, because resolving the wrong set drops the friendlist table."
 
 say "Browser client"
 webclient_jar "$ENGINE"
+
+# ---------------------------------------------------------------- the website
+#
+# OPTIONAL AND NEVER FATAL. The site is its own repository with its own deploy script under
+# $ROOT/web, called from here only so that one command updates everything. A website that will
+# not build must not stop the world being updated: the game is the point, and deploy-web.sh
+# builds before it restarts, so a failure there leaves the old site serving.
+#
+# BEFORE the restart below rather than after, because the last thing this script does is tail
+# the journal and never return.
+#
+# It also regenerates the site's figures from the content checkout this deploy just pulled, so
+# the drop tables and counts on the website cannot drift from the world.
+#
+# SKIP_WEB=1 leaves the site alone.
+WEB_DEPLOY=${WEB_DEPLOY:-$ROOT/web/deploy/deploy-web.sh}
+if [ -z "${SKIP_WEB:-}" ] && [ -x "$WEB_DEPLOY" ]; then
+    say "Website"
+    "$WEB_DEPLOY" || say "the website deploy FAILED - the game deploy carries on"
+fi
 
 # systemctl, never a manual npm start - that starts a second unsupervised world that
 # collides on port 43594 and dies with the SSH session.

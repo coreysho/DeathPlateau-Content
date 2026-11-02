@@ -696,3 +696,68 @@ if (loc_coord = $last) {
     ~agility_xp(^lum_stones_xp);
 }
 p_teleport(loc_coord);
+
+// ---------------------------------------------------------------- Edgeville Dungeon obstacle pipe
+//
+// loc_9295 "Obstacle pipe", op1=Squeeze-through, authored in the cache and wired to nothing - so the
+// one shortcut between the two halves of the dungeon did nothing at all when clicked. Agility 51 and
+// 10 experience, per the OSRS wiki.
+//
+// IT IS A PAIR, like the Dwarven Mine crevice and the Wilderness course's own pipe: two placements
+// of the same loc at (3150, 9906) and (3153, 9906), each a shape-10 2x1 so they block 3150-3151 and
+// 3153-3154, with one open tile at 3152 between them. The mouths are 3149 and 3155 and nothing else
+// joins the two sides - a flood fill from one to the other fails - so this is the only way across
+// and a dead op was a dead end.
+//
+// TWO LEGS, ONE SQUEEZE EACH, which is what the pair is for: 3149 -> 3152 through the west pipe and
+// 3152 -> 3155 through the east one, the way wilderness_course.rs2 crosses its pair. The timings are
+// measured rather than copied: human_pipesqueeze is 9 frames of 40 client cycles, so each leg glides
+// 0->40 inside a move_delay of 2 (60 cycles). That keeps the glide inside the crawl and the crawl
+// inside the leg, which is the rule the wilderness pipe's own comment arrived at the hard way -
+// its 80-cycle double squeeze needed a 3-tick leg, and this one does not.
+//
+// THE DAMAGE IS NOT HERE. The wiki says crossing can deal 1-6 and cannot kill, with the chance of
+// getting through unharmed rising with Agility. I could not date that to this revision and did not
+// want to invent a curve for it, so the pipe is safe; it is a few lines to add if it should hurt.
+[oploc1,loc_9295]
+if (stat(agility) < 51) {
+    ~mesbox("You need an Agility level of 51 to squeeze through the pipe.");
+    return;
+}
+def_coord $west_mouth = 0_49_154_13_50; // 3149, 9906
+def_coord $middle = 0_49_154_16_50;     // 3152, 9906, the open tile between the two pipes
+def_coord $east_mouth = 0_49_154_19_50; // 3155, 9906
+def_coord $west_pipe = 0_49_154_14_50;  // 3150, 9906
+def_coord $east_pipe = 0_49_154_17_50;  // 3153, 9906
+
+// Which way you are going is read off where you STAND rather than off which half you clicked, which
+// is the only reading that is always right: loc_coord names a 2x1 that is two tiles wide and whose
+// far edge is the middle of the pipe, so "which side of the loc am I on" has to be worked out
+// anyway. (As it happens the far half cannot be clicked from the wrong side at all - the engine
+// finds no interaction tile for it and walks the player into the rock instead - so loc_coord would
+// have survived today. It would not survive the two halves being moved a tile.)
+def_coord $mouth = $west_mouth;
+def_coord $exit = $east_mouth;
+def_coord $first = $west_pipe;
+def_coord $second = $east_pipe;
+def_int $facing = ^exact_east;
+if (coordx(coord) > coordx($middle)) {
+    $mouth = $east_mouth;
+    $exit = $west_mouth;
+    $first = $east_pipe;
+    $second = $west_pipe;
+    $facing = ^exact_west;
+}
+if (coord ! $mouth) {
+    p_delay(0);
+    p_walk($mouth);
+}
+p_delay(0);
+~change_merged_loc($first);
+~agility_exactmove(human_pipesqueeze, 0, 2, $mouth, $middle, 0, 40, $facing, true);
+sound_synth(squeeze_in, 1, 0);
+p_delay(0);
+~change_merged_loc($second);
+~agility_exactmove(human_pipesqueeze, 0, 2, $middle, $exit, 0, 40, $facing, true);
+sound_synth(squeeze_in, 1, 0);
+~agility_xp(100);

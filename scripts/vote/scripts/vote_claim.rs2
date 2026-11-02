@@ -120,6 +120,12 @@ if ($status = ^vote_claim_nosites) {
 // WHERE TO VOTE, as a message box rather than dialogue, because it is a list and it is the thing
 // the player came to read. The cooldown is per site and comes out of the ledger, so it is right
 // whether the last vote was claimed or reported by the site itself.
+//
+// WHICH SITES, NOT WHICH ADDRESSES. This used to print each site's own URL, and a player cannot
+// click text in this client - so it was a long line to copy out by hand, and without their name
+// in it the vote it led to could never pay them. The names and the cooldowns are what is worth
+// reading here; the links live at one short address that fills the name in for them. See
+// ^vote_website.
 [proc,vote_sites_mesbox]
 if (vote_sitecount = 0) {
     return;
@@ -129,12 +135,14 @@ def_int $i = 0;
 while ($i < vote_sitecount) {
     def_int $left = vote_cooldown($i);
     if ($left = 0) {
-        $lines = "<$lines>|<vote_sitename($i)> - <vote_siteurl($i)>";
+        $lines = "<$lines>|<vote_sitename($i)> - ready now";
     } else {
         $lines = "<$lines>|<vote_sitename($i)> - ready in <~vote_wait($left)>";
     }
     $i = calc($i + 1);
 }
+def_string $where = ^vote_website;
+$lines = "<$lines>|Get the links from <$where> so they carry your name.";
 ~mesbox($lines);
 
 // "3 hours", "12 minutes", "40 seconds" - the biggest unit that is not zero, because a cooldown is

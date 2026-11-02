@@ -30,13 +30,17 @@ font=q8_full
 text=Click here to continue
 colour=0xFFFF00
 
+// obj_tiny_net IS A KEY. Rendered on its own it is a shaft with a square bit on the end, and that
+// is what every Hunter level-up put on screen. The name is the cache's, not a description of the
+// mesh. The butterfly net is the skill's own tool and actually looks like one; the angles are the
+// ones its obj config uses for the inventory icon (skill_hunter/configs/hunter_imps.obj).
 [icon]
 type=model
 x=31
 y=32
 width=32
 height=32
-model=obj_tiny_net
-zoom=460
-xan=351
-yan=1865
+model=obj_butterfly_net
+zoom=1440
+xan=152
+yan=1956

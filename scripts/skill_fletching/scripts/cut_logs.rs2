@@ -28,36 +28,32 @@ def_int $stock_level;
 def_int $stock_experience;
 $stock, $stock_level, $stock_experience = db_getfield($data, fletch_bow_table:stock, 0);
 def_string $wood = ~string_removeright(oc_name($log), 5);
+// MAKE X / 10 / 5 / 1, which is what skillmulti is and multiobj is not. The two families look
+// alike and are not: multiobjN asks WHICH and nothing else, so fletching answered "which" and then
+// silently cut the entire inventory. skillmultiN asks which AND how many, and it is the same panel
+// the spinning wheel and the glassblowing pipe already use.
+//
+// skillmulti1 has Make All / X / 5 / 1 and no 10, which is 474's own layout for the one-product
+// panel; the two-, three- and four-product ones all carry X / 10 / 5 / 1.
 def_namedobj $product;
+def_int $requested = 0;
 if ($obj2 = null) {
-    $product = $stock;
+    $product, $requested = ~skillmulti1($stock);
 } else if ($shaft_count < 1 & $stock = null) {
-    // guess based off 2004
-    $product = ~multiobj2("What would you like to make?", 
-        $obj2, 0, -15, 175, "<$wood> Short Bow.", 0, 0,
-        $obj3, 0, -15, 175, "<$wood> Long Bow.", 0, 0
-    );
+    $product, $requested = ~skillmulti2($obj2, $obj3);
 } else if ($shaft_count < 1) {
-    $product = ~multiobj3("What would you like to make?",
-        $obj2, 0, 0, 175, "<$wood> Short Bow.", 0, 0,
-        $obj3, 0, 0, 175, "<$wood> Long Bow.", 0, 0,
-        $stock, 0, 0, 175, "<$wood> Stock.", 0, 0
-    );
+    $product, $requested = ~skillmulti3($obj2, $obj3, $stock);
 } else {
-    $product = ~multiobj4("What would you like to make?",
-        $obj1, 0, 0, 175, "Arrow Shafts.", 0, 0,
-        $obj2, 0, 0, 175, "Short Bow.", 0, 0,
-        $obj3, 0, 0, 175, "Long Bow.", 0, 0,
-        $stock, 0, 0, 175, "Crossbow Stock.", 0, 0
-    );
+    $product, $requested = ~skillmulti4($obj1, $obj2, $obj3, $stock);
 }
-if ($product = null) {
-    ~displaymessage(^dm_default);
+if ($product = null | $requested = null | $requested < 1) {
     return;
 }
 def_int $level = 1;
-// default to shafts
-def_int $count = 1;
+// How many products ONE log yields - 1 for a bow or a stock, fifteen for arrow shafts. Renamed
+// from $count when the panel started returning a count of its own: the two numbers are different
+// things and sharing a name between them is how a Make 5 turns into five times fifteen shafts.
+def_int $per_log = 1;
 def_int $fletching_experience = multiply($shaft_count, 5);
 def_string $message;
 // 2005-osrs, rsc
@@ -73,7 +69,7 @@ if ($product = $stock) {
     $message = "You carefully cut the wood into a longbow.";
 } else {
     $message = "You carefully cut the wood into <tostring($shaft_count)> arrow shafts.";
-    $count = $shaft_count;
+    $per_log = $shaft_count;
     $fletching_experience = multiply($shaft_count, 5);
 }
 if (stat(fletching) < $level) {
@@ -81,14 +77,34 @@ if (stat(fletching) < $level) {
     ~doubleobjbox($log, $product, "You need a Fletching level of at least <tostring($level)> to make <~add_article(lowercase(oc_name($product)))>.", 200);
     return;
 }
-// EVERY LOG, not one of them - see bows.rs2, which had the same comment and the same problem.
+// AS MANY AS WERE ASKED FOR, counted down through the chain - see bows.rs2, which had the same
+// problem, and carries the long version of why the repeat is a queue and not p_delay: p_delay sets
+// player.delayed, input is dropped while that is set, and the loop could not be stopped at all.
 // The product chosen at the top is kept for the whole run, so this does not ask again per log.
-while (inv_total(inv, $log) > 0) {
-    inv_del(inv, $log, 1);
-    mes($message);
-    stat_advance(fletching, $fletching_experience);
-    inv_add(inv, $product, $count);
-    if (inv_total(inv, $log) > 0) {
-        p_delay(2);
-    }
+@fletch_log_one($log, $product, $per_log, $fletching_experience, $message, $requested);
+
+[label,fletch_log_one](obj $log, namedobj $product, int $per_log, int $experience, string $message, int $left)
+if (%action_delay > map_clock) {
+    return;
 }
+if ($left < 1) {
+    return;
+}
+if (inv_total(inv, $log) < 1) {
+    return;
+}
+inv_del(inv, $log, 1);
+// human_fletching is the 377 cache's knife-in-hand animation, the one viking_olaf.rs2 and the max
+// cape rack already cut with. Fletching had none at all: the log vanished and the shafts appeared.
+anim(human_fletching, 0);
+mes($message);
+stat_advance(fletching, $experience);
+inv_add(inv, $product, $per_log);
+$left = calc($left - 1);
+if ($left > 0 & inv_total(inv, $log) > 0) {
+    %action_delay = calc(map_clock + 3);
+    weakqueue*(fletch_cut_log, 3)($log, $product, $per_log, $experience, $message, $left);
+}
+
+[queue,fletch_cut_log](obj $log, namedobj $product, int $per_log, int $experience, string $message, int $left)
+@fletch_log_one($log, $product, $per_log, $experience, $message, $left);

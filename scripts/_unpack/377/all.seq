@@ -1,3 +1,24 @@
+// The 377 cache's animations, named from the dump.
+//
+// ATTACK ANIMATIONS OUTRANK BLOCKS HERE (priority 6 against 5), which is a rule about the CLIENT and
+// not about the cache. Client.java replaces a running animation whenever the new one's priority is
+// >= the current one's, and a monster is sent its block the tick AFTER it swings - so at equal
+// priority the block cuts every attack short and plays over it, and the only attack a player ever
+// sees in full is the first one, thrown before they had landed a hit and started the blocks coming.
+// That was reported as Dagannoth Prime "showing its magic attack once and a ranged attack after".
+//
+// 830 npcs already carried 6 on the attack and 979 carried 5 on the block, so the rule was the
+// cache's own; what it lacked was application. A sweep raised the 57 attack sequences still on the
+// default 5, and lowered the 11 blocks that had been raised to 6 and tied their own attack. Three
+// are deliberately left tied, because for them one animation is honestly doing two jobs:
+//
+//   pheasent_ready          the pheasants' attack AND their block - raising it raises both sides
+//   100_jubbly_ogre_kick    Rantz's attack AND his idle
+//   abyssal_demon_teleport  the abyssal demon's block, but a signature animation its own scripts
+//                           drive; lowering it would let an attack cut the teleport
+//
+// tools/sim/animpriority.ts (engine) holds the rule and those three names.
+
 [swarm_walk]
 frame1=anim_4622
 delay1=2
@@ -42,6 +63,7 @@ frame10=anim_4629
 frame11=anim_4624
 
 [swarm_block]
+priority=6
 frame1=anim_4635
 frame2=anim_4641
 frame3=anim_4646
@@ -932,6 +954,7 @@ frame9=anim_4520
 delay9=20000
 
 [demon_casting]
+priority=6
 frame1=anim_4484
 frame2=anim_4498
 frame3=anim_4511
@@ -1731,6 +1754,7 @@ frame9=anim_7324
 delay9=20000
 
 [giant_casting]
+priority=6
 frame1=anim_7292
 frame2=anim_7302
 frame3=anim_7311
@@ -1914,6 +1938,7 @@ frame5=anim_3793
 delay5=20000
 
 [giantspider_casting]
+priority=6
 frame1=anim_3797
 frame2=anim_3802
 frame3=anim_3806
@@ -2439,6 +2464,7 @@ frame9=anim_7611
 delay9=20000
 
 [midget_chanting]
+priority=6
 frame1=anim_7491
 frame2=anim_7665
 frame3=anim_7634
@@ -4116,6 +4142,7 @@ frame12=anim_3438
 frame13=anim_3447
 
 [bird_attack]
+priority=6
 frame1=anim_3405
 frame2=anim_3411
 frame3=anim_3418
@@ -4374,6 +4401,7 @@ frame8=anim_7199
 delay8=9
 
 [ogre_attack]
+priority=6
 frame1=anim_7179
 frame2=anim_7184
 frame3=anim_7189
@@ -24773,6 +24801,7 @@ frame16=anim_2450
 frame17=anim_736
 
 [human_trans_casting]
+priority=6
 frame1=anim_886
 frame2=anim_1168
 frame3=anim_1454
@@ -27315,6 +27344,7 @@ frame1=anim_4005
 delay1=14465
 
 [chompy_attack]
+priority=6
 reachforward=yes
 frame1=anim_4012
 frame2=anim_4019
@@ -27558,6 +27588,7 @@ frame7=anim_5619
 delay7=5
 
 [elemental_fire_attack]
+priority=6
 frame1=anim_5603
 frame2=anim_5609
 frame3=anim_5616
@@ -27636,6 +27667,7 @@ frame8=anim_5331
 delay8=6
 
 [elemental_earth_attack]
+priority=6
 reachforward=yes
 frame1=anim_5312
 frame2=anim_5317
@@ -27693,6 +27725,7 @@ frame6=anim_4946
 delay6=2
 
 [elemental_air_attack]
+priority=6
 frame1=anim_4943
 frame2=anim_4948
 frame3=anim_4952
@@ -27740,6 +27773,7 @@ frame13=anim_7802
 frame14=anim_7804
 
 [elemental_water_attack]
+priority=6
 frame1=anim_5348
 frame2=anim_5512
 frame3=anim_5527
@@ -28341,6 +28375,7 @@ frame8=anim_7972
 delay8=5
 
 [werewolf_attack]
+priority=6
 frame1=anim_7944
 frame2=anim_7950
 frame3=anim_7957
@@ -29564,6 +29599,7 @@ frame8=anim_8711
 delay8=5
 
 [troll_rock_throw]
+priority=6
 reachforward=yes
 replaceheldright=hide
 frame1=anim_8660
@@ -30495,6 +30531,7 @@ frame4=anim_8963
 delay4=11
 
 [lion_attack]
+priority=6
 frame1=anim_8940
 frame2=anim_8941
 frame3=anim_8942
@@ -31163,6 +31200,7 @@ frame11=anim_9310
 frame12=anim_9311
 
 [rabbit_attack]
+priority=6
 frame1=anim_9300
 frame2=anim_9301
 frame3=anim_9302
@@ -31852,6 +31890,7 @@ frame6=anim_9672
 delay6=11
 
 [shade_attack]
+priority=6
 frame1=anim_9623
 frame2=anim_9626
 frame3=anim_9627
@@ -32218,6 +32257,7 @@ frame8=anim_9854
 delay8=4
 
 [horror_crab_attack]
+priority=6
 frame1=anim_9822
 frame2=anim_9823
 frame3=anim_9824
@@ -32671,6 +32711,7 @@ frame5=anim_9954
 frame6=anim_9955
 
 [horror_dagannoth_attack]
+priority=6
 frame1=anim_9933
 frame2=anim_9934
 frame3=anim_9935
@@ -32692,6 +32733,7 @@ frame8=anim_9948
 frame9=anim_9949
 
 [horror_dagannoth_rangeattack]
+priority=6
 frame1=anim_9980
 frame2=anim_9983
 frame3=anim_9984
@@ -34560,6 +34602,7 @@ frame2=anim_10283
 delay2=11
 
 [m_gorilla_attack]
+priority=6
 frame1=anim_10249
 frame2=anim_10250
 frame3=anim_10251
@@ -38342,6 +38385,7 @@ frame6=anim_12091
 frame7=anim_12092
 
 [waa_ovinocanus_attack]
+priority=6
 frame1=anim_12078
 frame2=anim_12079
 frame3=anim_12080
@@ -38398,6 +38442,7 @@ frame8=anim_12077
 delay8=5
 
 [waa_homo_arachnus_attack]
+priority=6
 frame1=anim_12045
 frame2=anim_12046
 frame3=anim_12047
@@ -38540,6 +38585,7 @@ frame4=anim_12266
 delay4=11
 
 [homolupus_attack]
+priority=6
 frame1=anim_12242
 frame2=anim_12243
 frame3=anim_12244
@@ -40892,6 +40938,7 @@ frame7=anim_13062
 frame8=anim_13063
 
 [bearsuit_attack]
+priority=6
 frame1=anim_13048
 frame2=anim_13049
 frame3=anim_13050
@@ -41371,6 +41418,7 @@ frame8=anim_13245
 delay8=3
 
 [cave_slime_attack]
+priority=6
 frame1=anim_13205
 frame2=anim_13206
 frame3=anim_13207
@@ -41536,6 +41584,7 @@ frame8=anim_13275
 frame9=anim_13274
 
 [wall_beast_specialattack_attack]
+priority=6
 frame1=anim_13283
 frame2=anim_13287
 frame3=anim_13288
@@ -42956,6 +43005,7 @@ frame8=anim_13794
 delay8=6
 
 [rock_avatar_attack]
+priority=6
 frame1=anim_13730
 frame2=anim_13733
 frame3=anim_13734
@@ -45160,6 +45210,7 @@ frame2=anim_14333
 delay2=6
 
 [scarab_attack]
+priority=6
 frame1=anim_14351
 frame2=anim_14360
 frame3=anim_14361
@@ -46724,6 +46775,7 @@ frame10=anim_15268
 frame11=anim_15269
 
 [vulture_ground_attack]
+priority=6
 frame1=anim_15240
 frame2=anim_15241
 frame3=anim_15242
@@ -47706,7 +47758,7 @@ frame12=anim_15809
 [barrows_quarterstaff_defend]
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 reachforward=yes
-priority=6
+priority=5
 frame1=anim_15818
 frame2=anim_15819
 frame3=anim_15820
@@ -49460,6 +49512,7 @@ frame8=anim_16187
 delay8=5
 
 [cave_goblin_bone_spear_attack]
+priority=6
 frame1=anim_16131
 frame2=anim_16132
 frame3=anim_16133
@@ -50485,6 +50538,7 @@ frame5=anim_16634
 delay5=9
 
 [wom_bed_attack]
+priority=6
 frame1=anim_16673
 frame2=anim_16674
 frame3=anim_16675
@@ -50707,6 +50761,7 @@ frame5=anim_16830
 delay5=5
 
 [abyssal_leech_attack]
+priority=6
 frame1=anim_16794
 frame2=anim_16797
 frame3=anim_16798
@@ -50796,6 +50851,7 @@ frame9=anim_16870
 frame10=anim_16862
 
 [abyssal_pyramid_attack]
+priority=6
 frame1=anim_16837
 frame2=anim_16840
 frame3=anim_16841
@@ -50911,6 +50967,7 @@ frame21=anim_16909
 delay21=6
 
 [abyssal_walker_attack]
+priority=6
 frame1=anim_16887
 frame2=anim_16888
 frame3=anim_16889
@@ -54646,6 +54703,7 @@ frame4=anim_18340
 delay4=7
 
 [wallasalki_attack]
+priority=6
 frame1=anim_18309
 frame2=anim_18310
 frame3=anim_18311
@@ -59537,6 +59595,7 @@ frame64=anim_20526
 delay64=4
 
 [mouse_attack]
+priority=6
 frame1=anim_20496
 frame2=anim_20497
 frame3=anim_20498
@@ -60276,6 +60335,7 @@ frame9=anim_4339
 delay9=200
 
 [dark_beast_update_death]
+priority=6
 frame1=anim_4316
 frame2=anim_4321
 frame3=anim_4326
@@ -61352,6 +61412,7 @@ frame6=anim_21181
 delay6=5
 
 [slayer_lizard_attack]
+priority=6
 frame1=anim_21130
 frame2=anim_21131
 frame3=anim_21132
@@ -62791,7 +62852,18 @@ frame4=anim_21734
 frame5=anim_21735
 frame6=anim_21736
 
+// THE THREE KINGS' ATTACKS OUTRANK THEIR BLOCK (priority 6 against the block's 5), which is what
+// every other fighting npc in this cache does - 830 of them carry 6 on the attack and 979 carry 5
+// on the block - and these three were left on the default 5 because nothing in the raw dump sets it.
+//
+// WHY IT SHOWED UP AS "THE WRONG ANIMATION". Client.java replaces a running animation whenever the
+// new one's priority is >= the current one's, and a king is sent its block the tick AFTER it swings.
+// At equal priority the block therefore cut every attack short and played over it, so the only
+// attack a player ever saw in full was the FIRST one - the one thrown before they had landed a hit
+// and started the blocks coming. Reported as Dagannoth Prime showing its magic attack once and
+// something else from then on; it was its own block, every time.
 [dagannoth_meganoth_attack_melee]
+priority=6
 frame1=anim_21766
 frame2=anim_21773
 frame3=anim_21774
@@ -62809,6 +62881,7 @@ frame14=anim_21771
 frame15=anim_21772
 
 [dagannoth_meganoth_attack_mage]
+priority=6
 frame1=anim_21737
 frame2=anim_21738
 frame3=anim_21739
@@ -62819,6 +62892,7 @@ frame7=anim_21743
 frame8=anim_21744
 
 [dagannoth_meganoth_attack_range]
+priority=6
 frame1=anim_21745
 frame2=anim_21748
 frame3=anim_21749
@@ -62891,6 +62965,7 @@ frame8=anim_21820
 delay8=8
 
 [dagannoth_rock_lobster_attack]
+priority=6
 frame1=anim_21793
 frame2=anim_21794
 frame3=anim_21795
@@ -63019,6 +63094,7 @@ frame9=anim_21861
 delay9=2
 
 [dagannoth_water_creature_attack]
+priority=6
 frame1=anim_21840
 frame2=anim_21841
 frame3=anim_21842
@@ -64109,6 +64185,7 @@ frame2=anim_22396
 frame3=anim_22396
 
 [clay_golem_attack]
+priority=6
 frame1=anim_22413
 frame2=anim_22414
 frame3=anim_22415
@@ -65436,6 +65513,7 @@ frame10=anim_22945
 frame11=anim_22944
 
 [wyvern_skeleton_iceball]
+priority=6
 walkmerge=label_1,label_2,label_9,label_11,label_13,label_15,label_17,label_19,label_37,label_39,label_41,label_43,label_45
 frame1=anim_22949
 frame2=anim_22950
@@ -69105,6 +69183,7 @@ frame10=anim_24919
 delay10=2000
 
 [killerwatt_biped_attack]
+priority=6
 frame1=anim_24891
 frame2=anim_24894
 frame3=anim_24895
@@ -74857,6 +74936,7 @@ frame6=anim_29063
 frame7=anim_29062
 
 [crab_attack]
+priority=6
 frame1=anim_29035
 frame2=anim_29040
 frame3=anim_29041
@@ -74931,6 +75011,7 @@ frame8=anim_29184
 delay8=3
 
 [mudskipper_attack]
+priority=6
 frame1=anim_29125
 frame2=anim_29135
 frame3=anim_29136
@@ -76603,6 +76684,7 @@ frame7=anim_28779
 frame8=anim_28780
 
 [agrith_nana_attack]
+priority=6
 frame1=anim_28762
 frame2=anim_28765
 frame3=anim_28766
@@ -76704,6 +76786,7 @@ frame3=anim_28880
 frame4=anim_28881
 
 [dessourt_melee_attack]
+priority=6
 frame1=anim_28864
 frame2=anim_28865
 frame3=anim_28866
@@ -78053,6 +78136,7 @@ frame7=anim_29661
 delay7=3
 
 [royal_sea_snake_attack]
+priority=6
 frame1=anim_29613
 frame2=anim_29614
 frame3=anim_29615
@@ -79706,6 +79790,7 @@ frame8=anim_27752
 delay8=4
 
 [tentacle_monster_attack]
+priority=6
 frame1=anim_27703
 frame2=anim_27711
 frame3=anim_27712
@@ -83173,6 +83258,7 @@ frame8=anim_31223
 frame9=anim_31224
 
 [fear_attack]
+priority=6
 frame1=anim_31169
 frame2=anim_31172
 frame3=anim_31173
@@ -87149,6 +87235,7 @@ frame6=anim_33216
 frame7=anim_33217
 
 [battle_tortoise_attack]
+priority=6
 frame1=anim_33233
 frame2=anim_33234
 frame3=anim_33235
@@ -87579,6 +87666,7 @@ frame8=anim_33376
 delay8=5
 
 [swan_seatroll_attack]
+priority=6
 frame1=anim_33346
 frame2=anim_33347
 frame3=anim_33348

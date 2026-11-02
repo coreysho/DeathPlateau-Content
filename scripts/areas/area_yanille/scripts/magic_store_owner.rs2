@@ -11,3 +11,21 @@ switch_int(~p_choice2("Yes please.", 1, "No thank you.", 2)) {
     case 2 :
         ~chatplayer("<p,neutral>No thank you.");
 } 
+
+// THE ROBE STORE, next door to the one above. The npc declares op1=Talk-to and op3=Trade in the
+// cache and had neither behind it; its stock list (magicguildshop2 - the five mystic pieces) was
+// already in the 727 dump with nothing pointing at it.
+//
+// Trade opens the shop straight away, as every op3=Trade does. Talk-to asks first, the way its
+// neighbour does, so the two shopkeepers in one room do not answer the same click differently.
+[opnpc1,magic_store_owner2]
+~chatnpc("<p,happy>Welcome to the Magic Guild Robe Store.|Would you like to see my robes?");
+switch_int(~p_choice2("Yes please.", 1, "No thank you.", 2)) {
+    case 1 :
+        ~chatplayer("<p,happy>Yes please.");
+        ~openshop_activenpc;
+    case 2 :
+        ~chatplayer("<p,neutral>No thank you.");
+}
+
+[opnpc3,magic_store_owner2] ~openshop_activenpc;

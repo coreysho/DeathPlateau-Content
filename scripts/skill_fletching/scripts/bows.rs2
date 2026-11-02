@@ -32,19 +32,70 @@ if (stat(fletching) < $level) {
     return;
 }
 
-// EVERY BOW IN THE INVENTORY, not one of them. "make one bow at a time" is what this said and
-// what it did, so stringing a full load was twenty-seven separate clicks.
+// MAKE X / 5 / 1, OR ALL - skillmulti1, 474's one-product panel (it has Make All where the wider
+// ones have Make 10). Stringing had no panel at all: it strung the whole inventory and gave the
+// player no say in it, which is only the right answer by accident.
 //
-// p_delay carries the repeat and yields with it, so walking away or clicking something else
-// ends the loop by itself on the next pass - there is no state to unwind.
-while (inv_total(inv, $unstrung_bow) > 0 & inv_total(inv, bow_string) > 0) {
-    inv_del(inv, $unstrung_bow, 1);
-    inv_del(inv, bow_string, 1);
-    // 2005-osrs, rsc
-    mes("You add a string to the bow.");
-    stat_advance(fletching, db_getfield($data, fletching_table:experience, 0));
-    inv_add(inv, db_getfield($data, fletching_table:product, 0));
-    if (inv_total(inv, $unstrung_bow) > 0 & inv_total(inv, bow_string) > 0) {
-        p_delay(2);
-    }
+// THE REPEAT IS A QUEUE, NOT p_delay, AND THAT IS THE WHOLE POINT. This was a while loop paced
+// by p_delay(2), with a comment claiming that walking away or clicking something else ended it
+// by itself. It does the opposite: p_delay sets player.delayed, and while that is set both
+// MoveClickHandler and OpLocHandler DROP the player's input - so the loop ran to the end of the
+// inventory and nothing could stop it. skill_farming/scripts/farming_useitem.rs2 writes the same
+// warning out at length, and ordinary woodcutting avoids p_delay for exactly this reason.
+//
+// Woodcutting's own answer - pace on map_clock and re-queue through p_oploc - is not available
+// here: this is an item on an item, and P_OPHELD throws 'unimplemented' in the engine. So the
+// repeat is carried the way cooking carries its own (skill_cooking/scripts/cooking.rs2): one bow
+// now, the next on a weakqueue three ticks out, which is the same cadence p_delay(2) gave since
+// p_delay sets delayedUntil to tick + 1 + n.
+//
+// %action_delay is the stop. Every other paced action in the build writes it, so a step that
+// finds the clock already claimed knows the player has gone and does something else, and drops
+// the chain instead of stringing another bow.
+// The table's product column is (namedobj, int) - the bow and how many of it - so it has to be
+// split before the panel can be shown the item on its own.
+def_namedobj $strung;
+def_int $strung_count;
+$strung, $strung_count = db_getfield($data, fletching_table:product, 0);
+def_namedobj $picked;
+def_int $requested;
+$picked, $requested = ~skillmulti1($strung);
+if ($picked = null | $requested = null | $requested < 1) {
+    return;
 }
+@string_bow_one($unstrung_bow, $requested);
+
+// One bow, then book the next if there is one and another was asked for. Re-reads the row rather
+// than carrying it, because a queue entry outlives the script that made it.
+[label,string_bow_one](obj $unstrung_bow, int $left)
+if (%action_delay > map_clock) {
+    return;
+}
+if ($left < 1) {
+    return;
+}
+def_dbrow $data = ~get_fletching_data($unstrung_bow);
+if ($data = null) {
+    return;
+}
+if (inv_total(inv, $unstrung_bow) < 1 | inv_total(inv, bow_string) < 1) {
+    return;
+}
+inv_del(inv, $unstrung_bow, 1);
+inv_del(inv, bow_string, 1);
+// The cache's only fletching animation, and the one cutting logs uses. 377 has no separate
+// stringing animation - Old School's is seq 6678, which is years out of this revision - so a bow
+// is strung with the same knife-in-hand motion a log is cut with, which is what 2006 did.
+anim(human_fletching, 0);
+// 2005-osrs, rsc
+mes("You add a string to the bow.");
+stat_advance(fletching, db_getfield($data, fletching_table:experience, 0));
+inv_add(inv, db_getfield($data, fletching_table:product, 0));
+$left = calc($left - 1);
+if ($left > 0 & inv_total(inv, $unstrung_bow) > 0 & inv_total(inv, bow_string) > 0) {
+    %action_delay = calc(map_clock + 3);
+    weakqueue*(fletch_string_bow, 3)($unstrung_bow, $left);
+}
+
+[queue,fletch_string_bow](obj $unstrung_bow, int $left)
+@string_bow_one($unstrung_bow, $left);

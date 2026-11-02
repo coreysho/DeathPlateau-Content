@@ -51,3 +51,10 @@ transmit=yes
 clientcode=10
 scope=perm
 protect=no
+
+// THE LEVEL-UP POPUP, 0 on and 1 off - the same way round as option_chat, and the way round that
+// matters: a varp nobody has ever written reads 0, so every player who has not touched this keeps
+// the popup they have always had. Server-side only; nothing in the client reads it.
+[option_levelup]
+scope=perm
+protect=no
