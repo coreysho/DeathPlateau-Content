@@ -58,6 +58,19 @@ if($stat = farming) { // special case, idk why they did this...
     // https://storage.googleapis.com/tannerdino/images/50farming.png
     if_setobject(levelup_farming:icon, spade, 180);
 }
+// THE BOX, UNLESS IT HAS BEEN TURNED OFF (options tab, %option_levelup: 0 on, 1 off). Everything
+// above this line still happens with it off - the message in the chatbox, the fireworks and the
+// jingle - so you still know you levelled. What goes is the modal and the interruption that comes
+// with it, which is the only reason anyone wants it gone: p_pausebutton makes the player busy and
+// closing the box clears their weak queues, so levelling at a fishing spot costs a click and a
+// fresh cast. That is the fishing complaint this answers.
+//
+// The unlock boxes go with it. They are the same modal and the same interruption, and a switch that
+// stopped one and not the other would be a switch that works except when it matters - a 99 is
+// exactly when you do not want your action dropped. The unlocks are in the Skill Guide either way.
+if (%option_levelup ! 0) {
+    return;
+}
 // the level up dialogue box
 if_settext(db_getfield($unlock_row, levelup:title, 0), "@dbl@<$message>");
 if_settext(db_getfield($unlock_row, levelup:body, 0), "<db_getfield($unlock_row, levelup:level_prefix, 0)> <tostring($level)>.");

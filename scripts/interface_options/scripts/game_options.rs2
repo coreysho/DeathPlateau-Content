@@ -92,6 +92,19 @@ if (%option_aid = ^aid_no) {
 }
 ~options_tooltips;
 
+// THE LEVEL-UP POPUP. 0 on, 1 off. What it governs is in levelup/scripts/levelup.rs2: the message,
+// the fireworks and the jingle happen either way - what goes is the modal box, and with it the
+// interruption, which is the whole reason to want this off. Levelling while fishing stops being a
+// click to dismiss and a cast to start again.
+[if_button,options:levelup_popup]
+if_close;
+if (%option_levelup = 0) {
+    %option_levelup = 1;
+} else {
+    %option_levelup = 0;
+}
+~options_tooltips;
+
 // Run, which 474 put here rather than on a tab of its own.
 [if_button,options:run]
 if_close;
@@ -121,6 +134,14 @@ if (p_finduid(uid) = true) {
 // in layers of their own, one of each pair hidden. This shows the one that is true. Called at
 // login (~initalltabs) and after every toggle.
 [proc,options_tooltips]
+// The level-up switch says which it is rather than hiding one of a pair, so it is written here
+// rather than paired below. This proc is the one place every setting change and the login both
+// pass through, which is why it is the right place for it.
+if (%option_levelup = 0) {
+    if_settext(options:levelup_popup, "Level-up popup: On");
+} else {
+    if_settext(options:levelup_popup, "Level-up popup: Off");
+}
 ~options_tooltip_pair(options:run_on, options:run_off, %option_run, ^player_run_on);
 ~options_tooltip_pair(options:chat_effects_on, options:chat_effects_off, %option_chat, 0);
 ~options_tooltip_pair(options:split_pm_on, options:split_pm_off, %option_pm, 1);
