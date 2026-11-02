@@ -178,11 +178,61 @@ if (coordz(coord) > coordz(loc_coord)) {
 if (~werewolf_blocked = true) {
     return;
 }
+// NOT WITH A HELMET ON. "Players cannot wear a helmet when attempting this obstacle" - you grip
+// the line with your teeth and a helm is in the way.
+if (inv_getobj(worn, ^wearpos_hat) ! null) {
+    ~mesbox("You grip this line with your teeth, and your helmet is rather in the way. Take it off first.");
+    return;
+}
 p_arrivedelay;
 mes("You grip the zip line with your teeth...");
+if (~werewolf_slipped = true) {
+    ~werewolf_fall;
+    return;
+}
 ~agility_exactmove(human_ropeswing_long, 0, 3, coord, ^werewolf_zip_land, 0, 70, ^exact_south, false);
 ~agility_xp(^werewolf_xp_zip);
 mes("...and let go at the bottom.");
+
+// WHETHER THE DEATHSLIDE THROWS YOU, and it is the only obstacle on this course that can.
+//
+// Old School names three things and gives one hard anchor: "higher Agility and Strength with lower
+// weight give a better chance", and at "level 80 Agility and Strength with weight 2 kg or lower
+// this obstacle will never be failed". So both stats are rolled on the same curve, fitted to reach
+// 256 at exactly 80 - at 80 and 80 neither roll can be lost - and weight is the third test, which
+// only bites above the published 2kg.
+//
+// The curve below 80 is a reconstruction: nothing publishes a rate at any other level. 192 and 271
+// put it at 240 of 256 for each stat at the course's own 60, which is about one fall in eight for
+// the pair of them.
+[proc,werewolf_slipped]()(boolean)
+if (stat_random(agility, ^werewolf_zip_low, ^werewolf_zip_high) = false) {
+    return(true);
+}
+if (stat_random(strength, ^werewolf_zip_low, ^werewolf_zip_high) = false) {
+    return(true);
+}
+if (weight > ^werewolf_zip_weight & random(^werewolf_zip_weight_odds) = 0) {
+    return(true);
+}
+return(false);
+
+// AND A FALL STILL ENDS AT THE BOTTOM, because there is nowhere else for it to end.
+//
+// The strip the slide crosses - z 9898 to 9907, the whole width of the gully - has not one tile a
+// player can stand on anywhere along it (tools/sim/werewolfslide.ts). So a player who comes off
+// finishes the drop rather than landing halfway, which also spares this file from inventing a
+// coordinate Old School never published.
+//
+// The experience is the published shape of it: "200 Agility experience, or less when falling off
+// the obstacle earlier... you will only receive 180, 160 or 140". One of the three, by how early
+// you lost your grip. The damage does NOT scale with hitpoints - "the only agility obstacle that
+// can do damage past the player's Hitpoints" - so a low-hitpoint player really can die here.
+[proc,werewolf_fall]
+~agility_exactmove(human_ropeswing_long, 0, 3, coord, ^werewolf_zip_land, 0, 70, ^exact_south, false);
+~agility_xp(calc(^werewolf_xp_zip - calc(calc(random(3) + 1) * ^werewolf_zip_step)));
+mes("...and your grip goes. You hit the ground hard.");
+~damage_self(calc(^werewolf_zip_hit_low + random(^werewolf_zip_hit_span)));
 
 // ---------------------------------------------------------------- the way in and out
 //

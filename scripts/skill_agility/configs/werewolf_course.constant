@@ -77,3 +77,27 @@
 // ladder at 3549,9864 climbs back out beside the trapdoor.
 ^werewolf_entry = 0_55_154_23_6            // 3543,9862
 ^werewolf_exit = 0_55_54_23_7              // 3543,3463
+
+// ---------------------------------------------------------------------------- the deathslide
+//
+// The only obstacle on this course Old School lets you fail. Two rolls on the same curve, one on
+// Agility and one on Strength, fitted so each reaches 256 at exactly 80 and so neither can be lost
+// there - which is the published anchor, "level 80 Agility and Strength with weight 2 kg or lower
+// ... will never be failed". At the course's own 60 each roll is 240 of 256, so the pair fails
+// about one run in eight. The curve between is a reconstruction; no other rate is published.
+^werewolf_zip_low = 192
+^werewolf_zip_high = 271
+
+// Weight is the third thing the wiki names and the only number it gives is the 2kg in that same
+// sentence, so that is where it starts to cost you.
+^werewolf_zip_weight = 2
+^werewolf_zip_weight_odds = 4
+
+// "200 Agility experience, or less when falling off the obstacle earlier... you will only receive
+// 180, 160 or 140" - in tenths, one, two or three steps of 20 below the full 200.
+^werewolf_zip_step = 200
+
+// "A fall can deal upwards of 30 damage and does NOT scale with Hitpoints." No exact range is
+// published; 30 to 35 is the smallest reading of "upwards of 30" that is still upwards of it.
+^werewolf_zip_hit_low = 30
+^werewolf_zip_hit_span = 6
