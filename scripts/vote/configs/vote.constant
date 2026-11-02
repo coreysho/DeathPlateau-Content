@@ -103,3 +103,15 @@
 // are in ticks (100 ticks is a minute) and both are one number used nowhere else.
 ^vote_reminder_first = 500      // 5 minutes after logging in
 ^vote_reminder_ticks = 3000     // and every 30 minutes after that
+
+// ============================================================================ where the links are (2 November)
+// THE CLERK CANNOT HAND OVER A LINK. This client has no clickable text, so any address it prints
+// is one the player has to type by hand - and a vote link only pays if it carries their name,
+// because a toplist has no idea who voted unless it was told first. Those two facts do not fit
+// together: a link with a name in it is far too long to read off a message box and type.
+//
+// So the clerk names ONE SHORT ADDRESS and the vote page there puts the player's name into every
+// link at once. One thing to type, and it is the thing that pays. Before this the clerk printed
+// the sites' own addresses with nobody's name in them, which counted toward the server's ranking
+// and could never reach a ticket.
+^vote_website = "deathplateau.com/vote"
