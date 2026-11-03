@@ -138,6 +138,16 @@ def record(local, o, bonuses, model_base, is_hood, gwd_prot=None):
         L.append('recol%ds=%d' % (n, hsl16_to_rgb15(src)))
         L.append('recol%dd=%d' % (n, hsl16_to_rgb15(dst)))
     L.append('iop2=Wear')
+    # AND NOTHING ELSE, except on the accumulator. Every variant's op list in OSRS's own item
+    # table is Wear alone - the plain Max cape's Teleports, Spellbook and Features are stripped -
+    # and the one exception is the Accumulator max cape, which inherits the DEVICE's option
+    # because that is what is fused into it. OSRS spells that option "Commune" on slot 4; this
+    # build's Ava's devices spell it "Toggle-attract" on slot 3, so the spec carries the slot and
+    # label this build uses rather than OSRS's. avas_device.rs2 already had the handler -
+    # [opheld3,accumulator_max_cape] ~avas_attract_toggle - and tools/sim/orphans.ts found it with
+    # no option to fire it, which is what this line is for.
+    for slot, label in sorted((o.get('extra_iops') or {}).items()):
+        L.append('iop%s=%s' % (slot, label))
     if o.get('cost') is not None:
         L.append('cost=%d' % o['cost'])
     if o.get('members'):
