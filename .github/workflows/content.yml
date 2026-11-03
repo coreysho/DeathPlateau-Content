@@ -296,6 +296,11 @@ jobs:
         # about to print, so this holds all 43 to that exact wording - a loose match would eat a
         # reward written beside the points.
         - questscroll_battery.py
+        # WAS IN NEITHER LIST and had never run in CI. It checks the three places a skilling tool
+        # has to be wired - the obj param, the hardcoded axe ladder, the per-tree success table -
+        # plus, now, the three places a TREE has to be wired and the Ent that spawns at it. It
+        # reads only content and the .ob2 models beside it, so it is a plain matrix row.
+        - skilltools_battery.py
 
     steps:
     - uses: actions/checkout@v4
