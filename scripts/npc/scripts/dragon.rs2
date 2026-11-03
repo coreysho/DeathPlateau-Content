@@ -85,10 +85,23 @@ if (~npc_check_notcombat_self = false) {
     return;
 }
 anim(%com_defendanim, 0);
-if (random(2) = 0) {
-    npc_anim(dragon_attack, 0);
+// A DRAGON BITES WITH ITS OWN ANIMATION. This played dragon_attack or dragon_head_attack whatever
+// the dragon was, which is right for the 377 mesh the pair was drawn for and wrong for anything
+// else sharing this proc: the King Black Dragon is Old School's art and carries osrs_seq_91, and it
+// bit with the 377 red dragon's animation instead. Reported in those words. The baby dragons were
+// the same - bdrag_attack in their config, the adult's bite on screen.
+//
+// The flourish stays where it belongs. Two bite animations exist for the 377 dragon and only for
+// it, so a dragon whose attack_anim IS dragon_attack still randomises between the pair; anything
+// with an animation of its own simply uses it.
+if (npc_param(attack_anim) = dragon_attack) {
+    if (random(2) = 0) {
+        npc_anim(dragon_attack, 0);
+    } else {
+        npc_anim(dragon_head_attack, 0);
+    }
 } else {
-    npc_anim(dragon_head_attack, 0);
+    npc_anim(npc_param(attack_anim), 0);
 }
 if (npc_param(attack_sound) ! null) {
     sound_synth(npc_param(attack_sound), 1, 0);

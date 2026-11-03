@@ -63,6 +63,14 @@ wanderrange=20
 maxrange=20
 attackrange=15
 respawnrate=150
+// A TICK TIMER, so [ai_timer,king_dragon] (areas/area_wilderness/scripts/king_black_dragon.rs2)
+// gets a turn while the dragon is walking after someone - neither ai_applayer2 nor ai_opplayer2
+// does, and that is why a running player used to be chased in silence. It has to live HERE rather
+// than as an npc_settimer in an [ai_spawn]: Npc.resetDefaults puts timerInterval back to this
+// field every time the dragon drops a target it cannot reach, so a timer armed at spawn is wiped a
+// couple of ticks into the first chase. The trigger's own guards make a tick where nobody is being
+// fought cost two comparisons.
+timer=1
 hitpoints=240
 attack=240
 strength=240

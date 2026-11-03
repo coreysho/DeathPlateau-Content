@@ -74,10 +74,19 @@ font=q8_full
 text=Select an Option
 colour=0x800000
 
+// CLOSE SAT AT y=310 IN A PANEL 96 TALL, so it was drawn nowhere at all: the leather crafting menu
+// this interface exists for (skill_crafting/scripts/leather/leather.rs2) had no visible way to
+// close it. 310 is a fullscreen coordinate and this is a chatbox interface - Client.java draws one
+// at CHAT_Y + (CHAT_H - 96) / 2 and gives it 479 by 96 - so it is a leftover from whatever taller
+// layout this was adapted from.
+//
+// 80 is where multiobj7 puts its own bottom row, which is the lowest anything in the chatbox draws
+// and still fits: 80 + 17 is 97, and the one row over the edge is the unused bottom of the click
+// box rather than any of the text.
 [com_8]
 type=text
 x=8
-y=310
+y=80
 buttontype=normal
 width=464
 height=17

@@ -38540,15 +38540,6 @@ recol1s=15857
 recol1d=7330
 length=2
 
-[favour_campfire]
-name=Fire
-desc=Hot!
-model=troll_stronghold_camp_fire
-anim=fire
-blockrange=no
-ambient=75
-contrast=75
-
 [favour_campfire_base]
 model=favour_campfire_base
 active=no
@@ -53480,20 +53471,6 @@ sharelight=yes
 active=no
 mirror=yes
 
-[farm_fireplace]
-name=Fireplace
-desc=A grand old fireplace.
-model=loc_2725
-recol1s=31457
-recol1d=15653
-recol2s=27201
-recol2d=14596
-recol3s=26209
-recol3d=13539
-length=3
-anim=grandfireplace
-bgsound=fire_crackling_med,10
-
 [hay_bale]
 name=Hay Bale
 desc=I bet there's a needle in it somewhere.
@@ -66743,16 +66720,6 @@ width=2
 length=2
 active=yes
 ambient=30
-
-[elid_clay_oven]
-name=Clay Oven
-desc=A clay oven for cooking with.
-model=elid_clay_oven
-width=2
-length=2
-ambient=15
-forceapproach=west
-bgsound=fire_crackling_small,3
 
 [elid_crate]
 name=Crate
@@ -88888,23 +88855,6 @@ recol1s=7331
 recol1d=7297
 blockrange=no
 ambient=15
-
-[qip_sheep_shearer_fireplacecookingpot]
-name=Cooking pot
-desc=Something is cooking nicely here.
-model=qip_sheep_shearer_fireplacecookingpot
-recol1s=13671
-recol1d=7297
-recol2s=12614
-recol2d=12548
-recol3s=11557
-recol3d=10434
-recol4s=10500
-recol4d=13605
-recol5s=9443
-recol5d=7297
-anim=fireplace
-bgsound=cooking_loop_2,3
 
 [qip_sheep_shearer_bed]
 name=Bed

@@ -318,6 +318,8 @@ forceapproach=south
 op1=Climb
 
 [dwarf_keldagrim_kebab_fireplace]
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_fire
 name=Fireplace
 desc=A lovely place to cook meat.
 model=dwarf_keldagrim_kebab_fireplace
@@ -326,6 +328,8 @@ active=yes
 anim=dwarf_fireplace
 
 [dwarf_keldagrim_poor_fireplace]
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_fire
 name=Fireplace
 desc=A lovely place to cook meat.
 model=dwarf_keldagrim_kebab_fireplace
@@ -334,6 +338,8 @@ active=yes
 anim=dwarf_fireplace
 
 [dwarf_keldagrim_fireplace]
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_fire
 name=Fireplace
 desc=A lovely place to cook meat.
 model=dwarf_keldagrim_kebab_fireplace
@@ -341,6 +347,8 @@ active=yes
 anim=dwarf_fireplace
 
 [dwarf_keldagrim_big_fireplace]
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_fire
 name=Fireplace
 desc=A great place to cook meat.
 model=dwarf_keldagrim_kebab_fireplace

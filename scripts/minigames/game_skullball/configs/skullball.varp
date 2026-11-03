@@ -1,0 +1,9 @@
+// How many of the ten goals are behind the player, and when the clock started.
+//
+// scope=temp on both: a game of skullball is not something to carry across a logout, and the ball
+// is a timed npc that will not be there when you come back either.
+[skullball_goals]
+scope=temp
+
+[skullball_start]
+scope=temp

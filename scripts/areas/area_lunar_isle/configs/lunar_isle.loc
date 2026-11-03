@@ -1367,6 +1367,8 @@ recol2d=26358
 
 [loc474_16893]
 // rev 474 loc 16893 (import474map.py)
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_oven
 name=Cooking range
 model=loc474_16893
 recol1s=3171

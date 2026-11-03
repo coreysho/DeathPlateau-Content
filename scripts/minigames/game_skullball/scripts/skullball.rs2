@@ -1,0 +1,226 @@
+// Werewolf Skullball - https://oldschool.runescape.wiki/w/Werewolf_Skullball
+//
+// "It's the same as football, except for the fact that your ball is actually a Skull." Ten goals
+// on the east field behind the werewolf trapdoor, in a fixed order, and a clock that starts the
+// moment the first one goes in.
+//
+// THE CAST AND THE PITCH WERE ALREADY HERE. The Skullball Boss stands at 3549,9867 and six
+// Skullball Trainers are spread over the field, all spawned by the 377 map data; the ball is an
+// npc the cache already describes - "A human skull used as a ball", alwaysontop, with Tap, Kick,
+// Shoot and Show-Goal on it - and the goals are thirty loc pieces in ten threes. None of that is
+// created here. See skullball.constant for how the ORDER of the ten was worked out, which is the
+// one thing neither the cache nor the wiki states outright.
+//
+// WHAT IS SIMPLER HERE THAN IN OLD SCHOOL, and deliberately:
+//
+//   The ball does not bounce off walls. Old School's route uses a bounce at the fifth goal; here
+//   the ball stops against anything solid instead. Everything is still reachable, because tap and
+//   kick will walk it round, but the published "optimal route" will not replay move for move.
+//
+//   The ball travels instantly rather than rolling tile by tile over several ticks. It is still
+//   checked against every tile it crosses, so a goal on the way through counts exactly as it
+//   should - what is missing is the time the roll takes, not the result of it.
+//
+//   The trainers' running commentary is one line rather than the nine Old School picks between.
+
+// ---------------------------------------------------------------- the boss hands you a skull
+[opnpc1,werewolf_skullballboss]
+p_arrivedelay;
+if (%fenk_quest < ^fenk_complete) {
+    ~chatnpc("You're no werewolf. Clear off.");
+    return;
+}
+if (inv_total(worn, ring_of_charos) = 0 & inv_total(worn, ring_of_charos_unlocked) = 0) {
+    ~chatnpc("Skullball is for our kind. Put the ring on if you want a game.");
+    return;
+}
+// THE LEVEL IS ONLY WANTED HERE. "The Agility requirement and Ring of Charos are only required
+// when speaking to the Skullball Boss to spawn the skullball, and the player can still kick the
+// ball while drained below 25 Agility."
+if (stat(agility) < ^skullball_level) {
+    ~chatnpc("Come back when you can keep up - <tostring(^skullball_level)> Agility, at least.");
+    return;
+}
+%skullball_goals = 0;
+%skullball_start = 0;
+npc_add(^skullball_spawn, waa_skullball, ^skullball_life);
+~chatnpc("There's your skull. Ten goals, in order. The clock doesn't start until the first one goes in.");
+
+// A SKULL DOES NOT WANDER OFF ON ITS OWN.
+//
+// The ball is an npc and takes the default wandering behaviour, which for a football is a disaster:
+// it drifted two or three tiles every few ticks, so a shoot that had landed the ball exactly where
+// it belonged left it somewhere else by the time the next strike was set up, and the whole game
+// read as though the roll were moving diagonally.
+//
+// Setting the mode straight after npc_add does nothing - the new npc is not the active one there,
+// and its targetOp still read WANDER the moment the boss handed it over. [ai_spawn] does run with
+// the npc active, so it is done here, once, for every skull that ever appears.
+[ai_spawn,waa_skullball]
+npc_setmode(none);
+
+// ---------------------------------------------------------------- tap, kick, shoot
+//
+// "Tap - Moves the Skullball 1 square ahead", four for a kick and nine for a shoot. Which way is
+// not written down anywhere, and the nearest the wiki comes is the boss saying "your character
+// will kick the Skullball from which ever side he is facing it" - so the ball goes directly away
+// from the player, which is also the only reading the route table makes sense under.
+[opnpc1,waa_skullball]
+~skullball_strike(^skullball_tap);
+
+[opnpc3,waa_skullball]
+~skullball_strike(^skullball_kick);
+
+[opnpc4,waa_skullball]
+~skullball_strike(^skullball_shoot);
+
+// "Show-goal will get the yellow arrow and point it to where you have to kick the Skullball to."
+[opnpc5,waa_skullball]
+if (%skullball_goals >= ^skullball_goals_total) {
+    mes("That was the last of them.");
+    return;
+}
+hint_coord(2, ~skullball_goal(calc(%skullball_goals + 1)), 0);
+mes("The arrow marks goal <tostring(calc(%skullball_goals + 1))>.");
+
+[proc,skullball_strike](int $tiles)
+p_arrivedelay;
+// away from the player, on whichever axis they are further along
+def_int $dx = 0;
+def_int $dz = 0;
+if (coordx(npc_coord) = coordx(coord)) {
+    if (coordz(npc_coord) < coordz(coord)) {
+        $dz = -1;
+    } else {
+        $dz = 1;
+    }
+} else if (coordx(npc_coord) < coordx(coord)) {
+    $dx = -1;
+} else {
+    $dx = 1;
+}
+sound_synth(skullball_tap, 1, 0);
+~skullball_roll($tiles, $dx, $dz);
+
+// ONE TILE AT A TIME, so a goal on the way through counts. The ball stops against anything solid
+// rather than bouncing off it, which is the one place this is simpler than Old School.
+[proc,skullball_roll](int $left, int $dx, int $dz)
+if ($left <= 0) {
+    return;
+}
+if (~skullball_rollable(movecoord(npc_coord, $dx, 0, $dz)) = false) {
+    sound_synth(skullball_collide, 1, 0);
+    return;
+}
+// npc_telejump, not npc_tele: tele queues a WALK and the npc catches up over the next few
+// ticks, so a nine-tile shot resolved a tile at a time and the ball was still drifting
+// diagonally towards an old waypoint when the next strike landed. A rolling skull is placed.
+npc_telejump(movecoord(npc_coord, $dx, 0, $dz));
+~skullball_scored;
+~skullball_roll(calc($left - 1), $dx, $dz);
+
+// ---------------------------------------------------------------- the goals, in order
+[proc,skullball_scored]
+if (%skullball_goals >= ^skullball_goals_total) {
+    return;
+}
+if (~skullball_in(npc_coord, ~skullball_goal(calc(%skullball_goals + 1))) = false) {
+    return;
+}
+%skullball_goals = calc(%skullball_goals + 1);
+sound_synth(skeletongoal, 1, 0);
+if (%skullball_goals = 1) {
+    %skullball_start = map_clock;
+}
+if (%skullball_goals >= ^skullball_goals_total) {
+    ~skullball_finish;
+    return;
+}
+mes("Skullball goal! <tostring(calc(^skullball_goals_total - %skullball_goals))> to go.");
+
+// CAN THE SKULL GO HERE? Not "can a werewolf walk here", which is a different question and the
+// one that stopped the first shot of the first game dead.
+//
+// All thirty goal tiles are blocked - solid to anything on legs, and they have to be, or the goals
+// would be bunting. A rolling skull goes through them. Any of them, not only the one being aimed
+// at: a shot that overruns should be able to pass a goal already scored rather than wedging
+// against it.
+[proc,skullball_rollable](coord $at)(boolean)
+if (map_blocked($at) = false) {
+    return(true);
+}
+return(~skullball_is_goal($at, 1));
+
+[proc,skullball_is_goal](coord $at, int $n)(boolean)
+if ($n > ^skullball_goals_total) {
+    return(false);
+}
+if (~skullball_in($at, ~skullball_goal($n)) = true) {
+    return(true);
+}
+return(~skullball_is_goal($at, calc($n + 1)));
+
+// A goal is three tiles wide and two of the ten are turned side-on, so "in it" is anywhere within
+// one tile of the middle on either axis.
+[proc,skullball_in](coord $at, coord $goal)(boolean)
+if (coordx($at) < sub(coordx($goal), ^skullball_goal_reach)) {
+    return(false);
+}
+if (coordx($at) > add(coordx($goal), ^skullball_goal_reach)) {
+    return(false);
+}
+if (coordz($at) < sub(coordz($goal), ^skullball_goal_reach)) {
+    return(false);
+}
+if (coordz($at) > add(coordz($goal), ^skullball_goal_reach)) {
+    return(false);
+}
+return(true);
+
+[proc,skullball_goal](int $n)(coord)
+switch_int ($n) {
+    case 1 : return(^skullball_goal_1);
+    case 2 : return(^skullball_goal_2);
+    case 3 : return(^skullball_goal_3);
+    case 4 : return(^skullball_goal_4);
+    case 5 : return(^skullball_goal_5);
+    case 6 : return(^skullball_goal_6);
+    case 7 : return(^skullball_goal_7);
+    case 8 : return(^skullball_goal_8);
+    case 9 : return(^skullball_goal_9);
+    case default : return(^skullball_goal_10);
+}
+
+// ---------------------------------------------------------------- the whistle
+//
+// "You will gain 750 Agility experience if you complete the game in under 4 minutes. For every 3
+// seconds over 4 minutes, you'll lose 8 experience." No floor is published, so it stops at nothing
+// rather than running negative.
+[proc,skullball_finish]
+def_int $taken = calc(map_clock - %skullball_start);
+def_int $xp = ^skullball_reward;
+if ($taken > ^skullball_par) {
+    $xp = calc(^skullball_reward - calc(calc(calc($taken - ^skullball_par) / ^skullball_step) * ^skullball_penalty));
+}
+if ($xp < 0) {
+    $xp = 0;
+}
+hint_stop;
+// a tick is 0.6s, so seconds is ticks times three over five
+mes("Skullball goal! That is all ten, in <tostring(calc(calc($taken * 3) / 5))> seconds.");
+~agility_xp($xp);
+%skullball_goals = 0;
+%skullball_start = 0;
+npc_del;
+
+// ---------------------------------------------------------------- the trainers
+//
+// "He will tell players how to start playing Skullball, and once the game has begun, he will tell
+// them how many goals they have left to make."
+[opnpc1,werewolf_trainer_1]
+p_arrivedelay;
+if (%skullball_goals = 0) {
+    ~chatnpc("This is the Skullball Course. Go and talk to the boss at the beginning of the course if you'd like a go.");
+    return;
+}
+~chatnpc("<tostring(calc(^skullball_goals_total - %skullball_goals))> to go. Keep it up!");
