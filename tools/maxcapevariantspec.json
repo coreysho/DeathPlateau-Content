@@ -66,7 +66,7 @@
   "_emote": "The skillcape emote still works. This build has no Max cape emote of its own and picks a random skillcape emote instead; a variant does the same thing, through the same line, rather than getting a mechanism of its own.",
   "ops": [],
   "_ops": "No Teleports op and no Features op. That is where OSRS's restriction actually bites, and it is what keeps the plain Max cape worth owning.",
-  "_ops_cache_evidence": "The cache agrees, and this is better evidence than the wiki's prose: obj 13280, the plain Max cape, carries iops {0: Wear, 1: Teleports, 2: Spellbook, 3: Features}. Every one of the eight god/fire variants carries {1: Wear} and nothing else. The ops are stripped in OSRS's own item table. The Accumulator max cape (13337) is the one exception and is not one: it carries {1: Wear, 3: Commune}, and so does Ava's accumulator itself (10499) - Commune is a modern option on the DEVICE that the variant inherits, not a max cape perk. This build's Ava's devices have no Commune, so the variant has none either and carries Wear like the other eight.",
+  "_ops_cache_evidence": "The cache agrees, and this is better evidence than the wiki's prose: obj 13280, the plain Max cape, carries iops {0: Wear, 1: Teleports, 2: Spellbook, 3: Features}. Every one of the eight god/fire variants carries {1: Wear} and nothing else. The ops are stripped in OSRS's own item table. The Accumulator max cape (13337) is the one exception and is not one: it carries {1: Wear, 3: Commune}, and so does Ava's accumulator itself (10499) - Commune is a modern option on the DEVICE that the variant inherits, not a max cape perk. This build's Ava's devices have no Commune either, but they do have its equivalent - avas_accumulator carries iop3=Toggle-attract - so the variant inherits that one, on slot 3 with this build's label. It carries Wear plus Toggle-attract where the other eight carry Wear alone; see extra_iops on this cape.",
   "_device_perk": "The Accumulator max cape saves ammunition and attracts steel. That is NOT a skillcape perk and does not go through ~skillcape_worn: see device_identity below. The four retained skills above are the same four for all nine."
  },
  "god_identity": {
@@ -942,6 +942,10 @@
     "iops": {
      "1": "Wear",
      "3": "Commune"
+    },
+    "_extra_iops_why": "OSRS gives this one cape a second option because the device is fused into it - iops {1: Wear, 3: Commune}, where 3 is the fourth slot. This build's Ava's devices have no Commune, but they do have its equivalent: avas_accumulator in scripts/quests/quest_animmag/configs/animmag.obj carries iop3=Toggle-attract. So the variant inherits THAT, on the slot and with the label this build uses. The handler was already written and unreachable - [opheld3,accumulator_max_cape] ~avas_attract_toggle in avas_device.rs2 - and tools/sim/orphans.ts found it with no option able to fire it.",
+    "extra_iops": {
+     "3": "Toggle-attract"
     },
     "members": true
    },
