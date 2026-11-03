@@ -259,6 +259,8 @@ op1=Go-down
 op2=Close
 
 [100_dave_stove]
+// Cooking is driven entirely off category - see skill_cooking/configs/cooking_source/cooking_sources.loc.
+category=cooking_oven
 name=Stove
 desc=Hmmmm...home cooking.
 model=100_dave_stove
