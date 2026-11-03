@@ -30,6 +30,14 @@ data=tree,regicide_tree_small
 data=tree,loc474_1286
 data=tree,loc474_4818
 data=tree,loc474_1291
+// Ape Atoll's two Jungle Trees. The cache gives them op1=Chop-down + op3=hidden and their own
+// stumps while every other jungletree in the build has no op, and antimacro.npc has an ent drawn
+// for each of them - see mm.loc. A plain tree is what is left once the Legends' Quest machete
+// jungle is ruled out, so they sit in this row rather than in jungle_tree_table: that row has no
+// successchance lines at all (jungle_tree.rs2 hardcodes its own roll), so a category=tree loc
+// landing there would ask woodcutting_successchance for rates it does not have.
+data=tree,mm_bush_kharazi_jungle_tree1
+data=tree,mm_bush_kharazi_jungle_tree2
 data=levelrequired,0
 data=productexp,250
 data=product,logs

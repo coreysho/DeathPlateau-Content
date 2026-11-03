@@ -3413,6 +3413,17 @@ head1=npc_drunk1_head
 head2=npc_3508_head
 head3=npc_harlow_head
 
+// WIRED 2026-11-03. Twenty-one Ents carried op1="Chop down" and no category=macro_event_ent, so
+// [opnpc1,_macro_event_ent] never saw the click: the woodcutting anti-macro event spawned an Ent at
+// an ordinary tree, an oak, a willow, a yew, a maple or a magic tree and the player could not chop
+// it at all. The nine that already worked - achey, both hollows, both regicide trees, mahogany,
+// teak and the two jungle ones - are the template, and they also carry wanderrange=0 and
+// moverestrict=nomove, which an Ent needs because it stands where its tree was for sixty ticks.
+// Left deliberately unwired: macro_ent_dead_tree5/9/11, macro_ent_evergreen3 and macro_ent_tree2,
+// which are spare cache slots with no param=ent_tree_loc and nothing pointing at them, and
+// macro_ent_dramen, whose dramentree has its own [oploc1,dramentree] that never calls the macro
+// event and no row in woodcutting_trees. Giving any of those the category would turn silence into
+// "Nothing interesting happens.", which is worse. tools/skilltools_battery.py checks all of it now.
 [macro_ent_tree1]
 name=Tree
 desc=One of the most common trees in Gielinor.
@@ -3425,6 +3436,9 @@ readyanim=seq_1675
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,tree
 
 [macro_ent_tree2]
@@ -3453,6 +3467,9 @@ readyanim=seq_1677
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,tree2
 
 [macro_ent_dead_tree1]
@@ -3465,6 +3482,8 @@ readyanim=seq_1679
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+category=macro_event_ent
 param=ent_tree_loc,deadtree1
 moverestrict=nomove
 
@@ -3480,6 +3499,8 @@ readyanim=seq_1679
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+category=macro_event_ent
 param=ent_tree_loc,lightdeadtree1
 moverestrict=nomove
 
@@ -3496,6 +3517,9 @@ readyanim=seq_1681
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree2
 
 [macro_ent_dead_tree4]
@@ -3511,6 +3535,9 @@ readyanim=seq_1681
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree2_swamp
 
 [macro_ent_dead_tree5]
@@ -3537,6 +3564,9 @@ readyanim=seq_1681
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree2_dark
 
 [macro_ent_dead_tree7]
@@ -3549,6 +3579,9 @@ readyanim=seq_1683
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree3
 
 [macro_ent_dead_tree8]
@@ -3562,6 +3595,9 @@ readyanim=seq_1681
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree2_snowy
 
 [macro_ent_dead_tree9]
@@ -3589,6 +3625,8 @@ readyanim=seq_1685
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+category=macro_event_ent
 param=ent_tree_loc,deadtree6
 moverestrict=nomove
 
@@ -3627,6 +3665,9 @@ readyanim=seq_1691
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,magictree
 
 [macro_ent_maple]
@@ -3639,6 +3680,9 @@ readyanim=seq_1693
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,mapletree
 
 [macro_ent_willow1]
@@ -3651,6 +3695,9 @@ readyanim=seq_1695
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,willowtree
 
 [macro_ent_willow2]
@@ -3665,6 +3712,9 @@ readyanim=seq_1697
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,loc_5551
 
 [macro_ent_willow3]
@@ -3679,6 +3729,9 @@ readyanim=seq_1699
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,loc_5553
 
 [macro_ent_oak]
@@ -3691,6 +3744,9 @@ readyanim=seq_1721
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,oaktree
 
 [macro_ent_yew]
@@ -3703,6 +3759,9 @@ readyanim=seq_1701
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,yewtree
 
 [macro_ent_evergreen1]
@@ -3715,6 +3774,9 @@ readyanim=seq_1703
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,evergreen
 
 [macro_ent_evergreen2]
@@ -3727,6 +3789,9 @@ readyanim=seq_1705
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,evergreen_large
 
 [macro_ent_evergreen3]
@@ -3751,6 +3816,9 @@ readyanim=seq_1709
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,snowtree1
 
 [macro_ent_dead_tree12]
@@ -3763,6 +3831,9 @@ readyanim=seq_1711
 vislevel=hide
 op1=Chop down
 op3=hidden
+wanderrange=0
+moverestrict=nomove
+category=macro_event_ent
 param=ent_tree_loc,deadtree_burnt
 
 [macro_ent_achey]
@@ -3884,8 +3955,12 @@ op3=hidden
 wanderrange=0
 moverestrict=nomove
 category=macro_event_ent
-//TODO: desc is wrong? Or unused? Matches model
-//param=ent_tree_loc,jungletree1_karamja
+// WAS UNUSED AND UNUSABLE: nothing carried param=ent,macro_ent_jungle_tree2, and the commented
+// guess below named jungletree1_karamja, which has no op at all and so can never spawn an ent.
+// mm_bush_kharazi_jungle_tree2 is the only choppable jungletree2 in the build and matches this
+// npc's model1=npc_1792 and size=2. Without this line attempt_cut_ent's db_find comes back null
+// and chopping the ent says "Nothing interesting happens."
+param=ent_tree_loc,mm_bush_kharazi_jungle_tree2
 
 [macro_mahogany_ent]
 name=Mahogany
