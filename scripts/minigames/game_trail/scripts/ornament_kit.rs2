@@ -117,6 +117,53 @@ mes("The <lowercase(oc_name($kit))> doesn't fit on that.");
 [opheld4,tzhaar_ket_om_t] ~ornament_kit_revert(last_item);
 [opheld4,zamorak_godsword_or] ~ornament_kit_revert(last_item);
 
+// AND THE SAME ON opheld5, BECAUSE THE ITEM DECLARES TWO OPTIONS AND ONLY ONE WORKED.
+//
+// Every result above carries iop4=Revert AND iop5=Dismantle. The Revert is this repository's -
+// added with param=ornament_from when the kits were wired - and the Dismantle came in with the
+// item from a modern OSRS cache (configs/ornament_results.obj is written by
+// tools/models/importosrs.py, and the Dismantle sits up with iop2 in the imported block while the
+// Revert was appended after the params). Only iop4 had a handler.
+//
+// SO CLICKING "Dismantle" DROPPED THE ITEM ON THE FLOOR. There are two global opheld triggers in
+// the build, and the one for slot five is player/scripts/drop.rs2's [opheld5,_], which until
+// recently took every fifth-option click without reading the label. It reads it now and answers
+// "Destroy", but "Dismantle" still falls through to the drop - and every one of these items is
+// tradeable=no, so dropping one is losing it. tools/sim/opsweep.ts listed all 24 under "answered
+// only by the global fallback", which is exactly what that section is for.
+//
+// WIRING IT RATHER THAN DELETING THE OPTION, of the two ways to make the item honest. Removing
+// iop5=Dismantle would also work and would match OSRS's single option, but it throws away
+// imported cache data to do it, and a player who clicks either word means the same thing: take
+// the kit off and give me both pieces back. Both now do that. The precedent is directly above -
+// the two Gravedigger helmets have carried [opheld5,...] ~ornament_kit_revert since they landed,
+// because a slayer helmet spends its iop4 on Disassemble and iop5 was the slot its own iop
+// declared.
+[opheld5,amulet_of_fury_or] ~ornament_kit_revert(last_item);
+[opheld5,armadyl_godsword_or] ~ornament_kit_revert(last_item);
+[opheld5,bandos_godsword_or] ~ornament_kit_revert(last_item);
+[opheld5,berserker_necklace_or] ~ornament_kit_revert(last_item);
+[opheld5,dark_infinity_bottoms] ~ornament_kit_revert(last_item);
+[opheld5,dark_infinity_hat] ~ornament_kit_revert(last_item);
+[opheld5,dark_infinity_top] ~ornament_kit_revert(last_item);
+[opheld5,dragon_boots_g] ~ornament_kit_revert(last_item);
+[opheld5,dragon_chainbody_g] ~ornament_kit_revert(last_item);
+[opheld5,dragon_defender_t] ~ornament_kit_revert(last_item);
+[opheld5,dragon_platelegs_g] ~ornament_kit_revert(last_item);
+[opheld5,dragon_plateskirt_g] ~ornament_kit_revert(last_item);
+[opheld5,dragon_scimitar_or] ~ornament_kit_revert(last_item);
+[opheld5,dragon_sq_shield_g] ~ornament_kit_revert(last_item);
+[opheld5,light_infinity_bottoms] ~ornament_kit_revert(last_item);
+[opheld5,light_infinity_hat] ~ornament_kit_revert(last_item);
+[opheld5,light_infinity_top] ~ornament_kit_revert(last_item);
+[opheld5,rune_defender_t] ~ornament_kit_revert(last_item);
+[opheld5,rune_scimitar_guthix] ~ornament_kit_revert(last_item);
+[opheld5,rune_scimitar_saradomin] ~ornament_kit_revert(last_item);
+[opheld5,rune_scimitar_zamorak] ~ornament_kit_revert(last_item);
+[opheld5,saradomin_godsword_or] ~ornament_kit_revert(last_item);
+[opheld5,tzhaar_ket_om_t] ~ornament_kit_revert(last_item);
+[opheld5,zamorak_godsword_or] ~ornament_kit_revert(last_item);
+
 [proc,ornament_kit_revert](obj $item)
 def_namedobj $back = oc_param($item, ornament_from);
 if ($back = null) {
