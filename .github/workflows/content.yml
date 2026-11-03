@@ -124,6 +124,46 @@ jobs:
         rm -f data/pack/server/script.dat data/pack/client/config
         bun run build
 
+    # THE TWO RATCHETS, which belong here more than anywhere. The engine's nightly runs them too,
+    # but a dead option or an unreachable trigger is almost always added by a CONTENT change - so
+    # this is where the author finds out, on their own push, instead of a sweep at three in the
+    # morning.
+    #
+    #   opsweep   every option the cache offers that no script answers.  2,741 and 1,008 of those
+    #             on something the map actually places, as of writing.
+    #   orphans   the inverse: every trigger written against an option the cache does not declare.
+    #             Six left, after this branch recovered seventy-eight of them.
+    #
+    # Both boot a world, and World refuses to start without a login key; it is gitignored, so a
+    # fresh checkout has none and a throwaway per run is right. Nothing here signs anything a
+    # player will see.
+    #
+    # THE FRICTION IS DELIBERATE AND WORTH NAMING. The baselines live in the ENGINE repository
+    # (engine/tools/sim/*-baseline.txt), so a content change that adds an entry on purpose cannot
+    # be banked from a content pull request - it needs an engine one. That is the right shape for a
+    # ratchet, whose whole job is to make a new entry cost something, and the wrong shape for
+    # somebody editing a .loc who wants to get on with it. If it becomes a nuisance, the answer is
+    # to move the baselines to this repository (they describe content, after all) rather than to
+    # stop running the checks.
+    - name: A login key for the ratchets
+      working-directory: engine
+      run: bun x tsx tools/server/rsa.ts
+
+    - name: No option the cache offers goes unanswered
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: bun x tsx tools/sim/opsweep.ts --check
+
+    # if: always() so a red opsweep does not hide a red orphans - they are independent lists and a
+    # push can add to both.
+    - name: No trigger is written against an option that does not exist
+      if: always()
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: bun x tsx tools/sim/orphans.ts --check
+
     # Needs the build to have run - it decodes the packed archive the way the client's
     # Component.decode does, and asserts no packed script counts a pouch rune without a pouch twin.
     - name: The packed interfaces count the pouch runes
