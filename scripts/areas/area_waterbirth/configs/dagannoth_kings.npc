@@ -55,6 +55,13 @@ param=strengthbonus,255
 // biggest hit recorded. The stats are right and stay; the max hit is a field in Old School and is
 // one here now too (max_hit, skill_combat/configs/npc_combat.param).
 param=max_hit,26
+// REX IS RESISTANT TO MELEE AND RANGED, NOT IMMUNE, AND THAT IS THE DECISION (2026-11-02).
+// Corey asked whether melee should be unable to damage him at all. It should not: Old School makes
+// him only extremely hard to hit, and 255 in the four non-magic defences is how that is said here.
+// Measured with a maxed player and an abyssal whip, 7.9% of swings land - Old School's own formula
+// on the published numbers gives about 12%, so this build is already the harsher of the two and
+// there is nothing to add. Asked and answered; please do not re-litigate it from the fact that a
+// melee hitsplat is possible.
 param=stabdefence,255
 param=slashdefence,255
 param=crushdefence,255

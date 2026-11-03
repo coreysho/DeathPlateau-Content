@@ -36,10 +36,10 @@
 //   Corey: "for the spinolyps, build the suspicious water stuff"): now fully migrated below with
 //   their own weak-melee combat stats, and a real timed emerge/submerge loop is wired in
 //   dagannoth_maze_monsters.rs2 (npc_settimer + npc_changetype_keepall, the same self-directed
-//   pattern already used for Boulder/Rock). NOTE: neither the visible nor invisible form was found
-//   actually placed in any .jm2 map file this project has (searched every region's NPC section for
-//   ids 2891-2896, all 660 files, zero placements) - the AI/stats are ready regardless, but there's
-//   currently no live spawn point for Corey to test against; flagged rather than guessed at.
+//   pattern already used for Boulder/Rock). The note that used to sit here said neither form was
+//   placed in any .jm2 map file, from a search for ids 2891-2896; that was wrong. Twenty-five of
+//   them stand in the maze on a live world and the cycle turns on all of them - counted by walking
+//   World.npcs rather than by grepping the map files (tools/sim/dagkings.ts asserts it).
 //
 // Explicitly NOT migrated here, left untouched in all.npc:
 // - jb_viking_dude ("Bardur") - a real, named, ordinarily-friendly Fremennik NPC
@@ -370,6 +370,12 @@ huntrange=1
 [dagannoth_water_creature_1x1]
 name=Spinolyp
 desc=A sneaky, spiny, subterranean sea-dwelling scamp.
+// THE SUBMERGE/EMERGE CLOCK that [ai_timer] on this type reads - see
+// scripts/dagannoth_maze_monsters.rs2, which flips between the Spinolyp and the "Suspicious
+// water" form every 20 ticks. It lives here rather than as an npc_settimer in an [ai_spawn]
+// because Npc.resetDefaults puts timerInterval back to THIS field every time the npc drops a
+// target, which would have stopped the cycle for good the first time one lost a player.
+timer=20
 model1=npc_2892
 resizeh=40
 resizev=40
@@ -413,6 +419,8 @@ param=retreat,0
 [dagannoth_water_creature_1x12]
 name=Spinolyp
 desc=A sneaky, spiny, subterranean sea-dwelling scamp.
+// The submerge/emerge clock, as above.
+timer=20
 model1=npc_2892
 resizeh=40
 resizev=40
@@ -456,6 +464,8 @@ param=retreat,0
 [dagannoth_water_creature_1x13]
 name=Spinolyp
 desc=A sneaky, spiny, subterranean sea-dwelling scamp.
+// The submerge/emerge clock, as above.
+timer=20
 model1=npc_2892
 resizeh=40
 resizev=40
@@ -515,6 +525,8 @@ param=retreat,0
 [dagannoth_water_creature_1x1_invisible]
 name=Suspicious water
 desc=If I didn't know better, I'd swear there's something in there...
+// The submerge/emerge clock, as above.
+timer=20
 model1=trollrescue_blankmodel_8
 minimap=no
 vislevel=34
@@ -542,6 +554,8 @@ param=retreat,0
 [dagannoth_water_creature_1x1_invisible2]
 name=Suspicious water
 desc=If I didn't know better, I'd swear there's something in there...
+// The submerge/emerge clock, as above.
+timer=20
 model1=trollrescue_blankmodel_8
 minimap=no
 vislevel=34
@@ -569,6 +583,8 @@ param=retreat,0
 [dagannoth_water_creature_1x1_invisible3]
 name=Suspicious water
 desc=If I didn't know better, I'd swear there's something in there...
+// The submerge/emerge clock, as above.
+timer=20
 model1=trollrescue_blankmodel_8
 minimap=no
 vislevel=34

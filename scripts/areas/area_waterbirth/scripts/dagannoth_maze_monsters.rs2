@@ -64,21 +64,21 @@ return(30);
 // confirmed precedent for this primitive - macro_event_triffid.rs2), but as a genuine back-and-forth
 // LOOP rather than a one-time reveal, driven by npc_settimer/[ai_timer] (confirmed real recurring
 // timer primitive - see npc_poison.rs2/macro_event_triffid.rs2 precedent) instead of player-aggro.
-// [ai_spawn,tag] is a real, engine-native trigger (ServerTriggerType.ts's AI_SPAWN=166, fired from
-// World.ts on npc spawn) - not used anywhere else in content scripts yet, but backed directly by
-// engine source rather than guessed, and it's the natural place to arm the very first timer tick.
-// Armed on BOTH the visible and invisible forms since no live spawn point for either has turned up
-// in the map data yet (see the .npc header note) - whichever form eventually gets placed, the cycle
-// self-starts correctly. 20-tick (12s) duration in each direction is a judgment call, not
-// wiki-sourced (the wiki doesn't give an exact cycle length) - easy to retune later.
-// dagannoth_water_creature_spring_up/_go_down are real animation names, confirmed present in
-// content/scripts/_unpack/377/all.seq.
-[ai_spawn,dagannoth_water_creature_1x1] npc_settimer(20);
-[ai_spawn,dagannoth_water_creature_1x12] npc_settimer(20);
-[ai_spawn,dagannoth_water_creature_1x13] npc_settimer(20);
-[ai_spawn,dagannoth_water_creature_1x1_invisible] npc_settimer(20);
-[ai_spawn,dagannoth_water_creature_1x1_invisible2] npc_settimer(20);
-[ai_spawn,dagannoth_water_creature_1x1_invisible3] npc_settimer(20);
+// 20-tick (12s) duration in each direction is a judgment call, not wiki-sourced (the wiki doesn't
+// give an exact cycle length) - easy to retune later. dagannoth_water_creature_spring_up/_go_down
+// are real animation names, confirmed present in content/scripts/_unpack/377/all.seq.
+//
+// THE FIRST TICK IS ARMED FROM CONFIG, NOT FROM [ai_spawn] (fixed 2026-11-02). It used to be an
+// [ai_spawn,<tag>] per form calling npc_settimer(20), and that was wrong twice over. A trigger
+// written for ONE npc replaces the wildcard [ai_spawn,_], so each of these six was arming its timer
+// INSTEAD OF taking the spawn defaults every other npc gets - no combat xp multiplier, no start
+// coord, no spawn facing. And a timer armed that way does not last: Npc.resetDefaults writes
+// timerInterval back to the npc type's own timer field, and it runs every time an npc drops a
+// target - which for something that fights players is most of its life. The cycle would have
+// stopped for good the first time a Spinolyp lost someone between two of its own ticks.
+// timer=20 on all six types (configs/dagannoth_maze_monsters.npc) is the version the engine itself
+// re-arms, and the npc_settimer(20) at the end of each branch below is now only belt and braces.
+// Both faults were caught while giving the King Black Dragon a timer of its own.
 
 // emerged -> submerged
 [ai_timer,dagannoth_water_creature_1x1]

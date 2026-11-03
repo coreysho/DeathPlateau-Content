@@ -1,5 +1,56 @@
 [ai_queue1,king_dragon] ~npc_default_retaliate_ap;
 
+// THE BREATH THAT REACHES SOMEBODY RUNNING AWAY (2026-11-02).
+//
+// WHY A TIMER AND NOT A TRIGGER. Neither ai_applayer2 nor ai_opplayer2 fires while the npc is
+// walking after a player it has not reached - the engine runs them on arrival, not on the way - so
+// a player who simply keeps moving was chased in silence. Measured against Dagannoth Supreme,
+// which stays in applayer2 and never hands over: a player pinned eight tiles out for sixty ticks
+// took 17 hits from Supreme and NONE from the dragon. A timer is the only thing here that gets a
+// turn every tick regardless of what mode the chase has put it in, which is the whole point. With
+// it the same kite takes 11, against a ceiling of 12 at a 5-tick attack cadence.
+//
+// AND THE TIMER IS CONFIG, NOT [ai_spawn]. npc_settimer at spawn looks equivalent and is not:
+// Npc.resetDefaults writes timerInterval back to the TYPE's timer, and it runs the moment the npc
+// gives up on a target it cannot reach - which for a chasing dragon is a couple of ticks into the
+// chase, precisely when this is wanted. Armed from an [ai_spawn,king_dragon] the timer fired twice
+// and then went quiet for the whole sixty-tick kite. timer=1 in npc/configs/dragons.npc survives
+// the reset, because the reset is what reads it.
+//
+// It does NOT duplicate the two triggers: it checks whether the dragon can reach you, and if it
+// can, does nothing and leaves the fight to them. Everything else is the same guard they use, in
+// the same order.
+//
+// %npc_action_delay is what stops this being a second attack rather than the same one from further
+// away - ~kbd_dragonfire_far sets it, exactly as the close attacks do, so the dragon still breathes
+// on its own cadence whoever asked for it.
+[ai_timer,king_dragon]
+if (%npc_action_delay > map_clock) {
+    return;
+}
+// Whoever it is fighting. An ai_ trigger does not start with an active player, and a timer is not
+// handed one at all, so the fight's own uid is the only way to find them from here.
+if (finduid(%npc_attacking_uid) = false) {
+    return;
+}
+// Within the breath's reach. 15 is the dragon's own attackrange in npc/configs/dragons.npc, which
+// is what the engine already uses to decide when ai_applayer2 may fire; without this it would burn
+// somebody who had left the lair entirely.
+if (distance(npc_coord, coord) > ^kbd_breath_range) {
+    return;
+}
+// It can reach them: the ordinary triggers have the fight in hand and will do it better.
+if (npc_canreach = true) {
+    return;
+}
+if (~npc_check_notcombat = false) {
+    return;
+}
+if (~npc_check_notcombat_self = false) {
+    return;
+}
+~kbd_dragonfire_far;
+
 [ai_applayer2,king_dragon]
 if (%npc_action_delay > map_clock) {
     return;
@@ -17,6 +68,13 @@ if (~npc_check_notcombat_self = false) {
 // out of melee reach (npc_canreach: beside it, not across a corner or a safespot's wall), it breathes
 if (npc_canreach = false) {
     ~kbd_dragonfire_far;
+    // AND IT STAYS THERE BREATHING. Without this return it dropped straight into opplayer2 below,
+    // which is "go and interact" - so it breathed exactly once, walked into melee, and from then
+    // on only ever acted when it could reach you. Reported as "only attacks when it is within
+    // melee range". applayer2's own range is the npc's attackrange (15), so staying in it means
+    // it keeps breathing at whatever distance it found you, which is what the comment above this
+    // branch has always said it does.
+    return;
 }
 npc_sethuntmode(aggressive_melee);
 npc_setmode(opplayer2);
@@ -32,6 +90,17 @@ if (~npc_check_notcombat = false) {
     return;
 }
 if (~npc_check_notcombat_self = false) {
+    return;
+}
+// AND THE SAME TEST ON THIS SIDE. ai_applayer2 hands over to opplayer2 once it can reach you, and
+// opplayer2 is where it stays - so anything that puts you out of reach AFTER the fight has started
+// left it with no branch that attacks: ~kbd_random_attack's three attacks are all close-quarters,
+// and the far breath lives in the trigger it had already left. A wall between you and it is the
+// case the comment at the top of this file has always described ("can also be safespoted"), and it
+// is the one that was reported: it only ever acted when it could reach you.
+if (npc_canreach = false) {
+    ~kbd_dragonfire_far;
+    npc_setmode(applayer2);
     return;
 }
 ~kbd_random_attack;

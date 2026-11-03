@@ -1,0 +1,8 @@
+// How far the King Black Dragon's fire reaches, which is its own attackrange in
+// npc/configs/dragons.npc - the number the engine already uses to decide when ai_applayer2 may
+// fire. The timer in scripts/king_black_dragon.rs2 has to say it out loud because a timer gets no
+// range check of its own: without it the dragon would breathe at somebody who had left the lair.
+//
+// If attackrange there changes, change this with it. They are the same distance for the same
+// reason and nothing in the engine ties them together.
+^kbd_breath_range = 15
