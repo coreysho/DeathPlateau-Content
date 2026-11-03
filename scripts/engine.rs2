@@ -866,6 +866,10 @@
 [command,oc_category](obj $obj)(category)
 // info: Get the description text from an obj config
 [command,oc_desc](obj $obj)(string)
+// info: Get the label on one of an obj's five backpack options (1-5), or "null" if that slot is empty
+[command,oc_iop](obj $obj, int $slot)(string)
+// info: Get the label on one of an obj's five ground options (1-5), or "null" if that slot is empty
+[command,oc_op](obj $obj, int $slot)(string)
 // info: Get the members requirement from an obj config
 [command,oc_members](obj $obj)(boolean)
 // info: Get the weight from an obj config
