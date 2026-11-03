@@ -149,7 +149,15 @@ def lists():
         p.button(nm, 44 + i * 108, TOP, 100, label, center=True)
     p.text('status', PANEL_X, TOP + 18, PANEL_W, '', colour=YELLOW, font='p11_full', center=True)
     # 8 x 4: an item is 32 wide and the margin 15, so 8*47-15 = 361 wide, centred
-    p.inv('grid', 76, TOP + 36, 8, 4, '15,15', ['Inspect', 'Buy-now'])
+    # ALL THREE OPTIONS ARE DECLARED HERE EVEN THOUGH THE SCRIPT REWRITES THEM. if_setinvop
+    # only tells the CLIENT what to draw; InvButtonHandler in the engine still validates the
+    # incoming packet against the option this file declares, and rejects op N outright when
+    # slot N is null. So a slot the script ever sets at runtime has to be non-null here or the
+    # click is thrown away server-side. The labels below are the union of what ~tp_grid_ops
+    # sets per tab (Inspect/Buy-now on Browse, Collect/Collect-noted/Collect-X on the box);
+    # which three the player actually sees is still the script's call. Slot 4 stays null
+    # because no tab uses it and there is no [inv_button4,tradingpost:grid].
+    p.inv('grid', 76, TOP + 36, 8, 4, '15,15', ['Inspect', 'Buy-now', 'Collect-X'])
     p.text('empty', PANEL_X, TOP + 100, PANEL_W, '', colour=GREY, center=True)
     # the bottom row; the script hides whichever do not apply to the open tab
     p.hbutton('search', 30, 276, 80, 'Search', 'Search by name')
@@ -217,7 +225,10 @@ def offer():
 def side():
     p = Panel('tradingpost_side', 'THE TRADING POST - the inventory beside it')
     # the same grid shop_template_side uses; the options are rewritten per window
-    p.inv('inv', 16, 8, 4, 7, '10,4', ['List'])
+    # Four options, not one - see the note on tradingpost's grid. The script sets "List" alone
+    # while a list is open and all four ("Offer", "Offer-5", "Offer-All", "Offer-X") while an
+    # offer is being built, and the engine will only accept op2/3/4 if they are declared here.
+    p.inv('inv', 16, 8, 4, 7, '10,4', ['List', 'Offer-5', 'Offer-All', 'Offer-X'])
     return p
 
 

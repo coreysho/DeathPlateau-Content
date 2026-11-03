@@ -60,3 +60,149 @@ active=yes
 ambient=30
 contrast=15
 op1=Light
+
+// ============================================================================================
+// Desert Treasure - the four pyramid obelisks (2026-11-03).
+//
+// Moved out of scripts/_unpack/377/all.loc for the same reason the torches above were: an op has
+// to be added, and redeclaring a name that still exists there is a "Duplicate config found"
+// build error. Everything below is the untouched cache data plus one line per block.
+//
+// WHY THE OP HAS TO EXIST. ~dt_place_diamond in quest_deserttreasure.rs2 answers [oploc1] on all
+// eight of these and is the only way to charge an obelisk, and charging all four is what opens
+// the pyramid - so with no op1 anywhere, Desert Treasure could not be finished. It could not:
+// the quest's own run sim stopped at 41 of 42 checks until this was added, and the engine's
+// OpLocHandler refused the packet outright because the type it resolved to declared no op1.
+//
+// WHICH EIGHT, AND WHY BOTH HALVES. oblix1..4 are multiloc SHELLS - each reads a varp
+// (fd_column_blood and friends) and draws oblix_a..d while the obelisk is uncharged and
+// fd_*_column once its diamond is in. OpLocHandler resolves a multiloc downward and then checks
+// the ops of the type it LANDED on, so the uncharged variant oblix_a..d is the one that really
+// needs the option; the shells carry it too, for the case where one is ever placed without its
+// varp resolving. fd_*_column deliberately gets nothing: a charged obelisk is finished, and a
+// second click on it has nothing to do.
+//
+// WHY "Activate" AND NOT "Search". The click does not look inside anything - it puts a diamond
+// into the obelisk and lights it ("All four obelisks blaze at once"). Search was the first guess
+// and it described the wrong action. Activate is what this repo already labels a magical object
+// you switch on: the six wilderness portal stones and the three POH elemental orbs all use it.
+// The 377 dump itself has no Activate anywhere, but it has no vocabulary for this either - its
+// closest word is Touch, used on magic fire walls and a shrine - and the sibling torches above
+// already invented op1=Light on the same grounds.
+// ============================================================================================
+
+[desert_treasure_oblix1]
+op1=Activate
+active=yes
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+multivar=fd_column_blood
+multiloc=0,desert_treasure_oblix_a
+multiloc=1,fd_blood_column
+
+[desert_treasure_oblix_a]
+op1=Activate
+name=Obelisk
+desc=You can feel a mysterious power emanating from it...
+model=desert_treasure_oblixa
+recol1s=15855
+recol1d=19553
+recol2s=20011
+recol2d=26059
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+
+[desert_treasure_oblix2]
+op1=Activate
+active=yes
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+multivar=fd_column_fire
+multiloc=0,desert_treasure_oblix_b
+multiloc=1,fd_smoke_column
+
+[desert_treasure_oblix_b]
+op1=Activate
+name=Obelisk
+desc=You can feel a mysterious power emanating from it...
+model=desert_treasure_oblixa
+recol1s=15855
+recol1d=22264
+recol2s=20011
+recol2d=20082
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+
+[desert_treasure_oblix3]
+op1=Activate
+active=yes
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+multivar=fd_column_ice
+multiloc=0,desert_treasure_oblix_c
+multiloc=1,fd_ice_column
+
+[desert_treasure_oblix_c]
+op1=Activate
+name=Obelisk
+desc=You can feel a mysterious power emanating from it...
+model=desert_treasure_oblixa
+recol1s=15855
+recol1d=18207
+recol2s=20011
+recol2d=19060
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+
+[desert_treasure_oblix4]
+op1=Activate
+active=yes
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open
+multivar=fd_column_shadow
+multiloc=0,desert_treasure_oblix_d
+multiloc=1,fd_shadow_column
+
+[desert_treasure_oblix_d]
+op1=Activate
+name=Obelisk
+desc=You can feel a mysterious power emanating from it...
+model=desert_treasure_oblixa
+recol1s=15855
+recol1d=6341
+recol2s=20011
+recol2d=10568
+length=2
+width=2
+resizex=256
+resizey=256
+resizez=256
+anim=oblix_open

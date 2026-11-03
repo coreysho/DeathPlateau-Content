@@ -129,10 +129,13 @@ jobs:
     # this is where the author finds out, on their own push, instead of a sweep at three in the
     # morning.
     #
-    #   opsweep   every option the cache offers that no script answers.  2,741 and 1,008 of those
+    #   opsweep   every option the cache offers that no script answers.  2,734 and 1,005 of those
     #             on something the map actually places, as of writing.
     #   orphans   the inverse: every trigger written against an option the cache does not declare.
-    #             Six left, after this branch recovered seventy-eight of them.
+    #             None left, after this branch recovered all eighty-five.
+    #   ifselect  every radio button whose handler stores a value its own highlight script in the
+    #             cache does not agree with. Twenty-four baselined, all of them buttons in
+    #             interfaces nobody has written yet.
     #
     # Both boot a world, and World refuses to start without a login key; it is gitignored, so a
     # fresh checkout has none and a throwaway per run is right. Nothing here signs anything a
@@ -163,6 +166,19 @@ jobs:
       env:
         BUILD_SRC_DIR: ../content
       run: bun x tsx tools/sim/orphans.ts --check
+
+    # The third one, and the one that catches wiring both of the above call fine. Thessalia's
+    # women's trousers window had an [if_button] handler for every option and every option it
+    # answered existed, and it still handed out the wrong trousers for six of its seven styles,
+    # because the handlers were a button out of step with the window. A 377 radio button carries
+    # its own highlight script naming the varp value that means "I am chosen"; this compares that
+    # against what the handler stores.
+    - name: No radio button stores a value its own highlight script disagrees with
+      if: always()
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: bun x tsx tools/sim/ifselect.ts --check
 
     # Needs the build to have run - it decodes the packed archive the way the client's
     # Component.decode does, and asserts no packed script counts a pouch rune without a pouch twin.
