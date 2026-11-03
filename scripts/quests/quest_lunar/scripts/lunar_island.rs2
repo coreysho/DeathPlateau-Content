@@ -653,9 +653,7 @@ mes("The <$what> altar pours its power into the staff.");
 // The helm: mine a stalagmite in the Lunar Isle mine for lunar ore, smelt it, and hammer the bar on
 // an anvil. Mining 60 - boostable here, unlike the gate at the start of the quest.
 [oploc1,loc474_16679] @lunar_mine_stalagmite;
-[oploc3,loc474_16679] @lunar_mine_stalagmite;
 [oploc1,loc474_16680] @lunar_mine_stalagmite;
-[oploc3,loc474_16680] @lunar_mine_stalagmite;
 
 [label,lunar_mine_stalagmite]
 if (%lunar_quest < ^lunar_staff_done | %lunar_quest >= ^lunar_complete) {

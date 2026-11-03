@@ -172,11 +172,15 @@ p_telejump(^dt_shadow_ladder_top);
 // Two forms. Form 1 is spawned on entry to the lair; when it dies its ai_queue3 hook spawns form 2
 // in the same place. Neither form drops the diamond until form 2 dies.
 
-[oploc1,deserttreasure_shadowladder]
-mes("You climb down.");
-p_delay(1);
-p_telejump(^dt_damis_lair);
-~dt_spawn_damis;
+// REMOVED: [oploc1,deserttreasure_shadowladder], which could never run for two independent
+// reasons the comment forty lines up already names - the loc declares op3="Climb-down" and no op1,
+// and no map places it at all (0 instances in the built cache). Its telejump to ^dt_damis_lair was
+// the only one in the build, which looks alarming until you see that the live route is the handler
+// above: into ^dt_shadow_dungeon, then ~dt_spawn_damis, which puts Damis a few steps from where
+// you land. ^dt_damis_lair survives as the anchor npc_add and npc_find use below.
+//
+// tools/sim/orphans.ts listed it. Left in place it would sit in that tool's baseline for good,
+// which is the wrong answer for a handler its own author had already worked around.
 
 [proc,dt_spawn_damis]
 if (%deserttreasure < ^dt_hunting_diamonds) {

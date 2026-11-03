@@ -27966,6 +27966,7 @@ resizey=192
 resizez=192
 bgsound=area474_3115,3
 
+op1=Search
 [stalagmite_large_dusty]
 name=Stalagmites
 desc=A limestone ceiling growth.
@@ -44346,6 +44347,7 @@ forceapproach=north
 model=arena_guard_chest_open
 recol1s=10570
 recol1d=5285
+op1=Search
 active=no
 forceapproach=north
 
@@ -44479,6 +44481,7 @@ model=vampire_big_grave_noblood
 width=5
 length=3
 
+op1=Search
 [vampire_big_grave_withblood]
 name=Vampire tomb
 desc=An ancient looking tomb.
@@ -44487,6 +44490,7 @@ anim=vampire_coffin_open
 width=5
 length=3
 
+op1=Search
 [sword_haunted_well_go_up]
 name=Rope
 desc=Climb this rope to go up.
@@ -44673,6 +44677,7 @@ forceapproach=north
 model=arena_guard_chest_open
 recol1s=10570
 recol1d=14720
+op1=Search
 active=no
 forceapproach=north
 
@@ -44911,6 +44916,7 @@ hillskew=yes
 op1=Enter
 
 [desert_treasure_oblix1]
+op1=Search
 active=yes
 length=2
 width=2
@@ -44937,6 +44943,7 @@ resizey=256
 resizez=256
 anim=oblix_open
 
+op1=Search
 [fd_blood_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -44955,6 +44962,7 @@ resizez=256
 anim=oblix_open
 
 [desert_treasure_oblix2]
+op1=Search
 active=yes
 length=2
 width=2
@@ -44981,6 +44989,7 @@ resizey=256
 resizez=256
 anim=oblix_open
 
+op1=Search
 [fd_smoke_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -44999,6 +45008,7 @@ resizez=256
 anim=oblix_open
 
 [desert_treasure_oblix3]
+op1=Search
 active=yes
 length=2
 width=2
@@ -45025,6 +45035,7 @@ resizey=256
 resizez=256
 anim=oblix_open
 
+op1=Search
 [fd_ice_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -45043,6 +45054,7 @@ resizez=256
 anim=oblix_open
 
 [desert_treasure_oblix4]
+op1=Search
 active=yes
 length=2
 width=2
@@ -45069,6 +45081,7 @@ resizey=256
 resizez=256
 anim=oblix_open
 
+op1=Search
 [fd_shadow_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -45310,6 +45323,7 @@ name=Crack
 desc=You can see a small fissure in the ground here.
 model=trollrescue_blankmodel
 
+op1=Search
 [four_diamonds_tomb_wall]
 model=ahoy_tomb_wall
 sharelight=yes
@@ -46240,6 +46254,7 @@ desc=That could hurt.
 model=deserttreasure_wall_crusher
 hillskew=yes
 anim=tomb_wall_crushing
+op1=Search
 blockwalk=no
 active=yes
 bgsound=area474_3123,5
@@ -87989,6 +88004,7 @@ mapscene=6
 resizey=100
 
 [burgh_well]
+op1=Search
 category=well
 name=Well
 desc=It smells stagnant.

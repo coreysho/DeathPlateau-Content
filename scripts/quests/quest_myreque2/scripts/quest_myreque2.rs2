@@ -739,7 +739,9 @@ if (%burgh_inn_rubble_pile >= ^m2_rubble_loads) {
 }
 mes("You tip it onto the pile. There is more of it in the inn.");
 
-[oploc1,burgh_outside_rubble_pile]
+// op2, not op1: the rubble pile declares op2="Search" and no op1 at all, so this was written
+// against an option no client can draw. tools/sim/orphans.ts found it.
+[oploc2,burgh_outside_rubble_pile]
 p_arrivedelay;
 if (%burgh_inn_colapsed_wall = ^m2_on) {
     ~mesbox("The back wall of the inn, in a heap, in the street, where it is at least not on top of a trapdoor.");
