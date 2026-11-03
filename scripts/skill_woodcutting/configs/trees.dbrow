@@ -38,6 +38,11 @@ data=tree,loc474_1291
 // landing there would ask woodcutting_successchance for rates it does not have.
 data=tree,mm_bush_kharazi_jungle_tree1
 data=tree,mm_bush_kharazi_jungle_tree2
+// The Void Knights' Outpost trees, which are `tree` and `tree2` copied including their op - see
+// game_pest/configs/pest.loc. They are the ordinary tree twice over, so they belong in the
+// ordinary tree's row.
+data=tree,pest_tree
+data=tree,pest_tree2
 data=levelrequired,0
 data=productexp,250
 data=product,logs
