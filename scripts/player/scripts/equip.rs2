@@ -206,7 +206,18 @@ if ($obj = castlewars_saradomin_banner | $obj = castlewars_zamorak_banner) {
 // the cache has both for that reason. A worn pair left sitting in a pocket would be permanent
 // negative weight, so it goes back to being the ordinary pair the moment it comes off. The way on
 // is [opheld2,ikov_bootsoflightness] in quests/quest_ikov/scripts/ikov_dungeon.rs2.
-if ($obj = ikov_bootsoflightnessworn) {
+//
+// GUARDED ON THERE BEING A PAIR TO SWAP, because this proc runs MORE THAN ONCE for one unequip -
+// which the note at ~try_equip above already says, and this hook was written without it. Taking the
+// boots off reached here twice; the first call moved the worn pair out and put the pocketed pair in,
+// and the second found no worn pair to delete, deleted nothing, and added a pocketed pair anyway.
+// One pair in, two pairs out, every single time you took them off.
+//
+// Found by the fuzzer's item-conservation watcher, which is what that watcher is for: 99 bots
+// reported "60 item moves and nothing else over 30 ticks, and the totals changed:
+// ikov_bootsoflightness +16". tools/sim/ikovboots.ts in the engine repo takes one pair through
+// twenty on-off cycles and counts what comes back.
+if ($obj = ikov_bootsoflightnessworn & inv_total(inv, ikov_bootsoflightnessworn) > 0) {
     inv_del(inv, ikov_bootsoflightnessworn, 1);
     inv_add(inv, ikov_bootsoflightness, 1);
 }
