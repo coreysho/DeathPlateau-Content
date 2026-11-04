@@ -79,6 +79,17 @@ if (~inzone_coord_pair_table(trawler_game_zones, $coord) = true | ~inzone_coord_
 if (~in_tutorial_island($coord) = true) {
     return(false);
 }
+// AND NOT INSIDE A TEMPLE TREK, which is the same kind of place as the trawler and the gnomeball
+// field above it and was simply missing from this list. Every away-event takes the player nine map
+// squares off to a room they cannot walk out of, and a trek is fourteen rooms of instanced map with
+// an escort on playerfollow and a reward that is lost the moment the escort is left behind: the
+// escort stays in the room, [queue,trek_escort_watch] keeps running on a player who is no longer
+// there, and the trek is over. Caught by tools/sim/templetrek.ts on seed 1, which ended the leg
+// standing on ^macro_quiz_landing - 1952,4764, the Quiz Master's podium - with the escort 270 tiles
+// behind it in room 1, and reported it as the trek failing to land in Burgh de Rott.
+if (~in_templetrek($coord) = true) {
+    return(false);
+}
 return(true);
 
 // this proc is only used for spawning randoms
