@@ -43,6 +43,14 @@ data=tree,mm_bush_kharazi_jungle_tree2
 // ordinary tree's row.
 data=tree,pest_tree
 data=tree,pest_tree2
+// The Warriors' Guild map's four, which had a Chop down and no category - see
+// game_warriorsguild/configs/wguild_map.loc. Three evergreens and a dead tree, all of them the
+// ordinary tree's logs; osrsloc_1286 is the same loc id as loc474_1286, which is already in this
+// row by way of hunter_feldip.loc.
+data=tree,osrsloc_2091
+data=tree,osrsloc_2092
+data=tree,osrsloc_27060
+data=tree,osrsloc_1286
 data=levelrequired,0
 data=productexp,250
 data=product,logs
