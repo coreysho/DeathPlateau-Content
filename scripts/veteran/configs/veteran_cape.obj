@@ -1,0 +1,45 @@
+// The Veteran cape, for the players who tested the server before it opened.
+//
+// THE MODELS ARE GENERATED, NOT HAND-EDITED. tools/models/genveterancape.py builds all three from
+// the Attack cape's: the skillcape shape recoloured to bronze, with Jagex's attack emblem cut out
+// of the mesh and the server's DP monogram built in its place. The emblem on this cape is
+// geometry rather than a texture - the 377 client has none on this model - so swapping it means
+// deleting twenty-four faces and adding eighty-eight. Rerun the generator rather than editing the
+// .ob2 files.
+//
+// The bronze is the same ramp the Veteran chat icon is drawn in, so the rank reads as one thing
+// in chat and on the back. The monogram is the brand's red, because a bronze monogram on a bronze
+// cape disappears.
+//
+// NO RECOLOURS HERE, unlike every other cape in the build. The colours are baked into the
+// generated models instead. The skillcapes share one mesh and recolour it per skill, which needs
+// a list of colour pairs per item - and the inventory mesh and the worn mesh of this cape do not
+// share all their source colours, so such a list silently leaves one of the two models the wrong
+// colour. Generating the models with the colour already in them cannot go wrong that way.
+//
+// THE DEFENCE IS A PLAIN CAPE'S, deliberately. This is a badge: a reward that is also an upgrade
+// would pull against the launch wipe, which exists to put everyone on the same footing. A Cape of
+// Accomplishment's +9 would have made it worth wearing for its stats.
+//
+// Untradeable, and given back by the server to any veteran who does not have one - see
+// Engine-TS World.grantVeteranCape. Losing it costs nothing but a relog.
+
+[veteran_cape]
+name=Veteran cape
+desc=Worn by those who tested Death Plateau before it opened.
+model=obj_veteran_cape
+manwear=obj_veteran_cape_manwear,0
+womanwear=obj_veteran_cape_womanwear,0
+// The Attack cape's own 2d camera, since this is its mesh.
+2dzoom=2128
+2dxan=504
+2dyof=1
+iop2=Wear
+wearpos=back
+cost=1
+tradeable=no
+weight=1lb
+category=armour_cape
+param=slashdefence,1
+param=crushdefence,1
+param=rangedefence,2
