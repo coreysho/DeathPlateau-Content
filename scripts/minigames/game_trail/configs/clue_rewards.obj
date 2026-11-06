@@ -11662,6 +11662,10 @@ param=attackrate,5
 // later. It takes the dragon pickaxe's, the way the gilded pickaxe takes the rune one.
 param=mining_rate,2
 param=mining_animation,human_mining_dragon_pickaxe
+// AND THE MINING LEVEL TO USE IT, which was missing entirely - so it read as 0, and
+// ~pickaxe_checker (skill_mining/scripts/pickaxe_checker.rs2) compares the player's level
+// against this param. 61, as Old School has it and as dragon_pickaxe already carries.
+param=levelrequire,61
 [third_age_axe]
 name=3rd Age axe
 desc=A beautifully crafted axe, shaped by ancient smiths.
@@ -11700,6 +11704,10 @@ param=attackrate,5
 // Woodcutting. It is a clue reward with a woodcutter's animation and nothing told
 // the skill about it, so until now it chopped nothing: see tools/skilltools_battery.py.
 param=woodcutting_struct,woodcutting_third_age_axe
+// AND THE WOODCUTTING LEVEL TO USE IT, missing the same way the pickaxe's was. 61, as Old
+// School has it; ~woodcutting_best_axe hardcodes "> 60" for this axe, so the ladder and the
+// config now agree instead of one of them being the only place the number exists.
+param=levelrequire,61
 [bloodhound]
 name=Bloodhound
 desc=Tracking down clues all over the world.

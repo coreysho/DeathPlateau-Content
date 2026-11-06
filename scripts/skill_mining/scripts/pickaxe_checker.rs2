@@ -1,8 +1,23 @@
+// THE LADDER IS THE LIST, and it was two rungs short. A pickaxe that is not named here cannot be
+// used however well its config is filled in - the same fault ~woodcutting_best_axe warns about,
+// where the gilded AXE had its struct and its animation and still chopped nothing. The gilded and
+// 3rd Age pickaxes are clue rewards with a mining rate and a mining animation of their own
+// (minigames/game_trail/configs/clue_rewards.obj) and neither could mine a thing.
+//
+// The level comes off the pickaxe's own levelrequire rather than a number written here, so adding a
+// rung is one block and the config stays the single source of the requirement.
+// tools/sim/tooltiers.ts checks the two halves against each other.
 [proc,pickaxe_checker]()(obj)
 def_int $lvl0 = stat(mining);
 def_obj $obj1 = inv_getobj(worn, ^wearpos_rhand);
+if ($lvl0 >= oc_param(third_age_pickaxe, levelrequire) & ($obj1 = third_age_pickaxe | inv_total(inv, third_age_pickaxe) > 0)) {
+    return(third_age_pickaxe);
+}
 if ($lvl0 >= oc_param(dragon_pickaxe, levelrequire) & ($obj1 = dragon_pickaxe | inv_total(inv, dragon_pickaxe) > 0)) {
     return(dragon_pickaxe);
+}
+if ($lvl0 >= oc_param(gilded_pickaxe, levelrequire) & ($obj1 = gilded_pickaxe | inv_total(inv, gilded_pickaxe) > 0)) {
+    return(gilded_pickaxe);
 }
 if ($lvl0 >= oc_param(rune_pickaxe, levelrequire) & ($obj1 = rune_pickaxe | inv_total(inv, rune_pickaxe) > 0)) {
     return(rune_pickaxe);
