@@ -362,3 +362,36 @@ resizey=105
 op1=Close
 category=door_opened
 param=next_loc_stage,misc_viking_abode_door_low
+
+// ---------------------------------------------------------------------------------------------
+// The Slayer Tower's 2nd floor door
+// ---------------------------------------------------------------------------------------------
+// A single leaf at 3445,3554 on the tower's 2nd floor, and the last of the three dead Open clicks
+// that made the tower unenterable and then unwalkable - see the note in doubledoors.loc for the
+// front door and the 1st floor's pair. loc_5128 is its open twin, already in the cache.
+
+[loc_5126]
+category=door_closed
+param=next_loc_stage,loc_5128
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Open
+
+[loc_5128]
+category=door_opened
+param=next_loc_stage,loc_5126
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Close

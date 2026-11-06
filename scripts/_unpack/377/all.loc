@@ -30917,17 +30917,6 @@ recol1d=10535
 sharelight=yes
 active=no
 
-[slayertower_door]
-name=Door
-desc=A big wooden door.
-model=loc_4487
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Open
-
 [slayertower_door_arch]
 model=loc_4488
 hillskew=yes
@@ -30948,41 +30937,6 @@ op1=Open
 blockwalk=no
 mirror=yes
 active=no
-
-[slayertower_door_mirror]
-name=Door
-desc=A big wooden door.
-model=loc_4487
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-mirror=yes
-op1=Open
-
-[slayertower_door_open]
-name=Door
-desc=A big wooden door.
-model=loc_4487
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Close
-
-[slayertower_door_open_mirror]
-name=Door
-desc=A big wooden door.
-model=loc_4487
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-mirror=yes
-op1=Close
 
 [slayer_dungeon_entrance]
 name=Cave Entrance
@@ -34878,17 +34832,6 @@ width=2
 blockrange=no
 blockwalk=no
 
-[loc_5126]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Open
-
 [loc_5127]
 name=Danger sign
 desc=Danger!
@@ -34900,17 +34843,6 @@ recol2d=20011
 recol3s=13571
 recol3d=11592
 op1=Read
-
-[loc_5128]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Close
 
 [loc_5129]
 model=loc_5129
@@ -68188,52 +68120,6 @@ ambient=15
 model=elid_temple_door_open
 hillskew=yes
 ambient=15
-mirror=yes
-
-[loc_10527]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Open
-
-[loc_10528]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Close
-
-[loc_10529]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Open
-mirror=yes
-
-[loc_10530]
-name=Door
-desc=A tall wooden door.
-model=loc_5126
-hillskew=yes
-ambient=20
-resizez=128
-resizex=128
-resizey=192
-op1=Close
 mirror=yes
 
 [champions_wall]
