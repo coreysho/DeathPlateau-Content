@@ -60,6 +60,16 @@ recol5d=7332
 recol6s=7469
 recol6d=6275
 vislevel=hide
+// SHE STAYS IN HER CORNER. Her spawn was at 3093,3369 - OUTSIDE Draynor Manor, in the strip of
+// grass along its west wall - and reported from play as "the witch you speak to spawns outside".
+// She is now at 3098,3370, the manor's north-western corner, which is where the wiki puts her
+// ("located in the north-western corner of Draynor Manor"); Ava is in the secret room at the
+// south-west of the same floor, which is the "next door" the magnet dialogue means.
+//
+// wanderrange=0 because the default is 5 and that is how she was found at 3094,3373 rather than at
+// her own spawn square: five tiles of wander from a doorway is enough to leave the room. A quest
+// npc with one conversation has no business walking off.
+wanderrange=0
 
 // The trees in the Draynor Manor grounds are npcs, not scenery - that is how the cache has them,
 // and it is why Ava calls them "the ones that attack rather than the really dead ones". They stand
