@@ -67,6 +67,11 @@ p_delay(1);
 anim(human_death, 0);
 ~damage_self(5);
 p_delay(2);
+// AND LET IT GO. human_death holds its last frame for 400 seconds and hides both held items, and
+// at priority 10 nothing the player does - not an attack, not a cast - can replace it. Malak does
+// not teleport you, so without this the player stands in the collapse pose with their weapon and
+// shield invisible until it times out. The same reason teleport.rs2 clears its own.
+anim(null, 0);
 inv_del(inv, fd_silver_pot_blessed, 1);
 inv_add(inv, fd_silver_pot_blood_blessed, 1);
 if (%fdvw_subquest < ^fdvw_pot_filled) {
