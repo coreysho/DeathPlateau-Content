@@ -549,27 +549,46 @@ switch_coord (loc_coord) {
 }
 
 
+// THE SLAYER TOWER'S TWO STAIRCASES. Reported from play after the tower's doors and chains were
+// fixed: "the staircases in the slayer tower do not [work]". These four were never dead clicks -
+// each already had its [oploc1] here - so the sweep that found the doors and the chains walked
+// straight past them. What they had was a switch_coord with nothing in it but the default, so
+// every click printed "Unhandled stairs: loc_4493 at ..." and left the player where they stood.
+//
+// loc_4493 / loc_4494 are one flight on a single square, ground floor to 1st and back, just inside
+// the front door; the landing is the tile west of it, which is the only walkable side on either
+// level. loc_4495 / loc_4496 are a flight whose two ends are two squares apart - 3413 at the
+// bottom on the 1st floor, 3415 at the top on the 2nd - so going up moves you east and up, and
+// going down moves you west and down. The landings are the far side of each end: 3417 on the 2nd
+// floor, where the only walkable tile beside those stairs is, and 3412 on the 1st.
+//
+// Measured off the collision map rather than guessed, and checked for connection to the rest of
+// each floor - 3433,3537 reaches the front door, 3412,3540 reaches the lower chain's landing.
 [oploc1,loc_4493]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_53_55_42_17 : p_telejump(1_53_55_41_17); // Slayer Tower - ground floor to the 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_4494]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_53_55_42_17 : p_telejump(0_53_55_41_17); // Slayer Tower - 1st floor to the ground
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_4495]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_53_55_21_20 : p_telejump(2_53_55_25_20); // Slayer Tower - 1st floor to the 2nd
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_4496]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 2_53_55_23_20 : p_telejump(1_53_55_20_20); // Slayer Tower - 2nd floor to the 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
