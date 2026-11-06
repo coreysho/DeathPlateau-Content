@@ -709,12 +709,16 @@ switch_coord (loc_coord) {
 [oploc1,mm_stairs_top]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_43_43_43_43 : p_telejump(0_43_43_42_42); // Ape Atoll - the temple, 1st floor down
+    case 1_43_43_47_43 : p_telejump(0_43_43_47_41); // Ape Atoll - the temple, the second flight
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,mm_stairs_base]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_43_43_43_42 : p_telejump(1_43_43_42_43); // Ape Atoll - the temple, ground floor up
+    case 0_43_43_47_42 : p_telejump(1_43_43_47_42); // Ape Atoll - the temple, the second flight
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -743,6 +747,8 @@ switch_coord (loc_coord) {
 [oploc1,hauntedmine_dark_stairs_bottom]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_42_71_21_47 : p_telejump(1_42_71_22_47); // Haunted Mine - up
+    case 0_42_71_43_17 : p_telejump(1_42_71_44_17); // Haunted Mine - up
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -757,12 +763,14 @@ switch_coord (loc_coord) {
 [oploc1,karam_dungeon_cavestairs]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_41_149_24_56 : p_telejump(1_41_149_25_56); // Karamja dungeon - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_5096]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 2_41_149_20_57 : p_telejump(1_41_149_20_56); // Karamja dungeon - down
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1010,12 +1018,16 @@ switch_coord (loc_coord) {
 [oploc1,loc_7056]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_33_76_19_51 : p_telejump(0_33_76_17_51); // down
+    case 1_48_50_19_51 : p_telejump(0_48_50_17_51); // Draynor area - down
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_7057]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_33_76_18_51 : p_telejump(1_33_76_19_52); // up
+    case 0_48_50_18_51 : p_telejump(1_48_50_19_52); // Draynor area - up
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1028,24 +1040,30 @@ switch_coord (loc_coord) {
 [oploc1,blast_furnace_stairs_up]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_30_77_19_28 : p_telejump(1_30_77_20_28); // Blast Furnace - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_9470]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_46_50_21_15 : p_telejump(1_46_50_22_14); // Port Sarim area - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_9471]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_46_50_22_15 : p_telejump(0_46_50_20_15); // Port Sarim area - down
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,sarim_spiralstairs]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_47_50_18_48 : p_telejump(1_47_50_17_48); // Port Sarim - up
+    case 0_47_50_15_61 : p_telejump(1_47_50_14_61); // Port Sarim - up
+    case 0_45_51_51_18 : p_telejump(1_45_51_50_18); // Rimmington - up
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1167,6 +1185,7 @@ switch_coord (loc_coord) {
 [oploc1,magictraining_stairs_base]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_52_51_39_42 : p_telejump(1_52_51_38_42); // Mage Training Arena - up
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1179,6 +1198,7 @@ switch_coord (loc_coord) {
 [oploc1,magictraining_stairs_top]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_52_51_39_42 : p_telejump(0_52_51_38_42); // Mage Training Arena - down
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1191,12 +1211,14 @@ switch_coord (loc_coord) {
 [oploc1,magictraining_stairs_base_mirror]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_52_51_29_42 : p_telejump(1_52_51_29_43); // Mage Training Arena - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,magictraining_stairs_top_mirror]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_52_51_29_42 : p_telejump(0_52_51_29_41); // Mage Training Arena - down
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1248,12 +1270,14 @@ switch_coord (loc_coord) {
 [oploc1,loc_11724]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_46_52_24_19 : p_telejump(1_46_52_23_19); // Falador - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_11725]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_46_52_24_19 : p_telejump(0_46_52_23_19); // Falador - down
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1278,12 +1302,18 @@ switch_coord (loc_coord) {
 [oploc1,loc_11732]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_47_52_40_24 : p_telejump(1_47_52_42_25); // Falador east - up
+    case 0_47_52_26_35 : p_telejump(1_47_52_28_35); // Falador - up
+    case 0_46_52_29_56 : p_telejump(1_46_52_28_57); // Falador north - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_11733]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_47_52_41_25 : p_telejump(0_47_52_39_24); // Falador east - down
+    case 1_47_52_27_35 : p_telejump(0_47_52_25_35); // Falador - down
+    case 1_46_52_29_57 : p_telejump(0_46_52_28_56); // Falador north - down
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1304,42 +1334,53 @@ switch_coord (loc_coord) {
 [oploc1,loc_11736]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_47_52_37_35 : p_telejump(1_47_52_36_36); // Falador - up
+    case 0_46_52_15_41 : p_telejump(1_46_52_14_43); // Falador west - up
+    case 0_46_52_27_42 : p_telejump(1_46_52_27_41); // Falador north - up
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,loc_11737]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_47_52_37_36 : p_telejump(0_47_52_36_35); // Falador - down
+    case 1_46_52_15_42 : p_telejump(0_46_52_14_41); // Falador west - down
+    case 1_46_52_27_43 : p_telejump(0_46_52_26_42); // Falador north - down
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,fai_darkwiztower_spiralstairs]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_45_52_27_6 : p_telejump(1_45_52_26_6); // Dark Wizards' Tower - ground to 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,fai_darkwiztower_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_45_52_27_6 : @stair_options(2_45_52_29_7, 0_45_52_26_6); // Dark Wizards' Tower - 1st, either way
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc2,fai_darkwiztower_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_45_52_27_6 : p_telejump(2_45_52_29_7); // Dark Wizards' Tower - 1st to 2nd
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc3,fai_darkwiztower_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_45_52_27_6 : p_telejump(0_45_52_26_6); // Dark Wizards' Tower - 1st to ground
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,fai_darkwiztower_spiralstairstop]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 2_45_52_28_7 : p_telejump(1_45_52_26_6); // Dark Wizards' Tower - 2nd to 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
@@ -1387,30 +1428,38 @@ switch_coord (loc_coord) {
 [oploc1,wild6_spiralstairs]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 0_51_61_16_32 : p_telejump(1_51_61_15_32); // Rogues' Castle - ground to 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,wild6_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_51_61_16_32 : @stair_options(2_51_61_15_32, 0_51_61_15_32); // Rogues' Castle - 1st, either way
+    case 2_51_61_16_32 : @stair_options(3_51_61_18_32, 1_51_61_15_32); // Rogues' Castle - 2nd, either way
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc2,wild6_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_51_61_16_32 : p_telejump(2_51_61_15_32); // Rogues' Castle - 1st to 2nd
+    case 2_51_61_16_32 : p_telejump(3_51_61_18_32); // Rogues' Castle - 2nd to 3rd
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc3,wild6_spiralstairs_middle]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 1_51_61_16_32 : p_telejump(0_51_61_15_32); // Rogues' Castle - 1st to ground
+    case 2_51_61_16_32 : p_telejump(1_51_61_15_32); // Rogues' Castle - 2nd to 1st
     case default : @unhandled_stairs(loc_coord);
 }
 
 [oploc1,wild6_spiralstairstop]
 // arrive delay?
 switch_coord (loc_coord) {
+    case 3_51_61_17_32 : p_telejump(2_51_61_15_32); // Rogues' Castle - 3rd to 2nd
     case default : @unhandled_stairs(loc_coord);
 }
 // ---
