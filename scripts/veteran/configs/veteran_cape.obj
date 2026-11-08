@@ -36,12 +36,11 @@ desc=Worn by those who tested Death Plateau before it opened.
 model=obj_veteran_cape
 manwear=obj_veteran_cape_manwear,0
 womanwear=obj_veteran_cape_womanwear,0
-// The inventory icon looks at the BACK of the cape, where the device is. The Attack cape's own
-// camera (2dxan=504, no yan) was for its folded inventory mesh; ours is the worn cape, so it
-// needs turning round or the icon is a thin edge-on V.
+// The Attack cape's own camera. It suits a cape LYING DOWN, which is what the inventory model
+// is again: looking straight at a standing cape, as an earlier version did, gave a readable icon
+// and an unreadable lump on the ground, because the ground uses this same model.
 2dzoom=2128
-2dxan=0
-2dyan=1024
+2dxan=504
 2dyof=1
 iop2=Wear
 wearpos=back
