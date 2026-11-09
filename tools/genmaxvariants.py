@@ -63,7 +63,9 @@ OWN_MODELS = ('fire', 'infernal')
 # The comments this file writes are prose, so the counts in them are spelled out. A number that
 # can only be read as a digit is a comment nobody proofreads.
 WORDS = {0: 'no', 1: 'one', 2: 'two', 3: 'three', 4: 'four', 5: 'five', 6: 'six', 7: 'seven',
-         8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve'}
+         8: 'eight', 9: 'nine', 10: 'ten', 11: 'eleven', 12: 'twelve', 13: 'thirteen',
+         14: 'fourteen', 15: 'fifteen', 16: 'sixteen', 17: 'seventeen', 18: 'eighteen',
+         19: 'nineteen', 20: 'twenty'}
 
 
 def word(n):
@@ -177,7 +179,12 @@ def build(spec):
          '// variant is an Ava\'s accumulator for bows, thrown weapons, the blowpipe and the magnet.',
          '//',
          '// The %s variants with no models of their own are the plain Max cape\'s model with five'
-         % word(n - len(OWN_MODELS)),
+         # COUNTED, NOT SUBTRACTED. This was n minus the two with OWN_MODELS, which quietly
+         # counted the three imbued ancient capes - and later the Veteran max cape - among
+         # the recoloured ones although they name models through `models`. A variant is
+         # recoloured only if it has neither.
+         % word(sum(1 for v in spec['variants']
+                    if v['key'] not in OWN_MODELS and not v.get('models'))),
          '// recolours, and the max hood\'s with six, exactly as OSRS has them.',
          '']
     names = []

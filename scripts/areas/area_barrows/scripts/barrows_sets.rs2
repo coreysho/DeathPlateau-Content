@@ -106,7 +106,8 @@ if ($style = ^magic_style & ~barrows_set_worn(^barrows_set_ahrim) = ^true
     npc_statsub(strength, ^barrows_ahrim_strength_drain, 0);
 }
 if (~barrows_set_worn(^barrows_set_guthan) = ^true & random(100) < ^barrows_set_effect_pct) {
-    spotanim_pl(barrows_guthan_effect, 92, 0);
+    // Ground-anchored model; see skill_magic/scripts/spells/teleport.rs2.
+    spotanim_pl(barrows_guthan_effect, 0, 0);
     stat_heal(hitpoints, $damage, 0);
 }
 
@@ -121,7 +122,8 @@ if ($style = ^magic_style & ~barrows_set_worn(^barrows_set_ahrim) = ^true
     .stat_sub(strength, ^barrows_ahrim_strength_drain, 0);
 }
 if (~barrows_set_worn(^barrows_set_guthan) = ^true & random(100) < ^barrows_set_effect_pct) {
-    spotanim_pl(barrows_guthan_effect, 92, 0);
+    // Ground-anchored model; see skill_magic/scripts/spells/teleport.rs2.
+    spotanim_pl(barrows_guthan_effect, 0, 0);
     stat_heal(hitpoints, $damage, 0);
 }
 if ($style = ^ranged_style & ~barrows_set_worn(^barrows_set_karil) = ^true

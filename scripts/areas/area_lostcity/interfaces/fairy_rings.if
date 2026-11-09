@@ -1,0 +1,214 @@
+// The fairy ring dial: three letters, six arrows and a lever to pull.
+//
+// HAND-WRITTEN, not adopted, and that is the one unusual thing about this file. tools/genadopt.py
+// renames a cache panel's components so a script can read if_settext(smelt_window:icon1) instead of
+// com_21, and every custom panel in this fork so far came that way. There is no fairy ring panel in
+// 377 to adopt: the quest that unlocks the network in RuneScape is Fairytale II, which this
+// revision predates, so the cache carries the mushroom models and no way to dial them.
+//
+// WHAT IT IS COPIED FROM. The cache does carry this exact widget twice - the Legends' Quest
+// combination door (scripts/interfaces/tribal_door2.if, four dials) and an unused six-dial panel
+// for naming a cat (inter_312). The tribal door is driven by quest_totem.rs2 and the cat panel is
+// somebody's future feature, so neither is free to take; instead every measurement below is the
+// tribal door's, so this sits in the world looking like the thing next to it:
+//
+//   letters    y=97,  font q8_full, 0xFFFF00 on a com_i16 plaque at y=116
+//   arrows     y=196, leftarrow/rightarrow, 45 wide, the pair 48 apart
+//   columns    124 apart, which is the tribal door's spacing, not a guess
+//   ENTER      a 128x32 rect at y=262 with the word on top of it
+//
+// THREE COLUMNS, NOT FOUR, so the letters are at 132/256/380 rather than 65/189/313/437: centred
+// on 256 at the same 124 spacing. A fairy ring code is three letters and the dials have to match
+// it, or a player reading ALQ off the wiki has a fourth dial to wonder about.
+//
+// The components are NAMED rather than left as com_<n> - fairy_rings:letter1 says what it is at
+// the call site in a way com_43 never could, and nothing generated this file so nothing will
+// overwrite the names.
+
+[backing_outer]
+type=rect
+x=2
+y=68
+width=508
+height=172
+fill=yes
+colour=0x202020
+
+[backing_inner]
+type=rect
+x=6
+y=72
+width=499
+height=164
+fill=yes
+colour=0x404040
+
+[title]
+type=text
+x=185
+y=30
+width=147
+height=14
+center=yes
+font=b12_full
+shadowed=yes
+text=Fairy ring
+colour=0xFFFF00
+
+[close]
+type=text
+x=424
+y=28
+buttontype=close
+width=68
+height=11
+font=p11_full
+shadowed=yes
+text=Close Window
+colour=0xC00000
+overcolour=0xFFFFFF
+
+// ---- the first dial: A D C B
+[plaque1]
+type=model
+x=121
+y=116
+width=32
+height=32
+model=com_i16
+zoom=550
+xan=400
+
+[letter1]
+type=text
+x=132
+y=97
+width=9
+height=17
+center=yes
+font=q8_full
+shadowed=yes
+text=A
+colour=0xFFFF00
+
+[left1]
+type=graphic
+x=89
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=leftarrow,0
+
+[right1]
+type=graphic
+x=137
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=rightarrow,0
+
+// ---- the second dial: I L K J
+[plaque2]
+type=model
+x=245
+y=116
+width=32
+height=32
+model=com_i16
+zoom=550
+xan=400
+
+[letter2]
+type=text
+x=256
+y=97
+width=9
+height=17
+center=yes
+font=q8_full
+shadowed=yes
+text=I
+colour=0xFFFF00
+
+[left2]
+type=graphic
+x=213
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=leftarrow,0
+
+[right2]
+type=graphic
+x=261
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=rightarrow,0
+
+// ---- the third dial: P S R Q
+[plaque3]
+type=model
+x=369
+y=116
+width=32
+height=32
+model=com_i16
+zoom=550
+xan=400
+
+[letter3]
+type=text
+x=380
+y=97
+width=9
+height=17
+center=yes
+font=q8_full
+shadowed=yes
+text=P
+colour=0xFFFF00
+
+[left3]
+type=graphic
+x=337
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=leftarrow,0
+
+[right3]
+type=graphic
+x=385
+y=196
+buttontype=normal
+width=45
+height=36
+graphic=rightarrow,0
+
+// ---- and the lever
+[enter_box]
+type=rect
+x=193
+y=262
+buttontype=normal
+width=128
+height=32
+fill=yes
+colour=0x404040
+
+[enter_text]
+type=text
+x=227
+y=269
+width=62
+height=17
+font=q8_full
+shadowed=yes
+text=ENTER
+colour=0xFFFF00

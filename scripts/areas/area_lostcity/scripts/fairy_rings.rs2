@@ -1,6 +1,265 @@
+// The fairy ring network: six rings, one dial, and a quest that has to be finished first.
+//
+// WHAT 377 GAVE US AND WHAT IT DID NOT. Eight mushroom rings are placed on this map and the
+// models, the vanish and appear animations and the Zanaris hub all ship with the revision. What
+// does not ship is any way to dial one, because in RuneScape the network unlocks in Fairytale II
+// and 377 predates it: there is no fairy ring panel in the cache and no varbit for a code. So the
+// rings sat rendering as mushrooms you walked over - six of them without even a name - and the
+// one script in this file sent you from Zanaris to the Lumbridge Swamp shed and nowhere else.
+//
+// THE DIAL IS A HAND-WRITTEN PANEL, see ../interfaces/fairy_rings.if for why, and every
+// measurement in it is the Legends' Quest combination door's so that the two look alike. This
+// file is the door's script with three dials instead of four: quest_totem.rs2 is where the
+// getbit_range/setbit_range_toint pattern and the enum-per-dial idea come from.
+//
+// GATED ON FAIRYTALE PART I, as asked. RuneScape wants rather more - The Restless Ghost, Priest
+// in Peril, Nature Spirit, Lost City, Fairytale I and part of Fairytale II, plus a dramen staff
+// in your hand - and Part I alone is a deliberate simplification of that, not an oversight. The
+// check is one line and is easy to tighten later if you want the staff back.
+//
+// AN UNKNOWN CODE DOES NOTHING, loudly enough to be clear and quietly enough not to be a slap:
+// 64 codes are diallable and 6 go anywhere. That is what RuneScape does with an unused code too.
+
+// ---------------------------------------------------------------- the rings themselves
+//
+// EVERY RING DIALS. There is no fixed pairing, because a network where each ring reaches one
+// other place is not a network. Two things sit beside the dial rather than in place of it: the
+// Zanaris ring by Fairy Nuff keeps its old one-way step out to the swamp AS WELL as the dial, so
+// the route players already use is still there, and every ring outside Zanaris carries a
+// right-click "Zanaris" that dials BKS for you. Both are additive - nothing the dial could do
+// stopped being possible - and the second is below under THE WAY BACK.
+[oploc1,64_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,1_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,6_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,27_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,37_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,47_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,fairy_mushroom_ring3] @fairy_ring_use;
+[oploc1,3_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,4_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,7_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,10_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,14_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,15_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,18_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,19_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,23_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,24_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,25_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,29_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,30_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,33_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,36_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,38_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,42_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,43_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,45_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,49_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,50_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,52_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,53_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,55_fairy_mushroom_ring] @fairy_ring_use;
+
+// THE WAY BACK, without dialling it. RuneScape puts a "Zanaris" option on every ring except the
+// ones already in Zanaris, because BKS is the one code every player dials a hundred times and
+// making them spell it out each time is friction with nothing on the other side of it.
+//
+// ONLY THE FIVE SURFACE RINGS GET IT. Three of this map's eight rings stand in Zanaris itself -
+// 64_ at 2412,4434, fairy_mushroom_ring at 2452,4473 and fairy_mushroom_ring3 at 2486,4471 - and
+// an option that teleports you forty tiles to another corner of the room you are standing in is
+// not a shortcut, it is a bug report waiting to happen. Their op2 is deliberately absent, which
+// is also why this list is five lines and the one above is seven.
+[oploc2,1_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,6_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,27_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,37_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,47_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,3_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,4_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,7_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,10_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,14_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,15_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,18_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,19_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,23_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,24_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,25_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,29_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,30_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,33_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,36_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,38_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,42_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,43_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,45_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,49_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,50_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,52_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,53_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,55_fairy_mushroom_ring] @fairy_ring_zanaris;
+
 [oploc1,fairy_mushroom_ring]
 p_walk(loc_coord);
+if (%fairy_farmers_quest < ^fairy_complete) {
+    // the swamp step has never needed the quest, so it still does not
+    @fairy_ring_swamp;
+    return;
+}
+switch_int(~p_choice2("Dial a code.", 1, "Step through to the swamp.", 2)) {
+    case 1 : @fairy_ring_open;
+    case 2 : @fairy_ring_swamp;
+}
+
+[label,fairy_ring_swamp]
+@fairy_ring_travel(^fairy_to_swamp);
+
+[label,fairy_ring_use]
+p_walk(loc_coord);
+if (%fairy_farmers_quest < ^fairy_complete) {
+    ~fairy_ring_mumble;
+    return;
+}
+@fairy_ring_open;
+
+// THE SHORTCUT IS GATED EXACTLY AS THE DIAL IS. It skips the panel, not the quest - and since it
+// never opens the panel it cannot lean on the ENTER button's check the way the dial does, so the
+// check has to be here. A player without Fairytale Part I gets the same mushrooms-are-pretty line
+// they get from a left click, because as far as they know nothing about this ring has changed.
+[label,fairy_ring_zanaris]
+p_walk(loc_coord);
+if (%fairy_farmers_quest < ^fairy_complete) {
+    ~fairy_ring_mumble;
+    return;
+}
+@fairy_ring_travel(^fairy_to_zanaris);
+
+// SAID AS THE RING, not as a quest requirement, because a player who has not met a fairy yet has
+// no reason to connect a mushroom circle with a farmer's missing secateurs. A proc rather than
+// two copies of the string, so the left click and the right click can never drift apart.
+[proc,fairy_ring_mumble]
+~mesbox("The mushrooms are pretty, and nothing more. Perhaps somebody who|knows about fairies could tell you why.");
+
+[label,fairy_ring_open]
+~fairy_ring_refresh;
+if_openmain(fairy_rings);
+
+// ---------------------------------------------------------------- the dial
+//
+// Two bits per dial and four letters per dial, so every stored value is a letter and there is no
+// invalid state: turning past the end wraps, which is what a ring does.
+[proc,fairy_dial_get](int $dial)(int)
+switch_int($dial) {
+    case 1 : return (getbit_range(%fairy_ring_dial, ^fairy_dial1_lo, ^fairy_dial1_hi));
+    case 2 : return (getbit_range(%fairy_ring_dial, ^fairy_dial2_lo, ^fairy_dial2_hi));
+    case 3 : return (getbit_range(%fairy_ring_dial, ^fairy_dial3_lo, ^fairy_dial3_hi));
+}
+return (0);
+
+[proc,fairy_dial_set](int $dial, int $value)
+switch_int($dial) {
+    case 1 : %fairy_ring_dial = setbit_range_toint(%fairy_ring_dial, $value, ^fairy_dial1_lo, ^fairy_dial1_hi);
+    case 2 : %fairy_ring_dial = setbit_range_toint(%fairy_ring_dial, $value, ^fairy_dial2_lo, ^fairy_dial2_hi);
+    case 3 : %fairy_ring_dial = setbit_range_toint(%fairy_ring_dial, $value, ^fairy_dial3_lo, ^fairy_dial3_hi);
+}
+
+// Put what is stored on the dials. Called when the panel opens as well as on every turn, so a
+// player who dialled DKR last week sees DKR rather than AIP.
+[proc,fairy_ring_refresh]
+if_settext(fairy_rings:letter1, enum(int, string, fairy_dial1, ~fairy_dial_get(1)));
+if_settext(fairy_rings:letter2, enum(int, string, fairy_dial2, ~fairy_dial_get(2)));
+if_settext(fairy_rings:letter3, enum(int, string, fairy_dial3, ~fairy_dial_get(3)));
+
+[label,fairy_ring_turn](int $dial, int $change)
+def_int $next = calc(~fairy_dial_get($dial) + $change);
+if ($next > 3) {
+    $next = 0;
+} else if ($next < 0) {
+    $next = 3;
+}
+~fairy_dial_set($dial, $next);
+~fairy_ring_refresh;
+
+[if_button,fairy_rings:left1] @fairy_ring_turn(1, -1);
+[if_button,fairy_rings:left2] @fairy_ring_turn(2, -1);
+[if_button,fairy_rings:left3] @fairy_ring_turn(3, -1);
+[if_button,fairy_rings:right1] @fairy_ring_turn(1, 1);
+[if_button,fairy_rings:right2] @fairy_ring_turn(2, 1);
+[if_button,fairy_rings:right3] @fairy_ring_turn(3, 1);
+
+// ---------------------------------------------------------------- and the lever
+[if_button,fairy_rings:enter_box]
+if_close;
+// THE QUEST IS CHECKED AGAIN HERE. The panel can only be opened by a ring and a ring checks, but
+// a button trigger is reachable by anything that can send its id - and a teleport network is
+// exactly what somebody would try to reach that way.
+if (%fairy_farmers_quest < ^fairy_complete) {
+    return;
+}
+// THE SIX BITS, NOT A SUM OF THE THREE DIALS. Computing a key here would be a second encoding
+// of a thing the varp already encodes, and the two disagreed for a while - see the long note in
+// fairy_rings.constant. The dials ARE the code.
+def_int $code = getbit_range(%fairy_ring_dial, ^fairy_dial1_lo, ^fairy_dial3_hi);
+switch_int($code) {
+    case ^fairy_code_aiq : @fairy_ring_travel(^fairy_to_mudskipper);
+    case ^fairy_code_ajr : @fairy_ring_travel(^fairy_to_trollcave);
+    case ^fairy_code_akq : @fairy_ring_travel(^fairy_to_piscatoris);
+    case ^fairy_code_aks : @fairy_ring_travel(^fairy_to_feldip);
+    case ^fairy_code_alp : @fairy_ring_travel(^fairy_to_lighthouse);
+    case ^fairy_code_alq : @fairy_ring_travel(^fairy_to_hauntedwoods);
+    case ^fairy_code_alr : @fairy_ring_travel(^fairy_to_abyss);
+    case ^fairy_code_als : @fairy_ring_travel(^fairy_to_mcgrubor);
+    case ^fairy_code_biq : @fairy_ring_travel(^fairy_to_kalphite);
+    case ^fairy_code_bis : @fairy_ring_travel(^fairy_to_ardougnezoo);
+    case ^fairy_code_bjr : @fairy_ring_travel(^fairy_to_fisherking);
+    case ^fairy_code_bkp : @fairy_ring_travel(^fairy_to_chompy);
+    case ^fairy_code_bkr : @fairy_ring_travel(^fairy_to_mortmyre);
+    case ^fairy_code_bks : @fairy_ring_travel(^fairy_to_zanaris);
+    case ^fairy_code_blp : @fairy_ring_travel(^fairy_to_tzhaar);
+    case ^fairy_code_blr : @fairy_ring_travel(^fairy_to_legends);
+    case ^fairy_code_cip : @fairy_ring_travel(^fairy_to_miscellania);
+    case ^fairy_code_ciq : @fairy_ring_travel(^fairy_to_yanille);
+    case ^fairy_code_cjr : @fairy_ring_travel(^fairy_to_sinclair);
+    case ^fairy_code_ckr : @fairy_ring_travel(^fairy_to_taibwo);
+    case ^fairy_code_cks : @fairy_ring_travel(^fairy_to_canifis);
+    case ^fairy_code_clp : @fairy_ring_travel(^fairy_to_draynorisland);
+    case ^fairy_code_clr : @fairy_ring_travel(^fairy_to_apeatoll);
+    case ^fairy_code_dis : @fairy_ring_travel(^fairy_to_wiztower);
+    case ^fairy_code_dkp : @fairy_ring_travel(^fairy_to_karamjaglider);
+    case ^fairy_code_dkr : @fairy_ring_travel(^fairy_to_edgeville);
+    case ^fairy_code_dks : @fairy_ring_travel(^fairy_to_polar);
+    case ^fairy_code_dlq : @fairy_ring_travel(^fairy_to_nardah);
+    case ^fairy_code_dlr : @fairy_ring_travel(^fairy_to_isafdar);
+    case ^fairy_code_dls : @fairy_ring_travel(^fairy_to_myreque);
+    case default :
+        // 34 of the 64 codes land here. Most are real RuneScape codes whose destination is
+        // 2015-2025 content with no ground on a 2006 map; three more (DJP, AJS, CKP) are places
+        // this map genuinely lacks - see fairy_rings.constant. Saying "nothing happens" is honest
+        // about that in a way "invalid code" would not be.
+        mes("The ring hums for a moment, and settles. Nothing happens.");
+}
+
+// THE DELAYS ARE THE ANIMATION, and without them there is none. anim() only says what the client
+// should play NEXT; the vanish, the jump and the appear all in one tick means the only anim that
+// ever reaches the client is the last one set before the tick is flushed - by which time the
+// player is already standing somewhere else. Deployed, that read as a teleport with no animation
+// at all, which is exactly what it was.
+//
+// Two ticks each is what player_teleport_normal uses between its cast animation and the jump, for
+// this same reason. The seqs are seven frames each and are one another reversed, so the pair reads
+// as one movement: dissolve here, resolve there.
+[label,fairy_ring_travel](coord $dest)
+// The anim alone reads as a plain fade out and back in - the player shrinks away and returns and
+// nothing else happens. `fairy_flower_ring` is the ring of fairy sparkles that goes with it, at
+// height 0 so it sits on the ground around the feet rather than over the head; both ends get one,
+// because arriving with no effect looked like a different (and worse) thing than leaving with one.
+// The p_delay either side is not padding: anim() and spotanim() both set a per-tick mask, so
+// without it the vanish, the arrival and the appear all land on one tick and only the last of
+// each reaches the client. That was the original bug.
 anim(human_fairy_vanish, 0);
-p_telejump(0_50_49_1_33);
+spotanim_pl(fairy_flower_ring, 0, 0);
+p_delay(2);
+p_telejump($dest);
 anim(human_fairy_appear, 0);
-p_delay(0);
+spotanim_pl(fairy_flower_ring, 0, 0);
+p_delay(2);

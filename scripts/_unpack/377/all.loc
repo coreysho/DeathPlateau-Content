@@ -83193,9 +83193,17 @@ offsety=0
 offsety=0
 op1=Squeeze-past
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Zanaris, (2412, 4434) - the hub
 [64_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=fairy_mushroom_ring3
-active=no
+active=yes
+op1=Use
 ambient=20
 hillskew=yes
 
@@ -91323,290 +91331,480 @@ active=no
 resizey=117
 mirror=yes
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Piscatoris Hunter area, (2319, 3619)
+// AND ITS MODEL, which the first version of this did not touch and should have. 377 placed
+// these five as loc_9158 with minigame_start_icon edges - NOT mushroom rings, whatever the
+// debugname says. Activated but left on those models they were a named, clickable nothing:
+// deployed, the Edgeville ring teleported correctly and there was no ring to be seen. The
+// models here are the ones the Zanaris rings use and are known to render as a fairy ring.
 [1_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [1_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [1_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [3_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [3_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [3_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [4_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [4_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [4_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// McGrubor's Wood, (2644, 3495)
+// AND ITS MODEL, which the first version of this did not touch and should have. 377 placed
+// these five as loc_9158 with minigame_start_icon edges - NOT mushroom rings, whatever the
+// debugname says. Activated but left on those models they were a named, clickable nothing:
+// deployed, the Edgeville ring teleported correctly and there was no ring to be seen. The
+// models here are the ones the Zanaris rings use and are known to render as a fairy ring.
 [6_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [6_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [6_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [7_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [7_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [7_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [10_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [10_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [10_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [14_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [14_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [14_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [15_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [15_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [15_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [18_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [18_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [18_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [19_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [19_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [19_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [23_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [23_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [23_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [24_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [24_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [24_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [25_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [25_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [25_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Edgeville, (3129, 3496)
+// AND ITS MODEL, which the first version of this did not touch and should have. 377 placed
+// these five as loc_9158 with minigame_start_icon edges - NOT mushroom rings, whatever the
+// debugname says. Activated but left on those models they were a named, clickable nothing:
+// deployed, the Edgeville ring teleported correctly and there was no ring to be seen. The
+// models here are the ones the Zanaris rings use and are known to render as a fairy ring.
 [27_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [27_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [27_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [29_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [29_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [29_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [30_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [30_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [30_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
@@ -91630,235 +91828,385 @@ blockwalk=no
 blockrange=no
 
 [33_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [33_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [33_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [36_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [36_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [36_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Port Sarim, (3082, 3206)
+// AND ITS MODEL, which the first version of this did not touch and should have. 377 placed
+// these five as loc_9158 with minigame_start_icon edges - NOT mushroom rings, whatever the
+// debugname says. Activated but left on those models they were a named, clickable nothing:
+// deployed, the Edgeville ring teleported correctly and there was no ring to be seen. The
+// models here are the ones the Zanaris rings use and are known to render as a fairy ring.
 [37_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [37_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [37_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [38_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [38_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [38_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [42_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [42_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [42_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [43_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [43_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [43_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [45_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [45_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [45_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Sinclair Mansion, (2705, 3576)
+// AND ITS MODEL, which the first version of this did not touch and should have. 377 placed
+// these five as loc_9158 with minigame_start_icon edges - NOT mushroom rings, whatever the
+// debugname says. Activated but left on those models they were a named, clickable nothing:
+// deployed, the Edgeville ring teleported correctly and there was no ring to be seen. The
+// models here are the ones the Zanaris rings use and are known to render as a fairy ring.
 [47_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [47_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [47_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [53_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [53_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [53_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no

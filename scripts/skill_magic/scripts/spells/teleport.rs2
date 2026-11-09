@@ -80,10 +80,10 @@ if (p_finduid(uid) = true) {
     // give additional affects
     // teleport player. Always a radius of 2
     def_coord $dest = map_findsquare(db_getfield($spell_data, magic_spell_table:tele_coord, 0), 0, 2, ^map_findsquare_lineofwalk);
-    // The ancient teleports use the cache's own zaros_teleport seq and spotanim rather than the
-    // normal book's human_castteleport / teleport_casting pair. Both were already in the 377 cache
-    // (seq 1988, spotanim 392) and unused. Keyed off the spell id range so no other caller of
-    // ~player_teleport_normal - jewellery, quest teleports, random events - is affected.
+    // The ancient teleports use the cache's own ancient casting seq and teleport spotanim rather
+    // than the normal book's human_castteleport / teleport_casting pair. Both were already in the
+    // 377 cache (seq 1979, spotanim 392) and unused. Keyed off the spell id range so no other
+    // caller of ~player_teleport_normal - jewellery, quest teleports, random events - is affected.
     if ($spell >= ^paddewwa_teleport & $spell <= ^ghorrock_teleport) {
         ~player_teleport_ancient($dest);
         return;
@@ -109,8 +109,23 @@ p_delay(2);
 if_close;
 p_stopaction;
 sound_synth(teleport_all, 1, 0);
-anim(zaros_teleport, 0);
-spotanim_pl(zaros_teleport, 92, 0);
+// THE PLAYER'S SEQ AND THE SPOTANIM'S SEQ ARE NOT THE SAME SEQ, though the cache gives them
+// near-identical names. spotanim zaros_teleport (392) plays seq zaros_teleport (1988) on its own
+// model, and 1988's frames are built against animset 531 - which holds exactly two seqs,
+// zaros_teleport and wanted_teleport_in, and not one human_* animation. Handing it to a player
+// posed a human skeleton with another model's bones: the body tore into floating slabs well above
+// where the player stood, which is what "wrong plane" and "contorts" were describing.
+// zaros_vertical_casting (1979) is the player half of the same effect - animset 72, alongside
+// human_caststrike, human_castwave and the rest of the casting poses - and the eight ancient
+// COMBAT spells in magic_combat_spells.dbrow already cast with it.
+anim(zaros_vertical_casting, 0);
+// HEIGHT 0, NOT 92. spotanim height is a lift: ClientPlayer translates the model by
+// (0, 0, -height) before drawing it. spot_zaros_teleport is 224 tall and authored with its base
+// already at y=0 - it is a column meant to stand on the floor - so the 92 that the normal and
+// lunar teleports use lifted the whole thing clear of the ground. Those two want it: their models
+// are authored ABOVE the origin (spot_teleport_casting sits at y -34..-16) and 92 is what puts
+// them at chest height. Which number is right is a property of the model, not of teleporting.
+spotanim_pl(zaros_teleport, 0, 0);
 p_delay(2);
 ~p_telejump_safe($coord);
 

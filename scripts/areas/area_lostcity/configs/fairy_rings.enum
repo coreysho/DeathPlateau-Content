@@ -1,0 +1,32 @@
+// WHAT EACH DIAL READS, in the order the dial turns.
+//
+// NOT ALPHABETICAL, and that is the point. quest_totem's alphabet.enum maps 0-25 to A-Z for the
+// combination door, where any letter is possible. A fairy ring dial carries four letters and turns
+// through them in a fixed order - A D C B, I L K J, P S R Q - so a player turning the first dial
+// once from A gets D, not B. Reusing alphabet.enum here would have put the letters in the wrong
+// order on every dial and made half the codes on the wiki undiallable.
+//
+// Two bits per dial, so the index is 0-3 and every value is a letter.
+[fairy_dial1]
+inputtype=int
+outputtype=string
+val=0,A
+val=1,D
+val=2,C
+val=3,B
+
+[fairy_dial2]
+inputtype=int
+outputtype=string
+val=0,I
+val=1,L
+val=2,K
+val=3,J
+
+[fairy_dial3]
+inputtype=int
+outputtype=string
+val=0,P
+val=1,S
+val=2,R
+val=3,Q

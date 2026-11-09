@@ -700,6 +700,21 @@ cost=1800
 members=yes
 wearpos=righthand
 weight=2lb
+// The two params that make it an axe Bob will look at. Without them bob.rs2 fell through to
+// "Sorry friend, but I can't do anything with that", so an Ent turned a 55,000gp dragon axe into
+// an item whose own description reads "Bob can fix this for me." and nothing in the game could.
+// The art was all here - broken model, manwear, womanwear, the head and its own handle - only the
+// wiring was missing. The combat block below is what the other seven broken hatchets carry; it is
+// wieldable (wearpos=righthand), and without it a player holding one has no attack animation.
+category=weapon_blunt
+param=attackrate,5
+param=slashattack_anim,human_axe_hack
+param=crushattack_anim,human_blunt_pound
+param=defend_anim,human_axe_block
+param=slash_sound,baxe_slash
+param=crush_sound,baxe_crush
+param=to_be_fixed_by_bob,^true
+param=fixed,dragon_axe
 
 [cert_macro_broken_dragon_hatchet]
 certlink=macro_broken_dragon_hatchet

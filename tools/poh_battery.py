@@ -4724,6 +4724,7 @@ _nosrc = sorted(k for k, v in _NOSPEC['objs'].items() if 'osrs_source' not in v)
 check(not _nosrc, 'and what OSRS does instead, so the departure is visible: %s'
       % (_nosrc or 'all of them'))
 
+
 # THE DUPLICATE SECATEURS, which is the one entry whose whole purpose is a check. The working
 # magic secateurs are fairy_enchanted_secateurs (7409); magic_secateurs (8109) came in with a
 # later-cache import, does nothing, and sits one autocomplete away from the one that works. It is

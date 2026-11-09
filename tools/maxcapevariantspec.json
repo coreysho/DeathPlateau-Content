@@ -1163,10 +1163,106 @@
   },
   "god_param": 41,
   "gwd_prot": "gwd_prot_zamorak"
+ },
+ {
+  "key": "veteran",
+  "_models": "ITS OWN MESHES, like the fire, infernal and imbued ancient variants - because the recolour below is no longer the whole of it. The Veteran device is GEOMETRY, and an obj config can repaint a model but cannot add a triangle to one. tools/genveteranmaxcape.py applies the pairs to obj_max_cape and obj_max_hood and strikes the device into the back of the cape; the recol lists are kept here as the record of what the repaint is, and are emitted as []. The device's vertex labels come from the cloth under each one rather than being a single label as on the Veteran cape: the Max cape's back is a patchwork of labels 9, 11, 14, 15 and 16, whose largest one-label square on the midline is twelve units against a device of twenty-four, so a rigid device would tear off the cloth it is printed on.",
+  "models": "veteran",
+  "_custom": "NOT an Old School variant - this server's own, like the Undertaker max cape. Its source is the Veteran cape, which is not earned in game at all: it is granted to the accounts that tested the server before it opened, and handed back by Engine-TS World.veteranCape to any veteran who has not got one. So this is the only variant with TWO gates - the ninety-nines that every variant needs, and a rank that cannot be earned after launch. The osrs_* fields the Old School eleven carry are provenance, and there is none to record.",
+  "source_cape": "veteran_cape",
+  "cape": {
+   "osrs_name": "Veteran max cape",
+   "recol_baked": [
+    [
+     668,
+     4636
+    ],
+    [
+     675,
+     4643
+    ],
+    [
+     784,
+     4626
+    ],
+    [
+     815,
+     4655
+    ],
+    [
+     673,
+     4641
+    ]
+   ],
+   "recol": [],
+   "zoom2d": 2232,
+   "xan2d": 687,
+   "yan2d": 27,
+   "yof2d": -5,
+   "desc": "The cape worn by only the most experienced players. This one was here before the gates opened.",
+   "weight": 453,
+   "cost": 99000,
+   "wearpos": 1,
+   "wearpos2": null,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true
+  },
+  "hood": {
+   "osrs_name": "Veteran max hood",
+   "recol_baked": [
+    [
+     815,
+     4655
+    ],
+    [
+     784,
+     4626
+    ],
+    [
+     675,
+     4643
+    ],
+    [
+     685,
+     4653
+    ],
+    [
+     914,
+     4626
+    ],
+    [
+     945,
+     4657
+    ]
+   ],
+   "recol": [],
+   "zoom2d": 720,
+   "xan2d": 21,
+   "yan2d": 18,
+   "desc": "The hood worn by only the most experienced players. This one was here before the gates opened.",
+   "weight": 453,
+   "cost": null,
+   "wearpos": 0,
+   "wearpos2": 8,
+   "iops": {
+    "1": "Wear"
+   },
+   "members": true
+  },
+  "bonuses": {
+   "slashdefence": 1,
+   "crushdefence": 1,
+   "rangedefence": 2
+  },
+  "osrs_params_not_bonuses": {},
+  "god_param": null
  }
  ],
  "recolours": {
   "_what": "The god variants have no models of their own - they recolour the plain Max cape's and the max hood's. This records what the recolour sources actually hit, because a source that hits nothing makes the piece render as a plain Max cape and NOTHING else notices: not the config, not the linter, not the packed-data check.",
+  "_veteran_bronze": "THE BRONZE IS THE VETERAN CAPE'S OWN RAMP. An hsl16 is (hue>>2)<<10 | (sat>>5)<<7 | light>>1, and obj_veteran_cape_manwear's cloth is one ramp - hue 4, saturation 4 - at eight different lightnesses. The Max cape's five recolour sources are likewise one red ramp (hue 0) at five lightnesses, so each destination keeps its source's LIGHTNESS and takes the veteran hue and saturation. Flattening them to one bronze would have repainted the shading out of the cloth. One exception: the darkest, lightness 16, has no rgb15 that converts back to it, and an obj config can only write rgb15 - so it rounds to 18, which is a colour the Veteran cape itself uses. The hood's own darkest is already 18, so two of its six sources land on the same bronze; they are both near-black shadow and nothing shows.",
   "conversion_is_colour_exact": {
    "_finding": "This build's converted models are colour-identical to OSRS's. Checked by decoding the OSRS models straight out of index 7 and comparing face counts and colour sets with the .ob2 files osrs2ob2.py produced.",
    "face_counts": {

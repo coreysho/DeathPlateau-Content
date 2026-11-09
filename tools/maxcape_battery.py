@@ -476,7 +476,10 @@ for _rel in ('scripts/_unpack/377/all.obj',
              'scripts/areas/area_wilderness/configs/undertaker_outfit.obj',
              # the three imbued ancient capes, added 30 October; without this file three source
              # capes read as missing and SIX checks here fail on a build that is correct
-             'scripts/areas/area_mage_arena/configs/ancient_cape.obj'):
+             'scripts/areas/area_mage_arena/configs/ancient_cape.obj',
+             # the Veteran cape, added 8 November - the fourteenth variant's source, and the only
+             # one that is not earned in game at all: it comes with the rank
+             'scripts/veteran/configs/veteran_cape.obj'):
     ALLOBJ.update(blocks(read(_rel)))
 def _params(f):
     out = {}
