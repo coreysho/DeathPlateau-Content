@@ -175,7 +175,8 @@ switch_npc (npc_type) {
         }
     case barrows_guthan :
         if (random(100) < ^barrows_guthan_effect_pct) {
-            spotanim_npc(barrows_guthan_effect, 92, 0);
+            // spot_barrows_guthan_effect is 300 tall and based at y=0; see skill_magic/.../teleport.rs2.
+            spotanim_npc(barrows_guthan_effect, 0, 0);
             npc_statheal(hitpoints, $damage, 0);
         }
     case barrows_karil :
