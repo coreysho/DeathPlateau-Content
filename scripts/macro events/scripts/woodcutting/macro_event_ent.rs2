@@ -128,22 +128,31 @@ p_opnpc(3);
 if (%macro_ent_counter = 6) {
     %macro_ent_counter = 0;
     def_namedobj $axe_broken = oc_param($axe, broken);
-    // todo: use inv_changeslot?
-    if (inv_total(worn, $axe) > 0) {
-        inv_del(worn, $axe, 1);
-        inv_setslot(worn, ^wearpos_rhand, $axe_broken, 1);
-        ~update_all($axe);
-    } else if (inv_total(inv, $axe) > 0) {
-        inv_del(inv, $axe, 1);
-        inv_add(inv, $axe_broken, 1);
-    }
     mes("That's not a tree, it's an Ent!");
-    mes("The Ent damages your axe!");
+    // AN EVENT THAT CANNOT PUT THE TOOL BACK TOGETHER MUST NOT TAKE IT APART - the rule
+    // macro_event_lost_axe.rs2 already keeps for axe_head, and the same hole on this side.
+    // inv_setslot and inv_add both do nothing with a null obj while inv_del above has already run,
+    // so an axe with no broken form - third age, gilded now, and whatever is added next - was
+    // deleted outright by the Ent: no broken item, no message naming it, nothing to take to Bob.
+    // The Ent still interrupts and still says its line; it just cannot destroy what it cannot
+    // damage.
+    if ($axe_broken ! null) {
+        // todo: use inv_changeslot?
+        if (inv_total(worn, $axe) > 0) {
+            inv_del(worn, $axe, 1);
+            inv_setslot(worn, ^wearpos_rhand, $axe_broken, 1);
+            ~update_all($axe);
+        } else if (inv_total(inv, $axe) > 0) {
+            inv_del(inv, $axe, 1);
+            inv_add(inv, $axe_broken, 1);
+        }
+        mes("The Ent damages your axe!");
+        session_log(^log_adventure, "Broke their <oc_name($axe)>");
+    }
     npc_anim(seq_335, 0); // todo: need a video of this
     npc_facesquare(coord);
     anim(null, 0);
     sound_synth(staff_stab, 1, 0); // osrs used spear sound
-    session_log(^log_adventure, "Broke their <oc_name($axe)>");
     return;
 }
 %macro_ent_counter = add(%macro_ent_counter, 1);
