@@ -1,6 +1,6 @@
-// The fairy ring network: twenty-eight codes, and a ring on the ground for every one of them.
+// The fairy ring network: thirty codes, and a ring on the ground for every one of them.
 //
-// WHY TWENTY-EIGHT AND NOT FIFTY-FIVE. RuneScape has 55 working codes. A code is only worth having
+// WHY THIRTY AND NOT FIFTY-FIVE. RuneScape has 55 working codes. A code is only worth having
 // if there is a ring at the other end, and thirty of RuneScape's lead to Varlamore, Great
 // Kourend, Kebos, the Isle of Souls, Zul-Andra, Grimstone, Yu'biusk and the Abyss: content from
 // 2015 to 2025 with no ground on a 2006 map. Three were added in November 2025.
@@ -42,6 +42,24 @@
 // RuneScape does give ALR away with no requirement, so this is authentic rather than generous,
 // but it is a real change to how runecrafting is trained here. One line removes it.
 //
+// TWO MORE FOUND BY LOOKING HARDER, after the npc-name bug above was fixed. Neither answers to
+// the name RuneScape uses for it, which is why both read as absent twice:
+//
+//   DLR  Tirannwn is here under the Regicide quest's own prefix - regicide_tree_fallen,
+//        regicide_red_mushroom_fade, regicide_corpse - and nothing in it says isafdar. A first
+//        guess of (2200, 3060) landed on High Priestess Zul-Harcinqa instead, which is Zul-Andra.
+//   DLS  In Search of the Myreque is this server's "route" quest, so a search for /myreque/
+//        found nothing. The surface entrance is freedomfighterentrance beside hollowtree_entrance
+//        at (3509, 3447), which IS The Hollows, and Veliaf Hurtz stands at (3505, 9838) in the
+//        cave below. The ring goes two tiles from the hideout door.
+//
+// AIR AND BIP STAY UNBUILT, and the reason is worth keeping so nobody repeats the search. Both
+// are empty islands with no landmark to find, so they were looked for geometrically instead - and
+// the islands that exist are the wrong ones. South-east of Ardougne there is the Fishing Trawler
+// dock (game_trawler_reward_net, winch, anchor) and a 138-tile island of moss giants; on the
+// Salve the only island with room on it is the Nature Spirit's grotto. Putting a ring on any of
+// those and calling it AIR or BIP would be the Port Sarim mistake over again.
+//
 // A CODE IS JUST THE VARP, and it is worth saying why rather than how. The first version of this
 // had two encodings for one thing: %fairy_ring_dial packs dial 1 into the LOW bits, while the
 // lookup key was written dial1 * 16 + dial2 * 4 + dial3, weighting dial 1 highest. Both are
@@ -52,7 +70,7 @@
 //
 // So there is one encoding: the code IS the six bits, dial1 + dial2 * 4 + dial3 * 16, read
 // straight out of the varp. Each dial is 0-3 in the order the dial turns (A D C B / I L K J /
-// P S R Q - see fairy_rings.enum). 64 possible codes, 28 of them real; the rest are a ring that
+// P S R Q - see fairy_rings.enum). 64 possible codes, 30 of them real; the rest are a ring that
 // hums and does nothing, which is what RuneScape does with an unused code too. AIP is 0, so a
 // player who has never touched the dial opens it on a code that goes nowhere.
 
@@ -84,6 +102,8 @@
 ^fairy_code_dkr = 41  // Edgeville
 ^fairy_code_dks = 25  // the polar hunter area
 ^fairy_code_dlq = 53  // north of Nardah
+^fairy_code_dlr = 37  // Isafdar, in Tirannwn
+^fairy_code_dls = 21  // the Myreque's cave
 
 // Where each code puts you: the centre tile of the ring at the far end.
 ^fairy_to_mudskipper    = 0_46_48_51_41    // 2995, 3113
@@ -114,6 +134,8 @@
 ^fairy_to_abyss         = 0_47_75_17_33    // 3025, 4833
 ^fairy_to_tzhaar        = 0_38_80_8_26     // 2440, 5146
 ^fairy_to_fisherking    = 0_41_73_5_5      // 2629, 4677
+^fairy_to_isafdar       = 0_34_48_24_48    // 2200, 3120
+^fairy_to_myreque       = 0_54_153_44_18   // 3500, 9810
 
 // The Lumbridge Swamp shed, which the Zanaris ring by Fairy Nuff has always stepped out to. Kept
 // as a second option on that one ring rather than replaced by the dial - it is a route players
