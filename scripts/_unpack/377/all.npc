@@ -43780,6 +43780,8 @@ vislevel=34
 multivar=fd_icewarrior_dadfree
 multinpc=0,fd_trollblock1
 multinpc=1,fd_troll_dad
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [fd_trollblock1]
 name=Ice block
@@ -43805,6 +43807,8 @@ vislevel=34
 multivar=fd_icewarrior_mumfree
 multinpc=0,fd_trollblock2
 multinpc=1,fd_troll_mum
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [fd_trollblock2]
 name=Ice block
@@ -45358,6 +45362,8 @@ vislevel=1
 multivar=thsfm_vanstrom_hide
 multinpc=0,route_vanstrom_klause_sitting
 multinpc=1,canafis_stranger
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [tog_light_creature]
 name=Light creature
@@ -51938,6 +51944,8 @@ op1=Talk-to
 vislevel=1
 multivar=golem_a
 multinpc=10,magic_carpet_seller5
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [magic_carpet_seller5]
 name=Rug Merchant
@@ -67953,6 +67961,8 @@ vislevel=1
 multivar=elid_rangingchannel
 multinpc=0,elid_ranging_target
 multinpc=1,elid_ranging_target_done
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [champions_doorman]
 name=Larxus
@@ -68613,6 +68623,8 @@ readyanim=devious_dead
 vislevel=1
 multivar=devious_monk
 multinpc=1,devious_monk_dead_visable
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [devious_monk_dead_visable]
 name=Dead Monk
@@ -69667,6 +69679,8 @@ minimap=no
 turnspeed=0
 multivar=enakh_ice_room
 multinpc=0,enakh_dummy_fountain
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [enakh_dummy_fountain]
 name=Crust of ice
@@ -69685,6 +69699,8 @@ minimap=no
 turnspeed=0
 multivar=enakh_smoke_room
 multinpc=0,enakh_dummy_furnace
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [enakh_dummy_furnace]
 name=Furnace grate
@@ -69713,6 +69729,8 @@ vislevel=1
 multivar=enakh_enakhra_form
 multinpc=0,enakh_enakhra_hooded
 multinpc=1,enakh_enakhra_mahjarrat
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [enakh_enakhra_hooded]
 name=Enakhra
@@ -69776,6 +69794,8 @@ multivar=enakh_akthanakos_form
 multinpc=0,enakh_akthanakos_boneguard
 multinpc=1,enakh_akthanakos_freed
 multinpc=2,enakh_akthanakos_mahjarrat
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [enakh_akthanakos_boneguard]
 name=Boneguard
@@ -86852,6 +86872,8 @@ multinpc=15,wise_old_man
 multinpc=20,wise_old_man
 multinpc=190,wise_old_man
 multinpc=200,wise_old_man
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [wom_inactive]
 name=Wise Old Man
@@ -87138,6 +87160,8 @@ multinpc=30,wom_cutscene_2
 multinpc=40,wom_cutscene_2
 multinpc=50,wom_cutscene_2
 multinpc=55,wom_cutscene_2
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [swan_wom_office]
 readyanim=human_ready
@@ -87153,6 +87177,8 @@ multinpc=130,wom_inactive
 multinpc=140,wom_inactive
 multinpc=150,wom_inactive
 multinpc=180,wom_inactive
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [swan_wom_draynor]
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
