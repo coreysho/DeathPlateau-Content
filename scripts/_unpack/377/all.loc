@@ -92184,29 +92184,19 @@ blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring]
-name=Fairy ring
-desc=Better not eat them!
-model=fairy_mushroom_ring3
-active=yes
-op1=Use
-op2=Zanaris
-ambient=20
-hillskew=yes
+model=loc_9158
+active=no
 blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring_edge]
-model=fairy_mushroom_ring_edge
-ambient=20
-hillskew=yes
+model=minigame_start_icon
 active=no
 blockwalk=no
 blockrange=no
 
 [55_fairy_mushroom_ring_corner]
-model=fairy_mushroom_ring_corner
-ambient=20
-hillskew=yes
+model=minigame_start_icon
 active=no
 blockwalk=no
 blockrange=no
