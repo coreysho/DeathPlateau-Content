@@ -83340,9 +83340,17 @@ offsety=0
 offsety=0
 op1=Squeeze-past
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Zanaris, (2412, 4434) - the hub
 [64_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=fairy_mushroom_ring3
-active=no
+active=yes
+op1=Use
 ambient=20
 hillskew=yes
 
@@ -91487,9 +91495,17 @@ active=no
 resizey=117
 mirror=yes
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Piscatoris Hunter area, (2319, 3619)
 [1_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=loc_9158
-active=no
+active=yes
+op1=Use
 blockwalk=no
 blockrange=no
 
@@ -91541,9 +91557,17 @@ active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// McGrubor's Wood, (2644, 3495)
 [6_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=loc_9158
-active=no
+active=yes
+op1=Use
 blockwalk=no
 blockrange=no
 
@@ -91721,9 +91745,17 @@ active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Edgeville, (3129, 3496)
 [27_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=loc_9158
-active=no
+active=yes
+op1=Use
 blockwalk=no
 blockrange=no
 
@@ -91829,9 +91861,17 @@ active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Port Sarim, (3082, 3206)
 [37_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=loc_9158
-active=no
+active=yes
+op1=Use
 blockwalk=no
 blockrange=no
 
@@ -91919,9 +91959,17 @@ active=no
 blockwalk=no
 blockrange=no
 
+// ACTIVATED for the fairy ring network. 377 ships this ring placed on the map and inert -
+// active=no, no name, no op - so it rendered as mushrooms you walked over. The dialling
+// network needs it clickable; the model, footprint and blockwalk are left exactly as they
+// were, so nothing about the world's geometry changes. scripts/areas/area_lostcity.
+// Sinclair Mansion, (2705, 3576)
 [47_fairy_mushroom_ring]
+name=Fairy ring
+desc=Better not eat them!
 model=loc_9158
-active=no
+active=yes
+op1=Use
 blockwalk=no
 blockrange=no
 

@@ -1,0 +1,63 @@
+// The fairy ring network, and the six places on this map that have one.
+//
+// WHY SIX AND NOT FIFTY-FIVE. RuneScape has 55 working codes; this world can honestly carry six,
+// because a ring code is only worth having if there is a ring at the other end. 377 ships eight
+// mushroom rings placed on the map - six of them inert until scripts/_unpack/377/all.loc was
+// given a name and an op for each - and the rest of the network's destinations are Varlamore,
+// Great Kourend, Kebos, the Isle of Souls, Zul-Andra, Grimstone and the Abyss: content from 2015
+// to 2025 that has no ground on a 2006 map. Three of those codes were added in November 2025.
+//
+// So the rings below are the ones 377 itself put down, each keeping the code Jagex gave it:
+//
+//   BKS  Zanaris                    the hub, and the only one 377 dressed properly
+//   AKQ  Piscatoris Hunter area     mapsquare 36_56, the square hunter_piscatoris.rs2 works in
+//   ALS  McGrubor's Wood
+//   DKR  Edgeville
+//   CJR  Sinclair Mansion (east)
+//   AIQ  Port Sarim
+//
+// AIQ IS THE ONE TO ARGUE WITH. In RuneScape that code is Mudskipper Point, a beach; this map's
+// ring is at (3082, 3206), which is open grass and boulders about 95 tiles north-east of there -
+// near Port Sarim, and not on any shoreline. It is not Draynor island either. So the ring is
+// real, placed by 377, and sits where no RuneScape ring sits. AIQ is the nearest honest answer
+// (both are Asgarnia) rather than inventing a letter combination the wiki does not know.
+//
+// A CODE IS JUST THE VARP, and it is worth saying why rather than how. The first version of this
+// had two encodings for one thing: %fairy_ring_dial packs dial 1 into the LOW bits, while the
+// lookup key was written dial1 * 16 + dial2 * 4 + dial3, weighting dial 1 highest. Both are
+// defensible and they disagree - 26 is DKR read one way and CKS read the other - so a test that
+// set the varp directly dialled a dead code while believing it had dialled Edgeville, and a
+// deliberately broken quest gate went unnoticed because the teleport it should have let through
+// was never reachable in the first place.
+//
+// So there is one encoding now: the code IS the six bits, dial1 + dial2 * 4 + dial3 * 16, read
+// straight out of the varp. Each dial is 0-3 in the order the dial turns (A D C B / I L K J /
+// P S R Q - see fairy_rings.enum). 64 possible codes, six of them real; the rest are a ring that
+// hums and does nothing, which is what RuneScape does with an unused code too.
+^fairy_code_bks = 27      // Zanaris
+^fairy_code_akq = 56      // Piscatoris
+^fairy_code_als = 20      // McGrubor's Wood
+^fairy_code_dkr = 41      // Edgeville
+^fairy_code_cjr = 46      // Sinclair Mansion
+^fairy_code_aiq = 48      // Port Sarim
+
+// Where each code puts you: the centre tile of the ring at the far end.
+^fairy_to_zanaris    = 0_37_69_44_18   // 2412, 4434
+^fairy_to_piscatoris = 0_36_56_15_35   // 2319, 3619
+^fairy_to_mcgrubor   = 0_41_54_20_39   // 2644, 3495
+^fairy_to_edgeville  = 0_48_54_57_40   // 3129, 3496
+^fairy_to_sinclair   = 0_42_55_17_56   // 2705, 3576
+^fairy_to_portsarim  = 0_48_50_10_6    // 3082, 3206
+
+// The Lumbridge Swamp shed, which the Zanaris ring by Fairy Nuff has always stepped out to. Kept
+// as a second option on that one ring rather than replaced by the dial - it is a route players
+// already use, and taking it away to add a feature would be a poor trade.
+^fairy_to_swamp = 0_50_49_1_33         // 3201, 3169
+
+// Bit positions in %fairy_ring_dial. Two bits per dial.
+^fairy_dial1_lo = 0
+^fairy_dial1_hi = 1
+^fairy_dial2_lo = 2
+^fairy_dial2_hi = 3
+^fairy_dial3_lo = 4
+^fairy_dial3_hi = 5
