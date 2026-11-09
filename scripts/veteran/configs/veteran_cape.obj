@@ -1,0 +1,53 @@
+// The Veteran cape, for the players who tested the server before it opened.
+//
+// THE MESH IS BUILT FROM SCRATCH, by tools/models/genveterancapemesh.py - a skillcape silhouette
+// drawn as a sheet of vertices, not a copy of an existing cape. Rerun the generator rather than
+// editing the .ob2 files.
+//
+// IT IS FROM SCRATCH BECAUSE THE ATTACK CAPE HAS A HOLE IN IT. Strip that cape of its emblem and
+// render it with nothing behind it and you see the background straight through the middle of its
+// back: Jagex's solid emblem covers the gap rather than mending it. Our device - the rank's own
+// chat icon - is an open shape, so it had to carry a disc behind it to cover the same gap, and
+// that disc was the only reason the cape ever had a circle on it. Every attempt to shrink,
+// reshape or hide the disc failed for its own reason. A mesh with no hole needs no disc.
+//
+// The animation labels are the one thing borrowed: a worn cape is skinned to the player through
+// them and they cannot be invented, so each vertex takes the label of the nearest attack-cape
+// vertex at its own height.
+//
+// The bronze is the same ramp the Veteran chat icon is drawn in, so the rank reads as one thing
+// in chat and on the back, and the device is the chat icon's own shape. It is dark against the
+// cloth, which is this shape's idiom - a skillcape wears a dark grey sword on a gold shield.
+//
+// NO RECOLOURS HERE, unlike every other cape in the build: the colours are generated into the
+// models. A shared mesh recoloured per item needs a list of colour pairs, and a list is a thing
+// that can fall out of step with a mesh.
+//
+// THE DEFENCE IS A PLAIN CAPE'S, deliberately. This is a badge: a reward that is also an upgrade
+// would pull against the launch wipe, which exists to put everyone on the same footing. A Cape of
+// Accomplishment's +9 would have made it worth wearing for its stats.
+//
+// Untradeable, and given back by the server to any veteran who does not have one - see
+// Engine-TS World.grantVeteranCape. Losing it costs nothing but a relog.
+
+[veteran_cape]
+name=Veteran cape
+desc=Worn by those who tested Death Plateau before it opened.
+model=obj_veteran_cape
+manwear=obj_veteran_cape_manwear,0
+womanwear=obj_veteran_cape_womanwear,0
+// The Attack cape's own camera. It suits a cape LYING DOWN, which is what the inventory model
+// is again: looking straight at a standing cape, as an earlier version did, gave a readable icon
+// and an unreadable lump on the ground, because the ground uses this same model.
+2dzoom=2128
+2dxan=504
+2dyof=1
+iop2=Wear
+wearpos=back
+cost=1
+tradeable=no
+weight=1lb
+category=armour_cape
+param=slashdefence,1
+param=crushdefence,1
+param=rangedefence,2

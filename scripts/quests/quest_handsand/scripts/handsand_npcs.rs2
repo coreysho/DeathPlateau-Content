@@ -477,6 +477,14 @@ if (inv_total(inv, handsand_orb_recording) = 0) {
     ~chatplayer("<p,sad>I lost it.");
     ~chatnpc("<p,angry>Then you will have to do it again.");
     inv_add(inv, handsand_orb_storage, 1);
+    // AND THE SERUM WITH IT. This branch has always reserved two inventory slots and its own note
+    // has always said "a fresh orb and serum", and it only ever added the orb - so a player who
+    // lost the recording got the orb back, found the mug full again and had nothing to put in it,
+    // and had to work out for themselves that a SECOND conversation with Rarve would hand the
+    // serum over through ~handsand_rarve_waiting. Both of them, in the conversation that says so.
+    if (inv_total(inv, handsand_truthserum) = 0) {
+        inv_add(inv, handsand_truthserum, 1);
+    }
     %handsand_question1 = ^handsand_off;
     %handsand_question2 = ^handsand_off;
     %handsand_question3 = ^handsand_off;

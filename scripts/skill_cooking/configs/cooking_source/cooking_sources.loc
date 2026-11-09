@@ -148,3 +148,91 @@ length=2
 forceapproach=east
 category=cooking_oven
 bgsound=cooking_loop_1,3
+
+// ---------------------------------------------------------------------------------------------
+// The fires that looked like fires and were not
+// ---------------------------------------------------------------------------------------------
+// Reported from play as "Fire doesn't work in HAM Hideout - try using food on either fire in the
+// dungeon", and it was the same fault as the five ranges above, one family along: cooking runs off
+// category and nothing else, so a fire with no category cooks nothing. favour_campfire is the HAM
+// Hideout's pair of fires AND six more around Burthorpe and the Troll Stronghold - eight placements
+// that have never cooked anything. The other three here are twins of sources that DO cook, down to
+// the name and description:
+//
+//   favour_campfire                        "Fire" / "Hot!"                        = [fire]
+//   farm_fireplace                         "Fireplace" / "A grand old fireplace." = [grandfireplace]
+//   qip_sheep_shearer_fireplacecookingpot  "Cooking pot" / "Something is cooking nicely here."
+//                                                                                 = [fireplacecookingpot]
+//   elid_clay_oven                         "Clay Oven" / "A clay oven for cooking with."
+//
+// Categorised in their own area or quest file rather than moved here, because that file already
+// owns them: viking_house_fire and viking_longhall_fire (Rellekka), the four
+// dwarf_keldagrim_*_fireplace types (each one describing itself as "a lovely place to cook meat"),
+// 100_dave_stove and loc474_16893 ("Cooking range").
+//
+// LEFT ALONE, and listed so the next person does not have to find them again. Each is a placed loc
+// that calls itself a fire, a fireplace or a range and cannot cook, and for each one the question
+// is whether it should - which is a judgment about the place, not about this file:
+//
+//   roving_fire          "Looks to me like a quickly built fire."  Roving Elves' camp, 2290,3146
+//   draynor_fireplace    "Oh for a marshmallow on a stick!"        x3
+//   boardgames_fireplace "A nice and cosy fire."                   x4, the games room
+//   loc_5631             "Glowing embers."                         x5
+//   ogre_fire            "Hot stuff."                              Gu'Tanoth
+//   viking_pig_roast     "Finger licking good!"                    Rellekka
+//   osrsloc_26185        no description                            2820,3555
+//   osrsloc_10660        no description                            x3
+
+[favour_campfire]
+category=cooking_fire
+name=Fire
+desc=Hot!
+model=troll_stronghold_camp_fire
+anim=fire
+blockrange=no
+ambient=75
+contrast=75
+
+[farm_fireplace]
+category=cooking_fire
+name=Fireplace
+desc=A grand old fireplace.
+model=loc_2725
+recol1s=31457
+recol1d=15653
+recol2s=27201
+recol2d=14596
+recol3s=26209
+recol3d=13539
+length=3
+anim=grandfireplace
+bgsound=fire_crackling_med,10
+
+[qip_sheep_shearer_fireplacecookingpot]
+category=cooking_fire
+name=Cooking pot
+desc=Something is cooking nicely here.
+model=qip_sheep_shearer_fireplacecookingpot
+recol1s=13671
+recol1d=7297
+recol2s=12614
+recol2d=12548
+recol3s=11557
+recol3d=10434
+recol4s=10500
+recol4d=13605
+recol5s=9443
+recol5d=7297
+anim=fireplace
+bgsound=cooking_loop_2,3
+
+[elid_clay_oven]
+category=cooking_oven
+name=Clay Oven
+desc=A clay oven for cooking with.
+model=elid_clay_oven
+width=2
+length=2
+ambient=15
+forceapproach=west
+bgsound=fire_crackling_small,3

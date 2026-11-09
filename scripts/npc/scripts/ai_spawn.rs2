@@ -1,4 +1,20 @@
-[ai_spawn,_]
+[ai_spawn,_] ~npc_spawn_defaults;
+
+// WHAT EVERY NPC NEEDS AT SPAWN, as a proc rather than only as the wildcard's body.
+//
+// A trigger written for ONE npc REPLACES the wildcard for that npc - the engine picks the most
+// specific and runs only that - so an [ai_spawn,something] silently costs that npc its combat xp
+// multiplier, its start coord and its spawn facing unless it asks for them. The Spinolyps in the
+// Waterbirth maze had been doing exactly that since their suspicious-water cycle was added.
+// Anything that needs its own ai_spawn calls this first.
+//
+// AND A RECURRING TIMER IS NOT A REASON TO WRITE ONE. npc_settimer here does not last:
+// Npc.resetDefaults writes timerInterval back to the npc TYPE's own timer field, and it runs every
+// time an npc drops a target - so a timer armed at spawn is gone a few ticks into the first fight.
+// timer=<ticks> in the .npc config is the version that survives, because the reset is what reads
+// it. Measured on the King Black Dragon: armed from an ai_spawn its [ai_timer] fired twice in a
+// sixty-tick chase, and from the config field, every tick of it.
+[proc,npc_spawn_defaults]
 %npc_combat_xp_multiplier = npc_param(combat_xp_multiplier);
 %npc_start_coord = npc_coord;
 // Which way it stands, for the npcs that care - see npc/configs/npc_spawn.param. The default of -1

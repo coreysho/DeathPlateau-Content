@@ -1,4 +1,25 @@
+// AUTO-RETALIATE ALWAYS SWINGS, AND KOLODION'S ARENA ALWAYS REFUSES A SWING.
+//
+// p_opnpc(2) is a melee attack whatever the player is holding, and npc_is_attackable blocks melee
+// inside the Mage Arena (skill_combat/scripts/npc/npc_combat.rs2) - so every hit the player took in
+// there printed "Kolodion allows only magical combat within the arena." and did nothing else. In
+// Mage Arena II that is one line per champion attack for the whole fight, three fights long,
+// measured at one per incoming hit.
+//
+// So in the arena: retaliate with the armed spell if there is one, and if there is not, do nothing
+// at all rather than issue a swing that cannot land. The three god spells cannot be autocast on
+// this build (the picker, staff_spells, carries the sixteen elemental spells and nothing else), so
+// the second case is the usual one there and silence is the whole fix.
+//
+// Deliberately NOT changed outside the arena. Old School retaliates with whatever style is armed,
+// this build always melees, and that is a wider question about combat than this queue.
 [queue,playerhit_n_retaliate](npc_uid $nid)
+if (%option_nodef = ^player_auto_retaliate_on & npc_finduid($nid) = true & busy2 = false & ~inzone_coord_pair_table(mage_arena, coord) = true) {
+    if (~player_autocast_enabled = true) {
+        p_opnpct(db_getfield(~get_spell_data(~twinflame_autocast_spell(%autocast_spell)), magic_spell_table:spellcom, 0));
+    }
+    return;
+}
 if (%option_nodef = ^player_auto_retaliate_on & npc_finduid($nid) = true & busy2 = false) {
     // npc flinches player
     if (%action_delay < map_clock) {

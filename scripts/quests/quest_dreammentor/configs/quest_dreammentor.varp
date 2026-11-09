@@ -6,7 +6,10 @@
 // %dm_lastfood      the last thing he ate: "he rejects a food type he was recently given", so the
 //                   twenty pieces have to be three different kinds, rotated
 [dreammentor]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [dreammentor_bits]
 scope=perm
