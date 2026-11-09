@@ -1,6 +1,6 @@
-// The fairy ring network: twenty-five codes, and a ring on the ground for every one of them.
+// The fairy ring network: twenty-eight codes, and a ring on the ground for every one of them.
 //
-// WHY TWENTY-FIVE AND NOT FIFTY-FIVE. RuneScape has 55 working codes. A code is only worth having
+// WHY TWENTY-EIGHT AND NOT FIFTY-FIVE. RuneScape has 55 working codes. A code is only worth having
 // if there is a ring at the other end, and thirty of RuneScape's lead to Varlamore, Great
 // Kourend, Kebos, the Isle of Souls, Zul-Andra, Grimstone, Yu'biusk and the Abyss: content from
 // 2015 to 2025 with no ground on a 2006 map. Three were added in November 2025.
@@ -26,6 +26,22 @@
 // and anyone who learned AIQ in the last week has one letter to relearn. The right-click Zanaris
 // option matters most on this one, since the ring is the only way off.
 //
+// THREE OTHER REALMS THIS MAP DOES HAVE, which the first pass missed by searching the wrong
+// field: findmarks.ts read an npc's name in preference to its debugname, so it reported places
+// absent that are merely named differently. ALR's abyss sits beside abyss_exit_to_fire and the
+// rcu_outer_multi ring, BLP's is among the TzHaar themselves, and BJR's is on the grass outside
+// the Fisher King's castle - a first pass put that one in his throne room, among three
+// painting2_king and six suits of armour.
+//
+// DIR's gorak plane was dropped on the same evidence. There is a Gorak npc at (2865, 5262) on
+// level 2, but the locs around it are God Wars Dungeon's - gwd_pillar_grapple among them - so
+// that is this server's GWD space, not a plane to send anybody to.
+//
+// ALR IS WORTH A SECOND THOUGHT and is flagged rather than hidden: the abyss is the fast
+// runecrafting route, and a fairy ring into it skips the wilderness trip and the Zamorak mage.
+// RuneScape does give ALR away with no requirement, so this is authentic rather than generous,
+// but it is a real change to how runecrafting is trained here. One line removes it.
+//
 // A CODE IS JUST THE VARP, and it is worth saying why rather than how. The first version of this
 // had two encodings for one thing: %fairy_ring_dial packs dial 1 into the LOW bits, while the
 // lookup key was written dial1 * 16 + dial2 * 4 + dial3, weighting dial 1 highest. Both are
@@ -36,7 +52,7 @@
 //
 // So there is one encoding: the code IS the six bits, dial1 + dial2 * 4 + dial3 * 16, read
 // straight out of the varp. Each dial is 0-3 in the order the dial turns (A D C B / I L K J /
-// P S R Q - see fairy_rings.enum). 64 possible codes, 25 of them real; the rest are a ring that
+// P S R Q - see fairy_rings.enum). 64 possible codes, 28 of them real; the rest are a ring that
 // hums and does nothing, which is what RuneScape does with an unused code too. AIP is 0, so a
 // player who has never touched the dial opens it on a code that goes nowhere.
 
@@ -46,12 +62,15 @@
 ^fairy_code_aks = 24  // Feldip hunter area
 ^fairy_code_alp = 4   // the Lighthouse
 ^fairy_code_alq = 52  // the Haunted Woods
+^fairy_code_alr = 36  // the Abyssal Area
 ^fairy_code_als = 20  // McGrubor's Wood
 ^fairy_code_biq = 51  // the Kalphite Hive
 ^fairy_code_bis = 19  // Ardougne, by the zoo
+^fairy_code_bjr = 47  // the Fisher King's realm
 ^fairy_code_bkp = 11  // Chompy marsh
 ^fairy_code_bkr = 43  // Mort Myre
 ^fairy_code_bks = 27  // Zanaris
+^fairy_code_blp = 7   // the TzHaar city
 ^fairy_code_blr = 39  // the Legends' Guild
 ^fairy_code_cip = 2   // Miscellania
 ^fairy_code_ciq = 50  // north-west of Yanille
@@ -92,6 +111,9 @@
 ^fairy_to_edgeville     = 0_48_54_57_40    // 3129, 3496
 ^fairy_to_polar         = 0_42_59_18_1     // 2706, 3777
 ^fairy_to_nardah        = 0_53_46_22_61    // 3414, 3005
+^fairy_to_abyss         = 0_47_75_17_33    // 3025, 4833
+^fairy_to_tzhaar        = 0_38_80_8_26     // 2440, 5146
+^fairy_to_fisherking    = 0_41_73_5_5      // 2629, 4677
 
 // The Lumbridge Swamp shed, which the Zanaris ring by Fairy Nuff has always stepped out to. Kept
 // as a second option on that one ring rather than replaced by the dial - it is a route players

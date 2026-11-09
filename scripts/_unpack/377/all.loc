@@ -92072,55 +92072,85 @@ blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [49_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [50_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring]
-model=loc_9158
-active=no
+name=Fairy ring
+desc=Better not eat them!
+model=fairy_mushroom_ring3
+active=yes
+op1=Use
+op2=Zanaris
+ambient=20
+hillskew=yes
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring_edge]
-model=minigame_start_icon
+model=fairy_mushroom_ring_edge
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no
 
 [52_fairy_mushroom_ring_corner]
-model=minigame_start_icon
+model=fairy_mushroom_ring_corner
+ambient=20
+hillskew=yes
 active=no
 blockwalk=no
 blockrange=no

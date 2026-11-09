@@ -54,6 +54,9 @@
 [oploc1,42_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,43_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,45_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,49_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,50_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,52_fairy_mushroom_ring] @fairy_ring_use;
 
 // THE WAY BACK, without dialling it. RuneScape puts a "Zanaris" option on every ring except the
 // ones already in Zanaris, because BKS is the one code every player dials a hundred times and
@@ -88,6 +91,9 @@
 [oploc2,42_fairy_mushroom_ring] @fairy_ring_zanaris;
 [oploc2,43_fairy_mushroom_ring] @fairy_ring_zanaris;
 [oploc2,45_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,49_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,50_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,52_fairy_mushroom_ring] @fairy_ring_zanaris;
 
 [oploc1,fairy_mushroom_ring]
 p_walk(loc_coord);
@@ -197,12 +203,15 @@ switch_int($code) {
     case ^fairy_code_aks : @fairy_ring_travel(^fairy_to_feldip);
     case ^fairy_code_alp : @fairy_ring_travel(^fairy_to_lighthouse);
     case ^fairy_code_alq : @fairy_ring_travel(^fairy_to_hauntedwoods);
+    case ^fairy_code_alr : @fairy_ring_travel(^fairy_to_abyss);
     case ^fairy_code_als : @fairy_ring_travel(^fairy_to_mcgrubor);
     case ^fairy_code_biq : @fairy_ring_travel(^fairy_to_kalphite);
     case ^fairy_code_bis : @fairy_ring_travel(^fairy_to_ardougnezoo);
+    case ^fairy_code_bjr : @fairy_ring_travel(^fairy_to_fisherking);
     case ^fairy_code_bkp : @fairy_ring_travel(^fairy_to_chompy);
     case ^fairy_code_bkr : @fairy_ring_travel(^fairy_to_mortmyre);
     case ^fairy_code_bks : @fairy_ring_travel(^fairy_to_zanaris);
+    case ^fairy_code_blp : @fairy_ring_travel(^fairy_to_tzhaar);
     case ^fairy_code_blr : @fairy_ring_travel(^fairy_to_legends);
     case ^fairy_code_cip : @fairy_ring_travel(^fairy_to_miscellania);
     case ^fairy_code_ciq : @fairy_ring_travel(^fairy_to_yanille);
@@ -217,7 +226,7 @@ switch_int($code) {
     case ^fairy_code_dks : @fairy_ring_travel(^fairy_to_polar);
     case ^fairy_code_dlq : @fairy_ring_travel(^fairy_to_nardah);
     case default :
-        // 39 of the 64 codes land here. Most are real RuneScape codes whose destination is
+        // 36 of the 64 codes land here. Most are real RuneScape codes whose destination is
         // 2015-2025 content with no ground on a 2006 map; three more (DJP, AJS, CKP) are places
         // this map genuinely lacks - see fairy_rings.constant. Saying "nothing happens" is honest
         // about that in a way "invalid code" would not be.
