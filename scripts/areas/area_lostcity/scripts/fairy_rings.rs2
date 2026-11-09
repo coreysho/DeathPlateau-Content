@@ -143,8 +143,17 @@ switch_int($code) {
 // this same reason. The seqs are seven frames each and are one another reversed, so the pair reads
 // as one movement: dissolve here, resolve there.
 [label,fairy_ring_travel](coord $dest)
+// The anim alone reads as a plain fade out and back in - the player shrinks away and returns and
+// nothing else happens. `fairy_flower_ring` is the ring of fairy sparkles that goes with it, at
+// height 0 so it sits on the ground around the feet rather than over the head; both ends get one,
+// because arriving with no effect looked like a different (and worse) thing than leaving with one.
+// The p_delay either side is not padding: anim() and spotanim() both set a per-tick mask, so
+// without it the vanish, the arrival and the appear all land on one tick and only the last of
+// each reaches the client. That was the original bug.
 anim(human_fairy_vanish, 0);
+spotanim_pl(fairy_flower_ring, 0, 0);
 p_delay(2);
 p_telejump($dest);
 anim(human_fairy_appear, 0);
+spotanim_pl(fairy_flower_ring, 0, 0);
 p_delay(2);
