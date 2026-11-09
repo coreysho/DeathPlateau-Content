@@ -352,12 +352,36 @@ if (%feud_var_comp_gangs < ^feud_gangs_both) {
 // =========================================================================== Ali the Operator
 // The Menaphite boss in the purple tent, who renders only at feud_boss_vis = 1 - and nothing ever
 // set that bit, so he could not be seen, let alone joined. He is set visible by the camel joke,
+// THE THIEVING LICENCE IS A FUNCTION OF THE STAGE, not of a conversation.
+//
+// feud_npc_multi decides which ops the villagers, the bandit guards and the doorman carry, so a
+// character whose licence is behind their stage cannot click the thing the quest is asking for.
+// Granting it on the transition alone left every character who had ALREADY passed that
+// conversation stuck for good: the router below sends them to feud_operator_blackjack, which
+// returns on its reminder without touching the licence. So it is reconciled from the stage
+// instead, wherever a stuck player would naturally go.
+//
+// IT ONLY EVER RAISES. The licence stays at two after the quest as one of its rewards, and a
+// reconcile that worked downwards would take that reward back off anybody who finished.
+[proc,feud_licence_from_stage]()()
+def_int $want = ^feud_thief_none;
+if (%feud_var >= ^feud_pickpocket) {
+    $want = ^feud_thief_lure;
+}
+if (%feud_var >= ^feud_blackjack) {
+    $want = ^feud_thief_knock;
+}
+if (%feud_npc_multi < $want) {
+    %feud_npc_multi = $want;
+}
+
 // which is when he notices you.
 [opnpc1,feud_menap_boss]
 if (%feud_var < ^feud_camels) {
     ~chatnpc("<p,angry>Out.");
     return;
 }
+~feud_licence_from_stage;
 if (%feud_var >= ^feud_jewels) {
     @feud_operator_traitor;
 }

@@ -553,6 +553,9 @@ mes("Both gangs lost everybody who gave orders inside one afternoon. The street 
 [opnpc1,feud_villager_multi_3] @feud_villager_talk;
 
 [label,feud_villager_talk]
+// Talking to a villager is the other thing a player does when the option they were told to use is
+// not on the menu, so the licence is reconciled here too. See feud_licence_from_stage.
+~feud_licence_from_stage;
 if (%feud_var = ^feud_menaphite_down) {
     ~chatplayer("<p,neutral>The Menaphite boss is asleep and their big man is finished.");
     ~chatnpc("<p,shock>...both of them?");
