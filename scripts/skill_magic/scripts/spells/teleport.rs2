@@ -119,7 +119,13 @@ sound_synth(teleport_all, 1, 0);
 // human_caststrike, human_castwave and the rest of the casting poses - and the eight ancient
 // COMBAT spells in magic_combat_spells.dbrow already cast with it.
 anim(zaros_vertical_casting, 0);
-spotanim_pl(zaros_teleport, 92, 0);
+// HEIGHT 0, NOT 92. spotanim height is a lift: ClientPlayer translates the model by
+// (0, 0, -height) before drawing it. spot_zaros_teleport is 224 tall and authored with its base
+// already at y=0 - it is a column meant to stand on the floor - so the 92 that the normal and
+// lunar teleports use lifted the whole thing clear of the ground. Those two want it: their models
+// are authored ABOVE the origin (spot_teleport_casting sits at y -34..-16) and 92 is what puts
+// them at chest height. Which number is right is a property of the model, not of teleporting.
+spotanim_pl(zaros_teleport, 0, 0);
 p_delay(2);
 ~p_telejump_safe($coord);
 

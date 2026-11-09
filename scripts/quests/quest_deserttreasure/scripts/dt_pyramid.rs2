@@ -241,7 +241,8 @@ if (%deserttreasure = ^dt_azzanadra_freed) {
     if_close;
     p_delay(1);
     anim(human_pray, 0);
-    spotanim_pl(zaros_teleport, 92, 0);
+    // Ground-anchored model; see the note in skill_magic/scripts/spells/teleport.rs2.
+    spotanim_pl(zaros_teleport, 0, 0);
     sound_synth(magical_barrier, 1, 0);
     p_delay(3);
     queue(dt_quest_complete, 0, 0);
