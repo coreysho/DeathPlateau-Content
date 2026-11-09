@@ -1,26 +1,30 @@
-// The fairy ring network, and the six places on this map that have one.
+// The fairy ring network: twenty-five codes, and a ring on the ground for every one of them.
 //
-// WHY SIX AND NOT FIFTY-FIVE. RuneScape has 55 working codes; this world can honestly carry six,
-// because a ring code is only worth having if there is a ring at the other end. 377 ships eight
-// mushroom rings placed on the map - six of them inert until scripts/_unpack/377/all.loc was
-// given a name and an op for each - and the rest of the network's destinations are Varlamore,
-// Great Kourend, Kebos, the Isle of Souls, Zul-Andra, Grimstone and the Abyss: content from 2015
-// to 2025 that has no ground on a 2006 map. Three of those codes were added in November 2025.
+// WHY TWENTY-FIVE AND NOT FIFTY-FIVE. RuneScape has 55 working codes. A code is only worth having
+// if there is a ring at the other end, and thirty of RuneScape's lead to Varlamore, Great
+// Kourend, Kebos, the Isle of Souls, Zul-Andra, Grimstone, Yu'biusk and the Abyss: content from
+// 2015 to 2025 with no ground on a 2006 map. Three were added in November 2025.
 //
-// So the rings below are the ones 377 itself put down, each keeping the code Jagex gave it:
+// Three more were ruled out by looking rather than guessing, with tools/sim/ringsites.ts:
 //
-//   BKS  Zanaris                    the hub, and the only one 377 dressed properly
-//   AKQ  Piscatoris Hunter area     mapsquare 36_56, the square hunter_piscatoris.rs2 works in
-//   ALS  McGrubor's Wood
-//   DKR  Edgeville
-//   CJR  Sinclair Mansion (east)
-//   AIQ  Port Sarim
+//   DJP  Tower of Life       not on this map. No loc and no npc anywhere matches it.
+//   AJS  penguins, Miscellania   Cold War content. There are no penguin locs at all, and the
+//                            only Penguin npc on the map is in the Ardougne zoo pen.
+//   CKP  cosmic entity plane the plane has no clear 3x3 anywhere on it. A ring needs nine tiles.
 //
-// AIQ IS THE ONE TO ARGUE WITH. In RuneScape that code is Mudskipper Point, a beach; this map's
-// ring is at (3082, 3206), which is open grass and boulders about 95 tiles north-east of there -
-// near Port Sarim, and not on any shoreline. It is not Draynor island either. So the ring is
-// real, placed by 377, and sits where no RuneScape ring sits. AIQ is the nearest honest answer
-// (both are Asgarnia) rather than inventing a letter combination the wiki does not know.
+// EVERY COORDINATE BELOW WAS PROBED, not estimated. Each is walkable, holds no scenery, is joined
+// to the mainland, is outdoors by a wall test, fits inside one map square, and has surroundings
+// that name the place it claims to be - kalphite_burrow_entrance beside BIQ, npc:Kruk beside CLR,
+// mudskipper_sign beside AIQ. That last check is the one that matters: three first drafts were in
+// the wrong place entirely, including a "polar hunter area" that landed on Piscatoris next to an
+// existing ring, and an "Ardougne Zoo" inside a house with a bath in it.
+//
+// CLP IS A CORRECTION. This file used to call the ring at (3082, 3206) Port Sarim, give it the
+// code AIQ, and state outright that "it is not Draynor island either". That was wrong on both
+// counts. A flood fill from that tile reaches 40 tiles and stops: it is an islet, which is
+// exactly what RuneScape's CLP is. So it is CLP now, AIQ has gone to the real Mudskipper Point,
+// and anyone who learned AIQ in the last week has one letter to relearn. The right-click Zanaris
+// option matters most on this one, since the ring is the only way off.
 //
 // A CODE IS JUST THE VARP, and it is worth saying why rather than how. The first version of this
 // had two encodings for one thing: %fairy_ring_dial packs dial 1 into the LOW bits, while the
@@ -30,24 +34,64 @@
 // deliberately broken quest gate went unnoticed because the teleport it should have let through
 // was never reachable in the first place.
 //
-// So there is one encoding now: the code IS the six bits, dial1 + dial2 * 4 + dial3 * 16, read
+// So there is one encoding: the code IS the six bits, dial1 + dial2 * 4 + dial3 * 16, read
 // straight out of the varp. Each dial is 0-3 in the order the dial turns (A D C B / I L K J /
-// P S R Q - see fairy_rings.enum). 64 possible codes, six of them real; the rest are a ring that
-// hums and does nothing, which is what RuneScape does with an unused code too.
-^fairy_code_bks = 27      // Zanaris
-^fairy_code_akq = 56      // Piscatoris
-^fairy_code_als = 20      // McGrubor's Wood
-^fairy_code_dkr = 41      // Edgeville
-^fairy_code_cjr = 46      // Sinclair Mansion
-^fairy_code_aiq = 48      // Port Sarim
+// P S R Q - see fairy_rings.enum). 64 possible codes, 25 of them real; the rest are a ring that
+// hums and does nothing, which is what RuneScape does with an unused code too. AIP is 0, so a
+// player who has never touched the dial opens it on a code that goes nowhere.
+
+^fairy_code_aiq = 48  // Mudskipper Point
+^fairy_code_ajr = 44  // slayer cave SE of Rellekka
+^fairy_code_akq = 56  // Piscatoris
+^fairy_code_aks = 24  // Feldip hunter area
+^fairy_code_alp = 4   // the Lighthouse
+^fairy_code_alq = 52  // the Haunted Woods
+^fairy_code_als = 20  // McGrubor's Wood
+^fairy_code_biq = 51  // the Kalphite Hive
+^fairy_code_bis = 19  // Ardougne, by the zoo
+^fairy_code_bkp = 11  // Chompy marsh
+^fairy_code_bkr = 43  // Mort Myre
+^fairy_code_bks = 27  // Zanaris
+^fairy_code_blr = 39  // the Legends' Guild
+^fairy_code_cip = 2   // Miscellania
+^fairy_code_ciq = 50  // north-west of Yanille
+^fairy_code_cjr = 46  // Sinclair Mansion (east)
+^fairy_code_ckr = 42  // south of Tai Bwo Wannai
+^fairy_code_cks = 26  // Canifis
+^fairy_code_clp = 6   // Draynor island
+^fairy_code_clr = 38  // Ape Atoll
+^fairy_code_dis = 17  // the Wizards' Tower
+^fairy_code_dkp = 9   // the Karamja gnome glider
+^fairy_code_dkr = 41  // Edgeville
+^fairy_code_dks = 25  // the polar hunter area
+^fairy_code_dlq = 53  // north of Nardah
 
 // Where each code puts you: the centre tile of the ring at the far end.
-^fairy_to_zanaris    = 0_37_69_44_18   // 2412, 4434
-^fairy_to_piscatoris = 0_36_56_15_35   // 2319, 3619
-^fairy_to_mcgrubor   = 0_41_54_20_39   // 2644, 3495
-^fairy_to_edgeville  = 0_48_54_57_40   // 3129, 3496
-^fairy_to_sinclair   = 0_42_55_17_56   // 2705, 3576
-^fairy_to_portsarim  = 0_48_50_10_6    // 3082, 3206
+^fairy_to_mudskipper    = 0_46_48_51_41    // 2995, 3113
+^fairy_to_trollcave     = 0_43_56_28_30    // 2780, 3614
+^fairy_to_piscatoris    = 0_36_56_15_35    // 2319, 3619
+^fairy_to_feldip        = 0_39_45_60_44    // 2556, 2924
+^fairy_to_lighthouse    = 0_39_56_9_50     // 2505, 3634
+^fairy_to_hauntedwoods  = 0_56_55_16_3     // 3600, 3523
+^fairy_to_mcgrubor      = 0_41_54_20_39    // 2644, 3495
+^fairy_to_kalphite      = 0_50_48_30_34    // 3230, 3106
+^fairy_to_ardougnezoo   = 0_40_51_36_13    // 2596, 3277
+^fairy_to_chompy        = 0_37_47_25_37    // 2393, 3045
+^fairy_to_mortmyre      = 0_54_53_14_38    // 3470, 3430
+^fairy_to_zanaris       = 0_37_69_44_18    // 2412, 4434
+^fairy_to_legends       = 0_42_52_45_25    // 2733, 3353
+^fairy_to_miscellania   = 0_39_60_15_46    // 2511, 3886
+^fairy_to_yanille       = 0_39_48_25_55    // 2521, 3127
+^fairy_to_sinclair      = 0_42_55_17_56    // 2705, 3576
+^fairy_to_taibwo        = 0_43_47_45_1     // 2797, 3009
+^fairy_to_canifis       = 0_53_54_55_14    // 3447, 3470
+^fairy_to_draynorisland = 0_48_50_10_6     // 3082, 3206
+^fairy_to_apeatoll      = 0_42_43_24_33    // 2712, 2785
+^fairy_to_wiztower      = 0_48_49_36_13    // 3108, 3149
+^fairy_to_karamjaglider = 0_46_46_26_34    // 2970, 2978
+^fairy_to_edgeville     = 0_48_54_57_40    // 3129, 3496
+^fairy_to_polar         = 0_42_59_18_1     // 2706, 3777
+^fairy_to_nardah        = 0_53_46_22_61    // 3414, 3005
 
 // The Lumbridge Swamp shed, which the Zanaris ring by Fairy Nuff has always stepped out to. Kept
 // as a second option on that one ring rather than replaced by the dial - it is a route players

@@ -35,6 +35,25 @@
 [oploc1,37_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,47_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,fairy_mushroom_ring3] @fairy_ring_use;
+[oploc1,3_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,4_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,7_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,10_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,14_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,15_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,18_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,19_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,23_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,24_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,25_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,29_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,30_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,33_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,36_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,38_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,42_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,43_fairy_mushroom_ring] @fairy_ring_use;
+[oploc1,45_fairy_mushroom_ring] @fairy_ring_use;
 
 // THE WAY BACK, without dialling it. RuneScape puts a "Zanaris" option on every ring except the
 // ones already in Zanaris, because BKS is the one code every player dials a hundred times and
@@ -50,6 +69,25 @@
 [oploc2,27_fairy_mushroom_ring] @fairy_ring_zanaris;
 [oploc2,37_fairy_mushroom_ring] @fairy_ring_zanaris;
 [oploc2,47_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,3_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,4_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,7_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,10_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,14_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,15_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,18_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,19_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,23_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,24_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,25_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,29_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,30_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,33_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,36_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,38_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,42_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,43_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,45_fairy_mushroom_ring] @fairy_ring_zanaris;
 
 [oploc1,fairy_mushroom_ring]
 p_walk(loc_coord);
@@ -153,16 +191,36 @@ if (%fairy_farmers_quest < ^fairy_complete) {
 // fairy_rings.constant. The dials ARE the code.
 def_int $code = getbit_range(%fairy_ring_dial, ^fairy_dial1_lo, ^fairy_dial3_hi);
 switch_int($code) {
-    case ^fairy_code_bks : @fairy_ring_travel(^fairy_to_zanaris);
+    case ^fairy_code_aiq : @fairy_ring_travel(^fairy_to_mudskipper);
+    case ^fairy_code_ajr : @fairy_ring_travel(^fairy_to_trollcave);
     case ^fairy_code_akq : @fairy_ring_travel(^fairy_to_piscatoris);
+    case ^fairy_code_aks : @fairy_ring_travel(^fairy_to_feldip);
+    case ^fairy_code_alp : @fairy_ring_travel(^fairy_to_lighthouse);
+    case ^fairy_code_alq : @fairy_ring_travel(^fairy_to_hauntedwoods);
     case ^fairy_code_als : @fairy_ring_travel(^fairy_to_mcgrubor);
-    case ^fairy_code_dkr : @fairy_ring_travel(^fairy_to_edgeville);
+    case ^fairy_code_biq : @fairy_ring_travel(^fairy_to_kalphite);
+    case ^fairy_code_bis : @fairy_ring_travel(^fairy_to_ardougnezoo);
+    case ^fairy_code_bkp : @fairy_ring_travel(^fairy_to_chompy);
+    case ^fairy_code_bkr : @fairy_ring_travel(^fairy_to_mortmyre);
+    case ^fairy_code_bks : @fairy_ring_travel(^fairy_to_zanaris);
+    case ^fairy_code_blr : @fairy_ring_travel(^fairy_to_legends);
+    case ^fairy_code_cip : @fairy_ring_travel(^fairy_to_miscellania);
+    case ^fairy_code_ciq : @fairy_ring_travel(^fairy_to_yanille);
     case ^fairy_code_cjr : @fairy_ring_travel(^fairy_to_sinclair);
-    case ^fairy_code_aiq : @fairy_ring_travel(^fairy_to_portsarim);
+    case ^fairy_code_ckr : @fairy_ring_travel(^fairy_to_taibwo);
+    case ^fairy_code_cks : @fairy_ring_travel(^fairy_to_canifis);
+    case ^fairy_code_clp : @fairy_ring_travel(^fairy_to_draynorisland);
+    case ^fairy_code_clr : @fairy_ring_travel(^fairy_to_apeatoll);
+    case ^fairy_code_dis : @fairy_ring_travel(^fairy_to_wiztower);
+    case ^fairy_code_dkp : @fairy_ring_travel(^fairy_to_karamjaglider);
+    case ^fairy_code_dkr : @fairy_ring_travel(^fairy_to_edgeville);
+    case ^fairy_code_dks : @fairy_ring_travel(^fairy_to_polar);
+    case ^fairy_code_dlq : @fairy_ring_travel(^fairy_to_nardah);
     case default :
-        // 58 of the 64 codes land here, and most of them are real RuneScape codes whose
-        // destination is 2015-2025 content. Saying "nothing happens" is honest about that in a
-        // way "invalid code" would not be.
+        // 39 of the 64 codes land here. Most are real RuneScape codes whose destination is
+        // 2015-2025 content with no ground on a 2006 map; three more (DJP, AJS, CKP) are places
+        // this map genuinely lacks - see fairy_rings.constant. Saying "nothing happens" is honest
+        // about that in a way "invalid code" would not be.
         mes("The ring hums for a moment, and settles. Nothing happens.");
 }
 
