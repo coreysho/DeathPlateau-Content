@@ -413,6 +413,12 @@ if (%feud_var_urchin < ^feud_urchin_used) {
 ~chatnpc("<p,happy>No. Now the other way round - some of them you cannot distract, so you put them to sleep instead.");
 ~chatnpc("<p,neutral>There is a man by the bar who sells blackjacks. Buy one, get a villager somewhere quiet, and knock him down before you go through his pockets.");
 %feud_var = ^feud_blackjack;
+// AND THE LICENCE WITH IT, which is what was missing: Knock-Out is an op the CACHE only puts on
+// the third state of a villager, so a player told to knock one down could not, and the quest
+// stopped here. feud_operator_blackjack below also sets this, but it only runs once a villager
+// has already been knocked down and robbed - it was granting the option after the step that
+// needs it.
+%feud_npc_multi = ^feud_thief_knock;
 ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
 ~mesbox("A man has appeared near the bar with a bundle of short weighted sticks, which is the kind of thing that happens in this village when the big tent decides it should.");
 
@@ -512,6 +518,10 @@ p_delay(2);
 
 // Lure, which the second multinpc state adds. It is what puts a villager somewhere nobody is
 // watching, and it is the half of the blackjack trick that is not the blackjack.
+// ALL THREE, because the cache does. The Lure and Knock-Out words sit on the second and third
+// states of every villager's children, so a menu offers them on all three groups; binding two of
+// them left an option that did nothing on the other, which is worse than no option at all.
+[opnpc4,feud_villager_multi_1] @feud_villager_lure;
 [opnpc4,feud_villager_multi_2] @feud_villager_lure;
 [opnpc4,feud_villager_multi_3] @feud_villager_lure;
 
@@ -525,7 +535,10 @@ npc_say("What? Where?");
 ~mesbox("He follows you round the corner, complaining, and stops where nobody can see either of you. Now would be the moment.");
 %feud_distracted = ^feud_on;
 
-// Knock-Out, the third state, and the only way the quest's own pickpocket succeeds.
+// Knock-Out, the third state, and the only way the quest's own pickpocket succeeds. On all three
+// for the same reason as Lure above.
+[opnpc5,feud_villager_multi_1] @feud_villager_knock;
+[opnpc5,feud_villager_multi_2] @feud_villager_knock;
 [opnpc5,feud_villager_multi_3] @feud_villager_knock;
 
 [label,feud_villager_knock]
