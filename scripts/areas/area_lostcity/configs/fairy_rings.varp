@@ -1,0 +1,16 @@
+// THE CODE ON THE DIALS, remembered between sessions.
+//
+// Three dials, two bits each, in bits 0-5: dial 1 in 0-1, dial 2 in 2-3, dial 3 in 4-5. Four
+// letters per dial is exactly two bits, so the whole code is six bits and there is no invalid
+// state to guard against - every value 0-63 is a code somebody could have dialled, which is why
+// the lookup answers "nothing happens" rather than erroring.
+//
+// scope=perm because RuneScape's rings remember where you last went, and a player who hops
+// Zanaris -> Edgeville every login should not re-dial DKR each time.
+//
+// protect=no because [if_button,...] reads and writes it. The tribal door's varp says the same
+// thing for the same reason (%handelmort_traps_disabled, quest_totem), and so do skill_guide.varp
+// and game_options.varp: a protected varp is unreadable from a button trigger.
+[fairy_ring_dial]
+scope=perm
+protect=no
