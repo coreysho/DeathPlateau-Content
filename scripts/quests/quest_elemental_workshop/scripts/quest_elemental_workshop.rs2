@@ -250,13 +250,16 @@ if($last_useitem = elemental_workshop_lava_bowl_full) {
     mes("You empty the lava in the furnace.");
     inv_del(inv, elemental_workshop_lava_bowl_full, 1);
     inv_add(inv, elemental_workshop_lava_bowl, 1);
+    // The lava is poured in the tick the bowl empties. Four ticks stood between the two, and a
+    // player who clicked away in them had carried lava up from the trough for nothing.
+    def_int $was_lit = testbit(%elemental_workshop_bits, ^elemental_workshop_furnace_lit);
+    %elemental_workshop_bits = setbit(%elemental_workshop_bits, ^elemental_workshop_furnace_lit);
     p_delay(4);
-    if(testbit(%elemental_workshop_bits, ^elemental_workshop_furnace_lit) = ^true) {
+    if($was_lit = ^true) {
         mes("The lava makes little difference to the furnace's searing heat.");
         return;
     }
     mes("The furnace bursts in to life.");
-    %elemental_workshop_bits = setbit(%elemental_workshop_bits, ^elemental_workshop_furnace_lit);
 }
 if(testbit(%elemental_workshop_bits, ^elemental_workshop_furnace_lit) = ^false) {
     mes("The furnace is cold and useless for anything.");

@@ -504,12 +504,18 @@ if ($element = ^dt_elem_blood) { %fd_column_blood = 1; }
 else if ($element = ^dt_elem_smoke) { %fd_column_fire = 1; }
 else if ($element = ^dt_elem_ice) { %fd_column_ice = 1; }
 else { %fd_column_shadow = 1; }
-sound_synth(magical_barrier, 1, 0);
-p_delay(2);
+// The fourth diamond is in: the quest moves with it rather than two ticks later, where a click
+// would leave four diamonds spent and the pyramid shut.
+def_boolean $all_four = false;
 if (%fd_column_blood = 1 & %fd_column_fire = 1 & %fd_column_ice = 1 & %fd_column_shadow = 1) {
-    ~mesbox("All four obelisks blaze at once. Somewhere below you, something very old shifts in its sleep.|The pyramid has opened.");
+    $all_four = true;
     %deserttreasure = ^dt_diamonds_placed;
     ~send_quest_progress(questlist:deserttreasure, %deserttreasure, ^deserttreasure_complete);
+}
+sound_synth(magical_barrier, 1, 0);
+p_delay(2);
+if ($all_four = true) {
+    ~mesbox("All four obelisks blaze at once. Somewhere below you, something very old shifts in its sleep.|The pyramid has opened.");
     return;
 }
 ~mesbox("The obelisk hums with light. Three more to go.");

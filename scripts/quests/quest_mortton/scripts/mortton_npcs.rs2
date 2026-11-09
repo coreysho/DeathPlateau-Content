@@ -143,6 +143,24 @@ if ($visible_bit > -1 & testbit(%morttonmulti, $visible_bit) = ^true) {
 }
 inv_del(inv, $item, 1);
 inv_add(inv, $left, 1);
+// THE DOSE IS SPENT HERE. Three ticks of script follow it, and a player who clicks away in them
+// used to lose the dose and leave the villager uncured - so the bits that record the cure are
+// set in the same tick, and only the writing-up waits.
+if ($visible_bit > -1) {
+    %morttonmulti = setbit(%morttonmulti, $visible_bit);
+    %morttonmulti = setbit(%morttonmulti, $used_bit);
+    // Curing Razmire is what puts the player onto the shades, and curing Ulsquire is what sends
+    // them back - both here, with the cure, because a cured villager refuses a second dose and
+    // the quest would have nothing else to move it.
+    if ($visible_bit = ^razmire_visible & %morttonquest = ^mortton_made_serum) {
+        %morttonquest = ^mortton_kill_shades;
+        ~send_quest_progress(questlist:mortton, %morttonquest, ^mortton_complete);
+    }
+    if ($visible_bit = ^ulsquire_visible & %morttonquest = ^mortton_shades_to_razmire) {
+        %morttonquest = ^mortton_shades_to_ulsquire;
+        ~send_quest_progress(questlist:mortton, %morttonquest, ^mortton_complete);
+    }
+}
 if_close;
 mes("You get a dose of Serum 207 into them.");
 p_delay(3);
@@ -151,15 +169,4 @@ if ($visible_bit = -1) {
     ~mesbox("They stop clawing at themselves for a moment, look at you as though they had only just arrived, and then it goes again.");
     return;
 }
-%morttonmulti = setbit(%morttonmulti, $visible_bit);
-%morttonmulti = setbit(%morttonmulti, $used_bit);
 ~mesbox("They come back. Not all the way, and not for long, but far enough to hold a conversation.");
-// Curing Razmire is what puts the player onto the shades.
-if ($visible_bit = ^razmire_visible & %morttonquest = ^mortton_made_serum) {
-    %morttonquest = ^mortton_kill_shades;
-    ~send_quest_progress(questlist:mortton, %morttonquest, ^mortton_complete);
-}
-if ($visible_bit = ^ulsquire_visible & %morttonquest = ^mortton_shades_to_razmire) {
-    %morttonquest = ^mortton_shades_to_ulsquire;
-    ~send_quest_progress(questlist:mortton, %morttonquest, ^mortton_complete);
-}

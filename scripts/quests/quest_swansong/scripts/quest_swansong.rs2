@@ -622,9 +622,10 @@ if (inv_total(inv, mistrune) < 10 | inv_total(inv, lavarune) < 10 | inv_total(in
 inv_del(inv, mistrune, 10);
 inv_del(inv, lavarune, 10);
 inv_del(inv, bloodrune, 5);
+// Twenty-five runes, counted out and gone: the quest moves in the tick that takes them.
+%swansong = ^swan_wom;
+~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
 if_close;
 mes("The Wise Old Man counts the runes into a pocket of his dressing gown and gets up without using the stick.");
 p_delay(4);
-%swansong = ^swan_wom;
-~send_quest_progress(questlist:swansong, %swansong, ^swan_complete);
 ~mesbox("The boat comes back the next morning with one passenger on it, and he is extremely old and he is carrying nothing at all.");

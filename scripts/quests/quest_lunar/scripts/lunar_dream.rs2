@@ -26,6 +26,12 @@ if (inv_total(worn, lunar_helm) = 0 | inv_total(worn, lunar_torso) = 0
     return;
 }
 inv_del(inv, lunar_soaked_kindling, 1);
+// The kindling is on the brazier and spent; the dream is three ticks away and the quest should
+// not be waiting on the player standing still for them.
+if (%lunar_quest = ^lunar_clothes_done) {
+    %lunar_quest = ^lunar_in_dream;
+    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
+}
 if_close;
 mes("You drop the soaked kindling onto the brazier.");
 anim(human_pickuptable, 0);
@@ -33,10 +39,6 @@ sound_synth(fire_lit, 1, 0);
 p_delay(3);
 p_telejump(^lunar_dream_centre);
 say("Huh? Where am I?");
-if (%lunar_quest = ^lunar_clothes_done) {
-    %lunar_quest = ^lunar_in_dream;
-    ~send_quest_progress(questlist:lunar, %lunar_quest, ^lunar_complete);
-}
 
 // =========================================================================== waking up
 //

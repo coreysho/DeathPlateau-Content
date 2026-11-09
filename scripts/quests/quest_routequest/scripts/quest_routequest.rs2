@@ -181,15 +181,17 @@ if (inv_total(inv, woodplank) < ^route_planks_needed) {
 }
 ~chatplayer("<p,neutral>Six planks.");
 inv_del(inv, woodplank, ^route_planks_boat);
+// The planks are his the moment they are counted out; the directions that follow are four ticks
+// and three lines away, and the quest should not be waiting on them.
+%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_boat);
+%routequest = ^route_boat;
+~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
 ~chatnpc("<p,happy>Three for me.");
 if_close;
 mes("Cyreg turns the boat over and spends a while on it with three of your planks and a quantity of tar.");
 p_delay(4);
 ~chatnpc("<p,neutral>Right. North as far as the boat goes - that is the Hollows. Then north on foot, over the rope bridge, and look for a tree that is the wrong shape. There will be a man near it who stops people. Tell him what you are carrying.");
 ~chatnpc("<p,neutral>Keep the other three planks. You will want them before you reach the tree.");
-%routequest_myreque_bits = setbit(%routequest_myreque_bits, ^route_bit_boat);
-%routequest = ^route_boat;
-~send_quest_progress(questlist:routequest, %routequest, ^route_complete);
 
 // =========================================================================== the boat
 // Board is free once the boat is the Myreque's; Board ( Pay 10 ) is how everybody else crosses, and

@@ -237,11 +237,13 @@ mes("Nuff puts the skull on the floor by the Queen's head and the secateurs in h
 p_delay(5);
 inv_del(inv, fairy_queen_secateurs, 1);
 inv_del(inv, fairy_skull, 1);
+// BOTH SPENT, SO THE QUEST MOVES NOW. Seven more ticks of script stand between here and the
+// write; the secateurs are the Queen's own and there is not a second pair.
+%fairy_farmers_quest = ^fairy_told;
 ~mesbox("Nothing happens for long enough that you start to work out what you are going to say.");
 p_delay(4);
 ~mesbox("Then the Fairy Queen opens her eyes, looks at the ceiling, and says that the room is damp.");
 p_delay(3);
-%fairy_farmers_quest = ^fairy_told;
 // Both switches go back: she is a person again and the throne is hers.
 %fairy_queen_check = ^fairy_off;
 %fairy_godfather_check = ^fairy_off;

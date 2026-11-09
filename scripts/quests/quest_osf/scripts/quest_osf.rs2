@@ -132,10 +132,11 @@ if (inv_total(inv, favour_directionals_fixed) = 0 | inv_total(inv, favour_orname
 inv_del(inv, favour_directionals_fixed, 1);
 inv_del(inv, favour_ornament_fixed, 1);
 inv_del(inv, favour_pillar_fixed, 1);
-mes("You put the pillar in first, then the directionals, then the ornament on top.");
-p_delay(4);
+// Three mended parts, all spent: the record goes in with them rather than four ticks later.
 %weathervanefixed = ^osf_on;
 %onesmallfavour = ^osf_vane_fixed;
+mes("You put the pillar in first, then the directionals, then the ornament on top.");
+p_delay(4);
 stat_advance(crafting, 5000);
 ~send_quest_progress(questlist:onesmallfavour, %onesmallfavour, ^osf_complete);
 ~mesbox("It catches the wind and turns, and somewhere below you a seer makes a noise you will remember.");

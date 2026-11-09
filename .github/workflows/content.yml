@@ -188,6 +188,10 @@ jobs:
         # gates the placeholder Release option on. It was never in this matrix.
         - banktab_sim.py
         - certcheck.py
+        # A quest may not record a step later than it spends the player's things: p_delay hands
+        # the script back to the engine, and a player who clicks away in between keeps the loss
+        # and not the progress. One of those cost a player the Feud.
+        - questprogress_battery.py
 
     steps:
     - uses: actions/checkout@v4

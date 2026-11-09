@@ -482,6 +482,14 @@ switch_obj ($item) {
 
 [label,enakh_place_pedestal_head]
 if (%enakh_pedestal_head = ^enakh_pedestal_head_in) {
+    // AND THE WAY OUT IF THE HEAD WENT IN WITHOUT THE QUEST FOLLOWING IT. The head is spent and
+    // the recess is full, so there is no second attempt: without this, a player interrupted
+    // during the six ticks of lights below is stuck at ^enakh_elements for good.
+    if (%enakh_quest < ^enakh_akthanakos & ~enakh_all_elements = true) {
+        %enakh_akthanakos_form = ^enakh_akth_freed;
+        %enakh_quest = ^enakh_akthanakos;
+        ~send_quest_progress(questlist:enakh, %enakh_quest, ^enakh_complete);
+    }
     mes("The head is already in the recess.");
     return;
 }
@@ -492,14 +500,18 @@ if (~enakh_all_elements = false) {
 inv_del(inv, enakh_stone_head_akthanakos, 1);
 if_close;
 mes("The head drops into the recess without a gap anywhere round it.");
+// THE HEAD IS SPENT, SO THE QUEST MOVES WITH IT. p_delay suspends this script and anything the
+// player clicks in the six ticks below drops the rest of it - and the head cannot be put in a
+// recess that is already full, so the quest would never move again. The lights are theatre and
+// can be lost; the two lines that matter happen in the tick that consumed the head.
 %enakh_pedestal_head = ^enakh_pedestal_head_in;
+%enakh_akthanakos_form = ^enakh_akth_freed;
+%enakh_quest = ^enakh_akthanakos;
+~send_quest_progress(questlist:enakh, %enakh_quest, ^enakh_complete);
 p_delay(3);
 // Head plus all four elements is pedestal index 31, the brightest state the multiloc has.
 mes("All four channels light at once and run into it.");
 p_delay(3);
-%enakh_akthanakos_form = ^enakh_akth_freed;
-%enakh_quest = ^enakh_akthanakos;
-~send_quest_progress(questlist:enakh, %enakh_quest, ^enakh_complete);
 ~mesbox("Somewhere down the hall the boneguard that has not moved in four thousand years comes apart, and something steps out of it.");
 
 // =========================================================================== the rubble

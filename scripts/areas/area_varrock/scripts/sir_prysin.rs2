@@ -68,12 +68,15 @@ if_close();
 mes("You give all three keys to Sir Prysin.");
 inv_del(inv, silverlight_key_1, 1);
 inv_del(inv, silverlight_key_2, 1);
+// THE KEY, THE SWORD AND THE RECORD IN ONE TICK. p_delay suspends this script and anything the
+// player clicks in those four ticks drops the rest of it - the third key is gone, there is no
+// Silverlight, and the quest never moves. The sword is one of a kind and the key is spent.
 inv_del(inv, silverlight_key_3, 1);
+inv_add(inv, silverlight, 1);
+%demonstart = ^demon_silverlight;
 p_delay(2);
 mes("Prysin hands you an impressive looking sword.");
 p_delay(2);
-inv_add(inv, silverlight, 1);
-%demonstart = ^demon_silverlight;
 
 [label,demon_slayer_sir_prysin_aris]
 ~chatnpc("<p,neutral>Gypsy Aris? Is she still alive? I remember her from when I was pretty young. Well what do you need to talk to me about?");

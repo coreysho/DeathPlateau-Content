@@ -273,6 +273,10 @@ if (%ahoy_subquest_nettletea = ^ahoy_tea_asked) {
 ~chatplayer("<p,happy>Nettle tea. China cup. Milk.");
 inv_del(inv, chinacup_of_nettletea_milky, 1);
 %ahoy_subquest_nettletea = ^ahoy_tea_done;
+// AND THE QUEST WITH IT. What she says next is four ticks and six lines away; a player who
+// clicks off during it has spent the tea, and the cup is a long way back to make again.
+%ahoy_questvar = ^ahoy_crone_told;
+~send_quest_progress(questlist:ahoy, %ahoy_questvar, ^ahoy_complete);
 if_close;
 mes("The old crone drinks the tea without saying anything at all for a while.");
 p_delay(4);
@@ -280,8 +284,6 @@ p_delay(4);
 ~chatnpc("<p,neutral>He did not do this with a spell. He did it with a book - the Book of Haricanto - and the book is buried where nobody would dig.");
 ~chatplayer("<p,quiz>Where?");
 ~chatnpc("<p,neutral>Dragontooth Island, under a cross on a map that was torn into three so no one man could sell it.");
-%ahoy_questvar = ^ahoy_crone_told;
-~send_quest_progress(questlist:ahoy, %ahoy_questvar, ^ahoy_complete);
 ~chatnpc("<p,worried>The three pieces went down with the ship that carried them. It is still on the rocks west of the town.");
 
 [label,ahoy_crone_ritual]

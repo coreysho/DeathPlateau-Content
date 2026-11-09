@@ -117,11 +117,14 @@ inv_del(inv, needle, 1);
 inv_del(inv, thread, ^fenk_threads_wanted);
 %fenk_needle = 1;
 %fenk_threads_given = 1;
+// IN THE SAME TICK AS THE THREAD. The sewing takes four ticks of script and the needle and the
+// five thread are already spent; a player who clicks away during it would have handed them over
+// for nothing, and the doctor takes them only once.
+%fenk_quest = ^fenk_body_sewn;
+~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
 if_close;
 mes("Dr Fenkenstrain sets to work on the slab. It takes a long time and he hums while he does it.");
 p_delay(4);
-%fenk_quest = ^fenk_body_sewn;
-~send_quest_progress(questlist:creatureoffenkenstrain, %fenk_quest, ^fenk_complete);
 ~mesbox("What is lying on the slab now is not a person. It is a shape that a person would fit into.");
 @fenk_doctor_conductor;
 

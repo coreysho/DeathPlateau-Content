@@ -182,18 +182,23 @@ if ($has_rantz_ingredient = false | $has_bugs_ingredient = false | $has_fycie_in
 
 mes("You carefully place the chompy bird on the spit-roast.");
 inv_del(inv, raw_chompy, 1);
+// THE ROLL, AND EVERYTHING IT SPENDS OR RECORDS, IN THIS TICK. The bird is already on the spit;
+// two ticks of roasting follow, and a player who clicks away in them used to lose the bird and
+// the cooking with it. The roasting below is theatre and can be dropped.
+def_boolean $passes_roll = stat_random(cooking, 200, 255);
+if ($passes_roll = true) {
+    %chompybird = ^chompybird_chompy_cooked;
+}
+~delete_chompy_ingredients($rantz_ingredient, $bugs_ingredient, $fycie_ingredient);
 // Temp note: dur updated
 loc_change(chompybird_spitroast, 5);
 loc_anim(roast);
 anim(human_potterywheel, 0);
 sound_synth(spit_roast, 1, 0);
 p_delay(2);
-    
-def_boolean $passes_roll = stat_random(cooking, 200, 255);
+
 if ($passes_roll = true) {
     mes("You add the other ingredients and cook the food.");
-    %chompybird = ^chompybird_chompy_cooked;
-    ~delete_chompy_ingredients($rantz_ingredient, $bugs_ingredient, $fycie_ingredient);
     // Temp note: dur updated
     loc_change(chompybird_spitroast_cooked, 5);
     loc_anim(roast);
@@ -207,7 +212,6 @@ if ($passes_roll = true) {
     ~objbox(cooked_s_chompy, "You use the <$rantz_ingredient_name>, <$bugs_ingredient_name> and the <$fycie_ingredient_name>|with the chompy bird to make a seasoned chompy.", 250, 0, divide(^objbox_height, 2));
 } else {
     mes("You accidentally burn the chompy.");
-    ~delete_chompy_ingredients($rantz_ingredient, $bugs_ingredient, $fycie_ingredient);
     // Temp note: dur updated
     loc_change(chompybird_spitroast_ruined, 5);
     loc_anim(roast);

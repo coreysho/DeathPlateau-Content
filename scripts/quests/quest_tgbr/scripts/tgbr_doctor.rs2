@@ -279,13 +279,15 @@ if (%tgbr_crate ! ^tgbr_crate_filled) {
 if_close;
 p_arrivedelay;
 inv_del(inv, tgbr_shipping_order, 1);
+// The order is stuck to the lid and gone: four ticks of crate business follow, and the quest
+// should not be waiting on the player not clicking anything during them.
+%tgbr_crate = ^tgbr_crate_none;
+%tgbr = ^tgbr_shipped;
+~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
 mes("You stick the shipping order to the lid.");
 p_delay(2);
 ~mesbox("Dr Fenkenstrain climbs into the bottom half of the crate without being asked twice, and pulls the false floor down over himself.");
 p_delay(2);
-%tgbr_crate = ^tgbr_crate_none;
-%tgbr = ^tgbr_shipped;
-~send_quest_progress(questlist:tgbr, %tgbr, ^tgbr_complete);
 sound_synth(door_open, 1, 0);
 ~mesbox("The crate is gone. There is a faint muffled complaining about the dark, going away down the stairs.");
 ~mesbox("He will be in the windmill cellar on Harmony Island.");

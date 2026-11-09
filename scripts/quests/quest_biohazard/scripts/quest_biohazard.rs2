@@ -33,9 +33,9 @@ if(npc_find(coord, mournerwatchtower, 5, 0) = true) {
 if(%biohazard = ^biohazard_spoken_jerico & last_useitem = birdfeed) {
     // https://web.archive.org/web/20060111205550im_/http://www.runeweb.net/fireball/Biohazard%20Images/biohazard8.PNG
     inv_del(inv, birdfeed, 1);
+    %biohazard = ^biohazard_used_birdfeed;
     mes("You throw a hand full of seeds onto the watch tower");
     p_delay(2);
-    %biohazard = ^biohazard_used_birdfeed;
     mes("The mourners do not seem to notice");
     return;
 } 
@@ -102,9 +102,11 @@ if(last_useitem = mourning_apple_toxin) {
 if(last_useitem = rottenapples) {
     mes("You place the rotten apple in the pot...");
     inv_del(inv, rottenapples, 1);
-    p_delay(3);
     if(%biohazard = ^biohazard_climbed_ladder) {
         %biohazard = ^biohazard_poisoned_stew;
+    }
+    p_delay(3);
+    if(%biohazard = ^biohazard_poisoned_stew) {
         mes("and it quickly dissolves into the stew.");
         p_delay(2);
     }

@@ -161,11 +161,12 @@ if (%myreque_2_quest = ^m2_rod) {
 if_close;
 mes("Veliaf turns the rod over twice and does not let go of it.");
 p_delay(5);
-inv_del(inv, burgh_rod_command_final_10, 1);
+// THE ROD NEVER LEAVES THE BAG. It was taken out and put back three ticks later as theatre, so
+// a player who clicked away in between lost the one rod in the game AND the quest ending with
+// it. Veliaf hands it straight back in the text; nothing has to leave the inventory for that.
+%myreque_2_quest = ^m2_complete;
 ~mesbox("\"Sixty years,\" he says. \"Sixty years of hurting them and running, and a dead priest had the answer written on his own coffin lid the whole time.\" | He hands it straight back. \"You made it. You carry it. There are ten charges in that and I want to know what happens to the first thing you use one on.\"");
 p_delay(3);
-inv_add(inv, burgh_rod_command_final_10, 1);
-%myreque_2_quest = ^m2_complete;
 // ...and Temple Trekking opens. The six volunteers are spawned in Burgh de Rott already and hidden
 // behind multivar=templetrek_npcs_visible; this is the write that makes them visible.
 ~trek_unlock;

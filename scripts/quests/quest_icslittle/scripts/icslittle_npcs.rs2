@@ -59,13 +59,15 @@ if (inv_total(inv, ics_little_pileofsalt) = 0 | inv_total(inv, ics_little_sap_bu
 inv_del(inv, ics_little_pileofsalt, 1);
 inv_del(inv, ics_little_sap_bucket, 1);
 inv_del(inv, ics_little_linen, 1);
+// Salt, sap and linen are spent here; the embalming takes three ticks of script and the quest
+// should not be waiting on the player not clicking anything during them.
+%ics_little_var = ^icslittle_embalmed;
+%ics_specvis = ^icslittle_spectre_shown;
+~send_quest_progress(questlist:ics_little, %ics_little_var, ^icslittle_complete);
 ~chatnpc("<p,happy>Then it can be done today.");
 if_close;
 mes("The embalmer works for a long time, and the High Priest watches every minute of it.");
 p_delay(3);
-%ics_little_var = ^icslittle_embalmed;
-%ics_specvis = ^icslittle_spectre_shown;
-~send_quest_progress(questlist:ics_little, %ics_little_var, ^icslittle_complete);
 ~chatnpc("<p,neutral>Klenter is prepared. Now go down to the tomb and bring up his four canopic jars - all four, and do not mix them up.");
 
 [label,icslittle_priest_jars]

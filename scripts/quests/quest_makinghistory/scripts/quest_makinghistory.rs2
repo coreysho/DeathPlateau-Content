@@ -182,9 +182,11 @@ if_close;
 mes("Jorral reads it twice as well, and then goes and looks at the crates for a while.");
 p_delay(5);
 inv_del(inv, makinghistory_letter2, 1);
+// The letter is handed over and gone; what follows is three ticks of Jorral moving crates, and
+// a player who clicks away during it would have given up the letter for an unfinished quest.
+%makinghistory_prog = ^mh_complete;
 ~mesbox("\"The road can go round,\" he says. \"Six years, and the road can go round.\" | He starts moving crates immediately, and keeps talking while he does it, mostly about shelving.");
 p_delay(3);
-%makinghistory_prog = ^mh_complete;
 // Both ghosts have been waiting on this, in opposite ways and for the same reason.
 %makinghistory_melina_pres = ^mh_gone;
 %makinghistory_droalak_pres = ^mh_gone;

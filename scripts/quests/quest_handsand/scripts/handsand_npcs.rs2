@@ -517,11 +517,13 @@ inv_del(inv, bucket_sand, 1);
 if (inv_total(inv, handsand_orb_recording) > 0) {
     inv_del(inv, handsand_orb_recording, 1);
 }
+// The runes, the sand and the orb are all spent above: the quest moves with them rather than
+// four ticks later, where a click would take the lot and leave the pit empty.
+%handsand_quest = ^handsand_pit_filled;
+~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
 if_close;
 mes("Rarve pours the bucket out onto the floor of his own study and does something to it that makes your teeth ache.");
 p_delay(4);
-%handsand_quest = ^handsand_pit_filled;
-~send_quest_progress(questlist:handsand, %handsand_quest, ^handsand_complete);
 ~mesbox("Somewhere to the south, a sand pit that has been getting shallower for thirty years is suddenly full to the brim.");
 ~chatnpc("<p,neutral>One more thing, and it is the one that hangs him. I can name a hand, but a hand is a hand.");
 ~chatnpc("<p,sad>Everything that came out of that pit that week went to the glass furnaces on Entrana. If the rest of him is anywhere it is in a sand heap over there - ask whoever works it.");

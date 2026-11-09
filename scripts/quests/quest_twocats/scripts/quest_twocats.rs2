@@ -168,9 +168,11 @@ switch_obj ($item) {
             return;
         }
         inv_del(inv, potato_seed, 1);
+        // The seed and the record of it in the same tick: p_delay below suspends this script,
+        // and a player who clicks away in those two ticks has spent a seed on nothing.
+        %twocats_chores_tidygarden = ^twocats_patch_planted;
         mes("You dib the seed potatoes in along the row.");
         p_delay(2);
-        %twocats_chores_tidygarden = ^twocats_patch_planted;
         stat_advance(farming, 80);
         mes("That is the garden tended.");
         ~twocats_check_chores;

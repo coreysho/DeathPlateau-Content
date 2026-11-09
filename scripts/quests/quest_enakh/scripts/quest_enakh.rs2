@@ -217,12 +217,14 @@ if (%enakh_statue_stage >= ^enakh_build_head_lazim) {
     return;
 }
 inv_del(inv, $obj, 1);
-if_close;
-mes("You climb the scaffold and settle the head onto the shoulders.");
-p_delay(3);
+// The head is carved once and spent here: the statue's state and the quest's go in with it,
+// not three ticks later where a click can drop them.
 %enakh_statue_stage = $built;
 %enakh_quest = ^enakh_head_on;
 ~send_quest_progress(questlist:enakh, %enakh_quest, ^enakh_complete);
+if_close;
+mes("You climb the scaffold and settle the head onto the shoulders.");
+p_delay(3);
 stat_advance(crafting, 2000);
 @enakh_statue_falls;
 

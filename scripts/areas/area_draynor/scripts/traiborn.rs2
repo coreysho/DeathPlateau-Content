@@ -33,9 +33,11 @@ if(inv_total(inv, bones) < 1) {
 if(%demonstart >= ^demon_find_bones & %demonstart < ^demon_got_traiborn_key & inv_total(inv, bones) > 0) {
     if_close();
     inv_del(inv, bones, 1);
+    // Counted in the tick the bones are spent: a delay drops the rest of the script if the
+    // player clicks away, and a set of bones would go with it.
+    %demonstart = calc(%demonstart + 1);
     mes("You give Traiborn a set of bones.");
     p_delay(1);
-    %demonstart = calc(%demonstart + 1);
     @demon_slayer_traiborn_give_bones;
 } else {
     @demon_slayer_traiborn_stop_giving_bones;
