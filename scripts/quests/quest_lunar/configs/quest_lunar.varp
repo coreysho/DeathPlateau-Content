@@ -11,7 +11,10 @@
 //                the sequence the Numerator is reciting, the logs on your pile, and so on. Temp,
 //                because a challenge you walk out of starts again.
 [lunar_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [lunar_bits]
 scope=perm

@@ -5,11 +5,15 @@ scope=perm
 scope=perm
 
 [arenaquest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
 
 // Clock Tower: which of the four coloured cogs have been placed, plus the cooled flag. Shipped with
 // no scope line at all, i.e. temp, so the placements were forgotten on every logout and the quest
 // journal then reported all four as still missing. The cogs themselves are consumed on placement.
+transmit=yes
+
 [cog_bits]
 scope=perm
 
@@ -95,10 +99,16 @@ protect=no
 [varp_59]
 
 [goblinquest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [waterfall_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [waterfall_golrie_and_puzzle]
 scope=perm
@@ -285,12 +295,16 @@ type=obj
 [book_page]
 
 [elenaquest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
 
 // Auto retaliate persists across logout (2026-10-06), the same fix the run toggle had on 2026-09-10
 // and for the same reason: there was no scope line, and a varp with no scope defaults to temp, so
 // every login turned it back on. 0 is on and 1 is off, so a save from before this has no stored
 // value, reads 0, and keeps the setting it has always had.
+transmit=yes
+
 [option_nodef]
 protect=no
 transmit=yes
@@ -577,10 +591,14 @@ protect=no
 // Eadgar's Ruse stage.
 // scope=perm added: VarpConfig.ts:79 defaults to SCOPE_TEMP.
 [eadgar_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
 
 // Eadgar's Ruse. %eadgar_scarecrow_items hangs off this.
 // scope=perm added: VarpConfig.ts:79 defaults to SCOPE_TEMP.
+transmit=yes
+
 [eadgar_bits]
 scope=perm
 
@@ -715,7 +733,10 @@ protect=no
 scope=perm
 
 [hauntedmine]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [hauntedmine_bits]
 scope=perm
@@ -726,7 +747,10 @@ transmit=yes
 [wearing_sled]
 
 [routequest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [routequestmulti]
 // [multi_vanstrom_stranger_entity] keys on this, and so does the whole of In Search of the Myreque
@@ -770,7 +794,10 @@ transmit=yes
 [varp_401]
 
 [roving_elves_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [roving_elves_bits]
 scope=perm
@@ -1107,7 +1134,10 @@ scope=perm
 // stage and every one of its flag bits were forgotten on logout. Same defect as recruitmentdrive,
 // viking, regicide, cog_bits and trail_status.
 [mourning_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [mourning_quest_bits]
 scope=perm
@@ -1350,7 +1380,10 @@ transmit=yes
 transmit=yes
 
 [deal_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [deal_var]
 transmit=yes
@@ -1678,7 +1711,10 @@ protect=no
 [varp_713]
 
 [rag_quest]
+// The quest helper plugin reads this to know which leg of the quest you are on. Without
+// transmit the client's copy stays 0 for ever and the panel has nothing to show.
 scope=perm
+transmit=yes
 
 [varp_715]
 
