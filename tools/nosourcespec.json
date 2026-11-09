@@ -207,6 +207,11 @@
         "black_heraldic_kiteshield4",
         "black_heraldic_kiteshield5"
       ]
+    },
+    "veteran_cape": {
+      "osrs_source": "none, and none is wanted: Old School's veteran capes are handed out by account age with no in-game source either, so a sweep of its content would call them sourceless too",
+      "why": "THE GIVER IS IN THE ENGINE, NOT IN CONTENT - the one blind spot this sweep has by construction. obtainable.py walks content's scripts/ and its pack files and nothing else, so World.veteranCape(player, give) in Engine-TS is invisible to it: that function adds the cape to any veteran holding none, across inventory, worn and bank, and takes it back from anyone who stops being one. The cape IS obtainable, which makes this entry a pointer rather than an excuse, and it is the first obj here whose source lives outside this repository at all.",
+      "why_not_deleted": "nothing to delete - the obj is correct and wanted. What would be wrong is this entry outliving the grant it points at, which is the regression the 'not_a_source' section above was invented to stop, so group 68 now reads the engine's World.ts and goes red if veteranCape stops naming veteran_cape. Deleting the grant breaks this check rather than leaving the sweep quietly excused."
     }
   }
 }
