@@ -22,10 +22,12 @@
 
 // ---------------------------------------------------------------- the rings themselves
 //
-// EVERY RING DIALS. There is no "nearest ring" shortcut and no fixed pairing, because a network
-// where each ring reaches one other place is not a network. The Zanaris ring by Fairy Nuff is the
-// single exception and it is additive: it keeps its old one-way step out to the swamp AS WELL as
-// the dial, so the route players already use is still there.
+// EVERY RING DIALS. There is no fixed pairing, because a network where each ring reaches one
+// other place is not a network. Two things sit beside the dial rather than in place of it: the
+// Zanaris ring by Fairy Nuff keeps its old one-way step out to the swamp AS WELL as the dial, so
+// the route players already use is still there, and every ring outside Zanaris carries a
+// right-click "Zanaris" that dials BKS for you. Both are additive - nothing the dial could do
+// stopped being possible - and the second is below under THE WAY BACK.
 [oploc1,64_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,1_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,6_fairy_mushroom_ring] @fairy_ring_use;
@@ -33,6 +35,21 @@
 [oploc1,37_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,47_fairy_mushroom_ring] @fairy_ring_use;
 [oploc1,fairy_mushroom_ring3] @fairy_ring_use;
+
+// THE WAY BACK, without dialling it. RuneScape puts a "Zanaris" option on every ring except the
+// ones already in Zanaris, because BKS is the one code every player dials a hundred times and
+// making them spell it out each time is friction with nothing on the other side of it.
+//
+// ONLY THE FIVE SURFACE RINGS GET IT. Three of this map's eight rings stand in Zanaris itself -
+// 64_ at 2412,4434, fairy_mushroom_ring at 2452,4473 and fairy_mushroom_ring3 at 2486,4471 - and
+// an option that teleports you forty tiles to another corner of the room you are standing in is
+// not a shortcut, it is a bug report waiting to happen. Their op2 is deliberately absent, which
+// is also why this list is five lines and the one above is seven.
+[oploc2,1_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,6_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,27_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,37_fairy_mushroom_ring] @fairy_ring_zanaris;
+[oploc2,47_fairy_mushroom_ring] @fairy_ring_zanaris;
 
 [oploc1,fairy_mushroom_ring]
 p_walk(loc_coord);
@@ -52,12 +69,28 @@ switch_int(~p_choice2("Dial a code.", 1, "Step through to the swamp.", 2)) {
 [label,fairy_ring_use]
 p_walk(loc_coord);
 if (%fairy_farmers_quest < ^fairy_complete) {
-    // SAID AS THE RING, not as a quest requirement, because a player who has not met a fairy yet
-    // has no reason to connect a mushroom circle with a farmer's missing secateurs.
-    ~mesbox("The mushrooms are pretty, and nothing more. Perhaps somebody who|knows about fairies could tell you why.");
+    ~fairy_ring_mumble;
     return;
 }
 @fairy_ring_open;
+
+// THE SHORTCUT IS GATED EXACTLY AS THE DIAL IS. It skips the panel, not the quest - and since it
+// never opens the panel it cannot lean on the ENTER button's check the way the dial does, so the
+// check has to be here. A player without Fairytale Part I gets the same mushrooms-are-pretty line
+// they get from a left click, because as far as they know nothing about this ring has changed.
+[label,fairy_ring_zanaris]
+p_walk(loc_coord);
+if (%fairy_farmers_quest < ^fairy_complete) {
+    ~fairy_ring_mumble;
+    return;
+}
+@fairy_ring_travel(^fairy_to_zanaris);
+
+// SAID AS THE RING, not as a quest requirement, because a player who has not met a fairy yet has
+// no reason to connect a mushroom circle with a farmer's missing secateurs. A proc rather than
+// two copies of the string, so the left click and the right click can never drift apart.
+[proc,fairy_ring_mumble]
+~mesbox("The mushrooms are pretty, and nothing more. Perhaps somebody who|knows about fairies could tell you why.");
 
 [label,fairy_ring_open]
 ~fairy_ring_refresh;
