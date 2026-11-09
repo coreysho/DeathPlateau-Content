@@ -189,6 +189,8 @@ multinpc=6,eagle_nickolaus
 multinpc=7,eagle_nickolaus
 
 // Nickolaus in the nest: shouted to until he has his disguise, and in it from then on.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [eagle_nickolaus_nest_shell]
 multivar=eaglespeak
 multinpc=0,eagle_nickolaus_nest
@@ -202,6 +204,8 @@ multinpc=7,eagle_nickolaus_disguised
 
 // The desert, jungle and polar eagles, in the Eagles' Peak eyrie and at the other end of their flight.
 // A rope is used on one to travel (scripts/eaglespeak_transport.rs2); in 2006 they have no op.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [eagle_desert_eagle]
 name=Desert eagle
 desc=A very large, very dangerous, very sandy-looking birdy.
@@ -363,6 +367,8 @@ multivar=eaglespeak_boulder_pushed
 multinpc=0,eagle_boulder
 
 // The ferret in its pen at Ardougne Zoo once the quest is done (474 npc 5139, shown by the shell).
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [eagle_zoo_ferret]
 name=Ferret
 desc=Wild.
@@ -376,6 +382,8 @@ multivar=eaglespeak
 multinpc=7,eagle_zoo_ferret
 
 // The ferret that walks into Nickolaus's box trap in the cutscene.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [eagle_cutscene_ferret]
 name=Ferret
 desc=Wild.

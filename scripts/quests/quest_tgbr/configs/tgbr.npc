@@ -24,6 +24,8 @@ multinpc=1,tgbr_tranquility_after
 // ---------------------------------------------------------------------------- Dr Fenkenstrain
 // In the windmill cellar from the moment the crate is posted, and never before. 474's own
 // threshold, read off npc 5606's table: 70 and up.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [tgbr_doctor_shell]
 multivar=tgbr
 multinpc=70,fenk_fenkenstrain_model
@@ -38,6 +40,8 @@ multinpc=130,fenk_fenkenstrain_model
 // He is in the corridor the peephole looks into. You can see him through it from the start, but he
 // is only standing there to be confronted once the gate is down - and he is gone the moment
 // Barrelchest is summoned, which is the point at which the quest stage leaves 100.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [tgbr_migor_shell]
 multivar=tgbr
 multinpc=90,tgbr_migor
@@ -46,22 +50,32 @@ multinpc=100,tgbr_migor
 // ---------------------------------------------------------------------------- the monks of Harmony
 // Four of them, each a zombie monk until the transplants are made. 474's varbit 3407 and its npcs
 // 5669-5672, which have exactly these two states.
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 [harmony_monk_shell_1]
 multivar=tgbr_restored
 multinpc=0,harmony_zombie_monk
 multinpc=1,harmony_monk
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [harmony_monk_shell_2]
 multivar=tgbr_restored
 multinpc=0,harmony_zombie_monk_2
 multinpc=1,harmony_monk_2
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [harmony_monk_shell_3]
 multivar=tgbr_restored
 multinpc=0,harmony_zombie_monk_3
 multinpc=1,harmony_monk_3
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
 
 [harmony_monk_shell_4]
 multivar=tgbr_restored
 multinpc=0,harmony_zombie_monk_4
 multinpc=1,harmony_monk_4
+// Static: no readyanim and no walkanim, so it is a rigid model the default wanderrange slid about.
+wanderrange=0
