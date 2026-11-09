@@ -186,6 +186,16 @@ if (%feud_var_drink >= ^feud_beers_wanted) {
 }
 inv_del(inv, beer, 1);
 %feud_var_drink = add(%feud_var_drink, 1);
+// THE QUEST MOVES WITH THE BEER, not with the conversation after it. p_delay below SUSPENDS this
+// script, and anything the player clicks in those three ticks drops the rest of it - so the third
+// beer could be drunk, and gone, with feud_var left at ^feud_sent. There is no way back from
+// that: Ali refuses a fourth beer, and his own op1 then sends the player to a tent whose minder
+// turns them away, which is exactly what a player reported. The irreversible half of a step and
+// the record that it happened belong in the same tick.
+if (%feud_var_drink >= ^feud_beers_wanted & %feud_var = ^feud_sent) {
+    %feud_var = ^feud_drunk;
+    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
+}
 if_close;
 mes("Drunken Ali takes the beer in both hands.");
 p_delay(3);
@@ -202,10 +212,6 @@ switch_int (%feud_var_drink) {
         ~chatnpc("<p,shock>Three. Three! Sit down, you are family now.");
         ~chatplayer("<p,quiz>Anything else I should know?");
         ~chatnpc("<p,neutral>Ask the bandits about the Menaphites. Ask the Menaphites about the bandits. They will each tell you the truth about the other and lie about themselves, and between the two you will have the whole thing.");
-        if (%feud_var = ^feud_sent) {
-            %feud_var = ^feud_drunk;
-            ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
-        }
 }
 
 [opnpc1,feud_drunken_ali]
@@ -218,6 +224,13 @@ if (%feud_var_drink = ^feud_off) {
 if (%feud_var_drink < ^feud_beers_wanted) {
     ~chatnpc("<p,happy>You are the man with the beer. There was more beer, I thought.");
     return;
+}
+// AND THE WAY OUT FOR ANYBODY ALREADY STUCK. Three beers are drunk and the quest did not move,
+// because the write used to sit after the delay above; this is the one line that can still see
+// both facts, so it puts the quest where the beers say it is.
+if (%feud_var = ^feud_sent) {
+    %feud_var = ^feud_drunk;
+    ~send_quest_progress(questlist:feud, %feud_var, ^feud_complete);
 }
 ~chatnpc("<p,happy>Ali the Operator. The big tent. Tell him Ali sent you - that will not help, everybody here is called Ali.");
 
