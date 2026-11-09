@@ -30165,12 +30165,16 @@ model1=obj_eadgar_troll_thistle
 vislevel=hide
 minimap=no
 op1=Pick
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [eadgar_parrotts]
 name=Parrots
 desc=What a colourful bunch of parrots!
 model1=npc_1215
 vislevel=hide
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [eadgar_zoo_keeper_aviary]
 name=Parroty Pete
@@ -37686,6 +37690,8 @@ minimap=no
 // and as blocking npcs they cut that floor into pockets: findPath could not get a player from
 // 2791,4457 to 2789,4457, three tiles away, so the fight could never be joined. The chamber's
 // real obstacles are locs and are unaffected.
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_boss_key]
 blockwalk=none
@@ -37709,6 +37715,8 @@ minimap=no
 vislevel=hide
 alwaysontop=yes
 turnspeed=1024
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_cart1]
 blockwalk=none
@@ -37718,6 +37726,8 @@ model1=npc_1527
 vislevel=hide
 alwaysontop=yes
 turnspeed=1024
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_cart2]
 blockwalk=none
@@ -37727,6 +37737,8 @@ model1=npc_1527
 vislevel=hide
 alwaysontop=yes
 turnspeed=1024
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_cart3]
 blockwalk=none
@@ -37736,6 +37748,8 @@ model1=npc_1527
 vislevel=hide
 alwaysontop=yes
 turnspeed=1024
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_cart4]
 blockwalk=none
@@ -37745,6 +37759,8 @@ model1=npc_1527
 vislevel=hide
 alwaysontop=yes
 turnspeed=1024
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [hauntedmine_suprise_ghost]
 name=Ghost
@@ -39995,6 +40011,8 @@ readyanim=sitting_ready
 op1=Talk-to
 head1=obj_pickpocket_guide_mham
 head2=idk_man_jaw_short_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [favour_npc_chair]
 name=H.A.M. Member
@@ -42196,6 +42214,8 @@ turnspeed=0
 alwaysontop=yes
 head1=npc_1862_headi2
 head2=npc_pirate1_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [feud_ali_the_barman]
 name=Ali The barman
@@ -42402,6 +42422,8 @@ turnspeed=0
 alwaysontop=yes
 head1=npc_1862_head
 head2=obj_leather_cowl_manhead2
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [feud_camel]
 name=Ali the Camel
@@ -43275,6 +43297,8 @@ op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=idk_man_jaw_short_head
 head3=npc_gem_trader_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [fourdiamonds_sword_bandit_sitnorth]
 name=Bandit
@@ -43306,6 +43330,8 @@ op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=idk_man_jaw_short_head
 head3=npc_gem_trader_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [fourdiamonds_sword_bandit_siteast]
 name=Bandit
@@ -43337,6 +43363,8 @@ op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=idk_man_jaw_short_head
 head3=npc_gem_trader_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [fourdiamonds_sword_bandit_sitwest]
 name=Bandit
@@ -43368,6 +43396,8 @@ op1=Talk-to
 head1=obj_pickpocket_guide_man
 head2=idk_man_jaw_short_head
 head3=npc_gem_trader_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [fourdiamonds_troll_child]
 // name= added 2026-09-08. This is a multi SHELL - the client resolves multinpc before it draws
@@ -45354,6 +45384,8 @@ desc=An ancient giant serpent.
 model1=tog_weeping_wall_offr_q
 vislevel=hide
 head1=npc_2023_head
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [barrows_oldman]
 name=Strange Old Man
@@ -45925,6 +45957,8 @@ size=2
 readyanim=ogre_injured1
 op1=Talk-to
 head1=npc_ogre_chieftan_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [zogre_dying2]
 name=Grug
@@ -45935,6 +45969,8 @@ size=2
 readyanim=ogre_injured2
 op1=Talk-to
 head1=npc_ogre_chieftan_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [zogre_ogre_guard]
 name=Ogre guard
@@ -46967,6 +47003,8 @@ vislevel=hide
 turnspeed=0
 op1=Talk-to
 head1=npc_2094_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [dwarf_city_secretary_green_gemstone]
 name=Green Gemstone Secretary
@@ -46984,6 +47022,8 @@ vislevel=hide
 turnspeed=0
 op1=Talk-to
 head1=npc_lawgof2_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [dwarf_city_secretary_white_chisel]
 name=White Chisel Secretary
@@ -47002,6 +47042,8 @@ readyanim=dwarf_secretary_ready
 vislevel=hide
 op1=Talk-to
 head1=npc_2094_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [dwarf_city_secretary_silver_cog]
 name=Silver Cog Secretary
@@ -47023,6 +47065,8 @@ vislevel=hide
 turnspeed=0
 op1=Talk-to
 head1=npc_lawgof2_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [dwarf_city_secretary_brown_engine]
 name=Brown Engine Secretary
@@ -47044,6 +47088,8 @@ vislevel=hide
 turnspeed=0
 op1=Talk-to
 head1=npc_mcannonguard_head
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [dwarf_city_secretary_red_axe]
 name=Red Axe Secretary
@@ -51030,6 +51076,8 @@ vislevel=hide
 turnspeed=0
 size=2
 op1=Kick
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [wom_bed_active]
 name=Thing under the bed
@@ -55225,6 +55273,8 @@ resizev=100
 turnspeed=0
 vislevel=hide
 minimap=no
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [dungeon_dagganoth_egg2]
 name=Egg
@@ -55272,6 +55322,8 @@ size=2
 resizeh=250
 resizev=250
 turnspeed=0
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [dagganoth_critter]
 name=Dagannoth spawn
@@ -69468,6 +69520,8 @@ vislevel=hide
 alwaysontop=yes
 minimap=no
 turnspeed=0
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [agility_pyramid_penny_waterfall_npc_east]
 name=Pyramid block
@@ -69478,6 +69532,8 @@ vislevel=hide
 alwaysontop=yes
 minimap=no
 turnspeed=0
+// Static: a prop with no animation at all, which the default wanderrange walked off its spot.
+wanderrange=0
 
 [enakh_pentyn]
 name=Pentyn
@@ -75289,6 +75345,8 @@ op1=Talk-To
 head1=npc_drunk1_head
 head2=idk_man_jaw_goatee_head
 head3=obj_strawboater_red_manhead
+// Static: frozen in a pose and given no walkanim, so the default wanderrange slid the pose around.
+wanderrange=0
 
 [canoeing_sigurd]
 name=Sigurd
