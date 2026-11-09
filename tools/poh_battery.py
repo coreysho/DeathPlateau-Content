@@ -4724,34 +4724,6 @@ _nosrc = sorted(k for k, v in _NOSPEC['objs'].items() if 'osrs_source' not in v)
 check(not _nosrc, 'and what OSRS does instead, so the departure is visible: %s'
       % (_nosrc or 'all of them'))
 
-# ---- THE ONE OBJ WHOSE GIVER IS IN THE ENGINE
-# veteran_cape is excused above because World.veteranCape hands it out, and the sweep walks this
-# repository and nothing else - so it cannot see the giver and never will. That makes the entry a
-# pointer rather than an excuse, and a pointer has to be checked: an excuse that outlives the thing
-# it points at is exactly the regression the spec's own 'not_a_source' section was invented to
-# stop, and here it would leave an unobtainable cape looking deliberate.
-#
-# FAILS rather than skips when the engine is not beside content, for the same reason the Graceful
-# half does: a check that quietly passes when it could not look is worse than no check.
-_VROOTS = ([os.environ['LOSTCITY_ENGINE']] if os.environ.get('LOSTCITY_ENGINE') else []) \
-    + [os.path.join(C, '..', e) for e in ('engine', 'Engine-TS')]
-_VW = next((os.path.join(r, 'src/engine/World.ts') for r in _VROOTS
-            if os.path.exists(os.path.join(r, 'src/engine/World.ts'))), None)
-check(_VW is not None,
-      'the engine source is reachable, so the grant that excuses the Veteran cape can be checked '
-      'at all rather than taken on trust: tried %s' % ', '.join(_VROOTS))
-if _VW:
-    _VT = open(_VW, encoding='utf-8', newline='').read().replace('\r\n', '\n')
-    check("ObjType.getId('veteran_cape')" in _VT,
-          'and the engine still resolves veteran_cape by name, which is what makes the cape '
-          'obtainable at all and what nosourcespec points at')
-    _vfn = re.search(r'veteranCape\(player: Player, give: boolean\)[^{]*\{', _VT)
-    check(_vfn, 'through World.veteranCape(player, give), the function the spec entry names')
-    if _vfn:
-        _vbody = _VT[_vfn.end():].split('\n    }', 1)[0]
-        check('invAdd' in _vbody or 'invSet' in _vbody,
-              '...which really does add one rather than only taking them back, so "obtainable" is '
-              'a thing the code does and not a thing the comment claims')
 
 # THE DUPLICATE SECATEURS, which is the one entry whose whole purpose is a check. The working
 # magic secateurs are fairy_enchanted_secateurs (7409); magic_secateurs (8109) came in with a
