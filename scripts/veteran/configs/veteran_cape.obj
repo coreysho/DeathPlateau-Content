@@ -1,19 +1,33 @@
 // The Veteran cape, for the players who tested the server before it opened.
 //
-// THE MESH IS BUILT FROM SCRATCH, by tools/models/genveterancapemesh.py - a skillcape silhouette
-// drawn as a sheet of vertices, not a copy of an existing cape. Rerun the generator rather than
-// editing the .ob2 files.
+// THE MESH IS THE ATTACK CAPE'S, MENDED, and it is written by tools/models/genveterancape.py.
+// Rerun that rather than editing the .ob2 files. tools/models/genveterancapemesh.py built a cape
+// from scratch for three rounds and is superseded; it is kept only for what it recorded.
 //
-// IT IS FROM SCRATCH BECAUSE THE ATTACK CAPE HAS A HOLE IN IT. Strip that cape of its emblem and
-// render it with nothing behind it and you see the background straight through the middle of its
-// back: Jagex's solid emblem covers the gap rather than mending it. Our device - the rank's own
-// chat icon - is an open shape, so it had to carry a disc behind it to cover the same gap, and
-// that disc was the only reason the cape ever had a circle on it. Every attempt to shrink,
-// reshape or hide the disc failed for its own reason. A mesh with no hole needs no disc.
+// WHAT HAD TO BE MENDED. The attack cape has a hole in the middle of its back - strip its emblem,
+// render it with nothing behind, and the background shows through. Jagex's solid emblem covers
+// that gap rather than closing it. Our device is the rank's own chat icon, an open shape, so it
+// needed a disc behind it to cover the same gap, and that disc was the only reason the cape ever
+// had a circle on it. Building a whole cape to avoid the disc was the wrong answer: eight faces
+// fanned from the hole's own boundary close it, and keeping Jagex's mesh keeps the drape, the
+// fold, the collar, the animation labels and the draw priorities that a hand-built sheet kept
+// getting wrong.
 //
-// The animation labels are the one thing borrowed: a worn cape is skinned to the player through
-// them and they cannot be invented, so each vertex takes the label of the nearest attack-cape
-// vertex at its own height.
+// THE DEVICE SITS AT THE DEPTH OF THE EMBLEM IT REPLACED, not at the front of the cape. Taking
+// the cape's frontmost cloth instead put it at depth 20-26 against cloth at 14-20, and in game it
+// floated off the back. See genveterancape.py, which says so where the number is worked out.
+//
+// A MAX CAPE VARIANT IS MADE FROM THIS ONE. Use it on a Max cape with a Max hood and all three
+// become a Veteran max cape and its hood - scripts/skillcapes, generated from
+// tools/maxcapevariantspec.json. That cape is NOT this mesh: it is the Max cape's own model with
+// its red cloth recoloured to this bronze and this device struck into the back, written by
+// tools/genveteranmaxcape.py. The device is placed differently there - its vertices take their
+// animation labels from the cloth under each one rather than sharing a single label, because the
+// Max cape's back is a patchwork of five of them where the attack cape's emblem sits on one.
+//
+// The engine knows about the variant: World.veteranCape counts a fused cape as still having one,
+// or it would hand out a free Veteran cape at every login, and taking the rank away splits the
+// variant rather than destroying a Max cape somebody earned with twenty-three ninety-nines.
 //
 // The bronze is the same ramp the Veteran chat icon is drawn in, so the rank reads as one thing
 // in chat and on the back, and the device is the chat icon's own shape. It is dark against the

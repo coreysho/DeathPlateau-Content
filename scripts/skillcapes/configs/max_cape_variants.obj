@@ -1,4 +1,4 @@
-// THE 13 MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
+// THE FOURTEEN MAX CAPE VARIANTS AND THEIR HOODS. GENERATED - do not hand-edit.
 //   python3 tools/genmaxvariants.py
 // The numbers come from tools/maxcapevariantspec.json, which took them out of the OSRS
 // item table rather than off the wiki. Every bonus below is its SOURCE cape's, which is
@@ -14,7 +14,7 @@
 // scripts reads the cape slot and asks maxvariant_source what it came from, so the
 // variant is an Ava's accumulator for bows, thrown weapons, the blowpipe and the magnet.
 //
-// The eleven variants with no models of their own are the plain Max cape's model with five
+// The eight variants with no models of their own are the plain Max cape's model with five
 // recolours, and the max hood's with six, exactly as OSRS has them.
 
 [fire_max_cape]
@@ -735,6 +735,45 @@ manwear=obj_imbued_ancient_max_hood_manwear,0
 womanwear=obj_imbued_ancient_max_hood_womanwear,0
 manhead=obj_imbued_ancient_max_hood_manhead
 womanhead=obj_imbued_ancient_max_hood_womanhead
+wearpos=hat
+wearpos2=head
+2dzoom=720
+2dxan=21
+2dyan=18
+iop2=Wear
+members=yes
+tradeable=no
+weight=453g
+
+[veteran_max_cape]
+name=Veteran max cape
+desc=The cape worn by only the most experienced players. This one was here before the gates opened.
+model=obj_veteran_max_cape
+manwear=obj_veteran_max_cape_manwear,0
+womanwear=obj_veteran_max_cape_womanwear,0
+wearpos=back
+2dzoom=2232
+2dxan=687
+2dyan=27
+2dyof=-5
+iop2=Wear
+cost=99000
+members=yes
+tradeable=no
+weight=453g
+category=armour_cape
+param=slashdefence,1
+param=crushdefence,1
+param=rangedefence,2
+
+[veteran_max_hood]
+name=Veteran max hood
+desc=The hood worn by only the most experienced players. This one was here before the gates opened.
+model=obj_veteran_max_hood
+manwear=obj_veteran_max_hood_manwear,0
+womanwear=obj_veteran_max_hood_womanwear,0
+manhead=obj_veteran_max_hood_manhead
+womanhead=obj_veteran_max_hood_womanhead
 wearpos=hat
 wearpos2=head
 2dzoom=720

@@ -24,6 +24,7 @@ val=avas_accumulator,accumulator_max_cape
 val=imbued_ancient_cape_saradomin,imbued_ancient_saradomin_max_cape
 val=imbued_ancient_cape_guthix,imbued_ancient_guthix_max_cape
 val=imbued_ancient_cape_zamorak,imbued_ancient_zamorak_max_cape
+val=veteran_cape,veteran_max_cape
 
 [maxvariant_hood]
 // variant cape -> the hood that comes with it
@@ -43,6 +44,7 @@ val=accumulator_max_cape,accumulator_max_hood
 val=imbued_ancient_saradomin_max_cape,imbued_ancient_saradomin_max_hood
 val=imbued_ancient_guthix_max_cape,imbued_ancient_guthix_max_hood
 val=imbued_ancient_zamorak_max_cape,imbued_ancient_zamorak_max_hood
+val=veteran_max_cape,veteran_max_hood
 
 [maxvariant_source]
 // variant cape -> the source cape it came from. A null answer means "not a variant".
@@ -62,3 +64,4 @@ val=accumulator_max_cape,avas_accumulator
 val=imbued_ancient_saradomin_max_cape,imbued_ancient_cape_saradomin
 val=imbued_ancient_guthix_max_cape,imbued_ancient_cape_guthix
 val=imbued_ancient_zamorak_max_cape,imbued_ancient_cape_zamorak
+val=veteran_max_cape,veteran_cape
