@@ -634,6 +634,14 @@ inv_del(inv, $from, 1);
 inv_add(inv, $to, 1);
 anim(human_castteleport, 0);
 sound_synth(magical_barrier, 1, 0);
+// AND LET THE ANIMATION GO. human_castteleport ends shrunken and holds that last frame for 20000
+// client ticks - 400 seconds - with replaceheldleft and replaceheldright both set to hide, so the
+// staff in your hand and anything in your off-hand are invisible for the whole of it. A teleport
+// gets away with it because the long hop makes the client drop and re-add the player, which clears
+// the animation; this is a flourish with no teleport behind it, so only anim(null) ends it. Walking
+// does not. See skill_magic/scripts/spells/teleport.rs2's ~p_telejump_safe, which exists for this.
+anim(null, 0);
+
 if ($step = 4) {
     ~objbox(lunar_staff, "The earth altar takes hold of the staff, and lets go of something else. You are holding a Lunar staff.", 250, 0, 0);
     return;

@@ -1,0 +1,63 @@
+// The Slayer Tower, north of Canifis. Reported from play as "cant get into slayer tower".
+//
+// The tower had nothing at all behind it. Its front door, the door that splits the 1st floor and a
+// door on the 2nd all carried op1=Open from the cache and no script answered any of them, so Open
+// was a dead click and the building had no way in; those three are categorised into the generic
+// door system now (doors/configs/doubledoors.loc and doors.loc). This file is the other half: the
+// two Spikey chains, which are how the floors connect.
+//
+//   loc_9319 "Spikey chain"  Climb-up    3422,3550 L0  and  3447,3576 L1
+//   loc_9320 "Spikey chain"  Climb-down  3422,3550 L1  and  3447,3576 L2
+//
+// BOTH INSTANCES ARE THE SAME OBJECT WITH DIFFERENT REQUIREMENTS, which the wiki says outright of
+// the pair: "Both instances of the shortcut are the same object, despite their different Agility
+// level requirements", and that the game must be reading the player's position to decide which to
+// ask. switch_coord is how this build already says that - see ogre_stairs in
+// ladders+stairs/scripts/stairs.rs2 - so the lower chain asks Agility 61 and the upper 71 off the
+// coordinate of the chain that was clicked.
+//
+// CLIMBING UP AND DOWN ARE THE SAME TILE on two levels: the chain is a centrepiece (shape 10) and
+// blocks the square it stands on, so the landing is the tile east of it, which is walkable on all
+// four of the floors involved. Measured, not assumed.
+//
+// A FAILED CLIMB STILL CLIMBS. "There is a chance of failing the shortcuts, resulting in the player
+// gaining 6 Agility experience and taking 2-5 damage, however the player will still climb to the
+// different level." So the damage and the larger xp are the whole of the failure - there is no
+// case where a player pays the click and stays where they were.
+//
+// No requirement to enter the tower itself: the wiki lists none, and the basement's task-only rule
+// is about what may be killed down there rather than about the door.
+
+[oploc1,loc_9319] // Climb-up
+switch_coord (loc_coord) {
+    case ^slayer_tower_chain_lower : @slayer_tower_chain(^slayer_tower_chain_lower_level, ^slayer_tower_chain_lower_up);
+    case ^slayer_tower_chain_upper : @slayer_tower_chain(^slayer_tower_chain_upper_level, ^slayer_tower_chain_upper_up);
+    case default : @unhandled_stairs(loc_coord);
+}
+
+[oploc1,loc_9320] // Climb-down
+switch_coord (loc_coord) {
+    case ^slayer_tower_chain_lower_top : @slayer_tower_chain(^slayer_tower_chain_lower_level, ^slayer_tower_chain_lower_down);
+    case ^slayer_tower_chain_upper_top : @slayer_tower_chain(^slayer_tower_chain_upper_level, ^slayer_tower_chain_upper_down);
+    case default : @unhandled_stairs(loc_coord);
+}
+
+[label,slayer_tower_chain](int $level, coord $dest)
+if (stat(agility) < $level) {
+    ~mesbox("You need an Agility level of <tostring($level)> to climb the spikey chain.");
+    return;
+}
+p_arrivedelay;
+anim(human_reachforladder, 0);
+sound_synth(ropeclimb, 1, 0);
+p_telejump($dest);
+// The fail is a third of the time, which is the middle of what a shortcut of this kind costs; the
+// wiki gives the xp and the damage but not the rate.
+if (random(3) = 0) {
+    mes("You slip on the spikes as you climb.");
+    ~agility_xp(^slayer_tower_chain_xp_fail);
+    ~damage_self(add(randominc(3), 2));
+    return;
+}
+mes("You climb the spikey chain.");
+~agility_xp(^slayer_tower_chain_xp);

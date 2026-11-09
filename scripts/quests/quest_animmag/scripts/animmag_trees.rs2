@@ -11,7 +11,14 @@
 
 // =========================================================================== the trees
 
-[opnpc1,animmag_undead_tree]
+// CHOP, AND ALSO "USE AXE ON TREE", which is what a player does when Ava tells them to try their
+// axe on it. There was no [opnpcu] and the engine answers a missing trigger with "Nothing
+// interesting happens." - reported from play as "when trying to chop tree, just says nothing
+// interesting happens". It is the same action either way, so it is the same label.
+[opnpc1,animmag_undead_tree] @animmag_chop_tree;
+[opnpcu,animmag_undead_tree] @animmag_chop_tree;
+
+[label,animmag_chop_tree]
 if (%animmag < ^animmag_magnet_given) {
     mes("The tree shifts its weight. You decide to leave it alone.");
     return;
@@ -53,6 +60,20 @@ mes("You cut some undead twigs.");
 
 // A mithril axe or better, held or wielded - what the transcript means by "an axe which could
 // possibly affect this wood".
+//
+// THE LADDER IS THE LIST, and it was three rungs short. This named mithril, adamant and rune only,
+// so a player carrying a DRAGON axe - or a gilded or a third-age one, the three best axes in the
+// build and the ones anyone who has reached this quest is likeliest to own - was told "You don't
+// have an axe which could possibly affect this wood." and could not bounce the axe at all. Without
+// the bounce there is no %animmag 7, so Ava never names Turael and Turael never offers the trade:
+// reported from play as both "cant chop undead tree" and "turael doesnt have a dialogue for axe".
+// Exactly the mistake skill_woodcutting/scripts/woodcut.rs2 warns about in ~woodcutting_best_axe,
+// where the gilded axe chopped nothing for months for want of a line.
+//
+// Deliberately NOT level-gated. ~woodcutting_best_axe only returns an axe the player has the
+// Woodcutting level to use, and Animal Magnetism asks for no Woodcutting at all - the bounce is
+// scripted, not a cut. tools/sim/animmagtree.ts checks this list against every axe the woodcutting
+// ladder ranks at mithril or above, so a seventh axe cannot be added to the game and missed here.
 [proc,animmag_has_mithril_axe]()(boolean)
 if (inv_total(inv, mithril_axe) > 0 | inv_total(worn, mithril_axe) > 0) {
     return(true);
@@ -61,6 +82,15 @@ if (inv_total(inv, adamant_axe) > 0 | inv_total(worn, adamant_axe) > 0) {
     return(true);
 }
 if (inv_total(inv, rune_axe) > 0 | inv_total(worn, rune_axe) > 0) {
+    return(true);
+}
+if (inv_total(inv, dragon_axe) > 0 | inv_total(worn, dragon_axe) > 0) {
+    return(true);
+}
+if (inv_total(inv, gilded_axe) > 0 | inv_total(worn, gilded_axe) > 0) {
+    return(true);
+}
+if (inv_total(inv, third_age_axe) > 0 | inv_total(worn, third_age_axe) > 0) {
     return(true);
 }
 return(false);

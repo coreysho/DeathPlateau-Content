@@ -253,7 +253,10 @@ param=slashattack,38
 param=crushattack,32
 param=slashdefence,1
 param=strengthbonus,42
-param=levelrequire,41
+// 61, not 41. Old School asks 61 Woodcutting for a dragon axe, dragon_pickaxe carries 61 for
+// Mining, and ~woodcutting_best_axe has always required "> 60" for this axe - so 41 here was
+// the one number in the build that disagreed with the other three.
+param=levelrequire,61
 param=attackrate,5
 param=slashattack_anim,human_axe_hack
 param=crushattack_anim,human_blunt_pound

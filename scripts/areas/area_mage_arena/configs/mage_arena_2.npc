@@ -43,7 +43,15 @@ strength=1
 defence=90
 magic=120
 ranged=1
-param=magicdefence,60
+// MAGIC IS THE ONLY THING THAT CAN HURT THEM, AND MAGIC LEVEL IS WHAT DEFENDS AGAINST IT.
+// npc_defence_roll_specific uses the npc's MAGIC level for a magic defence roll, not its Defence -
+// so the 120 that makes a champion's own spell accurate was also making it nearly immune to the
+// only damage type the arena allows. Measured with a maxed player in a god cape and that god's
+// staff: attack roll 8640 against a defence roll of (120+9)*(60+64) = 15996, about a one-in-four
+// chance to hit. Three champions of 150 hitpoints at that rate is a hundred and forty casts.
+// 10 brings the defence roll to 9546 and the hit chance to about 45%, which is a boss rather than
+// a war of attrition, and leaves their accuracy against the player untouched.
+param=magicdefence,10
 category=ma2_champion
 
 [ma2_champion_guthix]
@@ -77,7 +85,15 @@ strength=1
 defence=90
 magic=120
 ranged=1
-param=magicdefence,60
+// MAGIC IS THE ONLY THING THAT CAN HURT THEM, AND MAGIC LEVEL IS WHAT DEFENDS AGAINST IT.
+// npc_defence_roll_specific uses the npc's MAGIC level for a magic defence roll, not its Defence -
+// so the 120 that makes a champion's own spell accurate was also making it nearly immune to the
+// only damage type the arena allows. Measured with a maxed player in a god cape and that god's
+// staff: attack roll 8640 against a defence roll of (120+9)*(60+64) = 15996, about a one-in-four
+// chance to hit. Three champions of 150 hitpoints at that rate is a hundred and forty casts.
+// 10 brings the defence roll to 9546 and the hit chance to about 45%, which is a boss rather than
+// a war of attrition, and leaves their accuracy against the player untouched.
+param=magicdefence,10
 category=ma2_champion
 
 [ma2_champion_zamorak]
@@ -121,5 +137,13 @@ strength=1
 defence=90
 magic=120
 ranged=1
-param=magicdefence,60
+// MAGIC IS THE ONLY THING THAT CAN HURT THEM, AND MAGIC LEVEL IS WHAT DEFENDS AGAINST IT.
+// npc_defence_roll_specific uses the npc's MAGIC level for a magic defence roll, not its Defence -
+// so the 120 that makes a champion's own spell accurate was also making it nearly immune to the
+// only damage type the arena allows. Measured with a maxed player in a god cape and that god's
+// staff: attack roll 8640 against a defence roll of (120+9)*(60+64) = 15996, about a one-in-four
+// chance to hit. Three champions of 150 hitpoints at that rate is a hundred and forty casts.
+// 10 brings the defence roll to 9546 and the hit chance to about 45%, which is a boss rather than
+// a war of attrition, and leaves their accuracy against the player untouched.
+param=magicdefence,10
 category=ma2_champion

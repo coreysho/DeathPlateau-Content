@@ -213,3 +213,128 @@ model=lefayeunopenabledoorl
 active=yes
 mirror=yes
 op1=Open
+
+// ---------------------------------------------------------------------------------------------
+// The Slayer Tower's doors
+// ---------------------------------------------------------------------------------------------
+// Reported from play as "cant get into slayer tower", and that is exactly what it was: the tower's
+// front door carried op1=Open from the cache and nothing answered it, so Open was a dead click and
+// the building had no way in. Two more pairs behind it were the same, which is why nothing inside
+// had been noticed as unreachable either.
+//
+//   slayertower_door / _mirror   3428,3535 L0   the front door, north of Canifis
+//   loc_10527 / loc_10529        3426,3555 L1   the 1st floor's own door, which splits that floor
+//                                               in two - the west half and the chain to the 2nd
+//   loc_5126                     3445,3554 L2   a single door on the 2nd floor (in doors.loc)
+//
+// Every closed leaf already had its open twin in the cache, down to the mirror flag, so all any of
+// them needed was the category and the next stage - the generic door system in doors/scripts does
+// the rest. The mirrored leaf of a pair is the RIGHT one, as loc_1506 above has it.
+
+[slayertower_door]
+category=door_left_closed
+param=next_loc_stage,slayertower_door_open
+name=Door
+desc=A big wooden door.
+model=loc_4487
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Open
+
+[slayertower_door_open]
+category=door_left_opened
+param=next_loc_stage,slayertower_door
+name=Door
+desc=A big wooden door.
+model=loc_4487
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Close
+
+[slayertower_door_mirror]
+category=door_right_closed
+param=next_loc_stage,slayertower_door_open_mirror
+name=Door
+desc=A big wooden door.
+model=loc_4487
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+mirror=yes
+op1=Open
+
+[slayertower_door_open_mirror]
+category=door_right_opened
+param=next_loc_stage,slayertower_door_mirror
+name=Door
+desc=A big wooden door.
+model=loc_4487
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+mirror=yes
+op1=Close
+
+[loc_10527]
+category=door_left_closed
+param=next_loc_stage,loc_10528
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Open
+
+[loc_10528]
+category=door_left_opened
+param=next_loc_stage,loc_10527
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Close
+
+[loc_10529]
+category=door_right_closed
+param=next_loc_stage,loc_10530
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Open
+mirror=yes
+
+[loc_10530]
+category=door_right_opened
+param=next_loc_stage,loc_10529
+name=Door
+desc=A tall wooden door.
+model=loc_5126
+hillskew=yes
+ambient=20
+resizez=128
+resizex=128
+resizey=192
+op1=Close
+mirror=yes

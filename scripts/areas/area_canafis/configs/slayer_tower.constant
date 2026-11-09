@@ -1,0 +1,23 @@
+// The Slayer Tower's two Spikey chains - see ../scripts/slayer_tower.rs2.
+//
+// The lower chain joins the ground floor to the 1st and asks Agility 61; the upper joins the 1st to
+// the 2nd and asks 71. Both are the same loc pair (loc_9319 Climb-up / loc_9320 Climb-down), told
+// apart by where they stand, which is what the wiki says the live game does.
+//
+// The _up and _down coords are the tile EAST of the chain on the floor being arrived at: the chain
+// is a centrepiece and blocks its own square, and east is walkable on all four floors.
+^slayer_tower_chain_lower = 0_53_55_30_30
+^slayer_tower_chain_lower_top = 1_53_55_30_30
+^slayer_tower_chain_lower_up = 1_53_55_31_30
+^slayer_tower_chain_lower_down = 0_53_55_31_30
+^slayer_tower_chain_lower_level = 61
+
+^slayer_tower_chain_upper = 1_53_55_55_56
+^slayer_tower_chain_upper_top = 2_53_55_55_56
+^slayer_tower_chain_upper_up = 2_53_55_56_56
+^slayer_tower_chain_upper_down = 1_53_55_56_56
+^slayer_tower_chain_upper_level = 71
+
+// 3 on a clean climb, 6 on a slip, in tenths as stat_advance takes them.
+^slayer_tower_chain_xp = 30
+^slayer_tower_chain_xp_fail = 60
