@@ -575,14 +575,28 @@ if (%feud_distracted = ^feud_off) {
     ~mesbox("Not in the open. Get him on his own first.");
     return;
 }
-// There is no player swing animation in this cache - human_pickpocket is the only one of the
-// pair it ships - so the swing is that and the falling over is the npc's own stunned_blackjack.
-anim(human_pickpocket, 0);
+// A SWING, AND THE BLACKJACK STAYS IN YOUR HAND.
+//
+// This was human_pickpocket, on the belief that the cache ships no swing. It does: the blunt
+// attack animations are what a wielded club uses. Worse, human_pickpocket sets replaceheldleft
+// and replaceheldright to 0 - hide - so the weapon the step above INSISTS you are wielding
+// vanished for thirteen frames of furtively reaching into a pocket, which is not what hitting
+// somebody looks like. human_blunt_pound is eight frames at priority 6 and leaves what you are
+// holding alone. The falling over is still the npc's own stunned_blackjack.
+anim(human_blunt_pound, 0);
 npc_anim(stunned_blackjack, 0);
-p_delay(3);
+// THE FLAGS BEFORE THE DELAY, NOT AFTER. p_delay suspends the script and everything past it is
+// dropped if the player clicks away mid-swing - the same shape as the beer progress this quest
+// used to lose. feud_found_trait is what Ali the Operator reads to accept the job, so a swing
+// that landed has to count even if the player walks off before the message.
 %feud_distracted = ^feud_off;
+def_int $first = ^false;
 if (%feud_var = ^feud_blackjack & %feud_found_trait = ^feud_off) {
     %feud_found_trait = ^feud_on;
+    $first = ^true;
+}
+p_delay(3);
+if ($first = ^true) {
     ~mesbox("He folds up quietly. His pockets hold four coins, a bent key and a hair comb, and the whole business took about two seconds - which is what Ali the Operator wanted to hear.");
     return;
 }
