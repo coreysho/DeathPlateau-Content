@@ -133,6 +133,39 @@ if command -v systemctl > /dev/null 2>&1; then
     if systemctl is-active --quiet "$SERVICE"; then note "now: UP"; else note "now: down"; fi
 fi
 
+# IS THERE A SECOND PROCESS? With LOGIN_SERVER=true and EASY_STARTUP unset, app.ts does NOT
+# spawn the login worker in-process - the engine talks over a socket to a login server that
+# was started separately, and deploy.sh knows of no unit but the world and dev.
+#
+# Why that matters today rather than in general. LoginServer loads data/pack in its
+# CONSTRUCTOR - InvType and VarPlayerType - and updateHiscores in that process reads varps by
+# NAME. A login server left running across a deploy keeps the pack it started with, and the
+# comment at that load says what happens when the ids no longer line up: every figure it
+# writes is skipped in silence. It also reads and writes save files directly, which is the
+# other half of what the wipe is moving.
+#
+# These two are booleans, not secrets, so they are printed as read.
+if [ -f "$ENGINE/.env" ]; then
+    login=$(grep -E "^[[:space:]]*LOGIN_SERVER=" "$ENGINE/.env" 2>/dev/null | head -1 | cut -d= -f2-)
+    easy=$(grep -E "^[[:space:]]*EASY_STARTUP=" "$ENGINE/.env" 2>/dev/null | head -1 | cut -d= -f2-)
+    note "LOGIN_SERVER=${login:-unset, so false}   EASY_STARTUP=${easy:-unset, so false}"
+    case "${login:-}:${easy:-}" in
+        true:true)
+            note "in-process: the login, friend and logger workers run inside the world, so the"
+            note "stop above takes them with it. Nothing more to do." ;;
+        true:*)
+            note "SEPARATE PROCESS. Stop it for the wipe, and make sure the deploy restarts it -"
+            note "otherwise it serves the launch on the pack it held BEFORE the deploy, and"
+            note "writes its hiscore figures with the old ids." ;;
+        *)
+            note "the world runs its own login thread, so there is no second process." ;;
+    esac
+fi
+if command -v systemctl > /dev/null 2>&1; then
+    units=$(systemctl list-units --type=service --state=running --no-legend --plain 2>/dev/null | grep -oE "(deathplateau|lostcity)[a-z-]*[.]service" | sort -u | xargs)
+    note "running now: ${units:-none that name this server}"
+fi
+
 step "4. The wipe. Read the dry run, and decide about --orphans before the day"
 cmd "cd $ENGINE && npx tsx tools/server/wipe.ts --profile $PROFILE"
 cmd "cd $ENGINE && npx tsx tools/server/wipe.ts --profile $PROFILE --confirm"
