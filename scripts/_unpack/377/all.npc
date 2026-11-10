@@ -44516,6 +44516,17 @@ multinpc=21,ics_little_hipriest_vis
 multinpc=22,ics_little_hipriest_vis
 multinpc=23,ics_little_hipriest_vis
 multinpc=24,ics_little_hipriest_vis
+// AND 25, WITHOUT WHICH THE QUEST CANNOT BE FINISHED. The cache stops this multi at 24, so the
+// High Priest becomes unclickable the moment Icthlarin sets the var to 25 (^icslittle_devoured) -
+// and the ONLY place icslittle_quest_complete is queued is his own ^icslittle_devoured branch in
+// quests/quest_icslittle/scripts/icslittle_npcs.rs2, the "It took him... Say the name quietly"
+// exchange. So the authored ending sat behind an npc that stopped answering exactly when it was
+// needed, and Icthlarin's Little Helper ended at 25 of 26 for everybody.
+//
+// The ceremony Priest covers 19-25 and is no substitute: his handler is one line of flavour and
+// completes nothing. Found by 981a228's menu guard, which is the case it was written for - "an op
+// the cache puts on a later state is one a player cannot reach yet, which is a quest that stops".
+multinpc=25,ics_little_hipriest_vis
 
 [ics_little_hipriest_town]
 walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
