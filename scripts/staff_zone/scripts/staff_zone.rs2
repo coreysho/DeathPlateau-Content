@@ -1,0 +1,36 @@
+// ::sz - the staff zone. The command is the engine's (ClientCheatHandler, staffModLevel >= 2);
+// this is the teleport it runs and the guard that keeps everybody else out.
+
+// WHY THE TELEPORT IS HERE AND NOT IN THE ENGINE, and the whole of the ::home argument again
+// (misc/scripts/home_teleport.rs2): a teleJump out of the handler skips everything a real teleport
+// refuses - a duel, Castle Wars, the trawler, a random event, Ana in her barrel, carrying the
+// monkey - and loses none of the rum, the plague sample or the sled it is supposed to lose. So the
+// engine keeps its own checks (busy, combat, the Wilderness, instances) and then runs this, which
+// is a teleport like any other.
+[proc,staffzone_teleport]
+if (~pre_tele_checks(coord) = false) {
+    return;
+}
+~p_telejump_safe(^staffzone_arrive);
+if (coord = ^staffzone_arrive) {
+    mes("You teleport to the staff zone.");
+    mes("Type <col=255>::home</col> to leave.");
+}
+
+// NOBODY WHO IS NOT STAFF WAKES UP IN THERE.
+//
+// ::sz is rank-gated, so the ordinary way in is shut, but it is not the only way onto those tiles:
+// ::teleother drags a player to wherever the staff member is standing, and a rank can be taken away
+// from an account that is logged out standing in the zone. Either leaves somebody in a staff-only
+// area with no way for anybody to notice. This is the same answer the rest of login.rs2 gives to the
+// same problem - ~poh_login for a house instance that no longer exists, ~trawler_login for a ship
+// that has sailed: if you are somewhere you should not be at login, you are put somewhere you should.
+[proc,staffzone_login]
+if (staffmodlevel >= ^staffzone_rank) {
+    return;
+}
+if (inzone(^staffzone_sw, ^staffzone_ne, coord) = false) {
+    return;
+}
+p_telejump(^staffzone_exit);
+mes("You have been moved out of a staff-only area.");

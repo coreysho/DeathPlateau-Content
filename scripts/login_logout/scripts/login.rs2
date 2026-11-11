@@ -71,6 +71,9 @@ queue(macro_event_login, 0, 0);
 ~falconry_login; // Hunter: Matthias's glove survives a logout, and its timer restarts
 // logged out inside a house instance that no longer exists -> back to the Rimmington portal
 ~poh_login;
+// ::sz is rank-gated, but ::teleother and a rank taken away are not: anybody below moderator
+// logging in inside the staff zone is put out of it (staff_zone/scripts/staff_zone.rs2)
+~staffzone_login;
 // planks from the sawmill before 2026-09-21 were a duplicate obj no quest accepts -> real planks
 ~sawmill_old_planks_login;
 // two or more 99s: swap any untrimmed skill capes for trimmed ones
