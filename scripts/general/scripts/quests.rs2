@@ -55,20 +55,30 @@ switch_component ($component) {
         if_openmain(questscroll);
     case default ://All other quests
         ~update_questpoints;
-        // THE SCROLL ALREADY SAYS HOW MANY QUEST POINTS (com_9, below), so a reward text that opens
-        // with its own "2 Quest Points" line printed it twice. 43 quests did: they wrote the line by
-        // hand, the other 68 left it to the scroll. Drop the line here once rather than in every one
-        // of them, so a quest written either way shows it once.
+        // THE SCROLL ALREADY SAYS HOW MANY QUEST POINTS, on com_9 below, out of the number it was
+        // handed. 43 of the 111 quests wrote that same line at the front of their reward text as
+        // well, so their scrolls showed it twice - Holy Grail's was the one reported. Dropped here,
+        // once, rather than edited out of 43 files, so a quest written either way shows it once and
+        // one written later needs no thought about which way is right.
+        //
+        // MATCHED AGAINST THE EXACT LINE com_9 IS ABOUT TO PRINT, not against the words "Quest
+        // Point" appearing somewhere in the first line. All 43 are byte-identical to it, down to
+        // the singular for a one-point quest, and tools/questscroll_battery.py holds them that way.
+        // The narrow match is what keeps a reward safe: a quest written later as "2 Quest Points
+        // and a hat" shows its points twice, which is the cosmetic bug this fixes, rather than
+        // losing the hat, which would be a worse one introduced by the fixing.
+        def_string $points = "<~pluralise($questpoints, "Quest Point")>";
         def_string $rewards = $rewardtext;
-        def_int $first_end = string_indexof_string("|", $rewards);
-        if ($first_end = -1 & string_indexof_string("Quest Point", $rewards) ! -1) {
-            $rewards = ""; // the points were all the reward text said
-        } else if ($first_end > 0 & string_indexof_string("Quest Point", substring($rewards, 0, $first_end)) ! -1) {
-            $rewards = substring($rewards, calc($first_end + 1), string_length($rewards));
+        if (string_indexof_string("<$points>|", $rewards) = 0) {
+            $rewards = substring($rewards, calc(string_length($points) + 1), string_length($rewards));
+        } else if (compare($rewards, $points) = 0) {
+            $rewards = ""; // the points line was the whole of the reward text
         }
         split_init($rewards, 200, 5, q8_full);
         if_settext(inter_238:com_3, $questmessage);
-        if_settext(inter_238:com_9, "<~pluralise($questpoints, "Quest Point")>");
+        // $points, not the proc called a second time: the line dropped above has to be the line
+        // printed here, and two calls are two places for that to stop being true.
+        if_settext(inter_238:com_9, $points);
         if_settext(inter_238:com_10, split_get(0, 0));
         if_settext(inter_238:com_11, split_get(0, 1));
         if_settext(inter_238:com_12, split_get(0, 2));
