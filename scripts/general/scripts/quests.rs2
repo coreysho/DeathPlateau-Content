@@ -55,7 +55,18 @@ switch_component ($component) {
         if_openmain(questscroll);
     case default ://All other quests
         ~update_questpoints;
-        split_init($rewardtext, 200, 5, q8_full);
+        // THE SCROLL ALREADY SAYS HOW MANY QUEST POINTS (com_9, below), so a reward text that opens
+        // with its own "2 Quest Points" line printed it twice. 43 quests did: they wrote the line by
+        // hand, the other 68 left it to the scroll. Drop the line here once rather than in every one
+        // of them, so a quest written either way shows it once.
+        def_string $rewards = $rewardtext;
+        def_int $first_end = string_indexof_string("|", $rewards);
+        if ($first_end = -1 & string_indexof_string("Quest Point", $rewards) ! -1) {
+            $rewards = ""; // the points were all the reward text said
+        } else if ($first_end > 0 & string_indexof_string("Quest Point", substring($rewards, 0, $first_end)) ! -1) {
+            $rewards = substring($rewards, calc($first_end + 1), string_length($rewards));
+        }
+        split_init($rewards, 200, 5, q8_full);
         if_settext(inter_238:com_3, $questmessage);
         if_settext(inter_238:com_9, "<~pluralise($questpoints, "Quest Point")>");
         if_settext(inter_238:com_10, split_get(0, 0));
