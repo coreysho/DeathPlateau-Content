@@ -112,7 +112,16 @@ for what in content engine web; do
     fi
     branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
     tip=$(git -C "$dir" log --oneline -1 2>/dev/null)
-    dirty=$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d " ")
+    # --no-optional-locks, AND IT IS NOT OPTIONAL HERE. `git status` is a read in intent and a
+    # WRITE in fact: it refreshes the index's cached stat data and saves it back. Run as root on a
+    # checkout the game serves from, that leaves .git/index owned by root, and the next deploy as
+    # lostcity dies with "index file open failed: Permission denied" - which is what happened on
+    # 11 November, twice, the second time to this line. The flag is what git added for exactly
+    # this: ask about the working tree and take no locks, write nothing.
+    #
+    # The other reads here - rev-parse, log, rev-list, show-ref - do not touch the index. This was
+    # the only one, and the header's claim that every command is a read is true of them.
+    dirty=$(git --no-optional-locks -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d " ")
     note "$what: $branch, $dirty local change(s), at $tip"
     if [ "$branch" != "$want" ]; then
         note "   NOT ON $want. Deploys still work - the pull goes into whatever is checked out -"
