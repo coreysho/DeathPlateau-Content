@@ -254,10 +254,29 @@ if [ -f "$ENGINE/.env" ]; then
     fi
 fi
 
-step "6. The website, which publishes the notes and announces them"
+step "6. The website: publish the post, and take the wipe notice down"
+cmd "git -C <your checkout> merge --ff-only origin/launch-day && git push origin main"
 cmd "$WEB/deploy/deploy-web.sh"
-note "Pulls, builds, restarts, then posts whatever news has gone up since the last deploy."
+note "THE MERGE COMES FIRST, and from a machine that can push - this box only ever pulls."
+note "The launch-day branch does two things at once: it moves the launch post out of"
+note "content/news/_pending so the site renders it, and it removes the wipe notice from the"
+note "five pages that carry it (the front page, /start, /register, /hiscores, /player)."
+note ""
+note "WHY IT IS A BRANCH. Until the wipe has actually run, that notice is the only thing"
+note "telling somebody arriving from a toplist that their account is about to be reset. On"
+note "main it would go out with any deploy this week and take the warning with it; after the"
+note "wipe it says the opposite of the truth. So it waits here until the wipe is done."
+note ""
+note "deploy-web.sh then pulls, builds, restarts, and posts the new news to Discord."
 note "A failed build leaves the old site running and stops."
+# As of the last fetch - nothing here touches the network.
+if [ -d "$WEB/.git" ] && git -C "$WEB" rev-parse --verify --quiet origin/launch-day > /dev/null 2>&1; then
+    if git -C "$WEB" merge-base --is-ancestor origin/launch-day origin/main 2>/dev/null; then
+        note "launch-day: already merged into main"
+    else
+        note "launch-day: NOT merged yet - the post stays unpublished and the notice stays up"
+    fi
+fi
 if [ -d "$WEB/content/news" ]; then
     latest=$(ls -1t "$WEB/content/news"/*.md 2> /dev/null | head -1)
     if [ -n "${latest:-}" ]; then note "newest post: $(basename "$latest")"; fi
