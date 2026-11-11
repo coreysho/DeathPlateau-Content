@@ -58,13 +58,46 @@ import jm2  # noqa: E402
 SQUARE = '22_56'
 BASE_X, BASE_Z = 22 * 64, 56 * 64          # 1408, 3584
 
-HEIGHT = 120                               # flat: the plateau's own height, and no slope seams
-SNOW = 94                                  # underlay: grey_blue_underlay, Death Plateau's ground
-ROCK = 83                                  # overlay: the worn plateau surface over it
-WOOD = 4                                   # woodenfloor - the Office
-BANK_A, BANK_B = 3, 4                      # the Edgeville bank's own two-tile chequer - the Vault
-PAD = 10                                   # darkstone - the boss pad
-RING = 76                                  # duel_arena - the sparring ring
+# THE PALETTE IS WHITE WOLF MOUNTAIN'S, NOT DEATH PLATEAU'S, and that is a correction.
+#
+# The first build took the ground from maps/m44_56.jm2 on the reasoning that Death Plateau is the
+# plateau this server is named after. Rendered with the real client code (tools/models/renderscene.py)
+# it is dull brown - and correctly so: flo "mountain_dark" is 0x464034, the Death Plateau IS a brown
+# rocky shelf above Burthorpe, and a staff zone floored in it looks like a car park. White Wolf
+# Mountain, two squares south, is where the snow is: "ice", 0xeeeeee.
+#
+# A MAP TILE'S FLO ID IS ONE MORE THAN THE FLO'S OWN. The client resolves both underlay and overlay
+# through FloType.field796[id - 1] (World.java), so writing 54 into a .jm2 draws flo 53. Every
+# colour in the first two versions of this file was one out, which is how the "lightrock" sparring
+# ring rendered in swamp green. So nothing here is a number: flo() takes the name out of
+# content/pack/flo.pack and adds the one, and the names below are the names in that file.
+def pack(name):
+    out = {}
+    with open(os.path.join(ROOT, 'pack', name + '.pack'), encoding='utf-8') as fh:
+        for line in fh:
+            if '=' in line:
+                i, n = line.strip().split('=', 1)
+                out[n] = int(i)
+    return out
+
+
+_FLO = pack('flo')
+
+
+def flo(name):
+    return _FLO[name] + 1
+
+
+HEIGHT = 120                               # the plateau floor: flat, so nothing walks on a slope
+PEAK = 246                                 # the ring of mountains around it, at the square's edge
+SNOW = flo('ice')                          # 0xeeeeee - what White Wolf Mountain is covered in
+ROCK_UN = flo('darkrock')                  # 0x4d4d4d - the lower slopes of the ring
+ROCK_OV = flo('lightrock')                 # 0x767676 - patches, paths and the sparring ring
+WOOD = flo('woodenfloor')                  # the Office. The first build wrote 4 and got cliff4,
+                                           # a grey stone slab, which is why it looked like a cell
+VAULT_FLOOR = flo('cliff4')                # 0x888888 - one pale stone floor. The bank's two-tile
+                                           # chequer read as a kitchen, which a vault is not
+PAD = flo('darkstone')                     # 0x222222 - the boss pad, bare and unmistakable
 INDOORS = 4                                # tile flag: under a roof, as every bank tile is
 BLOCKED = 1
 
@@ -83,14 +116,27 @@ VAULT_DOOR = (44, 'south')
 CELL_DOOR = 'south'
 
 CAMP = (27, 37, 27, 37)
+# Worn tracks: the camp to each district's door, as pairs of tiles. Straight lines only - two
+# segments make a corner where they meet, which is all a path up here needs to be.
+PATHS = [((32, 32), (32, 44)), ((18, 37), (32, 37)), ((44, 37), (32, 37)),
+         ((32, 32), (32, 20)), ((20, 21), (32, 21)), ((46, 21), (32, 21))]
 PAD_RECT = (28, 35, 12, 19)
 RING_RECT = (42, 50, 12, 20)
 
 WALL = 'brickwall'
 DOOR = 'loc_1513'                          # "Large door", [oploc1,_door_closed] - opens and shuts
-BARS = 'prisonbars'                        # the cages, as tools/genpillory.py uses them
+# THE CELLS ARE DRAYNOR JAIL'S, NOT A FENCE. prisonbars is a wall loc that draws a short railing,
+# and eight of them round a 3x3 room read in game as scattered fence posts rather than a cage. The
+# jail at 3126,3244 is built of oldbigstone_castlewall with prisonwindow set into it and a
+# hanginglantern over the door, so that is what a holding cell is here too.
+CELL_WALL = 'oldbigstone_castlewall'
+CELL_WINDOW = 'prisonwindow'
+LANTERN = 'hanginglantern'
 FENCE = 'railing'
 TORCH = 'torch'
+FIRE = 'fire_graphic'                      # anim=wiztorch, active=no - a fire that burns and does nothing
+SNOW_DECOR = ('snow1', 'snow2', 'snow3')   # the drifts White Wolf is covered in
+TREES = ('evergreen', 'deadtree2_snowy')
 ROCKS = ('death_mountainrocks_1', 'death_rockslide5')
 
 # shape, and the rotation that puts a wall on each edge of its own tile
@@ -98,16 +144,6 @@ STRAIGHT, CORNER, DECOR, CENTRE, GROUND = 0, 2, 4, 10, 22
 EDGE_ROT = {'west': 0, 'north': 1, 'east': 2, 'south': 3}
 # A corner covers two edges: 0 west+north, 1 north+east, 2 east+south, 3 south+west
 CORNER_ROT = {('west', 'south'): 3, ('west', 'north'): 0, ('east', 'north'): 1, ('east', 'south'): 2}
-
-
-def pack(name):
-    out = {}
-    with open(os.path.join(ROOT, 'pack', name + '.pack'), encoding='utf-8') as fh:
-        for line in fh:
-            if '=' in line:
-                i, n = line.strip().split('=', 1)
-                out[n] = int(i)
-    return out
 
 
 class Square:
@@ -126,12 +162,12 @@ class Square:
     def tile(self, x, z, overlay=None, flags=0, underlay=SNOW, height=HEIGHT):
         self.land[(0, x, z)] = dict(h=height, ov=overlay, shape=0, rot=0, flags=flags, un=underlay)
 
-    def floor(self, rect, overlay, flags=0, chequer=None):
+    def floor(self, rect, overlay, flags=0, chequer=None, underlay=SNOW):
         x0, x1, z0, z1 = rect
         for x in range(x0, x1 + 1):
             for z in range(z0, z1 + 1):
                 ov = overlay if chequer is None else (overlay if (x + z) % 2 else chequer)
-                self.tile(x, z, overlay=ov, flags=flags)
+                self.tile(x, z, overlay=ov, flags=flags, underlay=underlay)
 
     # --- locs ---
 
@@ -168,6 +204,15 @@ class Square:
             for x, edge in ((x0, 'west'), (x1, 'east')):
                 is_door = door_at is not None and door_at[1] == edge and door_at[0] == z
                 self.wall(door_name if is_door else name, x, z, [edge], door=is_door)
+
+    def decor(self, name, x, z, edge, offset=False):
+        """Something hung on the wall of this tile: a window, a lantern, a torch.
+
+        WALLDECOR is its own loc layer, so it shares a tile with the wall it hangs on and with
+        whatever stands on that tile - which is why these are not routed through put() or wall().
+        """
+        self.locs.append((self.names[name], 0, x, z,
+                          DECOR + (1 if offset else 0), EDGE_ROT[edge]))
 
     def npc(self, name, x, z):
         self.npcs.append((self.npc_names[name], 0, x, z))
@@ -209,23 +254,141 @@ class Square:
         return seen
 
 
+def _hash(a, b):
+    """A deterministic 0..1 from a pair of ints. No seed, no random: the same map every run."""
+    h = (a * 73856093) ^ (b * 19349663)
+    h = (h ^ (h >> 13)) * 1274126177
+    return ((h ^ (h >> 16)) & 0xffff) / 65535.0
+
+
+def noise(x, z, cell):
+    """Smooth value noise: the corners of a cell-sized grid, interpolated.
+
+    A hash taken per tile is static and a hash taken per 3x3 block is a grid of squares - the first
+    build's rock patches were the second, and rendered as a chequerboard of mud with hard right
+    angles across a snowfield. Interpolating between grid corners gives blobs with soft edges, which
+    is what a patch of bare rock looks like from above.
+    """
+    gx, gz = x / cell, z / cell
+    x0, z0 = int(gx // 1), int(gz // 1)
+    fx, fz = gx - x0, gz - z0
+    fx = fx * fx * (3 - 2 * fx)                       # smoothstep, so cells do not show as creases
+    fz = fz * fz * (3 - 2 * fz)
+    n00, n10 = _hash(x0, z0), _hash(x0 + 1, z0)
+    n01, n11 = _hash(x0, z0 + 1), _hash(x0 + 1, z0 + 1)
+    return (n00 * (1 - fx) + n10 * fx) * (1 - fz) + (n01 * (1 - fx) + n11 * fx) * fz
+
+
+def on_path(x, z):
+    """A worn track, one tile wide with a ragged edge.
+
+    One tile, not three. Three was a brown motorway through the middle of the zone - the render
+    showed a cross you could have landed a plane on - and a path up here is a line of footprints.
+    """
+    for (ax, az), (bx, bz) in PATHS:
+        if ax == bx and x == ax and min(az, bz) <= z <= max(az, bz):
+            return True
+        if az == bz and z == az and min(ax, bx) <= x <= max(ax, bx):
+            return True
+        # the ragged half-tile either side, so the line is not drawn with a ruler
+        if ax == bx and abs(x - ax) == 1 and min(az, bz) <= z <= max(az, bz) and _hash(x, z) < 0.45:
+            return True
+        if az == bz and abs(z - az) == 1 and min(ax, bx) <= x <= max(ax, bx) and _hash(x, z) < 0.45:
+            return True
+    return False
+
+
+def rock_patch(x, z):
+    """Where the snow is worn through to bare rock on the plateau floor, as overlay 22.
+
+    White Wolf Mountain is roughly seven tiles of snow to three of rock, and the rock is in drifts
+    with soft edges. This thresholds the smooth noise above, and DITHERS the band either side of the
+    threshold - a tile close to the edge goes either way on its own hash - so the boundary comes out
+    ragged at tile scale instead of as a drawn line. The client can draw a diagonal half-tile
+    (overlay shape 1 and up, which is what m44_54 uses) but a ragged edge needs no shapes at all.
+    """
+    if on_path(x, z):
+        return ROCK_OV
+    n = noise(x, z, 9)
+    if n > 0.76:
+        return ROCK_OV
+    if n > 0.68 and _hash(x * 3, z * 5) < (n - 0.68) / 0.08:
+        return ROCK_OV
+    return None
+
+
+def relief(x, z):
+    """A few units of height on the open plateau, and dead flat everywhere that is built on.
+
+    WHY AT ALL. Snow in this client is lit, not textured: White Wolf Mountain reads as bright white
+    because every slope on it catches the light differently. One flat plane catches it all the same
+    way, and 2,278 tiles of it rendered as a sheet of grey card - which is what the floor looked
+    like after the palette was fixed and before this was added.
+
+    WHY SO LITTLE. Six units is a third of a step. It shades the ground without putting anything on
+    a slope: the districts, their doors and the ring stay exactly level, and so does a one-tile
+    margin round each of them, so no wall ever meets ground that is not flat under it.
+    """
+    for x0, x1, z0, z1 in (OFFICE, VAULT, PAD_RECT, RING_RECT, CELLS[0], CELLS[1]):
+        if x0 - 2 <= x <= x1 + 2 and z0 - 2 <= z <= z1 + 2:
+            return HEIGHT
+    return HEIGHT + int(round((noise(x, z, 11) - 0.5) * 16))
+
+
 def build():
     sq = Square(pack('loc'), pack('npc'))
 
-    # THE PLATEAU, and the blocked rock line round it.
+    # THE PLATEAU FLOOR, and the mountains that ring it.
+    #
+    # A BOWL, NOT A SLAB. The first build was one flat height across all 64 squares, with eight
+    # tiles of blocked ground round the walkable part and a few rocks on it. Rendered, that is a
+    # brown table top with a black void past its edge, and in game you can see the edge of the
+    # world from the camp. Here the ground outside the plateau RISES instead - steeply, to the
+    # square's border - so the zone sits in a snow cirque with a horizon of peaks and no void in
+    # any direction. It costs nothing in collision: the ring is flagged blocked either way, and
+    # the height is only what the client draws.
     for x in range(64):
         for z in range(64):
             inside = X0 <= x <= X1 and Z0 <= z <= Z1
-            sq.tile(x, z, overlay=ROCK if inside else None, flags=0 if inside else BLOCKED)
+            if inside:
+                sq.tile(x, z, overlay=rock_patch(x, z), flags=0, underlay=SNOW, height=relief(x, z))
+                continue
+            # how far outside the plateau this tile is, 1 at the foot of the slope
+            d = max(X0 - x, x - X1, Z0 - z, z - Z1, 0)
+            far = max(X0, 63 - X1, Z0, 63 - Z1)
+            climb = (d / far) ** 1.6
+            # Ridges and gullies, from the same smooth noise as everything else. A modulo pattern
+            # here drew the mountainside as a regular chequer of brown diamonds on white - a quilt,
+            # not a mountain - which is what the first render of this slope showed.
+            jag = (noise(x, z, 6) - 0.5) * 46 * min(1.0, d / 3)
+            h = int(HEIGHT + (PEAK - HEIGHT) * climb + jag)
+            # A SNOW LINE, the right way up. Rock is the lower slope and the snow caps the peaks -
+            # the first cut had it backwards (more rock the higher it went) and rendered the ring as
+            # a wall of brown with a white skirt, which is a quarry, not a mountain.
+            r = noise(x, z, 7) - d / (far * 1.3)
+            ov = ROCK_OV if r > 0.34 else None
+            sq.tile(x, z, overlay=ov, flags=BLOCKED, underlay=SNOW if ov is None else ROCK_UN,
+                    height=min(255, max(0, h)))
 
-    # Rocks, all of them standing on ground that is blocked anyway - they are the horizon, not scenery
-    # to walk round. Two tiles clear of the plateau edge so a 2x2 footprint never reaches into it.
-    for x in range(X0 - 3, X1 + 4, 3):
-        for z in (Z0 - 3, Z1 + 2):
-            sq.put(ROCKS[(x + z) % 2], x, z, CENTRE, (x + z) % 4)
-    for z in range(Z0 - 3, Z1 + 4, 3):
-        for x in (X0 - 3, X1 + 2):
-            sq.put(ROCKS[(x + z) % 2], x, z, CENTRE, (x + z) % 4)
+    # A TREE LINE ON THE SLOPES, which is what hides the square's own border - every one of them
+    # stands on ground that is blocked anyway, so none of them is in the way of anything.
+    for x in range(2, 62, 3):
+        for z in range(2, 62, 3):
+            if X0 - 1 <= x <= X1 + 1 and Z0 - 1 <= z <= Z1 + 1:
+                continue
+            n = _hash(x * 3 + 1, z * 7 + 5)
+            if n < 0.42:
+                sq.put(TREES[0 if _hash(x, z) < 0.62 else 1], x, z, CENTRE, (x + z) % 4)
+            elif n < 0.56:
+                sq.put(ROCKS[(x + z) % 2], x, z, CENTRE, (x + z) % 4)
+
+    # DRIFTS ON THE PLATEAU ITSELF. Ground decor, so nothing blocks and nothing is in the way; it
+    # is what stops 2,278 tiles of flat white reading as a bedsheet.
+    for x in range(X0, X1 + 1):
+        for z in range(Z0, Z1 + 1):
+            if (x * 13 + z * 7) % 9 == 0 and not any(a <= x <= b and c <= z <= d
+                                                     for a, b, c, d in (OFFICE, VAULT)):
+                sq.put(SNOW_DECOR[(x + z) % 3], x, z, GROUND, (x + z) % 4)
 
     # ---- THE CAMP: where ::sz lands. Nothing here is walled; it is a camp, not a building.
     sq.put('altar', 28, 35, CENTRE, 0, blocks=2)       # width 2: op1 Pray-at, a table's width clear of it
@@ -234,6 +397,11 @@ def build():
     sq.put('chair', 32, 35, CENTRE, 0)
     sq.put('chair', 34, 35, CENTRE, 2)
     sq.put('chair', 33, 36, CENTRE, 1)
+    # Four fires round the camp. Nothing up here is lit otherwise: the render came back a dark
+    # brown field with an altar in it, and a camp at altitude with no fire reads as abandoned.
+    # fire_graphic is anim=wiztorch and active=no - it burns, it cannot be clicked, it is scenery.
+    for fx, fz in ((29, 29), (35, 29), (29, 35), (35, 35)):
+        sq.put(FIRE, fx, fz)
 
     # ---- THE OFFICE
     sq.floor(OFFICE, WOOD, flags=INDOORS)
@@ -245,23 +413,33 @@ def build():
     sq.put('table', 15, 45)
     sq.put('chair', 14, 45, CENTRE, 0)
     sq.put('chair', 16, 45, CENTRE, 2)
-    sq.locs.append((sq.names[TORCH], 0, x0, 44, DECOR, EDGE_ROT['west']))
-    sq.locs.append((sq.names[TORCH], 0, x0, 48, DECOR, EDGE_ROT['west']))
-    sq.locs.append((sq.names[TORCH], 0, x1, 44, DECOR, EDGE_ROT['east']))
+    for tz in (42, 46, 50):
+        sq.decor(TORCH, x0, tz, 'west')
+        sq.decor(TORCH, x1, tz, 'east')
+    sq.decor(LANTERN, 17, z1, 'north')
 
-    # The two cells. Bars on every edge but the door's, one wall loc per tile, and the flood fill
-    # below walks through the shut door to prove a cell can be got into and out of.
+    # The two cells, built the way Draynor jail is: solid stone, a barred window in each wall that
+    # has room for one, and a lantern over the door. One wall loc per tile, and the flood fill below
+    # walks through the shut door to prove a cell can still be got into and out of.
     for cx0, cx1, cz0, cz1 in CELLS:
-        sq.enclose((cx0, cx1, cz0, cz1), BARS,
-                   door_at=((cx0 + cx1) // 2, CELL_DOOR), door_name=DOOR)
+        door_x = (cx0 + cx1) // 2
+        sq.enclose((cx0, cx1, cz0, cz1), CELL_WALL, door_at=(door_x, CELL_DOOR), door_name=DOOR)
+        # a window in the three walls that are not the door, set in the middle tile of each
+        sq.decor(CELL_WINDOW, door_x, cz1, 'north')
+        sq.decor(CELL_WINDOW, cx0, (cz0 + cz1) // 2, 'west')
+        sq.decor(CELL_WINDOW, cx1, (cz0 + cz1) // 2, 'east')
+        sq.decor(LANTERN, door_x, cz0, 'south')
 
     # ---- THE VAULT
-    sq.floor(VAULT, BANK_A, flags=INDOORS, chequer=BANK_B)
+    sq.floor(VAULT, VAULT_FLOOR, flags=INDOORS)
     sq.enclose(VAULT, WALL, door_at=VAULT_DOOR, door_name=DOOR)
     vx0, vx1, vz0, vz1 = VAULT
     for x in range(40, 44):
         sq.put('bankbooth', x, 48, CENTRE, 1)
-    sq.locs.append((sq.names['banknoticeboard'], 0, 45, vz1, DECOR, EDGE_ROT['north']))
+    sq.decor('banknoticeboard', 45, vz1, 'north')
+    for tz in (41, 45, 49):
+        sq.decor(TORCH, vx0, tz, 'west')
+        sq.decor(TORCH, vx1, tz, 'east')
     sq.npc('banker1', 41, 49)
     sq.npc('banker2', 43, 49)
     sq.npc('generalshopkeeper5', 46, 43)
@@ -276,7 +454,9 @@ def build():
 
     sq.floor(PAD_RECT, PAD)                            # bare pad: ::npcadd wants room, not scenery
 
-    sq.floor(RING_RECT, RING)
+    # Rock swept clear of snow, not the Duel Arena's own floor - overlay 76 came out bright yellow
+    # sand against the white, which is a beach with a fence round it.
+    sq.floor(RING_RECT, ROCK_OV, underlay=ROCK_UN)
     rx0, rx1, rz0, rz1 = RING_RECT
     for x in range(rx0 + 1, rx1):                      # corners left open - the way in, no gate
         sq.wall(FENCE, x, rz0, ['south'])
