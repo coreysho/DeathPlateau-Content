@@ -1,0 +1,23 @@
+// The staff zone - one map square nobody can walk to, reached by ::sz and left by ::home.
+//
+// The square itself is built by tools/genstaffzone.py, which is where the layout and the reason for
+// every tile of it is written down. 22_56 is the same row as Burthorpe and the real Death Plateau,
+// five squares west of anything that exists: every one of its eight neighbours is empty, so no edge
+// of a real map square is ever in view, and x/z 1408..1471, 3584..3647 is outside both wilderness
+// rectangles and far inside the 14-bit coord packing. maps/ignore.csv keeps it off the world map.
+
+// Where ::sz lands you: the camp in the middle of the plateau.
+^staffzone_arrive = 0_22_56_32_32
+
+// The whole square, for asking "is this player in there" - the login check below is the only caller.
+^staffzone_sw = 0_22_56_0_0
+^staffzone_ne = 0_22_56_63_63
+
+// Where anyone who should not be in there is put instead. Edgeville, which is where ::home goes.
+^staffzone_exit = 0_48_54_14_35
+
+// THE RANK, AND WHO OWNS IT. Engine-TS's ClientCheatHandler is the authority on who may type ::sz
+// (staffModLevel >= 2, moderator) and ClientCheatCommands.ts is the authority on what is said about
+// it. This number exists so the login check can ask the same question of somebody already inside,
+// and it has to be kept equal to the handler's by hand - the two are in different repositories.
+^staffzone_rank = 2
