@@ -55,8 +55,38 @@ import dpglyph                                           # noqa: E402
 # shade would land on lightness 16, which has no rgb15 that converts back to it - irrelevant here,
 # since nothing is written through a config, but it is kept at 18 so the baked models and the
 # recolour pairs recorded in tools/maxcapevariantspec.json describe the same cape.
-CAPE = {668: 4636, 675: 4643, 784: 4626, 815: 4655, 673: 4641}
-HOOD = {815: 4655, 784: 4626, 675: 4643, 685: 4653, 914: 4626, 945: 4657}
+# ONE TABLE FOR BOTH, not a cape table and a hood table. They were split that way to mirror the
+# recolour pairs each item's config would have carried - and the split let 945 through: it is in
+# the hood's five shades and not the cape's, so twenty-four faces of rgb(201,26,12) stayed bright
+# red on a cape that had nothing else warm left on it. The check at the end of main() now refuses
+# a model that keeps a warm colour, so the next hole in a table says so instead of shipping.
+CLOTH = {668: 4361, 673: 4363, 675: 4363, 685: 4366, 784: 4357, 815: 4367, 914: 4358, 945: 4368}
+
+# AND THE GOLD, which this used to leave alone on purpose - a Saradomin max cape is blue cloth
+# under the same gold, and that sameness is what makes a max cape variant read as one. This cape
+# gives that up deliberately, because the Veteran cape it belongs to is dark cloth under gunmetal
+# and the pair have to match each other before they match the family.
+#
+# Resolved through the client palette rather than guessed from the numbers: hues 4 to 6 here are
+# rgb(202,150,110), rgb(175,124,63), rgb(218,170,114) - gold. (The Attack cape's bands are hue
+# 52-55 and magenta, a recolour placeholder; the two capes are built differently and the same
+# threshold would be wrong on both.) Each one keeps its own lightness and loses hue and
+# saturation, which is a neutral grey at the same brightness.
+#
+# KEPT SEPARATE FROM THE CLOTH TABLES, not merged into them: cloth_of() below feeds the device
+# placement, which finds the back of the cape by its cloth colours, and gold in that set would
+# have the device looking for somewhere to sit on the trim.
+TRIM = {4550: 70, 5683: 51, 5708: 76, 5458: 82, 4316: 92, 4820: 84, 5437: 61, 6798: 14, 4661: 53, 5706: 74, 4300: 76, 5714: 82}
+
+# THE TWO GEMS, and the last of the red. 972 is rgb(250,84,74) and exactly four faces, in two
+# clusters at x -18 and x +18 near the top of the cape - the shoulder stones. It was the only warm
+# colour left once the cloth and the trim had moved, so it is now a DARK neutral rather than a
+# bright one: the clasp around it is trim, and a light stone on a light clasp is no stone at all.
+GEM = {972: 34}
+# 902 and 522 are rgb(37,4,2) and rgb(47,18,17) - shading so dark it reads as black either way -
+# and 1944 is a single red step the cloth tables never named. They follow the cloth, so no part of
+# the mesh is left on the old red ramp.
+REST = {902: 4354, 522: 4355, 1944: 4360}
 
 # THE CLOTH IS LOOKED FOR BY ITS NEW COLOUR, because the repaint happens first: by the time the
 # device is placed, the five red shades the recolour named are gone and the bronze is there
@@ -64,11 +94,12 @@ HOOD = {815: 4655, 784: 4626, 675: 4643, 685: 4653, 914: 4626, 945: 4657}
 def cloth_of(table):
     return set(table) | set(table.values())
 
-# The device: dark on bronze, with a lighter rim just behind it so it reads as struck into the
-# cloth rather than painted on. The Veteran cape's own two colours, so the rank reads as one thing
-# whichever cape a player is wearing.
-EMBLEM_RGB = (58, 32, 14)
-EMBLEM_RIM_RGB = (206, 142, 84)
+# The device: light on dark cloth, with a darker rim just behind it so it reads as struck into the
+# cloth rather than painted on. It was the other way round when the cloth was bronze; against a
+# cape this dark the separation has to come from the other side. The Veteran cape's own two
+# colours, so the rank reads as one thing whichever cape a player is wearing.
+EMBLEM_RGB = (200, 200, 200)
+EMBLEM_RIM_RGB = (118, 118, 118)
 
 # Where the device goes on each cape model, and how big.
 #
@@ -90,9 +121,9 @@ CAPES = {
     'obj_max_cape_womanwear': dict(plane='xy', centre=(0, -112), size=24.0, mirror=True, flip=False),
 }
 
-PARTS = ([('obj_max_cape%s' % s, 'obj_veteran_max_cape%s' % s, CAPE)
+PARTS = ([('obj_max_cape%s' % s, 'obj_veteran_max_cape%s' % s, CLOTH)
           for s in ('', '_manwear', '_womanwear')] +
-         [('obj_max_hood%s' % s, 'obj_veteran_max_hood%s' % s, HOOD)
+         [('obj_max_hood%s' % s, 'obj_veteran_max_hood%s' % s, CLOTH)
           for s in ('', '_manwear', '_womanwear', '_manhead', '_womanhead')])
 
 
@@ -295,7 +326,16 @@ def main():
             raise SystemExit('%s.ob2 is missing' % src)
         m = parse_ob2(open(path, 'rb').read())
         hit = sum(1 for c in m['colour'] if c in table)
-        m['colour'] = [table.get(c, c) for c in m['colour']]
+        paint = {**table, **TRIM, **GEM, **REST}   # not dict(table, **...): these keys are ints
+        m['colour'] = [paint.get(c, c) for c in m['colour']]
+
+        # NOTHING WARM SURVIVES. A hue of 0-2 at any real saturation is the Max cape's red, and
+        # every one of those is meant to have been named by a table above. This cape has no warm
+        # colour in it by design, so anything left is a hole in a table rather than a decision.
+        left = sorted({c for c in m['colour'] if ((c >> 10) & 0x3F) <= 2 and ((c >> 7) & 0x7) >= 2})
+        if left:
+            raise SystemExit('%s: still red in %s - nothing names %s'
+                             % (os.path.basename(__file__), dst, ', '.join(str(c) for c in left)))
         print('  %-36s %4d faces, %3d repainted' % (dst, m['fcount'], hit))
         if src in CAPES:
             added = add_device(m, cloth_of(table), CAPES[src])
