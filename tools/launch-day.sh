@@ -93,16 +93,40 @@ cmd "cd $ENGINE && npx tsx tools/server/veteran.ts --list"
 note "A read. Names the roster the grant would give the rank to, while there is still time"
 note "to disagree with it."
 
-for pair in "$CONTENT:content" "$ENGINE:engine" "$WEB:web"; do
-    dir=${pair%:*}
-    what=${pair#*:}
-    if [ -d "$dir/.git" ]; then
-        branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
-        tip=$(git -C "$dir" log --oneline -1 2>/dev/null)
-        dirty=$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d ' ')
-        note "$what: $branch, $dirty local change(s), at $tip"
-    else
+# WHICH BRANCH EACH CHECKOUT IS ON, and not as a courtesy. On 11 November the live engine was
+# checked out on a branch called dev-logging - the JAVA CLIENT is on dev-logging, the engine
+# never was - while a local 377-wip sat beside it 613 commits behind. Live deploys did not care,
+# because the pull is "git pull origin 377-wip" into whatever is checked out. But --dev clones
+# --branch 377-wip from here, so a rebuilt dev world would have come up on the stale branch
+# without complaining, and anybody reading git status was told the engine was somewhere it was
+# not. It had printed the branch name here for two days and said nothing was wrong with it.
+for what in content engine web; do
+    case $what in
+        content) dir=$CONTENT; want=377-wip ;;
+        engine)  dir=$ENGINE;  want=377-wip ;;
+        web)     dir=$WEB;     want=main ;;
+    esac
+    if [ ! -d "$dir/.git" ]; then
         note "$what: no checkout at $dir"
+        continue
+    fi
+    branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null)
+    tip=$(git -C "$dir" log --oneline -1 2>/dev/null)
+    dirty=$(git -C "$dir" status --porcelain 2>/dev/null | wc -l | tr -d " ")
+    note "$what: $branch, $dirty local change(s), at $tip"
+    if [ "$branch" != "$want" ]; then
+        note "   NOT ON $want. Deploys still work - the pull goes into whatever is checked out -"
+        note "   but --dev clones --branch $want from here, and this misleads anybody reading it."
+        if git -C "$dir" show-ref --verify --quiet "refs/heads/$want"; then
+            note "   AND there is a local $want that is NOT the one being deployed:"
+            note "   $(git -C "$dir" log --oneline -1 "$want" 2>/dev/null)"
+            note "   that is the branch --dev would clone. Sort this out before touching dev."
+        fi
+    fi
+    # As of the last fetch: nothing here fetches, because nothing here touches the network.
+    behind=$(git -C "$dir" rev-list --count "HEAD..origin/$want" 2>/dev/null || echo 0)
+    if [ "${behind:-0}" -gt 0 ]; then
+        note "   $behind commit(s) behind origin/$want as of the last fetch"
     fi
 done
 note "green on 377-wip? github.com/coreysho/DeathPlateau-Content/actions"
