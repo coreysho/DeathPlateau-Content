@@ -14,7 +14,12 @@ if (~pre_tele_checks(coord) = false) {
 ~p_telejump_safe(^staffzone_arrive);
 if (coord = ^staffzone_arrive) {
     mes("You teleport to the staff zone.");
-    mes("Type <col=255>::home</col> to leave.");
+    // No colour tag on ::home. This client reads @xxx@ tags and knows nothing about OSRS's
+    // angle-bracket colour markup, which rs2check rule 21 caught in this very line: it would
+    // have been printed to the player verbatim, brackets and all. @whi@ works, but it switches
+    // a colour on with nothing to switch back to, so the words carry it instead. (Rule 21 reads
+    // raw lines, comments included, so do not quote the markup here either - that trips it too.)
+    mes("Type ::home to leave.");
 }
 
 // NOBODY WHO IS NOT STAFF WAKES UP IN THERE.
