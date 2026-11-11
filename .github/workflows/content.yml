@@ -192,6 +192,11 @@ jobs:
         # the script back to the engine, and a player who clicks away in between keeps the loss
         # and not the progress. One of those cost a player the Feud.
         - questprogress_battery.py
+        # The scroll writes "N Quest Point(s)" itself, and 43 quests also wrote that line into
+        # their reward text. The proc now drops a first line that EXACTLY matches the one it is
+        # about to print, so this holds all 43 to that exact wording - a loose match would eat a
+        # reward written beside the points.
+        - questscroll_battery.py
 
     steps:
     - uses: actions/checkout@v4
