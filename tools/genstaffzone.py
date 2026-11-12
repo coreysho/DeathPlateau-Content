@@ -171,11 +171,34 @@ class Square:
 
     # --- locs ---
 
-    def put(self, name, x, z, shape=CENTRE, rot=0, blocks=1):
+    def put(self, name, x, z, shape=CENTRE, rot=0, w=1, l=1):
+        """Something standing on the ground, and the tiles it stands on.
+
+        THE FOOTPRINT IS CHECKED, because a loc's own width and length are in its config and not in
+        my head: the fountain is 2x2, the furnace and a wilderness obelisk are 3x3, a telescope is
+        1x3 and the trading post is 2x1. Laying a dozen of them out by eye put two on one tile and
+        another across the path on the first attempt. A rotated loc swaps its width and length -
+        the client does, so this does.
+
+        Ground decor (shape 22) is not a footprint: a rug and a drift are painted on the tile and
+        nothing stands on them, so they are not recorded and do not collide.
+        """
         self.locs.append((self.names[name], 0, x, z, shape, rot))
-        if shape in (CENTRE, CENTRE + 1):
-            for dx in range(blocks):
-                self.full.add((x + dx, z) if rot % 2 == 0 else (x, z + dx))
+        if shape not in (CENTRE, CENTRE + 1):
+            return
+        ww, ll = (w, l) if rot % 2 == 0 else (l, w)
+        for dx in range(ww):
+            for dz in range(ll):
+                t = (x + dx, z + dz)
+                if t in self.full:
+                    raise SystemExit('two locs on tile %d,%d - the second is %s' % (t[0], t[1], name))
+                if t == ARRIVE:
+                    raise SystemExit('%s stands on the ::sz arrival tile' % name)
+                indoors = any(x0 <= t[0] <= x1 and z0 <= t[1] <= z1
+                              for x0, x1, z0, z1 in (OFFICE, VAULT))
+                if on_path(*t) and not indoors:
+                    raise SystemExit('%s at %d,%d stands in the path' % (name, t[0], t[1]))
+                self.full.add(t)
 
     def wall(self, name, x, z, edges, door=False):
         """One wall-layer loc on this tile, covering one edge or two. Nothing else may share it."""
@@ -391,16 +414,32 @@ def build():
                 sq.put(SNOW_DECOR[(x + z) % 3], x, z, GROUND, (x + z) % 4)
 
     # ---- THE CAMP: where ::sz lands. Nothing here is walled; it is a camp, not a building.
-    sq.put('altar', 28, 35, CENTRE, 0, blocks=2)       # width 2: op1 Pray-at, a table's width clear of it
-    sq.put('signpost', 34, 32)
-    sq.put('roundtable', 33, 35)
-    sq.put('chair', 32, 35, CENTRE, 0)
-    sq.put('chair', 34, 35, CENTRE, 2)
-    sq.put('chair', 33, 36, CENTRE, 1)
-    # Four fires round the camp. Nothing up here is lit otherwise: the render came back a dark
-    # brown field with an altar in it, and a camp at altitude with no fire reads as abandoned.
-    # fire_graphic is anim=wiztorch and active=no - it burns, it cannot be clicked, it is scenery.
-    for fx, fz in ((29, 29), (35, 29), (29, 35), (35, 35)):
+    #
+    # Laid out round the paths rather than across them, which the footprint check enforces - the
+    # first version had a chair standing in the middle of the north path and nobody noticed.
+    sq.put('altar', 28, 35, CENTRE, 0, w=2)            # width 2: op1 Pray-at
+    sq.put('fountain', 35, 34, CENTRE, 0, w=2, l=2)    # the one thing up here that is not grey
+    sq.put('telescope', 27, 29, CENTRE, 0, l=3)        # 1x3, pointed at the sky over the peaks
+
+    # Two warriors either side of the way in from the south, because a staff zone may as well
+    # announce itself.
+    sq.put('statue_malewarrior', 30, 28)
+    sq.put('statue_femalewarrior', 34, 28)
+
+    # The four kingdoms on the camp's south edge. Asgarnia is Burthorpe's, which is the closest
+    # thing to a claim this plateau has.
+    for i, (fx, flag) in enumerate(((28, 'flagpole_asgarnia'), (29, 'flagpole_kandarin'),
+                                    (35, 'flagpole_ardougne'), (36, 'flagpole'))):
+        sq.put(flag, fx, 27)
+
+    sq.put('table', 35, 30)
+    sq.put('chair', 34, 30, CENTRE, 0)
+    sq.put('chair', 36, 30, CENTRE, 2)
+    sq.put('signpost', 34, 33)
+    # Four fires, two of them flanking the arrival tile. Nothing up here is lit otherwise: the
+    # render came back a dark field with an altar in it, and a camp at altitude with no fire reads
+    # as abandoned. fire_graphic is anim=wiztorch and active=no - it burns and cannot be clicked.
+    for fx, fz in ((29, 32), (35, 32), (27, 34), (37, 34)):
         sq.put(FIRE, fx, fz)
 
     # ---- THE OFFICE
@@ -408,8 +447,19 @@ def build():
     sq.enclose(OFFICE, WALL, door_at=OFFICE_DOOR, door_name=DOOR)
     x0, x1, z0, z1 = OFFICE
     sq.put('favour_podium_lectern', 17, 50)
-    for i, x in enumerate((13, 14, 15)):
-        sq.put('bookcase', x, z1, CENTRE, 1)
+    for x in (13, 14, 15):
+        sq.put('bookshelf_old_tall', x, z1, CENTRE, 1)
+    sq.put('globe_model', 17, 46)
+    for i, (cx, cz) in enumerate(((13, 39), (14, 39), (13, 40))):
+        sq.put(('crate2', 'boxes', 'sacks')[i], cx, cz)
+    sq.put('candles', 23, 51)
+    # A rug under the desk: ground decor, so it collides with nothing and the table stands on it.
+    for dx in (-1, 0, 1):
+        for dz in (-1, 0, 1):
+            piece = ('rugmiddle_verydark' if (dx, dz) == (0, 0)
+                     else 'rugcorner_verydark' if dx and dz else 'rugside_verydark')
+            rot = (0 if dz == 1 else 2 if dz == -1 else 1 if dx == -1 else 3)
+            sq.put(piece, 15 + dx, 45 + dz, GROUND, rot)
     sq.put('table', 15, 45)
     sq.put('chair', 14, 45, CENTRE, 0)
     sq.put('chair', 16, 45, CENTRE, 2)
@@ -434,8 +484,13 @@ def build():
     sq.floor(VAULT, VAULT_FLOOR, flags=INDOORS)
     sq.enclose(VAULT, WALL, door_at=VAULT_DOOR, door_name=DOOR)
     vx0, vx1, vz0, vz1 = VAULT
+    # ROTATION 2, AND IT IS READ OFF EDGEVILLE RATHER THAN GUESSED. The booths at 3095,3489 and
+    # 3095,3491 are rot 3 with their banker to the EAST; the pair at 3096,3493 and 3098,3493 are
+    # rot 0 with their banker to the SOUTH. So the banker's side runs 0 south, 1 west, 2 north,
+    # 3 east. These two bankers stand north of the counter, which makes it rot 2 - it was built at
+    # rot 1 and faced the players sideways.
     for x in range(40, 44):
-        sq.put('bankbooth', x, 48, CENTRE, 1)
+        sq.put('bankbooth', x, 48, CENTRE, 2)
     sq.decor('banknoticeboard', 45, vz1, 'north')
     for tz in (41, 45, 49):
         sq.decor(TORCH, vx0, tz, 'west')
@@ -446,11 +501,34 @@ def build():
     sq.npc('generalassistant5', 47, 43)
     sq.put('table', 46, 44)
 
+    # THE TRADING POST, which is the one thing in here that is not a copy of something in Edgeville:
+    # it is this server's own (scripts/tradingpost), and a staff zone is exactly where somebody
+    # wants to read what the economy is asking for a whip without walking to the bank. width 2,
+    # forceapproach=south, so the two tiles below it are kept clear. The icon loc goes on the same
+    # tile it does at 3084,3492, so it shows on the minimap here too.
+    sq.put('trading_post', 46, 49, CENTRE, 0, w=2)
+    sq.put('trading_post_icon', 46, 49, GROUND, 0)
+    for i, (cx, cz) in enumerate(((50, 40), (50, 41), (49, 40), (50, 43))):
+        sq.put(('crate2', 'barrel', 'boxes', 'sacks')[i], cx, cz)
+    sq.put('candles', 39, 49)
+
     # ---- THE RANGE
-    for i, x in enumerate(range(14, 24, 2)):
-        sq.put('sworddummy', x, 20)                    # op2 Attack, wired in area_varrock
+    # z 18, not 20: the east-west path runs along z 21 and its ragged edge reaches z 20, so two of
+    # these five were standing in it. x stops at 21 to stay clear of the furnace's 3x3 at 22.
+    for x in range(13, 23, 2):
+        sq.put('sworddummy', x, 18)                    # op2 Attack, wired in area_varrock
     sq.put('target', 14, 23)
     sq.put('target', 16, 23)
+
+    # A corner to test a skill in, which is what staff on a live world actually need: a furnace
+    # (3x3, approached from the east, so 25,17 is left open), an anvil beside it, and a wheel.
+    sq.put('furnace1', 22, 16, CENTRE, 0, w=3, l=3)
+    sq.put('anvil', 26, 17)
+    sq.put('spinningwheel', 26, 15)                    # forceapproach=south: 26,14 stays clear
+    # A cannon nobody can fire and a wilderness obelisk nobody can step through. Both are here
+    # because they are the sort of thing you walk over to look at.
+    sq.put('cannon', 38, 23, CENTRE, 0, l=2)
+    sq.put('obelisk_earth', 38, 26, CENTRE, 0, w=3, l=3)
 
     sq.floor(PAD_RECT, PAD)                            # bare pad: ::npcadd wants room, not scenery
 
