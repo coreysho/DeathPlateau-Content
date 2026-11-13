@@ -34,17 +34,30 @@
 // the proc already answers Realism for a character who was never asked - the rate the engine plays
 // them at, so the badge that tells the truth about them.
 [proc,broadcast_name]()(string)
+// ONE RANK ICON, FROM THE ENGINE'S OWN CHOICE OF IT. This used to read staffmodlevel and rebuild
+// the ladder here, which worked for the staff crowns and could not reach the other two ranks at
+// all: Veteran and Helper are flags on the account rather than staff levels, so no comparison
+// against staffmodlevel finds them, and a veteran's yell and a veteran's rare drop went out with
+// the XP badge and nothing else while the same player's icon showed perfectly well over their head
+// and on their public chat - because those come from the appearance block, which does know.
+//
+// chatcrown is that same number: whatever ChatCrown.ts picked for this player, including the ones
+// this file cannot see. The switch below only turns a number into a marker, so a rank added later
+// needs a line here and nowhere else, and a broadcast can no longer disagree with a chat line
+// about who somebody is.
+//
+// 7 and 8 are NOT above 6 in rank - the low nibble is a set of icon ids, not a ladder - so they
+// are matched exactly, the same fencing the client's ChatIcons.forPlayer uses and for the same
+// reason: a veteran must not fall through into the second owner's crown.
 def_string $icons = "";
-if (staffmodlevel >= 6) {
-    $icons = "@cr8@";
-} else if (staffmodlevel >= 5) {
-    $icons = "@cr7@";
-} else if (staffmodlevel >= 4) {
-    $icons = "@cr6@";
-} else if (staffmodlevel >= 2) {
-    $icons = "@cr2@";
-} else if (staffmodlevel >= 1) {
-    $icons = "@cr1@";
+switch_int (chatcrown) {
+    case 8 : $icons = "@cra@";   // helper, blue roundel
+    case 7 : $icons = "@cr9@";   // veteran, bronze emblem
+    case 6 : $icons = "@cr8@";   // second owner
+    case 5 : $icons = "@cr7@";   // owner
+    case 4 : $icons = "@cr6@";   // developer
+    case 2 : $icons = "@cr2@";   // gold crown
+    case 1 : $icons = "@cr1@";   // silver crown
 }
 switch_int (~xprate_current) {
     case ^xprate_10x : $icons = append($icons, "@cr5@");

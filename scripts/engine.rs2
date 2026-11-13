@@ -244,6 +244,10 @@
 [command,staffmodlevel]()(int)
 // info: Get the permissions level the secondary player has
 [command,.staffmodlevel]()(int)
+// info: Get the rank icon the player's name carries (ChatCrown: 0 none, 1 silver, 2 gold, 4 developer, 5 owner, 6 second owner, 7 veteran, 8 helper)
+[command,chatcrown]()(int)
+// info: Get the rank icon the secondary player's name carries
+[command,.chatcrown]()(int)
 // info: Get the current level of $stat (different than base)
 [command,stat](stat $stat)(int)
 // info: Get the current level of $stat (different than base) for the secondary player
