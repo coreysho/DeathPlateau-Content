@@ -52,7 +52,7 @@
 def_string $icons = "";
 switch_int (chatcrown) {
     case 8 : $icons = "@cra@";   // helper, blue roundel
-    case 7 : $icons = "@cr9@";   // veteran, bronze emblem
+    case 7 : $icons = "@cr9@";   // veteran, grey emblem - gunmetal since 2026-11-11, matching the cape
     case 6 : $icons = "@cr8@";   // second owner
     case 5 : $icons = "@cr7@";   // owner
     case 4 : $icons = "@cr6@";   // developer
