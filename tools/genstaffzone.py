@@ -162,8 +162,9 @@ class Square:
 
     # --- terrain ---
 
-    def tile(self, x, z, overlay=None, flags=0, underlay=SNOW, height=HEIGHT):
-        self.land[(0, x, z)] = dict(h=height, ov=overlay, shape=0, rot=0, flags=flags, un=underlay)
+    def tile(self, x, z, overlay=None, flags=0, underlay=SNOW, height=HEIGHT, shape=0, rot=0):
+        self.land[(0, x, z)] = dict(h=height, ov=overlay, shape=shape, rot=rot,
+                                    flags=flags, un=underlay)
 
     def floor(self, rect, overlay, flags=0, chequer=None, underlay=SNOW):
         x0, x1, z0, z1 = rect
@@ -376,23 +377,52 @@ def on_path(x, z):
     return False
 
 
-def rock_patch(x, z):
-    """Where the snow is worn through to bare rock on the plateau floor, as overlay 22.
+def is_rock(x, z):
+    """Is this tile bare rock rather than snow? The mask, before it is given a shape."""
+    return on_path(x, z) or noise(x, z, 9) > 0.72
 
-    White Wolf Mountain is roughly seven tiles of snow to three of rock, and the rock is in drifts
-    with soft edges. This thresholds the smooth noise above, and DITHERS the band either side of the
-    threshold - a tile close to the edge goes either way on its own hash - so the boundary comes out
-    ragged at tile scale instead of as a drawn line. The client can draw a diagonal half-tile
-    (overlay shape 1 and up, which is what m44_54 uses) but a ragged edge needs no shapes at all.
+
+# The diagonal half-tile, and which way round it goes.
+#
+# READ OFF m44_54 RATHER THAN GUESSED. Every tile on White Wolf Mountain carrying overlay 22 at
+# shape 1 was tabulated against which of its four neighbours are solid rock, and the four rotations
+# fall out of the real map unambiguously: rot 0 appears where south and west are rock, rot 1 where
+# north and west are, rot 2 where north and east are, rot 3 where east and south are. So shape 1
+# covers the half of the tile toward one corner - 0 south-west, 1 north-west, 2 north-east, 3
+# south-east - and that corner is always the one BETWEEN the two rock neighbours.
+CORNER_SHAPE = {('s', 'w'): 0, ('n', 'w'): 1, ('n', 'e'): 2, ('e', 's'): 3}
+
+
+def shaped(x, z, mask):
+    """(overlay, shape, rotation) for a tile, with its outer corners cut diagonally.
+
+    WHY. A tile is either wholly overlay or wholly not, so a boundary between rock and snow comes
+    out as a staircase of right angles - which is what the zone's stone patches looked like, and
+    what a hand-drawn map avoids by splitting the boundary tiles diagonally. Where the rock turns a
+    corner, this draws the half-tile instead of the whole one, and the step becomes a 45 degree cut.
+
+    Only tiles that are ALREADY rock are changed, and only ever by taking area away. Nothing is
+    added to a snow tile, so the mask still decides where rock is and this only decides what its
+    edge looks like.
     """
-    if on_path(x, z):
-        return ROCK_OV
-    n = noise(x, z, 9)
-    if n > 0.76:
-        return ROCK_OV
-    if n > 0.68 and _hash(x * 3, z * 5) < (n - 0.68) / 0.08:
-        return ROCK_OV
-    return None
+    if not mask(x, z):
+        return None, 0, 0
+    n, e, s, w = mask(x, z + 1), mask(x + 1, z), mask(x, z - 1), mask(x - 1, z)
+    if n + e + s + w == 2:
+        for pair, rot in CORNER_SHAPE.items():
+            have = {'n': n, 'e': e, 's': s, 'w': w}
+            if have[pair[0]] and have[pair[1]]:
+                return ROCK_OV, 1, rot
+    return ROCK_OV, 0, 0
+
+
+def slope_rock(x, z):
+    """The same question for the mountainside: rock low, snow on the caps."""
+    d = max(X0 - x, x - X1, Z0 - z, z - Z1, 0)
+    if d == 0:
+        return False
+    far = max(X0, 63 - X1, Z0, 63 - Z1)
+    return noise(x, z, 7) - d / (far * 1.3) > 0.34
 
 
 def relief(x, z):
@@ -429,7 +459,9 @@ def build():
         for z in range(64):
             inside = X0 <= x <= X1 and Z0 <= z <= Z1
             if inside:
-                sq.tile(x, z, overlay=rock_patch(x, z), flags=0, underlay=SNOW, height=relief(x, z))
+                ov, shp, rt = shaped(x, z, is_rock)
+                sq.tile(x, z, overlay=ov, shape=shp, rot=rt, flags=0, underlay=SNOW,
+                        height=relief(x, z))
                 continue
             # how far outside the plateau this tile is, 1 at the foot of the slope
             d = max(X0 - x, x - X1, Z0 - z, z - Z1, 0)
@@ -443,10 +475,9 @@ def build():
             # A SNOW LINE, the right way up. Rock is the lower slope and the snow caps the peaks -
             # the first cut had it backwards (more rock the higher it went) and rendered the ring as
             # a wall of brown with a white skirt, which is a quarry, not a mountain.
-            r = noise(x, z, 7) - d / (far * 1.3)
-            ov = ROCK_OV if r > 0.34 else None
-            sq.tile(x, z, overlay=ov, flags=BLOCKED, underlay=SNOW if ov is None else ROCK_UN,
-                    height=min(255, max(0, h)))
+            ov, shp, rt = shaped(x, z, slope_rock)
+            sq.tile(x, z, overlay=ov, shape=shp, rot=rt, flags=BLOCKED,
+                    underlay=SNOW if ov is None else ROCK_UN, height=min(255, max(0, h)))
 
     # A TREE LINE ON THE SLOPES, which is what hides the square's own border - every one of them
     # stands on ground that is blocked anyway, so none of them is in the way of anything.
