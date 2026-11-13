@@ -132,6 +132,8 @@ DOOR = 'loc_1513'                          # "Large door", [oploc1,_door_closed]
 CELL_WALL = 'oldbigstone_castlewall'
 CELL_WINDOW = 'prisonwindow'
 LANTERN = 'hanginglantern'
+ROOF = 'roof_greyslate'                     # the slate that goes with brickwall
+ROOF_EDGE = 'roofedge_greyslate'
 FENCE = 'railing'
 TORCH = 'torch'
 FIRE = 'fire_graphic'                      # anim=wiztorch, active=no - a fire that burns and does nothing
@@ -141,6 +143,7 @@ ROCKS = ('death_mountainrocks_1', 'death_rockslide5')
 
 # shape, and the rotation that puts a wall on each edge of its own tile
 STRAIGHT, CORNER, DECOR, CENTRE, GROUND = 0, 2, 4, 10, 22
+ROOFSLOPE, ROOF_CONVEX, ROOF_FLAT, ROOFEDGE, ROOFEDGE_CORNER = 12, 16, 17, 18, 21
 EDGE_ROT = {'west': 0, 'north': 1, 'east': 2, 'south': 3}
 # A corner covers two edges: 0 west+north, 1 north+east, 2 east+south, 3 south+west
 CORNER_ROT = {('west', 'south'): 3, ('west', 'north'): 0, ('east', 'north'): 1, ('east', 'south'): 2}
@@ -236,6 +239,58 @@ class Square:
         """
         self.locs.append((self.names[name], 0, x, z,
                           DECOR + (1 if offset else 0), EDGE_ROT[edge]))
+
+    def roof(self, rect, roof_name=ROOF, edge_name=ROOF_EDGE):
+        """A slate roof over a rectangular building, on the level above it.
+
+        TAKEN APART FROM A REAL ONE rather than invented: the freestanding 10x6 roof at local
+        x21..30, z14..19 of maps/m32_61.jm2. Every tile of its perimeter is a roofedge facing out,
+        every tile inside it is a roof straight sloping away from a ridge down the middle, and the
+        level above the building carries land of its own - flags 16 and nothing else, no height, no
+        underlay. Rotations there read 0 east, 1 south, 2 west, 3 north, and at the corners the
+        column's rotation wins over the row's.
+
+        IT OVERHANGS THE WALLS BY A TILE, which the 5x3 roof in m38_51 does over its 3x1 room: the
+        box below is the INTERIOR, and the eaves sit one tile outside it on every side.
+
+        ONE RING OF SLOPE, THEN FLAT, which is m38_51's shape and not m32_61's. The 10x6 roof there
+        is a gable - two slopes meeting at a ridge down the middle - and a gable over a room this
+        size is a mountain of slate: rendered over the Office's 13x15 it came out taller than the
+        building and read as a stepped stone hill. The eaves ring, one ring of slope with convex
+        corners, and flat from there in stays the same low height whatever the footprint.
+
+        WHY THE LEVEL MATTERS. Roof locs live on level 1 for a single-storey building (2,521 of the
+        first 200 squares' roof-shaped locs are on level 1, 1,298 on level 2 for the two-storey
+        ones). Putting them on level 0 would stand them in the room. The client hides them again
+        when the player walks underneath, which is what flag 4 on the floor below is for, and every
+        interior tile here already carries it.
+        """
+        x0, x1, z0, z1 = rect
+        rx0, rx1, rz0, rz1 = x0 - 1, x1 + 1, z0 - 1, z1 + 1
+        for x in range(rx0, rx1 + 1):
+            for z in range(rz0, rz1 + 1):
+                self.land[(1, x, z)] = dict(h=None, ov=None, shape=0, rot=0, flags=16, un=0)
+                w, e = x == rx0, x == rx1
+                sth, nth = z == rz0, z == rz1
+                if w or e or sth or nth:                      # the eaves, facing out
+                    if (w or e) and (sth or nth):
+                        piece, shape = edge_name, ROOFEDGE_CORNER
+                        rot = 1 if (w and sth) else 0 if (e and sth) else 2 if (w and nth) else 3
+                    else:
+                        piece, shape = edge_name, ROOFEDGE
+                        rot = 2 if w else 0 if e else 1 if sth else 3
+                else:
+                    w, e = x == rx0 + 1, x == rx1 - 1
+                    sth, nth = z == rz0 + 1, z == rz1 - 1
+                    if (w or e) and (sth or nth):             # the slope's own corners
+                        piece, shape = roof_name, ROOF_CONVEX
+                        rot = 1 if (w and sth) else 0 if (e and sth) else 2 if (w and nth) else 3
+                    elif w or e or sth or nth:                # one ring of slope, and only one
+                        piece, shape = roof_name, ROOFSLOPE
+                        rot = 2 if w else 0 if e else 1 if sth else 3
+                    else:                                     # flat from there in
+                        piece, shape, rot = roof_name, ROOF_FLAT, 1
+                self.locs.append((self.names[piece], 1, x, z, shape, rot))
 
     def npc(self, name, x, z):
         self.npcs.append((self.npc_names[name], 0, x, z))
@@ -445,6 +500,7 @@ def build():
     # ---- THE OFFICE
     sq.floor(OFFICE, WOOD, flags=INDOORS)
     sq.enclose(OFFICE, WALL, door_at=OFFICE_DOOR, door_name=DOOR)
+    sq.roof(OFFICE)
     x0, x1, z0, z1 = OFFICE
     sq.put('favour_podium_lectern', 17, 50)
     for x in (13, 14, 15):
@@ -483,6 +539,7 @@ def build():
     # ---- THE VAULT
     sq.floor(VAULT, VAULT_FLOOR, flags=INDOORS)
     sq.enclose(VAULT, WALL, door_at=VAULT_DOOR, door_name=DOOR)
+    sq.roof(VAULT)
     vx0, vx1, vz0, vz1 = VAULT
     # ROTATION 2, AND IT IS READ OFF EDGEVILLE RATHER THAN GUESSED. The booths at 3095,3489 and
     # 3095,3491 are rot 3 with their banker to the EAST; the pair at 3096,3493 and 3098,3493 are
