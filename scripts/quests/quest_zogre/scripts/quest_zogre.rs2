@@ -258,6 +258,23 @@ p_arrivedelay;
 def_boolean $summoned = false;
 if (npc_find(0_40_48_39_15, zogre_human_zavistic_rarve, 3, 0) = false) {
     npc_add(0_40_48_39_15, zogre_human_zavistic_rarve, 200);
+    // AND HE STANDS AT THE DOOR HE ANSWERED (2026-11-13). Zavistic Rarve has no wanderrange line
+    // of his own, so he takes the engine's default of 5 (NpcType.wanderrange), and the guard above
+    // only looks three tiles from the tile the bell puts him on. Four steps of ordinary wandering
+    // and the bell can no longer see him: it rings up a SECOND Rarve, and a third, and a fourth,
+    // for as long as somebody keeps pulling the rope.
+    //
+    // Widening the guard is not the fix. The Rarve who lives INSIDE the guild spawns at 2588,3087
+    // - eleven tiles from the bell - and wanders five of his own, so any radius large enough to
+    // hold the summoned one is also large enough to mistake the indoor one for him and refuse to
+    // call anybody out at all, which breaks the quest the other way.
+    //
+    // Standing him still removes the race rather than resizing it, and it is what the line below
+    // already tells the player he does: he comes out to see who is making that noise. Same reason
+    // and same shape as king_bolren.
+    if (npc_findexact(0_40_48_39_15, zogre_human_zavistic_rarve) = true) {
+        npc_setmode(none);
+    }
     $summoned = true;
     mes("You ring the bell. Zavistic Rarve comes out of the guild to see who is making that noise.");
 }

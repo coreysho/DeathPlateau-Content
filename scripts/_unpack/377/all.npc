@@ -79418,6 +79418,18 @@ turnspeed=0
 vislevel=45
 
 [burgh_ivan_strom_temple_ambush]
+// A TIMER THAT SURVIVES A RESET (2026-11-13). The Myreque escort runs entirely off
+// [ai_timer,...] -> @m2_ivan_step, and that timer used to be armed only by npc_settimer in
+// script, at "Let's go". Npc.resetDefaults writes timerInterval back to THIS field, and it is
+// called the moment an npc has been stuck for five ticks (Npc.ts, wanderMode) - which is exactly
+// what happens when the ambush drops two juvinates on the tiles around him. With no timer line
+// here that reset set his interval to -1 and the escort went inert on the spot: he stopped
+// swinging the silver sickle, stopped eating, stopped following, and stood there being bitten
+// until he died. Whether the juvinates boxed him in was down to where map_findsquare put them,
+// so it broke on some runs and not others. Same field, same reason, as king_dragon's timer=1 in
+// npc/configs/dragons.npc. m2_ivan_step returns immediately while %npc_int is ^m2_ivan_waiting,
+// so arming it from config does not start the walk early.
+timer=3
 name=Ivan Strom
 desc=A member of the Myreque and an aspiring young priest.
 model1=npc_omart
@@ -79460,6 +79472,18 @@ param=death_anim,human_death
 param=death_drop,null
 
 [burgh_ivan_strom_temple_ambush_sickle]
+// A TIMER THAT SURVIVES A RESET (2026-11-13). The Myreque escort runs entirely off
+// [ai_timer,...] -> @m2_ivan_step, and that timer used to be armed only by npc_settimer in
+// script, at "Let's go". Npc.resetDefaults writes timerInterval back to THIS field, and it is
+// called the moment an npc has been stuck for five ticks (Npc.ts, wanderMode) - which is exactly
+// what happens when the ambush drops two juvinates on the tiles around him. With no timer line
+// here that reset set his interval to -1 and the escort went inert on the spot: he stopped
+// swinging the silver sickle, stopped eating, stopped following, and stood there being bitten
+// until he died. Whether the juvinates boxed him in was down to where map_findsquare put them,
+// so it broke on some runs and not others. Same field, same reason, as king_dragon's timer=1 in
+// npc/configs/dragons.npc. m2_ivan_step returns immediately while %npc_int is ^m2_ivan_waiting,
+// so arming it from config does not start the walk early.
+timer=3
 name=Ivan Strom
 desc=A member of the Myreque and an aspiring young priest.
 model1=npc_omart
@@ -79502,6 +79526,10 @@ param=death_anim,human_death
 param=death_drop,null
 
 [burgh_ivan_temple_vampire_juve_1]
+// Armed from config for the same reason as Ivan above: the bite runs off [ai_timer,...] and a
+// npc_settimer armed in the ambush does not survive Npc.resetDefaults, so a juvinate that got
+// stuck stopped biting for the rest of the fight.
+timer=4
 name=Vampyre Juvinate
 desc=An initiate juvenile vampire.
 model1=npc_3514
@@ -79534,6 +79562,10 @@ param=death_anim,human_death
 param=death_drop,null
 
 [burgh_ivan_temple_vampire_juve_2]
+// Armed from config for the same reason as Ivan above: the bite runs off [ai_timer,...] and a
+// npc_settimer armed in the ambush does not survive Npc.resetDefaults, so a juvinate that got
+// stuck stopped biting for the rest of the fight.
+timer=4
 name=Vampyre Juvinate
 desc=An initiate juvenile vampire.
 model1=npc_3514

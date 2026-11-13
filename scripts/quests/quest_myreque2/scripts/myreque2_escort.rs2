@@ -237,6 +237,14 @@ npc_settimer(^m2_ivan_tick);
 [ai_timer,burgh_ivan_strom_temple_ambush_sickle] @m2_ivan_step;
 
 [label,m2_ivan_step]
+// STILL IN THE CELLAR, so there is nothing to do yet. The timer is armed from the npc config now
+// (timer=3, with the reason written out there) rather than only by the npc_settimer below, so that
+// it survives the Npc.resetDefaults that being stuck triggers. Config arms it at spawn, and Ivan
+// is spawned into the cellar long before anybody says "Let's go", so the waiting state is what
+// holds him there - exactly what ~m2_ivan_walking reads two procs down.
+if (%npc_int = ^m2_ivan_waiting) {
+    return;
+}
 if (finduid(%npc_burgh_ivan_player) = false) {
     npc_del;
     return;
