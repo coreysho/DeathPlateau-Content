@@ -210,12 +210,12 @@ if ($cape = max_cape | enum(obj, namedobj, maxvariant_source, $cape) ! null) {
 // and in the same place. Deterministic rather than random: a random pick can show the same one
 // four times running, which is useless for comparing them.
 def_int $vet_pick = -1;
-def_int $vet_show = 0;
+def_string $vet_name = "";
 if ($cape = veteran_cape) {
     $vet_pick = %veteran_emote_pick;
-    // 1-based only for the message; nothing in the build interpolates a calc() inside a
-    // string, so the sum is done here rather than in the mes.
-    $vet_show = calc($vet_pick + 1);
+    // The name, not the index. An int cannot be dropped into a string - "<$vet_show>" was a
+    // type mismatch at build time - and a name is what you can report back anyway.
+    $vet_name = enum(int, string, veteran_emote_names, $vet_pick);
     %veteran_emote_pick = calc(($vet_pick + 1) % 3);
 }
 def_seq $seq = null;
@@ -234,7 +234,7 @@ anim($seq, 0);
 def_spotanim $spot = enum(obj, spotanim, skillcape_emote_spot, $cape);
 if ($vet_pick >= 0) {
     $spot = enum(int, spotanim, veteran_emote_candidates, $vet_pick);
-    mes("Candidate <$vet_show> of 3.");
+    mes("Veteran cape emote: <$vet_name>. Press again for the next one.");
 }
 if ($spot ! null) {
     spotanim_pl($spot, 0, 0);

@@ -6,3 +6,13 @@ default=null
 val=0,veteran_emote_monument
 val=1,veteran_emote_winged
 val=2,veteran_emote_tower
+
+// Named rather than numbered in the chat line: "2 of 3" is no use when reporting back which one
+// you liked, and the number changes if a candidate is dropped.
+[veteran_emote_names]
+inputtype=int
+outputtype=string
+default=""
+val=0,the monument
+val=1,the winged mark
+val=2,the tower
