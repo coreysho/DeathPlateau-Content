@@ -215,7 +215,7 @@ if ($obj = castlewars_saradomin_banner | $obj = castlewars_zamorak_banner) {
 //
 // Found by the fuzzer's item-conservation watcher, which is what that watcher is for: 99 bots
 // reported "60 item moves and nothing else over 30 ticks, and the totals changed:
-// ikov_bootsoflightness +16". tools/sim/ikovboots.ts in the engine repo takes one pair through
+// ikov_bootsoflightness +16". tools/sim/ikovbootsdupe.ts in the engine repo takes one pair through
 // twenty on-off cycles and counts what comes back.
 if ($obj = ikov_bootsoflightnessworn & inv_total(inv, ikov_bootsoflightnessworn) > 0) {
     inv_del(inv, ikov_bootsoflightnessworn, 1);
