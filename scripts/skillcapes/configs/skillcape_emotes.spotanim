@@ -125,3 +125,17 @@ ambient=60
 // OSRS spotanim 820
 model=spot_skillcape_construction
 anim=skillcape_construction
+
+// custom (2026-11-14) - the Veteran cape. Not an OSRS spotanim: it is spot_skillcape_quest_point
+// (OSRS 816) recast in the cape's own gunmetal, by keeping every face's LIGHTNESS and replacing
+// its hue and saturation. That is how the cape and the chat icon were made, and it is why the
+// shading survives - a flat colour swap reads as a sticker stuck over the model.
+//
+// The geometry is byte-identical to the Quest Point pillar; only the colour block differs. It
+// borrows that pillar's animation for the same reason it borrows its shape: Quest Point is the
+// one NON-SKILL cape in this table with an emote of its own, so it is the right pattern for a
+// cape that stands for time served rather than for a skill.
+[skillcape_veteran]
+model=spot_skillcape_veteran
+anim=skillcape_quest_point
+ambient=60
