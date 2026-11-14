@@ -240,6 +240,11 @@
 [command,sound_synth](synth $sound, int $loops, int $delay)
 // info: Play a $sound for the secondary player
 [command,.sound_synth](synth $sound, int $loops, int $delay)
+// info: Is the player a Helper? The rank is a flag on Player, not a staffModLevel, so this is the
+// info: only way to ask - staffmodlevel returns 0 for a Helper.
+[command,helper]()(boolean)
+// info: Is the secondary player a Helper?
+[command,.helper]()(boolean)
 // info: Get the permissions level the player has
 [command,staffmodlevel]()(int)
 // info: Get the permissions level the secondary player has

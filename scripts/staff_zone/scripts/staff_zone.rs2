@@ -34,6 +34,12 @@ if (coord = ^staffzone_arrive) {
 if (staffmodlevel >= ^staffzone_rank) {
     return;
 }
+// A Helper is allowed in and must not be thrown out again. The rank is a flag on Player rather
+// than a staffModLevel - theirs is 0 - so staffmodlevel above answers no for one, and without this
+// line every Helper who used ::sz would be back in Edgeville the next time they logged in.
+if (helper = true) {
+    return;
+}
 if (inzone(^staffzone_sw, ^staffzone_ne, coord) = false) {
     return;
 }
