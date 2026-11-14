@@ -1,0 +1,5 @@
+// EVALUATION BRANCH ONLY.
+// Which candidate the next Skillcape emote shows. perm, so it survives a relog and the cycle
+// carries on where it left off rather than restarting at the same one every session.
+[veteran_emote_pick]
+scope=perm

@@ -1,0 +1,29 @@
+// EVALUATION BRANCH ONLY - not for 377-wip.
+//
+// Three candidate graphics for a Veteran cape emote, so they can be compared in the game rather
+// than in a render. Each is an existing skillcape graphic recast in the cape's own gunmetal by
+// keeping every face's LIGHTNESS and replacing its hue and saturation, which is how the cape and
+// the chat icon were made: the shading survives, so it reads as the same object in another metal
+// instead of a flat colour swap.
+//
+// The ANIMATION is borrowed from the Quest Point cape and is the same for all three, because the
+// thing being chosen here is the graphic. Quest Point is the right thing to borrow from: it is
+// the one non-skill cape in the block that already has an emote of its own.
+
+[veteran_emote_monument]
+// spot_skillcape_quest_point (OSRS 816) in gunmetal - the pillar and its disc
+model=spot_veteran_monument
+anim=skillcape_quest_point
+ambient=60
+
+[veteran_emote_winged]
+// spot_skillcape_prayer (OSRS 829) in gunmetal - dark column, pale wings
+model=spot_veteran_winged
+anim=skillcape_prayer
+ambient=60
+
+[veteran_emote_tower]
+// spot_skillcape_construction (OSRS 820) in gunmetal - the tower. No ambient, as the original
+// has none; adding one here would make it the odd one out in the comparison.
+model=spot_veteran_tower
+anim=skillcape_construction

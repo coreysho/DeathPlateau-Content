@@ -205,6 +205,19 @@ def_obj $cape = inv_getobj(worn, ^wearpos_back);
 if ($cape = max_cape | enum(obj, namedobj, maxvariant_source, $cape) ! null) {
     $cape = ~skillcape_random_cape;
 }
+// EVALUATION BRANCH ONLY. The plain Veteran cape cycles the three candidate graphics instead
+// of taking one from skillcape_emote_spot, so three presses show all three over the same motion
+// and in the same place. Deterministic rather than random: a random pick can show the same one
+// four times running, which is useless for comparing them.
+def_int $vet_pick = -1;
+def_int $vet_show = 0;
+if ($cape = veteran_cape) {
+    $vet_pick = %veteran_emote_pick;
+    // 1-based only for the message; nothing in the build interpolates a calc() inside a
+    // string, so the sum is done here rather than in the mes.
+    $vet_show = calc($vet_pick + 1);
+    %veteran_emote_pick = calc(($vet_pick + 1) % 3);
+}
 def_seq $seq = null;
 if ($cape ! null) {
     $seq = enum(obj, seq, skillcape_emote_seq, $cape);
@@ -219,6 +232,10 @@ anim($seq, 0);
 // Looked up separately and guarded: the seq table and the spot table are two tables, and a cape
 // present in one but not the other used to emit spotanim 0 - the dragonfire breath.
 def_spotanim $spot = enum(obj, spotanim, skillcape_emote_spot, $cape);
+if ($vet_pick >= 0) {
+    $spot = enum(int, spotanim, veteran_emote_candidates, $vet_pick);
+    mes("Candidate <$vet_show> of 3.");
+}
 if ($spot ! null) {
     spotanim_pl($spot, 0, 0);
 }

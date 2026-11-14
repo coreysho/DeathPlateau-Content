@@ -192,6 +192,9 @@ val=slayer_cape_t,skillcape_slayer_emote
 val=farming_cape,skillcape_farming_emote
 val=farming_cape_t,skillcape_farming_emote
 val=quest_point_cape,skillcape_quest_point_emote
+// EVALUATION BRANCH ONLY - the plain Veteran cape borrows the Quest Point
+// motion so the three candidate GRAPHICS can be compared over one animation.
+val=veteran_cape,skillcape_quest_point_emote
 val=construction_cape,skillcape_construction_emote
 val=construction_cape_t,skillcape_construction_emote
 val=hunter_cape,skillcape_hunter_emote
