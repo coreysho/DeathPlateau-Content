@@ -287,7 +287,40 @@ if [ -d "$WEB/content/news" ]; then
     fi
 fi
 
-step "7. The Veteran rank. Whenever - it is safe with the world up"
+step "7. The staff roster panel in Discord. After the site, so the links in it work"
+cmd "cd $WEB && node scripts/discord-panels.mjs staff --dry-run"
+cmd "cd $WEB && node scripts/discord-panels.mjs staff"
+note "The standing panel naming the owners, administrators and helpers, what each rank's"
+note "icon looks like, and what staff will never ask a player for."
+note ""
+note "IT IS HELD UNTIL TODAY ON PURPOSE. It names Iron Sgt as a Helper, so posting it is"
+note "also the announcement of that rank - and a roster posted before the wipe would be"
+note "read by people whose accounts are about to reset."
+note ""
+note "It needs a webhook of its own, made in #rules: a SECOND one, beside the rules"
+note "panel's, because the lookup is keyed on the panel name rather than the channel."
+note "Save it as \$WEB/.discord-staff-webhook. deploy-web.sh puts every .discord-*-webhook"
+note "back to root-only after its chown, so it stays out of the game process's reach."
+note ""
+note "KEEP THE MESSAGE ID IT PRINTS. Put it in the POSTED map in scripts/discord-panels.mjs"
+note "and changing the roster later becomes --edit, which rewrites the panel in place and"
+note "keeps its pin and position. Without the id, the only way to correct a name is to"
+note "delete the message and post a new one, which loses both."
+# Reads, like everything else here.
+if [ -f "$WEB/.discord-staff-webhook" ]; then
+    note "webhook: present"
+else
+    note "webhook: MISSING - make it in #rules and save it as $WEB/.discord-staff-webhook"
+fi
+if [ -f "$WEB/scripts/discord-panels.mjs" ]; then
+    if grep -q "^    staff: '" "$WEB/scripts/discord-panels.mjs"; then
+        note "posted already: there is a staff id in POSTED, so change it with --edit"
+    else
+        note "not posted yet: no staff id in POSTED"
+    fi
+fi
+
+step "8. The Veteran rank. Whenever - it is safe with the world up"
 cmd "cd $ENGINE && npx tsx tools/server/veteran.ts --profile $PROFILE"
 cmd "cd $ENGINE && npx tsx tools/server/veteran.ts --profile $PROFILE --confirm"
 note "Qualifies on a save file - live, or in any wiped-* folder - AND a registration before"
