@@ -21,3 +21,8 @@
 // it. This number exists so the login check can ask the same question of somebody already inside,
 // and it has to be kept equal to the handler's by hand - the two are in different repositories.
 ^staffzone_rank = 2
+
+// AND HELPERS, who are not a rank at all. Player.helper is a flag set from the login server and a
+// Helper's staffModLevel is 0, so the number above cannot express them: the engine's ::sz gate and
+// the login check both ask the `helper` command separately. ::helper's own comment in the engine
+// says the rank "grants nothing, which is the point"; after 14 November it grants this.
