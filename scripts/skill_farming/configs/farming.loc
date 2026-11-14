@@ -5330,6 +5330,7 @@ model=compost_bin_empty
 model2=compost_bin_emptyi2
 model3=compost_bin_emptyi3
 ambient=25
+op2=Inspect
 
 [compost_bin_compostable]
 name=Compost Bin
@@ -5340,6 +5341,7 @@ model3=kalphite_wall_shortcut_model
 recol1s=8418
 recol1d=7425
 ambient=25
+op2=Inspect
 
 [compost_bin_compostable_ready]
 name=Compost Bin
@@ -5351,6 +5353,7 @@ recol1s=8418
 recol1d=7425
 ambient=25
 op1=Close
+op2=Inspect
 
 [compost_bin_supercompostable]
 name=Compost Bin
@@ -5361,6 +5364,7 @@ model3=kalphite_wall_shortcut_model
 recol1s=8418
 recol1d=9571
 ambient=25
+op2=Inspect
 
 [compost_bin_supercompostable_ready]
 name=Compost Bin
@@ -5372,6 +5376,7 @@ recol1s=8418
 recol1d=9571
 ambient=25
 op1=Close
+op2=Inspect
 
 [compost_bin_closed]
 name=Compost Bin

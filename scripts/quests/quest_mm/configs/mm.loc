@@ -1038,6 +1038,17 @@ ambient=40
 op1=Chop-down
 op3=hidden
 mapscene=5
+// WIRED AS AN ORDINARY WOODCUTTING TREE, on the cache's own evidence. Every other jungletree1 and
+// jungletree2 in this build - jungletree1, jungletree2, the three _karamja ones, jungletree2_short,
+// jungletree2_big, mm_bush_big_kharazi_jungle_tree_logs, mm_bush_jungle_palm and both
+// mm_plant_kharazi_jungle_plant - carries NO op at all, so the Chop-down on these two is
+// deliberate. They are not the Legends' Quest hack-through jungle either: those carry blockwalk=no
+// so a player stands inside them, and these block, so you stand beside them like any tree. And
+// macro_ent_jungle_tree1 in antimacro.npc already names this loc in its param=ent_tree_loc, which
+// only an ordinary woodcutting tree ever gets. The stumps below are this family's own, so they are
+// the next_loc_stage rather than junglestump_kharazi.
+category=tree
+param=next_loc_stage,mm_bush_kharazi_jungle_tree1_stump
 param=ent,macro_ent_jungle_tree1
 
 [mm_bush_kharazi_jungle_tree1_stump]
@@ -1055,6 +1066,12 @@ op3=hidden
 width=2
 length=2
 mapscene=5
+// Same reasoning as tree1 above. The ent is macro_ent_jungle_tree2, which existed with nothing
+// pointing at it: model1=npc_1792 and size=2 match jungletree2, and this is the only choppable
+// jungletree2 in the build, so it is the tree that ent was drawn for.
+category=tree
+param=next_loc_stage,mm_bush_kharazi_jungle_tree2_stump
+param=ent,macro_ent_jungle_tree2
 
 [mm_bush_kharazi_jungle_tree2_stump]
 name=Jungle Tree Stump

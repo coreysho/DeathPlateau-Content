@@ -108,6 +108,25 @@ return("s");
 [opheld5,_serpentine_helm]
 def_int $slot = last_slot;
 def_namedobj $bare = oc_param(last_item, serpentine_uncharged);
+// AN UNCHARGED HELM'S FIFTH OPTION IS Drop, NOT Uncharge, AND THIS IS A CATEGORY TRIGGER.
+//
+// All six helms are category serpentine_helm - the three charged ones, whose iop5 is "Uncharge"
+// and which carry param=serpentine_uncharged naming their bare twin, and the three bare ones,
+// whose iop5 is "Drop" and which carry no such param. A category trigger claims the click for
+// every one of them and beats the global [opheld5,_] ~dropslot in player/scripts/drop.rs2, so
+// clicking Drop on a bare helm arrived HERE. oc_param gave null, inv_setslot threw on it -
+// "An input for a Obj type was not valid to use. Input was -1" - and the helm could not be
+// dropped at all.
+//
+// Found by tools/sim/fuzz.ts, which reported it under SCRIPT FAULTS with the line number. Worth
+// saying because it is the kind of thing only a running bot finds: the handler exists, the option
+// exists, every cross-reference in the build agrees they match, and it still throws.
+//
+// Null means "not a charged helm", so hand it back to the drop code that would have had it.
+if ($bare = null) {
+    ~dropslot($slot);
+    return;
+}
 def_int $n = %serpentine_helm_charges;
 if ($n > 0) {
     if (inv_total(inv, zulrahs_scales) = 0 & inv_freespace(inv) < 1) {

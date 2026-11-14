@@ -184,7 +184,10 @@ MUTS += [
  # --- a variant is not a Max cape
  (_VOBJ, 'category=armour_cape\nparam=stabattack,1',
          'category=armour_cape\niop3=Teleports\nparam=stabattack,1',
-  '13 not one of the sixteen carries iop3, iop4 or iop5'),
+  # Reworded with the check, which now allows the accumulator's inherited Toggle-attract on iop3 by
+  # name. This mutation puts iop3=Teleports on fire_max_cape, which the carve-out does not cover,
+  # so the check still goes red on it - confirmed by applying the mutation and reading the failure.
+  '13 no variant carries a Teleports or a Features'),
  (_PRK, 'case cooking, crafting, runecraft, firemaking : return(true);',
         'case cooking, crafting, runecraft, firemaking, agility : return(true);',
   '13 the four skills a variant still answers true for are exactly Cooking'),

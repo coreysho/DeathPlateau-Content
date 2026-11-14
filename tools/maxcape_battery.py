@@ -554,11 +554,35 @@ check(not [n for n, f in VOBJ.items() if n.endswith('_max_hood') and f.get('para
       'no hood carries a combat bonus, which is what every skillcape hood in this build does')
 
 # ---- NONE OF THEM IS A MAX CAPE. This is the perk-stripping, from the item side.
-_ops = [(n, k) for n, f in VOBJ.items() for k in f if k in ('iop3', 'iop4', 'iop5')]
+#
+# ONE EXCEPTION, AND THE SPEC THIS FILE READS ALREADY NAMED IT before the configs caught up:
+# "The Accumulator max cape (13337) is the one exception and is not one: it carries
+# {1: Wear, 3: Commune}, and so does Ava's accumulator itself (10499) - Commune is a modern option
+# on the DEVICE that the variant inherits, not a max cape perk." So the second option is not a max
+# cape perk sneaking back in, which is what this check is for; it is the accumulator fused into the
+# cape, and the same reason ~avas_device treats a worn variant as the device a few checks below.
+#
+# OSRS spells it "Commune" on slot 4. This build's devices spell it "Toggle-attract" on slot 3 -
+# avas_accumulator in quest_animmag/configs/animmag.obj - so the variant carries that slot and that
+# label, from extra_iops in the spec. The handler was written long before the option existed:
+# [opheld3,accumulator_max_cape] ~avas_attract_toggle in avas_device.rs2, which tools/sim/orphans.ts
+# found with nothing able to fire it.
+_ALLOWED_EXTRA = {('accumulator_max_cape', 'iop3')}
+_ops = [(n, k) for n, f in VOBJ.items() for k in f
+        if k in ('iop3', 'iop4', 'iop5') and (n, k) not in _ALLOWED_EXTRA]
 check(not _ops,
-      'not one of the sixteen carries iop3, iop4 or iop5 - no Teleports and no Features - which '
-      "is OSRS's own list for all eight of them where the plain cape has four ops: %s"
+      'no variant carries a Teleports or a Features - the only iop past Wear in the sixteen is the '
+      "accumulator's inherited Toggle-attract, which the spec calls out as OSRS's own exception: %s"
       % (_ops[:3] or 'Wear and nothing else'))
+# The exception has to BE there, not merely be allowed: a spec that declares extra_iops and a config
+# that forgot them would pass the check above by doing nothing.
+_declared = {('%s_max_cape' % v['key'], 'iop%s' % slot)
+             for v in VSPEC['variants']
+             for slot in (v.get('cape', {}).get('extra_iops') or {})}
+check(_declared == _ALLOWED_EXTRA
+      and all(k in VOBJ.get(n, {}) for n, k in _declared),
+      'and the one the spec declares is the one the config writes, on the slot the spec names: %s'
+      % (sorted(_declared) or 'none declared'))
 check(all(f.get('iop2') == ['Wear'] for f in VOBJ.values()),
       '...and every one does carry Wear, so they can be put on at all')
 check(all(f.get('tradeable') == ['no'] for f in VOBJ.values()),

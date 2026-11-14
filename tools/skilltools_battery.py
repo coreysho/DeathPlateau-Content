@@ -83,6 +83,38 @@ def objs():
     return out
 
 
+def configs(ext):
+    """every config of one extension in the tree -> {name: {field: [values]}}, like objs()"""
+    out = {}
+    for root, _d, files in os.walk(os.path.join(C, 'scripts')):
+        for f in files:
+            if not f.endswith(ext):
+                continue
+            cur = None
+            for line in open(os.path.join(root, f), encoding='utf-8', errors='replace'):
+                line = line.split('//')[0].strip()
+                m = re.match(r'^\[([a-z0-9_]+)\]$', line)
+                if m:
+                    cur = m.group(1)
+                    out.setdefault(cur, {})
+                elif cur and '=' in line:
+                    k, v = line.split('=', 1)
+                    k, v = k.strip(), v.strip()
+                    if k == 'param' and ',' in v:
+                        k, v = v.split(',', 1)
+                    out[cur].setdefault(k, []).append(v)
+    return out
+
+
+def all_rs2():
+    text = []
+    for root, _d, files in os.walk(os.path.join(C, 'scripts')):
+        for f in files:
+            if f.endswith('.rs2'):
+                text.append(open(os.path.join(root, f), encoding='utf-8', errors='replace').read())
+    return '\n'.join(text)
+
+
 def structs():
     names = set()
     for root, _d, files in os.walk(os.path.join(C, 'scripts')):
@@ -155,10 +187,114 @@ def main():
     zero = [n for n in picks if real[n].get('mining_rate', ['0'])[0] == '0']
     check('and none of them mines at rate 0', not zero, ', '.join(zero))
 
+    woodcut_trees()
     worn_rig(real)
 
     print(f'\n{ok} ok, {bad} FAIL')
     sys.exit(1 if bad else 0)
+
+
+def woodcut_trees():
+    """A TREE IS WIRED IN THREE PLACES TOO, and so is the Ent that spawns at it.
+
+    Same shape of bug as the axes above, one level out. A loc can carry op1="Chop down", op3=hidden
+    and a stump of its very own and still chop nothing, because woodcut.rs2 is reached by
+    `category=` and the logs come out of a dbrow the category knows nothing about. Ape Atoll's two
+    Jungle Trees were in exactly that state, placed 123 times, with 377's own cache telling anyone
+    who looked that they were meant to be choppable.
+
+    The Ent is worse, because it hides from the usual report. Twenty-one of the thirty-six Ents in
+    antimacro.npc had op1="Chop down" and no category=macro_event_ent, so [opnpc1,_macro_event_ent]
+    never saw the click - at an ordinary tree, an oak, a willow, a yew, a maple or a magic tree.
+    opsweep had them all along, filed under "not placed anywhere on the map", which is true of
+    every Ent and says nothing, because an Ent arrives by npc_add.
+
+    WHAT THE SKILL ACTUALLY READS, grepped out of woodcut.rs2 and macro_event_ent.rs2:
+      the loc    category= -> [oploc1,_tree] / [oploc1,_jungle_tree] / [oploc1,_jungle_bush]
+                 a row in woodcutting_trees naming it, or db_find comes back null
+                 op3=hidden, or p_oploc(3) returns early and it chops once and stops
+                 param=next_loc_stage, or loc_change is handed a null type
+      the Ent    category=macro_event_ent, param=ent_tree_loc naming the loc it replaced
+    """
+    CHOP = ('tree', 'jungle_tree', 'jungle_bush')
+    locs = configs('.loc')
+    npcs = configs('.npc')
+    rs2 = all_rs2()
+
+    rows = set()
+    cur = None
+    for line in read('scripts/skill_woodcutting/configs/trees.dbrow').replace('\r\n', '\n').split('\n'):
+        line = line.split('//')[0].strip()
+        m = re.match(r'^\[([a-z0-9_]+)\]$', line)
+        if m:
+            cur = m.group(1)
+        elif line.startswith('data=tree,'):
+            rows.add(line.split(',', 1)[1])
+
+    chopped = sorted(n for n, d in locs.items() if d.get('category', [None])[0] in CHOP)
+    print(f'\nWOODCUTTING TREES - {len(chopped)} locs carry a chopping category, {len(rows)} rows name a tree')
+
+    missing = [n for n in chopped if n not in rows]
+    check('each has a row in woodcutting_trees', not missing, ', '.join(missing))
+    nohidden = [n for n in chopped if 'hidden' not in locs[n].get('op3', [])]
+    check('and op3=hidden, so p_oploc(3) can keep it swinging', not nohidden, ', '.join(nohidden))
+    nostage = [n for n in chopped if 'next_loc_stage' not in locs[n]]
+    check('and a param=next_loc_stage to fall into', not nostage, ', '.join(nostage))
+    dangling = [f"{n} -> {locs[n]['next_loc_stage'][0]}" for n in chopped
+                if 'next_loc_stage' in locs[n] and locs[n]['next_loc_stage'][0] not in locs]
+    check('and that stage is a loc that exists', not dangling, ', '.join(dangling))
+
+    # THE OTHER DIRECTION, and it needs the multiloc escape. The five farmed trees - the
+    # *_fullygrown_2 variants - have no category of their own; their patch shell carries
+    # category=farming_patch and farming_actions.rs2 reads this same dbrow through it. A variant's
+    # trigger comes from whatever type is standing in the world, so the shell's category is the one
+    # that dispatches.
+    shell_of = {}
+    for shell, d in locs.items():
+        for ml in d.get('multiloc', []):
+            shell_of.setdefault(ml.split(',', 1)[1], []).append(shell)
+    unreachable = []
+    for t in sorted(rows):
+        if t not in locs:
+            unreachable.append(f'{t} (no such loc)')
+            continue
+        if locs[t].get('category', [None])[0] in CHOP:
+            continue
+        if f'[oploc1,{t}]' in rs2:
+            continue
+        if any(locs[s].get('category') for s in shell_of.get(t, [])):
+            continue
+        unreachable.append(t)
+    check('every row names a loc something can dispatch', not unreachable, ', '.join(unreachable))
+
+    # ---- the Ents
+    # Left out on purpose, with the reason, rather than hidden in a filter: these carry no
+    # param=ent_tree_loc and nothing points at them, so giving them the dispatching category would
+    # turn silence into "Nothing interesting happens."
+    SPARE = ('macro_ent_dead_tree5', 'macro_ent_dead_tree9', 'macro_ent_dead_tree11',
+             'macro_ent_evergreen3', 'macro_ent_tree2')
+    # dramentree has its own [oploc1,dramentree] which never calls ~macro_randomwoodcutting, and no
+    # row in woodcutting_trees, so macro_ent_dramen cannot spawn and cannot work if it did.
+    DRAMEN = 'macro_ent_dramen'
+
+    pairs = [(n, locs[n]['ent'][0]) for n in chopped if 'ent' in locs[n]]
+    print(f'  ({len(pairs)} of them name an Ent)')
+    gone = [f'{t} -> {e}' for t, e in pairs if e not in npcs]
+    check('each Ent a tree names exists', not gone, ', '.join(gone))
+    for field, want in (('category', 'macro_event_ent'), ('moverestrict', 'nomove'), ('wanderrange', '0')):
+        wrong = [f'{e} ({t})' for t, e in pairs if e in npcs and want not in npcs[e].get(field, [])]
+        check(f'and carries {field}={want}', not wrong, ', '.join(wrong))
+    backwards = [f"{e} -> {npcs[e].get('ent_tree_loc', ['nothing'])[0]} (not {t})" for t, e in pairs
+                 if e in npcs and npcs[e].get('ent_tree_loc', [None])[0] != t]
+    check('and names that same tree in param=ent_tree_loc', not backwards, ', '.join(backwards))
+
+    ents = sorted(n for n, d in npcs.items() if 'macro_event_ent' in d.get('category', []))
+    named = {e for _t, e in pairs}
+    orphan = [e for e in ents if e not in named]
+    check(f'and all {len(ents)} Ents with that category are reachable from a tree', not orphan, ', '.join(orphan))
+    silent = [n for n in SPARE + (DRAMEN,) if 'macro_event_ent' in npcs.get(n, {}).get('category', [])]
+    check('the Ents nothing can spawn stay silent rather than saying nothing interesting happens',
+          not silent, ', '.join(silent))
 
 
 def worn_rig(real):

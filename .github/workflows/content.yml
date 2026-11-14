@@ -33,6 +33,16 @@ on:
         description: 'Only mutations whose label contains this, e.g. 64 for one round'
         type: string
         default: ''
+      engine_ref:
+        # THE MIRROR OF sims.yml's content_ref, and it exists for the same reason. The three
+        # ratchet steps in the pack job live in the ENGINE repository, so a content branch cannot
+        # be checked against a ratchet that is still on an engine branch - and a tool that has not
+        # reached 377-wip yet is not there to run at all. A dispatched run can name the engine
+        # branch that carries it; a push cannot, which is why those steps also skip themselves when
+        # the tool is missing rather than failing the build.
+        description: 'Engine branch to build and take the ratchets from'
+        type: string
+        default: '377-wip'
 
 # A new push supersedes the run it interrupted - but never a mutation run, which is why the event
 # is part of the key.
@@ -56,7 +66,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: coreysho/DeathPlateau-Engine
-        ref: 377-wip
+        # `|| '377-wip'` and not the input alone: a push carries no inputs, so
+        # github.event.inputs.engine_ref is empty there rather than defaulted.
+        ref: ${{ github.event.inputs.engine_ref || '377-wip' }}
         path: engine
         # If Engine-TS is private, a plain checkout cannot reach it: GITHUB_TOKEN is scoped to this
         # repository only. Make a PAT with read access to it, save it as the ENGINE_TOKEN secret,
@@ -123,6 +135,93 @@ jobs:
       run: |
         rm -f data/pack/server/script.dat data/pack/client/config
         bun run build
+
+    # THE TWO RATCHETS, which belong here more than anywhere. The engine's nightly runs them too,
+    # but a dead option or an unreachable trigger is almost always added by a CONTENT change - so
+    # this is where the author finds out, on their own push, instead of a sweep at three in the
+    # morning.
+    #
+    #   opsweep   every option the cache offers that no script answers.  2,734 and 1,005 of those
+    #             on something the map actually places, as of writing.
+    #   orphans   the inverse: every trigger written against an option the cache does not declare.
+    #             None left, after this branch recovered all eighty-five.
+    #   ifselect  every radio button whose handler stores a value its own highlight script in the
+    #             cache does not agree with. Twenty-four baselined, all of them buttons in
+    #             interfaces nobody has written yet.
+    #
+    # Both boot a world, and World refuses to start without a login key; it is gitignored, so a
+    # fresh checkout has none and a throwaway per run is right. Nothing here signs anything a
+    # player will see.
+    #
+    # EACH STEP SKIPS ITSELF IF ITS TOOL IS NOT IN THE ENGINE CHECKOUT, which is not defensiveness
+    # for its own sake - it is the only honest behaviour. The tools live in the ENGINE repository
+    # and this job checks out that repository at 377-wip, so a ratchet added on an engine branch
+    # does not exist here until that branch merges. Without the guard the step dies with
+    # ERR_MODULE_NOT_FOUND and takes the whole pack job with it, which is how these three were red
+    # on every push for a day. Dispatch with engine_ref set to run them against a branch now.
+    #
+    # THE FRICTION IS DELIBERATE AND WORTH NAMING. The baselines live in the ENGINE repository
+    # (engine/tools/sim/*-baseline.txt), so a content change that adds an entry on purpose cannot
+    # be banked from a content pull request - it needs an engine one. That is the right shape for a
+    # ratchet, whose whole job is to make a new entry cost something, and the wrong shape for
+    # somebody editing a .loc who wants to get on with it. If it becomes a nuisance, the answer is
+    # to move the baselines to this repository (they describe content, after all) rather than to
+    # stop running the checks.
+    - name: A login key for the ratchets
+      working-directory: engine
+      run: bun x tsx tools/server/rsa.ts
+
+    - name: No option the cache offers goes unanswered
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: |
+        if [ ! -f tools/sim/opsweep.ts ]; then
+          echo "tools/sim/opsweep.ts is not in this engine checkout (${{ github.event.inputs.engine_ref || '377-wip' }}) - skipping."
+          echo "The ratchet lives in the engine repository; until it reaches that branch there is"
+          echo "nothing here to run. Dispatch this workflow with engine_ref set to the branch that"
+          echo "carries it to check against it now."
+          exit 0
+        fi
+        bun x tsx tools/sim/opsweep.ts --check
+
+    # if: always() so a red opsweep does not hide a red orphans - they are independent lists and a
+    # push can add to both.
+    - name: No trigger is written against an option that does not exist
+      if: always()
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: |
+        if [ ! -f tools/sim/orphans.ts ]; then
+          echo "tools/sim/orphans.ts is not in this engine checkout (${{ github.event.inputs.engine_ref || '377-wip' }}) - skipping."
+          echo "The ratchet lives in the engine repository; until it reaches that branch there is"
+          echo "nothing here to run. Dispatch this workflow with engine_ref set to the branch that"
+          echo "carries it to check against it now."
+          exit 0
+        fi
+        bun x tsx tools/sim/orphans.ts --check
+
+    # The third one, and the one that catches wiring both of the above call fine. Thessalia's
+    # women's trousers window had an [if_button] handler for every option and every option it
+    # answered existed, and it still handed out the wrong trousers for six of its seven styles,
+    # because the handlers were a button out of step with the window. A 377 radio button carries
+    # its own highlight script naming the varp value that means "I am chosen"; this compares that
+    # against what the handler stores.
+    - name: No radio button stores a value its own highlight script disagrees with
+      if: always()
+      working-directory: engine
+      env:
+        BUILD_SRC_DIR: ../content
+      run: |
+        if [ ! -f tools/sim/ifselect.ts ]; then
+          echo "tools/sim/ifselect.ts is not in this engine checkout (${{ github.event.inputs.engine_ref || '377-wip' }}) - skipping."
+          echo "The ratchet lives in the engine repository; until it reaches that branch there is"
+          echo "nothing here to run. Dispatch this workflow with engine_ref set to the branch that"
+          echo "carries it to check against it now."
+          exit 0
+        fi
+        bun x tsx tools/sim/ifselect.ts --check
 
     # Needs the build to have run - it decodes the packed archive the way the client's
     # Component.decode does, and asserts no packed script counts a pouch rune without a pouch twin.
@@ -197,6 +296,11 @@ jobs:
         # about to print, so this holds all 43 to that exact wording - a loose match would eat a
         # reward written beside the points.
         - questscroll_battery.py
+        # WAS IN NEITHER LIST and had never run in CI. It checks the three places a skilling tool
+        # has to be wired - the obj param, the hardcoded axe ladder, the per-tree success table -
+        # plus, now, the three places a TREE has to be wired and the Ent that spawns at it. It
+        # reads only content and the .ob2 models beside it, so it is a plain matrix row.
+        - skilltools_battery.py
 
     steps:
     - uses: actions/checkout@v4
@@ -239,7 +343,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: coreysho/DeathPlateau-Engine
-        ref: 377-wip
+        # `|| '377-wip'` and not the input alone: a push carries no inputs, so
+        # github.event.inputs.engine_ref is empty there rather than defaulted.
+        ref: ${{ github.event.inputs.engine_ref || '377-wip' }}
         path: engine
 
     - uses: actions/checkout@v4
@@ -319,7 +425,9 @@ jobs:
     - uses: actions/checkout@v4
       with:
         repository: coreysho/DeathPlateau-Engine
-        ref: 377-wip
+        # `|| '377-wip'` and not the input alone: a push carries no inputs, so
+        # github.event.inputs.engine_ref is empty there rather than defaulted.
+        ref: ${{ github.event.inputs.engine_ref || '377-wip' }}
         path: engine
 
     # leprechaun_mutate spawns leprechaun_battery, which reads the client as well as the engine.

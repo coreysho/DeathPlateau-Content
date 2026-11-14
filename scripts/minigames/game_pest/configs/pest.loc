@@ -944,6 +944,18 @@ length=2
 mapscene=0
 op1=Chop down
 op3=hidden
+// THIS IS `tree` COPIED, op and all: same model, same recolour, same desc, same mapscene, and the
+// Chop-down came with it while category=tree and param=next_loc_stage did not - so 8 placed trees
+// on the Void Knights' Outpost offered Chop-down and did nothing. Found by
+// tools/sim/deadcategory.ts, which suggested category=tree off the shared model.
+//
+// The evidence here is weaker than Ape Atoll's two jungle trees, and worth saying so: an op that
+// arrived by copy-paste is not proof of intent the way a loc with the only op in its family is.
+// What settles it is that either answer is cheap and one of them is honest - these are the ordinary
+// tree twice over, down to the recolour, so they drop the ordinary tree's logs into the ordinary
+// tree's stump. The alternative was deleting a Chop-down the cache has always drawn.
+category=tree
+param=next_loc_stage,treestump2
 
 [pest_tree2]
 name=Tree
@@ -956,6 +968,9 @@ length=2
 mapscene=1
 op1=Chop down
 op3=hidden
+// `tree2` copied, exactly as pest_tree above is `tree` copied. 9 placed instances.
+category=tree
+param=next_loc_stage,treestump2
 
 [pest_void_knight_glow_red]
 model=pest_void_knight_glow_red

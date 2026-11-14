@@ -1,4 +1,55 @@
-[opheld5,_] ~dropslot(last_slot);
+// THE FIFTH BACKPACK OPTION IS USUALLY "Drop" AND SOMETIMES IS NOT. ObjType seeds iop as
+// [null, null, null, null, 'Drop'], so slot 5 reads "Drop" for every item that does not override
+// it, and for those this is the whole story. 286 objs DO override it - 160 say "Destroy", 96
+// "Move", 24 "Dismantle", 6 "Release" - and this trigger used to hand all of them to ~dropslot
+// without looking. Clicking "Destroy" on a quest item put it on the floor, with no confirmation
+// and no warning, and ^dropslot_duration then took it away for good. A misclick cost the item.
+//
+// There are only two global opheld triggers in the build, this one and [opheld2,_] in equip.rs2,
+// so there was nothing else for those clicks to reach. tools/sim/opsweep.ts lists all 286 in its
+// "answered only by the global fallback" section, which is exactly what that section is for.
+[opheld5,_]
+def_obj $obj = inv_getobj(inv, last_slot);
+if ($obj = null) {
+    return;
+}
+// oc_iop was declared in the engine's ScriptOpcode.ts from the start ("official, see cs2") and
+// left unimplemented, which is why this check could not be written before now.
+if (compare(oc_iop($obj, 5), "Destroy") = 0) {
+    @destroyslot(last_slot, $obj);
+    return;
+}
+// Move, Dismantle and Release still fall through, deliberately and not silently. Each wants a
+// feature rather than a branch - Dismantle should split an ornamented item back into base plus
+// kit, Release should put the creature down, Move belongs to the sliding-puzzle interfaces - and
+// until one exists, dropping is the wrong behaviour but not a dead end. Making them inert instead
+// would strand an ornamented godsword in the backpack for good, because "Dismantle" IS its fifth
+// option: there is no Drop on it to fall back to.
+~dropslot(last_slot);
+
+// WHAT "Destroy" IS FOR. The 160 items that carry it are untradeable quest items - lunar_*,
+// enakh_*, handsand_*, mourning_*, burgh_*, chickenquest_* and the rest - where the point of the
+// option is that the player cannot sell or bank the thing and needs a way to be rid of it, with a
+// confirmation because getting another one usually means talking to somebody.
+//
+// The shape here is the one storage_items.rs2 already uses for the herb sack, seed box and looting
+// bag: a mesbox, then ~p_choice2, then delete. Those keep their own [opheld5,<item>] handlers,
+// which claim the click before this global ever sees it, so nothing below changes them.
+[label,destroyslot](int $slot, obj $obj)
+~mesbox("Are you sure you want to destroy this object? You will not be able|to get it back.");
+if (~p_choice2("Destroy the <lowercase(oc_name($obj))>.", 1, "Keep it.", 2) ! 1) {
+    return;
+}
+// p_choice2 pauses for the player's click, so the backpack is not necessarily what it was when the
+// option was chosen - the item could have been dropped, banked or used in between. Re-reading the
+// slot is what stops this destroying whatever landed there instead.
+if (inv_getobj(inv, $slot) ! $obj) {
+    return;
+}
+// The whole slot, not one: destroying a stack destroys the stack, and every one of these is an
+// untradeable that comes in ones anyway.
+inv_delslot(inv, $slot);
+mes("You destroy the <lowercase(oc_name($obj))>.");
 
 [proc,dropslot](int $last)
 if (~in_duel_arena(coord) = true) {

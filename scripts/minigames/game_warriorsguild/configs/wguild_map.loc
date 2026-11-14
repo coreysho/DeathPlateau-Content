@@ -51,6 +51,20 @@ mapscene=9
 ambient=25
 contrast=125
 
+// WIRED 2026-11-04. These four carried op1="Chop down" and nothing else - no category, so
+// [oploc1,_tree] never saw the click, and 22 placed trees on the Warriors' Guild map said nothing
+// interesting happens. Found by tools/sim/deadcategory.ts in the engine repo, which reports
+// category=tree as the ONLY category in the build that answers "Chop down".
+//
+// Each one copies a precedent rather than inventing anything, and osrsloc_1286's is exact:
+// loc474_1286 in skill_hunter/configs/hunter_feldip.loc is THE SAME LOC ID from the 474 cache,
+// already wired, already a Dead tree, already pointing at deadtree2_stump. The evergreens follow
+// normal.loc's own: `evergreen` is 2x2 and falls into treestump2, `evergreen_large` is 3x3 and
+// falls into evergreen_large_stump, so the 2x2 pair takes the first and the 3x3 takes the second.
+//
+// op3=hidden IS NOT DECORATION HERE. woodcut.rs2 keeps a player swinging with p_oploc(3), and
+// P_OPLOC returns early on a null slot, so a tree with the category and no op3 is chopped once and
+// stops. Every working tree in the build carries it; tools/skilltools_battery.py checks for it now.
 [osrsloc_1286]
 // OSRS loc 1286
 name=Dead tree
@@ -60,6 +74,9 @@ mapscene=27
 ambient=15
 contrast=100
 op1=Chop down
+op3=hidden
+category=tree
+param=next_loc_stage,deadtree2_stump
 
 [osrsloc_1535]
 // OSRS loc 1535
@@ -126,6 +143,9 @@ mapscene=0
 ambient=15
 contrast=100
 op1=Chop down
+op3=hidden
+category=tree
+param=next_loc_stage,treestump2
 
 [osrsloc_2092]
 // OSRS loc 2092
@@ -138,6 +158,9 @@ mapscene=0
 ambient=15
 contrast=100
 op1=Chop down
+op3=hidden
+category=tree
+param=next_loc_stage,evergreen_large_stump
 
 [osrsloc_2098]
 // OSRS loc 2098
@@ -662,6 +685,9 @@ width=2
 length=2
 mapscene=0
 op1=Chop down
+op3=hidden
+category=tree
+param=next_loc_stage,treestump2
 
 [osrsloc_27062]
 // OSRS loc 27062

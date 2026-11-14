@@ -357,5 +357,21 @@ while ($i < inv_size(inv)) {
 // false with the charged one in the bank: its contents stay where they are
 return($lost);
 
-// (2026-10-19) The empty one is wieldable too, and went on at level 1: the same requirement as charged.
-[opheld2,toxic_blowpipe_empty] @levelrequire_ranged(^blowpipe_level, last_slot);
+// (2026-10-19) "The empty one is wieldable too, and went on at level 1: the same requirement as
+// charged." That is what the handler here said, and it never ran once: toxic_blowpipe_empty
+// declares iop4=Dismantle and nothing else, so no client ever drew a Wield to click and
+// InvButtonHandler's sibling OpHeldHandler would have refused the packet anyway. Removing it
+// changes no behaviour at all - it only stops the file claiming a feature the game does not have.
+//
+// WHETHER IT SHOULD HAVE ONE IS STILL OPEN, and the evidence pulls both ways, so it is left as
+// it is rather than guessed at:
+//   for wieldable - the obj carries full worn data (manwear, womanwear, wearpos=righthand,
+//     wearpos2=lefthand), which is work nobody does for an item that cannot be equipped, and the
+//     comment above says that was the intent.
+//   against      - the empty one's op list is not the charged one's minus a few. Its iop4 is
+//     Dismantle where the charged one's iop4 is Unload, so the two menus were laid out
+//     separately, on purpose. tools/sim/blowpipe.ts pins the absence outright ("the empty one
+//     has no Wield"), and that check is what caught an earlier attempt to add iop2=Wield by
+//     copying the charged twin's label.
+// Adding the option means adding iop2=Wield to configs/blowpipe.obj, restoring a handler here,
+// and changing that check in blowpipe.ts to assert the new behaviour instead of the old.

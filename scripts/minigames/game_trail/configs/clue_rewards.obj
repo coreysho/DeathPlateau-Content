@@ -11739,7 +11739,16 @@ model=obj_ring_of_third_age
 2dyan=191
 weight=5g
 cost=12000
-iop1=Wear
+// Wear ON iop2, AND A wearpos TO WEAR IT INTO. This was iop1=Wear with no wearpos at all, so the
+// ring could not be worn twice over: equip.rs2's handler is [opheld2,_] and nothing answers
+// opheld1, so the click went nowhere, and even if it had arrived there was no slot to put the ring
+// in. A hard clue can hand this out (trail_clue_hard_reward.rs2, case 111) and the collection log
+// counts it, so it is a reachable reward that did nothing. Every other piece in this file -
+// third_age_full_helmet and the rest - is wearpos + iop2=Wear, and so is every ring in the cache
+// (ring_of_life, ring_of_wealth, gold_ring). No param= lines: this one is cosmetic, like its
+// description says, which is also how ring_of_life carries no combat bonuses.
+wearpos=ring
+iop2=Wear
 
 // No combat bonuses - this one is worn for the look.
 // THE FIFTEEN BEGINNER TREASURE TRAIL UNIQUES (tools/models/batches/batch_beginner_clues.txt).

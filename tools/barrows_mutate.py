@@ -596,8 +596,13 @@ MUTS = [
   '...and is registered in pack/animset.pack'),
  (BASEPACK, '=base_osrs_11654\n', '=base_osrs_11654_gone\n',
   '...and its base in pack/base.pack'),
+ # The label used to name the "exactly the five checked above" check. That check now reads "all six
+ # carry iop2=Wield", because the broken crossbow has one and is refused by ~barrows_broken_refuse
+ # rather than by a missing label - so the check that goes red on THIS mutation is the one that
+ # counts the set, which is the sixth-is-the-broken-one line. Verified by applying the mutation and
+ # reading which checks failed, not by guessing from the wording.
  (ALLOBJ, '[barrows_karil_weapon_50]', '[barrows_karil_weapon_50x]',
-  'the crossbows that can be held are exactly the five checked above'),
+  '...and the sixth is the broken one'),
  (ALLOBJ, 'param=rangeattack_anim,osrs_karil_crossbow_fire\nparam=defend_anim,human_unarmedblock\n'
           'param=rangeattack_sound,crossbow\nparam=damagetype,^ranged_style\n'
           'param=ready_baseanim,osrs_karil_crossbow_ready',
@@ -611,7 +616,11 @@ MUTS = [
   'barrows_karil_weapon_25 fires with the OSRS animation'),
  (ALLOBJ, '[barrows_karil_weapon_broken]\nname=Karils x-bow 0',
           '[barrows_karil_weapon_broken]\nname=Karils x-bow 0\nparam=ready_baseanim,human_dh_weapon_ready',
-  '...and the one that cannot names no animation at all'),
+  # Reworded with the check: the broken crossbow DOES carry an iop2=Wield now, refused by
+  # ~barrows_broken_refuse rather than by a missing label, so "the one that cannot" was no longer
+  # how the battery describes it. Having no animation is still the real asymmetry, and still what
+  # goes red here - confirmed by applying this mutation and reading the failure.
+  '...which names no animation at all, having no attack to play'),
  (ALLOBJ, '// walk-merges two frames built on the same skeleton (Model.java: "if (!sameSkeleton(...))"',
           '// walk-merges two frames built on the same base',
   'and the obj records why the whole set had to move'),

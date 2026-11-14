@@ -1167,10 +1167,31 @@ check(not badfix,
 tagged = sorted(n for n, d in OBJB.items() if param(d, 'barrows_set') not in (None, '0'))
 check(len(tagged) == len(BROS) * len(SLOTS),
       'nothing outside the twenty-four carries a set id: %d' % len(tagged))
-# A 0% piece cannot satisfy a set effect however it resolves, because it cannot be worn.
+# A 0% PIECE CANNOT SATISFY A SET EFFECT HOWEVER IT RESOLVES, BECAUSE IT CANNOT BE WORN - and
+# what guarantees that changed, so this checks the guarantee and not the old symptom of it.
+#
+# It used to be that the broken pieces declared no iop2, so no client drew a Wear and the question
+# never arose. That also meant [opheld2,barrows_x_broken] ~barrows_broken_refuse in tier70.rs2 -
+# written to tell the player the piece is broken and that Bob in Lumbridge will repair it - never
+# ran for any of the 24, and someone holding a broken helm was told nothing. tools/sim/orphans.ts
+# found the whole set.
+#
+# The pieces carry a Wear or Wield now and the refusal is what keeps them off, which is strictly
+# better: unwearable AND it says why. So the check is that all 24 have the refuse trigger claiming
+# their opheld2 - a specific trigger beats the global [opheld2,_] equip code in equip.rs2, which is
+# the only thing that could put one in the worn inventory. tools/sim/barrowsbroken.ts drives it for
+# real and asserts the worn slot stays empty for every one of the 24; this is the static half.
+TIER70 = read('scripts/levelrequire/scripts/tier70.rs2')
 broken = ['barrows_%s_%s_broken' % (b, s) for b in BROS for s in SLOTS]
-check(not [n for n in broken if 'iop2' in OBJB.get(n, {})],
-      'and a 0% piece has no Wear option, so it can never be in the worn inventory at all')
+unrefused = [n for n in broken
+             if '[opheld2,%s] ~barrows_broken_refuse' % n not in TIER70]
+check(not unrefused,
+      'every 0%% piece has its Wear claimed by ~barrows_broken_refuse, so the equip code never sees'
+      ' it: %s' % (unrefused[:3] or 'all 24'))
+noop = [n for n in broken if 'iop2' not in OBJB.get(n, {})]
+check(not noop,
+      '...and all 24 have an option for it to refuse, which is what makes the message reachable:'
+      ' %s' % (noop[:3] or 'all 24'))
 
 worn = nocomment(SETS.split('[proc,barrows_set_worn]', 1)[1].split('\n[', 1)[0])
 for slot in ('hat', 'torso', 'legs', 'rhand'):
@@ -1689,21 +1710,36 @@ for w in XBOWS:
           and all(got['walk_%s_baseanim' % d] == ['osrs_karil_crossbow_walk'] for d in 'fblr')
           and got['running_baseanim'] == ['osrs_karil_crossbow_run'],
           '...and its ready, four walks and run come across with it, once each')
-# EVERY crossbow that can be held, not just the pristine one: there are six objs and the sixth,
-# barrows_karil_weapon_broken ("Karils x-bow 0"), carries no iop2=Wield and no animation params at
-# all, because a fully degraded crossbow cannot be wielded. Counting to five would have passed by
-# luck; this asks the objs which of them can be held. The first version of this check DID count to
-# five, and went red on the broken one - which is how the exclusion came to be stated rather than
-# assumed.
+# EVERY crossbow, and the sixth one is the interesting case. There are six objs:
+# barrows_karil_weapon_broken ("Karils x-bow 0") is the fully degraded one, and it has an
+# iop2=Wield like the other five while still being impossible to wield.
+#
+# THAT READS LIKE A CONTRADICTION AND IS NOT, so it is worth stating once. It used to carry no
+# iop2 at all, and this check asserted the absence - "a fully degraded crossbow cannot be
+# wielded", which is true, and the missing label is not what made it true. tier70.rs2 has
+# [opheld2,barrows_x_broken] ~barrows_broken_refuse for all 24 broken Barrows pieces, and that
+# handler tells the player the item is broken and that Bob in Lumbridge will repair it. With no
+# iop2 on the obj, no client drew a Wield, nothing reached the handler, and a player holding a
+# broken crossbow was told nothing at all. tools/sim/orphans.ts found all 24 at once.
+#
+# So the option exists now and the refusal is what stops the wield, which is strictly better: the
+# piece cannot be worn AND it says why. The engine never reaches the global [opheld2,_] equip code
+# for it, because a specific trigger wins. tools/sim/barrowsbroken.ts pins both halves for every
+# one of the 24 - the message, and the worn slot staying empty - and that is the test to read if
+# this ever looks wrong.
+#
+# What still separates the broken one from the five: no animation params. A crossbow that cannot
+# be held has no attack, walk or run to name, and that is the real asymmetry.
 allxbow = [n for n in re.findall(r'(?m)^\[(barrows_karil_weapon\w*)\]$', ALLOBJ)]
 wieldable = [n for n in allxbow if 'iop2=Wield' in objblock(n)]
-check(sorted(wieldable) == sorted(XBOWS),
-      'the crossbows that can be held are exactly the five checked above (%d objs, %d wieldable)'
-      % (len(allxbow), len(wieldable)))
-check(all('_anim,' not in objblock(n) and '_baseanim,' not in objblock(n)
-          for n in allxbow if n not in wieldable),
-      '...and the one that cannot names no animation at all: %s'
-      % ([n for n in allxbow if n not in wieldable] or 'none'))
+broken = [n for n in allxbow if n not in XBOWS]
+check(sorted(wieldable) == sorted(allxbow),
+      'all six crossbows carry iop2=Wield - the broken one is refused by script, not by a missing'
+      ' label (%d objs, %d wieldable)' % (len(allxbow), len(wieldable)))
+check(broken == ['barrows_karil_weapon_broken'],
+      '...and the sixth is the broken one: %s' % (broken or 'none'))
+check(all('_anim,' not in objblock(n) and '_baseanim,' not in objblock(n) for n in broken),
+      '...which names no animation at all, having no attack to play: %s' % (broken or 'none'))
 # WHY the whole set moves and not just the attack: the client only walk-merges two frames built on
 # the same skeleton, so an OSRS fire against a 377 walk drops one of the two.
 check('sameSkeleton' in nocomment(objblock('barrows_karil_weapon')) or 'sameSkeleton' in objblock('barrows_karil_weapon'),

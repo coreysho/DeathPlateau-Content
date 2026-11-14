@@ -27951,6 +27951,7 @@ active=yes
 blockrange=no
 
 [eadgar_troll_cauldron]
+op1=Search
 name=Troll Stew
 desc=I don't want to look too closely at what's cooking in there...
 model=cauldron
@@ -44343,6 +44344,7 @@ op1=Open
 forceapproach=north
 
 [fd_firedungeon_openchest]
+op1=Search
 model=arena_guard_chest_open
 recol1s=10570
 recol1d=5285
@@ -44473,6 +44475,7 @@ op1=Climb-up
 mapscene=7
 
 [vampire_big_grave_noblood]
+op1=Search
 name=Vampire tomb
 desc=An ancient looking tomb.
 model=vampire_big_grave_noblood
@@ -44480,6 +44483,7 @@ width=5
 length=3
 
 [vampire_big_grave_withblood]
+op1=Search
 name=Vampire tomb
 desc=An ancient looking tomb.
 model=vampire_big_grave_withblood
@@ -44670,6 +44674,7 @@ op1=Open
 forceapproach=north
 
 [fd_bandit_openchest]
+op1=Search
 model=arena_guard_chest_open
 recol1s=10570
 recol1d=14720
@@ -44910,33 +44915,6 @@ length=2
 hillskew=yes
 op1=Enter
 
-[desert_treasure_oblix1]
-active=yes
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-multivar=fd_column_blood
-multiloc=0,desert_treasure_oblix_a
-multiloc=1,fd_blood_column
-
-[desert_treasure_oblix_a]
-name=Obelisk
-desc=You can feel a mysterious power emanating from it...
-model=desert_treasure_oblixa
-recol1s=15855
-recol1d=19553
-recol2s=20011
-recol2d=26059
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-
 [fd_blood_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -44947,33 +44925,6 @@ recol2s=20011
 recol2d=26059
 length=2
 width=2
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-
-[desert_treasure_oblix2]
-active=yes
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-multivar=fd_column_fire
-multiloc=0,desert_treasure_oblix_b
-multiloc=1,fd_smoke_column
-
-[desert_treasure_oblix_b]
-name=Obelisk
-desc=You can feel a mysterious power emanating from it...
-model=desert_treasure_oblixa
-recol1s=15855
-recol1d=22264
-recol2s=20011
-recol2d=20082
 length=2
 width=2
 resizex=256
@@ -44998,33 +44949,6 @@ resizey=256
 resizez=256
 anim=oblix_open
 
-[desert_treasure_oblix3]
-active=yes
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-multivar=fd_column_ice
-multiloc=0,desert_treasure_oblix_c
-multiloc=1,fd_ice_column
-
-[desert_treasure_oblix_c]
-name=Obelisk
-desc=You can feel a mysterious power emanating from it...
-model=desert_treasure_oblixa
-recol1s=15855
-recol1d=18207
-recol2s=20011
-recol2d=19060
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-
 [fd_ice_column]
 name=Obelisk
 desc=You can feel a mysterious power emanating from it...
@@ -45035,33 +44959,6 @@ recol2s=20011
 recol2d=19060
 length=2
 width=2
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-
-[desert_treasure_oblix4]
-active=yes
-length=2
-width=2
-resizex=256
-resizey=256
-resizez=256
-anim=oblix_open
-multivar=fd_column_shadow
-multiloc=0,desert_treasure_oblix_d
-multiloc=1,fd_shadow_column
-
-[desert_treasure_oblix_d]
-name=Obelisk
-desc=You can feel a mysterious power emanating from it...
-model=desert_treasure_oblixa
-recol1s=15855
-recol1d=6341
-recol2s=20011
-recol2d=10568
 length=2
 width=2
 resizex=256
@@ -45306,6 +45203,7 @@ model=deserttreasure_shadowladder
 op3=Climb-down
 
 [dt_dummy_square]
+op1=Search
 name=Crack
 desc=You can see a small fissure in the ground here.
 model=trollrescue_blankmodel
@@ -46235,6 +46133,7 @@ sharelight=yes
 hillskew=yes
 
 [deserttreasure_wall_crusher]
+op1=Search
 name=Wall Crusher
 desc=That could hurt.
 model=deserttreasure_wall_crusher
@@ -87989,6 +87888,7 @@ mapscene=6
 resizey=100
 
 [burgh_well]
+op1=Search
 category=well
 name=Well
 desc=It smells stagnant.
