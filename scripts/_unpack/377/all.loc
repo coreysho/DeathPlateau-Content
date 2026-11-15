@@ -42466,6 +42466,22 @@ active=yes
 op1=Mine
 op2=Prospect
 op3=Hidden
+// GOLD, AND IT DEPLETES. The description has always said so - "A mineral vein that looks
+// distinctly like gold" - and there was no recolour to argue with it. Wired on the shape
+// skill_mining/configs/rimmington_rocks.loc works out at length: the dispatching category, and
+// the spent partner for loc_change to swap in.
+//
+// dwarf_gold_depleted is that partner and was already in the cache, same hillskew, model named
+// for the job. loc_change REFUSES a null type, so a vein wired without one throws rather than
+// failing quietly, which is why this could not be guessed at.
+//
+// It keeps active=no and gains nothing, unlike rimmington's spent rocks which carry
+// param=mining_rock_empty,1 so a click on them explains itself. There is no click here to
+// explain: loc_change's second argument is the respawn delay and the engine reverts the loc
+// itself, so the partner needs no category, no param and no options. A depleted vein you
+// cannot click reads correctly on its own.
+category=mining_rock_normal
+param=next_loc_stage_mining,dwarf_gold_depleted
 
 [dwarf_gold_mine_r]
 name=Mineral vein
@@ -42476,6 +42492,8 @@ active=yes
 op1=Mine
 op2=Prospect
 op3=Hidden
+category=mining_rock_normal
+param=next_loc_stage_mining,dwarf_gold_depleted
 
 [dwarf_gold_mine_l]
 name=Mineral vein
@@ -42487,6 +42505,8 @@ active=yes
 op1=Mine
 op2=Prospect
 op3=Hidden
+category=mining_rock_normal
+param=next_loc_stage_mining,dwarf_gold_depleted
 
 [dwarf_gold_depleted]
 model=dwarf_gold_depleted

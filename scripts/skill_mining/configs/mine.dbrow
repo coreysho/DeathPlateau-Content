@@ -143,6 +143,11 @@ data=rock,loc_11185
 data=rock,loc_11952
 data=rock,loc_11953
 data=rock,loc_11951
+// The dwarven mine's gold veins, 155 instances - see their note in _unpack/377/all.loc. Added
+// here and not given a table of their own because the ore, level, xp and respawn are all gold's.
+data=rock,dwarf_gold_mine
+data=rock,dwarf_gold_mine_r
+data=rock,dwarf_gold_mine_l
 data=ore_name,gold
 data=rock_output,gold_ore
 data=rock_level,40
