@@ -33308,6 +33308,22 @@ retex2s=elfwood
 retex2d=wood2
 op1=Search
 
+// MINE AND PROSPECT HIDDEN: these are the Haunted Mine's walls, not ore rocks.
+//
+// 110 instances across 24 locs, all of them inside the Haunted Mine (x 2712-2804,
+// z 4426-4493) - which the npcs placed around them settle: possessed_pickaxe_stationary,
+// skeletal_miner_sitting, hauntedmine_boss_cart, crane_posessed_mine, hauntedmine_boss_key.
+//
+// tools/sim/rockore.ts in the engine states the rule that classifies them: "A rock with no
+// 6342 slot at all is mine-wall scenery, not an ore rock." None of the 24 has one. So there
+// is no ore to identify and nothing to deplete into, and the Mine the cache offers has
+// answered "Nothing interesting happens." since the dump.
+//
+// Hidden rather than given param=mining_rock_empty,1, which is the other way to stop that
+// message. "There is no ore currently available in this rock" is a sentence about a rock
+// that ran out; these never had any, and the original game draws no Mine on a decorative
+// rock face. The deliberately-empty treatment is used on loc_14850/51/52 instead, where a
+// mapscene mine icon means a player has been told there is a mine to find.
 [loc_4976]
 name=Mineral vein
 desc=A distinctive layer in the rock strata.
@@ -33318,8 +33334,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4977]
@@ -33332,8 +33348,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4978]
@@ -33346,8 +33362,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4979]
@@ -33360,8 +33376,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4980]
@@ -33374,8 +33390,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4981]
@@ -33388,8 +33404,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4982]
@@ -33402,8 +33418,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4983]
@@ -33416,8 +33432,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4984]
@@ -33430,8 +33446,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4985]
@@ -33444,8 +33460,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4986]
@@ -33458,8 +33474,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4987]
@@ -33472,8 +33488,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4988]
@@ -33486,8 +33502,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4989]
@@ -33500,8 +33516,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4990]
@@ -33514,8 +33530,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4991]
@@ -33528,8 +33544,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4992]
@@ -33542,8 +33558,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4993]
@@ -33556,8 +33572,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4994]
@@ -33570,8 +33586,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4995]
@@ -33584,8 +33600,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_4996]
@@ -33598,8 +33614,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [track_points_a_mirrored]
@@ -88406,8 +88422,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_12942]
@@ -88420,8 +88436,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [loc_12943]
@@ -88434,8 +88450,8 @@ active=yes
 contrast=100
 ambient=25
 hillskew=yes
-op1=Mine
-op2=Prospect
+op1=hidden
+op2=hidden
 op3=Hidden
 
 [sang_boat_broken_multiloc]
@@ -92944,6 +92960,18 @@ anim=gas
 blockrange=no
 bgsound=area474_3073,3
 
+// DELIBERATELY EMPTY, not hidden: the map promises a mine here.
+// 72 instances in the Wilderness by the Dark Warriors' Fortress (3011-3013, 3593-3596),
+// which dark_warrior, young_dark_wizard, bearded_dark_wizard, green_dragon and
+// wilderness_capeseller_10 around them settle. recol2d=0 paints the ore seam the body
+// colour, and regional_rocks.loc's rule is that a rock with no ore colour is a rock with no
+// ore in it - so there is no ore to identify here either.
+//
+// But mapscene=12 draws a mine icon on the world map, so a player has been told to come
+// and look. Hiding the option would leave them hunting for a rock that offers nothing;
+// mining.rs2 reads this param and answers "There is no ore currently available in this
+// rock.", which is both true and an explanation. The Haunted Mine's walls are hidden
+// instead, having no icon to answer for.
 [loc_14850]
 name=Rocks
 desc=A rocky outcrop.
@@ -92955,6 +92983,8 @@ recol2d=0
 op1=Mine
 op2=Prospect
 op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
 mapscene=12
 blockrange=no
 ambient=10
@@ -92970,6 +93000,8 @@ recol2d=0
 op1=Mine
 op2=Prospect
 op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
 mapscene=12
 blockrange=no
 ambient=10
@@ -92985,6 +93017,8 @@ recol2d=0
 op1=Mine
 op2=Prospect
 op3=hidden
+category=mining_rock_normal
+param=mining_rock_empty,1
 mapscene=12
 blockrange=no
 ambient=10
