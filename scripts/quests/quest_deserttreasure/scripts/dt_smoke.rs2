@@ -250,3 +250,25 @@ if (npc_findhero = ^false) {
 }
 obj_add(npc_coord, fd_diamond_fire, 1, ^lootdrop_duration);
 obj_add(npc_coord, coins, 2000, ^lootdrop_duration);
+// RECORD THE KILL, which nothing did - so the guard in ~dt_smoke_gate that exists to stop Fareed
+// being spawned again never fired, and he came back every time the player re-entered the arena.
+// That is the thing the spawn-on-demand design a few lines up was written to avoid: "Fareed is
+// spawned rather than left on the map, so he cannot be farmed before the quest."
+//
+// npc_findhero above grants active_player, which is enough to READ a varp and not enough to write
+// one: VarPlayerType.protect defaults to true and deserttreasurevarbit2 takes that default, so
+// POP_VARBIT demands p_active_player, and only P_FINDUID sets it. Hence the upgrade, asked for
+// explicitly.
+//
+// THIS IS KAMIL'S OWN PATTERN, one file over - [ai_queue3,icediamond_icewarrior] in dt_ice.rs2
+// does exactly this and its comment records the same reasoning, naming [ai_queue3,san_tojalon] in
+// Legends' Quest as where the shape came from.
+//
+// Conditional on purpose: protected access is refused while the player has a modal open, so the
+// guard can fail. The cost of that is only that Fareed can be fought again, which is what happened
+// on every kill until now - a safe failure rather than a stuck quest, which is why there is no
+// belt-and-braces fallback here as there is for Kamil, whose varbit gates quest progress.
+if (p_finduid(uid) = false) {
+    return;
+}
+%fd_killed_firewarrior = 1;
