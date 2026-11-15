@@ -192,6 +192,10 @@ val=slayer_cape_t,skillcape_slayer_emote
 val=farming_cape,skillcape_farming_emote
 val=farming_cape_t,skillcape_farming_emote
 val=quest_point_cape,skillcape_quest_point_emote
+// custom (2026-11-14) - the Veteran cape had no row here at all, so the emote
+// button told a veteran to go and wear a skillcape. It borrows the Quest Point
+// MOTION; the graphic below is its own.
+val=veteran_cape,skillcape_quest_point_emote
 val=construction_cape,skillcape_construction_emote
 val=construction_cape_t,skillcape_construction_emote
 val=hunter_cape,skillcape_hunter_emote
@@ -244,6 +248,7 @@ val=slayer_cape_t,skillcape_slayer
 val=farming_cape,skillcape_farming
 val=farming_cape_t,skillcape_farming
 val=quest_point_cape,skillcape_quest_point
+val=veteran_cape,skillcape_veteran
 val=construction_cape,skillcape_construction
 val=construction_cape_t,skillcape_construction
 val=hunter_cape,skillcape_hunter
