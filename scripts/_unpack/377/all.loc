@@ -87999,6 +87999,13 @@ model=burgh_floorboard_hole
 sharelight=yes
 forcedecor=yes
 
+// BURGH DE ROTT'S FLOORBOARD HATCHES. The owner confirmed where they go: down to the cellars.
+// That is a plain vertical link here, because the town's house interiors sit on level 1 and the
+// cellars on level 0 - which is why the down hatch is placed at level 1 and the ladder back up
+// at level 0, and why deadladders finds each a same-tile partner on 3 of 3 instances.
+//
+// Checked by climbing rather than taken on that evidence: loc_11739 has a same-tile partner on
+// 7 of 7 and still lands in a wall. tools/sim/ladderclimb.ts walks every placed instance.
 [burgh_floorboard_hatch]
 name=Ladder
 desc=A wooden ladder.
@@ -88009,6 +88016,7 @@ op1=Climb-down
 active=yes
 forceapproach=east
 
+category=ladder_down
 [burgh_ladder_hatch_up]
 name=Ladder
 desc=A wooden ladder.
@@ -88017,6 +88025,7 @@ op1=Climb-up
 sharelight=yes
 forceapproach=east
 
+category=ladder_up
 [burgh_pages1]
 model=burgh_pages1
 raiseobject=no
