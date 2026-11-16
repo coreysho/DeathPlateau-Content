@@ -125,6 +125,25 @@ if(loc_coord = 0_50_149_22_52) { // Zanaris ladder (entrance room)
 }
 ~climb_ladder(movecoord(coord(), 0, 0, -6400), true);
 
+// THE WILDERNESS DUNGEON LADDER, which is loc_1755's mirror and nothing more.
+//
+// wild_laddertop_dungeon sits at 3005,3963 with Climb-down and had no handler, so opsweep had
+// it and climbladders listed it under CANNOT BE A VERTICAL LINK - correctly, because it is on
+// level 0 and there is no level below to telejump to. The owner said where it goes: down to the
+// dungeon.
+//
+// The destination needed no guessing. loc_1755 is placed at 3005,10363 - the SAME x and z,
+// 6400 south, which is where this build keeps the underground - and its own handler a few lines
+// up is ~climb_ladder(movecoord(coord(), 0, 0, -6400), true). This is that line with the sign
+// turned round, so the two ends agree by construction rather than by my arithmetic.
+//
+// Not a category: _ladder_down means one level down on the same tile, which is what would have
+// put a player inside the ground here. The dungeon ladders in this file are all explicit for
+// the same reason - loc_1767 p_teleports into the Lava Maze, loc_1765 to the KBD lair.
+[oploc1,wild_laddertop_dungeon]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, 0, 6400), false);
+
 [oploc1,loc_1757] 
 p_arrivedelay;
 ~climb_ladder(movecoord(coord(), 0, 0, -6400), true);
