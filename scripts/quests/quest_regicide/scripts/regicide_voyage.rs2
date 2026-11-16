@@ -26,6 +26,33 @@ switch_int (~p_choice2("Climb into the well.", 1, "Search the stone structure.",
         @upass_well_inscription;
 }
 
+// THE THIRD WELL, which had nothing on its Climb-down. regicide_voyage_temple_well1 shares both its
+// model and its "Well of voyage." description with well2, but it is placed nowhere near either
+// wired well: 2008,4711 on level 1, inside Iban's temple, beside the ibanmonk and the temple doors.
+//
+// THE BACKLOG'S RECIPE WOULD HAVE GOT THIS BACKWARDS. "Shares a distinctive model with a loc that
+// has its own trigger - copy that trigger" gives well2's body, which teleports to 0_37_151_4_54.
+// That is the blood well's tile, so a player climbing down in Iban's temple would come out further
+// back along the Underground Pass. bloodwell_upass is not a second voyage well - its description is
+// "It doesn't look like water in there...", its model is cave_well, and quest_upass owns both its
+// triggers for filling the doll. It carries the Well of Voyage INSCRIPTION, which is why Regicide
+// hooks the voyage onto it and why well2 returns there.
+//
+// So this is the other end and it goes the way its name says: west, into the voyage temple under
+// Isafdar, landing beside well2 - which already brings you back. It reuses the Well of Voyage's own
+// label rather than a copy of it, and carries the same gate bloodwell_upass does, so it is a second
+// way west for somebody who has earned the first rather than a new destination or a new shortcut.
+[oploc1,regicide_voyage_temple_well1]
+if (%upass = ^upass_complete & %regicide_quest >= ^regicide_started) {
+    @regicide_well_of_voyage;
+}
+mes("You search the stone structure...");
+p_delay(0);
+mes("On the side you find an old inscription,");
+mes("It reads...");
+p_delay(1);
+@upass_well_inscription;
+
 [oploc1,regicide_voyage_temple_well2]
 anim(human_reachforladder, 0);
 mes("You climb down into the well...");
