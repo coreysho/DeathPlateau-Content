@@ -29,21 +29,28 @@ mes("You pull on the large wooden doors...");
 if(%biohazard = ^biohazard_complete) {
     def_coord $loc_coord = loc_coord;
     mes("...You open them and walk through.");
+    // THE OPEN MODELS, not the other half of the same shut gate. This used to swap the two
+    // halves with each other - the tile holding ardougnedoor_r took ardougnedoor_l at the other
+    // one's angle and vice versa - and ardougnedoor_r IS ardougnedoor_l with mirror=yes, so a
+    // swapped pair rotated 180 degrees is the same shut gate again. The gates never appeared to
+    // move while the player slid through them (tracker issue 20).
+    //
+    // ardougnedoor_l_open and ardougnedoor_r_open are in the 377 cache for this and were used by
+    // nothing at all. Each tile keeps its own half and its own angle, because an open-door model
+    // is drawn already open: the +1 rotation in ~open_and_close_door2 is for WALL doors, which
+    // swing onto the neighbouring tile's wall line. These four are shape-10 centrepieces with no
+    // wall line to swing along, which is why they are hand-rolled here in the first place.
     if(loc_find(0_39_51_62_36, ardougnedoor_r) = true) {
-        // Temp note: dur updated
-        loc_add(loc_coord, ardougnedoor_l, 2, loc_shape, 5);
+        loc_add(loc_coord, ardougnedoor_r_open, loc_angle, loc_shape, 5);
     }
     if(loc_find(0_39_51_61_36, ardougnedoor_l) = true) {
-        // Temp note: dur updated
-        loc_add(loc_coord, ardougnedoor_r, 0, loc_shape, 5);
+        loc_add(loc_coord, ardougnedoor_l_open, loc_angle, loc_shape, 5);
     }
     if(loc_find(0_39_51_62_35, ardougnedoor_l) = true) {
-        // Temp note: dur updated
-        loc_add(loc_coord, ardougnedoor_r, 2, loc_shape, 5);
+        loc_add(loc_coord, ardougnedoor_l_open, loc_angle, loc_shape, 5);
     }
     if(loc_find(0_39_51_61_35, ardougnedoor_r) = true) {
-        // Temp note: dur updated
-        loc_add(loc_coord, ardougnedoor_l, 0, loc_shape, 5);
+        loc_add(loc_coord, ardougnedoor_r_open, loc_angle, loc_shape, 5);
     }
     sound_synth(coffin_open, 1, 0);
     if(coordx(coord) < coordx(loc_coord)) {
