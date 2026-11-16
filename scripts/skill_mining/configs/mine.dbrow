@@ -23,6 +23,8 @@ data=rock,loc_11191
 data=rock,loc_14904
 data=rock,loc_14905
 data=rock,loc_10949
+// Same shape again. Recolours exactly match loc_10949.
+data=rock,loc_11195
 data=ore_name,clay
 data=rock_output,clay
 data=rock_level,1
@@ -61,6 +63,8 @@ data=rock,macro_tinrock1
 data=rock,macro_tinrock2
 data=rock,loc_9714
 data=rock,loc_9716
+// loc_9715 had category=mining_rock_normal and its next_loc_stage, and no row here, so Mine reached db_find, got null and printed the default. Its recolours are byte-identical to loc_9716 directly above.
+data=rock,loc_9715
 data=rock,loc_11933
 data=rock,loc_11934
 data=rock,loc_11935
@@ -120,6 +124,8 @@ data=rock,loc_11963
 data=rock,loc_11964
 data=rock,loc_11965
 data=rock,loc_10948
+// Same shape: a category, a next_loc_stage, no row. Recolours exactly match loc_10948.
+data=rock,loc_11194
 data=ore_name,coal
 data=rock_output,coal
 data=rock_level,30
