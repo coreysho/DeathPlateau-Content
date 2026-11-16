@@ -53584,6 +53584,20 @@ desc=An odd looking tree.
 model=elf_village_treegate
 length=4
 
+// LLETYA'S TREE WALKWAYS. The owner confirmed where these go: up into the walkways between the
+// trees, which is the plain vertical link [oploc1,_ladder_up] does - p_telejump one level up from
+// the tile the player is standing on.
+//
+// Wired on that word rather than on the map, because the map cannot say it. deadladders finds
+// these a same-tile partner on 5 of 5 instances, which is the strongest evidence it has, and
+// loc_11739 has exactly that and still lands in a wall - the handler jumps from the PLAYER's
+// tile, so the landing depends on the side they walked up from. tools/sim/lletyaladders.ts in
+// the engine climbs every placed instance and checks where the player actually ends up, which
+// is the test the previous attempt at this bucket did not have.
+//
+// elf_village_ladder_mid is deliberately NOT wired here: it carries Climb-up on op2 and
+// Climb-down on op3, and the generic handler is op1-only, so no category can answer both. It
+// wants [label,ladder_options], which is a different change.
 [elf_village_ladder]
 name=ladder
 desc=I can climb this.
@@ -53592,6 +53606,7 @@ active=yes
 op1=Climb-up
 mapscene=7
 
+category=ladder_up
 [elf_village_ladder_mid]
 name=ladder
 desc=I can climb this.
@@ -53610,6 +53625,7 @@ active=yes
 op1=Climb-down
 mapscene=7
 
+category=ladder_down
 [elf_village_well]
 category=well
 name=Well
