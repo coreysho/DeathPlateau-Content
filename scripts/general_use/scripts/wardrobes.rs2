@@ -1,19 +1,28 @@
-[oploc1,spookywardrobe]
+// TWO WARDROBES, one handler each way round. The spooky one in Draynor Manor's cellar was wired;
+// draynor_wardrobe is the same furniture recoloured, placed 30 times upstairs, and its Open did
+// nothing at all. It has its own open and skeleton locs already - draynor_wardrobe_open and
+// draynor_wardrobe_open_skeleton, with op2=Search and op3=Close on both, exactly as the spooky set
+// does - so the only thing missing was the three triggers.
+//
+// The bodies are shared rather than copied, and both sets go through them: a second copy of the
+// 1-in-21 roll is a second place for it to drift. The locs are parameters because loc_change needs
+// to know which family it is closing back into.
+
+[label,wardrobe_open](loc $open, loc $skeleton)
 p_arrivedelay;
 anim(human_openbigcupboard, 0);
 p_delay(0);
 // todo - Sound
-
 // 1/21 of spooky wardrobe, https://archive.is/FPJBA
 if (random(21) = 0) {
     // Temp note: dur does not need updated
-    loc_change(spookywardrobe_open_skeleton, 500);
+    loc_change($skeleton, 500);
 } else {
     // Temp note: dur does not need updated
-    loc_change(spookywardrobe_open, 500);
+    loc_change($open, 500);
 }
 
-[oploc2,spookywardrobe_open]
+[label,wardrobe_search]
 p_arrivedelay;
 if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) { // complete guess
     mes("You search the wardrobe..."); // guess
@@ -23,22 +32,28 @@ if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) 
 }
 mes("The wardrobe is empty.");
 
-[oploc3,spookywardrobe_open]
-p_arrivedelay;
-anim(human_closechest, 0);
-p_delay(0);
-// todo - Sound
-// Temp note: dur does not need updated
-loc_change(spookywardrobe, 500);
-
-[oploc2,spookywardrobe_open_skeleton]
+[label,wardrobe_skeleton]
 p_arrivedelay;
 mes("Eek! There's a skeleton in there.");
 
-[oploc3,spookywardrobe_open_skeleton]
+[label,wardrobe_close](loc $closed)
 p_arrivedelay;
 anim(human_closechest, 0);
 p_delay(0);
 // todo - Sound
 // Temp note: dur does not need updated
-loc_change(spookywardrobe, 500);
+loc_change($closed, 500);
+
+// ---------------------------------------------------------------- Draynor Manor's cellar
+[oploc1,spookywardrobe] @wardrobe_open(spookywardrobe_open, spookywardrobe_open_skeleton);
+[oploc2,spookywardrobe_open] @wardrobe_search;
+[oploc3,spookywardrobe_open] @wardrobe_close(spookywardrobe);
+[oploc2,spookywardrobe_open_skeleton] @wardrobe_skeleton;
+[oploc3,spookywardrobe_open_skeleton] @wardrobe_close(spookywardrobe);
+
+// ---------------------------------------------------------------- Draynor Manor itself
+[oploc1,draynor_wardrobe] @wardrobe_open(draynor_wardrobe_open, draynor_wardrobe_open_skeleton);
+[oploc2,draynor_wardrobe_open] @wardrobe_search;
+[oploc3,draynor_wardrobe_open] @wardrobe_close(draynor_wardrobe);
+[oploc2,draynor_wardrobe_open_skeleton] @wardrobe_skeleton;
+[oploc3,draynor_wardrobe_open_skeleton] @wardrobe_close(draynor_wardrobe);

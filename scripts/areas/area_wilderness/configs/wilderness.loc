@@ -4440,6 +4440,10 @@ recol6s=5250
 recol6d=5184
 active=yes
 op1=Open
+// The pair was unwired: Open on 29 placed instances answered nothing, and wild_door_open was
+// sitting there unused. Same shape as loc_1530/loc_1531 and every other door in the build.
+category=door_closed
+param=next_loc_stage,wild_door_open
 raiseobject=no
 
 [wild_door_open]
@@ -4460,6 +4464,8 @@ recol6s=5250
 recol6d=5184
 active=yes
 op1=Close
+category=door_opened
+param=next_loc_stage,wild_door
 raiseobject=no
 
 [wild_doubledoor_l]
