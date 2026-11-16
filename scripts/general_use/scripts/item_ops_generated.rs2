@@ -109,6 +109,33 @@
 // Wanted! The commorb's Scan, Contact and Playback moved to
 // quests/quest_wanted/scripts/quest_wanted.rs2 - the obj is named "Commorb" and carries iop1=Scan,
 // iop2=Contact and iop4=Playback, and the two stubs here said "Nothing interesting happens."
+// PLAY-WITH, which the cache has had an animation for all along and nothing ever played.
+//
+// The option fell through to the global [opheld2,_] equip code, so clicking Play-With silently
+// WORE the bowl into the weapon slot - the menu said one thing and the game did another. opsweep
+// found the dead option; what settles what it should do instead is that the cache carries three
+// animations, one per bowl, used by nothing:
+//
+//   human_play_with_pet_fish_blue    fishbowl_bluefish
+//   human_play_with_pet_fish_green   fishbowl_greenfish
+//   human_play_with_pet_fish_spine   fishbowl_spinefish
+//
+// A one-to-one match with the three objs is not a coincidence, and the shape is Diango's toy
+// horseys one file over: [opheld1,horsey_brown] @toy_horsey_say(human_playhorsey_brown) does
+// p_stopaction, anim, and a line. Play-with plays an animation there and it plays one here.
+//
+// NOTHING NEEDED THE BOWL WORN, which is what makes claiming the option safe: all three carry
+// wearpos=righthand and no Wear or Wield, so that mislabelled click was the only route to the
+// worn slot - and no script anywhere reads a fishbowl out of worn, so nothing loses a thing.
+[label,play_with_pet_fish](seq $anim)
+p_stopaction;
+anim($anim, 20); // the delay is the horseys' own, so the client finishes running first
+mes("You play with your pet fish.");
+
+[opheld2,fishbowl_bluefish] @play_with_pet_fish(human_play_with_pet_fish_blue);
+[opheld2,fishbowl_greenfish] @play_with_pet_fish(human_play_with_pet_fish_green);
+[opheld2,fishbowl_spinefish] @play_with_pet_fish(human_play_with_pet_fish_spine);
+
 [opheld1,fishbowl_bluefish] ~mesbox("Nothing interesting happens.");
 [opheld3,fishbowl_bluefish] mes("You sprinkle some food into the bowl.");
 [opheld1,fishbowl_greenfish] ~mesbox("Nothing interesting happens.");
