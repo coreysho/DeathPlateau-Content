@@ -32272,6 +32272,7 @@ forceapproach=north
 active=yes
 op1=Climb-up
 
+category=ladder_up
 [boardgames_ladderdown]
 name=Ladder
 desc=Leads down to the Burthorpe Games Rooms.
@@ -32281,6 +32282,7 @@ op1=Climb-Down
 forceapproach=east
 active=yes
 
+category=ladder_down
 [boardgames_wall]
 model=boardgames_wall
 sharelight=yes
@@ -61266,6 +61268,7 @@ mapscene=7
 sharelight=yes
 forceapproach=south
 
+category=ladder_down
 [prison_poorbed_no_blockwalk]
 name=Bed
 desc=I guess I could sleep in it if I were really tired.
@@ -75033,6 +75036,7 @@ forceapproach=north
 active=yes
 op1=Climb-up
 
+category=ladder_up
 [boardgames_runeversi_ladderdown_experienced]
 name=Ladder
 desc=The ladder back to the Runeversi challenge room.
@@ -75041,6 +75045,7 @@ forceapproach=north
 active=yes
 op1=Climb-Down
 
+category=ladder_down
 [boardgames_runesquares_ladderup_experienced]
 name=Ladder
 desc=The ladder to the Runesquares challenge room for experienced players.
@@ -75049,6 +75054,7 @@ forceapproach=north
 active=yes
 op1=Climb-up
 
+category=ladder_up
 [boardgames_runesquares_ladderdown_experienced]
 name=Ladder
 desc=The ladder back to the Runesquares challenge room.
@@ -75057,6 +75063,7 @@ forceapproach=north
 active=yes
 op1=Climb-Down
 
+category=ladder_down
 [boardgames_table_runesquares]
 name=Table
 desc=A game of runesquares is being played on this table.
@@ -79432,6 +79439,26 @@ recol4d=14694
 width=2
 blockrange=no
 
+// THE REST OF THE PLAIN VERTICAL LADDERS, wired on judgement with the owner's leave, and each one
+// checked by climbing. The board games ones go between the floors, which the owner confirmed;
+// the others are the same shape - one direction on op1, with a partner at the far end of every
+// instance that deadladders found.
+//
+// Evidence is not proof here, and this bucket proved it again: loc_11739 has a
+// same-tile partner on 7 of 7 instances, the strongest signal the tool gives, and the backlog
+// records it landing at 3050,3356,2 which is a wall. It is wired here anyway BECAUSE
+// tools/sim/ladderclimb.ts climbs every placed instance and checks the landing is standable -
+// so if it is still wrong the sim says so and the category comes straight back off, which is a
+// better way to find out than reading the map again.
+// loc_11739 AND ITS FAMILY ARE DELIBERATELY NOT WIRED, and the attempt is recorded rather than
+// quietly dropped. All four were given a category and tools/sim/ladderclimb.ts climbed every
+// placed instance: loc_11739 landed at 3050,3356,2 and loc_11740 at 2954,3390,1, both solid
+// ground, which is the backlog's own warning about this pair reproduced from the other side.
+// Their partners loc_11741 and loc_11742 came off with them, because half a wired pair is a
+// one-way trip into somewhere a player cannot leave.
+//
+// ship_ladder_no_approach and ship_laddertop_no_approach went the same way: the top one lands
+// at 2777,3234,0, which is solid.
 [loc_11739]
 name=Ladder
 desc=Allows access to above level.
@@ -82998,6 +83025,7 @@ op1=Climb-up
 mapscene=7
 forceapproach=south
 
+category=ladder_up
 [fairy_ladder_wind_down]
 name=Ladder
 desc=I can climb this.
@@ -83017,6 +83045,7 @@ op1=Climb-down
 mapscene=7
 forceapproach=south
 
+category=ladder_down
 [fairy_cow_in_wheel]
 name=Cow wheel
 desc=She likes the exercise.

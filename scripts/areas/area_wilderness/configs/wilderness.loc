@@ -4350,6 +4350,10 @@ blockrange=no
 model=wilderness_manicals
 active=no
 
+// The Wilderness tower: wild_ladder up from the ground, wild_ladder_middle between, wild_laddertop
+// down from the roof. Plain vertical links, each with a same-tile partner at every instance, and
+// checked by tools/sim/ladderclimb.ts. The middle one is NOT here - it carries Climb-up on op2
+// and Climb-down on op3, which no single category can answer.
 [wild_ladder]
 name=Ladder
 desc=I can climb up this.
@@ -4366,6 +4370,7 @@ op1=Climb-up
 forceapproach=north
 mapscene=7
 
+category=ladder_up
 [wild_laddertop]
 name=Ladder
 desc=I can climb down this.
@@ -4385,6 +4390,7 @@ sharelight=yes
 forceapproach=north
 mapscene=7
 
+category=ladder_down
 [wild_ladder_middle]
 name=Ladder
 desc=I can climb this.
