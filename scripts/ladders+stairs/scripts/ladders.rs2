@@ -222,6 +222,45 @@ p_arrivedelay;
 p_arrivedelay;
 ~climb_ladder(movecoord(coord(), 0, -1, 0), false);
 
+// THE TWO THREE-OP MIDDLES that opsweep still had down as dead. Neither can take a category: a
+// middle carries Climb / Climb-up / Climb-down, so it needs three triggers, and the ladder_up and
+// ladder_down categories on their own stacks each dispatch exactly one. The ends of both stacks
+// already work through those categories - only the rungs between them did nothing.
+//
+// Both are plain vertical stacks on a single tile, which is what makes the generic offset right
+// here. wild_ladder_middle sits at 3022,3625 / 3022,3638 / 3036,3625 / 3036,3638 on levels 1 and 2,
+// between a wild_ladder on level 0 and a wild_laddertop on level 3; elf_village_ladder_mid sits at
+// 2328,3168 and 2328,3175 on level 1, between an elf_village_ladder below and an
+// elf_village_ladder_top above. Every placement of both is the same two numbers all the way up, so
+// one level off the player's own tile is the destination, exactly as for laddermiddle.
+//
+// Down passes false, so the climb uses human_pickupfloor like qip_cook_ladder_middle above rather
+// than reaching upward for a rung that is below you. [oploc3,laddermiddle] passes true and is left
+// alone - that is a pre-existing wart on a working ladder, not something to fix from here.
+[oploc1,wild_ladder_middle]
+p_arrivedelay;
+@ladder_options(movecoord(coord(), 0, 1, 0), movecoord(coord(), 0, -1, 0));
+
+[oploc2,wild_ladder_middle]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, 1, 0), true);
+
+[oploc3,wild_ladder_middle]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, -1, 0), false);
+
+[oploc1,elf_village_ladder_mid]
+p_arrivedelay;
+@ladder_options(movecoord(coord(), 0, 1, 0), movecoord(coord(), 0, -1, 0));
+
+[oploc2,elf_village_ladder_mid]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, 1, 0), true);
+
+[oploc3,elf_village_ladder_mid]
+p_arrivedelay;
+~climb_ladder(movecoord(coord(), 0, -1, 0), false);
+
 [proc,climb_ladder](coord $coord, boolean $up)
 if ($up = true) {
     anim(human_reachforladder, 0);
