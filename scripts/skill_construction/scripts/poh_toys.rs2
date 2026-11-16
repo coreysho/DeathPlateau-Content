@@ -1,0 +1,77 @@
+// THE CLOCKWORK TOYS, which the cache has described in full since the dump and nothing ever ran.
+//
+// Three verbs, and all three were dead - opsweep found the Release, and the other two were found by
+// pulling the thread:
+//
+//   Wind      iop1 on poh_toy_{soldier,doll,mouse}_unwound
+//   Release   iop5 on poh_toy_{soldier,doll,mouse}_wound, and on poh_toy_cat
+//   Pick-up   op1 on the npcs poh_toy_{soldier,doll,mouse,cat}
+//
+// Everything else was already there. The npcs exist with vislevel=hide and carry their own
+// movement: walkanim=poh_toy_soldier_walk, readyanim=poh_toy_soldier_ready, and the same for the
+// doll, the mouse and the cat. There are even animations the npcs do not use yet -
+// poh_toy_soldier_fallover and poh_toy_soldier_fallover_ready - which is what a wound-down toy does
+// and is left alone here rather than guessed at.
+//
+// THE SHAPE IS ~release_toad's, in quests/quest_chompybird/scripts/bloated_toad.rs2: delete the
+// item, npc_add at a square beside the player with a lifetime, then npc_walk it away. The toad is
+// the only other thing in the game that turns an item into a creature and lets it go, so its
+// handler is the precedent rather than an invention.
+//
+// WHAT THE CACHE DID NOT SETTLE, and how each was decided:
+//
+//   what Pick-up returns   the UNWOUND obj, because Wind exists. A toy that has walked about has
+//                          run down, and iop1=Wind is there to wind it again, so the loop closes:
+//                          wind it, release it, pick it up, wind it again. Returning the wound obj
+//                          would make Wind unreachable for anyone who ever released a toy.
+//                          poh_toy_cat has no wound/unwound pair at all, so the cat returns itself.
+//   how long it walks      500 ticks, five minutes. The toad's own lifetime is 10, which is right
+//                          for something hopping off into the undergrowth and wrong for something
+//                          you are meant to pick up again: a toy that vanished after six seconds
+//                          would eat the item. Long enough to watch and retrieve, short enough that
+//                          a forgotten toy does not stand in somebody's house forever.
+//
+// Both are judgement rather than evidence, and are the two numbers to change first if this ever
+// feels wrong.
+
+// ----------------------------------------------------------------------------- wind it up
+[label,poh_toy_wind](namedobj $wound)
+inv_delslot(inv, last_slot);
+inv_add(inv, $wound, 1);
+mes("You wind up the toy.");
+
+[opheld1,poh_toy_soldier_unwound] @poh_toy_wind(poh_toy_soldier_wound);
+[opheld1,poh_toy_doll_unwound] @poh_toy_wind(poh_toy_doll_wound);
+[opheld1,poh_toy_mouse_unwound] @poh_toy_wind(poh_toy_mouse_wound);
+
+// ----------------------------------------------------------------------------- let it go
+// ~release_toad's shape: a square beside the player to stand on, a square to head for, and the npc
+// walking from one to the other under its own walkanim.
+[label,poh_toy_release](npc $toy)
+inv_delslot(inv, last_slot);
+def_coord $away = map_findsquare(coord, 0, 1, ^map_findsquare_lineofwalk);
+npc_add(map_findsquare(coord, 1, 1, ^map_findsquare_lineofwalk), $toy, 500);
+npc_walk(movecoord(npc_coord, calc(10 * (coordx($away) - coordx(npc_coord))), 0, calc(10 * (coordz($away) - coordz(npc_coord)))));
+mes("You put the toy down and it marches away.");
+
+[opheld5,poh_toy_soldier_wound] @poh_toy_release(poh_toy_soldier);
+[opheld5,poh_toy_doll_wound] @poh_toy_release(poh_toy_doll);
+[opheld5,poh_toy_mouse_wound] @poh_toy_release(poh_toy_mouse);
+[opheld5,poh_toy_cat] @poh_toy_release(poh_toy_cat);
+
+// ----------------------------------------------------------------------------- pick it back up
+// The unwound obj, so Wind has something to do. Refuses on a full pack rather than deleting the npc
+// and handing back nothing, which is the failure ~unequip_trollromance_sled guards the same way.
+[label,poh_toy_pickup](namedobj $give)
+if (inv_freespace(inv) < 1) {
+    mes("You don't have room to pick that up.");
+    return;
+}
+npc_del;
+inv_add(inv, $give, 1);
+mes("You pick the toy up.");
+
+[opnpc1,poh_toy_soldier] @poh_toy_pickup(poh_toy_soldier_unwound);
+[opnpc1,poh_toy_doll] @poh_toy_pickup(poh_toy_doll_unwound);
+[opnpc1,poh_toy_mouse] @poh_toy_pickup(poh_toy_mouse_unwound);
+[opnpc1,poh_toy_cat] @poh_toy_pickup(poh_toy_cat);
