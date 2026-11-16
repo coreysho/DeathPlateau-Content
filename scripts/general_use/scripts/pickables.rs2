@@ -31,6 +31,20 @@ if(inv_freespace(inv) = 0) {
 [oploc2,wheat_smallest]
 @pick_wheat;
 
+// TWO MORE WHEAT, both of which were simply left off this list. Between them they are 101 placed
+// instances of a Pick that did nothing, which makes them the largest live "Pick" in the backlog and
+// the whole of it - opsweep lists exactly two dead Picks and these are both of them.
+//
+// wheat_tall carries name=Wheat and model=wheat, the same as the three above it; loc474_22300 is
+// Harmony Island's field, name=Wheat, and the only named loc in that import block. Neither needs a
+// picked variant because ~pickup_loc_floor works by loc_del and a respawn, and both are
+// blockwalk=no like the rest, so the p_teleport onto the tile behaves as it does for wheat.
+[oploc2,wheat_tall]
+@pick_wheat;
+
+[oploc2,loc474_22300]
+@pick_wheat;
+
 // Pickable Onion
 [oploc2,onion]
 p_arrivedelay;
