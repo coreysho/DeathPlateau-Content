@@ -146,6 +146,44 @@ inv_add(inv, forget_gardener_letter, 1);
 %forget_gardener_task = 1;
 ~chatnpc("<p,neutral>The allotment north of Falador. He will be the only man alive who knows what I am talking about and I have been waiting two years to find out whether he agrees with me.");
 
+// =========================================================================== the hops patch
+//
+// op2="Inspect" answered nothing on all six states of Rind's patch, 96 placed instances. The
+// trigger goes on farming_hops_patch_keldagrim, NOT on the names opsweep prints: it lists
+// kelda_hops_1, _2, _3, _seed and _fullygrown because that is where the option sits in the cache,
+// and those are multiloc CHILDREN. OpLocHandler resolves a multiloc only to decide whether the op
+// is valid and then hands on the placed Loc, whose type is the base - so a trigger on a child name
+// is never reached. tools/sim/gardeninspect.ts proves that dispatch empirically.
+//
+// INSPECT ONLY, and the reason is worth stating rather than leaving as a gap. op1="Harvest" on
+// kelda_hops_fullygrown is dead too and is NOT wired here, because nothing can reach state 8:
+// %forget_farming is set to 4 by @forget_rind_done below and nothing anywhere advances it. The
+// pieces for the rest are all in the cache and all unconnected - kelda_hop_seed through _seed_5,
+// the kelda_hops obj, and ^brew_vat_kelda_hops = 68 which brewing.constant defines and no script
+// reads. A Harvest written now would be code no player could run. That chain is a feature, and it
+// is in decisions.md as one.
+//
+// So this reports the truth at every state, including the one the patch is actually stuck in.
+[oploc2,farming_hops_patch_keldagrim]
+p_arrivedelay;
+if (%forget_farming >= 8) {
+    mes("The hops are full grown, and nobody has come for them.");
+    return;
+}
+if (%forget_farming >= 5) {
+    mes("The hops are through and climbing.");
+    return;
+}
+if (%forget_farming = 4) {
+    mes("Sown with Rind's hop seeds. Nothing has come up yet.");
+    return;
+}
+if (%forget_farming = 3) {
+    mes("Clear soil, and no seed in it.");
+    return;
+}
+mes("A hop patch gone to weed.");
+
 [label,forget_rind_done]
 ~chatplayer("<p,neutral>Seeds.");
 ~chatnpc("<p,happy>He wrote BACK. After two years he wrote back and he AGREES with me.");

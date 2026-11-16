@@ -4,6 +4,89 @@
 // label each and the patch type is a parameter. Every tile of a patch type shares one varbit, so
 // raking any delphinium bed rakes all four of them.
 
+// =========================================================================== Inspect
+//
+// op2="Inspect" on every bed, and nothing answered it. THE NAME IN THE BACKLOG IS NOT THE NAME TO
+// HOOK, which is the thing to carry away from this one: opsweep lists the dead option under
+// garden_delphiniums_weeds_1 and its siblings, because that is the loc config the option sits on.
+// Those are multiloc CHILDREN. OpLocHandler resolves the multiloc only to decide whether the op is
+// valid, then hands the placed Loc on, and the trigger is looked up with
+// LocType.get(this.target.type) - the BASE. A trigger written on the child name would never fire.
+// That is why raking is already hooked on garden_delphinium_patch and not on a stage.
+//
+// The states are the ones documented in configs: 0-3 weeds counting up to clear soil, 4 sown, 5-6
+// growing, 7 up. The orchids are pots and skip 2 and 3; the white tree runs to 12. So Inspect takes
+// the state and the kind, and the two patches that are not beds get their own wording rather than
+// being told they are overgrown when they are an empty pot.
+[oploc2,garden_delphinium_patch] @garden_inspect(%garden_delphiniums_varbit, "delphiniums");
+[oploc2,garden_rosebush_patch_white] @garden_inspect(%garden_rosebush_white_varbit, "white roses");
+[oploc2,garden_rosebush_patch_red] @garden_inspect(%garden_rosebush_red_varbit, "red roses");
+[oploc2,garden_rosebush_patch_pink] @garden_inspect(%garden_rosebush_pink_varbit, "pink roses");
+[oploc2,garden_snowdrop_patch] @garden_inspect(%garden_snowdrops_varbit, "snowdrops");
+[oploc2,garden_vine_patch] @garden_inspect(%garden_vines_varbit, "vines");
+[oploc2,garden_orchid_pink_patch] @garden_inspect_pot(%garden_orchids_pink_varbit, "pink orchids");
+[oploc2,garden_orchid_yellow_patch] @garden_inspect_pot(%garden_orchids_yellow_varbit, "yellow orchids");
+[oploc2,garden_white_tree_patch] @garden_inspect_tree;
+
+[label,garden_inspect](int $state, string $what)
+p_arrivedelay;
+if ($state >= ^garden_fullygrown) {
+    mes("The <$what> are up and the bed is full of them.");
+    return;
+}
+if ($state >= ^garden_growing_1) {
+    mes("The <$what> are through the soil and coming on.");
+    return;
+}
+if ($state = ^garden_seed) {
+    mes("Sown with <$what>. It wants watering.");
+    return;
+}
+if ($state = ^garden_weeded) {
+    mes("Clear soil. Nothing sown in it yet.");
+    return;
+}
+mes("More weed than bed. It wants raking.");
+
+// The pots skip the two middle weed states entirely, so "overgrown" is the wrong word for them.
+[label,garden_inspect_pot](int $state, string $what)
+p_arrivedelay;
+if ($state >= ^garden_fullygrown) {
+    mes("The <$what> have filled the pot.");
+    return;
+}
+if ($state >= ^garden_growing_1) {
+    mes("Something green is up in the pot.");
+    return;
+}
+if ($state = ^garden_seed) {
+    mes("Sown with <$what>. It wants watering.");
+    return;
+}
+if ($state = ^garden_pot_soil) {
+    mes("A pot with compost in it, waiting for a seed.");
+    return;
+}
+mes("An empty plant pot.");
+
+// Thirteen states rather than eight: a seedling at 4, growth to 8, and the fruit coming on to 12.
+[label,garden_inspect_tree]
+p_arrivedelay;
+def_int $state = %garden_white_tree_varbit;
+if ($state >= ^garden_tree_fruit_1) {
+    mes("The white tree is fruiting.");
+    return;
+}
+if ($state >= ^garden_tree_grown) {
+    mes("The white tree is full grown.");
+    return;
+}
+if ($state >= ^garden_tree_seedling) {
+    mes("A white tree seedling, still small.");
+    return;
+}
+mes("More weed than bed. It wants raking.");
+
 // =========================================================================== raking
 [oplocu,garden_delphinium_patch] @garden_rake(%garden_delphiniums_varbit, 1);
 [oplocu,garden_rosebush_patch_white] @garden_rake(%garden_rosebush_white_varbit, 2);
