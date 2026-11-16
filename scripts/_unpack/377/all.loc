@@ -61226,6 +61226,14 @@ model=prison_wallspikes_incorner
 ambient=20
 active=no
 
+// PORT SARIM JAIL. The owner confirmed where these go: down to the cells. That is the plain
+// vertical link both ways - prison_ladder_up from the cells to the floor above,
+// prison_laddertop back down into them.
+//
+// Wired on that word and then CHECKED by climbing, which is the only order that works here:
+// deadladders gives these a same-tile partner on 4 of 4 and 3 of 3 instances, and loc_11739 has
+// exactly that evidence and still lands in a wall, because ~climb_ladder p_telejumps from the
+// tile the PLAYER stands on. tools/sim/ladderclimb.ts walks every placed instance of both.
 [prison_ladder_up]
 name=Ladder
 desc=It leads up.
@@ -61235,6 +61243,7 @@ op1=Climb-up
 forceapproach=north
 mapscene=7
 
+category=ladder_up
 [prison_laddertop]
 name=Ladder
 desc=I can climb down this.
@@ -61246,6 +61255,7 @@ sharelight=yes
 forceapproach=north
 mapscene=7
 
+category=ladder_down
 [prison_trapdoor]
 name=Trapdoor
 desc=I can climb down this.
