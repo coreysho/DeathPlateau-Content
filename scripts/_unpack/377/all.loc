@@ -74960,11 +74960,12 @@ recol2d=18821
 op1=Mine
 op2=Prospect
 op3=hidden
+// no category: quest_enakh answers Mine and Prospect on this rock directly. It carried
+// category=mining_rock_normal and a next_loc_stage with no mining_table row behind either,
+// which dispatched into mining.rs2 and printed "Nothing interesting happens".
 mapscene=12
 anim=gas
 blockrange=no
-category=mining_rock_normal
-param=next_loc_stage_mining,loc_9728
 bgsound=area474_3073,3
 
 [loc_11194]

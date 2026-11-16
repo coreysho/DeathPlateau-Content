@@ -7,12 +7,19 @@
 // use something on it. Handlers sit on the shell, never on a child.
 
 // =========================================================================== the rock
-// enakh_mining_stone is "A rock with a pickaxe" and carries exactly one op, op1=Take-axe. It is
-// also the only source of sandstone and granite that exists: this cache has no Desert Quarry at
-// all - there is not one loc in loc.pack with sandstone or granite in its name - so the rock has
-// to be both the pickaxe and the quarry. The first click prises the pickaxe out; every click after
-// that mines it, and it hands over whichever block the build still wants so the player is never
-// left rolling for the one piece they are short of.
+// enakh_mining_stone is "A rock with a pickaxe" and carries exactly one op, op1=Take-axe. The first
+// click prises the pickaxe out; every click after that mines it, and it hands over whichever block
+// the build still wants so the player is never left rolling for the one piece they are short of.
+//
+// THE CLAIM THAT USED TO BE HERE WAS WRONG, and it is worth leaving the correction in place because
+// the mistake is an easy one to make twice. This comment said "this cache has no Desert Quarry at
+// all - there is not one loc in loc.pack with sandstone or granite in its name - so the rock has to
+// be both the pickaxe and the quarry". The second half of that sentence is true and the conclusion
+// does not follow. The quarry is there; it simply does not have those words in its names. It is
+// loc_10946 and loc_10947, 58 placed instances in one pit at about 3172,2912, with enakh_scaffold,
+// enakh_wheel_barrow and enakh_secret_boulder standing around it - this quest's own scenery - and
+// two working rocks already in it, loc_10948 coal and loc_10949 clay. A search by name said no and
+// a look at the map says yes. They are wired at the foot of this file.
 [oploc1,enakh_mining_stone]
 p_arrivedelay;
 if (~enakh_has_pickaxe = false) {
@@ -25,6 +32,50 @@ if (~enakh_has_pickaxe = false) {
     return;
 }
 @enakh_mine_rock;
+
+// =========================================================================== the quarry
+// The pit itself: 58 placed instances whose Mine and Prospect answered nothing at all. They run
+// through this quest's own ~enakh_next_block, which is what makes them safe to wire WITHOUT
+// deciding which of the two is the sandstone and which the granite. That question cannot be settled
+// from the build - their ore recolours, 16706 and 18821, appear on no rock in mining_table, and
+// across every rock that does have a row recol2d is the ore - so nothing here guesses at it. The
+// quest hands out whatever the statue still needs, exactly as it does at enakh_mining_stone, and
+// the player is never short of the one piece they cannot get.
+//
+// NOT category=mining_rock_normal, which is the other thing that looks right. That dispatches into
+// mining.rs2, which does db_find on the loc and prints "Nothing interesting happens" for anything
+// with no row - and a row cannot be written without answering the sandstone-or-granite question
+// above. A direct trigger wins over a category in the lookup order, so these answer here instead.
+[oploc1,loc_10946]
+p_arrivedelay;
+@enakh_mine_rock;
+
+[oploc1,loc_10947]
+p_arrivedelay;
+@enakh_mine_rock;
+
+// Placed nowhere today, wired for the same reason their twins are: loc_11192 shares every recolour
+// with loc_10946 and loc_11193 with loc_10947, so if the map ever places them they are the same
+// rock and should not quietly go back to answering nothing.
+[oploc1,loc_11192]
+p_arrivedelay;
+@enakh_mine_rock;
+
+[oploc1,loc_11193]
+p_arrivedelay;
+@enakh_mine_rock;
+
+// Prospect names both stones rather than picking one, for the same reason.
+[label,enakh_prospect_quarry]
+p_arrivedelay;
+mes("You examine the rock face...");
+p_delay(2);
+mes("The quarry is sandstone and granite, and this face has both in it.");
+
+[oploc2,loc_10946] @enakh_prospect_quarry;
+[oploc2,loc_10947] @enakh_prospect_quarry;
+[oploc2,loc_11192] @enakh_prospect_quarry;
+[oploc2,loc_11193] @enakh_prospect_quarry;
 
 [oplocu,enakh_mining_stone]
 def_obj $item = last_useitem;
