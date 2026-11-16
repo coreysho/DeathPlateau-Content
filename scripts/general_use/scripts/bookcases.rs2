@@ -10,6 +10,18 @@ switch_coord (loc_coord) {
     case default : @search_bookcase;
 }
 
+// KELDAGRIM'S RED AXE SHELVES, 22 placed and answering nothing. Deliberately NOT category=bookcase:
+// the default above prints "none of them look very interesting", and this loc's own description is
+// "These books contain all sorts of data on the Red Axe." A player who reads the examine and then
+// searches should not be told the opposite. The Red Axe is real content here - quest_giantdwarf and
+// quest_forget both know the name - but nothing in the build reads these shelves, so this says what
+// is in them and stops there rather than inventing a step for a quest that may yet want one.
+[oploc1,dwarf_keldagrim_metal_bookcase]
+p_arrivedelay;
+mes("You search the shelves...");
+p_delay(1);
+~mesbox("Ledgers, contracts and consignment notes, all of them the Red Axe's and all of them in a dwarven hand you cannot read.");
+
 [label,search_bookcase]
 mes("You search the bookcase...");
 p_delay(1);

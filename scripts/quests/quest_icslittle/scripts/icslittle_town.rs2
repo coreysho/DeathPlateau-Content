@@ -207,6 +207,14 @@ if (inv_freespace(inv) = 0) {
 
 // "Bucket of sap (use a knife on a suitable tree while holding a bucket)." The only trees inside
 // the walls are the twenty-three banana trees, and they are what the embalmer means.
+// Search on the empty trees answered nothing - 23 placed instances of it inside the walls. The
+// line is the one quest_mm.rs2 already gives the same model, and like that one this is a TRIGGER
+// and not category=banana_tree on purpose: the shared handler changes the loc to its
+// next_loc_stage, an empty tree has none, and quest_mm.rs2 records that giving it the category
+// turned the sixth click into a script error.
+[oploc1,icthalarins_bananatreeempty]
+mes("There are no bananas left on the tree.");
+
 [oplocu,icthalarins_bananatreeempty]
 if (last_useitem ! knife) {
     ~displaymessage(^dm_default);

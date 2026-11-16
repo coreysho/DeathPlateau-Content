@@ -7,6 +7,20 @@
 //
 // Each shell has multiloc=0 and nothing else, so the jar is visible while its bit is 0 and vanishes
 // the moment it is set - which is exactly what taking it should do.
+// THE TOMB'S SARCOPHAGI, 33 of them, whose Search answered nothing. They are loc_6630, and the
+// obvious fix is wrong: they carry the model AND the description of
+// deserttreasure_sarcophigi_door_2, which IS wired - to @dt_search_sarcophagus, which rolls against
+// Desert Treasure's progress and spawns a deserttreasure_mummy_1 out of the lid. All six of those
+// are in the pyramid at about 2765,4945 on level 1. These are at 3276,9191, down here among the
+// canopic jars, the secret door and Icthlarin's own mummies, and they belong to this quest.
+//
+// So they get the empty half of that handler's own answer and none of its machinery. This tomb
+// already has its mummies standing up and walking around; a seventh crawling out of the furniture
+// would be somebody else's quest happening in the middle of this one.
+[oploc1,loc_6630]
+p_arrivedelay;
+~mesbox("You search the sarcophagus. It is empty, and has been for a very long time.");
+
 [oploc1,ics_little_pot_liver_multi] @icslittle_take_jar(ics_little_canopic_jar_liver);
 [oploc1,ics_little_pot_lungs_multi] @icslittle_take_jar(ics_little_canopic_jar_lungs);
 [oploc1,ics_little_pot_stomach_multi] @icslittle_take_jar(ics_little_canopic_jar_stomach);
