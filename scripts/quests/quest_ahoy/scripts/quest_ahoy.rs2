@@ -534,6 +534,11 @@ mes("The three scraps make one map, and the cross on it is out past the harbour.
 // the comment on [label,ahoy_ship_climb] for why it is a table and not arithmetic.
 [oploc1,ahoy_ghostship_ladder] @ahoy_ship_climb(1);
 [oploc1,ahoy_ghostship_laddertop] @ahoy_ship_climb(-1);
+// The angled pair on the pier-side ghost ship, deck to quarterdeck. Same handler, same table: see
+// the block at the foot of configs/ahoy_ladders.enum for why their four landings are derived from
+// the model's lean rather than measured like the rest, and what that costs.
+[oploc1,ahoy_ghostshipladder_angled] @ahoy_ship_climb(1);
+[oploc1,ahoy_ghostshipladder_top_angled] @ahoy_ship_climb(-1);
 
 [label,ahoy_ship_climb](int $dy)
 // THE LANDING COMES OUT OF A TABLE, not out of the player's approach side. It used to be mirrored

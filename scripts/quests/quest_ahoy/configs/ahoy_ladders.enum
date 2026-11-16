@@ -23,3 +23,26 @@ val=0_57_54_48_55,1_57_54_48_56   // 3696,3511 up   -> 3696,3512
 val=0_57_54_48_60,1_57_54_48_59   // 3696,3516 up   -> 3696,3515
 val=1_57_54_48_55,0_57_54_48_54   // 3696,3511 down -> 3696,3510
 val=1_57_54_48_60,0_57_54_48_61   // 3696,3516 down -> 3696,3517
+// --- the ghost ship's ANGLED pair, pier side, linking the deck (L1) to the quarterdeck (L2).
+// Two placements, each with a partner directly above it, at 3694,3510 and 3698,3510. The four rows
+// here were DERIVED, not measured, and that is the one place on these two ships where that is true.
+// The reason is worth writing down so nobody mistakes these numbers for the others:
+//
+// EVERY TILE ON DECKS 1 AND 2 OF THIS SHIP READS WALKABLE. There is no collision data up there at
+// all - a 17x13 sweep of both floors comes back open but for the ladder locs themselves. So the
+// check that makes the rest of this table trustworthy, "is the arrival tile standable", cannot fail
+// on these four rows and cannot be used to choose between candidates. Neither can ahoyladders.ts,
+// which is why its new rows prove only that the ladders answer and move you.
+//
+// GIVEN THAT, THE OFFSET COMES FROM THE MODEL. These two locs are shipladder_angled and
+// shipladder_top_angled, whose own handler in ladders+stairs/scripts/ladders.rs2 steps TWO TILES OUT
+// in the direction the ladder faces - an angled ladder leans, and you arrive at the top of the lean.
+// Both lower locs face angle 2 and both upper ones angle 0, so up goes south and down goes north.
+//
+// WHY THE TABLE ANYWAY, when the offset is arithmetic. Because arithmetic is what put a player
+// inside this hull once already. A wrong number here is a one-line edit to a documented value that
+// ahoyladders.ts then re-checks; a wrong rule in the handler is a bug on twelve other placements.
+val=1_57_54_50_54,2_57_54_50_52   // 3698,3510 up   -> 3698,3508, derived
+val=1_57_54_46_54,2_57_54_46_52   // 3694,3510 up   -> 3694,3508, derived
+val=2_57_54_50_54,1_57_54_50_56   // 3698,3510 down -> 3698,3512, derived
+val=2_57_54_46_54,1_57_54_46_56   // 3694,3510 down -> 3694,3512, derived
