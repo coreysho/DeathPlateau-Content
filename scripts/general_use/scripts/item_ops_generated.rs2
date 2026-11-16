@@ -150,9 +150,18 @@ if_openmain(xplamp);
 // are the bait for the jubbly hunt and had nowhere to be placed. @hundred_place_toad is in
 // quest_100/scripts/hundred_ogre.rs2 and keeps this message for everywhere that is not the island.
 [opheld1,100_jubbly_balloon_toad_brown] @hundred_place_toad(100_jubbly_balloon_toad_brown);
+// The singular Release beside the Release-all above, and it had to be written rather than left
+// to the global [opheld5,_] ~dropslot: with nothing claiming it, Release DROPPED the toad on
+// the floor and said nothing at all. Its sibling iop4 answers with a message and deletes
+// nothing, so this is that line in the singular - the two options now differ only in number,
+// which is what their labels say. Found by opsweep as one of six dead iop5=Release items; the
+// other four are POH toys and are deliberately left alone, because Release is their ONLY
+// option and claiming it would take away the only way to get rid of them.
 [opheld4,100_jubbly_balloon_toad_brown] ~mesbox("You release the toads. They hop away gratefully.");
+[opheld5,100_jubbly_balloon_toad_brown] ~mesbox("You release the toad. It hops away gratefully.");
 [opheld1,100_jubbly_balloon_toad_white] @hundred_place_toad(100_jubbly_balloon_toad_white);
 [opheld4,100_jubbly_balloon_toad_white] ~mesbox("You release the toads. They hop away gratefully.");
+[opheld5,100_jubbly_balloon_toad_white] ~mesbox("You release the toad. It hops away gratefully.");
 // Search, on the crate Aurel hands out: quests/quest_myreque2/scripts/myreque2_crate.rs2
 [opheld1,burgh_generalstore_crate] @m2_crate_search;
 [opheld1,burgh_rod_command1] mes("A silvery rod of mithril and silver with a sapphire on the top.");
