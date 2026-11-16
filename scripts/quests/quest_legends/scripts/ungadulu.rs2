@@ -1,7 +1,13 @@
 [opnpc1,ungadulu_good] @ungadulu_start;
 [opnpc2,ungadulu_good] @attack_ungadulu;
 [apnpc2,ungadulu_good] @attack_ungadulu;
-// opnpc1 here is NIH
+// opnpc1 on the possessed form is not the Shaman's conversation - @ungadulu_start above is, and it
+// belongs to ungadulu_good. But the cache offers Talk-to on this form too and it answered with
+// nothing, and this form is on its feet for a hundred ticks with the player free to click it. So it
+// answers now, with the one true thing there is to say about it.
+[opnpc1,ungadulu_bad]
+mes("Whatever is wearing the Shaman does not answer to his name.");
+
 [opnpc2,ungadulu_bad] @attack_ungadulu;
 [apnpc2,ungadulu_bad] @attack_ungadulu;
 

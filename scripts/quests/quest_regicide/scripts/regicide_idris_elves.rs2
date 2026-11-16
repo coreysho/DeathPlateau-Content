@@ -19,6 +19,25 @@
 // these elf models per their own walkanim=human_walk_*/readyanim=human_ready) and is removed with
 // npc_del. This is intentionally a modest, narrated moment, not a scripted fight engine.
 
+// ESSYLLT AND MORVRAN have Talk-to as well, and it did nothing. They stand on that path for 500
+// ticks either side of the scene below, so a player can reach them before Idris speaks and after
+// they have cut him down - two different moments, and they should not say the same thing in both.
+// Their voices here are the ones they use in the cutscene: Essyllt challenges, Morvran quotes the
+// law. Names are confirmed from [name=] as recorded above, so they can be addressed by them.
+[opnpc1,regicide_evil_elf1]
+if (%regicide_quest > ^regicide_started) {
+    ~chatnpc("<p,angry>Still here? Lord Iorwerth's camp is north-west. Walk.");
+    return;
+}
+~chatnpc("<p,angry>Keep walking, outsider. This path is watched, and not by me alone.");
+
+[opnpc1,regicide_evil_elf2]
+if (%regicide_quest > ^regicide_started) {
+    ~chatnpc("<p,angry>You were told to go north-west. The law does not repeat itself.");
+    return;
+}
+~chatnpc("<p,angry>Humans do not come this way. Whatever you are owed for that, you will be paid.");
+
 [opnpc1,regicide_good_elf1]
 if(%regicide_quest < ^regicide_started) {
     mes("The elf glances at you warily but says nothing.");

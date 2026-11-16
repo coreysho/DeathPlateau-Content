@@ -126,6 +126,20 @@ switch_int (%dm_boss) {
 ~dm_send_fear;
 mes("Something else is getting up.");
 
+// TALK-TO IN THE ARENA. He stands at the edge with his arms folded for the whole dream - 2000
+// ticks - so this one really is clickable, unlike most of the script-spawned npcs in this bucket,
+// and it answered with nothing. He shouts rather than opening a box for exactly the reason the
+// comment below this one records: there is a level 343 fear in the room.
+[opnpc1,cyrisus_dream]
+switch_int (%dm_boss) {
+    case 1 : npc_say("That one is mine. Do not be gentle with it.");
+    case 2 : npc_say("It does not end. Give it an end.");
+    case 3 : npc_say("It cannot be touched. Touch it anyway.");
+    case 4 : npc_say("Last one. Then we both wake up.");
+    case default : npc_say("Read the book at the north end. I am right behind you.");
+}
+mes("Cyrisus does not unfold his arms.");
+
 // CYRISUS SHOUTS, HE DOES NOT OPEN A DIALOGUE BOX. This was ~chatnpc, which suspends the script
 // that called it until the player clicks Continue - and the script that calls it is the one that
 // counts the fear off and spawns the next one. So the second fear did not appear until the player

@@ -567,6 +567,14 @@ npc_add(^m2_juve2_spot, burgh_vampire_juve_2, ^m2_fight_duration);
 npc_setmode(opplayer2);
 ~mesbox("Three of them, in a street with forty people watching. | There is a table in the shop behind you and the juvinates are not clever about tables.");
 
+// TALK-TO DURING THE FIGHT. The cache offers it on this form and nothing answered, so the click
+// did nothing at all. He has a real conversation twenty lines below, on burgh_gadderanks_wounded,
+// which is where it belongs - this is the three seconds before that. Narrated rather than a chat
+// box: opening a dialogue window on somebody in the middle of a three-on-one is not a kindness,
+// which is the same reasoning dream_mentor_fears.rs2 writes down about Cyrisus.
+[opnpc1,burgh_gadderanks_attackable]
+mes("Gadderanks has a mace in his hand and two juvinates at his back. The time for talking went past a moment ago.");
+
 [ai_queue3,burgh_gadderanks_attackable]
 def_coord $at = npc_coord;
 gosub(npc_death);

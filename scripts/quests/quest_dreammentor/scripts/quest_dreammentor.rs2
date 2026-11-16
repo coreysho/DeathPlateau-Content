@@ -197,6 +197,46 @@ if (%dm_armament ! ^dm_armament_full) {
 ~chatnpc("<p,happy>That's the lot. Take it to him.");
 ~mesbox("You have everything of Cyrisus's. He can have it back when he is standing up.");
 
+// =========================================================================== Inspect
+//
+// op3="Inspect" sits on all three of his forms - cyrisus_fallen, cyrisus and cyrisus_dream - and
+// nothing answered any of them, so the click did nothing wherever you met him. opsweep found the
+// last of the three only after his Talk-to was written, which is the usual shape: clearing one dead
+// op on an npc uncovers the next one.
+//
+// WHAT IT REPORTS IS NOT INVENTED. %dm_armament is a five-slot bitfield that ~dm_pick fills one
+// slot at a time out of Jack's account, and a player half-way through recovering it has no other
+// way to see which slots they already have - Astral Contact only confirms the last guess. So
+// Inspect lists what is still missing, which is the one question looking him over can answer.
+[label,dm_inspect_cyrisus]
+if (%dreammentor < ^dm_found_cyrisus) {
+    mes("He is in no state to be looked over.");
+    return;
+}
+if (%dreammentor >= ^dm_in_dream) {
+    mes("He has his arms folded and he is not watching the monster. He is watching you.");
+    return;
+}
+if (%dm_armament = ^dm_armament_full) {
+    mes("Helmet, body, legs, boots and a weapon, all of it his own. He is dressed for it.");
+    return;
+}
+mes("Cyrisus is still short of his own kit.");
+~dm_inspect_slot(^dm_arm_helmet, "a helmet");
+~dm_inspect_slot(^dm_arm_top, "a body");
+~dm_inspect_slot(^dm_arm_legs, "legs");
+~dm_inspect_slot(^dm_arm_boots, "boots");
+~dm_inspect_slot(^dm_arm_weapon, "a weapon");
+
+[proc,dm_inspect_slot](int $bit, string $slot)
+if (and(%dm_armament, ~lunar_bit($bit)) = 0) {
+    mes("He has no <$slot>.");
+}
+
+[opnpc3,cyrisus_fallen] @dm_inspect_cyrisus;
+[opnpc3,cyrisus] @dm_inspect_cyrisus;
+[opnpc3,cyrisus_dream] @dm_inspect_cyrisus;
+
 // One slot of the account. The three options are the three sets' answers for that slot; the one
 // that belongs to Cyrisus is the one that matches whichever of Attack, Ranged and Magic you are
 // highest in. Astral Contact will tell you whether you guessed right (skill_magic/lunar).

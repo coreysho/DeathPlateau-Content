@@ -59,6 +59,19 @@ switch_int(~p_choice3("Tell me how to untrap Merlin and I might.", 1, "No. He de
         ~mesbox("Morgan Le Faye vanishes.");
 }
 
+// TALK-TO. She is spawned by the scene above and then stands there for fifty ticks with her son
+// bleeding at her feet, and the click did nothing - so a player who read the instructions once and
+// closed the window had no way to hear them again. This gives the three questions back. It does not
+// re-enter @lefaye_spare_son: that heals Mordred and re-spawns her, and replaying a bargain already
+// struck is a different thing from asking her to repeat herself.
+[opnpc1,morgan_le_faye]
+if (%arthur < ^arthur_spoken_morgan_lefaye) {
+    ~chatnpc("<p,angry>Say what you came to say, or put up your sword.");
+    return;
+}
+~chatnpc("<p,neutral>Ask again, then, if you were not listening the first time.");
+@multi3("So where can I find Excalibur?", lefaye_excalibur, "What are the magic words?", lefaye_magic_words, "OK I will go do all that.", lefaye_ok);
+
 [label,lefaye_excalibur]
 ~chatplayer("<p,neutral>So where can I find Excalibur?");
 ~chatnpc("<p,neutral>The lady of the lake has it.|I don't know if she'll give it to you though,|she can be rather temperamental.");
