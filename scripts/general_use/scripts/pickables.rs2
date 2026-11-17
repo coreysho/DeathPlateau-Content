@@ -31,6 +31,13 @@ if(inv_freespace(inv) = 0) {
 [oploc2,wheat_smallest]
 @pick_wheat;
 
+// wheat_tall was the one of the four that never got wired up. It is the same name, the same model
+// and the same op2=Pick as its three siblings - only drawn taller - and there are 37 of them, the
+// nearest one tile from a working stalk in the Lumbridge field the grain for Cook's Assistant
+// comes from. Found by tools/sim/placeddead.ts, not by a report.
+[oploc2,wheat_tall]
+@pick_wheat;
+
 // Pickable Onion
 [oploc2,onion]
 p_arrivedelay;
