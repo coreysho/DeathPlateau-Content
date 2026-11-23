@@ -132,7 +132,12 @@ check('Traiborn' in _branch,
 # AND THE JOURNAL ANSWERS THE QUESTION IN FRONT OF THE PLAYER rather than one fixed block. RFD's
 # journal appends every sub-quest still open, so a long entry for each runs the page off the
 # bottom - which is why this is three states and not five more lines.
+# STOP AT THE NEXT PROC. This slice ran to end of file, and Traiborn's own two procs sit BELOW
+# the journal in this file - so it swallowed them, and the checks below passed on his name and
+# on an inv_total that belonged to his chat rather than to the journal. A mutation that blanked
+# the journal's plain-cake branch was not caught until this was narrowed.
 _journal = GUIDE.split('[proc,hundred_guide_journal]', 1)[1]
+_journal = re.split(r'\n\[(?:proc|label|op|if_)', _journal)[0]
 check('inv_total(inv, hundred_cake_of_guidance)' in _journal,
       'the journal knows when the cake is already made, and says to go and use it')
 check('inv_total(inv, cake)' in _journal,
