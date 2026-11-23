@@ -1342,20 +1342,21 @@ while ($i < ^poh_furn_slots) {
     $i = calc($i + 1);
 }
 
-// ONE ROOM'S PIECES, for ~poh_furn_relay. ~poh_furn_restore above lays the whole house back and is
-// right to: it is called after a BUILD, when every zone has just been replaced. A relay replaces one
-// zone, so only one room's locs were wiped, and re-adding the other two hundred-odd pieces of a
-// furnished house is work whose every loc_add is a client update for a loc that is already there.
+// ONE ROOM'S PIECES, for ~poh_furn_relay. ~poh_furn_restore above lays the whole house back and
+// is right to: it is called after a BUILD, when every zone has just been replaced. A relay
+// replaces ONE zone, so only one room's locs were wiped, and re-adding the other two
+// hundred-odd pieces of a furnished house is work whose every loc_add is a client update for a
+// loc that is already there.
 //
 // Reported as "when removing a item in poh there is a loding delay" (DeathPlateau-Bugs#64). The
 // delay is this: taking out one chair re-placed the whole house.
 //
-// It still scans all ^poh_furn_slots, because the slots are not grouped by room and a piece's room
-// is a field inside its packed value - the saving is in the loc_adds, which is where the cost is.
+// It still scans all ^poh_furn_slots, because the slots are not grouped by room and a piece's
+// room is a field inside its packed value - the saving is in the loc_adds, which is where the
+// cost is. Same shape as ~poh_furn_at and ~poh_furn_clear_cell above.
 //
-// NO "its room is gone" BRANCH, unlike ~poh_furn_restore: the caller has just re-laid this room, so
-// the room is there by construction. A relay for a room that does not exist clears the zone and has
-// no furniture to put back either way.
+// NO "its room is gone" BRANCH, unlike ~poh_furn_restore: the caller has just re-laid this room,
+// so the room is there by construction.
 [proc,poh_furn_restore_room](coord $base, int $rx, int $rz)
 def_int $i = 0;
 while ($i < ^poh_furn_slots) {
