@@ -376,6 +376,11 @@ if (last_useitem ! fenk_lightning_mould) {
 @fenk_cast_conductor;
 
 [label,fenk_cast_conductor]
+// CLOSE THE WINDOW FIRST. This is reached two ways now - the mould used on a silver bar, and the
+// furnace's Silver Casting panel, whose Lightning Rod slot calls straight in here - and the panel
+// would otherwise sit on top of every message below it. A close with nothing open costs nothing,
+// which is how myreque2_cast_rod handles the same two routes.
+if_close;
 if (stat(crafting) < 20) {
     mes("You need a Crafting level of 20 to cast this.");
     return;
