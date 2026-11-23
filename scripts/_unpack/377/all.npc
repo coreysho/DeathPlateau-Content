@@ -36558,7 +36558,8 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=5
 
 [mm_zombie_monkey_large_guard]
@@ -36593,7 +36594,8 @@ param=damagetype,^crush_style
 // applies (attackrate 4, respawnrate 100, the generic human attack/defend/death anims).
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=5
 
 [mm_zombie_monkey_small]
@@ -36622,7 +36624,8 @@ param=damagetype,^crush_style
 
 param=attack_anim,m_zombie_attack
 param=death_anim,m_monkey_death
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=5
 
 [mm_bonzara]
@@ -36716,7 +36719,8 @@ param=attack_sound,skeleton_attack
 param=death_anim,skeleton_death
 param=death_sound,skeleton_death
 param=defend_anim,skeleton_block
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=5
 
 [mm_warehouse_spider]
@@ -36830,7 +36834,8 @@ param=defend_anim,scorpion_parry
 
 param=attack_anim,scorpion_attack
 param=death_anim,scorpion_death
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=4
 
 [mm_jungle_spider]
@@ -36852,7 +36857,8 @@ param=death_drop,null
 param=attack_anim,giantspider_attack
 param=death_anim,giantspider_death
 param=defend_anim,giantspider_block
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=4
 
 [mm_jungle_snake]
@@ -36874,7 +36880,8 @@ param=death_anim,snake_death
 param=death_sound,snake_death
 param=defend_anim,snake_block
 param=defend_sound,snake_hit
-huntmode=aggressive_melee
+// The greegree has to stop this one too - see configs/mm.hunt in quests/quest_mm.
+huntmode=mm_aggressive_melee
 huntrange=4
 
 [mm_transmogrification_small_ninja_monkey]
