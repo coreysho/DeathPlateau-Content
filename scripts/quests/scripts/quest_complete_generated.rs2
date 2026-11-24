@@ -38,7 +38,7 @@ switch_component ($quest) {
             return(true);
         }
     case questlist:blackarmgang :
-        if (%blackarmgang >= ^blackarmgang_complete) {
+        if (%phoenixgang >= ^phoenixgang_complete | %blackarmgang >= ^blackarmgang_complete) {
             return(true);
         }
     case questlist:chompybird :
@@ -414,7 +414,7 @@ switch_component ($quest) {
             return(true);
         }
     case questlist:upass :
-        if (%upass >= ^upass_complete) {
+        if (1 >= ^upass_complete | %upass >= ^upass_complete) {
             return(true);
         }
     case questlist:vampire :

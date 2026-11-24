@@ -107,3 +107,93 @@ if (%qp >= $need) {
     return(true);
 }
 return(false);
+
+// ================================================================= the gate
+//
+// THE SAME ROW THAT THE JOURNAL PRINTS, USED TO STOP THE PLAYER. Until now the two halves of a
+// requirement lived apart: the journal said what a quest wanted, and whether the quest actually
+// asked for it was a guard clause somebody had written, or had not. Fifty-eight declared
+// requirements across twenty-one quests had no check anywhere - Heroes' Quest's four, Family
+// Crest's four, Ghosts Ahoy's two - so the log named a requirement and the quest let you in
+// regardless.
+//
+// Returns TRUE when something is missing, having already told the player which. A quest calls it
+// as the first thing its start does:
+//
+//     if (~quest_requirements_block("Ghosts Ahoy") = true) {
+//         return;
+//     }
+//
+// ONLY WHAT CAN BE CHECKED. The prose lines are not consulted here for the same reason the
+// journal does not colour them: there is nothing to check them against, and refusing a player
+// over a line this cannot evaluate would make the quest unstartable.
+// WHAT IS MISSING, AS TEXT, AND NOTHING ELSE. This does not talk to the player and does not
+// decide anything, which is the point: ~mesbox PARKS the script it is called from, so a proc that
+// announced the problem could not also return the answer - the return ran after the player clicked
+// Continue, long after the caller had read the stack. The deciding half was untestable and a sim
+// asking "does this gate stop a new character" got false for all 109.
+//
+// Empty string means nothing is missing.
+[proc,quest_requirements_missing](string $quest_name)(string)
+db_find(quest_requirement:name, $quest_name);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    return("");
+}
+
+def_string $missing = "";
+def_int $n = 0;
+
+def_int $need_qp = db_getfield($row, quest_requirement:questpoints, 0);
+if ($need_qp > 0 & ~questpoints_met($need_qp) = false) {
+    $n = add($n, 1);
+    $missing = append($missing, "|<tostring($need_qp)> Quest Points");
+}
+
+def_int $skills = db_getfieldcount($row, quest_requirement:skills);
+def_int $i = 0;
+while ($i < $skills) {
+    def_stat $stat;
+    def_int $level;
+    $stat, $level = db_getfield($row, quest_requirement:skills, $i);
+    if (~stat_req_met($stat, $level) = false) {
+        $n = add($n, 1);
+        $missing = append($missing, "|Level <tostring($level)> <enum(stat, string, stat_names, $stat)>");
+    }
+    $i = add($i, 1);
+}
+
+def_int $quests = db_getfieldcount($row, quest_requirement:quests);
+$i = 0;
+while ($i < $quests) {
+    def_component $other;
+    def_string $name;
+    $other, $name = db_getfield($row, quest_requirement:quests, $i);
+    if (~quest_component_complete($other) = false) {
+        $n = add($n, 1);
+        $missing = append($missing, "|<$name>");
+    }
+    $i = add($i, 1);
+}
+
+if ($n = 0) {
+    return("");
+}
+return($missing);
+
+// The in-game half: say what is missing, and tell the caller to stop. A quest calls this as the
+// first thing its start does, before any dialogue, so the NPC does not promise something it is
+// about to take back:
+//
+//     if (~quest_requirements_block("Ghosts Ahoy") = true) {
+//         return;
+//     }
+[proc,quest_requirements_block](string $quest_name)(boolean)
+// string_length, not = : RuneScript has no string equality operator, and the build says so -
+// "Operator '=' cannot be applied to 'string', 'string'".
+def_string $missing = ~quest_requirements_missing($quest_name);
+if (string_length($missing) = 0) {
+    return(false);
+}
+~mesbox(append("You need more than you have before you can start <$quest_name>.|You still need:", $missing));
+return(true);
