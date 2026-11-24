@@ -144,7 +144,9 @@ if ($row = null) {
 def_string $missing = "";
 def_int $n = 0;
 
-def_int $need_qp = db_getfield($row, quest_requirement:questpoints, 0);
+// startquestpoints, not questpoints: Recipe for Disaster's 175 is the total you end the quest
+// with, not a toll at the door, and the wiki marks the difference.
+def_int $need_qp = db_getfield($row, quest_requirement:startquestpoints, 0);
 if ($need_qp > 0 & ~questpoints_met($need_qp) = false) {
     $n = add($n, 1);
     $missing = append($missing, "|<tostring($need_qp)> Quest Points");

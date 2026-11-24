@@ -428,7 +428,7 @@ def wiki_facts(title):
         page = m.group(1).strip()
         text = fetch(page)
     out = {'page': page, 'qp': None, 'xp': {}, 'reqs_skill': {}, 'reqs_quest': [],
-           'reqs_start': {}, 'reqs_qp': None, 'rewards_raw': None, 'requirements_raw': None, 'later_xp': {},
+           'reqs_start': {}, 'reqs_qp': None, 'reqs_qp_start': None, 'rewards_raw': None, 'requirements_raw': None, 'later_xp': {},
            'release_year': None}
 
     # THE RELEASE YEAR DECIDES WHETHER A REWARD IS ORIGINAL OR A LATER ADDITION. This server plays
@@ -466,6 +466,13 @@ def wiki_facts(title):
                     continue
                 if skill == 'quest':
                     out['reqs_qp'] = lvl
+                    # The quest point total carries the same flag. Recipe for Disaster's 175 has
+                    # none, and its own note says nine of them are earned DURING the quest and
+                    # seventy-nine by finishing its prerequisites - so it is the total you end
+                    # with, not a toll at the door. Tears of Guthix's 43 is marked yes and is.
+                    f = re.search(r'\{\{Questreqstart\|(\w+)\}\}', line)
+                    if f and f.group(1).lower() == 'yes':
+                        out['reqs_qp_start'] = lvl
                     continue
                 if skill in NOT_OURS:
                     continue
