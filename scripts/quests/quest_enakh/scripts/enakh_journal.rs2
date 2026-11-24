@@ -5,7 +5,7 @@ switch_int (%enakh_quest) {
     case ^enakh_not_started :
         $text = "@dbl@I can start this quest by speaking to @dre@Lazim@dbl@ at the|";
         $text = append($text, "@dbl@half-built statue in the @dre@Kharidian Desert|");
-        $text = append($text, "@dbl@I will need @dre@<tostring(^enakh_req_crafting)> Crafting@dbl@, @dre@<tostring(^enakh_req_mining)> Mining@dbl@, @dre@<tostring(^enakh_req_firemaking)> Firemaking|");
+        $text = append($text, "@dbl@I will need @dre@<tostring(^enakh_req_crafting)> Crafting@dbl@ and @dre@<tostring(^enakh_req_firemaking)> Firemaking|");
         $text = append($text, "@dbl@@dre@<tostring(^enakh_req_magic)> Magic@dbl@ and @dre@<tostring(^enakh_req_prayer)> Prayer");
 
     case ^enakh_started :
