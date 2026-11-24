@@ -99,7 +99,31 @@ if (.npc_find(npc_coord, mm_karam, ^mm_karam_reach, 1) = true) {
     // Through npc_damage rather than npc_del, so the ordinary death runs: the death animation and
     // npc_param(death_drop), which is how the bones get onto the floor. Killing them is what Karam
     // is for, and the bones are why a player wants him to.
+    //
+    // AND THE DEATH HAS TO BE CALLED, not merely arrived at. npc_damage takes the hitpoints to
+    // nought and that is all it does: [ai_queue3,_] is run by the engine when an npc dies in the
+    // ordinary way, and nothing runs it for an npc damaged from inside its own [ai_opplayer2]. So
+    // the guard stood there dead - the nightly's fuzz watcher caught it as "mm_monkey_guard was
+    // still in the world 12 ticks after its hitpoints reached 0 (npc_del never ran)" - and the
+    // bones this comment is about have never once hit the floor, because the drop is in
+    // ~npc_default_death too and that never ran either.
+    //
+    // gosub it, which is exactly what [ai_queue3,_] would have done: npc_death for the animation
+    // and the delete, then death_drop for the bones.
     npc_damage(^hitmark_damage, npc_stat(hitpoints));
+    // AND THE BONES ARE DROPPED HERE RATHER THAN BY ~npc_default_death, which gates them on
+    // npc_findhero - and the killer is Karam, so there is no hero to find and the floor stayed
+    // empty. The engine runs an ai trigger as init(script, npc, target), so the player Karam is
+    // protecting is already the active one; this is their kill in every sense that matters.
+    //
+    // BEFORE THE DEATH AND NOT AFTER IT, because npc_coord is the npc's and ~npc_death ends on
+    // npc_del. ~npc_default_death gets away with the other order for an ordinary death; from in
+    // here the obj went nowhere at all.
+    def_namedobj $drop = npc_param(death_drop);
+    if ($drop ! null) {
+        obj_add(npc_coord, $drop, 1, ^lootdrop_duration);
+    }
+    gosub(npc_death);
     return;
 }
 gosub(npc_default_attack);
