@@ -36403,6 +36403,10 @@ param=rangeattack,0
 param=max_hit,20
 attackrange=8
 category=mm_archer
+// RESPAWN is the wiki's 50 ticks, not the engine's 100-tick default. Flagged on
+// DeathPlateau-Bugs#37 as the one line left undone, since it was not what the ticket reported;
+// Corey's call, 24 November, to bring it in line with Old School.
+respawnrate=50
 
 [mm_ravine_archer]
 name=Monkey Archer
@@ -36458,6 +36462,10 @@ param=rangeattack,0
 param=max_hit,20
 attackrange=8
 category=mm_archer
+// RESPAWN is the wiki's 50 ticks, not the engine's 100-tick default. Flagged on
+// DeathPlateau-Bugs#37 as the one line left undone, since it was not what the ticket reported;
+// Corey's call, 24 November, to bring it in line with Old School.
+respawnrate=50
 
 [mm_posted_archer]
 name=Monkey Archer
@@ -36513,6 +36521,10 @@ param=rangeattack,0
 param=max_hit,20
 attackrange=8
 category=mm_archer
+// RESPAWN is the wiki's 50 ticks, not the engine's 100-tick default. Flagged on
+// DeathPlateau-Bugs#37 as the one line left undone, since it was not what the ticket reported;
+// Corey's call, 24 November, to bring it in line with Old School.
+respawnrate=50
 
 [mm_religious_guard]
 name=Monkey Guard
