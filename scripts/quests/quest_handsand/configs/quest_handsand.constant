@@ -92,3 +92,8 @@
 ^handsand_guild = 0_40_48_28_15         // 2588,3087  the Wizards' Guild in Yanille
 ^handsand_mazion = 0_44_52_2_14         // 2818,3342  Entrana, by the sand pit the Yanille sacks
                                         // were shipped to - npc handsand_naziom, name=Mazion
+
+// The quest requires 17 Thieving and 49 Crafting. Sandy's pocket is the step the Thieving is
+// for, so the two must be the same number: see handsand_npcs.rs2.
+^handsand_req_thieving = 17
+^handsand_req_crafting = 49
