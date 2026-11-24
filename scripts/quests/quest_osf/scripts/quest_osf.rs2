@@ -22,6 +22,12 @@ switch_int (%onesmallfavour) {
 }
 
 [label,osf_start]
+// Every requirement this quest declares, checked before a word is said - the
+// same quest_requirement row the journal prints. Nothing here checked them at
+// all, so the log named them and the quest let you in anyway.
+if (~quest_requirements_block("One Small Favour") = true) {
+    return;
+}
 ~chatnpc("<p,sad>I cannot predict the weather. I am a seer. It is the one thing people ask me for.");
 switch_int (~p_choice2("Why not?", 1, "Guess.", 2)) {
     case 2 :

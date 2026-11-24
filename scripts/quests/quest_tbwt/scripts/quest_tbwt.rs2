@@ -19,6 +19,12 @@ switch_int (%tbwt_main) {
 }
 
 [label,tbwt_timfraku_start]
+// Every requirement this quest declares, checked before a word is said - the
+// same quest_requirement row the journal prints. Nothing here checked them at
+// all, so the log named them and the quest let you in anyway.
+if (~quest_requirements_block("Tai Bwo Wannai Trio") = true) {
+    return;
+}
 ~chatnpc("<p,angry>You are not of the village. Why are you in my house.");
 switch_int (~p_choice2("I was told you might need help.", 1, "I'll see myself out.", 2)) {
     case 2 :

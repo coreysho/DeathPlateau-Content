@@ -111,6 +111,12 @@ inv_add(inv, ectophial, 1);
 return(true);
 
 [label,ahoy_start]
+// Every requirement this quest declares, checked before a word is said - the
+// same quest_requirement row the journal prints. Nothing here checked them at
+// all, so the log named them and the quest let you in anyway.
+if (~quest_requirements_block("Ghosts Ahoy") = true) {
+    return;
+}
 // THE TWO REQUIREMENTS, which were not checked at all - a level 3 with a ghostspeak amulet could
 // start and finish the whole quest. Both come off the wiki's own requirements box: Priest in Peril,
 // and The Restless Ghost completed rather than merely begun.

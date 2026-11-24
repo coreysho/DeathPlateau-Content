@@ -19,6 +19,12 @@ switch_int (%dwarfrock_quest) {
 }
 
 [label,dwarfrock_start]
+// Every requirement this quest declares, checked before a word is said - the
+// same quest_requirement row the journal prints. Nothing here checked them at
+// all, so the log named them and the quest let you in anyway.
+if (~quest_requirements_block("Between a Rock...") = true) {
+    return;
+}
 ~chatnpc("<p,angry>Mind the rock. Everybody minds the rock eventually.");
 switch_int (~p_choice2("What's so special about it?", 1, "It's a rock.", 2)) {
     case 2 :
