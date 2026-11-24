@@ -6,12 +6,24 @@ if(inv_total(inv, cabbage) > 0) {
         case 1 :
             ~chatplayer("<p,neutral>Yes, I'll sell you all my cabbages.");
             if_close;
-            while(inv_total(inv, cabbage) > 0) {
-                // RSC sells 1 at a time with delay, OSRS technically does as well but with no delay, we'll copy RSC here
-                mes("You sell a cabbage.");
-                p_delay(0);
-                inv_del(inv, cabbage, 1);
-                inv_add(inv, coins, 100);
+            // OLD SCHOOL'S CADENCE, NOT RSC'S (DeathPlateau-Bugs#86). The comment that used to sit
+            // in this loop said "RSC sells 1 at a time with delay, OSRS technically does as well
+            // but with no delay, we'll copy RSC here", and the delay is the problem: p_delay sets
+            // player.delayed, and MoveClickHandler and its fifteen siblings THROW AWAY a click made
+            // while that is set rather than deferring it. So selling twenty-eight cabbages held the
+            // player for twenty-eight ticks and ate every click they made in them, with no message
+            // to say why. Same class as #39 and #85.
+            //
+            // ONE MESSAGE INSTEAD OF ONE PER CABBAGE, because without the delay the per-item line
+            // printed twenty-eight times in a single tick. The count and the total are the same
+            // information in a line a player can read.
+            def_int $sold = inv_total(inv, cabbage);
+            inv_del(inv, cabbage, $sold);
+            inv_add(inv, coins, calc($sold * 100));
+            if ($sold = 1) {
+                mes("You sell a cabbage for 100 coins.");
+            } else {
+                mes("You sell <tostring($sold)> cabbages for <tostring(calc($sold * 100))> coins.");
             }
             ~chatnpc("<p,neutral>Business good doing with you! Please, again come, buying always.");
         case 2 : ~chatplayer("<p,neutral>No, I will keep my cabbbages.");

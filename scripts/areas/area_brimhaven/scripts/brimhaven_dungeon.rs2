@@ -17,8 +17,10 @@
 // stands outside and takes 875 coins every time. THERE IS NO `saniboch` NPC IN THE 377 CACHE - I
 // checked all.npc - so there is nobody to take it, and inventing a toll on a door that never
 // charged one is a change to how the game plays rather than a fix to a dead option. Left open,
-// and the question is on DeathPlateau-Bugs#91 for Corey: one line here adds the 875 if he wants
-// the sink.
+// ANSWERED 25 November 2026: the door stays free. The two log balances and two pipe squeezes in
+// here stay dead for the same kind of reason - neither is in Old School's dungeon at all, the wiki
+// has them as alternative routes rather than the way through, and the dungeon is traversable
+// without them, so there is no level to invent them at. DeathPlateau-Bugs#91.
 
 [oploc1,dungeon_tree_closed]
 // p_telejump and not p_teleport: this is a door, so the screen should not fade the way a spell

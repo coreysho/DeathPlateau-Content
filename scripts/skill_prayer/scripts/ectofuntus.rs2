@@ -178,14 +178,32 @@ if (%ecto_tokens_pending >= ^ecto_token_cap) {
     return;
 }
 def_obj $bone = enum(obj, obj, bonemeal_to_bone, $meal);
-inv_del(inv, $meal, 1);
+// ZEALOT'S ROBES KEEP THE BONEMEAL AND NOT THE SLIME (DeathPlateau-Bugs#95). The wiki lists the
+// Ectofuntus among the places the set saves "remains", and worshipping consumes two things - a pot
+// of bonemeal and a bucket of slime - so which one a save keeps is a decision rather than a
+// lookup. It is the bonemeal: that is the remains, ground from a bone, and the slime is not a
+// remain at all. The slime is consumed on a save exactly as it is without one.
+//
+// The experience and the ecto-tokens are paid either way, as they are at the chaos altar and when
+// burying: the saving is a bonus on top, not a refund of the offering.
+def_boolean $saved = ~zealots_saves;
+if ($saved = false) {
+    inv_del(inv, $meal, 1);
+    inv_add(inv, pot_empty, 1);
+}
 inv_del(inv, bucket_ectoplasm, 1);
-inv_add(inv, pot_empty, 1);
 inv_add(inv, bucket_empty, 1);
 anim(human_pickupfloor, 0);
 sound_synth(fill_ectoplasm, 1, 0);
 p_delay(2);
-mes("You offer the bonemeal and the slime to the Ectofuntus.");
+if ($saved = true) {
+    // The same sentence the set uses when burying and at the altar, kept identical rather than
+    // invented a third time. The wiki records the effect and no message for it.
+    mes("You offer the bonemeal and the slime to the Ectofuntus.");
+    mes("Your robes preserve the bonemeal.");
+} else {
+    mes("You offer the bonemeal and the slime to the Ectofuntus.");
+}
 // Four times the bury value, which lives on the BONE - hence the read back from the bonemeal.
 ~prayer_xp(multiply(oc_param($bone, bone_exp), 4));
 %ecto_tokens_pending = add(%ecto_tokens_pending, ^ecto_tokens_per_worship);

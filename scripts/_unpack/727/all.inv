@@ -150,6 +150,13 @@ stock10=willow_longbow,2,200
 stock11=maple_shortbow,1,100
 stock12=maple_longbow,1,100
 stock13=crossbow,2,400
+// MITHRIL AND ADAMANT ARROWS, which Old School's Lowe stocks at 800 and 600 and ours stocked
+// neither (DeathPlateau-Bugs#82). The counts are the wiki's. The restock rates continue this
+// shop's own series - bronze 10, iron 15, steel 20 - because the wiki publishes the stock numbers
+// and not the cadence, and a cheaper arrow restocking faster is the pattern every row here
+// already follows.
+stock14=mithril_arrow,800,25
+stock15=adamant_arrow,600,30
 // THE EIGHT GEM-TIPPED BOLTS THAT USED TO BE HERE ARE GONE (DeathPlateau-Bugs#51, reported as
 // "lowe at varrock sells bolts it shouldn't"). They were a deliberate stopgap, put here with the
 // metal ones at the Ranging Guild and labelled "sold here until they can be smithed and fletched" -
@@ -606,6 +613,13 @@ stock8=chisel,2,100
 stock9=hammer,5,100
 
 [runeplateshop]
+// Oziach. Every number here matches Old School's own table: both rows 2 in stock on a 500-tick
+// restock, sold at 130%, bought at 40%, 3.0% per item.
+//
+// NO ANTI-DRAGON SHIELD, decided 25 November 2026 (DeathPlateau-Bugs#88). It is the one row Old
+// School's Oziach has that this shop does not, and its own page dates it to 23 April 2015 - nine
+// years the wrong side of this cache. The era line is held. Nothing is blocked by it either way:
+// Dragon Slayer needs a shield and the Duke of Lumbridge already gives you one.
 scope=shared
 size=40
 restock=yes
@@ -1362,31 +1376,19 @@ stock24=longbow,20,50
 stock25=oak_longbow,20,60
 stock26=zogre_bow,0,2000
 stock27=willow_longbow,20,70
-// The 2006 crossbows and their metal bolts (skill_combat/configs/ranged/crossbows.obj), put here
-// "until they can be smithed and fletched".
+// THE THIRTEEN CROSSBOW AND METAL-BOLT ROWS ARE GONE (DeathPlateau-Bugs#82). Seven crossbows -
+// bronze, blurite, iron, steel, mithril, adamant, rune - and six metal bolts were put here in
+// 2006 "until they can be smithed and fletched". That condition has been met: Smithing makes every
+// *_bolts_unf (bronze 3, blurite 8, iron 18, steel 33, mithril 53), Fletching feathers them and
+// cuts every gem tip, and the Fletching guide lists the lot. So the stopgap was the only reason
+// any of it was buyable, and no Old School shop at the Ranging Guild sells a crossbow at all.
 //
-// THAT CONDITION HAS BEEN MET and these rows have not been revisited. Smithing makes every
-// *_bolts_unf (bronze 3, blurite 8, iron 18, steel 33, mithril 53) and Fletching feathers them and
-// cuts every gem tip, so the stopgap is now the only reason any of this is buyable. Its twin at
-// Lowe's - eight gem-tipped bolts, which Old School's Lowe does not sell at all - was removed when
-// a player noticed it (DeathPlateau-Bugs#51).
+// Its twin at Lowe's - eight gem-tipped bolts - went the same way when a player noticed it
+// (DeathPlateau-Bugs#51). This is the same cleanup finished.
 //
-// THIS BLOCK IS LEFT ALONE ON PURPOSE. Taking it out changes where every crossbow in the game comes
-// from, which is an economy decision rather than a bug fix, and the Ranging Guild is not what was
-// reported. It is filed for a decision; see the issue.
-stock28=bronze_crossbow,10,100
-stock29=blurite_crossbow,8,150
-stock30=iron_crossbow,8,150
-stock31=steel_crossbow,6,200
-stock32=mithril_crossbow,5,250
-stock33=adamant_crossbow,3,400
-stock34=rune_crossbow,2,800
-stock35=blurite_bolts,800,30
-stock36=iron_bolts,800,30
-stock37=steel_bolts,600,40
-stock38=mithril_bolts,500,50
-stock39=adamant_bolts,400,60
-stock40=runite_bolts,300,80
+// WHAT THIS DECIDES, plainly, because it is an economy change and not a defect: every crossbow and
+// metal bolt in the game is player-made from here. The shop above still sells bows, arrows,
+// arrowheads and shafts.
 
 [ranging_guild_armourshop]
 scope=shared

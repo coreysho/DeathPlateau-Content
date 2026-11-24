@@ -67,11 +67,13 @@ def_int $option = ~p_choice2("OK, here you go.", 1, "No thanks, I'll leave it.",
 if($option = 1) {
     ~chatplayer("<p,neutral>Yeah, that'll do.");
     if_close;
-    while(inv_total(inv, fur) > 0) {
-        inv_del(inv, fur, 1);
-        inv_add(inv, coins, 12);
-        p_delay(0);
-    }
+    // NO PER-FUR DELAY (DeathPlateau-Bugs#86): p_delay sets player.delayed and the engine's
+    // handlers throw away a click made while it is set, so a stack of furs held the player for a
+    // tick each and ate everything they clicked in them. Baraek's "Thanks!" is the only line
+    // either loop printed, so nothing is lost by doing the lot at once.
+    def_int $furs = inv_total(inv, fur);
+    inv_del(inv, fur, $furs);
+    inv_add(inv, coins, calc($furs * 12));
     ~chatplayer("<p,happy>Thanks!");
 } else if($option = 2) {
     ~chatplayer("<p,angry>I think I'll keep hold of it actually!");
@@ -87,11 +89,10 @@ def_int $option = ~p_choice2("Yep, sounds fine.", 1, "No! I almost got my throat
 if($option = 1) {
     ~chatplayer("<p,happy>Yep, sounds fine.");
     if_close;
-    while(inv_total(inv, grey_wolf_fur) > 0) {
-        inv_del(inv, grey_wolf_fur, 1);
-        inv_add(inv, coins, 120);
-        p_delay(0);
-    }
+    // As the ordinary furs above - DeathPlateau-Bugs#86.
+    def_int $furs = inv_total(inv, grey_wolf_fur);
+    inv_del(inv, grey_wolf_fur, $furs);
+    inv_add(inv, coins, calc($furs * 120));
     ~chatplayer("<p,happy>Thanks!");
 } else if($option = 2) {
     ~chatplayer("<p,angry>No! I almost got my throat torn out by a wolf to get this!");
