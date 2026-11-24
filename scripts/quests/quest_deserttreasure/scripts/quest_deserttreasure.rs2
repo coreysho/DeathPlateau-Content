@@ -100,7 +100,7 @@ if (last_useitem = four_diamonds_translation_primer & %deserttreasure = ^dt_got_
 // (quests/quest_desertrescue/scripts/desertrescue_journal.rs2 opens with "Tourist Trap") - so the
 // note was wrong and the check was simply absent.
 [proc,dt_quest_requirements]()(boolean)
-if (%itexamlevel < ^itexam_complete) {
+if (%itexam_progress < ^itexam_complete) {
     ~mesbox("You need to have completed The Dig Site to start this quest.");
     return(false);
 }

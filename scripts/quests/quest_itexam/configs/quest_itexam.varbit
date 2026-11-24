@@ -1,0 +1,17 @@
+// THE DIGSITE'S PROGRESS, AS A VARBIT (DeathPlateau-Bugs#34, decided 25 November 2026).
+//
+// The quest keeps its progress in the low four bits of itexamlevel and reads it with
+// getbit_range(%itexamlevel, 0, 3) - so the number the content means by "how far through the
+// Digsite are you" was never a thing the cache described. The quest helper's table declared
+// `stageVar: itexamlevel` with no bit range, so the client read the WHOLE varp.
+//
+// Today the two agree, because nothing in this build writes bits 4 and up of that varp - there is
+// exactly one writer and it masks. The moment anything uses the upper bits, the helper would read
+// a value in the thousands, see it as past `done: 9`, and mark the Digsite complete.
+//
+// Naming the range makes it the same kind of thing as every other quest's progress: the helper
+// reads a varbit the cache defines, and the content reads it instead of masking by hand.
+[itexam_progress]
+basevar=itexamlevel
+startbit=0
+endbit=3

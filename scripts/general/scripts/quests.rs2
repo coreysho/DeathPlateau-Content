@@ -271,7 +271,7 @@ if (%zombiequeen >= ^zombiequeen_complete) {
 if (%crestquest = ^crest_complete) {
     $questpoints = add($questpoints, ^crest_questpoints); 
 }
-if (%itexamlevel = ^itexam_complete) {
+if (%itexam_progress = ^itexam_complete) {
     $questpoints = add($questpoints, ^itexam_questpoints); 
 }
 if (%deserttreasure = ^deserttreasure_complete) {
