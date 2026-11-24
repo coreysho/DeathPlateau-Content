@@ -33,6 +33,15 @@
 //   costs six lines and it is right the day the bit is set, which is exactly the shape the cache is
 //   asking for.
 //
+//   AND IT WAS NOT RIGHT FOR THAT DAY, which is the correction of 24 November 2026. Setting the
+//   bit shows "Talk-to" and the click would have died: OpNpcHandler resolves multinpc to decide
+//   whether the option EXISTS, but Player.getOpTrigger reads the trigger off the type of the npc
+//   standing there - the shell. Measured with the bit set: `No trigger for
+//   [opnpc1,alice_the_camel_multinpc]`, then "Nothing interesting happens." So the shell has a
+//   trigger of its own below, and it can only be reached in state 1 because state 0 resolves to
+//   [camel], which declares no ops. Same bug as Devin Mendelberg's and the two furnaces in this
+//   same pull request; the class is DeathPlateau-Bugs#106.
+//
 //   [camel] ITSELF. The six plain camels in the desert, and Alice's disguise, declare no ops at
 //   all - there is no Talk-to on them for any script to answer.
 
@@ -49,6 +58,7 @@ return(false);
 [opnpc1,ollie_the_camel] @camel_menu(^camel_ollie);
 [opnpc1,cam_the_camel] @camel_menu(^camel_cam);
 [opnpc1,alice_the_camel] @camel_menu(^camel_alice);
+[opnpc1,alice_the_camel_multinpc] @camel_menu(^camel_alice);
 // NEFERTI IS APPROACHED, NOT REACHED. She stands in a paddock in Sophanem with no gate: "Neferti
 // can be spoken to using a Camulet, although the player does not need to be standing next to her,
 // as there is no way into the pasture." An [opnpc1] needs operable distance and would walk a player
