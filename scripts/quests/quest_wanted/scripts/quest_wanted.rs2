@@ -243,9 +243,21 @@ p_delay(3);
 mes("He says something short in a language you do not have, and does not wait to watch.");
 p_delay(2);
 spotanim_pl(wanted_teleport, 92, 0);
-npc_add(movecoord(coord, 1, 0, 0), wanted_summoned_black_knight, ^wanted_summon_ticks);
 p_delay(1);
-~mesbox("A Black Knight steps out of nothing at all and comes straight for you. You do not have to beat him - you only have to leave.");
+// THE KNIGHT IS SUMMONED LAST, AFTER THE BOX IS READ, and the order is the whole bug.
+//
+// He used to be npc_added BEFORE this mesbox. A mesbox waits for the player to click, the knight
+// is aggressive and arrives while they are still reading it, and a player being hit does the
+// obvious thing: they fight, they do not click. So the script sat parked on the box for ever, and
+// @wanted_depart below - the line that actually records the sighting and lights the next place -
+// never ran. Talking to Solus again started a FRESH script, which summoned ANOTHER knight.
+//
+// Reported on 2026-11-24 as "kills the knight, talks to solus, and it respawns the knight", stuck
+// on five of seven. The sims never caught it because the harness clicks Continue in the same tick
+// the box opens, so the knight never got the chance to interrupt anything - a real player is
+// slower than drive() and that gap is where this lived.
+~mesbox("Something is coming. You do not have to beat it - you only have to leave.");
+npc_add(movecoord(coord, 1, 0, 0), wanted_summoned_black_knight, ^wanted_summon_ticks);
 
 [proc,wanted_taunt](int $stop)
 switch_int ($stop) {
@@ -356,11 +368,31 @@ return(0);
 // Which stop comes next. Four of the seven are fixed; the rest are drawn from the pool, and a
 // place is never used twice in a run, so the hunt cannot loop or send you back.
 [proc,wanted_next_place](int $stop)(int)
+def_int $fixed = 0;
 switch_int ($stop) {
-    case 1 : return(^wanted_place_canifis);
-    case 3 : return(^wanted_place_champions);
-    case 5 : return(^wanted_place_cavegoblin);
-    case 7 : return(^wanted_place_essence);
+    case 1 : $fixed = ^wanted_place_canifis;
+    case 3 : $fixed = ^wanted_place_champions;
+    case 5 : $fixed = ^wanted_place_cavegoblin;
+    case 7 : $fixed = ^wanted_place_essence;
+}
+// A FIXED STOP THAT IS ALREADY DONE IS NOT A STOP, and returning it anyway is how this quest
+// stranded a player on 2026-11-24 with no way out of it from inside the game.
+//
+// WHAT HAPPENED. His places read done {2,3,5,14} with place 3 ALSO still lit - four sightings, and
+// one of them was the place he was standing in. Talking to the npc there ran ~wanted_depart(3),
+// which marks 3 done, which it already was, so ~wanted_sightings did not move; the next place was
+// then asked for with the same stop number as last time, 5, and stop 5 is hard-wired to place 3.
+// So it lit place 3 again. Every attempt sent him back to the place he had just left and the
+// counter sat on "4 of 7" for ever - and nothing anywhere said so, because from the quest's side
+// it was doing exactly what it was told.
+//
+// HOW HE GOT INTO THAT STATE IS NOT WHAT THIS GUARDS. A save written by an older shape of this
+// quest is the likeliest cause and it cannot be proved from here. What is worth fixing is that the
+// hunt had NO ESCAPE once it was there: a stop whose fixed place is already behind the player now
+// falls through to the pool, which always draws from places that are not done. The fiction survives
+// - Old School fixes four of the seven, and those four still come first when they are available.
+if ($fixed ! 0 & ~wanted_location_done($fixed) = false) {
+    return($fixed);
 }
 if ($stop > ^wanted_sightings_needed) {
     return(0);
