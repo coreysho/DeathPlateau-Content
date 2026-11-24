@@ -87,7 +87,25 @@ if ($free_space = 0) {
 
 ~steal_from_stall($data, $loc_coord, $loc_angle, $loc_shape);
 
-[proc,stealing_check_for_guard](dbrow $data)(boolean)
+/**
+ * A GUARD IN RANGE SHOUTS AND ATTACKS. It no longer stops the theft.
+ *
+ * DeathPlateau-Bugs#14, decided 25 November 2026, reported as "cant steal from ardy baker stall"
+ * - and the report was literally accurate. This used to `return(true)` before any loot was rolled,
+ * and `ardougne_guard` has wanderrange 5 with six of them spawned within twelve tiles of that
+ * stall, so a guard was within five tiles of the approach tile 81-85% of the ticks. Measured over
+ * fourteen first attempts by fresh players: four stole something, ten were refused with a guard in
+ * range. Every guarded stall in the build is in Ardougne and all six sit in that range - fur 97%,
+ * silk 89%, gem 84%, baker 85%, silver 83%, spice 55% - so a thieving stall that fails seven
+ * attempts in ten is not trainable.
+ *
+ * Being seen now costs a fight rather than the steal, which is also what let the old shape be
+ * gamed: `npc_getmode ! opplayer2` skips a guard already attacking you, so the way through was to
+ * get caught once on purpose and then steal freely while being hit. That exclusion stays - a
+ * guard already on you does not need to shout again - but it is no longer a way to turn the block
+ * off.
+ */
+[proc,stealing_alert_guards](dbrow $data)
 def_int $npc_count = db_getfieldcount($data, stealing:guard);
 def_npc $npc1 = db_getfield($data, stealing:guard, min(0, $npc_count));
 def_npc $npc2 = db_getfield($data, stealing:guard, min(1, $npc_count));
@@ -101,13 +119,12 @@ while (npc_findnext = true) {
         & npc_getmode ! opplayer2 & lineofsight(npc_coord, coord) = true) {
         npc_say("Hey! Get your hands off there!");
         ~npc_retaliate(0);
-        return(true);
+        return;
     }
 }
-// Nobody in the guard list saw it. Both of these used to run off the end without returning: a
-// (boolean) proc that returns nothing leaves the caller comparing whatever was on the stack, and
-// it only read as false by luck.
-return(false);
+// Nobody in the guard list saw it, which is nothing to report now that the answer does not decide
+// whether the steal happens. The owner check below still answers a boolean and still blocks.
+return;
 
 [proc,stealing_check_for_owner](dbrow $data)(boolean)
 def_npc $owner = db_getfield($data, stealing:owner, 0);
