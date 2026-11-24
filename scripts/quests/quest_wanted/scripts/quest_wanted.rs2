@@ -302,8 +302,19 @@ mes("Then he stops reaching, and looks at you properly for the first time.");
 p_delay(3);
 ~wanted_set_location($place, ^wanted_off);
 ~wanted_mark_done($place);
-npc_add(movecoord(coord, 1, 0, 0), wanted_solus_attackable, ^wanted_summon_ticks);
+// THE BOX FIRST, THEN THE MAN, for the reason wanted_piece_knight was changed on 2026-11-24: a
+// mesbox waits for a click, and anything aggressive that arrives before the click is something the
+// player tries to fight while the script still holds them. The engine drops a queued op on a busy
+// player without a word, so the attack goes nowhere and the fight opens with Solus hitting a player
+// who cannot hit back. The log from that night has it in as many words, on the knight:
+//
+//   corey op4 on npc wanted_summoned_black_knight - no longer valid
+//
+// The quest's bookkeeping above is already safe either way - it is written before any of this - so
+// this is not about getting stuck. It is that the last fight of the quest should start when the
+// player is free to swing.
 ~mesbox("He is not going anywhere this time.");
+npc_add(movecoord(coord, 1, 0, 0), wanted_solus_attackable, ^wanted_summon_ticks);
 
 // His death, through the queue every other boss in this build uses: ai_queue3 is the npc's own
 // death script, and the player-side half runs as a queue so the award happens to the player who
