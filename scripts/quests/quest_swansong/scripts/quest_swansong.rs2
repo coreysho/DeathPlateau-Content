@@ -11,19 +11,39 @@ if (%swansong >= ^swan_wom & %swansong <= ^swan_ambush) {
 
 [opnpc1,swan_herman] @swan_herman_talk;
 
-// DEVIN MENDELBERG, who had nothing to say to anybody. swan_boat_colonist carries op1=Talk-to
-// through its multinpc (it is swan_colonist_1 at every stage) and no script answered it, so the
-// click did nothing at all; eaglespeak's dead-op check caught him when he wandered into its box.
-// He is the only swan_boat_colonist in the whole map set and he is standing in map square 37_54,
-// which is the Gnome Stronghold - eight map squares from the colony he is a colonist of. That spawn
-// came in with the bulk map import (34ef090e) rather than from anything here, and whether he should
-// be there at all is one line in maps/m37_54.jm2; what is certainly wrong is a clickable npc with
-// no handler, which is this.
+// DEVIN MENDELBERG, whose two lines nobody could reach.
 //
-// HANDLER ON THE SHELL, as with swan_multioutside above: Player.getOpTrigger looks the trigger up
-// on the npc's own type and OpNpcHandler resolves multinpc only to decide whether the option
-// exists, so an [opnpc1,swan_colonist_1] would never fire.
-[opnpc1,swan_boat_colonist]
+// The colony places three colonists in m36_57 - swan_colonist_1 "Devin Mendelberg" at 2313,3686,
+// swan_colonist_2 "George Laxmeister" and swan_colonist_3 "Ramara du Croissant" - and all three
+// carry op1=Talk-to. Devin's dialogue was written for swan_boat_colonist, the multinpc shell whose
+// face is always swan_colonist_1, so a click on the colonist himself arrived as
+// [opnpc1,swan_colonist_1], found nothing, and answered "Devin Mendelberg is not interested in
+// talking."
+//
+// TWO CORRECTIONS TO WHAT USED TO BE WRITTEN HERE (24 November 2026), both measured:
+//
+//   1. "He is the only swan_boat_colonist in the whole map set and he is standing in map square
+//      37_54, which is the Gnome Stronghold." Npc 3828, swan_boat_colonist, is placed in NO map
+//      square. The spawn in m37_54 is npc 3829, swan_boat_boatwoman - the next id along, which has
+//      no op1 label and a handler of its own. So this was an off-by-one in a cross-reference, and
+//      the consequence is worse than the comment thought: the shell exists nowhere, so the lines
+//      below were reachable by nobody at all rather than by somebody in the wrong place.
+//   2. "An [opnpc1,swan_colonist_1] would never fire." It fires, and it is the only thing that
+//      can. Player.getOpTrigger reads the trigger off the type of the npc STANDING THERE; the
+//      shell-only rule holds for a shell's own spawn, and there is no such spawn here. The colony
+//      spawn is a plain swan_colonist_1 and needs a trigger of that name.
+//
+// A fuzzing bot found it by walking up to him ([opnpc1,swan_colonist_1] does not exist). It had to
+// be a bot: tools/sim/opsweep.ts reads the whole cache for exactly this and was excusing the row,
+// because swan_boat_colonist lists swan_colonist_1 in multinpc and claims the option - family-wide,
+// with no regard for which of the two the map places, and here it places only the colonist. That
+// rule is narrower now (Engine#163) and tools/sim/swancolonists.ts covers what a player hears.
+//
+// The shell keeps its handler: it costs nothing, and if the boat scene ever places one it works.
+[opnpc1,swan_boat_colonist] @swan_devin_talk;
+[opnpc1,swan_colonist_1] @swan_devin_talk;
+
+[label,swan_devin_talk]
 if (%swansong < ^swan_complete) {
     ~chatnpc("<p,neutral>Devin Mendelberg. I came out here for the fishing, and I have had a good deal more of the sea trolls than of the fish.");
     return;
