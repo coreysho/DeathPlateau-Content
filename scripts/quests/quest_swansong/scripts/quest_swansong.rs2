@@ -37,7 +37,7 @@ if (%swansong >= ^swan_wom & %swansong <= ^swan_ambush) {
 // be a bot: tools/sim/opsweep.ts reads the whole cache for exactly this and was excusing the row,
 // because swan_boat_colonist lists swan_colonist_1 in multinpc and claims the option - family-wide,
 // with no regard for which of the two the map places, and here it places only the colonist. That
-// rule is narrower now (Engine#163) and tools/sim/swancolonists.ts covers what a player hears.
+// rule is narrower now (Engine#165) and tools/sim/swancolonists.ts covers what a player hears.
 //
 // The shell keeps its handler: it costs nothing, and if the boat scene ever places one it works.
 [opnpc1,swan_boat_colonist] @swan_devin_talk;
