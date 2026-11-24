@@ -87,3 +87,77 @@ if (random(3) ! 0) {
 anim(null, 0);
 mes("You hack through the vines.");
 loc_del(^brimhaven_vine_regrow);
+
+// ============================================================================ the stepping stones
+//
+// TWO ONE-TILE PLUGS IN A NORTH-SOUTH CHANNEL. Each stone's own tile is blocked (active=1), the
+// tiles north and south of it are open, and east and west are wall - so crossing one is a hop of
+// TWO tiles in z, over the stone, and not a step onto it. That is measured: isMapBlocked says
+// 2649,9561 and 2647,9558 are both blocked with open ground either side in z only.
+//
+// AGILITY 12 GOING SOUTH, FREE GOING NORTH. "[They] require level 12 Agility to be traversed from
+// the north, but have no requirements when approached from the south." North is the way out - the
+// dungeon's exit is at z=9564, above both stones - so the free direction is the one that cannot
+// leave anybody stranded, which is the rule the vines follow too (they can be cut by hand only
+// when heading for the exit).
+//
+// They carry no category between them, unlike the vines, so both names are declared here and both
+// jump to the one label.
+//
+// NO EXPERIENCE, for the reason the vines pay none: no figure for these is published anywhere
+// reachable, and a made up number is worse than none. The surface Karamja stones pay 30, but they
+// are a different obstacle over water with a drowning sequence, and borrowing their number would
+// be inventing with extra steps.
+
+[oploc1,karam_dungeon_stone1]
+@brimhaven_stone_jump;
+
+[oploc1,karam_dungeon_stone2]
+@brimhaven_stone_jump;
+
+[label,brimhaven_stone_jump]
+if (coord = loc_coord) {
+    mes("You can't do that from here.");
+    return;
+}
+// DIRECTLY ABOVE OR BELOW IT, AND ADJACENT. The hop is along z, so a player standing diagonally
+// or two tiles off would be thrown somewhere the channel does not go.
+if (coordx(coord) ! coordx(loc_coord)) {
+    mes("You need to stand in line with the stone to cross.");
+    return;
+}
+def_int $dz = -1;
+def_int $dir = ^exact_south;
+if (coordz(coord) < coordz(loc_coord)) {
+    $dz = 1;
+    $dir = ^exact_north;
+}
+if (coordz(coord) ! calc(coordz(loc_coord) + $dz * -1)) {
+    mes("You need to be next to the stone to cross.");
+    return;
+}
+// The level is asked for in one direction only: $dz of -1 is a player on the north side heading
+// south, which is deeper in.
+if ($dz = -1 & stat(agility) < ^brimhaven_stone_agility) {
+    mes("You need an Agility level of <tostring(^brimhaven_stone_agility)> to cross from this side.");
+    return;
+}
+def_coord $dest = movecoord(coord, 0, 0, calc($dz * 2));
+mes("You step onto the stone.");
+sound_synth(jump_no_land, 1, 20);
+~agility_exactmove(human_steppingstonejump, 20, 2, coord, $dest, 48, 60, $dir, false);
+// THE ROLL IS SOUTHBOUND ONLY, and that is not a detail. A level 1 player coming up from the
+// south is the player the free direction exists FOR - the one who got down here and has to get
+// out - and rolling against their Agility would have them failing this stone over and over with
+// no level they could reach to stop it. "No requirements when approached from the south" has to
+// mean no requirements, not a cheaper requirement. So northbound always lands.
+if ($dz = -1 & stat_random(agility, ^brimhaven_stone_roll_low, ^brimhaven_stone_roll_high) = false) {
+    // SLIPPED, BUT NOT ACROSS. A fail leaves the player where they started rather than on the far
+    // side, which is what makes a fail cost something: the alternative - damage and a free
+    // crossing - is no obstacle at all.
+    p_telejump(movecoord($dest, 0, 0, calc($dz * -2)));
+    mes("You slip and bang your leg on the rock.");
+    ~damage_self(calc(random(^brimhaven_stone_fail_damage) + 1));
+    return;
+}
+mes("You cross the stepping stone.");

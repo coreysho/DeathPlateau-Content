@@ -23,3 +23,17 @@
 
 // The cadence of one chop, in ticks, matching ordinary woodcutting's.
 ^brimhaven_vine_chop_ticks = 4
+
+// THE STEPPING STONES, and the one direction that asks for a level. "[They] require level 12
+// Agility to be traversed from the north, but have no requirements when approached from the
+// south." North is the way out - the dungeon exit sits at z=9564, above both stones - so the free
+// direction is the one that cannot trap anybody, which is the same rule the vines follow.
+^brimhaven_stone_agility = 12
+
+// Failing is "quite rare" and costs "a low amount of damage", and neither is published as a
+// number. The roll is stat_random against Agility, like every other obstacle in this cache, with
+// a band chosen to make a fail rare at the level the stones ask for rather than measured from
+// anything. The damage is small and flat for the same reason.
+^brimhaven_stone_roll_low = 190
+^brimhaven_stone_roll_high = 255
+^brimhaven_stone_fail_damage = 3
