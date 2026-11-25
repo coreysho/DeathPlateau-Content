@@ -39502,6 +39502,20 @@ param=death_sound,chicken_death
 param=slayer_category,^slayer_bird
 param=retreat,1
 
+// A LEVEL-32 MONSTER THAT COULD NOT FIGHT. 377 ships it with a model, a walk, a ready pose and
+// op2=Attack and nothing else - no hitpoints, no stats, no block animation and no huntmode - so
+// it stood there and let you hit it. It was also spawned nowhere at all, which is why nobody had
+// noticed: The Slug Menace's dungeon is the first place in this build that uses it.
+//
+// Stats from the wiki: 50 hitpoints, 40 attack, 30 strength, 40 defence, max hit 4, stab, 4
+// ticks, aggressive. Bonuses are 0, which is where the max hit comes from - ~combat_maxhit is
+// (effective_strength * (bonus + 64) + 320) / 640 with effective_strength = level + 9, so
+// strength 30 at bonus 0 gives (39*64 + 320)/640 = 4, the wiki number exactly.
+//
+// vislevel goes to 45, which is the wiki's and also what the Witchaven Dungeon page says is down
+// there. 377's 32 is the pre-Slug-Menace lobster; the quest that introduced this dungeon in
+// September 2006 is the thing that made them worth fearing, and nothing else in this build
+// spawns one, so there is no 2006 content for the change to contradict.
 [giant_lobster]
 name=Giant Lobster
 desc=An extremely vicious lobster.
@@ -39510,10 +39524,25 @@ size=2
 walkanim=scorpion_walk
 readyanim=scorpion_ready
 op2=Attack
-vislevel=32
-
+vislevel=45
+hitpoints=50
+attack=40
+strength=30
+defence=40
+huntmode=aggressive_melee
+huntrange=5
+respawnrate=50
 param=attack_anim,scorpion_attack
+param=defend_anim,scorpion_ready
 param=death_anim,scorpion_death
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,15
+param=magicdefence,99
+param=rangedefence,0
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^stab_style
 
 [ahoy_robin]
 name=Robin

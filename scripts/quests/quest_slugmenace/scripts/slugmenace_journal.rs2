@@ -1,0 +1,121 @@
+// The Slug Menace - the quest journal.
+//
+// ~quest_journal appends the requirement block itself, from quest_requirement.dbrow, so the
+// not-started page does not list them: that would print them twice and the two could drift apart.
+// player/scripts/quest_journal.rs2 is where that happens.
+
+[if_button,questlist:slugmenace]
+def_string $text;
+
+switch_int (%slugmenace_stage) {
+    case ^slugmenace_not_started :
+        $text = "@dbl@I can start this quest by speaking to @dre@Sir Tiffy Cashien|";
+        $text = append($text, "@dbl@on his bench in @dre@Falador Park|");
+        $text = append($text, "@dbl@I will need to be carrying my @dre@commorb");
+
+    case ^slugmenace_briefed :
+        $text = "@str@Something is going on in Witchaven, south-east of Ardougne.|";
+        $text = append($text, "@dbl@Sir Tiffy has upgraded my orb to a @dre@Commorb v2|");
+        $text = append($text, "@dbl@I should report to @dre@Col. O'Niall@dbl@ on the Witchaven dock|");
+        $text = append($text, "@dbl@The code phrase is @dre@'In Falador, the geese fly|");
+        $text = append($text, "@dre@backwards on Tuesdays'@dbl@, apparently");
+
+    case ^slugmenace_asking :
+        $text = "@str@The Mayor has been buying mining gear and rune essence by|";
+        $text = append($text, "@str@the cartload, and villagers have been vanishing overnight|");
+        $text = append($text, "@str@and coming back wrong.|");
+        $text = append($text, "@dbl@The colonel wants me to speak to three people:|");
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_hobb, "Mayor Hobb"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_maledict, "Brother Maledict"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_holgart, "Holgart the fisherman"));
+        if (%slugmenace_door_scanned = ^slugmenace_off) {
+            $text = append($text, "@dbl@Savant also wants me to @dre@Scan@dbl@ the Mayor");
+        } else {
+            $text = append($text, "@str@Savant's reading of the Mayor says there is something|");
+            $text = append($text, "@str@inside him using his mouth.|");
+            $text = append($text, "@dbl@I should report back to @dre@Col. O'Niall");
+        }
+
+    case ^slugmenace_shrine :
+        $text = "@str@Whatever is wrong with Witchaven started with the Mayor, and|";
+        $text = append($text, "@str@the Mayor started with the shrine.|");
+        $text = append($text, "@dbl@The @dre@old ruin@dbl@ west of the village has a way down|");
+        $text = append($text, "@dbl@There is a @dre@wall down there that is not a wall|");
+        $text = append($text, "@dbl@I must be carrying my @dre@Commorb v2@dbl@ to go through it");
+
+    case ^slugmenace_transcribed :
+        $text = "@str@There is a door under that shrine covered in writing that|";
+        $text = append($text, "@str@nobody in Witchaven put there. My hand will not open it.|");
+        $text = append($text, "@dbl@Savant has copied the glyphs into a @dre@door transcription|");
+        $text = append($text, "@dbl@I should take it to @dre@Jorral@dbl@, at his outpost|");
+        $text = append($text, "@dbl@north-west of @dre@Ardougne");
+
+    case ^slugmenace_translated :
+        $text = "@str@The writing is a name: @dre@Mother Mallum@str@. The Temple Knights|";
+        $text = append($text, "@str@fought her centuries ago, could not kill her, and sealed|");
+        $text = append($text, "@str@her behind that door instead.|");
+        $text = append($text, "@dbl@I should tell @dre@Col. O'Niall@dbl@, and then @dre@Brother Maledict|");
+        $text = append($text, "@dbl@Maledict has the shrine's own record in his church");
+
+    case ^slugmenace_pages :
+        $text = "@str@Maledict's book is the shrine's record and it is three pages|";
+        $text = append($text, "@str@short. Whatever is in him now does not want me reading it.|");
+        $text = append($text, "@dbl@Three pages to find:|");
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_page1, "the Mayor's study desk"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_page2, "Ezekial Lovecraft's drawer"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_page3, "three charred scraps from the colonel"));
+        if (%slugmenace_page3 = ^slugmenace_off) {
+            if (%slugmenace_paste_refused = ^slugmenace_off) {
+                $text = append($text, "@dbl@The scraps need glue. Something gentler than|");
+                $text = append($text, "@dbl@@dre@swamp paste@dbl@, Savant says");
+            } else {
+                $text = append($text, "@dbl@Savant says a @dre@dead sea slug@dbl@ rendered down makes a|");
+                $text = append($text, "@dbl@glue that dries clear, and that I need a cook|");
+                $text = append($text, "@dbl@@dre@Bailey@dbl@, on the Fishing Platform, is a cook|");
+                $text = append($text, "@dbl@@dre@Jeb@dbl@ runs the boat out there now");
+            }
+        }
+
+    case ^slugmenace_runes :
+        $text = "@str@The pages are instructions. Five runes, cut from essence and|";
+        $text = append($text, "@str@empowered at the altars - and both halves can go wrong.|");
+        $text = append($text, "@dbl@I need a @dre@chisel@dbl@ and plenty of @dre@rune essence|");
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_rune_air, "air"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_rune_water, "water"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_rune_earth, "earth"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_rune_fire, "fire"));
+        $text = append($text, ~slugmenace_journal_tick(%slugmenace_rune_mind, "mind"));
+        $text = append($text, "@dbl@Then the @dre@Imposing Doors@dbl@, with something to fight with");
+
+    case ^slugmenace_told :
+        $text = "@str@The Mayor was waiting behind the door. The enchantment only|";
+        $text = append($text, "@str@opened for someone working in the Knights' interests, so|");
+        $text = append($text, "@str@they had me open it for them.|");
+        $text = append($text, "@str@I killed the Prince. Then his mother spoke to me, and Savant|");
+        $text = append($text, "@str@had to try three times to pull me out.|");
+        $text = append($text, "@dbl@I should talk to @dre@Sir Tiffy Cashien");
+
+    case ^slugmenace_complete :
+        $text = "@str@Witchaven was quiet because most of it was no longer anybody|";
+        $text = append($text, "@str@in particular. The Mayor served a thing called Mother Mallum,|");
+        $text = append($text, "@str@sealed under the village by the Temple Knights centuries ago|");
+        $text = append($text, "@str@and patient about it.|");
+        $text = append($text, "@str@She asked me to be her next body. I declined, and Savant got|");
+        $text = append($text, "@str@me out by the third attempt.||");
+        $text = append($text, "@red@QUEST COMPLETE!");
+
+    case default :
+        $text = "@dbl@I can start this quest by speaking to @dre@Sir Tiffy Cashien|";
+        $text = append($text, "@dbl@on his bench in @dre@Falador Park");
+}
+
+~quest_journal("The Slug Menace", $text);
+
+// A ticked or unticked line. The journal lists several sets of things that can be done in any
+// order - three townspeople, three pages, five runes - and a list that does not say which are
+// done is a list the player has to work out by trying.
+[proc,slugmenace_journal_tick](int $flag, string $what)(string)
+if ($flag = ^slugmenace_on) {
+    return(append(append("@str@  - ", $what), " @gre@(done)|"));
+}
+return(append(append("@dbl@  - ", $what), "|"));

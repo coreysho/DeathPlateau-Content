@@ -136,3 +136,18 @@ endbit=18
 basevar=slugmenace_bits
 startbit=19
 endbit=19
+
+// Savant's first look at the dead slug, which is what becomes the glue later. Hooked on the item
+// rather than the pickup so a slug taken back out of the bank still starts her off.
+[slugmenace_slug_scanned]
+basevar=slugmenace_bits
+startbit=20
+endbit=20
+
+// Savant has refused the swamp paste. Bailey will not talk about glue before this - the quest's
+// own reason for wanting a cook is a thing Savant says, and skipping it would leave Bailey
+// offering to render a slug for no stated reason at all.
+[slugmenace_paste_refused]
+basevar=slugmenace_bits
+startbit=21
+endbit=21
