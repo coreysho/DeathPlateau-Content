@@ -35,16 +35,18 @@ if ($option = 2) {
 // --- Sir Tiffy Cashien, Falador Park ---
 
 [opnpc1,rd_teleporter_guy]
-// Wanted! starts and ends with Tiffy too. It claims the conversation only while it actually has
-// something to say - @wanted_tiffy is in quests/quest_wanted/scripts/wanted_tiffy.rs2 - and the
-// Recruitment Drive branches below are untouched otherwise.
-if (~wanted_tiffy_wants = true) {
-    @wanted_tiffy;
-}
+// EVERYTHING AFTER THIS QUEST HANGS OFF ONE MENU, in temple_knight/scripts/temple_knight.rs2:
+// Wanted!, which starts and ends with Tiffy, and the armoury, which is the reward for finishing
+// here. Wanted! used to be checked first and claimed the whole conversation whenever it had
+// anything to say, so an initiate could not buy armour for as long as that quest was open; it is
+// now one option in the menu alongside the shop, which is also how Old School presents it.
+//
+// Moving the check is behaviour-preserving: ~wanted_tiffy_wants returns false unless this quest is
+// complete, so nothing it answered yes to lies outside the branch below.
 if (%rd_main = ^recruitmentdrive_complete) {
     ~chatplayer("<p,happy>Hello Sir Tiffy.");
     ~chatnpc("<p,happy>Ah, our newest initiate! Do sit down. Mind the pigeons.");
-    return;
+    @tk_tiffy_postquest;
 }
 if (%rd_main < ^rd_started) {
     ~chatplayer("<p,happy>Hello.");
@@ -215,7 +217,12 @@ stat_advance(prayer, ^rd_reward_xp);
 stat_advance(herblore, ^rd_reward_xp);
 stat_advance(agility, ^rd_reward_xp);
 inv_add(inv, coins, ^rd_reward_coins);
-~send_quest_complete(questlist:rd, coins, 250, ^recruitmentdrive_questpoints, "You have completed the\\nRecruitment Drive Quest!", "1,000 Prayer XP|1,000 Herblore XP|1,000 Agility XP|3,000 Coins|Membership of the Temple Knights");
+// The helm as well, as Old School's does - it was left out because the armour had no stats and no
+// shop, and now it has both (temple_knight/configs/temple_knight.constant). No space check: the
+// test rooms are entered with nothing carried and nothing worn, which @rd_tiffy_offer enforces,
+// so the inventory this lands in is the one the player emptied to get in here.
+inv_add(inv, basic_tk_helm, 1);
+~send_quest_complete(questlist:rd, basic_tk_helm, 250, ^recruitmentdrive_questpoints, "You have completed the\\nRecruitment Drive Quest!", "1,000 Prayer XP|1,000 Herblore XP|1,000 Agility XP|3,000 Coins|An initiate helm|Membership of the Temple Knights");
 
 
 // --- Doors and portals ---

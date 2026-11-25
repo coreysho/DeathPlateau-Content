@@ -1,0 +1,104 @@
+// SIR TIFFY CASHIEN'S ARMOURY, and the two worn gates behind the kit it sells.
+// Numbers, prices and the reasoning behind both live in configs/temple_knight.constant.
+//
+// Tiffy's Talk-to is declared in quests/quest_rd/scripts/quest_rd.rs2 - a trigger cannot be
+// declared twice, and Recruitment Drive is what puts him in the park in the first place - so this
+// file owns the post-quest menu and that handler jumps into @tk_tiffy_postquest.
+
+// --- The counter ---
+
+// Everything Tiffy has to offer once you are in the order. Wanted! also starts and ends with him
+// and used to claim the whole conversation whenever it had something to say, which meant an
+// initiate could not buy armour at all for as long as that quest was open; both now hang off one
+// menu, which is also how Old School presents them.
+[label,tk_tiffy_postquest]
+if (~wanted_tiffy_wants = true) {
+    // Worded for where that quest is: "any jobs yet?" is the wrong thing to open with when the
+    // job is done and Tiffy is waiting to be handed Solus Dellagar's hat.
+    def_string $jobs = "Do you have any jobs for me yet?";
+    if (%wanted_main = ^wanted_cornered) {
+        $jobs = "About Solus Dellagar...";
+    }
+    switch_int (~p_choice3($jobs, 1, "Can I buy some armour?", 2, "Nothing, thanks.", 3)) {
+        case 1 :
+            ~chatplayer(append("<p,quiz>", $jobs));
+            @wanted_tiffy; // quests/quest_wanted/scripts/wanted_tiffy.rs2
+        case 2 : @tk_tiffy_armoury;
+        case 3 : @tk_tiffy_nothing;
+    }
+    return;
+}
+switch_int (~p_choice2("Can I buy some armour?", 1, "Nothing, thanks.", 2)) {
+    case 1 : @tk_tiffy_armoury;
+    case 2 : @tk_tiffy_nothing;
+}
+
+[label,tk_tiffy_nothing]
+~chatplayer("<p,neutral>Nothing, thanks.");
+~chatnpc("<p,happy>Then I shall sit here and be decorative. Ta-ta.");
+
+[label,tk_tiffy_armoury]
+~chatplayer("<p,quiz>Can I buy some armour?");
+if (~tk_proselyte_rank = true) {
+    ~chatnpc("<p,happy>Naturally. Proselyte issue and everything under it - you have earned the lot.");
+    ~openshop(tk_proselyte_armoury, ^tk_shop_buy, ^tk_shop_sell, ^tk_shop_haggle, "Proselyte Temple Knight Armoury");
+    return;
+}
+~chatnpc("<p,happy>Of course. Initiate issue only, I'm afraid - that is as far as your rank goes.");
+~openshop(tk_initiate_armoury, ^tk_shop_buy, ^tk_shop_sell, ^tk_shop_haggle, "Initiate Temple Knight Armoury");
+
+// --- Rank ---
+
+// WHETHER THE PLAYER IS A PROSELYTE, which is to say whether The Slug Menace is done.
+//
+// THIS IS A STUB AND IT IS DELIBERATE. The Slug Menace is being built in parallel; the varp and the
+// constant that answer this question - %slugmenace and ^slugmenace_complete - are declared by that
+// work and by nothing here, because a duplicate declaration of either breaks the build for both.
+// Until it lands, neither name exists, so this cannot be written as the real test and compile.
+//
+// Returning false is the honest stub: the proselyte counter and the proselyte worn gate are both
+// finished and simply closed, rather than open to someone who has not done the quest. There is no
+// other way into the four pieces - nothing drops them and no other shop stocks them - so nothing is
+// reachable early.
+//
+// TO TURN IT ON, once quest_slugmenace is on 377-wip, delete the return below and uncomment the
+// line above it. That is the whole change; nothing else in this file or either armoury refers to
+// the quest.
+[proc,tk_proselyte_rank]()(boolean)
+// return(%slugmenace >= ^slugmenace_complete);
+return(false);
+
+// --- Worn gates ---
+//
+// An [opheld2,<obj>] overrides the wildcard wear handler for that obj only. The pieces have their
+// equip bonuses in their configs; what cannot go in a config is a quest, which is why these are
+// scripts and not params.
+
+// Initiate: Recruitment Drive and 20 Defence, via the label levelrequire.rs2 already declared for
+// exactly this armour - it refuses with "Only Temple Knight initiates may wear this armour." and
+// then falls through to the ordinary Defence check.
+[opheld2,basic_tk_helm] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+[opheld2,basic_tk_body] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+[opheld2,basic_tk_legs] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+
+// Proselyte: The Slug Menace, 30 Defence and 20 Prayer. Not in levelrequire.rs2 with its sibling,
+// because the quest half of it is the stub above and keeping the two together means the flip is one
+// edit in one file.
+[opheld2,proselyte_sallet] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_hauberk] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_cuisse] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_tasset] @tk_wear_proselyte(last_slot);
+
+[label,tk_wear_proselyte](int $slot)
+if (~tk_proselyte_rank = false) {
+    mes("Only Temple Knight proselytes may wear this armour.");
+    return;
+}
+// Prayer first, because it is the requirement this set adds and the Defence one is shared: the
+// label below says the Defence line and ~equips on success.
+if (stat_base(prayer) < ^proselyte_prayer_level) {
+    mes("You are not a high enough level to use this item.");
+    mes("You need to have a Prayer level of <tostring(^proselyte_prayer_level)>.");
+    return;
+}
+@levelrequire_defence(^proselyte_defence_level, $slot);

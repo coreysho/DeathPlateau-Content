@@ -1,0 +1,54 @@
+// SIR TIFFY CASHIEN'S TWO ARMOURIES - the Temple Knights' kit, and who is allowed to buy it.
+// Wiki: https://oldschool.runescape.wiki/w/Sir_Tiffy_Cashien
+//
+// Tiffy sits on his bench in Falador Park as npc rd_teleporter_guy (that is the cache's own name
+// for him, not a typo - see quests/quest_rd), and he runs ONE counter whose stock depends on how
+// far into the order you are:
+//
+//   Recruitment Drive done  ->  Initiate Temple Knight Armoury   (three pieces)
+//   The Slug Menace done    ->  Proselyte Temple Knight Armoury  (those three plus four more)
+//
+// That is Old School's arrangement and it is the reason there are two invs rather than one with a
+// conditional: a shop inv is a stock list, and "which list" is the only thing the rank changes.
+//
+// WHERE THE TWO SETS COME FROM, which is not the same answer twice:
+//
+//   INITIATE is 2006 content. Recruitment Drive is June 2004 and the armour shipped with it, so
+//   all three pieces are already in the 377 cache - basic_tk_helm, basic_tk_body, basic_tk_legs,
+//   named "Initiate helm", "Initiate platemail" and "Initiate platelegs". They are finished in
+//   place in _unpack/377/all.obj (they had models and no stats at all) rather than imported, and
+//   they keep the cache's 2006 NAMES. Old School calls them sallet / hauberk / cuisse; that
+//   renaming came later, and a 377 client should show what 377 shipped.
+//
+//   PROSELYTE is not. The Slug Menace is 5 February 2007, so there is nothing in this cache to be
+//   faithful to and the four pieces are imported from Old School with its names, models and values
+//   - see configs/proselyte.obj.
+//
+// PRICES ARE THE OBJS' OWN cost=, because ^tk_shop_sell is 1000 per mille: at a sell multiplier of
+// 1000 ~calc_shop_value returns the cost unchanged, so an obj's cost IS its shelf price here. That
+// means initiate costs what 377 says it is worth (3,000 / 10,000 / 5,000 = 18,000 for the set) and
+// proselyte costs what Old School says (8,000 / 12,000 / 10,000, tasset 10,000). Old School's own
+// initiate prices are 6,000 / 10,000 / 8,000 - its item values moved after 2006 and the cache's
+// did not, and the cache is what this build follows.
+
+// --- Who may wear it ---
+// Initiate: Recruitment Drive and 20 Defence. levelrequire.rs2 already declared
+// [label,levelrequire_recruitmentdrive_defence] for armour that did not yet have stats, so the
+// quest half of this gate was written before the armour was.
+//
+// Old School also asks 10 Prayer for initiate. That requirement is NOT applied here: it is not
+// something a 2006 source backs up, and inventing a requirement is worse than omitting one. If a
+// 2006 source turns up, it is one line in ~tk_wear_initiate.
+^initiate_defence_level = 20
+
+// Proselyte: The Slug Menace, 30 Defence and 20 Prayer. This set is a port, so Old School's
+// requirements apply to it in full, Prayer included.
+^proselyte_defence_level = 30
+^proselyte_prayer_level = 20
+
+// --- The counter ---
+// Old School: sells at 100%, buys at 50%, and the price does not move with stock ("change per
+// 0.0%"). ~calc_shop_value floors the multiplier at 100 per mille, which never comes near these.
+^tk_shop_sell = 1000
+^tk_shop_buy = 500
+^tk_shop_haggle = 0
