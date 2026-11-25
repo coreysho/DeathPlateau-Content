@@ -57,12 +57,17 @@ mes("You've been stunned!");
 walktrigger(stunned);
 
 [proc,steal_from_stall](dbrow $data, coord $loc_coord, int $loc_angle, locshape $loc_shape)
-// if guard sees (for first time), stop player from stealing.
-// guards proioritize over sellers
-if (~stealing_check_for_guard($data) = true) {
+// A GUARD PUNISHES, THE OWNER REFUSES. Both run, and only one of them stops the steal.
+//
+// The guard shouts and attacks and the theft still goes through - see the proc for why, and for
+// what it measured. He is checked first so that the loudest reaction is his, as before.
+//
+// The owner is the one who can actually stop you, and that is deliberate: he has a tile you can
+// stand on, so a player who is refused has somewhere to move to. A guard did not, which is what
+// made the Ardougne market untrainable.
+~stealing_check_for_guard($data);
+if (~stealing_check_for_owner($data) = true) {
     return;
-} else if (~stealing_check_for_owner($data) = true) {
-   return;
 }
 def_int $experience = db_getfield($data, stealing:experience, 0);
 // osrs is 2x respawn speed, since they removed the scale by playercount

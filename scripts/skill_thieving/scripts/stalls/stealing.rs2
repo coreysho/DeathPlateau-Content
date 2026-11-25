@@ -87,7 +87,20 @@ if ($free_space = 0) {
 
 ~steal_from_stall($data, $loc_coord, $loc_angle, $loc_shape);
 
-[proc,stealing_check_for_guard](dbrow $data)(boolean)
+// A GUARD WHO SEES YOU PUNISHES THE THEFT; HE DOES NOT PREVENT IT.
+//
+// This used to return a boolean and the caller returned on it, so a guard in range with line of
+// sight stopped the steal before any loot was rolled. Measured at the Ardougne bakery, that was
+// 10 of 14 first attempts refused - every one of them with a guard within 5 tiles - because
+// `ardougne_guard` has wanderrange=5 and six of them spawn within 12 tiles of that stall. A
+// thieving stall that fails 70% of the time is not trainable, and the report it produced said
+// simply that the stall could not be stolen from (tracker issue 14).
+//
+// It takes no result now: the shout and the retaliation below ARE the consequence, and the steal
+// goes through. The owner is a separate question and still refuses - he has a tile you can stand
+// on to avoid him, which is the whole point of ~stealing_check_for_owner, and a guard had no
+// equivalent.
+[proc,stealing_check_for_guard](dbrow $data)
 def_int $npc_count = db_getfieldcount($data, stealing:guard);
 def_npc $npc1 = db_getfield($data, stealing:guard, min(0, $npc_count));
 def_npc $npc2 = db_getfield($data, stealing:guard, min(1, $npc_count));
@@ -101,13 +114,12 @@ while (npc_findnext = true) {
         & npc_getmode ! opplayer2 & lineofsight(npc_coord, coord) = true) {
         npc_say("Hey! Get your hands off there!");
         ~npc_retaliate(0);
-        return(true);
+        // ONE GUARD, NOT THE WHOLE MARKET. Returning here is what keeps a theft seen by four
+        // guards from starting four fights at once, which is the shape ~stealing_check_for_guard
+        // has always had - it is only the caller's reading of it that changed.
+        return;
     }
 }
-// Nobody in the guard list saw it. Both of these used to run off the end without returning: a
-// (boolean) proc that returns nothing leaves the caller comparing whatever was on the stack, and
-// it only read as false by luck.
-return(false);
 
 [proc,stealing_check_for_owner](dbrow $data)(boolean)
 def_npc $owner = db_getfield($data, stealing:owner, 0);
