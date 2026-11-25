@@ -222,3 +222,9 @@ inv_add(inv, slug_fragment2, 1);
 inv_add(inv, slug_fragment3, 1);
 ~objbox(slug_fragment1, "O'Niall hands over three scraps of parchment, charred at the edges. He watches you take them.", 250, 0, 0);
 ~chatnpc("<p,neutral>Stick them back together and you'll have your page. Mind what you use - that's old paper.");
+// AND SAVANT SAYS HOW. Without this the only route to the glue was trying swamp paste and
+// being refused, which a player has no reason to think of - and Bailey would not talk about
+// it either, so the quest stopped dead with no instruction anywhere.
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I heard that. Do not use swamp paste on it - it is oil-rich and it will lift the ink.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>My analysis of that sea slug finished while you were talking. Rendered down it makes a glue that dries clear.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>You will want someone with years of experience in aquatic cooking. Bailey, on the Fishing Platform - and Jeb runs the boat out there now.");

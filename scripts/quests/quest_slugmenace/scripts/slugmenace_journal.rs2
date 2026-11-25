@@ -65,15 +65,13 @@ switch_int (%slugmenace_stage) {
         $text = append($text, ~slugmenace_journal_tick(%slugmenace_page2, "Ezekial Lovecraft's drawer"));
         $text = append($text, ~slugmenace_journal_tick(%slugmenace_page3, "three charred scraps from the colonel"));
         if (%slugmenace_page3 = ^slugmenace_off) {
-            if (%slugmenace_paste_refused = ^slugmenace_off) {
-                $text = append($text, "@dbl@The scraps need glue. Something gentler than|");
-                $text = append($text, "@dbl@@dre@swamp paste@dbl@, Savant says");
-            } else {
-                $text = append($text, "@dbl@Savant says a @dre@dead sea slug@dbl@ rendered down makes a|");
-                $text = append($text, "@dbl@glue that dries clear, and that I need a cook|");
-                $text = append($text, "@dbl@@dre@Bailey@dbl@, on the Fishing Platform, is a cook|");
-                $text = append($text, "@dbl@@dre@Jeb@dbl@ runs the boat out there now");
-            }
+            // ALWAYS SAID, not only once the swamp paste has been refused. This used to
+            // sit behind that flag, so a player who never tried the paste was told nothing.
+            $text = append($text, "@dbl@The scraps need glue, and not @dre@swamp paste|");
+            $text = append($text, "@dbl@Savant says a @dre@dead sea slug@dbl@ rendered down makes a|");
+            $text = append($text, "@dbl@glue that dries clear, and that I need a cook|");
+            $text = append($text, "@dbl@@dre@Bailey@dbl@, on the Fishing Platform, is a cook|");
+            $text = append($text, "@dbl@@dre@Jeb@dbl@ runs the boat out there now");
         }
 
     case ^slugmenace_runes :

@@ -31,19 +31,22 @@ if (%slugmenace_stage >= ^slugmenace_shrine & %slugmenace_door_scanned = ^slugme
     mes("You need to get closer to the doors for the scan to work.");
     return;
 }
+// "Nothing worth reporting" is the right answer nearly everywhere, but at the one stage where
+// Savant has asked for a reading of the Mayor, a shrug is the wrong thing to say.
+if (%slugmenace_stage = ^slugmenace_asking & %slugmenace_met_hobb = ^slugmenace_on
+        & %slugmenace_mayor_scanned = ^slugmenace_off) {
+    mes("You need to be closer to the Mayor for the scan to work.");
+    return;
+}
 mes("The orb hums, finds nothing worth reporting, and goes quiet again.");
 
 // The Mayor is the only npc in the quest worth scanning, and he is in a room of his own, so
 // "is he within a few tiles" is the whole test. npc_findallzone walks the zone the player is in.
+// A RADIUS, NOT A ZONE. npc_findallzone searches the player's own 8x8 zone, so whether the scan
+// worked at all depended on which side of an invisible boundary the Mayor happened to be on.
+// npc_findcat takes a distance, which is what "near him" actually means.
 [proc,slugmenace_near_hobb]()(boolean)
-def_int $found = 0;
-npc_findallzone(coord);
-while (npc_findnext = true) {
-    if (npc_category = slugmenace_mayor) {
-        $found = 1;
-    }
-}
-if ($found = 1) {
+if (npc_findcat(coord, slugmenace_mayor, ^slugmenace_scan_range, 0) = true) {
     return(true);
 }
 return(false);
