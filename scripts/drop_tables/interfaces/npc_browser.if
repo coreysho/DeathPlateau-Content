@@ -739,7 +739,7 @@ height=13
 center=yes
 font=p12_full
 shadowed=yes
-text=740 monsters. Pick one to see what it drops, and how often.
+text=741 monsters. Pick one to see what it drops, and how often.
 colour=0xFF981F
 
 [letters]
@@ -3265,7 +3265,7 @@ x=158
 y=68
 width=312
 height=236
-scroll=11804
+scroll=11819
 
 [head_a]
 layer=list
@@ -3667,7 +3667,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=9630
+y=9645
 width=296
 height=15
 font=b12_full
@@ -3679,7 +3679,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=9646
+y=9661
 width=300
 height=1
 fill=yes
@@ -3689,7 +3689,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=10378
+y=10393
 width=296
 height=15
 font=b12_full
@@ -3701,7 +3701,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=10394
+y=10409
 width=300
 height=1
 fill=yes
@@ -3711,7 +3711,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=10571
+y=10586
 width=296
 height=15
 font=b12_full
@@ -3723,7 +3723,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=10587
+y=10602
 width=300
 height=1
 fill=yes
@@ -3733,7 +3733,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=10764
+y=10779
 width=296
 height=15
 font=b12_full
@@ -3745,7 +3745,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=10780
+y=10795
 width=300
 height=1
 fill=yes
@@ -3755,7 +3755,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=11362
+y=11377
 width=296
 height=15
 font=b12_full
@@ -3767,7 +3767,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=11378
+y=11393
 width=300
 height=1
 fill=yes
@@ -3777,7 +3777,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=11435
+y=11450
 width=296
 height=15
 font=b12_full
@@ -3789,7 +3789,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=11451
+y=11466
 width=300
 height=1
 fill=yes
@@ -3799,7 +3799,7 @@ colour=0x4A4033
 layer=list
 type=text
 x=8
-y=11763
+y=11778
 width=296
 height=15
 font=b12_full
@@ -3811,7 +3811,7 @@ colour=0xFFFF00
 layer=list
 type=rect
 x=6
-y=11779
+y=11794
 width=300
 height=1
 fill=yes
@@ -10360,13 +10360,13 @@ option=View drops @lre@Giant Lobster
 [m243_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=3839
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 32
+text=Lvl 45
 colour=0xC8C8C8
 
 [m244]
@@ -19256,21 +19256,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Small Lizard
+text=Slug Prince
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Small Lizard
+option=View drops @lre@Slug Prince
 
 [m575_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=9127
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 12
+text=Lvl 62
 colour=0xC8C8C8
 
 [m576]
@@ -19283,21 +19283,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Smokedevil
+text=Small Lizard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Smokedevil
+option=View drops @lre@Small Lizard
 
 [m576_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=9142
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 93
+text=Lvl 12
 colour=0xC8C8C8
 
 [m577]
@@ -19310,21 +19310,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Snake
+text=Smokedevil
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Snake
+option=View drops @lre@Smokedevil
 
 [m577_lvl]
 layer=list
 type=text
-x=278
+x=270
 y=9157
-width=26
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 5
+text=Lvl 93
 colour=0xC8C8C8
 
 [m578]
@@ -19345,13 +19345,13 @@ option=View drops @lre@Snake
 [m578_lvl]
 layer=list
 type=text
-x=270
+x=278
 y=9172
-width=34
+width=26
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 24
+text=Lvl 5
 colour=0xC8C8C8
 
 [m579]
@@ -19364,21 +19364,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Soldier
+text=Snake
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Soldier
+option=View drops @lre@Snake
 
 [m579_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=9187
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 28
+text=Lvl 24
 colour=0xC8C8C8
 
 [m580]
@@ -19399,13 +19399,13 @@ option=View drops @lre@Soldier
 [m580_lvl]
 layer=list
 type=text
-x=270
+x=269
 y=9202
-width=34
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 48
+text=Lvl 28
 colour=0xC8C8C8
 
 [m581]
@@ -19418,10 +19418,22 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Solus Dellagar
+text=Soldier
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Solus Dellagar
+option=View drops @lre@Soldier
+
+[m581_lvl]
+layer=list
+type=text
+x=270
+y=9217
+width=34
+height=15
+font=p12_full
+shadowed=yes
+text=Lvl 48
+colour=0xC8C8C8
 
 [m582]
 layer=list
@@ -19433,22 +19445,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Sorebones
+text=Solus Dellagar
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Sorebones
-
-[m582_lvl]
-layer=list
-type=text
-x=272
-y=9232
-width=32
-height=15
-font=p12_full
-shadowed=yes
-text=Lvl 57
-colour=0xC8C8C8
+option=View drops @lre@Solus Dellagar
 
 [m583]
 layer=list
@@ -19460,21 +19460,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Souless
+text=Sorebones
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Souless
+option=View drops @lre@Sorebones
 
 [m583_lvl]
 layer=list
 type=text
-x=271
+x=272
 y=9247
-width=33
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 18
+text=Lvl 57
 colour=0xC8C8C8
 
 [m584]
@@ -19487,10 +19487,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Speedy Keith
+text=Souless
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Speedy Keith
+option=View drops @lre@Souless
 
 [m584_lvl]
 layer=list
@@ -19501,7 +19501,7 @@ width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 34
+text=Lvl 18
 colour=0xC8C8C8
 
 [m585]
@@ -19514,21 +19514,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Spiked Turoth
+text=Speedy Keith
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Spiked Turoth
+option=View drops @lre@Speedy Keith
 
 [m585_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=9277
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 244
+text=Lvl 34
 colour=0xC8C8C8
 
 [m586]
@@ -19541,21 +19541,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Spinolyp
+text=Spiked Turoth
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Spinolyp
+option=View drops @lre@Spiked Turoth
 
 [m586_lvl]
 layer=list
 type=text
-x=271
+x=263
 y=9292
-width=33
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 76
+text=Lvl 244
 colour=0xC8C8C8
 
 [m587]
@@ -19568,21 +19568,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Spiritual mage
+text=Spinolyp
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Spiritual mage
+option=View drops @lre@Spinolyp
 
 [m587_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=9307
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 120
+text=Lvl 76
 colour=0xC8C8C8
 
 [m588]
@@ -19603,13 +19603,13 @@ option=View drops @lre@Spiritual mage
 [m588_lvl]
 layer=list
 type=text
-x=265
+x=263
 y=9322
-width=39
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 121
+text=Lvl 120
 colour=0xC8C8C8
 
 [m589]
@@ -19630,13 +19630,13 @@ option=View drops @lre@Spiritual mage
 [m589_lvl]
 layer=list
 type=text
-x=263
+x=265
 y=9337
-width=41
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 122
+text=Lvl 121
 colour=0xC8C8C8
 
 [m590]
@@ -19649,21 +19649,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Spiritual ranger
+text=Spiritual mage
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Spiritual ranger
+option=View drops @lre@Spiritual mage
 
 [m590_lvl]
 layer=list
 type=text
-x=266
+x=263
 y=9352
-width=38
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 115
+text=Lvl 122
 colour=0xC8C8C8
 
 [m591]
@@ -19684,13 +19684,13 @@ option=View drops @lre@Spiritual ranger
 [m591_lvl]
 layer=list
 type=text
-x=265
+x=266
 y=9367
-width=39
+width=38
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 118
+text=Lvl 115
 colour=0xC8C8C8
 
 [m592]
@@ -19711,13 +19711,13 @@ option=View drops @lre@Spiritual ranger
 [m592_lvl]
 layer=list
 type=text
-x=263
+x=265
 y=9382
-width=41
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 122
+text=Lvl 118
 colour=0xC8C8C8
 
 [m593]
@@ -19738,13 +19738,13 @@ option=View drops @lre@Spiritual ranger
 [m593_lvl]
 layer=list
 type=text
-x=265
+x=263
 y=9397
-width=39
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 127
+text=Lvl 122
 colour=0xC8C8C8
 
 [m594]
@@ -19757,21 +19757,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Spiritual warrior
+text=Spiritual ranger
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Spiritual warrior
+option=View drops @lre@Spiritual ranger
 
 [m594_lvl]
 layer=list
 type=text
-x=266
+x=265
 y=9412
-width=38
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 115
+text=Lvl 127
 colour=0xC8C8C8
 
 [m595]
@@ -19792,13 +19792,13 @@ option=View drops @lre@Spiritual warrior
 [m595_lvl]
 layer=list
 type=text
-x=264
+x=266
 y=9427
-width=40
+width=38
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 123
+text=Lvl 115
 colour=0xC8C8C8
 
 [m596]
@@ -19825,7 +19825,7 @@ width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 125
+text=Lvl 123
 colour=0xC8C8C8
 
 [m597]
@@ -19846,13 +19846,13 @@ option=View drops @lre@Spiritual warrior
 [m597_lvl]
 layer=list
 type=text
-x=265
+x=264
 y=9457
-width=39
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 134
+text=Lvl 125
 colour=0xC8C8C8
 
 [m598]
@@ -19865,21 +19865,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Starlight
+text=Spiritual warrior
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Starlight
+option=View drops @lre@Spiritual warrior
 
 [m598_lvl]
 layer=list
 type=text
-x=264
+x=265
 y=9472
-width=40
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 149
+text=Lvl 134
 colour=0xC8C8C8
 
 [m599]
@@ -19892,21 +19892,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Steel dragon
+text=Starlight
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Steel dragon
+option=View drops @lre@Starlight
 
 [m599_lvl]
 layer=list
 type=text
-x=262
+x=264
 y=9487
-width=42
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 246
+text=Lvl 149
 colour=0xC8C8C8
 
 [m600]
@@ -19919,21 +19919,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Stick
+text=Steel dragon
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Stick
+option=View drops @lre@Steel dragon
 
 [m600_lvl]
 layer=list
 type=text
-x=264
+x=262
 y=9502
-width=40
+width=42
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 104
+text=Lvl 246
 colour=0xC8C8C8
 
 [m601]
@@ -19946,21 +19946,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Stranger
+text=Stick
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Stranger
+option=View drops @lre@Stick
 
 [m601_lvl]
 layer=list
 type=text
-x=270
+x=264
 y=9517
-width=34
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 95
+text=Lvl 104
 colour=0xC8C8C8
 
 [m602]
@@ -19973,10 +19973,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Straven
+text=Stranger
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Straven
+option=View drops @lre@Stranger
 
 [m602_lvl]
 layer=list
@@ -19987,7 +19987,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 23
+text=Lvl 95
 colour=0xC8C8C8
 
 [m603]
@@ -20000,21 +20000,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Summoned Zombie
+text=Straven
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Summoned Zombie
+option=View drops @lre@Straven
 
 [m603_lvl]
 layer=list
 type=text
-x=272
+x=270
 y=9547
-width=32
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 13
+text=Lvl 23
 colour=0xC8C8C8
 
 [m604]
@@ -20027,21 +20027,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Suqah
+text=Summoned Zombie
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Suqah
+option=View drops @lre@Summoned Zombie
 
 [m604_lvl]
 layer=list
 type=text
-x=267
+x=272
 y=9562
-width=37
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 111
+text=Lvl 13
 colour=0xC8C8C8
 
 [m605]
@@ -20054,21 +20054,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Swamp snake
+text=Suqah
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Swamp snake
+option=View drops @lre@Suqah
 
 [m605_lvl]
 layer=list
 type=text
-x=269
+x=267
 y=9577
-width=35
+width=37
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 80
+text=Lvl 111
 colour=0xC8C8C8
 
 [m606]
@@ -20089,13 +20089,13 @@ option=View drops @lre@Swamp snake
 [m606_lvl]
 layer=list
 type=text
-x=263
+x=269
 y=9592
-width=41
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 109
+text=Lvl 80
 colour=0xC8C8C8
 
 [m607]
@@ -20116,40 +20116,40 @@ option=View drops @lre@Swamp snake
 [m607_lvl]
 layer=list
 type=text
-x=264
+x=263
 y=9607
-width=40
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 139
+text=Lvl 109
 colour=0xC8C8C8
 
 [m608]
 layer=list
 type=text
 x=12
-y=9650
+y=9622
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tanglefoot
+text=Swamp snake
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tanglefoot
+option=View drops @lre@Swamp snake
 
 [m608_lvl]
 layer=list
 type=text
-x=267
-y=9650
-width=37
+x=264
+y=9622
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 111
+text=Lvl 139
 colour=0xC8C8C8
 
 [m609]
@@ -20162,21 +20162,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tarik
+text=Tanglefoot
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tarik
+option=View drops @lre@Tanglefoot
 
 [m609_lvl]
 layer=list
 type=text
-x=271
+x=267
 y=9665
-width=33
+width=37
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 21
+text=Lvl 111
 colour=0xC8C8C8
 
 [m610]
@@ -20189,21 +20189,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tentacle
+text=Tarik
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tentacle
+option=View drops @lre@Tarik
 
 [m610_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=9680
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 99
+text=Lvl 21
 colour=0xC8C8C8
 
 [m611]
@@ -20224,13 +20224,13 @@ option=View drops @lre@Tentacle
 [m611_lvl]
 layer=list
 type=text
-x=264
+x=269
 y=9695
-width=40
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 136
+text=Lvl 99
 colour=0xC8C8C8
 
 [m612]
@@ -20243,21 +20243,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Terrorbird
+text=Tentacle
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Terrorbird
+option=View drops @lre@Tentacle
 
 [m612_lvl]
 layer=list
 type=text
-x=269
+x=264
 y=9710
-width=35
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 28
+text=Lvl 136
 colour=0xC8C8C8
 
 [m613]
@@ -20270,10 +20270,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=The Draugen
+text=Terrorbird
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@The Draugen
+option=View drops @lre@Terrorbird
 
 [m613_lvl]
 layer=list
@@ -20284,7 +20284,7 @@ width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 69
+text=Lvl 28
 colour=0xC8C8C8
 
 [m614]
@@ -20297,21 +20297,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=The Kendal
+text=The Draugen
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@The Kendal
+option=View drops @lre@The Draugen
 
 [m614_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=9740
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 70
+text=Lvl 69
 colour=0xC8C8C8
 
 [m615]
@@ -20324,21 +20324,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=The Shaikahan
+text=The Kendal
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@The Shaikahan
+option=View drops @lre@The Kendal
 
 [m615_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=9755
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 83
+text=Lvl 70
 colour=0xC8C8C8
 
 [m616]
@@ -20351,21 +20351,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thief
+text=The Shaikahan
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thief
+option=View drops @lre@The Shaikahan
 
 [m616_lvl]
 layer=list
 type=text
-x=272
+x=270
 y=9770
-width=32
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 14
+text=Lvl 83
 colour=0xC8C8C8
 
 [m617]
@@ -20386,13 +20386,13 @@ option=View drops @lre@Thief
 [m617_lvl]
 layer=list
 type=text
-x=271
+x=272
 y=9785
-width=33
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 16
+text=Lvl 14
 colour=0xC8C8C8
 
 [m618]
@@ -20405,10 +20405,22 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thing under the bed
+text=Thief
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thing under the bed
+option=View drops @lre@Thief
+
+[m618_lvl]
+layer=list
+type=text
+x=271
+y=9800
+width=33
+height=15
+font=p12_full
+shadowed=yes
+text=Lvl 16
+colour=0xC8C8C8
 
 [m619]
 layer=list
@@ -20420,22 +20432,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thora
+text=Thing under the bed
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thora
-
-[m619_lvl]
-layer=list
-type=text
-x=277
-y=9815
-width=27
-height=15
-font=p12_full
-shadowed=yes
-text=Lvl 2
-colour=0xC8C8C8
+option=View drops @lre@Thing under the bed
 
 [m620]
 layer=list
@@ -20447,21 +20447,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thorhild
+text=Thora
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thorhild
+option=View drops @lre@Thora
 
 [m620_lvl]
 layer=list
 type=text
-x=279
+x=277
 y=9830
-width=25
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 1
+text=Lvl 2
 colour=0xC8C8C8
 
 [m621]
@@ -20474,21 +20474,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thrower Troll
+text=Thorhild
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thrower Troll
+option=View drops @lre@Thorhild
 
 [m621_lvl]
 layer=list
 type=text
-x=271
+x=279
 y=9845
-width=33
+width=25
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 67
+text=Lvl 1
 colour=0xC8C8C8
 
 [m622]
@@ -20509,13 +20509,13 @@ option=View drops @lre@Thrower Troll
 [m622_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=9860
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 68
+text=Lvl 67
 colour=0xC8C8C8
 
 [m623]
@@ -20528,21 +20528,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Thug
+text=Thrower Troll
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Thug
+option=View drops @lre@Thrower Troll
 
 [m623_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=9875
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 10
+text=Lvl 68
 colour=0xC8C8C8
 
 [m624]
@@ -20555,21 +20555,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tok-Xil
+text=Thug
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tok-Xil
+option=View drops @lre@Thug
 
 [m624_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=9890
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 90
+text=Lvl 10
 colour=0xC8C8C8
 
 [m625]
@@ -20582,21 +20582,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tortoise
+text=Tok-Xil
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tortoise
+option=View drops @lre@Tok-Xil
 
 [m625_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=9905
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 79
+text=Lvl 90
 colour=0xC8C8C8
 
 [m626]
@@ -20617,13 +20617,13 @@ option=View drops @lre@Tortoise
 [m626_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=9920
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 92
+text=Lvl 79
 colour=0xC8C8C8
 
 [m627]
@@ -20636,21 +20636,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tortured Soul
+text=Tortoise
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tortured Soul
+option=View drops @lre@Tortoise
 
 [m627_lvl]
 layer=list
 type=text
-x=270
+x=269
 y=9935
-width=34
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 59
+text=Lvl 92
 colour=0xC8C8C8
 
 [m628]
@@ -20663,21 +20663,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tower guard
+text=Tortured Soul
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tower guard
+option=View drops @lre@Tortured Soul
 
 [m628_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=9950
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 28
+text=Lvl 59
 colour=0xC8C8C8
 
 [m629]
@@ -20690,21 +20690,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tramp
+text=Tower guard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tramp
+option=View drops @lre@Tower guard
 
 [m629_lvl]
 layer=list
 type=text
-x=277
+x=269
 y=9965
-width=27
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 2
+text=Lvl 28
 colour=0xC8C8C8
 
 [m630]
@@ -20717,21 +20717,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tree spirit
+text=Tramp
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tree spirit
+option=View drops @lre@Tramp
 
 [m630_lvl]
 layer=list
 type=text
-x=272
+x=277
 y=9980
-width=32
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 14
+text=Lvl 2
 colour=0xC8C8C8
 
 [m631]
@@ -20752,13 +20752,13 @@ option=View drops @lre@Tree spirit
 [m631_lvl]
 layer=list
 type=text
-x=269
+x=272
 y=9995
-width=35
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 29
+text=Lvl 14
 colour=0xC8C8C8
 
 [m632]
@@ -20779,13 +20779,13 @@ option=View drops @lre@Tree spirit
 [m632_lvl]
 layer=list
 type=text
-x=270
+x=269
 y=10010
-width=34
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 49
+text=Lvl 29
 colour=0xC8C8C8
 
 [m633]
@@ -20806,13 +20806,13 @@ option=View drops @lre@Tree spirit
 [m633_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=10025
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 79
+text=Lvl 49
 colour=0xC8C8C8
 
 [m634]
@@ -20833,13 +20833,13 @@ option=View drops @lre@Tree spirit
 [m634_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=10040
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 120
+text=Lvl 79
 colour=0xC8C8C8
 
 [m635]
@@ -20860,13 +20860,13 @@ option=View drops @lre@Tree spirit
 [m635_lvl]
 layer=list
 type=text
-x=264
+x=263
 y=10055
-width=40
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 159
+text=Lvl 120
 colour=0xC8C8C8
 
 [m636]
@@ -20879,21 +20879,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tribesman
+text=Tree spirit
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tribesman
+option=View drops @lre@Tree spirit
 
 [m636_lvl]
 layer=list
 type=text
-x=270
+x=264
 y=10070
-width=34
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 32
+text=Lvl 159
 colour=0xC8C8C8
 
 [m637]
@@ -20906,21 +20906,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Troll
+text=Tribesman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Troll
+option=View drops @lre@Tribesman
 
 [m637_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=10085
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 69
+text=Lvl 32
 colour=0xC8C8C8
 
 [m638]
@@ -20941,13 +20941,13 @@ option=View drops @lre@Troll
 [m638_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=10100
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 91
+text=Lvl 69
 colour=0xC8C8C8
 
 [m639]
@@ -20960,21 +20960,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Troll General
+text=Troll
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Troll General
+option=View drops @lre@Troll
 
 [m639_lvl]
 layer=list
 type=text
-x=266
+x=271
 y=10115
-width=38
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 113
+text=Lvl 91
 colour=0xC8C8C8
 
 [m640]
@@ -20987,21 +20987,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Troll Spectator
+text=Troll General
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Troll Spectator
+option=View drops @lre@Troll General
 
 [m640_lvl]
 layer=list
 type=text
-x=273
+x=266
 y=10130
-width=31
+width=38
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 71
+text=Lvl 113
 colour=0xC8C8C8
 
 [m641]
@@ -21014,21 +21014,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tstanon Karlak
+text=Troll Spectator
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tstanon Karlak
+option=View drops @lre@Troll Spectator
 
 [m641_lvl]
 layer=list
 type=text
-x=265
+x=273
 y=10145
-width=39
+width=31
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 145
+text=Lvl 71
 colour=0xC8C8C8
 
 [m642]
@@ -21041,21 +21041,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Turoth
+text=Tstanon Karlak
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Turoth
+option=View drops @lre@Tstanon Karlak
 
 [m642_lvl]
 layer=list
 type=text
-x=270
+x=265
 y=10160
-width=34
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 83
+text=Lvl 145
 colour=0xC8C8C8
 
 [m643]
@@ -21082,7 +21082,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 85
+text=Lvl 83
 colour=0xC8C8C8
 
 [m644]
@@ -21103,13 +21103,13 @@ option=View drops @lre@Turoth
 [m644_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=10190
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 86
+text=Lvl 85
 colour=0xC8C8C8
 
 [m645]
@@ -21130,13 +21130,13 @@ option=View drops @lre@Turoth
 [m645_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=10205
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 87
+text=Lvl 86
 colour=0xC8C8C8
 
 [m646]
@@ -21157,13 +21157,13 @@ option=View drops @lre@Turoth
 [m646_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=10220
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 88
+text=Lvl 87
 colour=0xC8C8C8
 
 [m647]
@@ -21190,7 +21190,7 @@ width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 89
+text=Lvl 88
 colour=0xC8C8C8
 
 [m648]
@@ -21203,21 +21203,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Twig
+text=Turoth
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Twig
+option=View drops @lre@Turoth
 
 [m648_lvl]
 layer=list
 type=text
-x=273
+x=269
 y=10250
-width=31
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 71
+text=Lvl 89
 colour=0xC8C8C8
 
 [m649]
@@ -21230,21 +21230,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tyras guard
+text=Twig
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tyras guard
+option=View drops @lre@Twig
 
 [m649_lvl]
 layer=list
 type=text
-x=265
+x=273
 y=10265
-width=39
+width=31
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 110
+text=Lvl 71
 colour=0xC8C8C8
 
 [m650]
@@ -21257,21 +21257,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tz-Kek
+text=Tyras guard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tz-Kek
+option=View drops @lre@Tyras guard
 
 [m650_lvl]
 layer=list
 type=text
-x=271
+x=265
 y=10280
-width=33
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 45
+text=Lvl 110
 colour=0xC8C8C8
 
 [m651]
@@ -21284,21 +21284,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Tz-Kih
+text=Tz-Kek
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Tz-Kih
+option=View drops @lre@Tz-Kek
 
 [m651_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=10295
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 22
+text=Lvl 45
 colour=0xC8C8C8
 
 [m652]
@@ -21311,21 +21311,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=TzHaar-Hur
+text=Tz-Kih
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@TzHaar-Hur
+option=View drops @lre@Tz-Kih
 
 [m652_lvl]
 layer=list
 type=text
-x=272
+x=269
 y=10310
-width=32
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 74
+text=Lvl 22
 colour=0xC8C8C8
 
 [m653]
@@ -21338,21 +21338,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=TzHaar-Ket
+text=TzHaar-Hur
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@TzHaar-Ket
+option=View drops @lre@TzHaar-Hur
 
 [m653_lvl]
 layer=list
 type=text
-x=264
+x=272
 y=10325
-width=40
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 149
+text=Lvl 74
 colour=0xC8C8C8
 
 [m654]
@@ -21365,10 +21365,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=TzHaar-Mej
+text=TzHaar-Ket
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@TzHaar-Mej
+option=View drops @lre@TzHaar-Ket
 
 [m654_lvl]
 layer=list
@@ -21379,7 +21379,7 @@ width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 103
+text=Lvl 149
 colour=0xC8C8C8
 
 [m655]
@@ -21392,48 +21392,48 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=TzHaar-Xil
+text=TzHaar-Mej
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@TzHaar-Xil
+option=View drops @lre@TzHaar-Mej
 
 [m655_lvl]
 layer=list
 type=text
-x=265
+x=264
 y=10355
-width=39
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 133
+text=Lvl 103
 colour=0xC8C8C8
 
 [m656]
 layer=list
 type=text
 x=12
-y=10398
+y=10370
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Ugthanki
+text=TzHaar-Xil
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Ugthanki
+option=View drops @lre@TzHaar-Xil
 
 [m656_lvl]
 layer=list
 type=text
-x=270
-y=10398
-width=34
+x=265
+y=10370
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 42
+text=Lvl 133
 colour=0xC8C8C8
 
 [m657]
@@ -21446,21 +21446,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Undead Chicken
+text=Ugthanki
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Undead Chicken
+option=View drops @lre@Ugthanki
 
 [m657_lvl]
 layer=list
 type=text
-x=279
+x=270
 y=10413
-width=25
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 1
+text=Lvl 42
 colour=0xC8C8C8
 
 [m658]
@@ -21473,21 +21473,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Undead Cow
+text=Undead Chicken
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Undead Cow
+option=View drops @lre@Undead Chicken
 
 [m658_lvl]
 layer=list
 type=text
-x=277
+x=279
 y=10428
-width=27
+width=25
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 2
+text=Lvl 1
 colour=0xC8C8C8
 
 [m659]
@@ -21500,21 +21500,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Undead One
+text=Undead Cow
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Undead One
+option=View drops @lre@Undead Cow
 
 [m659_lvl]
 layer=list
 type=text
-x=271
+x=277
 y=10443
-width=33
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 61
+text=Lvl 2
 colour=0xC8C8C8
 
 [m660]
@@ -21535,13 +21535,13 @@ option=View drops @lre@Undead One
 [m660_lvl]
 layer=list
 type=text
-x=269
+x=271
 y=10458
-width=35
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 68
+text=Lvl 61
 colour=0xC8C8C8
 
 [m661]
@@ -21554,21 +21554,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Ungadulu
+text=Undead One
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Ungadulu
+option=View drops @lre@Undead One
 
 [m661_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=10473
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 70
+text=Lvl 68
 colour=0xC8C8C8
 
 [m662]
@@ -21589,13 +21589,13 @@ option=View drops @lre@Ungadulu
 [m662_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=10488
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 169
+text=Lvl 70
 colour=0xC8C8C8
 
 [m663]
@@ -21608,21 +21608,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Unicorn
+text=Ungadulu
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Unicorn
+option=View drops @lre@Ungadulu
 
 [m663_lvl]
 layer=list
 type=text
-x=272
+x=263
 y=10503
-width=32
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 15
+text=Lvl 169
 colour=0xC8C8C8
 
 [m664]
@@ -21635,21 +21635,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Unicorn Foal
+text=Unicorn
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Unicorn Foal
+option=View drops @lre@Unicorn
 
 [m664_lvl]
 layer=list
 type=text
-x=271
+x=272
 y=10518
-width=33
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 12
+text=Lvl 15
 colour=0xC8C8C8
 
 [m665]
@@ -21662,21 +21662,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Uodai
+text=Unicorn Foal
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Uodai
+option=View drops @lre@Unicorn Foal
 
 [m665_lvl]
 layer=list
 type=text
-x=264
+x=271
 y=10533
-width=40
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 149
+text=Lvl 12
 colour=0xC8C8C8
 
 [m666]
@@ -21689,10 +21689,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Uyoro
+text=Uodai
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Uyoro
+option=View drops @lre@Uodai
 
 [m666_lvl]
 layer=list
@@ -21710,27 +21710,27 @@ colour=0xC8C8C8
 layer=list
 type=text
 x=12
-y=10591
+y=10563
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Valgerd
+text=Uyoro
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Valgerd
+option=View drops @lre@Uyoro
 
 [m667_lvl]
 layer=list
 type=text
-x=277
-y=10591
-width=27
+x=264
+y=10563
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 2
+text=Lvl 149
 colour=0xC8C8C8
 
 [m668]
@@ -21743,21 +21743,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Vampire
+text=Valgerd
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Vampire
+option=View drops @lre@Valgerd
 
 [m668_lvl]
 layer=list
 type=text
-x=270
+x=277
 y=10606
-width=34
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 25
+text=Lvl 2
 colour=0xC8C8C8
 
 [m669]
@@ -21778,13 +21778,13 @@ option=View drops @lre@Vampire
 [m669_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=10621
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 61
+text=Lvl 25
 colour=0xC8C8C8
 
 [m670]
@@ -21811,7 +21811,7 @@ width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 72
+text=Lvl 61
 colour=0xC8C8C8
 
 [m671]
@@ -21824,10 +21824,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Vampyre Juvenile
+text=Vampire
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Vampyre Juvenile
+option=View drops @lre@Vampire
 
 [m671_lvl]
 layer=list
@@ -21838,7 +21838,7 @@ width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 45
+text=Lvl 72
 colour=0xC8C8C8
 
 [m672]
@@ -21851,21 +21851,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Vampyre Juvinate
+text=Vampyre Juvenile
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Vampyre Juvinate
+option=View drops @lre@Vampyre Juvenile
 
 [m672_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=10666
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 50
+text=Lvl 45
 colour=0xC8C8C8
 
 [m673]
@@ -21886,13 +21886,13 @@ option=View drops @lre@Vampyre Juvinate
 [m673_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=10681
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 54
+text=Lvl 50
 colour=0xC8C8C8
 
 [m674]
@@ -21913,13 +21913,13 @@ option=View drops @lre@Vampyre Juvinate
 [m674_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=10696
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 64
+text=Lvl 54
 colour=0xC8C8C8
 
 [m675]
@@ -21932,21 +21932,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Vitreous Jelly
+text=Vampyre Juvinate
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Vitreous Jelly
+option=View drops @lre@Vampyre Juvinate
 
 [m675_lvl]
 layer=list
 type=text
-x=261
+x=270
 y=10711
-width=43
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 206
+text=Lvl 64
 colour=0xC8C8C8
 
 [m676]
@@ -21959,21 +21959,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Viyeldi
+text=Vitreous Jelly
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Viyeldi
+option=View drops @lre@Vitreous Jelly
 
 [m676_lvl]
 layer=list
 type=text
-x=271
+x=261
 y=10726
-width=33
+width=43
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 79
+text=Lvl 206
 colour=0xC8C8C8
 
 [m677]
@@ -21986,48 +21986,48 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Vulture
+text=Viyeldi
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Vulture
+option=View drops @lre@Viyeldi
 
 [m677_lvl]
 layer=list
 type=text
-x=272
+x=271
 y=10741
-width=32
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 31
+text=Lvl 79
 colour=0xC8C8C8
 
 [m678]
 layer=list
 type=text
 x=12
-y=10784
+y=10756
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wall Beast
+text=Vulture
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wall Beast
+option=View drops @lre@Vulture
 
 [m678_lvl]
 layer=list
 type=text
-x=270
-y=10784
-width=34
+x=272
+y=10756
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 49
+text=Lvl 31
 colour=0xC8C8C8
 
 [m679]
@@ -22040,21 +22040,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wallasalki
+text=Wall Beast
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wallasalki
+option=View drops @lre@Wall Beast
 
 [m679_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=10799
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 98
+text=Lvl 49
 colour=0xC8C8C8
 
 [m680]
@@ -22067,21 +22067,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Warrior
+text=Wallasalki
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Warrior
+option=View drops @lre@Wallasalki
 
 [m680_lvl]
 layer=list
 type=text
-x=270
+x=269
 y=10814
-width=34
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 48
+text=Lvl 98
 colour=0xC8C8C8
 
 [m681]
@@ -22094,10 +22094,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Warrior woman
+text=Warrior
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Warrior woman
+option=View drops @lre@Warrior
 
 [m681_lvl]
 layer=list
@@ -22108,7 +22108,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 24
+text=Lvl 48
 colour=0xC8C8C8
 
 [m682]
@@ -22121,21 +22121,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Watchman
+text=Warrior woman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Watchman
+option=View drops @lre@Warrior woman
 
 [m682_lvl]
 layer=list
 type=text
-x=272
+x=270
 y=10844
-width=32
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 14
+text=Lvl 24
 colour=0xC8C8C8
 
 [m683]
@@ -22156,13 +22156,13 @@ option=View drops @lre@Watchman
 [m683_lvl]
 layer=list
 type=text
-x=269
+x=272
 y=10859
-width=35
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 29
+text=Lvl 14
 colour=0xC8C8C8
 
 [m684]
@@ -22183,13 +22183,13 @@ option=View drops @lre@Watchman
 [m684_lvl]
 layer=list
 type=text
-x=271
+x=269
 y=10874
-width=33
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 33
+text=Lvl 29
 colour=0xC8C8C8
 
 [m685]
@@ -22210,13 +22210,13 @@ option=View drops @lre@Watchman
 [m685_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=10889
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 49
+text=Lvl 33
 colour=0xC8C8C8
 
 [m686]
@@ -22237,13 +22237,13 @@ option=View drops @lre@Watchman
 [m686_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=10904
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 79
+text=Lvl 49
 colour=0xC8C8C8
 
 [m687]
@@ -22264,13 +22264,13 @@ option=View drops @lre@Watchman
 [m687_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=10919
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 120
+text=Lvl 79
 colour=0xC8C8C8
 
 [m688]
@@ -22291,13 +22291,13 @@ option=View drops @lre@Watchman
 [m688_lvl]
 layer=list
 type=text
-x=264
+x=263
 y=10934
-width=40
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 159
+text=Lvl 120
 colour=0xC8C8C8
 
 [m689]
@@ -22318,13 +22318,13 @@ option=View drops @lre@Watchman
 [m689_lvl]
 layer=list
 type=text
-x=263
+x=264
 y=10949
-width=41
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 253
+text=Lvl 159
 colour=0xC8C8C8
 
 [m690]
@@ -22337,21 +22337,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Water elemental
+text=Watchman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Water elemental
+option=View drops @lre@Watchman
 
 [m690_lvl]
 layer=list
 type=text
-x=271
+x=263
 y=10964
-width=33
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 34
+text=Lvl 253
 colour=0xC8C8C8
 
 [m691]
@@ -22364,21 +22364,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Water Wizard
+text=Water elemental
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Water Wizard
+option=View drops @lre@Water elemental
 
 [m691_lvl]
 layer=list
 type=text
-x=272
+x=271
 y=10979
-width=32
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 13
+text=Lvl 34
 colour=0xC8C8C8
 
 [m692]
@@ -22391,21 +22391,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Weaponsmaster
+text=Water Wizard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Weaponsmaster
+option=View drops @lre@Water Wizard
 
 [m692_lvl]
 layer=list
 type=text
-x=270
+x=272
 y=10994
-width=34
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 23
+text=Lvl 13
 colour=0xC8C8C8
 
 [m693]
@@ -22418,10 +22418,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Werewolf
+text=Weaponsmaster
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Werewolf
+option=View drops @lre@Weaponsmaster
 
 [m693_lvl]
 layer=list
@@ -22432,7 +22432,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 93
+text=Lvl 23
 colour=0xC8C8C8
 
 [m694]
@@ -22445,10 +22445,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=White Knight
+text=Werewolf
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@White Knight
+option=View drops @lre@Werewolf
 
 [m694_lvl]
 layer=list
@@ -22459,7 +22459,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 36
+text=Lvl 93
 colour=0xC8C8C8
 
 [m695]
@@ -22486,7 +22486,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 38
+text=Lvl 36
 colour=0xC8C8C8
 
 [m696]
@@ -22513,7 +22513,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 39
+text=Lvl 38
 colour=0xC8C8C8
 
 [m697]
@@ -22540,7 +22540,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 42
+text=Lvl 39
 colour=0xC8C8C8
 
 [m698]
@@ -22553,10 +22553,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=White wolf
+text=White Knight
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@White wolf
+option=View drops @lre@White Knight
 
 [m698_lvl]
 layer=list
@@ -22567,7 +22567,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 25
+text=Lvl 42
 colour=0xC8C8C8
 
 [m699]
@@ -22594,7 +22594,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 38
+text=Lvl 25
 colour=0xC8C8C8
 
 [m700]
@@ -22607,10 +22607,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wild dog
+text=White wolf
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wild dog
+option=View drops @lre@White wolf
 
 [m700_lvl]
 layer=list
@@ -22621,7 +22621,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 63
+text=Lvl 38
 colour=0xC8C8C8
 
 [m701]
@@ -22634,21 +22634,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wingman Skree
+text=Wild dog
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wingman Skree
+option=View drops @lre@Wild dog
 
 [m701_lvl]
 layer=list
 type=text
-x=265
+x=270
 y=11129
-width=39
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 143
+text=Lvl 63
 colour=0xC8C8C8
 
 [m702]
@@ -22661,21 +22661,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Witch
+text=Wingman Skree
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Witch
+option=View drops @lre@Wingman Skree
 
 [m702_lvl]
 layer=list
 type=text
-x=270
+x=265
 y=11144
-width=34
+width=39
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 25
+text=Lvl 143
 colour=0xC8C8C8
 
 [m703]
@@ -22688,21 +22688,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wizard
+text=Witch
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wizard
+option=View drops @lre@Witch
 
 [m703_lvl]
 layer=list
 type=text
-x=277
+x=270
 y=11159
-width=27
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 9
+text=Lvl 25
 colour=0xC8C8C8
 
 [m704]
@@ -22715,21 +22715,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wizard Grayzag
+text=Wizard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wizard Grayzag
+option=View drops @lre@Wizard
 
 [m704_lvl]
 layer=list
 type=text
-x=272
+x=277
 y=11174
-width=32
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 41
+text=Lvl 9
 colour=0xC8C8C8
 
 [m705]
@@ -22742,21 +22742,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wolf
+text=Wizard Grayzag
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wolf
+option=View drops @lre@Wizard Grayzag
 
 [m705_lvl]
 layer=list
 type=text
-x=270
+x=272
 y=11189
-width=34
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 25
+text=Lvl 41
 colour=0xC8C8C8
 
 [m706]
@@ -22783,7 +22783,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 64
+text=Lvl 25
 colour=0xC8C8C8
 
 [m707]
@@ -22796,21 +22796,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wolfman
+text=Wolf
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wolfman
+option=View drops @lre@Wolf
 
 [m707_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=11219
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 88
+text=Lvl 64
 colour=0xC8C8C8
 
 [m708]
@@ -22823,10 +22823,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wolfwoman
+text=Wolfman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wolfwoman
+option=View drops @lre@Wolfman
 
 [m708_lvl]
 layer=list
@@ -22850,21 +22850,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Woman
+text=Wolfwoman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Woman
+option=View drops @lre@Wolfwoman
 
 [m709_lvl]
 layer=list
 type=text
-x=277
+x=269
 y=11249
-width=27
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 2
+text=Lvl 88
 colour=0xC8C8C8
 
 [m710]
@@ -22885,13 +22885,13 @@ option=View drops @lre@Woman
 [m710_lvl]
 layer=list
 type=text
-x=278
+x=277
 y=11264
-width=26
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 3
+text=Lvl 2
 colour=0xC8C8C8
 
 [m711]
@@ -22918,7 +22918,7 @@ width=26
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 4
+text=Lvl 3
 colour=0xC8C8C8
 
 [m712]
@@ -22939,13 +22939,13 @@ option=View drops @lre@Woman
 [m712_lvl]
 layer=list
 type=text
-x=271
+x=278
 y=11294
-width=33
+width=26
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 12
+text=Lvl 4
 colour=0xC8C8C8
 
 [m713]
@@ -22966,13 +22966,13 @@ option=View drops @lre@Woman
 [m713_lvl]
 layer=list
 type=text
-x=272
+x=271
 y=11309
-width=32
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 14
+text=Lvl 12
 colour=0xC8C8C8
 
 [m714]
@@ -22993,13 +22993,13 @@ option=View drops @lre@Woman
 [m714_lvl]
 layer=list
 type=text
-x=270
+x=272
 y=11324
-width=34
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 24
+text=Lvl 14
 colour=0xC8C8C8
 
 [m715]
@@ -23012,48 +23012,48 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Wormbrain
+text=Woman
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Wormbrain
+option=View drops @lre@Woman
 
 [m715_lvl]
 layer=list
 type=text
-x=277
+x=270
 y=11339
-width=27
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 2
+text=Lvl 24
 colour=0xC8C8C8
 
 [m716]
 layer=list
 type=text
 x=12
-y=11382
+y=11354
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Yeti
+text=Wormbrain
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Yeti
+option=View drops @lre@Wormbrain
 
 [m716_lvl]
 layer=list
 type=text
-x=270
-y=11382
-width=34
+x=277
+y=11354
+width=27
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 58
+text=Lvl 2
 colour=0xC8C8C8
 
 [m717]
@@ -23066,21 +23066,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Yrsa
+text=Yeti
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Yrsa
+option=View drops @lre@Yeti
 
 [m717_lvl]
 layer=list
 type=text
-x=279
+x=270
 y=11397
-width=25
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 1
+text=Lvl 58
 colour=0xC8C8C8
 
 [m718]
@@ -23093,48 +23093,48 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Yt-MejKot
+text=Yrsa
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Yt-MejKot
+option=View drops @lre@Yrsa
 
 [m718_lvl]
 layer=list
 type=text
-x=263
+x=279
 y=11412
-width=41
+width=25
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 180
+text=Lvl 1
 colour=0xC8C8C8
 
 [m719]
 layer=list
 type=text
 x=12
-y=11455
+y=11427
 buttontype=normal
 width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zakl'n Gritch
+text=Yt-MejKot
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zakl'n Gritch
+option=View drops @lre@Yt-MejKot
 
 [m719_lvl]
 layer=list
 type=text
-x=264
-y=11455
-width=40
+x=263
+y=11427
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 142
+text=Lvl 180
 colour=0xC8C8C8
 
 [m720]
@@ -23147,21 +23147,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zamorak Wizard
+text=Zakl'n Gritch
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zamorak Wizard
+option=View drops @lre@Zakl'n Gritch
 
 [m720_lvl]
 layer=list
 type=text
-x=270
+x=264
 y=11470
-width=34
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 65
+text=Lvl 142
 colour=0xC8C8C8
 
 [m721]
@@ -23174,21 +23174,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zogre
+text=Zamorak Wizard
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zogre
+option=View drops @lre@Zamorak Wizard
 
 [m721_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=11485
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 44
+text=Lvl 65
 colour=0xC8C8C8
 
 [m722]
@@ -23201,21 +23201,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zombie
+text=Zogre
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zombie
+option=View drops @lre@Zogre
 
 [m722_lvl]
 layer=list
 type=text
-x=272
+x=271
 y=11500
-width=32
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 13
+text=Lvl 44
 colour=0xC8C8C8
 
 [m723]
@@ -23242,7 +23242,7 @@ width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 14
+text=Lvl 13
 colour=0xC8C8C8
 
 [m724]
@@ -23263,13 +23263,13 @@ option=View drops @lre@Zombie
 [m724_lvl]
 layer=list
 type=text
-x=271
+x=272
 y=11530
-width=33
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 18
+text=Lvl 14
 colour=0xC8C8C8
 
 [m725]
@@ -23290,13 +23290,13 @@ option=View drops @lre@Zombie
 [m725_lvl]
 layer=list
 type=text
-x=270
+x=271
 y=11545
-width=34
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 23
+text=Lvl 18
 colour=0xC8C8C8
 
 [m726]
@@ -23323,7 +23323,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 24
+text=Lvl 23
 colour=0xC8C8C8
 
 [m727]
@@ -23350,7 +23350,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 25
+text=Lvl 24
 colour=0xC8C8C8
 
 [m728]
@@ -23371,13 +23371,13 @@ option=View drops @lre@Zombie
 [m728_lvl]
 layer=list
 type=text
-x=269
+x=270
 y=11590
-width=35
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 29
+text=Lvl 25
 colour=0xC8C8C8
 
 [m729]
@@ -23398,13 +23398,13 @@ option=View drops @lre@Zombie
 [m729_lvl]
 layer=list
 type=text
-x=270
+x=269
 y=11605
-width=34
+width=35
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 39
+text=Lvl 29
 colour=0xC8C8C8
 
 [m730]
@@ -23431,7 +23431,7 @@ width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 49
+text=Lvl 39
 colour=0xC8C8C8
 
 [m731]
@@ -23452,13 +23452,13 @@ option=View drops @lre@Zombie
 [m731_lvl]
 layer=list
 type=text
-x=271
+x=270
 y=11635
-width=33
+width=34
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 79
+text=Lvl 49
 colour=0xC8C8C8
 
 [m732]
@@ -23479,13 +23479,13 @@ option=View drops @lre@Zombie
 [m732_lvl]
 layer=list
 type=text
-x=263
+x=271
 y=11650
-width=41
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 120
+text=Lvl 79
 colour=0xC8C8C8
 
 [m733]
@@ -23506,13 +23506,13 @@ option=View drops @lre@Zombie
 [m733_lvl]
 layer=list
 type=text
-x=264
+x=263
 y=11665
-width=40
+width=41
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 159
+text=Lvl 120
 colour=0xC8C8C8
 
 [m734]
@@ -23525,21 +23525,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zombie Pirate
+text=Zombie
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zombie Pirate
+option=View drops @lre@Zombie
 
 [m734_lvl]
 layer=list
 type=text
-x=272
+x=264
 y=11680
-width=32
+width=40
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 57
+text=Lvl 159
 colour=0xC8C8C8
 
 [m735]
@@ -23552,10 +23552,10 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zombie pirate
+text=Zombie Pirate
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zombie pirate
+option=View drops @lre@Zombie Pirate
 
 [m735_lvl]
 layer=list
@@ -23579,21 +23579,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zombie Swab
+text=Zombie pirate
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zombie Swab
+option=View drops @lre@Zombie pirate
 
 [m736_lvl]
 layer=list
 type=text
-x=271
+x=272
 y=11710
-width=33
+width=32
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 55
+text=Lvl 57
 colour=0xC8C8C8
 
 [m737]
@@ -23606,21 +23606,21 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
-text=Zombies Champion
+text=Zombie Swab
 colour=0xFF981F
 overcolour=0xFFFFFF
-option=View drops @lre@Zombies Champion
+option=View drops @lre@Zombie Swab
 
 [m737_lvl]
 layer=list
 type=text
-x=272
+x=271
 y=11725
-width=32
+width=33
 height=15
 font=p12_full
 shadowed=yes
-text=Lvl 51
+text=Lvl 55
 colour=0xC8C8C8
 
 [m738]
@@ -23633,16 +23633,43 @@ width=292
 height=15
 font=p12_full
 shadowed=yes
+text=Zombies Champion
+colour=0xFF981F
+overcolour=0xFFFFFF
+option=View drops @lre@Zombies Champion
+
+[m738_lvl]
+layer=list
+type=text
+x=272
+y=11740
+width=32
+height=15
+font=p12_full
+shadowed=yes
+text=Lvl 51
+colour=0xC8C8C8
+
+[m739]
+layer=list
+type=text
+x=12
+y=11755
+buttontype=normal
+width=292
+height=15
+font=p12_full
+shadowed=yes
 text=Zulrah
 colour=0xFF981F
 overcolour=0xFFFFFF
 option=View drops @lre@Zulrah
 
-[m738_lvl]
+[m739_lvl]
 layer=list
 type=text
 x=264
-y=11740
+y=11755
 width=40
 height=15
 font=p12_full
@@ -23650,11 +23677,11 @@ shadowed=yes
 text=Lvl 725
 colour=0xC8C8C8
 
-[m739]
+[m740]
 layer=list
 type=text
 x=12
-y=11783
+y=11798
 buttontype=normal
 width=292
 height=15
@@ -23665,11 +23692,11 @@ colour=0xFF981F
 overcolour=0xFFFFFF
 option=View drops @lre@'Cuffs'
 
-[m739_lvl]
+[m740_lvl]
 layer=list
 type=text
 x=278
-y=11783
+y=11798
 width=26
 height=15
 font=p12_full

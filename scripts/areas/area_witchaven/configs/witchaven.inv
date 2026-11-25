@@ -1,0 +1,26 @@
+// Ezekial Lovecraft's fishing shop, Witchaven.
+//
+// He arrived from the 474 cache with Talk-to and Shop on him, and an op with nothing behind it is
+// worse than no op: "Nothing interesting happens." is the game telling the player it is broken.
+// The stock is Gerrant's in Port Sarim - the wiki has him selling all normal fishing equipment and
+// buying fish and bait, which is the same shop - but his own inv, so the two tills are separate
+// and a run on one village does not empty the other.
+[witchaven_fishingshop]
+scope=shared
+size=40
+restock=yes
+stackall=yes
+allstock=no
+stock1=net,5,100
+stock2=fishing_rod,5,100
+stock3=fly_fishing_rod,5,100
+stock4=harpoon,2,400
+stock5=lobster_pot,2,400
+stock6=fishing_bait,1500,1
+stock7=feather,1000,1
+stock8=raw_shrimp,0,300
+stock9=raw_sardine,200,1
+stock10=raw_herring,0,900
+stock11=raw_anchovies,0,1200
+stock12=raw_trout,0,1500
+stock13=raw_pike,0,1800

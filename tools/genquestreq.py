@@ -50,6 +50,7 @@ ALIAS = {
     "Mourning's End Part I": "Mourning's Ends Part 1",
     "Mourning's End Part II": "Mourning's Ends Part 2",
     'Rune Mysteries': 'Rune Mysteries Quest',
+    'Sea Slug': 'Sea Slug Quest',
     'Dragon Slayer I': 'Dragon Slayer',
     'Desert Treasure I': 'Desert Treasure',
     "Legends' Quest": 'Legends Quest',

@@ -383,6 +383,9 @@ if (%garden_quest >= ^garden_complete) {
 if (%wanted_main >= ^wanted_complete) {
     $questpoints = add($questpoints, ^wanted_questpoints);
 }
+if (%slugmenace_stage >= ^slugmenace_complete) {
+    $questpoints = add($questpoints, ^slugmenace_questpoints);
+}
 if (%tbwt_main >= ^tbwt_complete) {
     $questpoints = add($questpoints, ^tbwt_questpoints);
 }
@@ -485,6 +488,7 @@ $total = add($total, ^soulbane_questpoints);
 $total = add($total, ^mortton_questpoints);
 $total = add($total, ^garden_questpoints);
 $total = add($total, ^wanted_questpoints);
+$total = add($total, ^slugmenace_questpoints);
 $total = add($total, ^tbwt_questpoints);
 $total = add($total, ^feud_questpoints);
 $total = add($total, ^ratcatch_questpoints);
@@ -696,6 +700,7 @@ if (testbit(%ibanmulti, ^upass_started_bit) = ^true & %upass ! ^upass_complete) 
 ~questlist_row(questlist:mortton, %morttonquest, ^mortton_complete, $send);
 ~questlist_row(questlist:garden, %garden_quest, ^garden_complete, $send);
 ~questlist_row(questlist:wanted, %wanted_main, ^wanted_complete, $send);
+~questlist_row(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete, $send);
 ~questlist_row(questlist:tbwt, %tbwt_main, ^tbwt_complete, $send);
 ~questlist_row(questlist:feud, %feud_var, ^feud_complete, $send);
 ~questlist_row(questlist:ratcatch, %ratcatch_var, ^ratcatch_complete, $send);

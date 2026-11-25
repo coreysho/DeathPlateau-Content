@@ -1,0 +1,292 @@
+// Imported from the rev 474 cache by tools/models/import474.py
+// Models are copied byte-for-byte; 474 uses the same model format the 377 client reads.
+// Everything the cache does not carry is marked TODO below.
+
+[slug_commorb]
+name=Commorb v2
+desc=A Temple Knight communication orb, upgraded.
+model=obj_commorb
+manwear=obj_commorb_manwear,0
+womanwear=obj_commorb_manwear,0
+2dxof=1
+2dyof=-1
+2dzoom=740
+2dxan=160
+2dyan=2028
+iop1=Scan
+iop2=Contact
+iop4=Playback
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_door_transcription]
+name=Door transcription
+desc=The markings copied off the imposing door.
+model=obj_-
+2dxof=1
+2dyof=7
+2dzoom=1040
+2dxan=380
+2dyan=120
+recol1s=32759
+recol1d=15865
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_dead_sea_slug]
+name=Dead sea slug
+desc=A dead sea slug. It is not improving with time.
+model=obj_slug_dead_sea_slug
+2dxof=-8
+2dyof=-82
+2dzoom=595
+2dxan=235
+2dyan=1867
+op3=Take
+cost=0
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_sea_slug_glue]
+name=Sea slug glue
+desc=Rendered from a sea slug. It will hold anything.
+model=obj_slug_sea_slug_glue
+2dxof=9
+2dyof=25
+2dzoom=848
+2dxan=237
+2dyan=48
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_page1]
+name=Page 1
+desc=A page from Brother Maledict's book.
+model=obj_slug_page1
+2dxof=7
+2dyof=22
+2dzoom=1744
+2dxan=304
+2dyan=152
+iop1=Read
+iop2=Shape-Earth
+iop3=Shape-Air
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_page2]
+name=Page 2
+desc=A page from Brother Maledict's book.
+model=obj_slug_page2
+2dzoom=1872
+2dxan=387
+2dyan=1127
+iop1=Read
+iop2=Shape-Fire
+iop3=Shape-Water
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_page3]
+name=Page 3
+desc=A page from Brother Maledict's book, in three pieces.
+model=obj_slug_page3
+2dyof=15
+2dzoom=1957
+2dxan=415
+2dyan=1923
+iop1=Read
+iop2=Shape-Mind
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_fragment1]
+name=Fragment 1
+desc=A third of a page.
+model=obj_slug_fragment1
+2dxof=8
+2dzoom=919
+2dxan=373
+2dyan=63
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_fragment2]
+name=Fragment 2
+desc=A third of a page.
+model=obj_slug_fragment2
+2dxof=1
+2dyof=-9
+2dzoom=595
+2dxan=294
+2dyan=1907
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_fragment3]
+name=Fragment 3
+desc=A third of a page.
+model=obj_slug_fragment3
+2dxof=9
+2dzoom=1049
+2dxan=360
+2dyan=1895
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_blank_air_rune]
+name=Blank air rune
+desc=Essence cut to the shape of air. It has no power yet.
+model=obj_slug_blank_air_rune
+2dxof=-1
+2dzoom=1178
+2dxan=622
+2dyan=3
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_air_rune]
+name=Air rune
+desc=Essence cut to the shape of air, and empowered.
+model=obj_slug_air_rune
+2dxof=-1
+2dzoom=1178
+2dxan=622
+2dyan=3
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_blank_water_rune]
+name=Blank water rune
+desc=Essence cut to the shape of water. It has no power yet.
+model=obj_slug_blank_water_rune
+2dxof=-8
+2dyof=12
+2dzoom=1114
+2dxan=429
+2dyan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_water_rune]
+name=Water rune
+desc=Essence cut to the shape of water, and empowered.
+model=obj_slug_water_rune
+2dxof=-8
+2dyof=12
+2dzoom=1114
+2dxan=429
+2dyan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_blank_earth_rune]
+name=Blank earth rune
+desc=Essence cut to the shape of earth. It has no power yet.
+model=obj_slug_blank_earth_rune
+2dxof=4
+2dyof=-1
+2dzoom=900
+2dxan=498
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_earth_rune]
+name=Earth rune
+desc=Essence cut to the shape of earth, and empowered.
+model=obj_slug_earth_rune
+2dxof=4
+2dyof=-1
+2dzoom=900
+2dxan=498
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_blank_fire_rune]
+name=Blank fire rune
+desc=Essence cut to the shape of fire. It has no power yet.
+model=obj_slug_blank_fire_rune
+2dxof=-1
+2dyof=-4
+2dzoom=919
+2dxan=512
+2dyan=166
+2dzan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_fire_rune]
+name=Fire rune
+desc=Essence cut to the shape of fire, and empowered.
+model=obj_slug_fire_rune
+2dxof=-1
+2dyof=-4
+2dzoom=919
+2dxan=512
+2dyan=166
+2dzan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_blank_mind_rune]
+name=Blank mind rune
+desc=Essence cut to the shape of mind. It has no power yet.
+model=obj_slug_blank_mind_rune
+2dxof=3
+2dyof=1
+2dzoom=1114
+2dxan=553
+2dyan=97
+2dzan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement
+
+[slug_mind_rune]
+name=Mind rune
+desc=Essence cut to the shape of mind, and empowered.
+model=obj_slug_mind_rune
+2dxof=3
+2dyof=1
+2dzoom=1114
+2dxan=553
+2dyan=97
+2dzan=55
+iop5=Destroy
+members=yes
+tradeable=no
+// TODO by hand: weight, category, param= combat bonuses, equip requirement

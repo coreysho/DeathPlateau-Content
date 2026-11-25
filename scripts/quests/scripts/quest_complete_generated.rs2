@@ -369,6 +369,10 @@ switch_component ($quest) {
         if (%sheepherderquest >= ^sheepherder_complete) {
             return(true);
         }
+    case questlist:slugmenace :
+        if (%slugmenace_stage >= ^slugmenace_complete) {
+            return(true);
+        }
     case questlist:soulbane :
         if (%soulbane_prog >= ^soulbane_complete) {
             return(true);

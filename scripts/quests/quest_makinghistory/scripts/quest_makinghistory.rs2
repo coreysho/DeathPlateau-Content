@@ -6,6 +6,13 @@
 
 // =========================================================================== Jorral
 [opnpc1,makinghistory_jorral]
+// The Slug Menace brings him a transcription to read, and the two quests are independent -
+// the quick guide's note about Making History is only that his dialogue offers History as
+// well. It claims the conversation only while that quest is waiting on him;
+// @slugmenace_jorral is in quests/quest_slugmenace/scripts/slugmenace_commorb.rs2.
+if (~slugmenace_jorral_wants = true) {
+    @slugmenace_jorral;
+}
 switch_int (%makinghistory_prog) {
     case ^mh_not_started : @mh_start;
     case ^mh_investigating : @mh_report;

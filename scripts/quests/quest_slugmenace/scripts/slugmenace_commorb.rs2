@@ -1,0 +1,226 @@
+// The Slug Menace - the Commorb v2, and Jorral who reads the door for you.
+//
+// THE ORB IS THE QUEST'S SPINE. Scan reads whatever is in front of you, Contact reaches Savant,
+// and Playback repeats the last thing she said - which is the one of the three that matters,
+// because the quest's instructions arrive by voice and a player who logs out mid-step has no
+// other way to get them back. Wanted!'s orb had the same three verbs and this is the same shape.
+//
+// A SCAN IS NOT A DESTINATION. The orb never says where to go next: it confirms the thing the
+// player is already standing in front of. That is why the Mayor's scan and the door's scan are
+// the only two that do anything, and everything else gets "nothing worth reporting".
+
+// =========================================================================== Scan
+[opheld1,slug_commorb]
+if (%slugmenace_stage = ^slugmenace_not_started) {
+    ~mesbox("The orb lights up and stays blank. There is nothing it has been asked to look for.");
+    return;
+}
+// The Mayor, from anywhere in the room with him. This is the reading Savant asks for in his own
+// conversation and the one Col. O'Niall will not take a report without.
+if (%slugmenace_stage = ^slugmenace_asking & %slugmenace_met_hobb = ^slugmenace_on
+        & %slugmenace_mayor_scanned = ^slugmenace_off) {
+    if (~slugmenace_near_hobb = true) {
+        @slugmenace_scan_hobb;
+    }
+}
+// The door, from beside it.
+if (%slugmenace_stage >= ^slugmenace_shrine & %slugmenace_door_scanned = ^slugmenace_off) {
+    if (~slugmenace_near_doors = true) {
+        @slugmenace_scan_doors;
+    }
+    mes("You need to get closer to the doors for the scan to work.");
+    return;
+}
+mes("The orb hums, finds nothing worth reporting, and goes quiet again.");
+
+// The Mayor is the only npc in the quest worth scanning, and he is in a room of his own, so
+// "is he within a few tiles" is the whole test. npc_findallzone walks the zone the player is in.
+[proc,slugmenace_near_hobb]()(boolean)
+def_int $found = 0;
+npc_findallzone(coord);
+while (npc_findnext = true) {
+    if (npc_category = slugmenace_mayor) {
+        $found = 1;
+    }
+}
+if ($found = 1) {
+    return(true);
+}
+return(false);
+
+// The doors are 6 tiles wide and sit in a wall, so the test is a box rather than a tile.
+[proc,slugmenace_near_doors]()(boolean)
+if (coordz(coord) < ^slugmenace_doors_scan_z0 | coordz(coord) > ^slugmenace_doors_scan_z1) {
+    return(false);
+}
+if (coordx(coord) < ^slugmenace_doors_scan_x0 | coordx(coord) > ^slugmenace_doors_scan_x1) {
+    return(false);
+}
+return(true);
+
+[label,slugmenace_scan_hobb]
+mes("You turn the orb towards the Mayor. It goes cold in your hand.");
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>That is not illness. There is something inside that man and it is using his mouth.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I have seen a reading like that once before, in a report I was not supposed to read. Tell the colonel.");
+// ITS OWN BIT, not the door's. They shared one at first and the Mayor's scan then made the
+// door's read as already done, so the transcription was never handed over at all.
+%slugmenace_mayor_scanned = ^slugmenace_on;
+
+[label,slugmenace_scan_doors]
+// ONE FREE SLOT, because the scan hands over an item. Old School checks this and says so, rather
+// than taking the scan and dropping the transcription.
+if (inv_freespace(inv) = 0) {
+    ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I can copy those glyphs, but you have nowhere to put the copy. Empty a pocket and scan again.");
+    return;
+}
+mes("You hold the orb up to the door. The glyphs crawl.");
+~chatnpc_specific("Savant", wanted_savant, "<p,quiz>I thought so. Those glyphs look similar to some ancient Saradomin runes I studied at the academy.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Hmm. I know a man who can translate them for us. Just be careful - he is not a member of the Knights.");
+inv_add(inv, slug_door_transcription, 1);
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I have added a transcript of the runes into your pack.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>The man you need to see is called Jorral. You can find him at his outpost, north-west of Ardougne.");
+~chatplayer("<p,happy>Fantastic - I'll get right on it.");
+%slugmenace_door_scanned = ^slugmenace_on;
+if (%slugmenace_stage < ^slugmenace_transcribed) {
+    %slugmenace_stage = ^slugmenace_transcribed;
+    ~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+}
+
+// =========================================================================== Contact
+[opheld2,slug_commorb]
+switch_int (%slugmenace_stage) {
+    case ^slugmenace_not_started :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Nothing to report. Sir Tiffy has not given me anything to work on.");
+    case ^slugmenace_briefed :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Col. O'Niall is a retired Knight on the Witchaven dock. Say the phrase, however silly it sounds.");
+    case ^slugmenace_asking :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Hmm. Sounds like Witchaven has some problems at the moment.");
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>The Mayor, the priest and the fisherman. Talk to all three, and scan the Mayor - I want a reading of whatever that is.");
+    case ^slugmenace_shrine :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>The ruin west of the village. There is a wall down there that is not a wall - push it.");
+    case ^slugmenace_transcribed : @slugmenace_contact_doors;
+    case ^slugmenace_translated :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Mother Mallum. Take that name back to the colonel and then to the priest.");
+    case ^slugmenace_pages :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Three pages. The Mayor's desk, Lovecraft's drawer, and whatever the colonel has been sitting on.");
+    case ^slugmenace_runes :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Five runes, five altars. Then the door, and bring something to hit it with.");
+    case ^slugmenace_told :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,sad>Go and see Sir Tiffy. I am not putting what I just heard in a written report.");
+    case default :
+        ~chatnpc_specific("Savant", wanted_savant, "<p,happy>Savant out.");
+}
+
+[label,slugmenace_contact_doors]
+~chatplayer("<p,quiz>What did you think of those doors? Spooky, hey?");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Very. Though I can't shake the feeling that I've seen something like that before.");
+~chatplayer("<p,neutral>They did look really out of place. I wonder who put them there?");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>The answer is probably contained within those strange glyphs.");
+~chatplayer("<p,neutral>I only hope that Jorral can translate them.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>He has a very good track record in translating ancient runes.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Although, to be fair, he does tend to get a bit obsessive at times.");
+~chatplayer("<p,happy>Thanks for the warning, Savant.");
+
+// =========================================================================== Playback
+// The step the player is on, in one line, because the quest's instructions arrive by voice and
+// there is otherwise no way to hear them twice.
+[opheld4,slug_commorb]
+switch_int (%slugmenace_stage) {
+    case ^slugmenace_briefed : ~mesbox("...report to Col. O'Niall in Witchaven. In Falador, the geese fly backwards on Tuesdays...");
+    case ^slugmenace_asking : ~mesbox("...the Mayor, Brother Maledict and Holgart the fisherman. And scan the Mayor...");
+    case ^slugmenace_shrine : ~mesbox("...the old ruin west of the village. Look for a wall that isn't one...");
+    case ^slugmenace_transcribed : ~mesbox("...the man you need to see is called Jorral. His outpost is north-west of Ardougne...");
+    case ^slugmenace_translated : ~mesbox("...Mother Mallum. Take it to the colonel, and then to Brother Maledict...");
+    case ^slugmenace_pages : ~mesbox("...three pages. The Mayor's desk, Lovecraft's drawer, and the colonel...");
+    case ^slugmenace_runes : ~mesbox("...five runes, five altars. Air, water, earth, fire, mind...");
+    case ^slugmenace_told : ~mesbox("...go and see Sir Tiffy...");
+    case default : ~mesbox("The orb replays a long silence and then Savant saying 'is that thing still on?'.");
+}
+
+// =========================================================================== Jorral
+// Making History declares [opnpc1,makinghistory_jorral]; this hooks in ahead of it. Jorral will
+// talk about the transcription whether or not Making History has been started, which is what the
+// quick guide means by its note about that quest - the two are independent.
+[proc,slugmenace_jorral_wants]()(boolean)
+if (%slugmenace_stage ! ^slugmenace_transcribed) {
+    return(false);
+}
+// AND THE TRANSCRIPTION HAS TO BE IN HAND. This hook goes straight into the translation rather
+// than adding an option to Jorral's own list, so claiming him on the stage alone would have shut
+// Making History out of its own quest giver for the length of one errand. A player who left the
+// copy at home gets Jorral's ordinary dialogue, and the orb's Contact is where the reminder is.
+if (inv_total(inv, slug_door_transcription) = 0) {
+    return(false);
+}
+return(true);
+
+[label,slugmenace_jorral]
+~chatplayer("<p,quiz>Excuse me?");
+~chatnpc("<p,quiz>Yes, can I help you?");
+~chatplayer("<p,quiz>I understand that you are something of a historian?");
+~chatnpc("<p,laugh>Hah! I am the foremost historian in the world.");
+~chatplayer("<p,happy>Great. I was wondering if you could translate something for me, please?");
+~chatnpc("<p,neutral>Possibly. I am very busy, you see, and my services don't come cheap.");
+~chatplayer("<p,quiz>Hmm. How much are we talking?");
+~chatnpc("<p,neutral>Well, I am very busy, but I could fit you in sometime next month.");
+~chatplayer("<p,sad>That was a bit longer than I was willing to wait. Can't you fit me in any sooner?");
+~chatnpc("<p,neutral>I'm afraid not. You see, I have this ongoing series of texts that need to be catalogued as soon as possible.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Psst.");
+~chatplayer("<p,quiz>Savant?");
+~chatnpc("<p,quiz>What?");
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>Drat. I was hoping he wouldn't notice.");
+~chatnpc("<p,quiz>Excuse me, but are you talking to your backpack?");
+~chatplayer("<p,neutral>Um, no. Savant, help.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Uh. Tell him that you're working for a wizard who's sending you telepathic instructions.");
+~chatplayer("<p,neutral>I, err, am working for a wizard who is giving me telepathic instructions.");
+~chatnpc("<p,quiz>Riiiight. Okay. What does this, err, voice want you to do?");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>We have a front company who keeps Jorral on retainer.");
+~chatplayer("<p,neutral>We have a...");
+~chatnpc_specific("Savant", wanted_savant, "<p,angry>No! Hang on, I wasn't finished.");
+~chatplayer("<p,sad>Sorry.");
+~chatnpc("<p,quiz>Pardon?");
+~chatplayer("<p,neutral>Not you.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Can I finish now? Anyway - tell him you are working for Petmel Books.");
+~chatplayer("<p,neutral>Apparently I'm working for Petmel Books, and this document is from them.");
+~chatnpc("<p,happy>Oh, right! That explains the mild insanity. No problem; hand over the document and I'll have a look.");
+~chatnpc("<p,quiz>Hmm. Interesting. Very interesting.");
+~chatnpc("<p,neutral>It's an early variation on a script used by the priests of Saradomin a long time ago.");
+~chatplayer("<p,quiz>What does it say?");
+~chatnpc("<p,happy>Look, you can see how the sentence structure and grammar evolved from the...");
+~chatplayer("<p,angry>Yes, yes, I'm sure it's very interesting. But what does it say?");
+~chatnpc("<p,neutral>Hmph. It seems this text pertains to a great battle between the temple of Saradomin and something called the Mahey'ish Medron.");
+~chatplayer("<p,quiz>The Mavis Merton?");
+~chatnpc("<p,neutral>Mahey'ish Medron. I think it's a corruption of an even earlier language, and actually refers to something called Mother Mallum.");
+~chatplayer("<p,quiz>And?");
+~chatnpc("<p,neutral>Well, there isn't a whole lot more. They managed to trap the Mother Mallum behind a mystical prison, where she was to wait for all time.");
+~chatplayer("<p,happy>Well, thanks for that. You have been a great help.");
+~chatnpc("<p,laugh>Any time. I recommend a doctor for those voices, though.");
+~chatplayer("<p,neutral>Uh, right. Goodbye.");
+%slugmenace_stage = ^slugmenace_translated;
+%slugmenace_translated = ^slugmenace_on;
+// The village turns here. The player now knows what is in it, and 474 brings the second form of
+// each villager in across these stages - see slugmenace.varbit for why all three go together.
+%slugmenace_villagers_turned = ^slugmenace_on;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+~slugmenace_jorral_debrief;
+
+// Savant's own history lesson, immediately afterwards. It is the quest's only exposition and it
+// is where "repair the prison" comes from, so it is not optional and not behind a Contact.
+[proc,slugmenace_jorral_debrief]()
+~chatnpc_specific("Savant", wanted_savant, "<p,happy>Come in. This is Savant. That was the final piece of the puzzle I needed.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I've cross-referenced the name Mahey'ish Medron with some other texts and been able to piece together some of the history.");
+~chatplayer("<p,happy>Finally, some solid information.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>It seems this isn't the first time the Temple Knights have run across this Mother Mallum character.");
+~chatplayer("<p,neutral>Now, why doesn't that surprise me?");
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>Centuries ago we discovered that a great evil had taken control of some of the most influential people in the world. That great evil was the Mother Mallum.");
+~chatplayer("<p,quiz>So what happened?");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>It took the few remaining uncorrupted knights all their wit and strength to devise a method of removing sea slug possession.");
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>Once freed, the Knights pursued a great crusade to destroy her. She was too powerful, and the best they could do was trap her inside a mystical prison.");
+~chatplayer("<p,sad>It looks like she's breaking free of that prison.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Right. The best thing we can do is repair or reinforce it before she escapes.");
+~chatplayer("<p,quiz>Did your research reveal how she was trapped in the first place?");
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>No. I hit a brick wall after that. We had a dragon crash land on our headquarters a few years ago, and the fire destroyed a lot of our records.");
+~chatplayer("<p,sad>Drat. That complicates things.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I think the best thing you can do is take a look around Witchaven. Speak to some of the locals and see if there are any clues to be found.");
+~chatplayer("<p,happy>Righty ho. I'll get to it. Thanks, Savant.");
+~chatnpc_specific("Savant", wanted_savant, "<p,happy>Don't mention it. Savant out.");

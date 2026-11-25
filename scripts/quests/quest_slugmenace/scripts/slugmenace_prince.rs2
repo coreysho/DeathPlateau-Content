@@ -1,0 +1,125 @@
+// The Slug Menace - the Imposing Doors open, and what is behind them.
+//
+// THE DOORS DO NOT OPEN, THEY LET YOU THROUGH. A multiloc's state cannot change what blocks, so
+// there is no version of this where the door becomes walkable; and the two sides of it are a wall
+// apart on the collision map whatever the door is doing. So opening them plays the cutscene and
+// puts the player on the far side, which is also exactly what Old School's player experiences.
+//
+// The runes are consumed. All five go into the door and the player does not get them back, which
+// is why the quest's own flags - not the inventory - are what says each one was ever made.
+
+[label,slugmenace_doors_open]
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>Ah, so good of you to finally join us. To be honest, I never thought you'd make it this far.");
+~chatplayer("<p,quiz>Mayor Hobb? What's going on?");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>Oh, come now. Surely you are smart enough to know when you've been played for a fool?");
+~chatplayer("<p,sad>Ahh. The penny drops. You got me to do your dirty work for you.");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,neutral>Indeed. The enchantment placed upon this door by the Temple Knights prevented anyone not working in their interests from opening it.");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,happy>With your superb timing, our plans have been advanced quicker than even we could have anticipated.");
+~chatplayer("<p,angry>And what are they? What are your plans?");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,neutral>You'd really like to know? Well, it seems the least I can do for you after all your hard work.");
+// He is revealed here, so the villager in Witchaven changes from this moment whatever happens
+// next - and a player who dies to the Prince and walks back in finds the village already turned.
+%slugmenace_hobb_turned = ^slugmenace_on;
+inv_del(inv, slug_air_rune, 1);
+inv_del(inv, slug_water_rune, 1);
+inv_del(inv, slug_earth_rune, 1);
+inv_del(inv, slug_fire_rune, 1);
+inv_del(inv, slug_mind_rune, 1);
+mes("You press the five carvings into the door. Each one sinks in and stops glowing.");
+p_telejump(^slugmenace_doors_through);
+~slugmenace_prince_appears;
+
+// The cutscene's last three lines and the summon, shared with the re-entry path: a player who
+// dies and comes back gets these and not the whole confession again, which is how Old School's
+// "Reentering the fight" section reads.
+[proc,slugmenace_prince_appears]()
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,happy>Behold, the beauteous visage of our beloved Prince.");
+~chatplayer("<p,quiz>So this is the Mother Mallum?");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>Mwahahaha... fool. No, this is not our Great Mother, though I sincerely wish you had the chance to gaze upon her.");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,angry>Sadly for you, this will be the last thing you ever see.");
+if_close;
+// A SUMMON CAN MISS. npc_add on an occupied square spawns nothing and the fight step then looks
+// at an empty room, so the Prince goes on a tile measured clear for a 2x2 on a booted world.
+// AND IT MUST NOT HAPPEN TWICE: the quest run found two of him in the room, because a loc step
+// that retries its click runs the whole cutscene again. One is the fight.
+if (~slugmenace_prince_present = true) {
+    return;
+}
+npc_add(^slugmenace_prince_spawn, slug_prince, ^slugmenace_prince_lifetime);
+
+// Walking back in after dying. The doors are open - the runes are gone and the flags remember -
+// so this is the only way back to the fight.
+[label,slugmenace_doors_reenter]
+if (~slugmenace_prince_present = true) {
+    ~mesbox("The doors stand open. Something very large is still in there.");
+    p_telejump(^slugmenace_doors_through);
+    return;
+}
+p_telejump(^slugmenace_doors_through);
+~slugmenace_prince_appears;
+
+[proc,slugmenace_prince_present]()(boolean)
+npc_findallzone(^slugmenace_prince_spawn);
+while (npc_findnext = true) {
+    if (npc_type = slug_prince) {
+        return(true);
+    }
+}
+return(false);
+
+// =========================================================================== his death
+// ai_queue3 is the npc's own death script, as every other boss in this build has it. Giving him
+// one takes him off [ai_queue3,_], which is where ~npc_default_death drops npc_param(death_drop),
+// so those four lines are repeated here in their own order - otherwise adding this trigger would
+// silently take away the one thing he leaves behind.
+[ai_queue3,slug_prince]
+gosub(npc_death);
+def_namedobj $drop = npc_param(death_drop);
+if ($drop ! null & npc_findhero = ^true) {
+    obj_add(npc_coord, $drop, 1, ^lootdrop_duration);
+}
+if (finduid(%npc_aggressive_player) = true) {
+    if_close;
+    queue(slugmenace_prince_beaten, 0, 0);
+}
+
+// The queue runs on the player who actually killed him.
+[queue,slugmenace_prince_beaten]
+if (%slugmenace_stage >= ^slugmenace_told) {
+    return;
+}
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,angry>No! Do you realise what you have done?");
+~chatplayer("<p,neutral>Yes. I have destroyed one of the great evils infesting this world.");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>You fool! Did you think it would be so easy? The Prince will be reborn in all his glory!");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,angry>Now you face the true wrath of the Mother Mallum!");
+npc_add(^slugmenace_mallum_spawn, slug_mother_mallum, ^slugmenace_mallum_lifetime);
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>Calm yourself, my child. We anticipated this eventuality. Go now and prepare the throne for our arrival.");
+~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,neutral>By your command, my queen.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>So then, it is just us. What shall we do with you?");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>Your mind is like an open book to us. Your very essence laid bare before our sight.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>You have great potential. We should destroy you now, lest you interfere with our plans further.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>Or we could take you whole and make you an extension of our will.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>After millennia, this husk is almost spent and requires replacement. Yes, you will make an excellent host.");
+~chatplayer("<p,angry>Never! I'll never serve you. I shall fight until my last breath before giving in.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,laugh>Yes, that's it. Fight. Fight with all your heart.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,laugh>It's always so much sweeter when they resist us.");
+say("Nooooooooo!");
+~chatnpc_specific("Savant", wanted_savant, "<p,quiz>Are you there? We've been having a few technical problems...");
+~chatplayer("<p,sad>Savant! Help me, please, for the love of Saradomin!");
+~chatnpc_specific("Savant", wanted_savant, "<p,angry>By the gods! I'll get you out of there immediately! Initiating emergency teleport.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,neutral>Come with us. Come and be with us for all eternity.");
+say("Savant!");
+~chatnpc_specific("Savant", wanted_savant, "<p,angry>She's blocking my magic! One second, I'll try something else.");
+~chatnpc_specific("Mother Mallum", slug_mother_mallum, "<p,laugh>Ahh, it is useless to resist. Now we shall become as one.");
+~chatplayer("<p,sad>Savant, now would be a good time!");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Right, I think I've got it this time. Just one more second.");
+// THE TELEPORT IS THE END OF THE SCENE, not a line in it. Out of the dungeon and onto the surface
+// at the ruins, which is where a player pulled out of there by a Temple Knight would land.
+p_telejump(^slugmenace_ruins_ladder);
+%slugmenace_stage = ^slugmenace_told;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+~chatnpc_specific("Savant", wanted_savant, "<p,quiz>Are you there? Are you okay? Speak to me!");
+~chatplayer("<p,sad>Phew! Yes, Savant. That was too close for comfort.");
+~chatnpc_specific("Savant", wanted_savant, "<p,happy>Thank Saradomin! I thought we'd lost you there for a moment.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I think you'd better talk to Sir Tiffy about this.");
+~chatplayer("<p,neutral>Indeed. I'll just get my breath back first.");

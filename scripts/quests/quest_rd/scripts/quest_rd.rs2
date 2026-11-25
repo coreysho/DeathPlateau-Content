@@ -38,6 +38,13 @@ if ($option = 2) {
 // Wanted! starts and ends with Tiffy too. It claims the conversation only while it actually has
 // something to say - @wanted_tiffy is in quests/quest_wanted/scripts/wanted_tiffy.rs2 - and the
 // Recruitment Drive branches below are untouched otherwise.
+// The Slug Menace is the latest thing he has to say, so it is asked first: it only wants him
+// once Wanted! is finished, and Wanted!'s own hook below only wants him until then, so the
+// two never both claim the conversation. @slugmenace_tiffy is in
+// quests/quest_slugmenace/scripts/slugmenace_tiffy.rs2.
+if (~slugmenace_tiffy_wants = true) {
+    @slugmenace_tiffy;
+}
 if (~wanted_tiffy_wants = true) {
     @wanted_tiffy;
 }
