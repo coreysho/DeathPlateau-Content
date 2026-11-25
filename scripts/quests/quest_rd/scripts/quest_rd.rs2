@@ -29,6 +29,7 @@ if ($option = 2) {
 ~chatplayer("<p,quiz>Tested how?");
 ~chatnpc("<p,happy>He will explain it far better than I would. And do not take anything with you - he will only make you put it down again.");
 %rd_main = ^rd_started;
+%rd_progress = ^rd_progress_tiffy;
 ~send_quest_progress(questlist:rd, 1, ^recruitmentdrive_complete);
 
 
@@ -94,32 +95,64 @@ if (inv_freespace(inv) < inv_size(inv)) {
 ~chatnpc("<p,happy>Off you go then. Good luck - you will need some.");
 @rd_send_to_next_room;
 
-// Five tests drawn at random from the seven, done by marking the two that were NOT drawn as already
-// finished. That keeps the whole run on the seven completion bits the cache already provides and
-// leaves nothing else to get out of step with them. It also means "passed" and "skipped" look the
-// same, which is why completion is "no room left" rather than a count - see ~rd_rooms_done.
+// Five tests drawn at random from the seven. The draw gets its OWN bits - %rd_room1_drawn and the
+// six beside it, on the rd_draw varp - so the seven completion bits mean completion and nothing
+// else.
+//
+// It used to be done by marking the two that were NOT drawn as already finished. That kept the
+// whole run on bits the cache already provides, and the quest coped with the ambiguity: completion
+// was "no room left" rather than a count, and the journal subtracted the two it knew were there.
+// The QUEST HELPER did not cope. Its step table uses these very varbits as its progress marks, so
+// the instant Sir Tiffy started a run two of them read "done" and the panel jumped - six measured
+// runs landed on five different steps, as deep as 53 of 56, and never on step 1 or 2.
+// DeathPlateau-Bugs#72.
+//
+// Why a fourth varp rather than spare bits here: recruitmentdrive has all 32 bits claimed, and so
+// do both scratch varps. And the draw cannot live in scratch anyway - %rd_room1_initiated is perm,
+// so a run survives a logout, and the draw has to survive with it or the player comes back to all
+// seven tests.
 [proc,rd_begin_run]
 %recruitmentdrive = 0;
 %rd_main = ^rd_started;
 %rd_rooms_tempvar = 0;
 %rd_rooms_tempvar2 = 0;
+%rd_draw = 0;
+%rd_progress = ^rd_progress_tiffy;
 def_int $skip1 = calc(random(7) + 1);
 def_int $skip2 = calc(random(7) + 1);
 while ($skip2 = $skip1) {
     $skip2 = calc(random(7) + 1);
 }
-~rd_skip_room($skip1);
-~rd_skip_room($skip2);
+def_int $room = 1;
+while ($room <= 7) {
+    if ($room ! $skip1 & $room ! $skip2) {
+        ~rd_mark_drawn($room);
+    }
+    $room = calc($room + 1);
+}
 %rd_room1_initiated = 1;
 
-[proc,rd_skip_room](int $room)
-if ($room = 1) { %rd_room1_complete = 1; }
-if ($room = 2) { %rd_room2_complete = 1; }
-if ($room = 3) { %rd_room3_complete = 1; }
-if ($room = 4) { %rd_room4_complete = 1; }
-if ($room = 5) { %rd_room5_complete = 1; }
-if ($room = 6) { %rd_room6_complete = 1; }
-if ($room = 7) { %rd_room7_complete = 1; }
+[proc,rd_mark_drawn](int $room)
+if ($room = 1) { %rd_room1_drawn = 1; }
+if ($room = 2) { %rd_room2_drawn = 1; }
+if ($room = 3) { %rd_room3_drawn = 1; }
+if ($room = 4) { %rd_room4_drawn = 1; }
+if ($room = 5) { %rd_room5_drawn = 1; }
+if ($room = 6) { %rd_room6_drawn = 1; }
+if ($room = 7) { %rd_room7_drawn = 1; }
+
+// In this run AND not yet passed. Both halves answered in one place, because every caller wants the
+// pair and reading either one alone is the bug above: the completion bit alone cannot tell a passed
+// test from one this run never offered, and the drawn bit alone cannot tell you what is left.
+[proc,rd_room_pending](int $room)(boolean)
+if ($room = 1 & %rd_room1_drawn = 1 & %rd_room1_complete = 0) { return(true); }
+if ($room = 2 & %rd_room2_drawn = 1 & %rd_room2_complete = 0) { return(true); }
+if ($room = 3 & %rd_room3_drawn = 1 & %rd_room3_complete = 0) { return(true); }
+if ($room = 4 & %rd_room4_drawn = 1 & %rd_room4_complete = 0) { return(true); }
+if ($room = 5 & %rd_room5_drawn = 1 & %rd_room5_complete = 0) { return(true); }
+if ($room = 6 & %rd_room6_drawn = 1 & %rd_room6_complete = 0) { return(true); }
+if ($room = 7 & %rd_room7_drawn = 1 & %rd_room7_complete = 0) { return(true); }
+return(false);
 
 [proc,rd_run_in_progress]()(boolean)
 if (%rd_room1_initiated = 1) {
@@ -127,51 +160,65 @@ if (%rd_room1_initiated = 1) {
 }
 return(false);
 
-// Every bit that is set, whether the room was passed or never drawn. The two that were skipped are
-// what the journal subtracts to report a score the player would recognise.
+// Tests passed, out of the five drawn. A straight count now that a skipped room carries no
+// completion bit - the journal used to subtract the two it knew were sitting there.
 [proc,rd_rooms_done]()(int)
 def_int $n = 0;
-if (%rd_room1_complete = 1) { $n = calc($n + 1); }
-if (%rd_room2_complete = 1) { $n = calc($n + 1); }
-if (%rd_room3_complete = 1) { $n = calc($n + 1); }
-if (%rd_room4_complete = 1) { $n = calc($n + 1); }
-if (%rd_room5_complete = 1) { $n = calc($n + 1); }
-if (%rd_room6_complete = 1) { $n = calc($n + 1); }
-if (%rd_room7_complete = 1) { $n = calc($n + 1); }
+if (%rd_room1_drawn = 1 & %rd_room1_complete = 1) { $n = calc($n + 1); }
+if (%rd_room2_drawn = 1 & %rd_room2_complete = 1) { $n = calc($n + 1); }
+if (%rd_room3_drawn = 1 & %rd_room3_complete = 1) { $n = calc($n + 1); }
+if (%rd_room4_drawn = 1 & %rd_room4_complete = 1) { $n = calc($n + 1); }
+if (%rd_room5_drawn = 1 & %rd_room5_complete = 1) { $n = calc($n + 1); }
+if (%rd_room6_drawn = 1 & %rd_room6_complete = 1) { $n = calc($n + 1); }
+if (%rd_room7_drawn = 1 & %rd_room7_complete = 1) { $n = calc($n + 1); }
 return($n);
 
-// The next room is simply the lowest-numbered one not yet passed, which means the run has no
-// ordering state of its own to get out of step with the completion bits. %rd_room_order cannot be
-// borrowed for it either - Lady Table's twelve statue shells read that varbit directly.
+// The next room is the lowest-numbered one this run drew and the player has not passed, which
+// means the run still has no ordering state of its own to get out of step with. %rd_room_order
+// cannot be borrowed for it either - Lady Table's twelve statue shells read that varbit directly.
+//
+// %rd_progress - the quest helper's ladder - is written in the seven branches below and in exactly
+// three other places: Sir Amik's handoff sets ^rd_progress_tiffy, ~rd_fail_room puts it back there,
+// and [queue,rd_quest_complete] sets ^rd_progress_done. Nothing else writes it and the quest itself
+// never reads it: "which room am I in" is already answered by the walls around the player. Why one
+// rising number rather than a room index is in quest_rd.constant.
 [label,rd_send_to_next_room]
-if (%rd_room1_complete = 0) {
+if (~rd_room_pending(1) = true) {
+    %rd_progress = ^rd_progress_room1;
     ~rd_enter_room(^rd_room1_arrive);
     return;
 }
-if (%rd_room2_complete = 0) {
+if (~rd_room_pending(2) = true) {
+    %rd_progress = ^rd_progress_room2;
     ~rd_enter_room(^rd_room2_arrive);
     return;
 }
-if (%rd_room3_complete = 0) {
+if (~rd_room_pending(3) = true) {
+    %rd_progress = ^rd_progress_room3;
     ~rd_enter_room(^rd_room3_arrive);
     return;
 }
-if (%rd_room4_complete = 0) {
+if (~rd_room_pending(4) = true) {
+    %rd_progress = ^rd_progress_room4;
     ~rd_enter_room(^rd_room4_arrive);
     return;
 }
-if (%rd_room5_complete = 0) {
+if (~rd_room_pending(5) = true) {
+    %rd_progress = ^rd_progress_room5;
     ~rd_enter_room(^rd_room5_arrive);
     return;
 }
-if (%rd_room6_complete = 0) {
+if (~rd_room_pending(6) = true) {
+    %rd_progress = ^rd_progress_room6;
     ~rd_enter_room(^rd_room6_arrive);
     return;
 }
-if (%rd_room7_complete = 0) {
+if (~rd_room_pending(7) = true) {
+    %rd_progress = ^rd_progress_room7;
     ~rd_enter_room(^rd_room7_arrive);
     return;
 }
+%rd_draw = 0;
 @rd_finish;
 
 [proc,rd_enter_room](coord $where)
@@ -203,6 +250,8 @@ sound_synth(door_open, 1, 0);
 %rd_main = ^rd_started;
 %rd_rooms_tempvar = 0;
 %rd_rooms_tempvar2 = 0;
+%rd_draw = 0;
+%rd_progress = ^rd_progress_tiffy;
 p_telejump(^rd_park);
 sound_synth(teleport_all, 1, 0);
 ~mesbox($why);
@@ -214,6 +263,8 @@ queue(rd_quest_complete, 0, 0);
 [queue,rd_quest_complete]
 %recruitmentdrive = 0;
 %rd_main = ^recruitmentdrive_complete;
+// After %rd_draw = 0, which cleared the drawn bits and the ladder together.
+%rd_progress = ^rd_progress_done;
 p_telejump(^rd_park);
 stat_advance(prayer, ^rd_reward_xp);
 stat_advance(herblore, ^rd_reward_xp);
@@ -306,7 +357,7 @@ if (~rd_run_in_progress = false) {
     ~quest_journal($n, $x);
     return;
 }
-$x = append($x, "|@str@I am part-way through the tests. I have passed <tostring(calc(~rd_rooms_done - 2))>|");
+$x = append($x, "|@str@I am part-way through the tests. I have passed <tostring(~rd_rooms_done)>|");
 $x = append($x, "@str@of the five.|");
 $x = append($x, "|@dbl@If I fail one I start again from the beginning.");
 ~quest_journal($n, $x);
