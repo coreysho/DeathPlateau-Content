@@ -157,3 +157,7 @@
 // under her, so she is given a minute and never seen again.
 ^slugmenace_prince_lifetime = 2000
 ^slugmenace_mallum_lifetime = 100
+
+// How close "near the Mayor" is for the orb's scan. He is pinned beside his desk and the study is
+// small, so this only has to cover the room he is standing in.
+^slugmenace_scan_range = 10

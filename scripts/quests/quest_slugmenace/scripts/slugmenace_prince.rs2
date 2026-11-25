@@ -9,6 +9,23 @@
 // is why the quest's own flags - not the inventory - are what says each one was ever made.
 
 [label,slugmenace_doors_open]
+// THE IRREVERSIBLE PART FIRST. This used to run eight chat boxes and only then consume the
+// runes, open the door and put the player through - so a lobster interrupting anywhere in
+// those eight cost the whole scene, and the doors then wanted the entire speech again. Now
+// the door opens, and Hobb talks to somebody who is already through it. An interruption
+// costs the rest of the speech and nothing else; walking back in replays only the short
+// version the re-entry path already had.
+inv_del(inv, slug_air_rune, 1);
+inv_del(inv, slug_water_rune, 1);
+inv_del(inv, slug_earth_rune, 1);
+inv_del(inv, slug_fire_rune, 1);
+inv_del(inv, slug_mind_rune, 1);
+// He is revealed here, so the villager in Witchaven changes from this moment whatever
+// happens next - and a player who dies to the Prince and walks back in finds the village
+// already turned.
+%slugmenace_hobb_turned = ^slugmenace_on;
+mes("You press the five carvings into the door. Each one sinks in and stops glowing.");
+p_telejump(^slugmenace_doors_through);
 ~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>Ah, so good of you to finally join us. To be honest, I never thought you'd make it this far.");
 ~chatplayer("<p,quiz>Mayor Hobb? What's going on?");
 ~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,laugh>Oh, come now. Surely you are smart enough to know when you've been played for a fool?");
@@ -17,16 +34,6 @@
 ~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,happy>With your superb timing, our plans have been advanced quicker than even we could have anticipated.");
 ~chatplayer("<p,angry>And what are they? What are your plans?");
 ~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,neutral>You'd really like to know? Well, it seems the least I can do for you after all your hard work.");
-// He is revealed here, so the villager in Witchaven changes from this moment whatever happens
-// next - and a player who dies to the Prince and walks back in finds the village already turned.
-%slugmenace_hobb_turned = ^slugmenace_on;
-inv_del(inv, slug_air_rune, 1);
-inv_del(inv, slug_water_rune, 1);
-inv_del(inv, slug_earth_rune, 1);
-inv_del(inv, slug_fire_rune, 1);
-inv_del(inv, slug_mind_rune, 1);
-mes("You press the five carvings into the door. Each one sinks in and stops glowing.");
-p_telejump(^slugmenace_doors_through);
 ~slugmenace_prince_appears;
 
 // The cutscene's last three lines and the summon, shared with the re-entry path: a player who

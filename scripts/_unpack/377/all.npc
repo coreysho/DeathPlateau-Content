@@ -39531,6 +39531,10 @@ strength=30
 defence=40
 huntmode=aggressive_melee
 huntrange=5
+// WANDERRANGE, because it had none and the default let them roam the whole dungeon. The Slug
+// Menace fight is a long cutscene the player cannot move during, so a lobster that wanders into
+// aggro range interrupts it - and with huntrange 5 and no wanderrange, six of them could.
+wanderrange=5
 respawnrate=50
 param=attack_anim,scorpion_attack
 param=defend_anim,scorpion_ready

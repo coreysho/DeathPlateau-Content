@@ -74,9 +74,10 @@ if (~slugmenace_has_orb_carried = false) {
 if (%slugmenace_stage ! ^slugmenace_pages) {
     return(false);
 }
-if (%slugmenace_paste_refused = ^slugmenace_off) {
-    return(false);
-}
+// NOT GATED ON THE SWAMP PASTE ANY MORE. Requiring Savant to have refused the paste first
+// turned an optional beat into a hard gate: a player who never tried it had no way to learn the
+// glue existed, and Bailey simply would not take the slug. Savant volunteers the same instruction
+// when the fragments are handed over, so there is always a way in.
 if (%slugmenace_page3 = ^slugmenace_on) {
     return(false);
 }

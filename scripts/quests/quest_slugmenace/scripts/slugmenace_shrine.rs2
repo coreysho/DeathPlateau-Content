@@ -36,15 +36,19 @@ if (%slugmenace_stage < ^slugmenace_shrine) {
     ~mesbox("You push the wall. It looks a bit odd, but not immediately interesting.");
     return;
 }
-if (%slugmenace_false_wall = ^slugmenace_off) {
-    %slugmenace_false_wall = ^slugmenace_on;
-    ~mesbox("The wall creaks open to reveal a hidden entrance!");
-}
-// THE ORB IS THE TICKET IN. Savant has to see what is through there, and the whole middle of the
-// quest is scans - so without it the player is turned back here rather than three rooms later.
+// THE ORB IS THE TICKET IN, and it is asked for BEFORE the wall opens. Savant has to see what is
+// through there, and the whole middle of the quest is scans - so without it the player is turned
+// back here rather than three rooms later.
 if (~slugmenace_has_orb_carried = false) {
     ~chatplayer("<p,neutral>I'd better carry my CommOrb so that Savant can see what's in there.");
     return;
+}
+// ONE CLICK OPENS IT AND PUTS YOU THROUGH. It used to take two - the first opened the wall and
+// left you standing in front of it - so the quest helper printed "Push Wall." twice in a row and
+// a player who pushed once saw nothing happen at all.
+if (%slugmenace_false_wall = ^slugmenace_off) {
+    %slugmenace_false_wall = ^slugmenace_on;
+    ~mesbox("The wall creaks open to reveal a hidden entrance!");
 }
 p_telejump(^slugmenace_temple_arrive);
 ~mesbox("You squeeze through the gap. The air on the other side is colder and tastes of salt.");
