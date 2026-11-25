@@ -1,0 +1,352 @@
+// The Slug Menace - the people of Witchaven.
+//
+// Mayor Hobb, Brother Maledict, Holgart, Jeb, Ezekial Lovecraft and three villagers. Each one is
+// a multinpc shell on the map (slugmenace.npc), so every handler is declared on BOTH children:
+// an op fires against whichever child the varbit picks, and a trigger on the parent never runs.
+//
+// HOLGART ALREADY HAS A HANDLER. He is Sea Slug's, in
+// areas/area_ardougne_east/scripts/holgart_ardougne.rs2, and a trigger cannot be declared twice -
+// so the Slug Menace branch hooks in ahead of his the same way this quest's Tiffy branch hooks in
+// ahead of Recruitment Drive's. Bailey and Jorral are hooked the same way, in their own files.
+
+// =========================================================================== Mayor Hobb
+[opnpc1,slug_hobb] @slugmenace_hobb;
+[opnpc1,slug_hobb_possessed] @slugmenace_hobb;
+
+[label,slugmenace_hobb]
+if (%slugmenace_stage < ^slugmenace_briefed) {
+    ~chatnpc("<p,happy>Well hello there; welcome to our little village. Pray, stay a while.");
+    return;
+}
+if (%slugmenace_stage >= ^slugmenace_pages) {
+    @slugmenace_hobb_desk_hint;
+}
+if (%slugmenace_met_hobb = ^slugmenace_on) {
+    ~chatnpc("<p,neutral>Hello again.");
+    @slugmenace_hobb_questions;
+}
+~chatnpc("<p,happy>Well hello there; welcome to our little village. Pray, stay a while.");
+~chatplayer("<p,quiz>Good day to you. Would you be the Mayor?");
+~chatnpc("<p,neutral>Indeed. Mayor Eustace Hobb, in fact. Do you like our home?");
+~chatplayer("<p,neutral>It's certainly very quiet.");
+~chatnpc("<p,neutral>Yes. Quiet and undisturbed. Just how we like it.");
+~chatnpc("<p,quiz>Tell me, what brings you to Witchaven?");
+~chatplayer("<p,neutral>I'm here to relax.");
+~chatnpc("<p,neutral>That's good, yes, that's good. Witchaven is a nice quiet village. Very relaxing. Good fishing.");
+~chatplayer("<p,quiz>Are you alright? You seem a little hazy.");
+~chatnpc("<p,neutral>It's nothing. I'm just a little tired at the moment. So much work, so much to do.");
+~chatplayer("<p,quiz>Really? What are you working on?");
+~chatnpc("<p,neutral>To the west, the shrine needs... work. Yes. Work. Things must be made better.");
+~chatplayer("<p,neutral>Well. Um. Yes. Indeed. I'm sure Saradomin would be pleased.");
+~chatnpc("<p,angry>Saradomin... why are you really here?");
+~chatplayer("<p,neutral>Like I said, I'm here to...");
+~chatnpc("<p,quiz>Are you sure that's the only reason you are here?");
+~chatplayer("<p,neutral>Well, I'm also here to visit a friend. Jake O'Niall.");
+~chatnpc("<p,happy>Ahh. Then this all makes sense. Yes, this is very good.");
+~chatplayer("<p,quiz>Err, how did you know my name?");
+~chatnpc("<p,neutral>You told me when you came in.");
+~chatplayer("<p,quiz>No. No, I didn't.");
+~chatnpc("<p,neutral>It does not matter. One of my... villagers must have mentioned that you are here.");
+%slugmenace_met_hobb = ^slugmenace_on;
+// SAVANT PROMPTS THE SCAN HERE, and this is the only place in the quest where the orb is used on
+// a person. Old School puts the prompt in the Mayor's conversation and then waits - the scan is
+// the player's to make, and ~slugmenace_asked_everyone will not let the report happen without it.
+~mesbox("Your commorb grows warm in your pocket.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Hold on. Whatever that is, it is not a man with food poisoning. Scan him - I want a reading.");
+@slugmenace_hobb_questions;
+
+[label,slugmenace_hobb_questions]
+~chatnpc("<p,quiz>Is there anything else you need to know?");
+def_int $choice = 1;
+while ($choice ! 4) {
+    $choice = ~p_choice4("What can you tell me about Witchaven?", 1,
+                         "What improvements are you making to the shrine?", 2,
+                         "Do you know you look very ill?", 3,
+                         "Nothing at the moment, thanks.", 4);
+    switch_int ($choice) {
+        case 1 : ~slugmenace_hobb_witchaven;
+        case 2 : ~slugmenace_hobb_shrine;
+        case 3 : ~slugmenace_hobb_ill;
+        case 4 :
+            ~chatplayer("<p,neutral>Nothing at the moment, thanks.");
+            ~chatnpc("<p,neutral>Then please feel free to stay in our village a while longer. Farewell.");
+            return;
+    }
+    ~chatnpc("<p,quiz>Is there anything else you need to know?");
+}
+
+[proc,slugmenace_hobb_witchaven]()
+~chatplayer("<p,quiz>What can you tell me about Witchaven?");
+~chatnpc("<p,sad>The land has seen much sorrow. Much loss.");
+~chatplayer("<p,quiz>Are you talking about the Fishing Platform?");
+~chatnpc("<p,neutral>Fishing Platform? Oh yes, that. No.");
+~chatnpc("<p,neutral>The platform heralds a new beginning for Witchaven, undreamed of by those who built it.");
+~chatplayer("<p,quiz>I thought it took away all the trade?");
+~chatnpc("<p,neutral>This is true. But it has brought us so much more in return. So much more.");
+~chatplayer("<p,quiz>Hmm. And I thought the village hated the Fishing Platform.");
+~chatnpc("<p,neutral>It was... a necessary step.");
+
+[proc,slugmenace_hobb_shrine]()
+~chatplayer("<p,quiz>What improvements are you making to the shrine?");
+~chatnpc("<p,happy>Ahh, the shrine. The future. Our destiny, our heritage.");
+~chatplayer("<p,quiz>How so?");
+~chatnpc("<p,neutral>That which the shrine holds can unlock a new path for all the village of Witchaven. And in time the whole of this world.");
+~chatplayer("<p,quiz>The whole world? I thought it was just some old shrine to Saradomin.");
+~chatnpc("<p,neutral>The history of that shrine should not be overlooked. It is ancient beyond your knowledge, and much that shaped our history is contained within its walls.");
+~chatplayer("<p,neutral>Sounds like a very interesting place. I may have to take a look.");
+~chatnpc("<p,neutral>There is much to be done before it is opened.");
+~chatplayer("<p,quiz>So it's not completed yet?");
+~chatnpc("<p,neutral>When you are ready, it may be that you will be unable to keep yourself away.");
+~chatplayer("<p,neutral>You know, you really are a strange person.");
+
+[proc,slugmenace_hobb_ill]()
+~chatplayer("<p,quiz>Do you know you look very ill?");
+~chatnpc("<p,neutral>Ill? No. Merely tired.");
+~chatplayer("<p,neutral>But you've turned a slightly sickly colour.");
+~chatnpc("<p,neutral>A touch of food poisoning, perhaps. This has been known to turn the face and give the impression of severe illness.");
+~chatplayer("<p,neutral>I've seen food poisoning. People normally don't look like... that.");
+~chatnpc("<p,neutral>Time is all that is needed. Yes. Time to... get better.");
+~chatplayer("<p,neutral>Well, I hope you get better soon.");
+~chatnpc("<p,neutral>Soon, all will be well again. Have no fear.");
+
+[label,slugmenace_hobb_desk_hint]
+if (%slugmenace_page1 = ^slugmenace_on) {
+    ~chatnpc("<p,angry>You have been in my study.");
+    ~chatplayer("<p,neutral>You have a lovely desk.");
+    ~chatnpc("<p,angry>Leave.");
+    return;
+}
+~chatnpc("<p,neutral>Hello again. Is there anything else you need to know?");
+~chatplayer("<p,quiz>Brother Maledict says a page of the shrine's record was lent to this house and never came back.");
+~chatnpc("<p,neutral>I keep no records. The desk in my study is my own business and so is what is in it.");
+~chatplayer("<p,neutral>Of course. Thank you, Mayor.");
+
+// =========================================================================== Brother Maledict
+[opnpc1,slug_maledict] @slugmenace_maledict;
+[opnpc1,slug_maledict_possessed] @slugmenace_maledict;
+
+[label,slugmenace_maledict]
+if (%slugmenace_stage < ^slugmenace_briefed) {
+    ~chatnpc("<p,happy>The blessings of Saradomin be with you, child.");
+    return;
+}
+if (%slugmenace_stage >= ^slugmenace_pages) {
+    @slugmenace_maledict_book;
+}
+if (%slugmenace_met_maledict = ^slugmenace_on) {
+    ~chatplayer("<p,happy>Good day to you, Brother Maledict.");
+    ~chatnpc("<p,happy>And a good day to you again. How can I help?");
+    @slugmenace_maledict_questions;
+}
+~chatplayer("<p,happy>Good day to you, sir.");
+~chatnpc("<p,happy>And a good day to you, my child. I am Brother Maledict, at your service.");
+~chatplayer("<p,quiz>How are you?");
+~chatnpc("<p,sad>Well, to be perfectly honest with you, I am a little concerned.");
+%slugmenace_met_maledict = ^slugmenace_on;
+@slugmenace_maledict_questions;
+
+[label,slugmenace_maledict_questions]
+def_int $choice = 1;
+while ($choice ! 4) {
+    $choice = ~p_choice4("What's worrying you?", 1,
+                         "What can you tell me about the shrine?", 2,
+                         "Tell me about the people of Witchaven.", 3,
+                         "That's enough for now.", 4);
+    switch_int ($choice) {
+        case 1 : ~slugmenace_maledict_worry;
+        case 2 : ~slugmenace_maledict_shrine;
+        case 3 : ~slugmenace_maledict_people;
+        case 4 :
+            ~chatplayer("<p,neutral>That's enough for now.");
+            ~chatnpc("<p,happy>Peace be with you, child.");
+            return;
+    }
+    ~chatnpc("<p,quiz>Anything else I can help you with?");
+}
+
+[proc,slugmenace_maledict_worry]()
+~chatplayer("<p,quiz>What's worrying you?");
+~chatnpc("<p,sad>My flock. They still come when I ring the bell, and there is nobody behind their eyes when they get here.");
+~chatnpc("<p,sad>I have buried people in this village. I have married them. I know what they look like when they are listening, and they are not listening.");
+~chatplayer("<p,quiz>All of them?");
+~chatnpc("<p,neutral>Not the Mayor. The Mayor has never been more awake in his life, and that frightens me more than the rest of it together.");
+
+[proc,slugmenace_maledict_shrine]()
+~chatplayer("<p,quiz>What can you tell me about the shrine?");
+~chatnpc("<p,happy>Ah yes, one of the wonders of Witchaven. That shrine has stood since before Witchaven was founded.");
+~chatplayer("<p,quiz>Now that is old.");
+~chatnpc("<p,neutral>Over one hundred and fifty years, in fact.");
+~chatnpc("<p,neutral>The role I now fulfil was originally given to one of the Temple Guardians. In time it was delegated to one of the ordained, such as myself.");
+~chatnpc("<p,sad>The shrine was abandoned when the village came into being. Since then it has fallen into disrepair, and other less savoury elements have moved in.");
+~chatplayer("<p,happy>You must be pleased that the Mayor is renovating it.");
+~chatnpc("<p,neutral>Well, yes. It came as something of a pleasant shock. I only hope he will let me visit it soon.");
+~chatnpc("<p,sad>He wants me to wait until it is ready to unveil.");
+
+[proc,slugmenace_maledict_people]()
+~chatplayer("<p,quiz>Tell me about the people of Witchaven.");
+~chatnpc("<p,happy>Ah, the people of Witchaven are the salt of the earth. Hardworking and very generous. Well. Usually.");
+~chatplayer("<p,quiz>Not any more?");
+~chatnpc("<p,sad>Oh, most of them certainly. It's just that something has changed over the past few weeks.");
+~chatnpc("<p,neutral>They used to be very rigorous in attending my services. Now they seem almost apathetic. They wander the village in a listless state.");
+~chatnpc("<p,neutral>Everyone except the Mayor. Since the platform opened he was a man beset by worries, and now he has found a new drive and energy.");
+~chatnpc("<p,sad>Ordinarily I would welcome that, especially directed at the shrine. I am not sure. Something about him has me worried.");
+~chatplayer("<p,neutral>Perhaps he thinks the shrine could bring new interest to the village?");
+~chatnpc("<p,neutral>Perhaps. Maybe I am being a little paranoid. I'll give it some thought.");
+
+// The book, and the cutscene where he is taken. Old School turns him here - 474's stage 8 - and
+// the quest needs him turned before he can be asked anything again, so the flag is set in the
+// same breath as the pages are named.
+[label,slugmenace_maledict_book]
+if (%slugmenace_maledict_turned = ^slugmenace_on) {
+    if (%slugmenace_page1 = ^slugmenace_on & %slugmenace_page2 = ^slugmenace_on
+            & %slugmenace_page3 = ^slugmenace_on) {
+        ~chatnpc("<p,neutral>You have them all. Read them, and do not come back here.");
+        return;
+    }
+    ~chatnpc("<p,neutral>The desk. The fishmonger. The colonel. Go.");
+    return;
+}
+~chatplayer("<p,sad>Brother. The door under that shrine has a name written on it, and the name is Mother Mallum.");
+~chatnpc("<p,sad>...Say it again.");
+~chatplayer("<p,neutral>Mother Mallum.");
+~chatnpc("<p,sad>Then the record was not a legend. Come. There is a book in the vestry that has never left this building.");
+~chatnpc("<p,neutral>It is the shrine's own account, kept by the Guardians. It is also incomplete. Three pages were lent out over the years and none came back.");
+~chatplayer("<p,quiz>Lent to whom?");
+~chatnpc("<p,neutral>One to the mayor's house, for the town record. One to Ezekial Lovecraft, who collects anything with writing on it.");
+~chatnpc("<p,sad>And one to a fire, I had thought. Ask the colonel - he was here when the vestry burned.");
+~mesbox("Brother Maledict stops in the middle of the aisle. His face goes slack, and then it goes wrong, and when he turns round he is not looking at you.");
+~chatnpc("<p,angry>There is nothing in that book for you.");
+%slugmenace_maledict_turned = ^slugmenace_on;
+~chatnpc_specific("Savant", wanted_savant, "<p,sad>I got that. Whatever is in the Mayor is in the priest now too. Get those pages before it reaches anyone else.");
+
+// =========================================================================== Holgart
+// Sea Slug declares [opnpc1,holgartland]; this hooks in ahead of it.
+[proc,slugmenace_holgart_wants]()(boolean)
+if (%slugmenace_stage ! ^slugmenace_asking) {
+    return(false);
+}
+if (%slugmenace_met_holgart = ^slugmenace_on) {
+    return(false);
+}
+return(true);
+
+[label,slugmenace_holgart]
+~chatplayer("<p,happy>Hello again, Holgart.");
+~chatnpc("<p,happy>Well, hello again m'hearty. How're yer fare?");
+~chatplayer("<p,quiz>Busy as always. Is everything okay?");
+~chatnpc("<p,sad>'Fraid not. I've been washed up and left to dry.");
+~chatplayer("<p,quiz>Pardon?");
+~chatnpc("<p,sad>Scuppered I am. Keelhauled and bottomed out.");
+~chatplayer("<p,quiz>What?");
+~chatnpc("<p,sad>I'm destitute. I can sail no more.");
+~chatplayer("<p,sad>Oh my, that's terrible! What happened?");
+~chatnpc("<p,angry>About two weeks ago I was hauled up in front of the Mayor and he tells me I've broken his new Articles of Sailing.");
+~chatnpc("<p,angry>He tells me that under his new laws my boat is forfeit.");
+~chatplayer("<p,angry>He took your boat?");
+~chatnpc("<p,sad>Aye. The Mayor has given it to Jeb Wormwood. He's running the boat to the Fishing Platform now.");
+~chatnpc("<p,neutral>Speaking of which - since you were last out there it's got a mite bit stranger. You really should take a look.");
+~chatplayer("<p,neutral>I'll do that, Holgart. I hope you get your boat back soon.");
+~chatnpc("<p,sad>Aye. Fare thee well.");
+%slugmenace_met_holgart = ^slugmenace_on;
+
+// =========================================================================== Jeb Wormwood
+[opnpc1,slug_jeb] @slugmenace_jeb;
+[opnpc1,slug_jeb_possessed] @slugmenace_jeb;
+
+[label,slugmenace_jeb]
+if (%slugmenace_jeb_turned = ^slugmenace_off) {
+    ~chatnpc("<p,angry>You are not part of us. Leave us alone.");
+    return;
+}
+~chatplayer("<p,quiz>I understand you can take me to the Fishing Platform.");
+~chatnpc("<p,neutral>Yes, we can do that.");
+if (~p_choice2("Will you take me, please?", 1, "Not just now.", 2) = 2) {
+    ~chatplayer("<p,neutral>Not just now.");
+    ~chatnpc("<p,neutral>Then stay, if that is your wish.");
+    return;
+}
+~chatplayer("<p,neutral>Will you take me, please?");
+~chatnpc("<p,neutral>Board the boat and we shall depart.");
+// Sea Slug's own destination - the platform is the platform, and keeping one constant for it
+// means a change to the landing moves both quests at once.
+p_telejump(^seaslug_platform_coord);
+~mesbox("You arrive at the Fishing Platform.");
+
+// And at the platform end of it. His own shell there, so neither side needs to ask where the
+// player is standing - and Holgart keeps his own handler on the platform untouched, which matters,
+// because Sea Slug and Kennith's rescue both run through it.
+[opnpc1,witchaven_jeb_platform] @slugmenace_jeb_platform;
+
+[label,slugmenace_jeb_platform]
+~chatplayer("<p,happy>Hey, Jeb.");
+~chatnpc("<p,neutral>Business here is complete. Do you wish to return to the dry land?");
+if (~p_choice2("Okay, let's go back.", 1, "No, I'm going to stay a while.", 2) = 2) {
+    ~chatplayer("<p,neutral>No, I'm going to stay a while.");
+    ~chatnpc("<p,neutral>Then stay, if that is your wish.");
+    return;
+}
+~chatplayer("<p,neutral>Okay, let's go back.");
+~chatnpc("<p,neutral>Then board the rowing boat.");
+p_telejump(^seaslug_shore_coord);
+~mesbox("The boat arrives at Witchaven.");
+
+// =========================================================================== Ezekial Lovecraft
+// He never changes form and belongs to the village, not the quest - but the page is the quest's,
+// so his handler lives here.
+[opnpc1,witchaven_lovecraft]
+if (%slugmenace_stage >= ^slugmenace_pages & %slugmenace_page2 = ^slugmenace_off) {
+    @slugmenace_lovecraft_page;
+}
+~chatnpc("<p,happy>Fish, bait, rods, nets. If it goes in the water or comes out of it, I have it.");
+if (~p_choice2("Let's see what you've got then.", 1, "No, thank you.", 2) = 2) {
+    ~chatplayer("<p,neutral>No, thank you.");
+    return;
+}
+~chatplayer("<p,neutral>Let's see what you've got then.");
+~openshop_activenpc;
+
+[label,slugmenace_lovecraft_page]
+~chatplayer("<p,quiz>Brother Maledict says he lent you a page out of the shrine's record.");
+~chatnpc("<p,happy>He did, and I never gave it back, and I shall tell you exactly why: nobody ever asked.");
+~chatnpc("<p,neutral>Writing is writing. I keep all of it. Bills of lading, bait prices, a page of somebody's temple - it all goes in the same drawer.");
+// ONE FREE SLOT, as Old School wants. inv_add without the check drops the page on the floor and
+// the next thing the player sees is a quest that cannot be finished.
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>You've nowhere to put it, though. Shift something.");
+    return;
+}
+~chatnpc("<p,happy>Here. Take it. It's no good to me - I can't read a word of it.");
+inv_add(inv, slug_page2, 1);
+%slugmenace_page2 = ^slugmenace_on;
+~objbox(slug_page2, "Lovecraft digs through a drawer of damp paper and pulls out a page covered in writing that is not any alphabet you know.", 250, 0, 0);
+
+// =========================================================================== the villagers
+[opnpc1,slug_villager_man] @slugmenace_villager;
+[opnpc1,slug_villager_woman] @slugmenace_villager;
+[opnpc1,slug_villager_old] @slugmenace_villager;
+[opnpc1,slug_villager_man_possessed] @slugmenace_villager_turned;
+[opnpc1,slug_villager_woman_possessed] @slugmenace_villager_turned;
+[opnpc1,slug_villager_old_possessed] @slugmenace_villager_turned;
+
+[label,slugmenace_villager]
+switch_int (random(3)) {
+    case 0 :
+        ~chatnpc("<p,neutral>Morning. Or afternoon. One of those.");
+        ~chatplayer("<p,quiz>Are you alright?");
+        ~chatnpc("<p,neutral>Tired. Everyone's tired. It's the sea air.");
+    case 1 :
+        ~chatnpc("<p,sad>I woke up on the beach again. Third time this month.");
+        ~chatplayer("<p,quiz>Doesn't that worry you?");
+        ~chatnpc("<p,neutral>Should it?");
+    case 2 :
+        ~chatnpc("<p,happy>Lovely village, this. Very quiet.");
+        ~chatplayer("<p,quiz>Where is everybody?");
+        ~chatnpc("<p,neutral>At the shrine, I expect. The Mayor asks and we go.");
+}
+
+[label,slugmenace_villager_turned]
+switch_int (random(3)) {
+    case 0 : ~chatnpc("<p,angry>We know what you are.");
+    case 1 : ~chatnpc("<p,angry>You should not have come back down here.");
+    case 2 : ~chatnpc("<p,angry>Mother is waiting.");
+}

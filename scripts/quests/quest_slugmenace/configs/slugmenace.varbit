@@ -4,7 +4,7 @@
 //
 // 474's own numbers are quoted against each so the next person can check them against the cache.
 
-// The quest's stage. 0 not started, 70 complete. The ladder is quest_slugmenace.constant's.
+// The quest's stage. 0 not started, 90 complete. The ladder is quest_slugmenace.constant's.
 // 474's varbit 2610.
 [slugmenace_stage]
 basevar=slugmenace
@@ -100,3 +100,39 @@ endbit=13
 basevar=slugmenace_bits
 startbit=14
 endbit=14
+
+// ---------------------------------------------------------------- who has turned
+// WHY THESE ARE NOT THE STAGE. 474 keys every one of these npcs on the stage varbit itself, with
+// a multinpc table that lists a child for each of its 256 values. That is a client-era table and
+// it cannot be written out as config: six npcs would be five hundred lines of `multinpc=N,...`.
+// One bit each, set by the quest at the stage 474 changes them at, is the same behaviour in two
+// lines - and it says in the config which npc changes rather than leaving it implied by a number.
+//
+// 474's own transitions, for the record: Jeb at its stage 2, Maledict at 8, O'Niall at 9, Hobb at
+// 12, and villagers appearing at 1, 5 and 9. This build turns all three villagers together, at
+// the point the player learns what is happening - Jorral's translation - because the quest has
+// three villagers rather than six and staggering three of them reads as nothing at all.
+[slugmenace_villagers_turned]
+basevar=slugmenace_bits
+startbit=15
+endbit=15
+
+[slugmenace_jeb_turned]
+basevar=slugmenace_bits
+startbit=16
+endbit=16
+
+[slugmenace_maledict_turned]
+basevar=slugmenace_bits
+startbit=17
+endbit=17
+
+[slugmenace_oniall_turned]
+basevar=slugmenace_bits
+startbit=18
+endbit=18
+
+[slugmenace_hobb_turned]
+basevar=slugmenace_bits
+startbit=19
+endbit=19

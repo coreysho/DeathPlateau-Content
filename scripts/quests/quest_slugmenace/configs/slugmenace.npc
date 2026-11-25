@@ -480,3 +480,55 @@ param=damagetype,^crush_style
 param=attack_anim,slug_prince_attack
 param=defend_anim,slug_prince_block
 param=death_anim,slug_prince_death
+
+// =========================================================================== the shells
+// EVERY VILLAGER HAS TWO FORMS and the quest swaps them as the player works out what is wrong.
+// These are what the map spawns: an op-less, model-less parent whose multivar picks the form. The
+// bits are set by the quest scripts at the stages 474 changes each npc at - see slugmenace.varbit
+// for why they are bits of their own rather than the stage varbit 474 keys them on.
+//
+// A shell carries no wanderrange, so they keep the default and drift as any villager does.
+// O'Niall's does not matter - neither of his forms has a walk.
+
+[witchaven_oniall]
+multivar=slugmenace_oniall_turned
+multinpc=0,slug_oniall
+multinpc=1,slug_oniall_possessed
+
+[witchaven_hobb]
+multivar=slugmenace_hobb_turned
+multinpc=0,slug_hobb
+multinpc=1,slug_hobb_possessed
+
+[witchaven_maledict]
+multivar=slugmenace_maledict_turned
+multinpc=0,slug_maledict
+multinpc=1,slug_maledict_possessed
+
+[witchaven_jeb]
+multivar=slugmenace_jeb_turned
+multinpc=0,slug_jeb
+multinpc=1,slug_jeb_possessed
+
+[witchaven_villager_man]
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_man
+multinpc=1,slug_villager_man_possessed
+
+[witchaven_villager_woman]
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_woman
+multinpc=1,slug_villager_woman_possessed
+
+[witchaven_villager_old]
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_old
+multinpc=1,slug_villager_old_possessed
+
+// Jeb sails the boat, so he stands at both ends of it. Two shells over the same two children
+// rather than one shell and a coordinate test in the handler: which side of the water the player
+// is on is the map's business, not a script's.
+[witchaven_jeb_platform]
+multivar=slugmenace_jeb_turned
+multinpc=0,slug_jeb
+multinpc=1,slug_jeb_possessed

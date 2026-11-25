@@ -890,6 +890,21 @@ table=quest_requirement
 data=quest,questlist:priest
 data=name,The Restless Ghost
 
+// The Slug Menace
+[quest_req_slugmenace]
+table=quest_requirement
+data=quest,questlist:slugmenace
+data=name,The Slug Menace
+data=skills,crafting,30
+data=skills,runecraft,30
+data=skills,slayer,30
+data=skills,thieving,30
+data=startskills,runecraft,30
+data=startskills,slayer,30
+data=quests,questlist:wanted,Wanted!
+data=quests,questlist:seaslug,Sea Slug Quest
+data=other,You must have the Commorb in your inventory to start the quest.
+
 // The Tourist Trap
 [quest_req_desertrescue]
 table=quest_requirement
