@@ -1,0 +1,11 @@
+// What a searched piece of furniture is offering, one slot per item, in the order its list gives.
+//
+// A PICKER, NOT A STORE. Every wiki page for these pieces says the contents are unlimited, so this
+// holds one of each for the client to draw an icon from and nothing is ever taken out of it: a
+// Take click adds to the player's own inv and leaves this alone. ~poh_search_open fills it from
+// the piece's list and [if_close] empties it again.
+//
+// scope is temp - the default - because it is not the player's, it is what they are looking at.
+// See DeathPlateau-Bugs#93 and tools/genpohsearch.py.
+[poh_search_items]
+size=^poh_search_slots

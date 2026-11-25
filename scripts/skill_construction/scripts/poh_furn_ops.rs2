@@ -135,44 +135,34 @@ mes($mes);
 // =========================================================================== the triggers
 
 [oploc1,poh_larder_1]
-mes("You search the larder.");
-mes("There is food in it, but nothing you want right now.");
+~poh_search_open(0, "Wooden larder", "A larder, and it never runs out.");
 
 [oploc1,poh_larder_2]
-mes("You search the larder.");
-mes("There is food in it, but nothing you want right now.");
+~poh_search_open(1, "Oak larder", "A larder, and it never runs out.");
 
 [oploc1,poh_larder_3]
-mes("You search the larder.");
-mes("There is food in it, but nothing you want right now.");
+~poh_search_open(2, "Teak larder", "A larder, and it never runs out.");
 
 [oploc1,poh_kitchen_shelves_1]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(3, "Wooden shelves", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_2]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(4, "Oak shelves 1", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_3]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(5, "Oak shelves 2", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_4]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(6, "Teak shelves 1", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_5]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(7, "Teak shelves 2", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_6]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(8, "Mahogany shelves 1", "Crockery, and there is always more of it.");
 
 [oploc1,poh_kitchen_shelves_7]
-mes("You search the shelves.");
-mes("There is nothing on them.");
+~poh_search_open(9, "Mahogany shelves 2", "Crockery, and there is always more of it.");
 
 [oploc1,poh_diningchairs_1]
 ~poh_furn_sit(human_sitting_chair, "You sit down on the bench.");
@@ -332,24 +322,19 @@ anim(human_pickupfloor, 0);
 mes("You look at yourself. Your reflection looks back, unimpressed.");
 
 [oploc1,loc_13699]
-mes("You search the rack.");
-mes("The tools are all where you left them.");
+~poh_search_open(10, "Wooden tools 1", "The tools are all where you left them.");
 
 [oploc1,loc_13700]
-mes("You search the rack.");
-mes("The tools are all where you left them.");
+~poh_search_open(11, "Wooden tools 2", "The tools are all where you left them.");
 
 [oploc1,loc_13701]
-mes("You search the rack.");
-mes("The tools are all where you left them.");
+~poh_search_open(12, "Oak tools", "The tools are all where you left them.");
 
 [oploc1,loc_13702]
-mes("You search the rack.");
-mes("The tools are all where you left them.");
+~poh_search_open(13, "Teak tools", "The tools are all where you left them.");
 
 [oploc1,loc_13703]
-mes("You search the rack.");
-mes("The tools are all where you left them.");
+~poh_search_open(14, "Mahogany tools", "The tools are all where you left them.");
 
 [oploc1,poh_altar_saradomin_1]
 @pray_at_altar(stat_base(prayer));
