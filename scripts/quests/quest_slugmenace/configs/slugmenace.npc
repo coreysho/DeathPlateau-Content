@@ -441,7 +441,7 @@ recol6d=24235
 [slug_mother_mallum]
 // rev 474 npc 4889
 name=Mother Mallum
-desc=Mother Mallum.
+desc=An unspeakable horror from the depths of time.
 model1=npc_slug_mother_mallum_1
 model2=npc_slug_mother_mallum_2
 model3=npc_slug_mother_mallum_3
@@ -456,36 +456,27 @@ resizev=120
 [slug_prince]
 // rev 474 npc 4890
 name=Slug Prince
-desc=Slug Prince.
 model1=npc_slug_prince_1
 size=2
 readyanim=slug_prince_ready
 walkanim=slug_prince_walk
 op2=Attack
 vislevel=62
-
-[slug_hemligssen]
-// rev 474 npc 5520
-name=Slug Hemligssen
-desc=Slug Hemligssen.
-model1=npc_slug_hemligssen_1
-model2=npc_slug_jeb_2
-model3=npc_slug_hemligssen_3
-model4=npc_slug_hemligssen_4
-model5=npc_slug_hemligssen_5
-model6=npc_slug_hemligssen_6
-model7=npc_slug_hemligssen_7
-model8=npc_slug_hemligssen_8
-head1=npc_slug_hemligssen_head1
-head2=npc_slug_hemligssen_head2
-head3=npc_slug_hemligssen_head3
-size=1
-readyanim=human_ready
-walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
-op1=Talk-to
-recol1s=7364
-recol1d=31710
-recol2s=6273
-recol2d=31202
-recol3s=25190
-recol3d=20049
+desc=A child of aquatic evil.
+hitpoints=70
+attack=50
+strength=50
+defence=50
+huntmode=aggressive_melee
+huntrange=4
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,200
+param=rangedefence,200
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attack_anim,slug_prince_attack
+param=defend_anim,slug_prince_block
+param=death_anim,slug_prince_death

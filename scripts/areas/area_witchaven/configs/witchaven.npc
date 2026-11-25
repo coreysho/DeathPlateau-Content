@@ -1,0 +1,39 @@
+// Imported from the rev 474 cache by tools/models/importnpc474batch.py: models copied
+// byte-for-byte, chatheads brought across, and one copy of each model shared between
+// every npc that wears it. Combat stats, huntmode and drops are by hand - the cache
+// carries none of them.
+// Witchaven's own cast, out of the rev 474 cache.
+// Ezekial Lovecraft keeps the fishing shop. He is not a Slug Menace npc - he lives here
+// and sells fishing gear - so he belongs to the village, not to the quest that asks him
+// about a page.
+
+[witchaven_lovecraft]
+// rev 474 npc 4856
+name=Ezekial Lovecraft
+desc=Ezekial Lovecraft.
+model1=npc_witchaven_lovecraft_1
+model2=npc_witchaven_lovecraft_2
+model3=npc_witchaven_lovecraft_3
+model4=npc_witchaven_lovecraft_4
+model5=npc_witchaven_lovecraft_5
+model6=npc_witchaven_lovecraft_6
+model7=npc_witchaven_lovecraft_7
+model8=npc_witchaven_lovecraft_8
+head1=npc_witchaven_lovecraft_head1
+head2=npc_witchaven_lovecraft_head2
+head3=npc_witchaven_lovecraft_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+op4=Shop
+recol1s=8322
+recol1d=10572
+recol2s=24196
+recol2d=8421
+recol3s=14724
+recol3d=18989
+recol4s=32735
+recol4d=24311
+recol5s=24075
+recol5d=24235
