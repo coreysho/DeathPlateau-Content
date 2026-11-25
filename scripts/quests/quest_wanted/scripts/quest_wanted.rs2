@@ -97,8 +97,16 @@ if (~wanted_sightings >= 1) {
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Here is how it works. Every time he jumps I can pull something off him - a hat, a cloak, whatever he was carrying. I cannot tell you where he went. I can tell you what he left.");
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>You work out where a thing like that comes from, you go there, and you scan. Do it <tostring(^wanted_sightings_needed)> times and he will not be able to jump again.");
 %wanted_contacted_savant = ^wanted_on;
-%wanted_main = ^wanted_briefed;
-~send_quest_progress(questlist:wanted, %wanted_main, ^wanted_complete);
+// STRAIGHT TO ^wanted_hunting. This used to write ^wanted_briefed and overwrite it four lines
+// later with no tick, no dialogue and no chance to log out in between - so stage 20 was a value
+// the player could never be found at, and the journal entry and two of Tiffy's lines written for
+// it could never be seen. It also cost a sim author an afternoon, because a run that stops after
+// the briefing and reads the stage gets 30 and has no way to know that is correct.
+//
+// There is no "briefed but not yet hunting" in the fiction either: Savant explains the plan and
+// tells you Solus is in Canifis in the same breath. ^wanted_briefed stays as the threshold
+// quest_wanted.rs2:30 compares against, and the branches written for it stay as a safe landing
+// for any save that is somehow on it, but nothing writes it any more.
 // The first stop is Canifis in Old School and it is not a deduction - he is simply seen there.
 ~wanted_set_location(^wanted_place_canifis, ^wanted_on);
 %wanted_main = ^wanted_hunting;
