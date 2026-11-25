@@ -81,8 +81,13 @@ if (~tk_proselyte_rank = true) {
 //
 // ONE PROC, deliberately: the proselyte counter and all four worn gates go through this, so the
 // rank is asked in one place and the quest is named in one place.
+// A comparison is a branch here and not an expression - return() takes a value, so `return(a >= b)`
+// does not parse.
 [proc,tk_proselyte_rank]()(boolean)
-return(%slugmenace_stage >= ^slugmenace_complete);
+if (%slugmenace_stage >= ^slugmenace_complete) {
+    return(true);
+}
+return(false);
 
 // --- Worn gates ---
 //
