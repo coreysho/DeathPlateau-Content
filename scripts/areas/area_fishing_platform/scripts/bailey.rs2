@@ -1,4 +1,11 @@
 [opnpc1,bailey]
+// The Slug Menace wants a dead sea slug rendered down for glue, and Bailey is the cook
+// Savant means by "years of experience in aquatic cooking". It claims the conversation only
+// while that quest is waiting on him; @slugmenace_bailey is in
+// quests/quest_slugmenace/scripts/slugmenace_pages.rs2.
+if (~slugmenace_bailey_wants = true) {
+    @slugmenace_bailey;
+}
 switch_int(%seaslugquest) {
     case ^seaslug_boat_repaired, ^seaslug_spoken_kennith, ^seaslug_sailed_kent :
         ~chatplayer("<p,happy>Hello.");

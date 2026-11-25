@@ -1,3 +1,8 @@
+// The Slug Menace empowers five carved runes, one at each of air, water, earth, fire and
+// mind. The four elemental altars declare their own [oplocu] below, so the case is added
+// in all five places; the proc checks the pairing itself, so a rune at the wrong altar is
+// told so rather than quietly working. It is in
+// quests/quest_slugmenace/scripts/slugmenace_runes.rs2.
 [oploc1,_rc_altar] @runecraft_runes;
 
 [oplocu,_rc_altar]
@@ -6,6 +11,7 @@ if (oc_category(last_useitem) = talismans) {
 } else {
     switch_obj (last_useitem) {
         case blankrune, blankrune_high : @runecraft_runes;
+        case slug_blank_air_rune, slug_blank_water_rune, slug_blank_earth_rune, slug_blank_fire_rune, slug_blank_mind_rune : ~slugmenace_empower(loc_type);
         case tiara : @runecraft_craft_tiaras(loc_type, last_useitem, last_useslot);
         case default : ~displaymessage(^dm_default);
     }
@@ -30,6 +36,7 @@ switch_obj (last_useitem) {
 // water, earth (quests/quest_lunar/scripts/lunar_island.rs2).
 [oplocu,air_altar]
 switch_obj (last_useitem) {
+    case slug_blank_air_rune, slug_blank_water_rune, slug_blank_earth_rune, slug_blank_fire_rune, slug_blank_mind_rune : ~slugmenace_empower(loc_type);
     case dramen_staff : ~lunar_enchant_staff(1);
     case blankrune, blankrune_high : @runecraft_runes;
     case waterrune, water_talisman : ~runecraft_combo_rune(waterrune, water_talisman, mistrune, 6, 80, airrune);
@@ -41,6 +48,7 @@ switch_obj (last_useitem) {
 
 [oplocu,water_altar]
 switch_obj (last_useitem) {
+    case slug_blank_air_rune, slug_blank_water_rune, slug_blank_earth_rune, slug_blank_fire_rune, slug_blank_mind_rune : ~slugmenace_empower(loc_type);
     case lunar_staff_pt2 : ~lunar_enchant_staff(3);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, mistrune, 6, 85, waterrune);
@@ -52,6 +60,7 @@ switch_obj (last_useitem) {
 
 [oplocu,earth_altar]
 switch_obj (last_useitem) {
+    case slug_blank_air_rune, slug_blank_water_rune, slug_blank_earth_rune, slug_blank_fire_rune, slug_blank_mind_rune : ~slugmenace_empower(loc_type);
     case lunar_staff_pt3 : ~lunar_enchant_staff(4);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, dustrune, 10, 90, earthrune);
@@ -63,6 +72,7 @@ switch_obj (last_useitem) {
 
 [oplocu,fire_altar]
 switch_obj (last_useitem) {
+    case slug_blank_air_rune, slug_blank_water_rune, slug_blank_earth_rune, slug_blank_fire_rune, slug_blank_mind_rune : ~slugmenace_empower(loc_type);
     case lunar_staff_pt1 : ~lunar_enchant_staff(2);
     case blankrune, blankrune_high : @runecraft_runes;
     case airrune, air_talisman : ~runecraft_combo_rune(airrune, air_talisman, smokerune, 15, 85, firerune);

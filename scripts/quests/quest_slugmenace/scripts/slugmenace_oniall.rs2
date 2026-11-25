@@ -1,0 +1,224 @@
+// The Slug Menace - Col. Jake O'Niall, on the Witchaven dock.
+//
+// He is the quest's hub: he briefs you, he takes the report on the three townspeople, he sends
+// you to the shrine, and later he hands over the three fragments of the last page. By the time he
+// does that last thing he is one of them, which is why his multinpc flag turns at the stage the
+// runes are cut - slugmenace.varbit has the table.
+//
+// THE HANDLER GOES ON THE SHELL, which is the opposite of what this file first said. A
+// multinpc's op trigger is looked up on the type the WORLD holds - Player.getOpTrigger reads
+// NpcType.get(target.type).id and resolves no further - so a trigger on either child never fires
+// at all. The dialogue branches on the stage anyway, and the possessed O'Niall is still
+// pretending, so one handler is all either form wants.
+
+[opnpc1,witchaven_oniall] @slugmenace_oniall;
+
+[label,slugmenace_oniall]
+switch_int (%slugmenace_stage) {
+    case ^slugmenace_not_started : @slugmenace_oniall_nothing;
+    case ^slugmenace_briefed : @slugmenace_oniall_firstmeeting;
+    case ^slugmenace_asking : @slugmenace_oniall_asking;
+    case ^slugmenace_shrine : @slugmenace_oniall_sent;
+    case ^slugmenace_transcribed : @slugmenace_oniall_sent;
+    case ^slugmenace_translated : @slugmenace_oniall_mallum;
+    case ^slugmenace_pages : @slugmenace_oniall_fragments;
+}
+@slugmenace_oniall_nothing;
+
+[label,slugmenace_oniall_nothing]
+~chatplayer("<p,quiz>Excuse me, are you Col. O'Niall?");
+~chatnpc("<p,neutral>I might be. Who's asking?");
+~chatplayer("<p,neutral>Nobody in particular.");
+~chatnpc("<p,neutral>Then I might not be. Good day.");
+
+// =========================================================================== the briefing
+[label,slugmenace_oniall_firstmeeting]
+~chatplayer("<p,quiz>Excuse me sir, would you be Col. O'Niall?");
+~chatnpc("<p,neutral>I might. Who's asking?");
+~chatplayer("<p,neutral>Sir Tiffy Cashien sent me.");
+~chatnpc("<p,quiz>And?");
+~chatplayer("<p,neutral>Umm... in Falador the geese fly backwards on Tuesdays?");
+~chatnpc("<p,angry>What? Are you mad?");
+~chatplayer("<p,sad>Uhh. I thought it was a Temple Knight secret code phrase.");
+~chatnpc("<p,neutral>I see Sir Tiffy still has his fun with the initiates. I asked for a Knight and I get a whelp.");
+~chatplayer("<p,angry>Whelp? I am a full member of the Temple Knights, sir!");
+~chatnpc("<p,neutral>Like I said. A whelp. And don't 'sir' me, I work for a living.");
+~chatplayer("<p,neutral>Right sir. I mean Colonel.");
+~chatnpc("<p,neutral>Jake will do fine.");
+%slugmenace_stage = ^slugmenace_asking;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+@slugmenace_oniall_questions;
+
+[label,slugmenace_oniall_asking]
+// He asks for the report the moment all three have been spoken to AND the Mayor has been scanned.
+// Without the scan Savant has nothing, and the quest would advance on three conversations that
+// proved nothing - which is the step the orb exists for.
+if (~slugmenace_asked_everyone = true) {
+    @slugmenace_oniall_report;
+}
+~chatnpc("<p,quiz>Anything new to report?");
+~chatplayer("<p,neutral>Not yet, but I was wondering if I could ask you some more questions?");
+@slugmenace_oniall_questions;
+
+[proc,slugmenace_asked_everyone]()(boolean)
+if (%slugmenace_met_hobb = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_met_maledict = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_met_holgart = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_mayor_scanned = ^slugmenace_off) {
+    // Savant's reading of the Mayor. Without it the report would go in on three conversations
+    // that proved nothing, which is the step the orb exists for.
+    return(false);
+}
+return(true);
+
+// The three things he will talk about, in any order, as many times as the player likes.
+[label,slugmenace_oniall_questions]
+~chatnpc("<p,quiz>Now, what do you want to know?");
+while (true = true) {
+    switch_int (~p_choice4("What's the mission?", 1, "Tell me about Witchaven.", 2,
+                           "Who are the important people in Witchaven?", 3,
+                           "That's enough for now.", 4)) {
+        case 1 : ~slugmenace_oniall_mission;
+        case 2 : ~slugmenace_oniall_witchaven;
+        case 3 : ~slugmenace_oniall_people;
+        case 4 :
+            ~chatplayer("<p,neutral>That's enough for now.");
+            ~chatnpc("<p,neutral>Stay sharp.");
+            return;
+    }
+    ~chatnpc("<p,quiz>Anything else you need to know?");
+}
+
+[proc,slugmenace_oniall_mission]()
+~chatplayer("<p,quiz>What's the mission?");
+~chatnpc("<p,neutral>Well, I started to notice something about three weeks ago.");
+~chatnpc("<p,neutral>The Mayor called a meeting of the town council. Nothing too strange about that in itself.");
+~chatnpc("<p,neutral>He was acting a bit strange, like he'd taken a blow to the head. At the end of it he announces he's renovating the shrine just west of the town.");
+~chatnpc("<p,neutral>Now, I thought that was a bit off, since he's about as religious as a dead dog on a termite mound.");
+~chatplayer("<p,sad>Eeew!");
+~chatnpc("<p,angry>Quiet down, I'm talking here.");
+~chatnpc("<p,neutral>I could have let that slip, save for the things he's been bringing in.");
+~chatplayer("<p,quiz>What, surface-to-air ballistas? Intercontinental exploding fireballs? The essential tools of world domination?");
+~chatnpc("<p,neutral>No. Mining equipment.");
+~chatplayer("<p,quiz>That doesn't sound very evil.");
+~chatnpc("<p,neutral>As well as the mining equipment, he's been bringing in rune essence. In large quantities.");
+~chatnpc("<p,neutral>Far beyond what a village this size has any use for.");
+~chatplayer("<p,neutral>Okay, that sounds suspicious. I'll look into it. Anything else?");
+~chatnpc("<p,sad>Yes. Some of the villagers have been disappearing overnight and turning up the next day dazed and confused.");
+~chatplayer("<p,quiz>Are you sure they're not just getting drunk?");
+~chatnpc("<p,neutral>They could be, I suppose. I'd rather you made sure.");
+~chatplayer("<p,neutral>Sure thing.");
+
+[proc,slugmenace_oniall_witchaven]()
+~chatplayer("<p,quiz>Tell me about Witchaven.");
+~chatnpc("<p,neutral>Well, what's to say. This place is falling apart.");
+~chatplayer("<p,neutral>I noticed it's a bit run down.");
+~chatnpc("<p,angry>Run down? Hah! This place used to be a bustling hive of industry.");
+~chatplayer("<p,quiz>What happened to it?");
+~chatnpc("<p,sad>The Fishing Platform happened to it.");
+~chatnpc("<p,neutral>When you put in a large-scale operation like that, it takes the business from the little man.");
+~chatnpc("<p,sad>Almost overnight Witchaven became a ghost town.");
+~chatplayer("<p,neutral>That's very sad. Still, you can't stand in the way of progress.");
+~chatnpc("<p,angry>I'm going to pretend you didn't say that.");
+~chatnpc("<p,neutral>Remember: bigger is not always better.");
+
+[proc,slugmenace_oniall_people]()
+~chatplayer("<p,quiz>Who are the important people in Witchaven?");
+~chatnpc("<p,neutral>Hmm. There are only three people I'd recommend speaking to.");
+~chatplayer("<p,quiz>Right, who would that be?");
+~chatnpc("<p,neutral>Firstly, go speak to Mayor Hobb. He was the first to start acting strangely.");
+~chatnpc("<p,sad>As well as that, he isn't looking too healthy.");
+~chatplayer("<p,neutral>Speak to the Mayor. Check.");
+~chatnpc("<p,neutral>Next, speak to Brother Maledict at the church.");
+~chatnpc("<p,neutral>He speaks to a lot of the villagers and has a good feel for what's going on in town.");
+~chatplayer("<p,neutral>Brother Maledict, right.");
+~chatnpc("<p,neutral>Finally, speak to Holgart the fisherman. I haven't seen him sailing in a while. That's definitely a bit off.");
+~chatplayer("<p,happy>Holgart. Oh yes, I've spoken to him before.");
+~chatnpc("<p,neutral>That covers about everyone, but don't limit yourself to those three. Others may have some insight.");
+~chatplayer("<p,happy>Will do, Colonel. Thanks for the advice.");
+
+// =========================================================================== the report
+[label,slugmenace_oniall_report]
+~chatplayer("<p,neutral>I've spoken to all three of them, Jake.");
+~chatnpc("<p,quiz>And?");
+~chatplayer("<p,sad>The Mayor is ill and lying about it. Brother Maledict has a congregation that has stopped coming. Holgart won't put to sea.");
+~chatnpc("<p,neutral>That's about what I expected, and worse for being confirmed.");
+~chatplayer("<p,neutral>My orb took a reading of the Mayor. Savant says there's something inside him.");
+~chatnpc("<p,sad>Then it starts where the Mayor started. The shrine, west of town. He's had men down there for three weeks and not one of them will say what's in it.");
+~chatnpc("<p,neutral>The old ruin out past the fence. There's a way down. Go and look, and don't go alone if you can help it - though I don't suppose you have anyone.");
+~chatplayer("<p,neutral>I have an orb.");
+~chatnpc("<p,laugh>Then you're better equipped than I was. Off you go.");
+%slugmenace_stage = ^slugmenace_shrine;
+// Jeb has a boat from here on - 474 changes him at the same point.
+%slugmenace_jeb_turned = ^slugmenace_on;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+
+[label,slugmenace_oniall_sent]
+if (~slugmenace_has_commorb = false) {
+    ~chatplayer("<p,sad>Um, Colonel. I lost my CommOrb...");
+    if (inv_freespace(inv) = 0) {
+        ~chatnpc("<p,neutral>And you'd put it where? Empty a pocket first.");
+        return;
+    }
+    ~chatnpc("<p,neutral>Very careless of you. Here, take another, and be careful with this one!");
+    inv_add(inv, slug_commorb, 1);
+    return;
+}
+if (%slugmenace_stage < ^slugmenace_transcribed) {
+    ~chatnpc("<p,quiz>Been down there yet?");
+    ~chatplayer("<p,neutral>I'm going.");
+    ~chatnpc("<p,neutral>The way down is the old ruin, west, past the fence. Look for a wall that isn't one.");
+    return;
+}
+~chatnpc("<p,quiz>Well?");
+~chatplayer("<p,neutral>There's a door down there with writing on it that nobody in Witchaven put there.");
+~chatnpc("<p,neutral>Then find someone who reads it. Jorral keeps an outpost north-west of Ardougne and knows more dead languages than is healthy.");
+
+// =========================================================================== after Jorral
+[label,slugmenace_oniall_mallum]
+~chatplayer("<p,sad>Jake. The writing on that door is a name. Mother Mallum.");
+~chatnpc("<p,neutral>Never heard it.");
+~chatplayer("<p,neutral>Jorral had. It's older than Witchaven and it's what the Mayor is working for.");
+~chatnpc("<p,sad>...Right. And the essence, and the mining, and the villagers coming back wrong.");
+~chatnpc("<p,neutral>Brother Maledict has a book in that church about the shrine. He's never let anyone read it. Go and tell him what you just told me and see if that changes.");
+%slugmenace_stage = ^slugmenace_pages;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+
+// =========================================================================== the fragments
+// He hands over the last page in three pieces. He is already turned by now, and gives them up
+// because Mother Mallum would rather the player opened that door than left it shut.
+[label,slugmenace_oniall_fragments]
+if (%slugmenace_page3 = ^slugmenace_on
+        | inv_total(inv, slug_fragment1) > 0
+        | inv_total(inv, slug_fragment2) > 0
+        | inv_total(inv, slug_fragment3) > 0) {
+    ~chatnpc("<p,neutral>You have the pieces. Put them together.");
+    return;
+}
+if (%slugmenace_page1 = ^slugmenace_off | %slugmenace_page2 = ^slugmenace_off) {
+    ~chatnpc("<p,quiz>Maledict's pages. Found them?");
+    ~chatplayer("<p,neutral>Not all of them.");
+    ~chatnpc("<p,neutral>The Mayor keeps a desk. Lovecraft keeps everything. Try both.");
+    return;
+}
+// THREE FREE SLOTS, as Old School wants. inv_add with no space check drops a quest item on the
+// floor and the quest looks broken five minutes later.
+if (inv_freespace(inv) < 3) {
+    ~chatnpc("<p,neutral>Three pieces, and you've not three pockets free. Come back when you have.");
+    return;
+}
+~chatplayer("<p,neutral>I'm one page short. Maledict says the last one never came back.");
+~chatnpc("<p,neutral>It came back. I have it.");
+~chatplayer("<p,angry>You have it?");
+~chatnpc("<p,neutral>In three pieces, out of the fire at the old vestry. Nobody asked me for it, so I kept it.");
+inv_add(inv, slug_fragment1, 1);
+inv_add(inv, slug_fragment2, 1);
+inv_add(inv, slug_fragment3, 1);
+~objbox(slug_fragment1, "O'Niall hands over three scraps of parchment, charred at the edges. He watches you take them.", 250, 0, 0);
+~chatnpc("<p,neutral>Stick them back together and you'll have your page. Mind what you use - that's old paper.");

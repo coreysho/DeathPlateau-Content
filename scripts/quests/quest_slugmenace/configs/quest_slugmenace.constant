@@ -1,0 +1,159 @@
+// THE SLUG MENACE - the design document, read out of the 474 cache before anything was written.
+//
+// The quest is varp 874 there: varbit 2610 holds the stage in bits 0-7, and twenty-one more
+// varbits sit beside it. 4,088 varbits decoded with zero unknown opcodes, so the layout below is
+// read rather than guessed.
+//
+// THE LADDER IS THE CACHE'S, NOT THE WALKTHROUGH'S. Every npc that changes during this quest is a
+// multinpc parent keyed on 2610, and the values they change at are the quest's shape:
+//
+//     1   a fourth Witchaven villager appears          (474 parent 4880)
+//     2   Jeb changes                                  (474 parent 4860)
+//     5   a fifth villager appears                     (474 parent 4881)
+//     8   Brother Maledict changes                     (474 parent 4855)
+//     9   Col. O'Niall changes, a sixth villager       (474 parents 4853, 4882)
+//    12   Mayor Hobb changes                           (474 parent 4854)
+//
+// Twelve is the last transition in the cache, so it is completion. The stages between those six
+// are this build's, spaced by ten so a step can be put between two of them later without
+// renumbering a save - the same spacing every other quest here uses.
+//
+// EVERY VILLAGER HAS TWO FORMS and the second one walks on slug_possessed_walk rather than the
+// human walk. That is the quest: they are being taken over, and the stage varbit swaps them in as
+// you work out what is happening. It is the thing the walkthrough does not tell you and the cache
+// does.
+
+^slugmenace_not_started = 0
+
+// Sir Tiffy has handed over the Commorb v2 and named Col. O'Niall. 474's stage 1.
+^slugmenace_briefed = 10
+
+// O'Niall has named the three people worth talking to: Mayor Hobb, Brother Maledict, Holgart.
+^slugmenace_asking = 20
+
+// All three spoken to and reported back. O'Niall sends you to the shrine. 474's stage 2, where
+// Jeb changes - he has the boat by now.
+^slugmenace_shrine = 30
+
+// The imposing door found, Savant has copied its markings, the dead sea slug is off the floor.
+^slugmenace_transcribed = 40
+
+// Jorral has translated them. 474's stage 5.
+^slugmenace_translated = 50
+
+// Brother Maledict has shown you the book and named its three missing pages. 474's stage 8 - he
+// is visibly ill by now.
+^slugmenace_pages = 60
+
+// All three pages recovered and glued. The runes can be cut. 474's stage 9, where O'Niall turns.
+^slugmenace_runes = 70
+
+// The door is open, the Slug Prince is dead, Mother Mallum has been seen and Savant has pulled
+// you out. Only Sir Tiffy is left.
+^slugmenace_told = 80
+
+// 474's stage 12.
+^slugmenace_complete = 90
+
+// ---------------------------------------------------------------- requirements
+// Wanted! and Sea Slug, plus four skills. Which of them gate the START rather than a step is the
+// wiki's {{Questreqstart}} flag's business and quest_requirement.dbrow's - these are here for the
+// scripts that enforce them, and tools/genquestreq.py writes the row the journal and the gate read.
+^slugmenace_req_crafting = 30
+^slugmenace_req_runecraft = 30
+^slugmenace_req_slayer = 30
+^slugmenace_req_thieving = 30
+
+// ---------------------------------------------------------------- rewards
+// 1 quest point and 3,500 each of Crafting, Runecraft and Thieving. stat_advance takes tenths.
+^slugmenace_xp_crafting = 35000
+^slugmenace_xp_runecraft = 35000
+^slugmenace_xp_thieving = 35000
+
+// ---------------------------------------------------------------- the flags
+^slugmenace_off = 0
+^slugmenace_on = 1
+
+// How many of the five runes the door wants.
+^slugmenace_runes_needed = 5
+
+// The Slug Prince drains Prayer by the damage it deals, and only melee hurts it.
+^slugmenace_prince_level = 62
+
+// ---------------------------------------------------------------- places
+// EVERY COORD HERE WAS CHECKED ON A BOOTED WORLD. An earlier draft of this file held nine of them
+// written from the walkthrough's descriptions: four were inside walls and the shrine landed in
+// the middle of Ardougne's market. They were deleted rather than committed, and these are the
+// ones the map actually has.
+//
+// The dungeon is two squares and you cannot walk between them - the chamber is under the
+// Witchaven ruins where the 377 ladder already lands, and the temple is a square of its own,
+// because 474 keeps it in m36_79 and that square is Zulrah's shrine here. So the false wall and
+// the passage are a pair of teleports, which is not a shortcut: a multiloc's state cannot change
+// what blocks, so the wall could not have been opened even inside one square.
+
+// The ruins above, and the chamber's own ladder back up to them. 2696,3282 and 2696,9682 - the
+// shared [oploc1,loc_1754] handler sends the player to their own tile plus 6400, which is why
+// going DOWN needed no new script.
+^slugmenace_ruins_ladder = 0_42_51_8_18
+^slugmenace_chamber_ladder = 0_42_151_8_18
+
+// The false wall, 2701,9688, and where it puts you: beside the temple's passage at 2707,10352.
+^slugmenace_temple_arrive = 0_42_161_19_48
+// And back, beside the wall at 2700,9688.
+^slugmenace_chamber_return = 0_42_151_12_24
+
+// The hole in the rock, 2715,10344. Agility 30, no experience, up to 5 damage on a failure, and
+// a success curve of 110/255 at the requirement rising to 255/255 - all from the wiki's own
+// Agility info box, which is also where the examine "A stinky hole." comes from.
+^slugmenace_shortcut_agility = 30
+^slugmenace_shortcut_low = 110
+^slugmenace_shortcut_high = 255
+^slugmenace_shortcut_damage = 5
+// The wall the hole is in. West of it you come out east, and the other way round.
+^slugmenace_shortcut_wall_x = 2715
+^slugmenace_shortcut_east = 0_42_161_29_40
+^slugmenace_shortcut_west = 0_42_161_26_40
+
+// The Imposing Doors, 2732,10341, and the tile they take a click from - 2733,10342, which
+// opfrom.ts says and a reading of the collision map got wrong twice. Opening them puts the player
+// through, on the far side at 2733,10340.
+^slugmenace_doors_through = 0_42_161_45_36
+
+// Where the Slug Prince and then Mother Mallum appear, behind the doors.
+^slugmenace_prince_spawn = 0_42_161_46_35
+^slugmenace_mallum_spawn = 0_42_161_45_33
+
+// HOW CLOSE IS "NEAR THE DOORS". They are six tiles wide, at 2727..2732 on z10341, and the only
+// floor beside them is the strip at z10342 - so the scan box is that strip plus a tile of slack
+// each way. A single-tile test would have made the scan depend on which of six tiles the player
+// happened to click from.
+^slugmenace_doors_scan_x0 = 2729
+^slugmenace_doors_scan_x1 = 2737
+^slugmenace_doors_scan_z0 = 10339
+^slugmenace_doors_scan_z1 = 10344
+
+// The Mayor's drawer is locked and the player has no key. stat_advance takes tenths, so this is
+// 50 Thieving experience - a token for the one place in the quest where the skill does anything,
+// and deliberately small: the quest's real Thieving reward is the 3,500 on the scroll.
+^slugmenace_desk_xp = 500
+
+// ---------------------------------------------------------------- the runes
+// stat_random succeeds with value/256, value = floor(low*(99-L)/98) + floor(high*(L-1)/98) + 1.
+// 120 and 220 give 150/256 at level 30 - the quest's requirement - and 221/256 at 99. Two stages
+// at 59% is 2.9 essence a rune and 14.5 for all five, which is the quick guide's "bring 15-20".
+^slugmenace_craft_low = 120
+^slugmenace_craft_high = 220
+^slugmenace_runecraft_low = 120
+^slugmenace_runecraft_high = 220
+
+// Tenths. Small on purpose: the quest's real reward is the 3,500 of each on the scroll, and
+// twenty-odd attempts at a generous per-attempt award would dwarf it.
+^slugmenace_shape_xp = 150
+^slugmenace_empower_xp = 150
+
+// How long the two summoned npcs stay. The Prince outlasts any reasonable fight; Mother Mallum is
+// only in the room for the length of her own speech and then the player is teleported out from
+// under her, so she is given a minute and never seen again.
+^slugmenace_prince_lifetime = 2000
+^slugmenace_mallum_lifetime = 100

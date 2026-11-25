@@ -1,0 +1,135 @@
+// The Slug Menace - Sir Tiffy Cashien, Falador Park.
+//
+// Tiffy is rd_teleporter_guy and he carries three things: Recruitment Drive declares [opnpc1] in
+// quests/quest_rd/scripts/quest_rd.rs2, and that handler offers a MENU - this quest, Wanted!, and
+// the Temple Knight armoury - from temple_knight/scripts/temple_knight.rs2. A trigger cannot be
+// declared twice, let alone three times, and the menu is also why none of the three can claim the
+// conversation away from the others: an initiate could not buy armour for as long as either quest
+// was open when each hooked in ahead of the handler instead.
+//
+// SO THE GREETING AND THE "any jobs yet?" MENU ARE NOT HERE. @tk_tiffy_postquest says both before
+// it jumps in, and ~slugmenace_tiffy_wants is what decides whether this quest is on that menu at
+// all - unchanged, and still answered before Wanted!'s.
+//
+// THE COMMORB IS THE GATE AT THE DOOR. Old School will not start this quest without a commorb in
+// the inventory, and then upgrades that orb to a Commorb v2 rather than handing out a second one:
+// "made by giving Sir Tiffy Cashien a normal commorb". So Wanted!'s wanted_crystal_ball goes in
+// and slug_commorb comes out, and the old orb is gone - which is also why a lost v2 is replaced
+// by Tiffy and by O'Niall both, exactly as Old School does it. A quest whose first item can be
+// destroyed and not replaced is a quest that can be made unfinishable, and Wanted! had that bug.
+
+[proc,slugmenace_tiffy_wants]()(boolean)
+// Only once Wanted! is done - before that Wanted!'s own hook owns him, and it is checked second.
+if (%wanted_main < ^wanted_complete) {
+    return(false);
+}
+if (%slugmenace_stage >= ^slugmenace_complete) {
+    return(false);
+}
+// He has something to say at the start, and again when the Prince is dead. In between the player
+// is working and he only says "good show" - which is still this quest talking, so it is his.
+return(true);
+
+[label,slugmenace_tiffy]
+if (%slugmenace_stage = ^slugmenace_not_started) {
+    @slugmenace_tiffy_start;
+}
+if (%slugmenace_stage >= ^slugmenace_told) {
+    @slugmenace_tiffy_done;
+}
+@slugmenace_tiffy_waiting;
+
+// =========================================================================== starting out
+[label,slugmenace_tiffy_start]
+// The greeting and the "Do you have any jobs for me yet?" / "Nothing, thank you." menu that used
+// to open this are said by @tk_tiffy_postquest now, which is the menu this quest shares with
+// Wanted! and the armoury. The player has already asked by the time this runs; the line below is
+// them saying it properly.
+~chatplayer("<p,quiz>So when can I start doing missions for the Temple Knights?");
+// The requirements are declared once, in quests/configs/quest_requirement.dbrow, and this is the
+// same row the journal prints. ~quest_requirements_block says what is missing and returns true.
+if (~quest_requirements_block("The Slug Menace") = true) {
+    ~chatnpc("<p,neutral>Well, I may have a mission for you, but it seems you are not quite ready for it yet.");
+    return;
+}
+~chatnpc("<p,happy>Well, now that you are a White Knight we can process your application form correctly.");
+~chatplayer("<p,quiz>And how long will that take?");
+~chatnpc("<p,laugh>Already done, old bean! The scales of justice never sleep.");
+~chatplayer("<p,neutral>Uh, right.");
+~chatnpc("<p,happy>So then, with that in mind, we have a mission for you.");
+~chatplayer("<p,happy>Really? Great! Am I to be flung to some far off and exotic land to defeat some evil genius?");
+~chatnpc("<p,neutral>What? Ah, no actually. We're sending you to Ardougne.");
+~chatplayer("<p,quiz>Ardougne?");
+~chatnpc("<p,quiz>Hmm, what's happening in Ardougne?");
+~chatplayer("<p,neutral>I don't know, you were about to tell me.");
+~chatnpc("<p,neutral>No, no, no, nothing happening in Ardougne. However, there is something going on in Witchaven, to the south-east of Ardougne.");
+if (~p_choice2("Yes, I'll go.", 1, "Sorry, but I'm not interested.", 2) = 2) {
+    ~chatplayer("<p,neutral>Sorry, but I'm not interested.");
+    ~chatnpc("<p,neutral>As you wish, old bean. Do let me know if you reconsider.");
+    return;
+}
+~chatplayer("<p,quiz>Are you sure? I mean, you're not a little... senile, maybe?");
+~chatnpc("<p,laugh>Haw, haw, haw, very funny old bean. I need you to report to Col. O'Niall in Witchaven.");
+~chatnpc("<p,neutral>He's a retired Temple Knight, but his clearance is still active. He will be able to fill you in.");
+~chatnpc("<p,neutral>Remember to use the Temple Knight code phrase: 'In Falador, the geese fly backwards on Tuesdays'.");
+~chatplayer("<p,neutral>You know, I'm still not sure this isn't some giant wind up.");
+~chatnpc("<p,neutral>Nonsense, my good bean, we take our work very seriously. The fate of the world rests in our hands, don't you know.");
+// The orb goes in and comes back upgraded. The requirement row says the commorb must be carried,
+// so the gate above has already refused a player without one - this is belt and braces for the
+// day that row changes, not a second gate.
+if (inv_total(inv, wanted_crystal_ball) = 0) {
+    ~chatnpc("<p,neutral>Hmm, you'll need to get your CommOrb before I send you off, old bean.");
+    return;
+}
+~chatnpc("<p,happy>Oh, before you go, I just need to update your CommOrb with the new mission parameters.");
+inv_del(inv, wanted_crystal_ball, 1);
+inv_add(inv, slug_commorb, 1);
+~objbox(slug_commorb, "Sir Tiffy turns the orb over twice, does something to it you do not see, and hands it back. It is warmer than it was.", 250, 0, 0);
+%slugmenace_stage = ^slugmenace_briefed;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+
+// =========================================================================== while you work
+[label,slugmenace_tiffy_waiting]
+// "Hey, Sir Tiffy." is gone from here: the shared menu greets him first, and the option that
+// reaches this branch reads "I have something to report." already.
+~chatnpc("<p,quiz>Greetings. Anything to report?");
+// A lost orb is a dead end otherwise: nothing else in the game hands one out, and every scan in
+// the quest wants it. Old School has him replace it and so does O'Niall.
+if (~slugmenace_has_commorb = false) {
+    ~chatplayer("<p,sad>I lost my CommOrb...");
+    if (inv_freespace(inv) = 0) {
+        ~chatnpc("<p,neutral>Free up some inventory space first, what?");
+        return;
+    }
+    ~chatnpc("<p,neutral>Very careless of you, what? Here, take another, but be careful of this one!");
+    inv_add(inv, slug_commorb, 1);
+    return;
+}
+~chatplayer("<p,neutral>Not yet, sir, but I'm working on it.");
+~chatnpc("<p,happy>Good show! That's the spirit.");
+
+// True if the orb is on the player or in the bank - a banked orb is not lost, and handing out a
+// second one would leave two in the game and a player wondering which the quest means.
+[proc,slugmenace_has_commorb]()(boolean)
+if (inv_total(inv, slug_commorb) > 0 | inv_total(bank, slug_commorb) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the end
+[label,slugmenace_tiffy_done]
+~chatplayer("<p,sad>Sir Tiffy. It is worse than Witchaven.");
+~chatnpc("<p,quiz>Go on, old bean.");
+~chatplayer("<p,neutral>There is a thing under that village called Mother Mallum. The mayor serves it. So did the colonel, by the end.");
+~chatnpc("<p,sad>Ah.");
+~chatplayer("<p,neutral>I killed its son and it offered me a job.");
+~chatnpc("<p,neutral>And you declined, which is why we recruit for brains. Savant logged the whole of it, including the part where she could not reach you.");
+~chatnpc("<p,neutral>The order has known the name for some time and has never had a witness. Now it has one.");
+~chatnpc("<p,happy>You are a Proselyte as of this morning. The armoury will sell to you accordingly - better prayer bonus, considerably worse jokes.");
+%slugmenace_stage = ^slugmenace_complete;
+// A stage change the player cannot see is a stage change that cannot be debugged.
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+stat_advance(crafting, ^slugmenace_xp_crafting);
+stat_advance(runecraft, ^slugmenace_xp_runecraft);
+stat_advance(thieving, ^slugmenace_xp_thieving);
+~send_quest_complete(questlist:slugmenace, slug_commorb, 250, ^slugmenace_questpoints, "You have completed\\nThe Slug Menace!", "1 Quest Point|3,500 Crafting XP|3,500 Runecraft XP|3,500 Thieving XP|Promotion to Proselyte");

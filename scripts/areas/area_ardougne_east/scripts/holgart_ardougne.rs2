@@ -1,4 +1,11 @@
 [opnpc1,holgartland]
+// The Slug Menace wants him too - the Mayor has taken his boat, and that is one of the
+// three things Col. O'Niall sends you to find out. It claims the conversation only while
+// the quest is actually waiting on him; @slugmenace_holgart is in
+// quests/quest_slugmenace/scripts/slugmenace_witchaven.rs2.
+if (~slugmenace_holgart_wants = true) {
+    @slugmenace_holgart;
+}
 switch_int (%seaslugquest) {
     case ^seaslug_not_started : @holgart_prequest;
     case ^seaslug_started : @holgart_wantboat;

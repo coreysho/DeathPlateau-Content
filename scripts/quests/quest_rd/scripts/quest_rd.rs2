@@ -36,13 +36,15 @@ if ($option = 2) {
 
 [opnpc1,rd_teleporter_guy]
 // EVERYTHING AFTER THIS QUEST HANGS OFF ONE MENU, in temple_knight/scripts/temple_knight.rs2:
-// Wanted!, which starts and ends with Tiffy, and the armoury, which is the reward for finishing
-// here. Wanted! used to be checked first and claimed the whole conversation whenever it had
-// anything to say, so an initiate could not buy armour for as long as that quest was open; it is
-// now one option in the menu alongside the shop, which is also how Old School presents it.
+// The Slug Menace and Wanted!, which both start and end with Tiffy, and the armoury, which is the
+// reward for finishing here. Each quest used to be checked ahead of this handler and claimed the
+// WHOLE conversation whenever it had anything to say, so an initiate could not buy armour for as
+// long as either was open. They are options on the menu instead, which is how Old School puts it.
 //
-// Moving the check is behaviour-preserving: ~wanted_tiffy_wants returns false unless this quest is
-// complete, so nothing it answered yes to lies outside the branch below.
+// Moving the checks is behaviour-preserving: ~wanted_tiffy_wants and ~slugmenace_tiffy_wants both
+// return false unless this quest is complete, so nothing either answered yes to lies outside the
+// branch below. @tk_tiffy_postquest asks them in the same order this used to - the Slug Menace
+// first, as the later quest - and they cannot both want him at once.
 if (%rd_main = ^recruitmentdrive_complete) {
     ~chatplayer("<p,happy>Hello Sir Tiffy.");
     ~chatnpc("<p,happy>Ah, our newest initiate! Do sit down. Mind the pigeons.");

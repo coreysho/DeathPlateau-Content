@@ -97,8 +97,16 @@ if (~wanted_sightings >= 1) {
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Here is how it works. Every time he jumps I can pull something off him - a hat, a cloak, whatever he was carrying. I cannot tell you where he went. I can tell you what he left.");
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>You work out where a thing like that comes from, you go there, and you scan. Do it <tostring(^wanted_sightings_needed)> times and he will not be able to jump again.");
 %wanted_contacted_savant = ^wanted_on;
-%wanted_main = ^wanted_briefed;
-~send_quest_progress(questlist:wanted, %wanted_main, ^wanted_complete);
+// STRAIGHT TO ^wanted_hunting. This used to write ^wanted_briefed and overwrite it four lines
+// later with no tick, no dialogue and no chance to log out in between - so stage 20 was a value
+// the player could never be found at, and the journal entry and two of Tiffy's lines written for
+// it could never be seen. It also cost a sim author an afternoon, because a run that stops after
+// the briefing and reads the stage gets 30 and has no way to know that is correct.
+//
+// There is no "briefed but not yet hunting" in the fiction either: Savant explains the plan and
+// tells you Solus is in Canifis in the same breath. ^wanted_briefed stays as the threshold
+// quest_wanted.rs2:30 compares against, and the branches written for it stay as a safe landing
+// for any save that is somehow on it, but nothing writes it any more.
 // The first stop is Canifis in Old School and it is not a deduction - he is simply seen there.
 ~wanted_set_location(^wanted_place_canifis, ^wanted_on);
 %wanted_main = ^wanted_hunting;
@@ -116,7 +124,7 @@ if ($place = 0) {
     ~mesbox("SOLUS DELLAGAR | Warrior mage. Responsible for the destruction of an entire settlement. | Teleports on sight and will not stand and fight. | The orb is holding nothing further.");
     return;
 }
-~mesbox("SOLUS DELLAGAR | Warrior mage. Responsible for the destruction of an entire settlement. | Teleports on sight and will not stand and fight. | LAST RECOVERED: <oc_name(~wanted_clue_item($place))>. <tostring(~wanted_sightings)> of <tostring(^wanted_sightings_needed)> jumps spent.");
+~mesbox("SOLUS DELLAGAR | Warrior mage. Responsible for the destruction of an entire settlement. | Teleports on sight and will not stand and fight. | LAST RECOVERED: <~wanted_clue_name($place)>. <tostring(~wanted_sightings)> of <tostring(^wanted_sightings_needed)> jumps spent.");
 
 // =========================================================================== Solus
 // wanted_solus carries op1=Talk-to and no attack option at all, so every confrontation up to the
@@ -578,6 +586,12 @@ return(^wanted_solus_1);
 // the bone spear and the twenty noted essence - come out of the table on their own.
 [proc,wanted_clue_item](int $i)(namedobj)
 switch_int ($i) {
+    // CANIFIS, stop 1, had no row and the table started at 2. Everything that reads a clue hands
+    // the result straight to oc_name, and oc_name(null) is "An input for a Obj type was not valid
+    // to use. Input was -1" - a script error, thrown at the player, on the FIRST stop of the hunt.
+    // It hit the quest journal as well as the orb's Playback: opening your own quest log while
+    // Solus was in Canifis was enough.
+    case 1 : return(garlic);
     case 2 : return(blue_cape);
     case 3 : return(cave_goblin_bone_spear);
     case 4 : return(blankrune_high);
@@ -597,6 +611,16 @@ switch_int ($i) {
     case 18 : return(blessedsnake);
 }
 return(null);
+
+// THE NAME, NEVER A NULL. Both callers used to put ~wanted_clue_item straight inside oc_name, so a
+// stop without a row was a script error rather than a gap in a sentence. The fallback is a phrase,
+// which closes the whole class rather than the one row that was missing.
+[proc,wanted_clue_name](int $i)(string)
+def_namedobj $obj = ~wanted_clue_item($i);
+if ($obj = null) {
+    return("something he did not mean to drop");
+}
+return(oc_name($obj));
 
 // The sentence Savant actually says. It names the thing and stops - working out the place from it
 // is the quest. There is deliberately NO place-name table any more: ~wanted_place_name existed to

@@ -1,0 +1,13 @@
+// THE SLUG MENACE. One varp holds the whole quest, as 474 does it (varp 874 there): the stage in
+// the low byte and a flag per thing-you-have-done above it. transmit=yes because the quest list
+// and the journal both read it, and scope=perm because it has to survive a logout.
+[slugmenace]
+scope=perm
+transmit=yes
+
+// WHO YOU HAVE SPOKEN TO IN WITCHAVEN, one bit each. The quest will not let you report back to
+// Col. O'Niall until all three are set, and 474 keeps them apart rather than counting them,
+// because the three can be done in any order.
+[slugmenace_bits]
+scope=perm
+transmit=yes
