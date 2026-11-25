@@ -491,12 +491,14 @@ param=death_anim,slug_prince_death
 // O'Niall's does not matter - neither of his forms has a walk.
 
 [witchaven_oniall]
+name=Col. O'Niall
 wanderrange=0
 multivar=slugmenace_oniall_turned
 multinpc=0,slug_oniall
 multinpc=1,slug_oniall_possessed
 
 [witchaven_hobb]
+name=Mayor Hobb
 wanderrange=0
 multivar=slugmenace_hobb_turned
 category=slugmenace_mayor
@@ -504,28 +506,33 @@ multinpc=0,slug_hobb
 multinpc=1,slug_hobb_possessed
 
 [witchaven_maledict]
+name=Brother Maledict
 wanderrange=0
 multivar=slugmenace_maledict_turned
 multinpc=0,slug_maledict
 multinpc=1,slug_maledict_possessed
 
 [witchaven_jeb]
+name=Jeb
 wanderrange=0
 multivar=slugmenace_jeb_turned
 multinpc=0,slug_jeb
 multinpc=1,slug_jeb_possessed
 
 [witchaven_villager_man]
+name=Witchaven villager
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_man
 multinpc=1,slug_villager_man_possessed
 
 [witchaven_villager_woman]
+name=Witchaven villager
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_woman
 multinpc=1,slug_villager_woman_possessed
 
 [witchaven_villager_old]
+name=Witchaven villager
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_old
 multinpc=1,slug_villager_old_possessed
@@ -534,6 +541,7 @@ multinpc=1,slug_villager_old_possessed
 // rather than one shell and a coordinate test in the handler: which side of the water the player
 // is on is the map's business, not a script's.
 [witchaven_jeb_platform]
+name=Jeb
 wanderrange=0
 multivar=slugmenace_jeb_turned
 multinpc=0,slug_jeb
