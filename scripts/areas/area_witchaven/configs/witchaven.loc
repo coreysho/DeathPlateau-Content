@@ -17,18 +17,6 @@ offsety=1
 ambient=35
 contrast=125
 
-[osrsloc_1276]
-// OSRS loc 1276
-name=Tree
-model=osrsloc_1276
-width=2
-length=2
-hillskew=yes
-mapscene=0
-ambient=15
-contrast=100
-op1=Chop down
-
 [osrsloc_1521]
 // OSRS loc 1521
 name=Large door
@@ -38,6 +26,8 @@ ambient=25
 contrast=125
 raiseobject=no
 op1=Open
+category=double_door_open_and_close_left
+param=next_loc_stage,loc_1522
 
 [osrsloc_1524]
 // OSRS loc 1524
@@ -49,6 +39,8 @@ ambient=25
 contrast=125
 raiseobject=no
 op1=Open
+category=double_door_open_and_close_right
+param=next_loc_stage,loc_1523
 
 [osrsloc_2493]
 // OSRS loc 2493
@@ -189,7 +181,6 @@ model=osrsloc_7170
 active=yes
 ambient=15
 contrast=75
-op1=Search
 
 [osrsloc_7171]
 // OSRS loc 7171
@@ -198,7 +189,6 @@ model=osrsloc_7171
 blockwalk=no
 blockrange=no
 ambient=10
-op1=Search
 
 [osrsloc_7182]
 // OSRS loc 7182
@@ -224,18 +214,6 @@ model=osrsloc_10793
 blockwalk=no
 blockrange=no
 raiseobject=no
-
-[osrsloc_10819]
-// OSRS loc 10819
-name=Willow tree
-model=osrsloc_10819
-width=2
-length=2
-hillskew=yes
-mapscene=3
-ambient=15
-contrast=100
-op1=Chop down
 
 [osrsloc_14042]
 // OSRS loc 14042
@@ -352,6 +330,8 @@ active=yes
 ambient=25
 raiseobject=no
 op1=Open
+category=door_open_and_close
+param=next_loc_stage,loc_1532
 
 [osrsloc_18169]
 // OSRS loc 18169
@@ -779,6 +759,7 @@ sharelight=yes
 mapscene=7
 forceapproach=north
 op1=Climb-up
+category=ladder_up
 
 [osrsloc_18235]
 // OSRS loc 18235
@@ -788,6 +769,7 @@ sharelight=yes
 mapscene=7
 forceapproach=south
 op1=Climb-down
+category=ladder_down
 
 [osrsloc_18237]
 // OSRS loc 18237
@@ -797,6 +779,7 @@ sharelight=yes
 mapscene=7
 forceapproach=south
 op1=Climb-down
+category=ladder_down
 
 [osrsloc_18238]
 // OSRS loc 18238
@@ -953,6 +936,7 @@ length=3
 ambient=40
 contrast=100
 op1=Pray
+category=prayer_altar
 
 [osrsloc_18260]
 // OSRS loc 18260

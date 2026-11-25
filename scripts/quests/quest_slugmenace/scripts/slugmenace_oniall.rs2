@@ -5,13 +5,13 @@
 // does that last thing he is one of them, which is why his multinpc flag turns at the stage the
 // runes are cut - slugmenace.varbit has the table.
 //
-// THE SHELL IS WHAT THE MAP SPAWNS, not either form, so [opnpc1] goes on both children: a
-// multinpc's op fires against the child the varbit currently picks, and a trigger on the parent
-// never runs. Both children here go to the same place, because the dialogue branches on the stage
-// anyway and the possessed O'Niall is still pretending.
+// THE HANDLER GOES ON THE SHELL, which is the opposite of what this file first said. A
+// multinpc's op trigger is looked up on the type the WORLD holds - Player.getOpTrigger reads
+// NpcType.get(target.type).id and resolves no further - so a trigger on either child never fires
+// at all. The dialogue branches on the stage anyway, and the possessed O'Niall is still
+// pretending, so one handler is all either form wants.
 
-[opnpc1,slug_oniall] @slugmenace_oniall;
-[opnpc1,slug_oniall_possessed] @slugmenace_oniall;
+[opnpc1,witchaven_oniall] @slugmenace_oniall;
 
 [label,slugmenace_oniall]
 switch_int (%slugmenace_stage) {
@@ -70,8 +70,9 @@ if (%slugmenace_met_maledict = ^slugmenace_off) {
 if (%slugmenace_met_holgart = ^slugmenace_off) {
     return(false);
 }
-if (%slugmenace_door_scanned = ^slugmenace_off) {
-    // the Mayor's scan sets this first; the door's scan sets it again later
+if (%slugmenace_mayor_scanned = ^slugmenace_off) {
+    // Savant's reading of the Mayor. Without it the report would go in on three conversations
+    // that proved nothing, which is the step the orb exists for.
     return(false);
 }
 return(true);
@@ -169,7 +170,7 @@ if (~slugmenace_has_commorb = false) {
     inv_add(inv, slug_commorb, 1);
     return;
 }
-if (%slugmenace_door_scanned = ^slugmenace_off | %slugmenace_stage < ^slugmenace_transcribed) {
+if (%slugmenace_stage < ^slugmenace_transcribed) {
     ~chatnpc("<p,quiz>Been down there yet?");
     ~chatplayer("<p,neutral>I'm going.");
     ~chatnpc("<p,neutral>The way down is the old ruin, west, past the fence. Look for a wall that isn't one.");

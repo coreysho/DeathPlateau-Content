@@ -93,7 +93,6 @@ recol5s=14724
 recol5d=7368
 recol6s=24075
 recol6d=24235
-category=slugmenace_mayor
 
 [slug_hobb_possessed]
 // rev 474 npc 4875
@@ -130,7 +129,6 @@ recol5s=14724
 recol5d=7368
 recol6s=24075
 recol6d=24235
-category=slugmenace_mayor
 
 [slug_maledict]
 // rev 474 npc 4878
@@ -493,21 +491,26 @@ param=death_anim,slug_prince_death
 // O'Niall's does not matter - neither of his forms has a walk.
 
 [witchaven_oniall]
+wanderrange=0
 multivar=slugmenace_oniall_turned
 multinpc=0,slug_oniall
 multinpc=1,slug_oniall_possessed
 
 [witchaven_hobb]
+wanderrange=0
 multivar=slugmenace_hobb_turned
+category=slugmenace_mayor
 multinpc=0,slug_hobb
 multinpc=1,slug_hobb_possessed
 
 [witchaven_maledict]
+wanderrange=0
 multivar=slugmenace_maledict_turned
 multinpc=0,slug_maledict
 multinpc=1,slug_maledict_possessed
 
 [witchaven_jeb]
+wanderrange=0
 multivar=slugmenace_jeb_turned
 multinpc=0,slug_jeb
 multinpc=1,slug_jeb_possessed
@@ -531,6 +534,7 @@ multinpc=1,slug_villager_old_possessed
 // rather than one shell and a coordinate test in the handler: which side of the water the player
 // is on is the map's business, not a script's.
 [witchaven_jeb_platform]
+wanderrange=0
 multivar=slugmenace_jeb_turned
 multinpc=0,slug_jeb
 multinpc=1,slug_jeb_possessed

@@ -28,7 +28,7 @@ switch_int (%slugmenace_stage) {
         $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_hobb, "Mayor Hobb"));
         $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_maledict, "Brother Maledict"));
         $text = append($text, ~slugmenace_journal_tick(%slugmenace_met_holgart, "Holgart the fisherman"));
-        if (%slugmenace_door_scanned = ^slugmenace_off) {
+        if (%slugmenace_mayor_scanned = ^slugmenace_off) {
             $text = append($text, "@dbl@Savant also wants me to @dre@Scan@dbl@ the Mayor");
         } else {
             $text = append($text, "@str@Savant's reading of the Mayor says there is something|");

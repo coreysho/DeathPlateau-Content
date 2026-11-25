@@ -151,3 +151,11 @@ endbit=20
 basevar=slugmenace_bits
 startbit=21
 endbit=21
+
+// SAVANT'S READING OF THE MAYOR, which is NOT the door's. These shared one bit at first and the
+// quest run found it in one line: the Mayor's scan set it, so the door's scan then read as
+// already done and the transcription was never handed over. Two readings, two bits.
+[slugmenace_mayor_scanned]
+basevar=slugmenace_bits
+startbit=22
+endbit=22

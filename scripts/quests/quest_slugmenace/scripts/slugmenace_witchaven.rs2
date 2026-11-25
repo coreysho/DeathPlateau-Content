@@ -1,8 +1,9 @@
 // The Slug Menace - the people of Witchaven.
 //
 // Mayor Hobb, Brother Maledict, Holgart, Jeb, Ezekial Lovecraft and three villagers. Each one is
-// a multinpc shell on the map (slugmenace.npc), so every handler is declared on BOTH children:
-// an op fires against whichever child the varbit picks, and a trigger on the parent never runs.
+// a multinpc shell on the map (slugmenace.npc), and EVERY HANDLER IS ON THE SHELL: a multinpc's
+// op trigger is looked up on the type the world holds, which is the shell, so a trigger on a
+// child never fires. quest_eaglespeak does the same with Nickolaus.
 //
 // HOLGART ALREADY HAS A HANDLER. He is Sea Slug's, in
 // areas/area_ardougne_east/scripts/holgart_ardougne.rs2, and a trigger cannot be declared twice -
@@ -10,8 +11,7 @@
 // ahead of Recruitment Drive's. Bailey and Jorral are hooked the same way, in their own files.
 
 // =========================================================================== Mayor Hobb
-[opnpc1,slug_hobb] @slugmenace_hobb;
-[opnpc1,slug_hobb_possessed] @slugmenace_hobb;
+[opnpc1,witchaven_hobb] @slugmenace_hobb;
 
 [label,slugmenace_hobb]
 if (%slugmenace_stage < ^slugmenace_briefed) {
@@ -122,8 +122,7 @@ if (%slugmenace_page1 = ^slugmenace_on) {
 ~chatplayer("<p,neutral>Of course. Thank you, Mayor.");
 
 // =========================================================================== Brother Maledict
-[opnpc1,slug_maledict] @slugmenace_maledict;
-[opnpc1,slug_maledict_possessed] @slugmenace_maledict;
+[opnpc1,witchaven_maledict] @slugmenace_maledict;
 
 [label,slugmenace_maledict]
 if (%slugmenace_stage < ^slugmenace_briefed) {
@@ -250,8 +249,7 @@ return(true);
 %slugmenace_met_holgart = ^slugmenace_on;
 
 // =========================================================================== Jeb Wormwood
-[opnpc1,slug_jeb] @slugmenace_jeb;
-[opnpc1,slug_jeb_possessed] @slugmenace_jeb;
+[opnpc1,witchaven_jeb] @slugmenace_jeb;
 
 [label,slugmenace_jeb]
 if (%slugmenace_jeb_turned = ^slugmenace_off) {
@@ -321,14 +319,16 @@ inv_add(inv, slug_page2, 1);
 ~objbox(slug_page2, "Lovecraft digs through a drawer of damp paper and pulls out a page covered in writing that is not any alphabet you know.", 250, 0, 0);
 
 // =========================================================================== the villagers
-[opnpc1,slug_villager_man] @slugmenace_villager;
-[opnpc1,slug_villager_woman] @slugmenace_villager;
-[opnpc1,slug_villager_old] @slugmenace_villager;
-[opnpc1,slug_villager_man_possessed] @slugmenace_villager_turned;
-[opnpc1,slug_villager_woman_possessed] @slugmenace_villager_turned;
-[opnpc1,slug_villager_old_possessed] @slugmenace_villager_turned;
+[opnpc1,witchaven_villager_man] @slugmenace_villager;
+[opnpc1,witchaven_villager_woman] @slugmenace_villager;
+[opnpc1,witchaven_villager_old] @slugmenace_villager;
 
+// One shell each, so there is one handler and it branches on the flag - a trigger on the
+// possessed child would never have fired.
 [label,slugmenace_villager]
+if (%slugmenace_villagers_turned = ^slugmenace_on) {
+    @slugmenace_villager_turned;
+}
 switch_int (random(3)) {
     case 0 :
         ~chatnpc("<p,neutral>Morning. Or afternoon. One of those.");

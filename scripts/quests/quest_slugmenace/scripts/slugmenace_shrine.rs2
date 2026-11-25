@@ -90,18 +90,17 @@ p_telejump($to);
 mes("You squeeze through the hole in the rock.");
 
 // =========================================================================== the dead sea slug
+// SAVANT NOTICES IT WHEN YOU PICK IT UP, not when you click it. The first version of this hung her
+// lines on [opheld1] and the quest run said why in one line: the obj has no inventory option at
+// all, so no client could ever have sent that click. Old School contacts you on the pickup, which
+// is also the only moment it is certain the player has one.
 [opobj3,slug_dead_sea_slug]
-if (%slugmenace_stage < ^slugmenace_shrine) {
+if (inv_freespace(inv) = 0) {
     @pickup_obj;
 }
-@pickup_obj;
-
-// Savant notices it the moment it is on you, which is what sets off the analysis that becomes the
-// glue later. Hooked on the inventory rather than the pickup so a slug taken from the bank, or
-// picked up a second time, still starts her off.
-[opheld1,slug_dead_sea_slug]
-if (%slugmenace_slug_scanned = ^slugmenace_on) {
-    ~mesbox("A dead sea slug. Savant has already had a good look at it.");
+obj_del;
+inv_add(inv, slug_dead_sea_slug, 1);
+if (%slugmenace_stage < ^slugmenace_shrine | %slugmenace_slug_scanned = ^slugmenace_on) {
     return;
 }
 ~chatnpc_specific("Savant", wanted_savant, "<p,quiz>Come in, this is Savant. I've detected a sea slug on you. Is everything okay?");

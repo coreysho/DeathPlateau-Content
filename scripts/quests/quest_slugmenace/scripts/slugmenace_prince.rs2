@@ -39,8 +39,12 @@ p_telejump(^slugmenace_doors_through);
 ~chatnpc_specific("Mayor Hobb", slug_hobb_possessed, "<p,angry>Sadly for you, this will be the last thing you ever see.");
 if_close;
 // A SUMMON CAN MISS. npc_add on an occupied square spawns nothing and the fight step then looks
-// at an empty room, so the Prince goes on a tile measured clear for a 2x2 on a booted world, and
-// the trigger is sent again by the doors if he is not there.
+// at an empty room, so the Prince goes on a tile measured clear for a 2x2 on a booted world.
+// AND IT MUST NOT HAPPEN TWICE: the quest run found two of him in the room, because a loc step
+// that retries its click runs the whole cutscene again. One is the fight.
+if (~slugmenace_prince_present = true) {
+    return;
+}
 npc_add(^slugmenace_prince_spawn, slug_prince, ^slugmenace_prince_lifetime);
 
 // Walking back in after dying. The doors are open - the runes are gone and the flags remember -

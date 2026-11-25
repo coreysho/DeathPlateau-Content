@@ -18,7 +18,7 @@ if (%slugmenace_stage = ^slugmenace_not_started) {
 // The Mayor, from anywhere in the room with him. This is the reading Savant asks for in his own
 // conversation and the one Col. O'Niall will not take a report without.
 if (%slugmenace_stage = ^slugmenace_asking & %slugmenace_met_hobb = ^slugmenace_on
-        & %slugmenace_door_scanned = ^slugmenace_off) {
+        & %slugmenace_mayor_scanned = ^slugmenace_off) {
     if (~slugmenace_near_hobb = true) {
         @slugmenace_scan_hobb;
     }
@@ -62,9 +62,9 @@ return(true);
 mes("You turn the orb towards the Mayor. It goes cold in your hand.");
 ~chatnpc_specific("Savant", wanted_savant, "<p,sad>That is not illness. There is something inside that man and it is using his mouth.");
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>I have seen a reading like that once before, in a report I was not supposed to read. Tell the colonel.");
-// The same flag the door's scan sets. It is the quest's "Savant has a reading" bit, and the first
-// thing she gets a reading of is the Mayor.
-%slugmenace_door_scanned = ^slugmenace_on;
+// ITS OWN BIT, not the door's. They shared one at first and the Mayor's scan then made the
+// door's read as already done, so the transcription was never handed over at all.
+%slugmenace_mayor_scanned = ^slugmenace_on;
 
 [label,slugmenace_scan_doors]
 // ONE FREE SLOT, because the scan hands over an item. Old School checks this and says so, rather
@@ -145,6 +145,13 @@ switch_int (%slugmenace_stage) {
 if (%slugmenace_stage ! ^slugmenace_transcribed) {
     return(false);
 }
+// AND THE TRANSCRIPTION HAS TO BE IN HAND. This hook goes straight into the translation rather
+// than adding an option to Jorral's own list, so claiming him on the stage alone would have shut
+// Making History out of its own quest giver for the length of one errand. A player who left the
+// copy at home gets Jorral's ordinary dialogue, and the orb's Contact is where the reminder is.
+if (inv_total(inv, slug_door_transcription) = 0) {
+    return(false);
+}
 return(true);
 
 [label,slugmenace_jorral]
@@ -176,11 +183,6 @@ return(true);
 ~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Can I finish now? Anyway - tell him you are working for Petmel Books.");
 ~chatplayer("<p,neutral>Apparently I'm working for Petmel Books, and this document is from them.");
 ~chatnpc("<p,happy>Oh, right! That explains the mild insanity. No problem; hand over the document and I'll have a look.");
-if (inv_total(inv, slug_door_transcription) = 0) {
-    ~chatplayer("<p,sad>Um, I don't appear to have it on me.");
-    ~chatnpc("<p,neutral>Well, run along and fetch it then.");
-    return;
-}
 ~chatnpc("<p,quiz>Hmm. Interesting. Very interesting.");
 ~chatnpc("<p,neutral>It's an early variation on a script used by the priests of Saradomin a long time ago.");
 ~chatplayer("<p,quiz>What does it say?");
