@@ -36,6 +36,10 @@ data=skills,crafting,19
 data=skills,ranged,30
 data=skills,slayer,18
 data=skills,woodcutting,35
+data=startskills,crafting,19
+data=startskills,ranged,30
+data=startskills,slayer,18
+data=startskills,woodcutting,35
 data=quests,questlist:priest,The Restless Ghost
 data=quests,questlist:haunted,Ernest the Chicken
 data=quests,questlist:priestperil,Priest in Peril
@@ -74,6 +78,7 @@ table=quest_requirement
 data=quest,questlist:fortress
 data=name,Black Knights' Fortress
 data=questpoints,12
+data=startquestpoints,12
 data=other,The ability to evade level 33 Black Knights
 
 // Cabin Fever
@@ -85,6 +90,8 @@ data=skills,agility,42
 data=skills,crafting,45
 data=skills,ranged,40
 data=skills,smithing,50
+data=startskills,ranged,40
+data=startskills,smithing,50
 data=quests,questlist:hunt,Pirate's Treasure
 data=quests,questlist:deal,Rum Deal
 
@@ -173,6 +180,7 @@ table=quest_requirement
 data=quest,questlist:dragon
 data=name,Dragon Slayer
 data=questpoints,32
+data=startquestpoints,32
 
 // Dream Mentor
 [quest_req_dreammentor]
@@ -202,6 +210,7 @@ table=quest_requirement
 data=quest,questlist:eadgar
 data=name,Eadgar's Ruse
 data=skills,herblore,31
+data=startskills,herblore,31
 data=quests,questlist:druid,Druidic Ritual
 data=quests,questlist:troll,Troll Stronghold
 
@@ -211,6 +220,7 @@ table=quest_requirement
 data=quest,questlist:eaglespeak
 data=name,Eagles' Peak
 data=skills,hunter,27
+data=startskills,hunter,27
 
 // Elemental Workshop
 [quest_req_elemental_workshop]
@@ -261,6 +271,7 @@ table=quest_requirement
 data=quest,questlist:fishingcompo
 data=name,Fishing Contest
 data=skills,fishing,10
+data=startskills,fishing,10
 
 // Forgettable Tale...
 [quest_req_forget]
@@ -278,6 +289,7 @@ table=quest_requirement
 data=quest,questlist:garden
 data=name,Garden of Tranquillity
 data=skills,farming,25
+data=startskills,farming,25
 data=quests,questlist:creatureoffenkenstrain,Creature of Fenkenstrain
 
 // Gertrude's Cat
@@ -323,6 +335,7 @@ table=quest_requirement
 data=quest,questlist:hero
 data=name,Heroes Quest
 data=questpoints,55
+data=startquestpoints,55
 data=skills,cooking,53
 data=skills,fishing,53
 data=skills,herblore,25
@@ -396,6 +409,7 @@ table=quest_requirement
 data=quest,questlist:legends
 data=name,Legends Quest
 data=questpoints,107
+data=startquestpoints,107
 data=skills,agility,50
 data=skills,crafting,50
 data=skills,herblore,45
@@ -433,6 +447,13 @@ data=skills,herblore,5
 data=skills,magic,65
 data=skills,mining,60
 data=skills,woodcutting,55
+data=startskills,crafting,61
+data=startskills,defence,40
+data=startskills,firemaking,49
+data=startskills,herblore,5
+data=startskills,magic,65
+data=startskills,mining,60
+data=startskills,woodcutting,55
 data=quests,questlist:viking,The Fremennik Trials
 data=quests,questlist:zanaris,Lost City
 data=quests,questlist:runemysteries,Rune Mysteries Quest
@@ -483,6 +504,8 @@ data=quest,questlist:mourning
 data=name,Mourning's Ends Part 1
 data=skills,ranged,60
 data=skills,thieving,50
+data=startskills,ranged,60
+data=startskills,thieving,50
 data=quests,questlist:roving_elves,Roving Elves
 data=quests,questlist:chompybird,Big Chompy Bird Hunting
 data=quests,questlist:sheepherder,Sheep Herder
@@ -643,6 +666,7 @@ data=skills,farming,40
 data=skills,fishing,50
 data=skills,prayer,47
 data=skills,slayer,42
+data=startskills,slayer,42
 data=quests,questlist:zogre,Zogre Flesh Eaters
 data=quests,questlist:priestperil,Priest in Peril
 data=other,Fishing requirement can be bypassed if obtaining 5 Karamthulhus from Zombie swabs or Zombie pirates
@@ -761,6 +785,7 @@ table=quest_requirement
 data=quest,questlist:tog
 data=name,Tears of Guthix
 data=questpoints,43
+data=startquestpoints,43
 data=skills,crafting,20
 data=skills,firemaking,49
 data=skills,mining,20
@@ -781,6 +806,7 @@ table=quest_requirement
 data=quest,questlist:feud
 data=name,The Feud
 data=skills,thieving,30
+data=startskills,thieving,30
 data=other,The ability to kill a level 70 bandit and a level 75 Menaphite (both can be safespotted).
 
 // The Fremennik Trials
@@ -836,6 +862,8 @@ data=quest,questlist:handsand
 data=name,The Hand in the Sand
 data=skills,crafting,49
 data=skills,thieving,17
+data=startskills,crafting,49
+data=startskills,thieving,17
 
 // The Knight's Sword
 [quest_req_squire]
@@ -927,6 +955,7 @@ table=quest_requirement
 data=quest,questlist:wanted
 data=name,Wanted!
 data=questpoints,32
+data=startquestpoints,32
 data=quests,questlist:rd,Recruitment Drive
 data=quests,questlist:lost_tribe,The Lost Tribe
 data=quests,questlist:priestperil,Priest in Peril

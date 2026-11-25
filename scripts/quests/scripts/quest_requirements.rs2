@@ -144,18 +144,26 @@ if ($row = null) {
 def_string $missing = "";
 def_int $n = 0;
 
-def_int $need_qp = db_getfield($row, quest_requirement:questpoints, 0);
+// startquestpoints, not questpoints: Recipe for Disaster's 175 is the total you end the quest
+// with, not a toll at the door, and the wiki marks the difference.
+def_int $need_qp = db_getfield($row, quest_requirement:startquestpoints, 0);
 if ($need_qp > 0 & ~questpoints_met($need_qp) = false) {
     $n = add($n, 1);
     $missing = append($missing, "|<tostring($need_qp)> Quest Points");
 }
 
-def_int $skills = db_getfieldcount($row, quest_requirement:skills);
+// startskills, NOT skills. The wiki marks each requirement as needed to START or needed later,
+// and almost every skill is "later": Old School lets you begin Between a Rock... without 40
+// Mining and stops you at the rock. Refusing the conversation on every listed skill is stricter
+// than the game being copied - 23 of the 162 are start requirements and the other 139 are not.
+// The journal still lists them all, because they are all requirements; this is only about which
+// of them may turn a player away at the door.
+def_int $skills = db_getfieldcount($row, quest_requirement:startskills);
 def_int $i = 0;
 while ($i < $skills) {
     def_stat $stat;
     def_int $level;
-    $stat, $level = db_getfield($row, quest_requirement:skills, $i);
+    $stat, $level = db_getfield($row, quest_requirement:startskills, $i);
     if (~stat_req_met($stat, $level) = false) {
         $n = add($n, 1);
         $missing = append($missing, "|Level <tostring($level)> <enum(stat, string, stat_names, $stat)>");

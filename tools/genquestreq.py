@@ -78,15 +78,22 @@ def requirements(key, name, names_to_key):
     if key in OVERRIDE:
         got = dict(OVERRIDE[key])
         got.setdefault('skills', {})
+        got.setdefault('start', {})
         got.setdefault('quests', [])
         got.setdefault('other', [])
         got.setdefault('qp', 0)
+        got.setdefault('qp_start', 0)
         return got, w
     # COMBAT IS NOT A SKILL. The wiki writes a combat-level requirement as {{SCP|Combat|85}}, which
     # looks exactly like a skill requirement and is not one - there is no `combat` stat for the
     # build to pack, and `data=skills,combat,85` stops the build with "double-check the reference
     # exists". It becomes a line of prose, which is all the journal can do with it anyway.
-    out = {'skills': {}, 'qp': w['reqs_qp'] or 0, 'quests': [], 'other': []}
+    out = {'skills': {}, 'start': {}, 'qp': w['reqs_qp'] or 0,
+           'qp_start': w.get('reqs_qp_start') or 0, 'quests': [], 'other': []}
+    for skill, lvl in w.get('reqs_start', {}).items():
+        s2 = Q.norm_skill(skill)
+        if s2 in Q.SKILLS:
+            out['start'][s2] = lvl
     for skill, lvl in w['reqs_skill'].items():
         s = Q.norm_skill(skill)
         if s in Q.SKILLS:
@@ -174,8 +181,12 @@ def render(ql, rows):
         L.append('data=name,%s' % quoted(ql[key]))
         if r['qp']:
             L.append('data=questpoints,%d' % r['qp'])
+        if r.get('qp_start'):
+            L.append('data=startquestpoints,%d' % r['qp_start'])
         for skill in sorted(r['skills']):
             L.append('data=skills,%s,%d' % (skill, r['skills'][skill]))
+        for skill in sorted(r.get('start', {})):
+            L.append('data=startskills,%s,%d' % (skill, r['start'][skill]))
         for other in r['quests']:
             # the name travels with the component: a component carries no text a script can read
             # back, and the journal has to print the quest under the name the quest list draws

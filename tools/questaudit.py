@@ -428,7 +428,7 @@ def wiki_facts(title):
         page = m.group(1).strip()
         text = fetch(page)
     out = {'page': page, 'qp': None, 'xp': {}, 'reqs_skill': {}, 'reqs_quest': [],
-           'reqs_qp': None, 'rewards_raw': None, 'requirements_raw': None, 'later_xp': {},
+           'reqs_start': {}, 'reqs_qp': None, 'reqs_qp_start': None, 'rewards_raw': None, 'requirements_raw': None, 'later_xp': {},
            'release_year': None}
 
     # THE RELEASE YEAR DECIDES WHETHER A REWARD IS ORIGINAL OR A LATER ADDITION. This server plays
@@ -448,14 +448,38 @@ def wiki_facts(title):
         req = field(det, 'requirements')
         if req:
             out['requirements_raw'] = req
-            for m in re.finditer(r'\{\{SCP\|([A-Za-z ]+)\|([\d,]+)', req):
+            # NEEDED TO START, OR NEEDED TO FINISH? The wiki marks each requirement with
+            # {{Questreqstart|yes}} or {{Questreqstart|no}}, and almost every skill is "no":
+            # Old School lets you start Between a Rock... without 40 Mining and stops you at the
+            # rock. Blocking the conversation on all of them is stricter than the game being
+            # copied, so the two are kept apart - reqs_skill is every requirement, for the
+            # journal to list, and reqs_start is the subset that may refuse a player at the door.
+            #
+            # An unmarked requirement is treated as NOT a start requirement. That is the way to
+            # be wrong that cannot lock anybody out of a quest they are entitled to begin.
+            for line in req.split(chr(10)):
+                m = re.search(r'\{\{SCP\|([A-Za-z ]+)\|([\d,]+)', line)
+                if not m:
+                    continue
                 skill, lvl = m.group(1).strip().lower(), num(m.group(2))
                 if lvl is None:
                     continue
                 if skill == 'quest':
                     out['reqs_qp'] = lvl
-                elif skill not in NOT_OURS:
-                    out['reqs_skill'][skill] = max(out['reqs_skill'].get(skill, 0), lvl)
+                    # The quest point total carries the same flag. Recipe for Disaster's 175 has
+                    # none, and its own note says nine of them are earned DURING the quest and
+                    # seventy-nine by finishing its prerequisites - so it is the total you end
+                    # with, not a toll at the door. Tears of Guthix's 43 is marked yes and is.
+                    f = re.search(r'\{\{Questreqstart\|(\w+)\}\}', line)
+                    if f and f.group(1).lower() == 'yes':
+                        out['reqs_qp_start'] = lvl
+                    continue
+                if skill in NOT_OURS:
+                    continue
+                out['reqs_skill'][skill] = max(out['reqs_skill'].get(skill, 0), lvl)
+                f = re.search(r'\{\{Questreqstart\|(\w+)\}\}', line)
+                if f and f.group(1).lower() == 'yes':
+                    out['reqs_start'][skill] = max(out['reqs_start'].get(skill, 0), lvl)
             for m in re.finditer(r'\[\[([^\]|#]+)(?:\|[^\]]*)?\]\]', req):
                 out['reqs_quest'].append(m.group(1).strip())
 
