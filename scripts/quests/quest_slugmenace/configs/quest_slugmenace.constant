@@ -1,0 +1,98 @@
+// THE SLUG MENACE - the design document, read out of the 474 cache before anything was written.
+//
+// The quest is varp 874 there: varbit 2610 holds the stage in bits 0-7, and twenty-one more
+// varbits sit beside it. 4,088 varbits decoded with zero unknown opcodes, so the layout below is
+// read rather than guessed.
+//
+// THE LADDER IS THE CACHE'S, NOT THE WALKTHROUGH'S. Every npc that changes during this quest is a
+// multinpc parent keyed on 2610, and the values they change at are the quest's shape:
+//
+//     1   a fourth Witchaven villager appears          (474 parent 4880)
+//     2   Jeb changes                                  (474 parent 4860)
+//     5   a fifth villager appears                     (474 parent 4881)
+//     8   Brother Maledict changes                     (474 parent 4855)
+//     9   Col. O'Niall changes, a sixth villager       (474 parents 4853, 4882)
+//    12   Mayor Hobb changes                           (474 parent 4854)
+//
+// Twelve is the last transition in the cache, so it is completion. The stages between those six
+// are this build's, spaced by ten so a step can be put between two of them later without
+// renumbering a save - the same spacing every other quest here uses.
+//
+// EVERY VILLAGER HAS TWO FORMS and the second one walks on slug_possessed_walk rather than the
+// human walk. That is the quest: they are being taken over, and the stage varbit swaps them in as
+// you work out what is happening. It is the thing the walkthrough does not tell you and the cache
+// does.
+
+^slugmenace_not_started = 0
+
+// Sir Tiffy has handed over the Commorb v2 and named Col. O'Niall. 474's stage 1.
+^slugmenace_briefed = 10
+
+// O'Niall has named the three people worth talking to: Mayor Hobb, Brother Maledict, Holgart.
+^slugmenace_asking = 20
+
+// All three spoken to and reported back. O'Niall sends you to the shrine. 474's stage 2, where
+// Jeb changes - he has the boat by now.
+^slugmenace_shrine = 30
+
+// The imposing door found, Savant has copied its markings, the dead sea slug is off the floor.
+^slugmenace_transcribed = 40
+
+// Jorral has translated them. 474's stage 5.
+^slugmenace_translated = 50
+
+// Brother Maledict has shown you the book and named its three missing pages. 474's stage 8 - he
+// is visibly ill by now.
+^slugmenace_pages = 60
+
+// All three pages recovered and glued. The runes can be cut. 474's stage 9, where O'Niall turns.
+^slugmenace_runes = 70
+
+// The door is open, the Slug Prince is dead, Mother Mallum has been seen and Savant has pulled
+// you out. Only Sir Tiffy is left.
+^slugmenace_told = 80
+
+// 474's stage 12.
+^slugmenace_complete = 90
+
+// ---------------------------------------------------------------- requirements
+// Wanted! and Sea Slug, plus four skills. Which of them gate the START rather than a step is the
+// wiki's {{Questreqstart}} flag's business and quest_requirement.dbrow's - these are here for the
+// scripts that enforce them, and tools/genquestreq.py writes the row the journal and the gate read.
+^slugmenace_req_crafting = 30
+^slugmenace_req_runecraft = 30
+^slugmenace_req_slayer = 30
+^slugmenace_req_thieving = 30
+
+// ---------------------------------------------------------------- rewards
+// 1 quest point and 3,500 each of Crafting, Runecraft and Thieving. stat_advance takes tenths.
+^slugmenace_xp_crafting = 35000
+^slugmenace_xp_runecraft = 35000
+^slugmenace_xp_thieving = 35000
+
+// ---------------------------------------------------------------- the flags
+^slugmenace_off = 0
+^slugmenace_on = 1
+
+// How many of the five runes the door wants.
+^slugmenace_runes_needed = 5
+
+// The Slug Prince drains Prayer by the damage it deals, and only melee hurts it.
+^slugmenace_prince_level = 62
+
+// ---------------------------------------------------------------- places
+// NOT WRITTEN YET, AND THE GUESSES ARE DELETED. Nine coordinates were written here from the
+// walkthrough's descriptions and then checked against a booted world: four were inside walls, and
+// the one for the shrine landed in the middle of Ardougne's market, twenty tiles from anything
+// this quest touches.
+//
+// The reason is bigger than a bad guess. THE SHRINE AND ITS DUNGEON ARE NOT IN THIS BUILD.
+// Witchaven's own square (m42_51) has no stairs, no trapdoor and no shrine - only fencing and
+// walls - and m42_152/m42_153 underneath it are a generic cave of cavewall_* pieces, nothing to
+// do with this quest. That is correct for a 377 map: the shrine was added WITH this quest, in
+// 2007.
+//
+// So the places go in when the map does, from the 474 cache, with tools/models/import474rect.py -
+// which exists for exactly this and whose first user was a 2007 building grafted into a square
+// the build already had. Guessing coordinates for a building that is not there would have been
+// writing down fiction.

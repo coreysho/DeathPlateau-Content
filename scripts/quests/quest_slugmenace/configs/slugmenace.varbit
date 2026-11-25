@@ -1,0 +1,102 @@
+// The Slug Menace - see slugmenace.varp. The stage lives in the low byte of its own varp, exactly
+// as 474 has it (varp 874, varbit 2610, bits 0-7), and the flags below are on a second varp here
+// rather than the same one, because this build has room and 474's packing was a client-era economy.
+//
+// 474's own numbers are quoted against each so the next person can check them against the cache.
+
+// The quest's stage. 0 not started, 70 complete. The ladder is quest_slugmenace.constant's.
+// 474's varbit 2610.
+[slugmenace_stage]
+basevar=slugmenace
+startbit=0
+endbit=7
+
+// ---------------------------------------------------------------- who you have spoken to
+// The three Witchaven names Col. O'Niall gives you, in any order. He will not hear your report
+// until all three are set. 474 keeps one bit each rather than a count for the same reason.
+[slugmenace_met_hobb]
+basevar=slugmenace_bits
+startbit=0
+endbit=0
+
+[slugmenace_met_maledict]
+basevar=slugmenace_bits
+startbit=1
+endbit=1
+
+[slugmenace_met_holgart]
+basevar=slugmenace_bits
+startbit=2
+endbit=2
+
+// ---------------------------------------------------------------- the shrine
+// The false wall on the east side of the shrine's first room: 0 a wall, 1 pushed open. This is
+// 474's varbit 2618, and the ONE loc in the whole cache that switches on this quest.
+[slugmenace_false_wall]
+basevar=slugmenace_bits
+startbit=3
+endbit=3
+
+// Savant has read the markings on the imposing door and you are carrying the transcription.
+[slugmenace_door_scanned]
+basevar=slugmenace_bits
+startbit=4
+endbit=4
+
+// Jorral has translated them.
+[slugmenace_translated]
+basevar=slugmenace_bits
+startbit=5
+endbit=5
+
+// ---------------------------------------------------------------- the pages
+// One bit per page recovered: the mayor's desk, Ezekial Lovecraft, and Col. O'Niall's three
+// fragments once they are glued back together.
+[slugmenace_page1]
+basevar=slugmenace_bits
+startbit=6
+endbit=6
+
+[slugmenace_page2]
+basevar=slugmenace_bits
+startbit=7
+endbit=7
+
+[slugmenace_page3]
+basevar=slugmenace_bits
+startbit=8
+endbit=8
+
+// ---------------------------------------------------------------- the door
+// One bit per rune set into the imposing door. Five bits, and the door opens on the fifth.
+[slugmenace_rune_air]
+basevar=slugmenace_bits
+startbit=9
+endbit=9
+
+[slugmenace_rune_water]
+basevar=slugmenace_bits
+startbit=10
+endbit=10
+
+[slugmenace_rune_earth]
+basevar=slugmenace_bits
+startbit=11
+endbit=11
+
+[slugmenace_rune_fire]
+basevar=slugmenace_bits
+startbit=12
+endbit=12
+
+[slugmenace_rune_mind]
+basevar=slugmenace_bits
+startbit=13
+endbit=13
+
+// Holgart has handed his boat to Jeb, so the Fishing Platform trip runs from Jeb instead.
+// 474's varbit 2614, which is also what swaps the giant lobsters in.
+[slugmenace_jeb_has_boat]
+basevar=slugmenace_bits
+startbit=14
+endbit=14
