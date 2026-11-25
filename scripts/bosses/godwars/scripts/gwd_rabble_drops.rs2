@@ -1,0 +1,135 @@
+// THE FOUR GOD WARS NPCS WITH NO ORDINARY SELF: the orks, the gorak, Saradomin's priest and his
+// two knights. Rates are the OSRS wiki's (November 2026), adapted to what this 377 cache has.
+//
+// The other eleven kinds in the skirmish - ogres, jogres, cyclopes, hobgoblins, goblins,
+// hellhounds, werewolves, bloodvelds, pyrefiends, icefiends and imps - are the same creatures that
+// live elsewhere in the world, so they are named on their own tables in drop_tables/scripts/
+// rather than copied here. These four have no ordinary counterpart to point at.
+//
+// WHY ANY OF THEM NEEDED THIS. All twenty carry category=gwd_army so [ai_timer,_gwd_army] can find
+// them for the skirmish, and an npc has ONE category - so taking that one cost each of them the
+// drop category it would otherwise have had. The shared death routine hands out
+// npc_param(death_drop) and nothing else when no table answers, so twenty attackable npcs dropped
+// their bones and that was all. DeathPlateau-Bugs#107, and the same shape as #32's trolls.
+//
+// AND THE 100% ROW IS EVERY TABLE'S OWN JOB. ~npc_death does not drop the bones; every table in
+// the build calls obj_add(npc_coord, npc_param(death_drop), ...) for itself, so a table that
+// forgets that line is a monster that leaves nothing at all. gwd_bodyguard_drops.rs2 records
+// paying for that lesson with a 540-kill sim run.
+
+// ---------------------------------------------------------------------------------- Ork
+// Four shells, one table - the wiki has a single Ork page covering all four monster ids.
+//
+// Exactly 128 slots, which is the arithmetic worth checking rather than trusting: 13 weapon rows
+// at 5, the iron spear at 4, the bronze scimitar at 6, five armour rows at 5, five coin rows at
+// 8+5+5+5+5, and the knife at 5.
+//
+// THE BRONZE SCIMITAR IS ONE ROW HERE AND TWO ON THE WIKI - 5/128 and a second at 1/128, which is
+// the same item at the same quantity, so it is 6/128. Merged rather than written twice because two
+// adjacent branches handing out the same thing is a reader's trap, not a mechanic.
+[ai_queue3,gwd_ork_1] @gwd_ork_drop_table;
+[ai_queue3,gwd_ork_2] @gwd_ork_drop_table;
+[ai_queue3,gwd_ork_3] @gwd_ork_drop_table;
+[ai_queue3,gwd_ork_4] @gwd_ork_drop_table;
+
+[label,gwd_ork_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+// Tertiary, and the orks are the only one of these four with two: easy and hard, both 1/128.
+~trail_easycluedrop(^trail_easy_droprate, npc_coord);
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+def_int $random = random(128);
+if ($random < 5) {
+    obj_add(npc_coord, bronze_2h_sword, 1, ^lootdrop_duration);
+} else if ($random < 10) {
+    obj_add(npc_coord, bronze_battleaxe, 1, ^lootdrop_duration);
+} else if ($random < 15) {
+    obj_add(npc_coord, bronze_dart, 2, ^lootdrop_duration);
+} else if ($random < 20) {
+    obj_add(npc_coord, bronze_halberd, 1, ^lootdrop_duration);
+} else if ($random < 26) {
+    obj_add(npc_coord, bronze_scimitar, 1, ^lootdrop_duration);
+} else if ($random < 31) {
+    obj_add(npc_coord, bronze_warhammer, 1, ^lootdrop_duration);
+} else if ($random < 36) {
+    obj_add(npc_coord, iron_dart, 2, ^lootdrop_duration);
+} else if ($random < 41) {
+    obj_add(npc_coord, iron_longsword, 1, ^lootdrop_duration);
+} else if ($random < 46) {
+    obj_add(npc_coord, iron_mace, 1, ^lootdrop_duration);
+} else if ($random < 51) {
+    obj_add(npc_coord, iron_scimitar, 1, ^lootdrop_duration);
+} else if ($random < 56) {
+    obj_add(npc_coord, steel_axe, 1, ^lootdrop_duration);
+} else if ($random < 61) {
+    obj_add(npc_coord, steel_dagger, 1, ^lootdrop_duration);
+} else if ($random < 66) {
+    obj_add(npc_coord, steel_mace, 1, ^lootdrop_duration);
+} else if ($random < 70) {
+    obj_add(npc_coord, iron_spear, 1, ^lootdrop_duration);
+} else if ($random < 75) {
+    obj_add(npc_coord, bronze_med_helm, 1, ^lootdrop_duration);
+} else if ($random < 80) {
+    obj_add(npc_coord, bronze_full_helm, 1, ^lootdrop_duration);
+} else if ($random < 85) {
+    obj_add(npc_coord, bronze_platelegs, 1, ^lootdrop_duration);
+} else if ($random < 90) {
+    obj_add(npc_coord, iron_chainbody, 1, ^lootdrop_duration);
+} else if ($random < 95) {
+    obj_add(npc_coord, steel_med_helm, 1, ^lootdrop_duration);
+} else if ($random < 103) {
+    obj_add(npc_coord, coins, 10, ^lootdrop_duration);
+} else if ($random < 108) {
+    obj_add(npc_coord, coins, 5, ^lootdrop_duration);
+} else if ($random < 113) {
+    obj_add(npc_coord, coins, 8, ^lootdrop_duration);
+} else if ($random < 118) {
+    obj_add(npc_coord, coins, 12, ^lootdrop_duration);
+} else if ($random < 123) {
+    obj_add(npc_coord, coins, 23, ^lootdrop_duration);
+} else {
+    obj_add(npc_coord, knife, 1, ^lootdrop_duration);
+}
+
+// ---------------------------------------------------------------------------------- Gorak
+// Big bones, then the shared gem table EVERY kill - that is the gorak's whole table on the wiki,
+// which says they "always roll the gem drop table". ~randomjewel is that table and carries its own
+// half-of-the-time nothing, so no roll is needed around it.
+//
+// LEFT OUT: the long bone at 1/400 and the curved bone at 1/5,012.5. Neither obj exists in this
+// cache - they are Rag and Bone Man II's and this build has no such quest - so their weight is
+// simply not in the table, which is how gwd_drops.rs2 and gwd_army_drops.rs2 handle the same
+// problem. The gorak claws at 1/3 are Fairytale II's and that quest is not here either.
+[ai_queue3,gwd_gorak] @gwd_gorak_drop_table;
+
+[label,gwd_gorak_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
+obj_add(npc_coord, ~randomjewel, ^lootdrop_duration);
+
+// ------------------------------------------------------- Saradomin's priest and his two knights
+// THEIR TABLE REALLY IS BONES AND A CLUE, and that is worth saying plainly because it looks like a
+// stub. The wiki gives the Saradomin priest exactly two rows - bones, always, and a hard clue at
+// 1/128 - and the Knight of Saradomin the same two plus an ecumenical key and a looting bag that
+// are Wilderness-only, so neither applies in this dungeon. The knights' page calls their drops
+// "very poor" in as many words.
+//
+// So these three were nearly right already: what they were missing was the clue, not a table.
+[ai_queue3,gwd_saradomin_priest] @gwd_saradomin_drop_table;
+[ai_queue3,gwd_saradomin_knight_1] @gwd_saradomin_drop_table;
+[ai_queue3,gwd_saradomin_knight_2] @gwd_saradomin_drop_table;
+
+[label,gwd_saradomin_drop_table]
+gosub(npc_death);
+if (npc_findhero = ^false) {
+    return;
+}
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+~trail_hardcluedrop(^trail_hard_droprate, npc_coord);
