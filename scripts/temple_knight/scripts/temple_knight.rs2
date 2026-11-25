@@ -1,0 +1,125 @@
+// SIR TIFFY CASHIEN'S ARMOURY, and the two worn gates behind the kit it sells.
+// Numbers, prices and the reasoning behind both live in configs/temple_knight.constant.
+//
+// Tiffy's Talk-to is declared in quests/quest_rd/scripts/quest_rd.rs2 - a trigger cannot be
+// declared twice, and Recruitment Drive is what puts him in the park in the first place - so this
+// file owns the post-quest menu and that handler jumps into @tk_tiffy_postquest.
+
+// --- The counter ---
+
+// EVERYTHING TIFFY HAS TO OFFER ONCE YOU ARE IN THE ORDER, and there are three things now: the
+// armoury, Wanted! and The Slug Menace. Both quests start and end with him, and each used to be
+// checked ahead of Recruitment Drive's handler and claim the WHOLE conversation whenever it had
+// anything to say - so an initiate could not buy armour for as long as either was open, which is
+// a trap and not a design. They are options on one menu instead, which is how Old School puts it.
+//
+// AT MOST ONE OF THE TWO WANTS HIM AT A TIME, by their own rules rather than by anything here:
+// ~slugmenace_tiffy_wants is false until Wanted! is complete, and ~wanted_tiffy_wants is false
+// from that moment on. So the menu is three options, never four, and the Slug Menace is asked
+// first because it is the later quest.
+//
+// NO ECHO OF THE JOBS OPTION. Every branch this can jump into opens with a line of its own that
+// follows the menu naturally - "So when can I start doing missions for the Temple Knights?",
+// "Greetings. Anything to report?", "It's done." - and saying the option back first would put two
+// player lines in a row. The armoury and the goodbye DO echo, because what follows them is Tiffy.
+[label,tk_tiffy_postquest]
+// 0 nobody, 1 The Slug Menace, 2 Wanted!
+def_int $jobs_owner = 0;
+def_string $jobs = "Do you have any jobs for me yet?";
+if (~slugmenace_tiffy_wants = true) {
+    $jobs_owner = 1;
+    if (%slugmenace_stage > ^slugmenace_not_started) {
+        $jobs = "I have something to report.";
+    }
+} else if (~wanted_tiffy_wants = true) {
+    $jobs_owner = 2;
+    // "Any jobs yet?" is the wrong thing to open with when the job is done and Tiffy is waiting
+    // to be handed Solus Dellagar's hat.
+    if (%wanted_main = ^wanted_cornered) {
+        $jobs = "About Solus Dellagar...";
+    }
+}
+if ($jobs_owner > 0) {
+    switch_int (~p_choice3($jobs, 1, "Can I buy some armour?", 2, "Nothing, thanks.", 3)) {
+        case 1 :
+            if ($jobs_owner = 1) {
+                @slugmenace_tiffy; // quests/quest_slugmenace/scripts/slugmenace_tiffy.rs2
+            }
+            @wanted_tiffy; // quests/quest_wanted/scripts/wanted_tiffy.rs2
+        case 2 : @tk_tiffy_armoury;
+        case 3 : @tk_tiffy_nothing;
+    }
+    return;
+}
+switch_int (~p_choice2("Can I buy some armour?", 1, "Nothing, thanks.", 2)) {
+    case 1 : @tk_tiffy_armoury;
+    case 2 : @tk_tiffy_nothing;
+}
+
+[label,tk_tiffy_nothing]
+~chatplayer("<p,neutral>Nothing, thanks.");
+~chatnpc("<p,happy>Then I shall sit here and be decorative. Ta-ta.");
+
+[label,tk_tiffy_armoury]
+~chatplayer("<p,quiz>Can I buy some armour?");
+if (~tk_proselyte_rank = true) {
+    ~chatnpc("<p,happy>Naturally. Proselyte issue and everything under it - you have earned the lot.");
+    ~openshop(tk_proselyte_armoury, ^tk_shop_buy, ^tk_shop_sell, ^tk_shop_haggle, "Proselyte Temple Knight Armoury");
+    return;
+}
+~chatnpc("<p,happy>Of course. Initiate issue only, I'm afraid - that is as far as your rank goes.");
+~openshop(tk_initiate_armoury, ^tk_shop_buy, ^tk_shop_sell, ^tk_shop_haggle, "Initiate Temple Knight Armoury");
+
+// --- Rank ---
+
+// WHETHER THE PLAYER IS A PROSELYTE, which is to say whether The Slug Menace is done.
+//
+// This was written as a stub returning false, because the quest was being built in parallel and
+// %slugmenace_stage and ^slugmenace_complete were declared by that work and by nothing here - a
+// duplicate declaration of either would have broken the build for both. The quest landed first
+// (quests/quest_slugmenace), so it is the real test now and the shelf is open.
+//
+// ONE PROC, deliberately: the proselyte counter and all four worn gates go through this, so the
+// rank is asked in one place and the quest is named in one place.
+// A comparison is a branch here and not an expression - return() takes a value, so `return(a >= b)`
+// does not parse.
+[proc,tk_proselyte_rank]()(boolean)
+if (%slugmenace_stage >= ^slugmenace_complete) {
+    return(true);
+}
+return(false);
+
+// --- Worn gates ---
+//
+// An [opheld2,<obj>] overrides the wildcard wear handler for that obj only. The pieces have their
+// equip bonuses in their configs; what cannot go in a config is a quest, which is why these are
+// scripts and not params.
+
+// Initiate: Recruitment Drive and 20 Defence, via the label levelrequire.rs2 already declared for
+// exactly this armour - it refuses with "Only Temple Knight initiates may wear this armour." and
+// then falls through to the ordinary Defence check.
+[opheld2,basic_tk_helm] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+[opheld2,basic_tk_body] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+[opheld2,basic_tk_legs] @levelrequire_recruitmentdrive_defence(^initiate_defence_level, last_slot);
+
+// Proselyte: The Slug Menace, 30 Defence and 20 Prayer. Not in levelrequire.rs2 with its sibling,
+// because the quest half of it is ~tk_proselyte_rank above and the counter asks the same proc -
+// keeping the two together is what makes "who is a proselyte" one answer rather than two.
+[opheld2,proselyte_sallet] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_hauberk] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_cuisse] @tk_wear_proselyte(last_slot);
+[opheld2,proselyte_tasset] @tk_wear_proselyte(last_slot);
+
+[label,tk_wear_proselyte](int $slot)
+if (~tk_proselyte_rank = false) {
+    mes("Only Temple Knight proselytes may wear this armour.");
+    return;
+}
+// Prayer first, because it is the requirement this set adds and the Defence one is shared: the
+// label below says the Defence line and ~equips on success.
+if (stat_base(prayer) < ^proselyte_prayer_level) {
+    mes("You are not a high enough level to use this item.");
+    mes("You need to have a Prayer level of <tostring(^proselyte_prayer_level)>.");
+    return;
+}
+@levelrequire_defence(^proselyte_defence_level, $slot);

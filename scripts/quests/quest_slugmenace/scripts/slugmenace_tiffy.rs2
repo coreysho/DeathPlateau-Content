@@ -1,10 +1,15 @@
 // The Slug Menace - Sir Tiffy Cashien, Falador Park.
 //
-// Tiffy is rd_teleporter_guy and he already carries two quests: Recruitment Drive declares
-// [opnpc1] in quests/quest_rd/scripts/quest_rd.rs2 and Wanted! hooks in ahead of it. A trigger
-// cannot be declared three times, so this hooks in ahead of BOTH - the Slug Menace first, because
-// it is the latest thing he has to say - and hands the conversation straight back the moment this
-// quest has nothing to add.
+// Tiffy is rd_teleporter_guy and he carries three things: Recruitment Drive declares [opnpc1] in
+// quests/quest_rd/scripts/quest_rd.rs2, and that handler offers a MENU - this quest, Wanted!, and
+// the Temple Knight armoury - from temple_knight/scripts/temple_knight.rs2. A trigger cannot be
+// declared twice, let alone three times, and the menu is also why none of the three can claim the
+// conversation away from the others: an initiate could not buy armour for as long as either quest
+// was open when each hooked in ahead of the handler instead.
+//
+// SO THE GREETING AND THE "any jobs yet?" MENU ARE NOT HERE. @tk_tiffy_postquest says both before
+// it jumps in, and ~slugmenace_tiffy_wants is what decides whether this quest is on that menu at
+// all - unchanged, and still answered before Wanted!'s.
 //
 // THE COMMORB IS THE GATE AT THE DOOR. Old School will not start this quest without a commorb in
 // the inventory, and then upgrades that orb to a Commorb v2 rather than handing out a second one:
@@ -36,12 +41,10 @@ if (%slugmenace_stage >= ^slugmenace_told) {
 
 // =========================================================================== starting out
 [label,slugmenace_tiffy_start]
-~chatnpc("<p,happy>Jolly good show on getting into the White Knights, what?");
-~chatnpc("<p,happy>Now how can I help you, old bean?");
-if (~p_choice2("Do you have any jobs for me yet?", 1, "Nothing, thank you.", 2) = 2) {
-    ~chatplayer("<p,neutral>Nothing, thank you.");
-    return;
-}
+// The greeting and the "Do you have any jobs for me yet?" / "Nothing, thank you." menu that used
+// to open this are said by @tk_tiffy_postquest now, which is the menu this quest shares with
+// Wanted! and the armoury. The player has already asked by the time this runs; the line below is
+// them saying it properly.
 ~chatplayer("<p,quiz>So when can I start doing missions for the Temple Knights?");
 // The requirements are declared once, in quests/configs/quest_requirement.dbrow, and this is the
 // same row the journal prints. ~quest_requirements_block says what is missing and returns true.
@@ -87,7 +90,8 @@ inv_add(inv, slug_commorb, 1);
 
 // =========================================================================== while you work
 [label,slugmenace_tiffy_waiting]
-~chatplayer("<p,happy>Hey, Sir Tiffy.");
+// "Hey, Sir Tiffy." is gone from here: the shared menu greets him first, and the option that
+// reaches this branch reads "I have something to report." already.
 ~chatnpc("<p,quiz>Greetings. Anything to report?");
 // A lost orb is a dead end otherwise: nothing else in the game hands one out, and every scan in
 // the quest wants it. Old School has him replace it and so does O'Niall.

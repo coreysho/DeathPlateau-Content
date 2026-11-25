@@ -1,0 +1,36 @@
+// Sir Tiffy Cashien's stock. Two lists, one counter - see configs/temple_knight.constant.
+//
+// Stock numbers and the restock rate are Old School's: thirty of each piece, restocking a piece per
+// tick, which is effectively bottomless and is what the shop a quest reward hangs off should be.
+// The alternative - a slow restock on a shop only one quest's worth of players can reach - just
+// means the second person to arrive cannot buy a set.
+//
+// allstock=no, so these shops will only buy back what they sell. That is what makes Tiffy's line
+// about selling you "initiate level items only" true in both directions: carry a proselyte hauberk
+// to the initiate counter before The Slug Menace and it will not take it either.
+
+[tk_initiate_armoury]
+scope=shared
+size=10
+restock=yes
+stackall=yes
+allstock=no
+stock1=basic_tk_helm,30,1
+stock2=basic_tk_legs,30,1
+stock3=basic_tk_body,30,1
+
+// The proselyte counter carries BOTH sets, as Old School's does - a proselyte has not stopped being
+// able to buy initiate kit, and the three initiate rows here are the same objs as above, not copies.
+[tk_proselyte_armoury]
+scope=shared
+size=20
+restock=yes
+stackall=yes
+allstock=no
+stock1=basic_tk_helm,30,1
+stock2=basic_tk_legs,30,1
+stock3=basic_tk_body,30,1
+stock4=proselyte_sallet,30,1
+stock5=proselyte_cuisse,30,1
+stock6=proselyte_hauberk,30,1
+stock7=proselyte_tasset,30,1

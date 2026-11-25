@@ -69918,6 +69918,22 @@ wearpos=hat
 wearpos2=head
 wearpos3=jaw
 weight=5lb
+// FINISHED 2026-11-24. The cache ships this piece with no category and no combat params,
+// so it wore as decoration: every defence zero. Initiate is mithril's defence line with a
+// prayer bonus on top, and these are mithril_full_helm's own numbers rather than a wiki table, so
+// the set cannot drift away from the armour it is meant to match. Prayer +3 (set +14).
+//
+// Worn gate: [opheld2,basic_tk_helm] in temple_knight/scripts/temple_knight.rs2 - Recruitment
+// Drive plus 20 Defence. NOT a saradominitem: initiate does not count as one in Old School.
+category=armour_helmet
+param=magicattack,-6
+param=rangeattack,-2
+param=stabdefence,13
+param=slashdefence,14
+param=crushdefence,11
+param=magicdefence,-1
+param=rangedefence,13
+param=prayerbonus,3
 
 [basic_tk_body]
 name=Initiate platemail
@@ -69942,6 +69958,22 @@ members=yes
 wearpos=torso
 wearpos2=arms
 weight=19lb
+// FINISHED 2026-11-24. The cache ships this piece with no category and no combat params,
+// so it wore as decoration: every defence zero. Initiate is mithril's defence line with a
+// prayer bonus on top, and these are mithril_platebody's own numbers rather than a wiki table, so
+// the set cannot drift away from the armour it is meant to match. Prayer +6 (set +14).
+//
+// Worn gate: [opheld2,basic_tk_body] in temple_knight/scripts/temple_knight.rs2 - Recruitment
+// Drive plus 20 Defence. NOT a saradominitem: initiate does not count as one in Old School.
+category=armour_body
+param=magicattack,-30
+param=rangeattack,-10
+param=stabdefence,46
+param=slashdefence,44
+param=crushdefence,38
+param=magicdefence,-6
+param=rangedefence,44
+param=prayerbonus,6
 
 [basic_tk_legs]
 name=Initiate platelegs
@@ -69963,6 +69995,22 @@ womanwear=obj_iron_platelegs_womanwear,0
 members=yes
 wearpos=legs
 weight=17lb
+// FINISHED 2026-11-24. The cache ships this piece with no category and no combat params,
+// so it wore as decoration: every defence zero. Initiate is mithril's defence line with a
+// prayer bonus on top, and these are mithril_platelegs's own numbers rather than a wiki table, so
+// the set cannot drift away from the armour it is meant to match. Prayer +5 (set +14).
+//
+// Worn gate: [opheld2,basic_tk_legs] in temple_knight/scripts/temple_knight.rs2 - Recruitment
+// Drive plus 20 Defence. NOT a saradominitem: initiate does not count as one in Old School.
+category=armour_legs
+param=magicattack,-21
+param=rangeattack,-7
+param=stabdefence,24
+param=slashdefence,22
+param=crushdefence,20
+param=magicdefence,-4
+param=rangedefence,22
+param=prayerbonus,5
 
 [rd_cupric_sulphate]
 name=Cupric sulfate

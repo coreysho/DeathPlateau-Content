@@ -1,0 +1,162 @@
+// PROSELYTE ARMOUR - the Temple Knights' second harness, sold by Sir Tiffy Cashien once The Slug
+// Menace is done. See scripts/temple_knight/configs/temple_knight.constant for the whole shelf and
+// why initiate comes out of the 377 cache while this is a port.
+//
+// This set is POST-2006 CONTENT - The Slug Menace is 5 February 2007 and proselyte came with it, so
+// there is nothing to be faithful to in a 377 cache and the pieces are imported from Old School
+// instead, keeping its names (sallet / hauberk / cuisse / tasset), its models and its values.
+// Initiate is the opposite case: it shipped in 377 as basic_tk_helm / basic_tk_body / basic_tk_legs
+// and is finished in place in scripts/_unpack/377/all.obj rather than re-imported.
+//
+// NOT HERE: "Proselyte harness m" and "Proselyte harness f". Old School's shop lists both, but a
+// harness is a Grand Exchange set placeholder - one obj that an exchange clerk swaps for three
+// pieces - and this build has no set mechanic for one to plug into.
+//
+// Imported from a modern OSRS cache by tools/models/importosrs.py.
+// Models are RE-ENCODED from OSRS model format into the 317-family format
+// (tools/models/osrs2ob2.py); every one is round-trip verified before writing.
+// wearpos/wearpos2/wearpos3 come from the cache - do not hand-edit them.
+
+[proselyte_sallet]
+name=Proselyte sallet
+desc=A Proselyte Temple Knight's helm.
+model=obj_proselyte_sallet
+manwear=obj_proselyte_sallet_manwear,0
+womanwear=obj_proselyte_sallet_womanwear,0
+manhead=obj_proselyte_sallet_manhead
+womanhead=obj_proselyte_sallet_womanhead
+wearpos=hat
+wearpos2=head
+wearpos3=jaw
+2dzoom=800
+2dxan=160
+2dyan=152
+2dxof=-1
+2dyof=6
+recol1s=15855
+recol1d=25368
+recol2s=15392
+recol2d=26048
+weight=2267g
+cost=8000
+members=yes
+iop2=Wear
+// Defences are adamant's, read straight out of adamant_full_helm - the wiki says proselyte
+// matches adamant and this build's adamant is the thing it has to match. The prayer bonus
+// is proselyte's own (+4; the full set is +18).
+category=armour_helmet
+param=magicattack,-6
+param=rangeattack,-2
+param=stabdefence,19
+param=slashdefence,21
+param=crushdefence,16
+param=magicdefence,-1
+param=rangedefence,19
+param=prayerbonus,4
+// Worn gate: [opheld2,proselyte_sallet] in temple_knight/scripts/temple_knight.rs2.
+
+[proselyte_hauberk]
+name=Proselyte hauberk
+desc=A Proselyte Temple Knight's armour.
+model=obj_proselyte_hauberk
+manwear=obj_proselyte_hauberk_manwear,0
+manwear2=obj_proselyte_hauberk_manwear2
+womanwear=obj_proselyte_hauberk_womanwear,0
+womanwear2=obj_proselyte_hauberk_womanwear2
+wearpos=torso
+wearpos2=arms
+2dzoom=1250
+2dxan=488
+2dxof=-1
+recol1s=6342
+recol1d=26048
+recol2s=15855
+recol2d=25368
+recol3s=10570
+recol3d=21140
+weight=8618g
+cost=12000
+members=yes
+iop2=Wear
+// Defences are adamant's, read straight out of adamant_platebody - the wiki says proselyte
+// matches adamant and this build's adamant is the thing it has to match. The prayer bonus
+// is proselyte's own (+8; the full set is +18).
+category=armour_body
+param=magicattack,-30
+param=rangeattack,-10
+param=stabdefence,65
+param=slashdefence,63
+param=crushdefence,55
+param=magicdefence,-6
+param=rangedefence,63
+param=prayerbonus,8
+// Worn gate: [opheld2,proselyte_hauberk] in temple_knight/scripts/temple_knight.rs2.
+
+[proselyte_cuisse]
+name=Proselyte cuisse
+desc=A Proselyte Temple Knight's leg armour.
+model=obj_proselyte_cuisse
+manwear=obj_proselyte_cuisse_manwear,0
+womanwear=obj_proselyte_cuisse_womanwear,0
+wearpos=legs
+2dzoom=1740
+2dxan=444
+2dyof=-8
+recol1s=15855
+recol1d=25368
+recol2s=10570
+recol2d=21140
+recol3s=14798
+recol3d=26048
+weight=7711g
+cost=10000
+members=yes
+iop2=Wear
+// Defences are adamant's, read straight out of adamant_platelegs - the wiki says proselyte
+// matches adamant and this build's adamant is the thing it has to match. The prayer bonus
+// is proselyte's own (+6; the full set is +18).
+category=armour_legs
+param=magicattack,-21
+param=rangeattack,-7
+param=stabdefence,33
+param=slashdefence,31
+param=crushdefence,29
+param=magicdefence,-4
+param=rangedefence,31
+param=prayerbonus,6
+// Worn gate: [opheld2,proselyte_cuisse] in temple_knight/scripts/temple_knight.rs2.
+
+[proselyte_tasset]
+name=Proselyte tasset
+desc=A Proselyte Temple Knight's leg armour.
+model=obj_proselyte_tasset
+manwear=obj_proselyte_tasset_manwear,0
+womanwear=obj_proselyte_tasset_womanwear,0
+wearpos=legs
+2dzoom=1100
+2dxan=620
+2dxof=5
+2dyof=5
+recol1s=15855
+recol1d=25368
+recol2s=2340
+recol2d=21140
+recol3s=14798
+recol3d=26048
+weight=8164g
+cost=10000
+members=yes
+iop2=Wear
+// Defences are adamant's, read straight out of adamant_plateskirt - the wiki says proselyte
+// matches adamant and this build's adamant is the thing it has to match. The prayer bonus
+// is proselyte's own (+6; the full set is +18).
+category=armour_legs
+param=magicattack,-21
+param=rangeattack,-7
+param=stabdefence,33
+param=slashdefence,31
+param=crushdefence,29
+param=magicdefence,-4
+param=rangedefence,31
+param=prayerbonus,6
+// Worn gate: [opheld2,proselyte_tasset] in temple_knight/scripts/temple_knight.rs2.
