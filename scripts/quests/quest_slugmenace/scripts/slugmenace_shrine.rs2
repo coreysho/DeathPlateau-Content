@@ -89,6 +89,20 @@ anim(human_pickupfloor, 0);
 p_telejump($to);
 mes("You squeeze through the hole in the rock.");
 
+// =========================================================================== the chests
+// FIVE OF THEM, three in the chamber and two in the temple, and 474 gives each an Open with
+// nothing behind it. There is nothing in them: the cult has been down here three weeks and the
+// chests are what they brought the mining equipment in. Saying so is better than the game
+// answering "Nothing interesting happens." to a chest.
+[oploc1,loc474_18304]
+p_arrivedelay;
+anim(human_pickupfloor, 0);
+if (%slugmenace_stage < ^slugmenace_shrine) {
+    ~mesbox("Empty, and recently so. Somebody has been carrying things down here.");
+    return;
+}
+~mesbox("Empty. Whatever the Mayor's men brought down here has already been used.");
+
 // =========================================================================== the dead sea slug
 // SAVANT NOTICES IT WHEN YOU PICK IT UP, not when you click it. The first version of this hung her
 // lines on [opheld1] and the quest run said why in one line: the obj has no inventory option at
