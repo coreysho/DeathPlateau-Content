@@ -67,11 +67,20 @@ def_int $option = ~p_choice2("OK, here you go.", 1, "No thanks, I'll leave it.",
 if($option = 1) {
     ~chatplayer("<p,neutral>Yeah, that'll do.");
     if_close;
-    while(inv_total(inv, fur) > 0) {
-        inv_del(inv, fur, 1);
-        inv_add(inv, coins, 12);
-        p_delay(0);
-    }
+    // SOLD IN ONE GO, not one a tick (DeathPlateau-Bugs#86, owner's call: Old School's pacing).
+    //
+    // This was `while (inv_total > 0) { del one; pay; p_delay(0); }` - a tick per fur, so a full
+    // pack froze the player for about 17 seconds with every click of theirs DISCARDED rather than
+    // queued, because MoveClickHandler drops a click from a delayed player. Nothing here needs
+    // pacing: there is no animation, no message per item and nothing the player could react to.
+    //
+    // COUNTED FIRST RATHER THAN JUST DROPPING THE DELAY. A `while` that re-reads the inventory and
+    // no longer yields is a hang if inv_del ever fails to remove anything; counting once cannot
+    // loop at all. Same reasoning in lunderwin.rs2, which keeps its per-item line and so keeps a
+    // loop - a bounded one.
+    def_int $furs = inv_total(inv, fur);
+    inv_del(inv, fur, $furs);
+    inv_add(inv, coins, calc($furs * 12));
     ~chatplayer("<p,happy>Thanks!");
 } else if($option = 2) {
     ~chatplayer("<p,angry>I think I'll keep hold of it actually!");
@@ -87,11 +96,10 @@ def_int $option = ~p_choice2("Yep, sounds fine.", 1, "No! I almost got my throat
 if($option = 1) {
     ~chatplayer("<p,happy>Yep, sounds fine.");
     if_close;
-    while(inv_total(inv, grey_wolf_fur) > 0) {
-        inv_del(inv, grey_wolf_fur, 1);
-        inv_add(inv, coins, 120);
-        p_delay(0);
-    }
+    // One go, as above - see the note on the plain fur loop.
+    def_int $greys = inv_total(inv, grey_wolf_fur);
+    inv_del(inv, grey_wolf_fur, $greys);
+    inv_add(inv, coins, calc($greys * 120));
     ~chatplayer("<p,happy>Thanks!");
 } else if($option = 2) {
     ~chatplayer("<p,angry>No! I almost got my throat torn out by a wolf to get this!");
