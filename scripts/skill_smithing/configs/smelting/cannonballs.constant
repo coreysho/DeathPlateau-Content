@@ -1,0 +1,14 @@
+// CANNONBALLS, the three numbers behind them. Each is used twice in
+// scripts/smelting/cannonballs.rs2 - once as the rule and once in the line that tells the player
+// about it - which is the whole reason they are named here rather than typed in both places: a
+// level that says 35 while refusing at 40 is the shape of bug a constant makes impossible.
+//
+// The sources for all three are cited at the top of that script and at the xp award itself.
+
+^cannonball_level = 35
+
+// Four to a steel bar, which is what makes them worth making at all.
+^cannonball_per_bar = 4
+
+// 37.5, in the tenths this build's ~smithing_xp takes.
+^cannonball_xp = 375
