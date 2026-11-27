@@ -178,14 +178,34 @@ if (%ecto_tokens_pending >= ^ecto_token_cap) {
     return;
 }
 def_obj $bone = enum(obj, obj, bonemeal_to_bone, $meal);
-inv_del(inv, $meal, 1);
+// ZEALOT'S ROBES SAVE THE BONEMEAL, AND ONLY THE BONEMEAL (DeathPlateau-Bugs#95, owner's call).
+// The wiki lists the Ectofuntus among the places the set saves remains - "using bonemeal and
+// buckets of slime to worship" - but worshipping spends two things, a pot of bonemeal and a bucket
+// of slime, and says nothing about which one a save keeps. The bonemeal is the remains: it is what
+// the bone became, and it is what the set is named for saving everywhere else. So a save keeps the
+// FULL pot, and the slime is spent regardless - the bucket is the part of the offering that is
+// gone, which is also what makes this a saving and not a free worship.
+//
+// THE EXPERIENCE AND THE TOKENS ARE PAID EITHER WAY, below. That is how the set works at the
+// altar and when burying: the prayer is the point and the keeping is a bonus on top, not a refund
+// of the offering. And it is ROLLED ONCE, here, before anything is taken - a second roll after the
+// pot was already emptied could not give it back.
+def_boolean $saved = ~zealots_saves;
+if ($saved = false) {
+    inv_del(inv, $meal, 1);
+    inv_add(inv, pot_empty, 1);
+}
 inv_del(inv, bucket_ectoplasm, 1);
-inv_add(inv, pot_empty, 1);
 inv_add(inv, bucket_empty, 1);
 anim(human_pickupfloor, 0);
 sound_synth(fill_ectoplasm, 1, 0);
 p_delay(2);
 mes("You offer the bonemeal and the slime to the Ectofuntus.");
+if ($saved = true) {
+    // The wording the set already uses for a bone, with the bonemeal named - the wiki records the
+    // effect and no message for it, so this is ours and kept as close to the others as it can be.
+    mes("Your robes preserve the bonemeal.");
+}
 // Four times the bury value, which lives on the BONE - hence the read back from the bonemeal.
 ~prayer_xp(multiply(oc_param($bone, bone_exp), 4));
 %ecto_tokens_pending = add(%ecto_tokens_pending, ^ecto_tokens_per_worship);
