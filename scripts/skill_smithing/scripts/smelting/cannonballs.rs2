@@ -1,14 +1,36 @@
+// CANNONBALLS - a steel bar and an ammo mould at any furnace, four balls a bar.
 // https://youtu.be/TeQXQDaawO0?t=134
 // https://web.archive.org/web/20041224191433/http://runehq.com/viewguilds.php?id=00375
 // https://web.archive.org/web/20040821133710/http://www.runescapecommunity.com:80/index.php?showtopic=159464
 // https://web.archive.org/web/20040727050826/http://img48.exs.cx/img48/9964/cannonballs1.png
+//
+// MAKE ALL / X / 5 / 1, ADDED 2026-11-27. This used to do exactly one bar per click, so a full
+// inventory of 27 was 27 clicks on the furnace with a six-tick wait between each. The panel is
+// skillmulti1 - 474's one-product chooser, the one with Make All where the wider panels have a
+// Make 10 - which the spinning wheel, the glassblowing pipe and fletching already use, so the
+// click now asks how many the way every other one-product job in this build does.
+//
+// THE REPEAT IS A QUEUE AND THE PACING IS NOT p_delay, which is a change to how one bar is made
+// and the reason the whole file was restructured rather than wrapped in a loop. p_delay sets
+// player.delayed, and input is DROPPED while that is set: a loop paced with it cannot be stopped
+// at all, so Make All would have been twenty-seven bars you were committed to the moment you
+// pressed it, walk away or not. weakqueue is cleared when the player does something else, which
+// is what makes "stop smelting" a thing a player can do. Same shape as smelt_window.rs2 next
+// door and fletching's cut_logs.rs2.
+//
+// THE SIX TICKS A BAR ARE UNCHANGED, deliberately - this is a convenience, not an xp rate. The
+// old chain was p_delay(4), p_delay(0), p_delay(2), and the four is itself a deviation Old School
+// does not have: the comment it carried says the furnace animation overrides the pickup one if
+// that stage is any faster. The two halves below are 3 and 3, so a bar still takes six ticks and
+// both animations still get room to play.
+
 [label,smelt_cannonballs]
-if(map_members = ^false) {
+if (map_members = ^false) {
     mes("You need to be on a members' world to make cannonballs."); // OSRS
     return;
 }
-if (stat(smithing) < 35) {
-    mes("You need a Smithing level of 35 to make cannonballs."); // osrs
+if (stat(smithing) < ^cannonball_level) {
+    mes("You need a Smithing level of <tostring(^cannonball_level)> to make cannonballs."); // osrs
     return;
 }
 if (inv_total(inv, ammo_mould) < 1) {
@@ -23,20 +45,52 @@ if (afk_event = ^true) {
     ~macro_event_general_spawn(~macro_event_set_random); // guess
     return;
 }
+def_namedobj $product;
+def_int $count;
+$product, $count = ~skillmulti1(mcannonball);
+// Closing the panel is an answer: null from the chooser, and nothing happens.
+if ($product = null | $count = null | $count < 1) {
+    return;
+}
+weakqueue*(cannonball_heat, 0)($count);
+
+// HEAT, then three ticks later POUR. Both halves re-check the bar rather than trusting the count,
+// because a run can outlive what it is made of - the bars can be dropped, banked or traded away
+// between two passes, and ^max_32bit_int from Make All is a count that is MEANT to outlive them.
+[queue,cannonball_heat](int $left)
+if ($left < 1) {
+    return;
+}
+if (inv_total(inv, steel_bar) < 1) {
+    // Only worth saying when a run is cut short; the first bar is checked before the panel opens.
+    mes("You have run out of steel bars.");
+    return;
+}
 mes("You heat the steel bar into a liquid state.");
 anim(human_furnace, 0);
 sound_synth(furnace, 1, 0);
-p_delay(4); // this delay is 2t faster in osrs, furnace anim overides pickupfloor if this delay is too fast
+weakqueue*(cannonball_pour, 3)($left);
+
+[queue,cannonball_pour](int $left)
+if (inv_total(inv, steel_bar) < 1) {
+    return;
+}
 mes("You pour the molten metal into your cannonball mould.");
 anim(human_pickupfloor, 0);
-p_delay(0);
-mes("The molten metal cools slowly to form 4 cannonballs.");
-p_delay(2);
-anim(human_pickupfloor, 0);
+mes("The molten metal cools slowly to form <tostring(^cannonball_per_bar)> cannonballs.");
 mes("You remove the cannonballs from the mould.");
 inv_del(inv, steel_bar, 1);
-inv_add(inv, mcannonball, 4);
+inv_add(inv, mcannonball, ^cannonball_per_bar);
 // 37.5 xp gained
 // https://web.archive.org/web/20040606145237/http://www.tip.it/runescape/index.php?page=rs2smithtables.htm
 // https://web.archive.org/web/20041222084000/http://www.runehq.com/cacheguides/viewotherguide00278.htm
-~smithing_xp(375);
+~smithing_xp(^cannonball_xp);
+$left = calc($left - 1);
+// REQUEUED ON THE COUNT ALONE, not on the count AND the bars. Both guards here would stop a run
+// that has run out of bars silently, one tick before the half above gets to say why - and that
+// leaves the "You have run out of steel bars." line unreachable, which is a line that may as well
+// not exist. Let the next heat find the empty bag and tell the player, the way smelt_window.rs2
+// reports running out of ore.
+if ($left > 0) {
+    weakqueue*(cannonball_heat, 3)($left);
+}
