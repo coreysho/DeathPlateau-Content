@@ -10,7 +10,20 @@ if(%vampire = ^quest_vampire_not_started) {
 
 } else if(%vampire = ^quest_vampire_started) {
     $text = "@str@I spoke to Morgan in Draynor Village. He told me that the|@str@locals are being attacked by a terrifying Vampire!||";
-    $text = append($text, "@dbl@I need to speak to @dre@Dr Harlow@dbl@ who can normally be found in|@dbl@the @dre@Jolly Boar Inn@dbl@ North East of @dre@Varrock@dbl@.");
+    // THE BLUE MOON INN, NOT THE JOLLY BOAR. This line sent players to the wrong side of the city:
+    // dr_harlow is spawned at 3222,3397, in the Blue Moon Inn south of Varrock square, and the
+    // Jolly Boar is north-east of the city past the wilderness edge. A player noticed and reported
+    // it as pointing at "the old location" (DeathPlateau-Bugs#116), which is exactly what it was.
+    //
+    // AND THE OLD LOCATION IS LITERALLY THAT. Dr Harlow stood in the Jolly Boar until the update of
+    // 7 February 2006, which moved him to the Blue Moon "because newer players had a hard time
+    // finding the bar and risked wandering into the nearby Wilderness". This is a 377 server, so
+    // that move is already history here - the npc placement has always been right and this line was
+    // describing a version of the game that predates the cache it ships with.
+    //
+    // Morgan's own line was corrected for the same reason and this one was missed with it: see the
+    // note in area_draynor/scripts/morgan.rs2, which says it "used to say the Jolly Boar Inn".
+    $text = append($text, "@dbl@I need to speak to @dre@Dr Harlow@dbl@ who can normally be found in|@dbl@the @dre@Blue Moon Inn@dbl@ in @dre@Varrock@dbl@.");
 
 } else if(%vampire = ^quest_vampire_spoke_to_harlow) {
     $text = "@str@I spoke to Morgan in Draynor Village. He told me that the|@str@locals are being attacked by a terrifying Vampire!||";
