@@ -65,5 +65,6 @@ val=^slayer_cavekraken,80
 // custom (2026-10-13) - Old School's own combat requirement for ankou. Duradel will not speak to
 // anybody under combat 100, so nothing can currently be refused by this; it is here so the number
 // is right if a lower master is ever given the row. Lava dragons have no requirement in OSRS
-// either, so they get no line.
+// either, so they get no line. The One-armed veteran reads none of this table: like Krystilia he
+// asks for no combat level (validate_slayer_target).
 val=^slayer_ankou,40

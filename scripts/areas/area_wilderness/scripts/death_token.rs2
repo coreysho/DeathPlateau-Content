@@ -36,6 +36,11 @@ def_int $chance = calc(^death_token_units / ^death_token_odds * add(30, multiply
 if (~undertaker_set_worn = true) {
     $chance = calc($chance * add(100, ^death_token_set_bonus) / 100);
 }
+// The roll is only made for a kill that counts towards the task (slayer_task.rs2), so the task
+// master here is the one who gave the task this kill counted for.
+if (%slayer_task_master = ^slayer_master_veteran) {
+    $chance = calc($chance * add(100, ^death_token_veteran_bonus) / 100);
+}
 if (random(^death_token_units) >= $chance) {
     return;
 }

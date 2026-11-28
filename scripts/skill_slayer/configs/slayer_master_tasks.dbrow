@@ -155,10 +155,11 @@ data=task,chaeldar_cavekraken
 // https://oldschool.runescape.wiki/w/Update:Angler%27s_Outfit_%26_Slayer
 [duradel_task_table]
 table=slayer_task_table
-// 204 + the two unlock-only rows added 2026-10-08 (8 each) + ankou (5) and the lava dragons (8)
-// added 2026-10-13. This number is the weight the roll divides, so it has to be the sum of every
-// row's weight below - slayer_battery group 13 is what holds it to that.
-data=total,233
+// 204 + the two unlock-only rows added 2026-10-08 (8 each) + ankou (5) added 2026-10-13. The lava
+// dragons (8) were here from 2026-10-13 and moved to the One-armed veteran on 2026-11-28. This
+// number is the weight the roll divides, so it has to be the sum of every row's weight below -
+// slayer_battery group 13 is what holds it to that.
+data=total,225
 data=task,duradel_abyssaldemons
 data=task,duradel_darkbeasts
 data=task,duradel_hellhounds
@@ -193,4 +194,36 @@ data=task,duradel_cavekraken
 data=task,duradel_reddragons
 data=task,duradel_aviansies
 data=task,duradel_ankou
-data=task,duradel_lavadragons
+
+// custom (2026-11-28) - THE ONE-ARMED VETERAN, on the Wilderness line north of Edgeville. Old
+// School's Krystilia, given to a man this build already had standing there. 135 is the sum of the
+// weights below; slayer_battery group 13 holds it to that.
+[veteran_task_table]
+table=slayer_task_table
+data=total,135
+data=task,veteran_ankou
+data=task,veteran_bandits
+data=task,veteran_bears
+data=task,veteran_blackdemons
+data=task,veteran_blackdragons
+data=task,veteran_blackknights
+data=task,veteran_chaosdruids
+data=task,veteran_darkwarriors
+data=task,veteran_earthwarriors
+data=task,veteran_firegiants
+data=task,veteran_greaterdemons
+data=task,veteran_greendragons
+data=task,veteran_hellhounds
+data=task,veteran_hillgiants
+data=task,veteran_icegiants
+data=task,veteran_icewarriors
+data=task,veteran_lavadragons
+data=task,veteran_lesserdemons
+data=task,veteran_magicaxes
+data=task,veteran_mossgiants
+data=task,veteran_pirates
+data=task,veteran_rogues
+data=task,veteran_scorpions
+data=task,veteran_skeletons
+data=task,veteran_spiders
+data=task,veteran_zombies

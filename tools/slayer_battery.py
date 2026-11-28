@@ -215,7 +215,12 @@ check('enum_getoutputcount' not in draw, 'and the draw itself counts nothing it 
 
 # ============================================================================ 7
 print('7. the masters open it, and the chat menu it replaced is gone')
-check('~slayer_rewards_window' in MASTER, 'a master\'s "spend my Slayer points" opens the window')
+# IN THE CHAT MENU, NOT ANYWHERE IN THE FILE. The Rewards right-click ([opnpc3,_slayer_master])
+# calls the same proc, so a whole-file search stayed green with the chat line's call deleted -
+# slayer_mutate's own mutation for this check survived on that until 2026-11-28.
+talk_menu = nocom(MASTER).split('[label,slayer_master_talk]', 1)
+talk_menu = talk_menu[1].split('\n[', 1)[0] if len(talk_menu) == 2 else ''
+check('~slayer_rewards_window' in talk_menu, 'a master\'s "spend my Slayer points" opens the window')
 check('@slayer_master_rewards' not in MASTER, 'and no longer jumps to the old chat menu')
 for gone in ('slayer_master_rewards', 'slayer_rewards_unlocks', 'slayer_rewards_extends',
              'slayer_rewards_buy', 'slayer_rewards_cancel', 'slayer_rewards_block',
@@ -247,7 +252,7 @@ held = sorted(int(v) for v in bits.values())
 # Distinct, NOT contiguous: the Cosmetics tab owns 5 and 6 out of the middle of the range, so an
 # unlock added after them starts at 7. What matters is that no two rewards share a bit, which is the
 # check below, and that nothing is renumbered, which is what a save already holds.
-check(held == sorted(set(held)), 'the %d unlocks own %d distinct bits, none reused: %s'
+check(held == sorted(set(held)), 'every unlock owns a distinct bit, none reused: %d unlocks, %d bits, %s'
       % (len(bits), len(set(held)), held))
 check(bits['0'] == '4', "and Bigger and Badder is still bit 4, which is what superiors.rs2 reads")
 # ONE VARP, TWO TABS. The Cosmetics tab's unlocks are bits in the same %slayer_unlocks, and three
@@ -268,17 +273,16 @@ print('9. the rewards themselves are OSRS\'s, and every row can answer for itsel
 WIKI = {'Bigger and Badder': 50, 'Gargoyle Smasher': 120, 'Slug Salter': 10,
         'Reptile Freezer': 10, 'Ring Bling': 150,
         "'Shroom Sprayer": 80, 'Seeing Red': 75, 'Watch the Birdie': 80}
-# THE ONE PRICE WITH NOTHING TO CHECK IT AGAINST. Playing with Fire (2026-10-13) puts lava dragons
-# into Duradel's table, and OSRS has no such unlock - Krystilia gives lava dragons as a Wilderness
-# task and this build has no Wilderness master. So it is kept in its own dict rather than smuggled
-# into WIKI, because a number this repo chose and a number the wiki states are not the same kind of
-# claim and a table called WIKI should not blur them.
-OURS = {'Playing with Fire': 100}
+# THE PRICES THIS REPO CHOSE RATHER THAN THE WIKI, kept apart so a table called WIKI never blurs the
+# two. Empty since 2026-11-28: the one entry was Playing with Fire, which put lava dragons on
+# Duradel's list because there was no Wilderness master. The One-armed veteran is one now, and
+# group 14 is the check that the unlock stays retired.
+OURS = {}
 UNLOCKS = {**WIKI, **OURS}
 names, costs = rows('slayer_unlock_name'), rows('slayer_unlock_cost')
 got = {names[k]: int(costs[k]) for k in names}
-check(got == UNLOCKS, 'the %d unlock prices are the wiki\'s, bar the one that is ours: %s'
-      % (len(UNLOCKS), got if got != UNLOCKS else 'all %d' % len(UNLOCKS)))
+check(got == UNLOCKS, 'the unlock prices are the wiki\'s, bar any that are ours: %s'
+      % (got if got != UNLOCKS else 'all %d' % len(UNLOCKS)))
 # The rune pouch is 750 points from a slayer master in OSRS, the same as the herb sack, so it
 # belongs in this list rather than as an exception to it.
 BUY = {'slayer_ring_8': 75, 'herb_sack': 750, 'looting_bag': 10, 'rune_pouch': 750}
@@ -397,7 +401,7 @@ for line in nocom(MASTER_ROWS).splitlines():
         t = row_task.get(line.split(',', 1)[1].strip())
         if t:
             assigned.setdefault(t, set()).add(cur)
-check(len(assigned) > 50, 'the five tables between them hand out %d different tasks' % len(assigned))
+check(len(assigned) > 50, 'the six tables between them hand out %d different tasks' % len(assigned))
 
 # what carries each category, and whether any of it is actually spawned on a map
 name2id = {}
@@ -471,12 +475,20 @@ check(not pointless, 'and nothing is refused that would have worked: %s'
 # ============================================================================ 12
 print('12. the Rewards right-click, on every master')
 NPCS = read('scripts/_unpack/377/all.npc')
-missing = []
-for i in range(1, 6):
-    block = NPCS.split('[slayer_master_%d]' % i, 1)[1].split('\n[', 1)[0]
-    if 'op3=Rewards' not in block:
-        missing.append('slayer_master_%d' % i)
-check(not missing, 'all five masters carry the option: %s' % (', '.join(missing) or 'Turael to Duradel'))
+VETNPC = read('scripts/areas/area_wilderness/configs/wilderness_veteran.npc')
+def npc_block(txt, name):
+    parts = txt.split('[%s]' % name, 1)
+    return parts[1].split('\n[', 1)[0] if len(parts) == 2 else ''
+# The sixth is not in all.npc: the One-armed veteran is this build's own npc, so his block is read
+# from his own file - a check that only read the cache's would pass with him missing the option.
+MASTER_BLOCKS = {'slayer_master_%d' % i: npc_block(NPCS, 'slayer_master_%d' % i) for i in range(1, 6)}
+MASTER_BLOCKS['wilderness_veteran'] = npc_block(VETNPC, 'wilderness_veteran')
+missing = [m for m, b in MASTER_BLOCKS.items() if 'op3=Rewards' not in b]
+check(not missing, 'all six masters carry the option: %s'
+      % (', '.join(missing) or 'Turael to Duradel, and the veteran'))
+notcat = [m for m, b in MASTER_BLOCKS.items() if not re.search(r'(?m)^category=slayer_master\s*$', b)]
+check(not notcat, 'and every one is in the slayer_master category the option is written for: %s'
+      % (', '.join(notcat) or 'all six'))
 check('[opnpc3,_slayer_master] ~slayer_rewards_window;' in nocom(MASTER),
       'op3 opens the same window the chat line opens, for the category rather than one npc at a time')
 
@@ -510,8 +522,91 @@ for line in nocom(MASTER_ROWS).splitlines() + ['[end]']:
         stated = int(line.split(',', 1)[1])
     elif line.startswith('data=task,') and cur:
         summed += row_weight.get(line.split(',', 1)[1].strip(), 0)
-check(masters == 5, 'all five masters have a stated total: %d' % masters)
-check(not wrong, 'and each one is the sum of its own rows: %s' % (', '.join(wrong) or 'all five'))
+check(masters == 6, 'all six masters have a stated total: %d' % masters)
+check(not wrong, 'and each one is the sum of its own rows: %s' % (', '.join(wrong) or 'all six'))
+
+# ============================================================================ 14
+print('14. the One-armed veteran is a Wilderness master, and only there')
+# KRYSTILIA'S RULES, on a man who was already standing on the line (2026-11-28). Four things make
+# him one, and each lives in a different file, so each is held here: his table, the points, the
+# rule that only Wilderness kills count, and the unlock his lava dragons made pointless.
+NEWT = nocom(TASK).split('[proc,slayer_new_target]', 1)[1].split('\n[', 1)[0]
+check(re.search(r'case wilderness_veteran\s*:\s*\$table = veteran_task_table;\s*%slayer_task_master = \^slayer_master_veteran;', NEWT) is not None,
+      'talking to him rolls on his own table and records him as the master')
+check(const('slayer_master_veteran') == 6, 'and he is master 6, after Duradel: %s' % const('slayer_master_veteran'))
+check(const('slayer_veteran_points') == 25 and 'case ^slayer_master_veteran : $base = ^slayer_veteran_points;' in nocom(PTS),
+      "his tasks pay Krystilia's 25 points before the streak multipliers")
+GEMSRC = nocom(read('scripts/skill_slayer/scripts/slayer_gem.rs2'))
+best = GEMSRC.split('[proc,get_best_slayer_master]', 1)[1].split('\n[', 1)[0]
+check('wilderness_veteran' not in best, 'he is never anybody\'s "best" master, so the gem and the nag never send people to him')
+
+# Where the kill is made. The rule is ONE proc, called first by both queues, so a kill that does not
+# count pays nothing at all - xp, scroll, token and superior all come after it.
+counts = nocom(TASK).split('[proc,slayer_task_counts_here]', 1)
+check(len(counts) == 2 and '%slayer_task_master = ^slayer_master_veteran & ~wilderness_level(coord) <= 0' in counts[1].split('\n[', 1)[0],
+      'a veteran task counts only where ~wilderness_level says the player is in the Wilderness')
+for q in ('progress_task', 'progress_task_split'):
+    body = nocom(TASK).split('[queue,%s]' % q, 1)[1].split('\n[', 1)[0]
+    check(before(body, '~slayer_kill_counts', 'stat_advance'),
+          '[queue,%s] asks before it pays anything' % q)
+check('~slayer_task_counts_here = false' in nocom(read('scripts/skill_slayer/scripts/black_mask.rs2')),
+      'and the black mask boosts only what counts, so it does not favour a kill made down here')
+
+# His table only holds what stands in the Wilderness. Group 11 proves each task is spawned
+# SOMEWHERE; that is not enough for a master whose kills only count up there, so the spawns are
+# held against the rectangles ~wilderness_level reads (wilderness_zones.dbrow).
+ZONES = nocom(read('scripts/areas/area_wilderness/configs/wilderness_zones.dbrow'))
+def rects(table):
+    sec = ZONES.split('[%s]' % table, 1)[1].split('\n[', 1)[0]
+    out = []
+    for a, b in re.findall(r'data=coord_pair,(\S+),(\S+)', sec):
+        pa, pb = [int(v) for v in a.split('_')], [int(v) for v in b.split('_')]
+        out.append(((pa[0], pa[1] * 64 + pa[3], pa[2] * 64 + pa[4]), (pb[0], pb[1] * 64 + pb[3], pb[2] * 64 + pb[4])))
+    return out
+WILD, NOTWILD = rects('wilderness_zones'), rects('wilderness_excluded_zones')
+def inrect(r, lvl, x, z):
+    return r[0][0] <= lvl <= r[1][0] and r[0][1] <= x <= r[1][1] and r[0][2] <= z <= r[1][2]
+def wild(lvl, x, z):
+    return not any(inrect(r, lvl, x, z) for r in NOTWILD) and any(inrect(r, lvl, x, z) for r in WILD)
+check(len(WILD) >= 2, 'read %d Wilderness rectangles and %d cut out of them' % (len(WILD), len(NOTWILD)))
+id2name = {v: k for k, v in name2id.items()}
+wild_names = set()
+coord_line = re.compile(r'^\s*(\d+)\s+(\d+)\s+(\d+)\s*:\s*(\d+)')
+for f in os.listdir(mapdir):
+    m = re.match(r'm(\d+)_(\d+)\.jm2$', f)
+    if not m:
+        continue
+    mx, mz = int(m.group(1)), int(m.group(2))
+    txt = open(os.path.join(mapdir, f), newline='').read()
+    if '==== NPC ====' not in txt:
+        continue
+    sec = re.split(r'(?m)^====', txt.split('==== NPC ====', 1)[1])[0]
+    for line in sec.splitlines():
+        c = coord_line.match(line)
+        if c and wild(int(c.group(1)), mx * 64 + int(c.group(2)), mz * 64 + int(c.group(3))):
+            wild_names.add(id2name.get(int(c.group(4))))
+vet = sorted(t for t, ms in assigned.items() if 'veteran' in ms)
+check(len(vet) >= 20, 'his table hands out %d different tasks' % len(vet))
+nowhere = sorted(t[1:] for t in vet if not any(n in wild_names for n in tagged.get(t, [])))
+check(not nowhere, 'and every one has a monster standing in the Wilderness to count: %s'
+      % (', '.join(nowhere) or 'all %d' % len(vet)))
+check(assigned.get('^slayer_lavadragon') == {'veteran'},
+      "lava dragons are his and nobody else's: %s" % sorted(assigned.get('^slayer_lavadragon', [])))
+
+# PLAYING WITH FIRE IS RETIRED. It is off the window, nothing asks for its bit, the bit is given to
+# nothing else, and the people who bought it are paid back once - the bit clears as the points go.
+check('Playing with Fire' not in rows('slayer_unlock_name').values(), 'Playing with Fire is off the Rewards window')
+check('^slayer_unlock_playing_with_fire' not in VALIDATE, 'and no task asks for its bit any more')
+check(str(const('slayer_unlock_playing_with_fire')) not in [str(v) for v in rows('slayer_unlock_bit').values()]
+      + [str(v) for v in rows('slayer_cosmetic_bit').values()],
+      'its bit, %s, is given to nothing else' % const('slayer_unlock_playing_with_fire'))
+login = nocom(PTS).split('[proc,slayer_login]', 1)
+lbody = login[1].split('\n[', 1)[0] if len(login) == 2 else ''
+check('clearbit(%slayer_unlocks, ^slayer_unlock_playing_with_fire)' in lbody
+      and 'add(%slayer_points, ^slayer_playing_with_fire_refund)' in lbody
+      and const('slayer_playing_with_fire_refund') == 100,
+      'and ~slayer_login refunds the 100 it cost, clearing the bit as it pays')
+check('~slayer_login;' in nocom(read('scripts/login_logout/scripts/login.rs2')), 'which the login script calls')
 
 print()
 print('ALL PASS' if fails == 0 else '%d FAILED' % fails)

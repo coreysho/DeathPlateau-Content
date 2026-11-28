@@ -33,7 +33,8 @@ scope=perm
 [slayer_tasks_done]
 scope=perm
 
-// who gave the current task: 1 Turael, 2 Mazchna, 3 Vannaka, 4 Chaeldar, 5 Duradel (0 = before this existed)
+// who gave the current task: 1 Turael, 2 Mazchna, 3 Vannaka, 4 Chaeldar, 5 Duradel, 6 the One-armed
+// veteran in the Wilderness (^slayer_master_veteran) (0 = before this existed)
 [slayer_task_master]
 transmit=yes
 scope=perm

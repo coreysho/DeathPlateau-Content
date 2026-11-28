@@ -1,6 +1,7 @@
 // Slayer points, the way OSRS does them (oldschool.runescape.wiki/w/Slayer_reward_point):
 //   - every finished task adds to %slayer_streak and pays points by the master who gave it:
-//     Turael 0, Mazchna 6, Vannaka 8, Chaeldar 10, Duradel 15 (current OSRS values);
+//     Turael 0, Mazchna 6, Vannaka 8, Chaeldar 10, Duradel 15, the One-armed veteran 25 - Krystilia's
+//     number (current OSRS values). His tasks share the one streak with everyone else's;
 //   - the first four tasks pay nothing; every 10th task pays 5x, 50th 15x, 100th 25x, 250th 35x,
 //     1000th 50x;
 //   - Turael swapping out a task you already have resets the streak (slayer_master.rs2).
@@ -33,6 +34,7 @@ switch_int ($master) {
     case 3 : $base = 8;
     case 4 : $base = 10;
     case 5 : $base = 15;
+    case ^slayer_master_veteran : $base = ^slayer_veteran_points;
 }
 if (modulo(%slayer_streak, 1000) = 0) {
     return(multiply($base, 50));
@@ -50,6 +52,18 @@ if (modulo(%slayer_streak, 10) = 0) {
     return(multiply($base, 5));
 }
 return($base);
+
+// PLAYING WITH FIRE IS RETIRED (2026-11-28), so whoever bought it gets the points back. It put lava
+// dragons on Duradel's list; the One-armed veteran gives them to anybody now and Duradel no longer
+// does, so the unlock does nothing. The bit is cleared as the points are paid, which is what makes
+// this a one-time refund rather than 100 points every login.
+[proc,slayer_login]
+if (testbit(%slayer_unlocks, ^slayer_unlock_playing_with_fire) = ^true) {
+    %slayer_unlocks = clearbit(%slayer_unlocks, ^slayer_unlock_playing_with_fire);
+    %slayer_points = add(%slayer_points, ^slayer_playing_with_fire_refund);
+    mes("Lava dragons are a Wilderness task from the One-armed veteran now, so Playing with Fire is gone.");
+    mes("Your <tostring(^slayer_playing_with_fire_refund)> Slayer points for it have been refunded.");
+}
 
 [proc,slayer_is_blocked](int $target)(boolean)
 if ($target <= 0) {

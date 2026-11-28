@@ -88,13 +88,68 @@ def_int $bounty = oc_param(undertaker_hat, pvp_token_bounty);
 // The veteran on the line
 // ---------------------------------------------------------------------------------------------
 
+// HE IS THE WILDERNESS SLAYER MASTER (2026-11-28) - Old School's Krystilia, given to the man who
+// was already standing on the line. The menu keeps his own two questions and adds hers: an
+// assignment, and points or stock. His Rewards and Trade right-clicks come from the slayer_master
+// category (wilderness_veteran.npc); the rules his tasks follow are in skill_slayer.
 [opnpc1,wilderness_veteran]
 ~chatnpc("<p,neutral>Going up, are you?");
-switch_int (~p_choice3("What's up there?", 1, "What happened to your arm?", 2, "Just passing.", 3)) {
-    case 1 : @veteran_up_there;
-    case 2 : @veteran_arm;
+switch_int (~p_choice5("I need a Wilderness assignment.", 1, "Have you any rewards for me, or anything to trade?", 2, "What's up there?", 3, "What happened to your arm?", 4, "Just passing.", 5)) {
+    case 1 : @veteran_slayer_assign;
+    case 2 : @veteran_slayer_trade;
+    case 3 : @veteran_up_there;
+    case 4 : @veteran_arm;
     case default : ~chatplayer("<p,neutral>Just passing.");
 }
+
+// WHAT HE ASKS BEFORE HE GIVES A TASK, in Krystilia's order:
+//   - a player who has never trained Slayer is sent to Turael first (she refuses Slayer level 1);
+//   - a task from anybody is finished before he gives another - he will not take over somebody
+//     else's, and he will not swap his own. Cancelling is in the Rewards window, as everywhere;
+//   - the warning, whenever the task before this one was not his: only Wilderness kills count.
+//     %slayer_task_master is who gave the last task, so this is the first visit, and every visit
+//     after working for somebody else - no varp of its own is needed to remember it.
+[label,veteran_slayer_assign]
+~chatplayer("<p,neutral>I need a Wilderness assignment.");
+if (stat_base(slayer) < 2) {
+    ~chatnpc("<p,neutral>You've never hunted anything for a Slayer master, have you? Go and see Turael in Burthorpe and learn what a task is. Then come back.");
+    return;
+}
+if (%slayer_count > 0) {
+    if (%slayer_task_master = ^slayer_master_veteran) {
+        ~chatnpc("<p,neutral>You've still got <tostring(%slayer_count)> <lowercase(~slayer_taskname)> to kill. Up there, not down here.");
+    } else {
+        ~chatnpc("<p,neutral>You're already working for another master. Finish that task, or have it cancelled, and then come and see me.");
+    }
+    return;
+}
+if (%slayer_task_master ! ^slayer_master_veteran) {
+    ~chatnpc("<p,neutral>Listen first. Whatever I give you, you kill it in the Wilderness. Kill one south of the signs and it does not count - not a single one.");
+    ~chatnpc("<p,shifty>And up there anybody can put you down and take what you are carrying. You will have a task and a full pack, the way I did.");
+    if (~p_choice2("Yes, I understand I must kill it in the Wilderness.", 1, "No, I'll stick to the usual masters.", 2) = 2) {
+        ~chatplayer("<p,neutral>No, I'll stick to the usual masters.");
+        ~chatnpc("<p,neutral>Sensible. Most of the ones who weren't are not around to argue with you.");
+        return;
+    }
+    ~chatplayer("<p,neutral>Yes, I understand I must kill it in the Wilderness.");
+}
+~slayer_new_target;
+~chatnpc("<p,neutral>Kill <tostring(%slayer_count)> <lowercase(~slayer_taskname)>. In the Wilderness.");
+@multi2("Got any tips for me?", slayer_master_tips, "Okay, great!", veteran_slayer_great);
+
+[label,veteran_slayer_great]
+~chatplayer("<p,happy>Okay, great!");
+~chatnpc("<p,neutral>Mind the signs. Come back with all of you.");
+
+[label,veteran_slayer_trade]
+~chatplayer("<p,quiz>Have you any rewards for me, or anything to trade?");
+~chatnpc("<p,neutral>Points or coins?");
+if (~p_choice2("I'd like to spend my Slayer points.", 1, "Let's see what you're selling.", 2) = 1) {
+    ~slayer_rewards_window;   // the window every master opens (skill_slayer/scripts/slayer_window.rs2)
+    return;
+}
+~chatplayer("<p,neutral>Let's see what you're selling.");
+~openshop_activenpc;
 
 [label,veteran_up_there]
 ~chatplayer("<p,quiz>What's up there?");

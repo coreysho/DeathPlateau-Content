@@ -7,6 +7,8 @@ switch_npc(npc_type) {
     case slayer_master_3 : $table = vannaka_task_table; %slayer_task_master = 3;
     case slayer_master_4 : $table = chaeldar_task_table; %slayer_task_master = 4;
     case slayer_master_5 : $table = duradel_task_table; %slayer_task_master = 5;
+    // the Wilderness master (area_wilderness/scripts/undertaker.rs2), Old School's Krystilia
+    case wilderness_veteran : $table = veteran_task_table; %slayer_task_master = ^slayer_master_veteran;
 }
 if ($table ! null) {
     // Slayer cape: 10% chance of being given the task you just finished again, if this master
@@ -78,7 +80,10 @@ if (stat_base(slayer) < enum(int, int, slayer_req, $target)) { // slayer req che
     return (false);
 }
 // TODO: should combat reqs exist? seems like they might of https://oldschool.runescape.wiki/w/Update:Slayer_Assignment_Rework
-if(~player_combat_level < enum(int, int, combat_req, $target)) {
+// The One-armed veteran asks for no combat level at all, as Krystilia does not: he hands out any
+// task on his list that you have the Slayer level for. %slayer_task_master is already his by the
+// time the roll gets here - ~slayer_new_target sets it before it rolls.
+if(%slayer_task_master ! ^slayer_master_veteran & ~player_combat_level < enum(int, int, combat_req, $target)) {
     return (false);
 }
 // quest reqs, this can possibly be done in dbtable/enum as well?
@@ -166,13 +171,20 @@ switch_int($target) {
             return (false);
         }
         return (true);
-    // BUILT 2026-10-13: the lava dragons are Duradel's third unlock-only row, behind Playing with
-    // Fire. Corey's call that this one is gated and the ankou are not, and it is the right split:
-    // ankou stand at level 29 Wilderness and die in a few hits, while a lava dragon is 230
-    // hitpoints of level 252 dragon on an island at level 37 - a task worth choosing rather than
-    // one worth being handed. The ankou need no case here at all; nothing refuses them.
-    case ^slayer_lavadragon :
-        if (testbit(%slayer_unlocks, ^slayer_unlock_playing_with_fire) = ^false) {
+    // LAVA DRAGONS NEED NO CASE ANY MORE. From 2026-10-13 they were Duradel's, behind the Playing
+    // with Fire unlock; since 2026-11-28 only the One-armed veteran gives them, to anybody, the way
+    // Krystilia does. The unlock is retired (slayer.constant).
+    //
+    // The veteran's two locked huts (2026-11-28). Both are lockpicked doors (skill_thieving's
+    // locked_door.dbrow, rows 2557 and 2558), and Old School asks for the same two levels before
+    // Krystilia gives the task, so nobody is sent to a hut they cannot open.
+    case ^slayer_magicaxe :
+        if (stat_base(thieving) < 23) {
+            return (false);
+        }
+        return (true);
+    case ^slayer_pirate :
+        if (stat_base(thieving) < 39) {
             return (false);
         }
         return (true);
@@ -259,6 +271,9 @@ if(npc_findhero = ^true) {
 if(%slayer_count <= 0) {
     return;
 }
+if (~slayer_kill_counts = false) {
+    return;
+}
 if(npc_finduid($uid) = true) {
     %slayer_count = sub(%slayer_count, 1);
     stat_advance(slayer, calc(10 * npc_basestat(hitpoints)));
@@ -274,6 +289,9 @@ if(npc_finduid($uid) = true) {
 if(%slayer_count <= 0) {
     return;
 }
+if (~slayer_kill_counts = false) {
+    return;
+}
 if(npc_finduid($uid) = true) {
     %slayer_count = sub(%slayer_count, 1);
     stat_advance(slayer, calc(10 * (npc_basestat(hitpoints) / 2)));
@@ -287,6 +305,26 @@ if(npc_finduid($uid) = true) {
     if(%slayer_count = 0) ~complete_task;
     ~slayer_superior_roll(npc_type);
 }
+
+// THE ONE-ARMED VETERAN'S RULE (2026-11-28), Krystilia's in Old School: a task he gave counts only
+// the kills you make standing in the Wilderness. It is where YOU stand, not the monster - the queue
+// runs on the player, so coord is theirs - and an underground kill counts wherever
+// ~wilderness_level says it is Wilderness (wilderness_zones.dbrow). A kill that does not count
+// returns before anything is paid: no xp, no scroll roll, no death token and no superior.
+[proc,slayer_kill_counts]()(boolean)
+if (~slayer_task_counts_here = false) {
+    mes("Your task is from the One-armed veteran: only kills in the Wilderness count.");
+    return(false);
+}
+return(true);
+
+// The same test without the message, for the black mask (black_mask.rs2), which asks it on every
+// hit: the monsters it boosts are the monsters that count, so outside the Wilderness neither does.
+[proc,slayer_task_counts_here]()(boolean)
+if (%slayer_task_master = ^slayer_master_veteran & ~wilderness_level(coord) <= 0) {
+    return(false);
+}
+return(true);
 
 [proc,complete_task]
 // https://youtu.be/xq8oz9of6Ck?si=WgGJ5L-rC1sCCh2F&t=66
