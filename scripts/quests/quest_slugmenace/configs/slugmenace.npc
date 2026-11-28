@@ -519,20 +519,31 @@ multivar=slugmenace_jeb_turned
 multinpc=0,slug_jeb
 multinpc=1,slug_jeb_possessed
 
+// THE THREE VILLAGER SHELLS CARRY THE ANIMATIONS, because the shell is what is placed and what
+// wanders. They had none, so a villager crossing the street slid along in whatever pose the model
+// started in - "floats around instead of walks" (DeathPlateau-Bugs#113), and tools/sim/staticnpcs.ts
+// calls a wanderer with no readyanim a posed npc left free to wander. The possessed children keep
+// their own slug_possessed_walk for the client to use where it resolves the face.
 [witchaven_villager_man]
 name=Witchaven villager
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_man
 multinpc=1,slug_villager_man_possessed
 
 [witchaven_villager_woman]
 name=Witchaven villager
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_woman
 multinpc=1,slug_villager_woman_possessed
 
 [witchaven_villager_old]
 name=Witchaven villager
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 multivar=slugmenace_villagers_turned
 multinpc=0,slug_villager_old
 multinpc=1,slug_villager_old_possessed

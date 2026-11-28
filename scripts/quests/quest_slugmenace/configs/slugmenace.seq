@@ -268,6 +268,10 @@ frame11=anim_1248_2
 delay11=4
 
 [slug_prince_attack]
+// ONE ABOVE HIS BLOCK. The client replaces a running animation when the new one's priority is >= the
+// current one's, and a block lands the tick after a swing, so at equal priority every attack was cut
+// short by the block on top of it (tools/sim/animpriority.ts). The block keeps the default.
+priority=6
 frame1=anim_1248_25
 delay1=4
 frame2=anim_1248_34
