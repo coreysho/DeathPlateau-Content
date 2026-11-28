@@ -532,6 +532,23 @@ stat_advance(firemaking, 4000);
 ~mesbox("A working furnace, in a town that has not had one since before anybody here was born.");
 return;
 
+// AND THEN IT SMELTS, which it did not. burgh_furnace_fired carries op2="Smelt" and
+// category=smithing_furnace, so [oploc2,_smithing_furnace] in smelt_window.rs2 should have
+// answered - but the engine dispatches a loc click on the type of the loc the MAP placed, which is
+// the multiloc shell burgh_furnace_multiloc, and the shell carries no category. Measured: `No
+// trigger for [oploc2,burgh_furnace_multiloc]`, then "Nothing interesting happens." In state 3 the
+// fired face's op1 is null, so Smelt is the ONLY thing left to click on the furnace a player has
+// just spent a quest repairing.
+//
+// No state check is needed here and none is wanted: op2 exists only on the fired face, and
+// OpLocHandler validates the label against the RESOLVED face before it dispatches - so this
+// trigger cannot be reached while the furnace is cracked, empty or cold. The use-on half
+// (oplocu) has no label to validate and is still dead; that one needs either a state check and a
+// refactor of the shared [oplocu,_smithing_furnace] switch, or the engine resolving multiloc for
+// trigger lookup, and is DeathPlateau-Bugs#106.
+[oploc2,burgh_furnace_multiloc]
+~smelt_window_open;
+
 // =========================================================================== the blood tithe
 [opnpc1,burgh_gadderanks_multinpc]
 if (%blood_tithe_visible ! ^m2_tithe_happening) {

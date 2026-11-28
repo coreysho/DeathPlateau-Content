@@ -482,7 +482,19 @@ if (%fever_hole_3 = ^fever_hole_open) {
 [oploc1,fever_cannon]
 ~mesbox("A cannon. Clean her, charge her, pack her, shot her, fuse her, and light her from one side.");
 
-[oploc2,fever_cannon]
+// EMPTY-OUT, WHICH NOBODY COULD CLICK. The label is on the fever_cannon FACE and the map places
+// the shell, fever_multi_cannon - and a loc click dispatches on the type the map placed, so
+// [oploc2,fever_cannon] could never fire and the drill could not be started over. Both triggers
+// now jump to the same label; the face keeps its own in case a map ever places one.
+//
+// op1 is untouched: in the fever_cannon state its label is "Inspect" and [oploc1,fever_multi_cannon]
+// above answers it with the gun drill, which is what the quest wants. [oploc1,fever_cannon]'s
+// mesbox below is dead for the same reason this was, and is left alone rather than given
+// precedence over the drill.
+[oploc2,fever_multi_cannon] @fever_cannon_empty;
+[oploc2,fever_cannon] @fever_cannon_empty;
+
+[label,fever_cannon_empty]
 %fever_cannon_clean = ^fever_off;
 %fever_cannon_powder = ^fever_off;
 %fever_cannon_tamp = ^fever_off;

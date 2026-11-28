@@ -273,6 +273,19 @@ stat_advance(crafting, 750);
 mes("Air gets to it, and whatever was banked in there four thousand years ago is still hot enough to catch.");
 ~enakh_check_elements;
 
+// AND THE LIT FURNACE SMELTS, which it did not. enakh_new_furnace_lit carries op2="Smelt" and
+// category=smithing_furnace, so [oploc2,_smithing_furnace] in smelt_window.rs2 should have
+// answered - but a loc click dispatches on the type the MAP placed, which is the multiloc shell
+// enakh_furnace_multiloc, and the shell carries no category. Measured: `No trigger for
+// [oploc2,enakh_furnace_multiloc]`, then "Nothing interesting happens."
+//
+// No state check here, deliberately: op2 exists only on the lit face, and OpLocHandler validates
+// the label against the RESOLVED face before it dispatches, so this cannot be reached while the
+// grate is still packed. The use-on half (oplocu) has no label to validate and is still dead, as
+// is the fountain next door - DeathPlateau-Bugs#106 has both and the engine question behind them.
+[oploc2,enakh_furnace_multiloc]
+~smelt_window_open;
+
 // =========================================================================== element 3: shadow
 // Six braziers, six separate bits, each a 0 log-remains / 1 lit multiloc. All six lit is what
 // throws the shadow the temple wants - which is why this is the shadow element and not the fire
