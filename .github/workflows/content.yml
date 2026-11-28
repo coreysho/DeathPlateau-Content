@@ -347,6 +347,7 @@ jobs:
         # the hold is the point. Two player reports and one sweep found the same fault in three
         # places (DeathPlateau-Bugs#39, #85, and glassblowing), so this is the ratchet for a fourth.
         - holdloop_battery.py
+        - dropdeath_battery.py
         - teleother_battery.py
         # the trading post: its windows, the barter inv going back, and the confirm clicks. The
         # market itself is checked in the engine repo, by tools/tradingpostcheck.ts.

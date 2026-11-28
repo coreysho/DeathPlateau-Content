@@ -14,6 +14,17 @@ if (npc_findhero = ^false) {
     return;
 }
 
+// THE 100% ROW, WHICH THIS TABLE NEVER HAD (DeathPlateau-Bugs#109). ~npc_death does not drop it -
+// every table calls obj_add for itself - so an icefiend config that says param=death_drop,ashes
+// left nothing behind at all, for every icefiend in the game, until now. Measured at twelve
+// kills and no ashes. The same omission four God Wars bodyguard tables had, found by a 540-kill
+// run; this one was simply never run against.
+//
+// SWEPT: of the 518 ai_queue3 handlers in drop_tables/scripts, this is the only table whose npc
+// config EXPLICITLY names a death_drop and whose table never drops it. tools/dropdeath_battery.py
+// keeps it that way.
+obj_add(npc_coord, npc_param(death_drop), 1, ^lootdrop_duration);
+
 
 // Tertiary
 ~trail_easycluedrop(^trail_easy_droprate, npc_coord);
