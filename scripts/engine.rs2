@@ -92,6 +92,9 @@
 // info: rare drop, a pet, a cape. It is a separate op from broadcast_mes so that yells and staff
 // info: announcements, which share that one, cannot reach a public channel by sharing this one.
 [command,broadcast_news](string $message, obj $icon, string $skill)
+// info: Tell the player's loot tracker what an inv has just paid them - a clue casket, the Barrows
+// info: chest - under the name given. Reports only; nothing is moved. (custom, 2026-11-28)
+[command,loot_event](string $source, inv $inv)
 // info: Claim a server first under $key, e.g. "99:fishing" (custom, 2026-11-16). True only for the
 // info: account that got there first, and only once ever - so it is safe to call from a level-up
 // info: that can fire again. The key is content's to choose; see engine MilestoneStore.ts.
@@ -420,6 +423,8 @@
 [command,midi_jingle](midi $jingle)
 // info: Play a jingle for the secondary player (advancing levels, completing quests, ...)
 [command,.midi_jingle](midi $jingle)
+// info: Length of a song in ticks, from the cache
+[command,midi_length](midi $track)(int)
 // info: Change the active_player type of minimap displayed
 [command,minimap_toggle](int $type)
 // info: Change the secondary active_player type of minimap displayed

@@ -5,6 +5,38 @@
 [if_button,music:com_181]
 %musicplay = 0;
 
+// LOOP (PlagueCityRS 349)
+[if_button,music:com_251]
+if (%musicloop = 0) {
+    %musicloop = 1;
+
+    // July 2006 mes:
+    mes("Music looping now enabled.");
+    softtimer(musicloop, 1);
+} else {
+    %musicloop = 0;
+
+    // inferred from enabled
+    mes("Music looping now disabled.");
+    clearsofttimer(musicloop);
+}
+
+[softtimer,musicloop]
+if (%musicloop = 0) {
+    clearsofttimer(musicloop);
+    return;
+}
+
+if (%currentsong = null) {
+    return;
+}
+
+if (map_clock > add(%musicstart, %musiclength)) {
+    // osrs has a 2t delay between silence and looping
+    midi_song(silence);
+    ~music_play(%currentsong);
+}
+
 // ----
 
 [if_button,music:7th_realm] ~music_playbybutton(music:7th_realm);

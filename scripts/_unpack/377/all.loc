@@ -55,6 +55,7 @@ length=3
 width=3
 op1=Fire
 op2=Pick-up
+op3=Check
 blockrange=no
 blockwalk=no
 
@@ -26240,6 +26241,8 @@ model=loc_3628
 recol1s=9513
 recol1d=15855
 op1=Open
+param=approach_direction,0
+category=macro_maze_wall_door
 
 [macro_maze_walllow_safe1]
 name=Wall
@@ -26248,6 +26251,8 @@ model=loc_3628
 recol1s=9513
 recol1d=15855
 op1=Open
+param=approach_direction,1
+category=macro_maze_wall_door
 
 [macro_maze_walllow_safe2]
 name=Wall
@@ -26256,6 +26261,8 @@ model=loc_3628
 recol1s=9513
 recol1d=15855
 op1=Open
+param=approach_direction,2
+category=macro_maze_wall_door
 
 [macro_maze_walllow_safe3]
 name=Wall
@@ -26264,6 +26271,8 @@ model=loc_3628
 recol1s=9513
 recol1d=15855
 op1=Open
+param=approach_direction,2
+category=macro_maze_wall_door
 
 [macor_maze_walllow_safe4]
 name=Wall
@@ -26272,6 +26281,8 @@ model=loc_3628
 recol1s=9513
 recol1d=15855
 op1=Open
+param=approach_direction,1
+category=macro_maze_wall_door
 
 [macro_maze_wallinactive]
 model=loc_3628

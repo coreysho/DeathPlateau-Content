@@ -5,6 +5,8 @@ protect=no
 
 [musicloop]
 transmit=yes
+scope=temp
+protect=no
 
 [musicmulti_1]
 transmit=yes
@@ -77,6 +79,11 @@ scope=perm
 protect=no
 
 [musiclength]
+scope=temp
+protect=no
 
 [currentsong]
+type=midi
+scope=temp
+protect=no
 

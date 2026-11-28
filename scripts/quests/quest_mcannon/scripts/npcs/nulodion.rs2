@@ -91,6 +91,14 @@ inv_add(inv, ammo_mould, 1);
 [label,lost_my_cannon]
 ~chatplayer("<p,sad>I've lost my cannon...");
 ~chatnpc("<p,neutral>That's unfortunate... but don't worry, I can sort you out.");
+// custom: a broken cannon (cannon_setup.rs2) is still standing and is the player's to repair
+if (%ownedmcannon ! null & loc_find(%ownedmcannon, dwarf_multicannon_broken) = true) {
+    ~chatnpc("<p,confused>Hmmm. I think you'll find your cannon still happily parked on the spot where you put it. It's only broken - give it a repair and it'll fire as well as ever.");
+    ~chatplayer("<p,confused>Oh, is it still there? I thought I'd lost it.");
+    ~chatnpc("<p,laugh>Ha ha ha, what a muddle-headed numpty you are!");
+    ~chatplayer("<p,angry>...");
+    return;
+}
 if (%ownedmcannon = null | loc_find(%ownedmcannon, dwarf_multicannon1) = true) {
     ~chatnpc("<p,sad>Oh dear, I'm only allowed to replace cannons|that were stolen in action.|I'm sorry but you'll have to buy a new set.");
     return;
@@ -141,6 +149,7 @@ if (%dropcannon = ^cannon_stage_base) {
 }
 %ownedmcannon = null;
 %dropcannon = ^cannon_stage_none;
+~cannon_hud_clear;
 
 [label,ill_take_a_cannon]
 ~chatplayer("<p,neutral>Ok, I'll take a cannon please.");

@@ -12,7 +12,33 @@ scope=perm
 
 [rockthrower]
 scope=perm
+// the cannonballs loaded, shown by the client's Cannon overlay
+transmit=yes
 
 [ownedmcannon]
 scope=perm
 type=coord
+
+// THE DECAY CLOCK - cannon_setup.rs2 has the whole story. All four are written by the
+// cannon_decay softtimer, which has no protected access, hence protect=no.
+// The map_clock the current stage ends: a full cannon breaks, a broken or part-built one vanishes.
+// Perm so a logout and login keeps it; a restart loses the cannon itself, so a stale value is
+// never read against a cannon that is still standing.
+[cannon_clock]
+scope=perm
+protect=no
+
+// For the client's Cannon overlay: ^cannon_hud_* and the ticks that state has left. The client
+// reads these by id (pack/varp.pack 2121, 2122), so they must keep them.
+[cannon_hud]
+protect=no
+transmit=yes
+
+[cannon_hud_ticks]
+protect=no
+transmit=yes
+
+// whether this stage's five-minute warning has been said
+[cannon_warned]
+type=boolean
+protect=no
