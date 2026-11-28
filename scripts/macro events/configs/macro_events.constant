@@ -106,6 +106,15 @@
 // Inside the cage. There is nowhere else to be.
 ^macro_pillory_landing = 0_50_53_28_21
 
+// THE MAZE, the Mysterious Old Man's other errand (from PlagueCityRS 349). The maze is map square
+// 45_71: four corners to start from, a shrine in the middle and chests on the way. See
+// macro_event_maze.rs2.
+^macro_maze = 22
+// 60 seconds before an opened chest closes again - https://www.youtube.com/shorts/TS3mW5Ta5pI
+^macro_maze_chest_ticks = 100
+// One of the four starting corners, for macro_event_rooms (which only needs a coord in the square).
+^macro_maze_landing = 0_45_71_11_53
+
 ^macro_bigfish = 6
 
 ^no_macro_event = 0
