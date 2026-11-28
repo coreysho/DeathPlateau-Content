@@ -9,6 +9,11 @@
 //   rd_room_order       recruitmentdrive bits 3-14   the statue arrangement - see Lady Table below
 //   rd_room1..7_complete recruitmentdrive bits 15-21 one per test
 //   rd_room1_initiated  recruitmentdrive bit 24      a run is in progress
+//
+// ADDED HERE, not in the cache: rd_draw, a fourth varp, holding rd_room1..7_drawn in bits 0-6 and
+// rd_progress in bits 7-10. recruitmentdrive has all 32 of its bits claimed and both scratch
+// varps are full too, and the draw has to be perm because rd_room1_initiated is - see
+// DeathPlateau-Bugs#72 and the note over ~rd_begin_run.
 //   rd_got_* / rd_spare_water / rd_room6_stone_door  Miss Cheevers' chemistry scratch state
 //   rd_foxleft/right, rd_chickleft/right, rd_grainleft/right   Sir Spishyus' bridge puzzle
 //   rd_templock_1/2, rd_react_on_spade, rd_gypsum_in_tin, rd_water_in_tin, rd_room6_hint1
@@ -35,10 +40,37 @@
 ^rd_started = 1
 // ^recruitmentdrive_complete = 2 is declared once, globally, in general/configs/quest.constant.
 
+// --- %rd_progress: the quest helper's ladder ---
+// %rd_main holds three values - not started, started, complete - and the whole of the quest between
+// Sir Tiffy and the end is the middle one. The helper's panel picks the leg to show by the LAST leg
+// whose value the player has passed (QuestHelperPlugin.legOf), so three values can only ever buy
+// three legs, and all seven tests sat inside one of them: a 56-step walk through all seven rooms in
+// a fixed order, shown to a player who is sitting five of them in whatever order the draw gave.
+// DeathPlateau-Bugs#72 option C.
+//
+// So the tests get a ladder of their own, written in exactly one place - the seven branches of
+// @rd_send_to_next_room - and nine legs come out of it. It has to be a single rising number because
+// that is what the panel reads; a plain "which room am I in" cannot say "finished", and cannot be
+// compared against ^rd_progress_done at all.
+//
+// It agrees with %rd_main by construction, and tools/sim/rddraw.ts asserts the agreement at every
+// step: 0 <-> not started, 1-8 <-> started, 9 <-> complete.
+^rd_progress_none = 0
+^rd_progress_tiffy = 1
+^rd_progress_room1 = 2
+^rd_progress_room2 = 3
+^rd_progress_room3 = 4
+^rd_progress_room4 = 5
+^rd_progress_room5 = 6
+^rd_progress_room6 = 7
+^rd_progress_room7 = 8
+^rd_progress_done = 9
+
 // --- Which tests this build offers ---
-// All seven are built, and a run sits five of them: rd_begin_run marks two at random as already
-// passed and the rest are handed out lowest-first. Sir Spishyus' bridge (room 1) and Miss Cheevers'
-// lab (room 6) are the two with item chains behind them; both are in the pool.
+// All seven are built, and a run sits five of them: rd_begin_run draws two at random to leave out
+// and marks the other five in the rd_room1..7_drawn bits; they are handed out lowest-first. Sir
+// Spishyus' bridge (room 1) and Miss Cheevers' lab (room 6) are the two with item chains behind
+// them; both are in the pool.
 ^rd_rooms_needed = 5
 
 // --- Where each test drops you (rooms 1 and 6) ---
@@ -110,10 +142,18 @@
 // the click never reaches a script. Every attempt fell through to ~rd_fail_room and ~rd_pass_room(2)
 // was dead code. Lady Table's own dialogue says what should happen ("Then I shall put it back"):
 // show the shuffle, restore all twelve, and keep the answer somewhere the multiloc cannot see.
-// Bits 21-26 of rd_rooms_tempvar2 are claimed by no varbit (0-20 are the fox/chicken/grain puzzle,
-// 27 is ^rd_bit_patience), so four of them hold the arrangement 1-12 and 0 means no puzzle running.
-^rd_bit_statue_lo = 21
-^rd_bit_statue_hi = 24
+// The four bits this is parked in: 28-31 of rd_rooms_tempvar2, holding the arrangement 1-12, with 0
+// meaning no puzzle running.
+//
+// MOVED 2026-11-25 (from 21-24, while separating the draw from the completion bits). The old range
+// was picked when bits 21-26 really were claimed by no varbit, and it no longer was: all.varbit now
+// puts rd_react_on_spade at 21, rd_gypsum_in_tin at 22, rd_water_in_tin at 23 and rd_room6_hint1 at
+// 24 - every one of them a Miss Cheevers' lab varbit sitting under the statue field. No player
+// could reach it, because ~rd_enter_room zeroes both scratch varps on entry so room 2 and room 6
+// can never be live at once, but that is the only thing that was keeping them apart. 28-31 are
+// claimed by nothing at all (26 is the last varbit on this varp, 27 is ^rd_bit_patience).
+^rd_bit_statue_lo = 28
+^rd_bit_statue_hi = 31
 
 // --- Sir Tinley ---
 // Eight seconds. p_delay is the whole mechanic: any click aborts the script, which is exactly the
