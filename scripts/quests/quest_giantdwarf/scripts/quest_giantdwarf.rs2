@@ -37,6 +37,25 @@ if (%giantdwarf_quest = ^gd_arrived) {
     ~mesbox("A city under a mountain, built by people who have never once been impressed by anything. Nobody looks up as you arrive.");
 }
 
+// THE CAVE. A player who knows the main game goes looking for a cave entrance into Keldagrim, and
+// this build's only one was walled into a two-tile pocket at 2838,10123 where nobody could reach it
+// (DeathPlateau-Bugs#115). It now stands in the tunnels beside Hammerspike and takes the same cart
+// ride without the conversation: Keldagrim needs no quest, and Hammerspike still starts it for
+// anyone who talks to him instead.
+[oploc1,dwarf_cave_entrance]
+if (%giantdwarf_quest = ^gd_not_started) {
+    %giantdwarf_quest = ^gd_arrived;
+    ~send_quest_progress(questlist:giantdwarf, %giantdwarf_quest, ^gd_complete);
+}
+mes("You squeeze into the tunnel. The cart is waiting.");
+p_delay(2);
+p_teleport(^gd_keldagrim_arrive);
+if (%giantdwarf_quest = ^gd_arrived) {
+    %giantdwarf_quest = ^gd_refused;
+    ~send_quest_progress(questlist:giantdwarf, %giantdwarf_quest, ^gd_complete);
+    ~mesbox("A city under a mountain, built by people who have never once been impressed by anything. Nobody looks up as you arrive.");
+}
+
 [label,gd_start]
 ~chatnpc("<p,angry>Humans do not come down this tunnel.");
 switch_int (~p_choice2("What's down it?", 1, "Sorry.", 2)) {
