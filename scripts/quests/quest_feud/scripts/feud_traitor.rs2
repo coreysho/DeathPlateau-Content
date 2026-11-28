@@ -453,6 +453,24 @@ p_delay(3);
 ~feud_spawn_leader;
 ~mesbox("It goes in without a mark. Now somebody has to tell the Menaphites that their boss is on the floor of the bar, and the only person in this village they would believe is one of their own.");
 
+// RECONCILED AT LOGIN, FROM THE STAGE (DeathPlateau-Bugs#118, "cant talk to menaphite leader ...
+// invisible"). Both leaders are drawn only while a bit in the quest varp is set, and the bits were
+// set by one conversation each: the camel joke for the two in the tents, the beer for the one
+// outside. A character who passed that conversation before the bit was wired to it - the tent boss
+// "could not be seen" for a while, see the note in quest_feud.rs2 - keeps a quest stage that says
+// they went past and a bit that says they did not, so the person the next step asks for is not
+// drawn. The leader outside the tent is also a plain npc_add, and a server restart (or his
+// 30000-tick lifetime) removes him while the stage stays at "poisoned": nobody to talk to, and the
+// beer cannot be poisoned twice. So the stage decides, here, and it only ever RAISES the bits.
+[proc,feud_reconcile_leaders]
+if (%feud_var >= ^feud_joined & %feud_var < ^feud_complete) {
+    %feud_boss_vis = ^feud_on;
+    %feud_bandit_boss_vis = ^feud_on;
+}
+if (%feud_var >= ^feud_poisoned & %feud_var < ^feud_menaphite_down) {
+    ~feud_spawn_leader;
+}
+
 [proc,feud_spawn_leader]
 %feud_boss_vis2 = ^feud_on;
 if (npc_findexact(^feud_leader_spawn, feud_menap_boss2) = true) {

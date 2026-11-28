@@ -214,6 +214,8 @@ if_settab(music, ^tab_musicplayer);
 // In Aid of the Myreque before the minigame was written has the quest and not the varbit, so this
 // catches them up rather than leaving an empty street in Burgh de Rott.
 ~trek_unlock;
+// The Feud's leaders are drawn from bits a stage can be past without - quests/quest_feud/scripts/feud_traitor.rs2.
+~feud_reconcile_leaders;
 // "Followers lose their food if you log out" - Old School's rule, and the simplest way to hold it
 // whatever scope the varp carries. minigames/game_templetrek/scripts/templetrek_events.rs2.
 ~trek_clear_pack;
