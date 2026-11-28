@@ -26,33 +26,35 @@ if(%phoenixgang >= ^phoenixgang_joined | %blackarmgang >= ^blackarmgang_joined) 
         ~chatnpc("<p,happy>Take these to the king|and he'll pay you both handsomely.|Please tell your friend to speak to me|after giving him his certificate.");
         return;
     } else if(inv_total(inv, arravshield1) > 0 | inv_total(inv, arravshield2) > 0) {
-        // Half a shield now buys ONE certificate, where it used to buy a shrug.
+        // HALF A SHIELD BUYS NOTHING. The reward is for the whole shield, and the way one account
+        // gets the whole shield is the way the quest is designed: trade halves with somebody on the
+        // other gang. Both halves are tradeable - neither arravshield1 nor arravshield2 carries any
+        // restriction - so that route is open on this server exactly as it is in the real game.
         //
-        // The two-half path above is authentic and is left exactly as it was - two players, two
-        // certificates, 600 coins each. The problem is that it is the ONLY path, and it cannot be
-        // walked alone: the gangs are mutually exclusive (katrine.rs2 refuses anyone who joined the
-        // Phoenix, straven.rs2 refuses anyone who joined the Black Arm) and each hideout door wants
-        // its own gang's varp, so one account can reach exactly one half of the shield, forever.
-        // On a server without a second player to trade with, the quest simply could not be finished.
+        // IT USED TO BUY ONE CERTIFICATE, as a kindness to a player with nobody to trade with. The
+        // reasoning written here was that the quest "simply could not be finished" alone, which was
+        // not true: the gangs are mutually exclusive, so one ACCOUNT can only reach one half, but
+        // the halves trade. So it was a convenience rather than a necessity, and a player noticed
+        // it as a divergence and reported it (DeathPlateau-Bugs#74). The owner's call was to put
+        // the real rule back.
         //
-        // So: bring the half you can actually get, get the half reward the king already pays. The
-        // king's dialogue needs no change at all - he has always said "I see you are claiming half
-        // the reward" and always paid 600, because the certificate was only ever worth half.
-        ~chatplayer("<p,quiz>I have half the shield of Arrav here.|Can I get a reward?");
-        ~chatnpc("<p,shock>Half of it? Let me see that!");
-        ~mesbox("The curator peers at the half shield.");
-        ~chatnpc("<p,shock>That shield has been missing for over twenty-five years!");
-        ~chatnpc("<p,neutral>Leave it here with me|and I'll write you out a certificate|for your half,|so that you can claim your share from the King.");
-        ~chatnpc("<p,neutral>If whoever holds the other half ever turns up,|they can do the same.");
-        ~mesbox("You hand over the half shield.");
-        if(inv_total(inv, arravshield1) > 0) {
-            inv_del(inv, arravshield1, 1);
-        } else {
-            inv_del(inv, arravshield2, 1);
-        }
-        inv_add(inv, arravcertificate, 1);
-        ~mesbox("The curator writes out a certificate.");
-        ~chatnpc("<p,happy>Take that to the king|and he'll pay you your share.");
+        // AND NOT THE MODERN RULE, deliberately. Today's Old School takes a half shield and hands
+        // back TWO copies of half a certificate, which two players trade in one go and join - and
+        // the king refuses half a certificate with "you'll have to get the other half and join them
+        // together". That whole system arrived in the update of 29 May 2007. Before it, the wiki
+        // records exactly what the branch above already does: "the person with both halves would
+        // then hand them in to the Curator, and get two certificates in return." This is a 377
+        // server, so the older rule is the right one, and the two-half path needs no change at all.
+        //
+        // THE LINES ARE THE GAME'S OWN, out of the Shield of Arrav transcript, rather than a shrug
+        // or something invented here. Nothing is taken from the player: they keep their half.
+        ~chatplayer("<p,neutral>Hello there.|I'm here about the Shield of Arrav.");
+        ~chatnpc("<p,shock>The shield of Arrav?|The Museum has been searching for that for years!");
+        ~mesbox("You show the curator your half of the shield.");
+        ~chatnpc("<p,shock>This is incredible!|But where's the other half?");
+        ~chatplayer("<p,quiz>So will I be rewarded|for recovering half of the shield?");
+        ~chatnpc("<p,sad>I'm afraid the reward is for the recovery|of the full shield.");
+        ~chatnpc("<p,neutral>We will have to hope that another adventurer|can recover that half.");
         return;
     }
 }
