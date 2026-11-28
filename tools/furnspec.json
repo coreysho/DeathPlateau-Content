@@ -77,10 +77,29 @@
    "planks": 8,
    "base": 9,
    "op1": {
-    "kind": "mes",
-    "lines": [
-     "You search the larder.",
-     "There is food in it, but nothing you want right now."
+    "kind": "search",
+    "line": "A larder, and it never runs out.",
+    "tiers": [
+     [
+      "bucket_milk",
+      "poh_tea_leaves"
+     ],
+     [
+      "bucket_milk",
+      "egg",
+      "pot_flour",
+      "poh_tea_leaves"
+     ],
+     [
+      "bucket_milk",
+      "egg",
+      "pot_flour",
+      "poh_tea_leaves",
+      "potato",
+      "garlic",
+      "onion",
+      "cheese"
+     ]
     ]
    }
   },
@@ -105,10 +124,65 @@
    "planks": 2,
    "base": 6,
    "op1": {
-    "kind": "mes",
-    "lines": [
-     "You search the shelves.",
-     "There is nothing on them."
+    "kind": "search",
+    "line": "Crockery, and there is always more of it.",
+    "tiers": [
+     [
+      "poh_kettle_empty",
+      "poh_teapot_clay_empty",
+      "poh_claycup_empty"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_clay_empty",
+      "poh_claycup_empty",
+      "beer_glass"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_porcelain_empty",
+      "poh_chinacup_empty",
+      "beer_glass",
+      "cake_tin"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_clay_empty",
+      "poh_claycup_empty",
+      "beer_glass",
+      "cake_tin",
+      "bowl_empty"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_porcelain_empty",
+      "poh_chinacup_empty",
+      "beer_glass",
+      "cake_tin",
+      "bowl_empty",
+      "piedish"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_porcelain_empty",
+      "poh_chinacup_empty",
+      "beer_glass",
+      "cake_tin",
+      "bowl_empty",
+      "piedish",
+      "pot_empty"
+     ],
+     [
+      "poh_kettle_empty",
+      "poh_teapot_giltporcelain_empty",
+      "poh_giltchinacup_empty",
+      "beer_glass",
+      "cake_tin",
+      "bowl_empty",
+      "piedish",
+      "pot_empty",
+      "chefs_hat"
+     ]
     ]
    }
   },
@@ -455,10 +529,41 @@
    "planks": 2,
    "base": 16,
    "op1": {
-    "kind": "mes",
-    "lines": [
-     "You search the rack.",
-     "The tools are all where you left them."
+    "kind": "search",
+    "line": "The tools are all where you left them.",
+    "tiers": [
+     [
+      "saw",
+      "hammer",
+      "chisel",
+      "shears"
+     ],
+     [
+      "bucket_empty",
+      "knife",
+      "spade",
+      "tinderbox"
+     ],
+     [
+      "brown_apron",
+      "glassblowingpipe",
+      "needle"
+     ],
+     [
+      "amulet_mould",
+      "necklace_mould",
+      "ring_mould",
+      "holy_symbol_mould",
+      "tiara_mould"
+     ],
+     [
+      "rake",
+      "spade",
+      "gardening_trowel",
+      "dibber",
+      "watering_can_0",
+      "secateurs"
+     ]
     ]
    }
   },
@@ -3125,6 +3230,12 @@
   "  preen    a seq and a line",
   "  mes      lines, printed in order",
   "  study    open the lectern window (tools/gentablets.py) and make magic tablets",
+  "  search   open the Search window (tools/genpohsearch.py) on the piece's own list of items, one",
+  "           tier at a time. The contents are unlimited - every wiki page for these says so - so",
+  "           the window is a picker and not a store: taking one adds to the player and the grid",
+  "           does not change. `tiers` is one list per loc IN LOC ORDER, so the mapping from the",
+  "           wiki's tiers to this cache's is positional, which matters because the names differ",
+  "           (this repo's Oak shelves 1 is the wiki's Wooden shelves 3) and the levels do too.",
   "",
   "NOT ANSWERED YET, and why: Work-at (workbenches) is flatpacks and needs one obj per piece of",
   "furniture; Craft, Open, Change-clothes, Upgrade, Activate, Set-up, Shoot-at, Throw-at,",

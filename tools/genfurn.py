@@ -106,6 +106,18 @@ def cfg(path):
         out[m.group(1)] = d
     return out
 
+def search_slots(path='scripts/skill_construction/configs/construction.constant'):
+    """^poh_search_slots, which is how many items the Search window can show.
+
+    Read rather than repeated, because tools/genpohsearch.py reads it too and the window, the inv
+    behind it and the lists in the spec all have to agree about one number.
+    """
+    m = re.search(r'(?m)^\^poh_search_slots = (\d+)$', read(path))
+    if not m:
+        raise SystemExit('construction.constant does not define ^poh_search_slots')
+    return int(m.group(1))
+
+
 def packmap(p):
     out = {}
     for l in read(p).split('\n'):
@@ -315,14 +327,57 @@ def build():
             if width(l) > NAME_PX:
                 err.append('%s: "%s" is %dpx in the window\'s %dpx name column'
                            % (f['key'], l, width(l), NAME_PX))
+    # WHAT A SEARCHED PIECE HANDS OVER. One list per loc, in loc order, so the mapping from the
+    # wiki's tiers to this cache's is positional - which matters, because the names differ (this
+    # repo's "Oak shelves 1" is the wiki's "Wooden shelves 3") and so do the levels. Checked here
+    # rather than trusted: a name that is not in obj.pack would compile to obj 0, which is
+    # mcannonremains, and a list longer than the window has slots would silently lose its tail.
+    # DeathPlateau-Bugs#93.
+    SEARCH_SLOTS = search_slots()
+    OBJS = packmap('pack/obj.pack')
+    n_search = 0
+    for f in fams:
+        op = f.get('op1') or {}
+        if op.get('kind') != 'search':
+            continue
+        tiers = op.get('tiers') or []
+        if len(tiers) != len(f.get('locs') or f.get('pieces') or []):
+            err.append('%s: %d search lists for %d pieces'
+                       % (f['key'], len(tiers), len(f.get('locs') or f.get('pieces') or [])))
+        for t, tier in enumerate(tiers, start=1):
+            if not tier:
+                err.append('%s tier %d: an empty search list - use kind "mes" if there is nothing in it'
+                           % (f['key'], t))
+            if len(tier) > SEARCH_SLOTS:
+                err.append('%s tier %d: %d items and the window has %d slots'
+                           % (f['key'], t, len(tier), SEARCH_SLOTS))
+            if len(set(tier)) != len(tier):
+                err.append('%s tier %d: the same item twice - %s' % (f['key'], t, tier))
+            for obj in tier:
+                if obj not in OBJS:
+                    err.append('%s tier %d: %s is not in obj.pack' % (f['key'], t, obj))
+        n_search += len(tiers)
     CEILING = (1 << (ITEM_LO + ITEM_HI)) - 1
     if len(items) > CEILING:
         err.append('%d items, but the item number is %d bits - %d is the ceiling'
                    % (len(items), ITEM_LO + ITEM_HI, CEILING))
+    # THE SEARCH NUMBER. A small dense index over the searchable pieces only, 0-based, in piece
+    # order - not the piece number, which runs to 351 and would make poh_search_item a table with
+    # 4212 keys of which 120 are real. The same flat-run trick poh_store_item uses next door.
+    bykey = {f['key']: f for f in fams}
+    nxt_search = 0
+    for i in items:
+        op = bykey[i['famkey']].get('op1') or {}
+        if op.get('kind') != 'search':
+            continue
+        i['search'] = nxt_search
+        i['searchitems'] = op['tiers'][i['tier'] - 1]
+        nxt_search += 1
     if err:
         print('\n'.join('  ERROR ' + e for e in err))
         raise SystemExit('%d problems in furnspec.json; nothing written' % len(err))
     return fams, items
+
 
 def resolve_model(base, MODELS):
     """The model.pack name behind a loc's `model=`. The loc packer registers a model under its own
@@ -468,6 +523,35 @@ def emit_enum(fams, items, path):
           default='null')
     table('poh_fam_name', 'string', [(n, f['label']) for n, f in enumerate(fams, 1)],
           ['// What the Furniture creation window calls each hotspot family, for its title bar.'])
+    # WHAT SEARCHING A PIECE OFFERS. One flat run per searchable piece, SEARCH_SLOTS wide, keyed on
+    # the piece's search number * that width + the slot - the same shape poh_store_item uses for the
+    # costume room, and for the same reason: the index IS the slot, so nothing has to search.
+    #
+    # Only the fifteen pieces with published contents are in here. The bookcase and the scroll rack
+    # carry op1=Search too and are deliberately not: nothing is published for either, and the line
+    # they already give is close to what the world's bookcases say. DeathPlateau-Bugs#93.
+    slots = search_slots()
+    table('poh_search_item', 'namedobj',
+          [(i['search'] * slots + n, obj)
+           for i in items if 'search' in i
+           for n, obj in enumerate(i['searchitems'])],
+          ['// The items a searched piece hands out, by search number * %d + slot. namedobj rather' % slots,
+           '// than obj because inv_add takes a namedobj; default=null because a namedobj enum with',
+           '// no default answers 0 on a miss and obj 0 is mcannonremains (rs2check rule 17), and',
+           '// every row past a short list IS a miss - the lists are 3 to 9 items in a %d-slot run.' % slots],
+          default='null')
+    # obj -> namedobj, every item in any search list mapped to itself.
+    #
+    # WHY A TABLE TO CONVERT A THING INTO ITSELF. The click arrives as a slot, inv_getobj answers an
+    # obj, and inv_add wants a namedobj - the same narrowing pet_variants.enum documents for
+    # last_useitem. The alternative was a varp remembering which piece is open, which is state that
+    # can go stale; this cannot. It also means only an item that is really in some search list can
+    # be handed over, so a grid out of step with its list gives nothing rather than something else.
+    give = sorted({obj for i in items if 'search' in i for obj in i['searchitems']})
+    o += ['// Keyed on obj and answering namedobj, which is the only reason it exists: see above.',
+          '[poh_search_give]', 'inputtype=obj', 'outputtype=namedobj', 'default=null']
+    o += ['val=%s,%s' % (obj, obj) for obj in give]
+    o.append('')
 
     def guide_room(room):
         parts = [p.strip() for p in room.split(',') if p.strip()]
@@ -1223,6 +1307,12 @@ def emit_ops(fams, items, byfam, path='scripts/skill_construction/scripts/poh_fu
             # the piece is passed in so its tier can set the capacity, the same way the altar's
             # offer trigger passes the piece it is standing on
             body = ['~poh_costume_open(%d);' % i['n']]
+        elif k == 'search':
+            # One window for fifteen pieces, so it is told which it is: the piece's search number
+            # picks its run of poh_search_item, and the name and the line are what it puts at the
+            # top. The line is the family's old dead Search message, which is true now that the
+            # items are really there.
+            body = ['~poh_search_open(%d, %s, %s);' % (i['search'], q(i['label']), q(op['line']))]
         elif k == 'study':
             # The lectern window, and the only op1 whose body depends on WHICH piece it is: a
             # lectern's tier is which of the seven it is, and that is what decides its tablet list.
