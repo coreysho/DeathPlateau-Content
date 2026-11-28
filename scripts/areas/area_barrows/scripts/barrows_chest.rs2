@@ -117,6 +117,10 @@ if (random(^barrows_tele_rate) = 0) {
     ~barrows_reward_add(barrows_teleport,
                         ~barrows_between(^barrows_tele_low, ^barrows_tele_high));
 }
+// The loot tracker's "Barrows" box: this chest's rolls and only these - the flush above emptied the
+// store first. Reopening the window later (barrows_chest_reopen) is not a second chest, so it is
+// reported here and not in the window proc.
+loot_event("Barrows", barrows_reward_store);
 ~barrows_chest_window($rolls, $potential);
 
 // ---------------------------------------------------------------------------------------------
