@@ -72,7 +72,18 @@ if (random(^champion_scroll_chance) = 0) {
 obj_add(npc_coord, champions_challenge_hobgoblin, 1, ^lootdrop_duration);
 }
 
-[ai_queue3,hobgoblin_armed] // LVL 42 Hobgoblins
+[ai_queue3,hobgoblin_armed] @hobgoblin_armed_drop_table; // LVL 42 Hobgoblins
+
+// AND ITS GOD WARS COPY, level 47, on the ARMED table - the higher of this file's two and
+// the nearer of them to 47. It carries category=gwd_army so that
+// [ai_timer,_gwd_army] can find it for the skirmish, and an npc has ONE category -
+// so taking that one cost it the drop category it would otherwise have had, and it dropped
+// its bones and nothing else. Named here rather than given a table of its own, because it
+// is the same creature.
+// DeathPlateau-Bugs#107.
+[ai_queue3,gwd_hobgoblin] @hobgoblin_armed_drop_table;
+
+[label,hobgoblin_armed_drop_table]
 gosub(npc_death);
 if (npc_findhero = ^false) {
     return;

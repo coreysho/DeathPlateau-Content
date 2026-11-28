@@ -4,6 +4,14 @@
 [ai_queue3,ogre] @lathastrainingogre_drop_table;
 [ai_queue3,ogre2] @lathastrainingogre_drop_table;
 
+// AND ITS GOD WARS COPY, level 58. It carries category=gwd_army so that
+// [ai_timer,_gwd_army] can find it for the skirmish, and an npc has ONE category -
+// so taking that one cost it the drop category it would otherwise have had, and it dropped
+// its bones and nothing else. Named here rather than given a table of its own, because it
+// is the same creature.
+// DeathPlateau-Bugs#107.
+[ai_queue3,gwd_ogre] @lathastrainingogre_drop_table;
+
 [label,lathastrainingogre_drop_table]
 gosub(npc_death);
 if (npc_findhero = ^false) {
