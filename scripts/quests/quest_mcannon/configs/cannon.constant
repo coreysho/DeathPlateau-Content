@@ -1,4 +1,19 @@
+// A part-built cannon (base, stand, barrels) vanishes this long after its last part went on.
 ^cannon_decay_length = 2500
+// A full cannon breaks after 25 minutes, then has 10 more to be repaired before it decays
+// (Old School, 24 March 2016). The loc itself is placed for the sum, the engine's safety net
+// for an owner who is not online to see it break - see cannon_setup.rs2.
+^cannon_break_ticks = 2500
+^cannon_broken_ticks = 1000
+^cannon_lifetime = 3500
+// The chat warning before a break and before a broken cannon decays: five minutes.
+^cannon_warn_ticks = 500
+
+// %cannon_hud, read by the client's Cannon overlay. Do not renumber: the client has these too.
+^cannon_hud_none = 0
+^cannon_hud_building = 1
+^cannon_hud_working = 2
+^cannon_hud_broken = 3
 
 ^cannon_stage_none = 0
 ^cannon_stage_base = 1

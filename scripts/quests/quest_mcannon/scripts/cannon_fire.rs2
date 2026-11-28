@@ -141,6 +141,7 @@ if (random(4) = 0 & %ownedmcannon ! null) { // guess
         mes("Your cannon has been destroyed!");
         loc_del(1);
         cleartimer(cannon_rotate);
+        ~cannon_hud_clear; // so the decay check does not also call it decayed
     }
     
 }
