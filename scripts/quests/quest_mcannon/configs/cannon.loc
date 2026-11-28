@@ -1,0 +1,15 @@
+// The player's cannon after its 25 minutes are up (Old School, 24 March 2016). It looks the same
+// as a working one - dwarf_multicannon1's model is the one the cache calls broken_multicannon -
+// and it does not fire. Repair puts the working cannon back; cannon_setup.rs2 has the rest.
+// Not the quest's broken_multicannon at the coal trucks, which is a different loc.
+[dwarf_multicannon_broken]
+name=Broken multicannon
+desc=A powerful ranging device. It needs repairing before it will fire again.
+model=broken_multicannon
+length=3
+width=3
+op1=Repair
+op2=Pick-up
+op3=Check
+blockrange=no
+blockwalk=no

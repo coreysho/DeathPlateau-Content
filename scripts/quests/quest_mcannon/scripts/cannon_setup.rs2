@@ -1,15 +1,127 @@
-[timer,cannon_decay]
+// ======================================================================= the decay clock
+//
+// HOW LONG A CANNON LASTS (Old School, Update: White & Black Graceful, 24 March 2016):
+// a fully built cannon BREAKS 25 minutes after it was set up. A broken cannon stops firing and
+// can be repaired, which restarts the 25 minutes. Left broken for another 10 minutes it decays
+// for good, and Nulodion hands out a free replacement ("I've lost my cannon"). Before that update
+// the cannon simply vanished at 25 minutes, which is what this server did until now, and the
+// cannonballs went with it as far as the player could tell.
+//
+// A part-built cannon (base, stand, barrels) never breaks; it vanishes 25 minutes after the last
+// part went on, as it always has.
+//
+// THE ENGINE AND THIS TIMER SHARE THE JOB. The loc's own lifetime is the safety net: a full cannon
+// is placed for ^cannon_lifetime (25 + 10 minutes), so one left by a player who logged out goes
+// at the 35-minute mark whether or not anyone is here to watch. The break at 25 minutes needs a
+// script to swap the loc, so it is done by this softtimer while the owner is online, against
+// %cannon_clock (the map_clock the current stage ends). A player who logs back in past the break
+// gets it broken on the next check, with whatever is left of the 10 minutes, not a fresh 10.
+//
+// %cannon_hud and %cannon_hud_ticks are transmitted for the client's Cannon overlay: which state
+// the cannon is in and how many ticks that state has left. Both are temp, so 0 after a login
+// until the first check, which is how this timer knows not to announce a loss it never saw.
+[softtimer,cannon_decay]
+~cannon_decay_check;
+
+[proc,cannon_decay_check]
 if (%ownedmcannon = null) {
-    cleartimer(cannon_decay);
+    ~cannon_hud_clear;
+    clearsofttimer(cannon_decay);
     return;
 }
-if (loc_find(%ownedmcannon, dwarf_multicannon1) = false) {
-    mes("Your cannon has decayed."); // https://runescape.wiki/w/Update:Patch_Notes_(6_May_2009)
-    cleartimer(cannon_decay);
+def_int $left = sub(%cannon_clock, map_clock);
+if (loc_find(%ownedmcannon, dwarf_multicannon1) = true) {
+    if ($left <= 0) {
+        // Whatever the 10 minutes still has. Normally all of it; less after a logout past the
+        // break, and never below a tick, which is the engine's own floor.
+        def_int $broken_left = max(1, add($left, ^cannon_broken_ticks));
+        loc_change(dwarf_multicannon_broken, $broken_left);
+        %cannon_clock = add(map_clock, $broken_left);
+        %cannon_warned = false;
+        cleartimer(cannon_rotate);
+        mes("Your cannon has broken!");
+        mes("Repair it within <~cannon_time_text($broken_left)> or it will decay.");
+        ~cannon_hud(^cannon_hud_broken, $broken_left);
+        return;
+    }
+    if ($left <= ^cannon_warn_ticks & %cannon_warned = false) {
+        %cannon_warned = true;
+        mes("Your cannon will break in <~cannon_time_text($left)>.");
+    }
+    ~cannon_hud(^cannon_hud_working, $left);
+    return;
+}
+if (loc_find(%ownedmcannon, dwarf_multicannon_broken) = true) {
+    if ($left <= ^cannon_warn_ticks & %cannon_warned = false) {
+        %cannon_warned = true;
+        mes("Your cannon will decay in <~cannon_time_text($left)> unless you repair it.");
+    }
+    ~cannon_hud(^cannon_hud_broken, $left);
+    return;
+}
+if (loc_find(%ownedmcannon, multicannon_base) = true | loc_find(%ownedmcannon, multicannon_stand) = true | loc_find(%ownedmcannon, multicannon_barrels) = true) {
+    ~cannon_hud(^cannon_hud_building, $left);
+    return;
+}
+// Gone. Only said if this session saw it standing: after a login (hud 0) or the King Black
+// Dragon (which says its own line and clears the hud) a missing cannon is not news.
+if (%cannon_hud ! ^cannon_hud_none) {
+    mes("Your cannon has decayed. Speak to Nulodion to obtain a new one."); // osrs
+}
+~cannon_hud_clear;
+clearsofttimer(cannon_decay);
+
+// A stage begins: the clock, the warning and the overlay start again, and the check is (re)started.
+[proc,cannon_stage_start](int $hud, int $ticks)
+%cannon_clock = add(map_clock, $ticks);
+%cannon_warned = false;
+~cannon_hud($hud, $ticks);
+softtimer(cannon_decay, 5);
+
+[proc,cannon_hud](int $hud, int $ticks)
+%cannon_hud = $hud;
+%cannon_hud_ticks = max(0, $ticks);
+
+[proc,cannon_hud_clear]
+%cannon_hud = ^cannon_hud_none;
+%cannon_hud_ticks = 0;
+%cannon_warned = false;
+
+// Called from [login,_]. The cannon outlives a logout, so its check has to start again.
+[proc,cannon_login]
+if (%ownedmcannon ! null) {
+    softtimer(cannon_decay, 5);
 }
 
-[label,cannon_ready_start]
-settimer(cannon_decay, 5); // OSRS: Checks every 5 ticks if the cannon still exists. THIS DOESNT SET AGAIN ON LOGIN!
+// "about 12 minutes", rounded up so a warning never promises less time than there is.
+[proc,cannon_time_text](int $ticks)(string)
+def_int $seconds = divide(multiply(max(0, $ticks), 6), 10);
+if ($seconds < 60) {
+    return("less than a minute");
+}
+def_int $minutes = divide(add($seconds, 59), 60);
+if ($minutes = 1) {
+    return("about a minute");
+}
+return("about <tostring($minutes)> minutes");
+
+// Check (op3 on both the working and the broken cannon): what the overlay says, in words.
+[proc,cannon_check]
+if (~cannon_belongs_to_player = false) {
+    mes("This is not your cannon."); // osrs
+    return;
+}
+def_int $left = sub(%cannon_clock, map_clock);
+if (loc_type = dwarf_multicannon_broken) {
+    mes("Your cannon is broken. It will decay in <~cannon_time_text($left)> unless you repair it.");
+} else {
+    mes("Your cannon will break in <~cannon_time_text($left)>.");
+}
+if (%rockthrower = 1) {
+    mes("It has 1 cannonball loaded.");
+} else {
+    mes("It has <tostring(max(0, %rockthrower))> cannonballs loaded.");
+}
 
 [proc,cannon_belongs_to_player]()(boolean)
 if (loc_coord = %ownedmcannon) {
@@ -120,6 +232,7 @@ anim(human_pickupfloor, 0);
 inv_del(inv, twpart1, 1);
 loc_add($origin, multicannon_base, 0, centrepiece_straight, ^cannon_decay_length);
 mes("You place the cannon base on the ground."); // https://youtu.be/TeQXQDaawO0?t=227
+~cannon_stage_start(^cannon_hud_building, ^cannon_decay_length);
 
 // ------- cannon base -------
 [oploc1,multicannon_base]
@@ -133,6 +246,7 @@ if (inv_freespace(inv) < 1) {
 }
 %ownedmcannon = null;
 %dropcannon = ^cannon_stage_none;
+~cannon_hud_clear;
 mes("You pick up the cannon,");
 mes("It's really heavy.");
 sound_synth(pick, 1, 0);
@@ -150,6 +264,7 @@ if (last_useitem = twpart2) {
     loc_change(multicannon_stand, ^cannon_decay_length);
     mes("You add the stand.");
     %dropcannon = ^cannon_stage_stand;
+    ~cannon_stage_start(^cannon_hud_building, ^cannon_decay_length);
     return;
 }
 // in osrs, if you use a cannon base on a cannon base, itll have this message...
@@ -175,6 +290,7 @@ if (inv_freespace(inv) < 2) {
 }
 %ownedmcannon = null;
 %dropcannon = ^cannon_stage_none;
+~cannon_hud_clear;
 mes("You pick up the cannon,");
 mes("It's really heavy.");
 sound_synth(pick, 1, 0);
@@ -193,6 +309,7 @@ if (last_useitem = twpart3) {
     loc_change(multicannon_barrels, ^cannon_decay_length);
     mes("You add the barrels.");
     %dropcannon = ^cannon_stage_barrels;
+    ~cannon_stage_start(^cannon_hud_building, ^cannon_decay_length);
     return;
 }
 if (oc_category(last_useitem) = cannon_parts & last_useitem ! twpart2) { 
@@ -214,6 +331,7 @@ if (inv_freespace(inv) < 3) {
 }
 %ownedmcannon = null;
 %dropcannon = ^cannon_stage_none;
+~cannon_hud_clear;
 mes("You pick up the cannon,");
 mes("It's really heavy.");
 sound_synth(pick, 1, 0);
@@ -231,9 +349,10 @@ if (last_useitem = twpart4) {
     anim(human_pickupfloor, 0);
     inv_del(inv, twpart4, 1);
     mes("You add the furnace.");
-    loc_change(dwarf_multicannon1, ^cannon_decay_length);
+    loc_change(dwarf_multicannon1, ^cannon_lifetime);
     %dropcannon = ^cannon_stage_full;
-    @cannon_ready_start;
+    ~cannon_stage_start(^cannon_hud_working, ^cannon_break_ticks);
+    return;
 }
 if (oc_category(last_useitem) = cannon_parts & last_useitem ! twpart3) { 
     mes("This cannon needs its furnace."); // osrs
@@ -244,6 +363,13 @@ if (oc_category(last_useitem) = cannon_parts & last_useitem ! twpart3) {
 
 // ------- cannon -------
 [oploc2,dwarf_multicannon1]
+~cannon_pickup_full;
+
+[oploc3,dwarf_multicannon1]
+~cannon_check;
+
+// The full cannon and the broken one pick up the same way, cannonballs and all.
+[proc,cannon_pickup_full]
 if (~cannon_belongs_to_player = false) {
     mes("This is not your cannon."); // osrs
     return;
@@ -258,6 +384,7 @@ mes("It's really heavy.");
 sound_synth(pick, 1, 0);
 %ownedmcannon = null;
 %dropcannon = ^cannon_stage_none;
+~cannon_hud_clear;
 inv_add(inv, twpart1, 1);
 inv_add(inv, twpart2, 1);
 inv_add(inv, twpart3, 1);
@@ -305,4 +432,36 @@ if (last_useitem = mcannonball) {
 } else {
     ~displaymessage(^dm_default);
 }
+// --------------
+
+// ------- broken cannon -------
+// Old School, 24 March 2016: "a repair option which allows you to reset your cannon timer
+// without having to pick it up and put it back down". The cannonballs stay loaded through the
+// break and the repair; only the clock starts again.
+[oploc1,dwarf_multicannon_broken]
+if (~cannon_belongs_to_player = false) {
+    mes("This is not your cannon."); // osrs
+    return;
+}
+anim(human_pickupfloor, 0);
+loc_change(dwarf_multicannon1, ^cannon_lifetime);
+mes("You repair your cannon, restoring it to working order.");
+~cannon_stage_start(^cannon_hud_working, ^cannon_break_ticks);
+
+[oploc2,dwarf_multicannon_broken]
+~cannon_pickup_full;
+
+[oploc3,dwarf_multicannon_broken]
+~cannon_check;
+
+[oplocu,dwarf_multicannon_broken]
+if (~cannon_belongs_to_player = false) {
+    mes("This is not your cannon."); // osrs
+    return;
+}
+if (last_useitem = mcannonball) {
+    mes("Your cannon is broken. Repair it before you load it.");
+    return;
+}
+~displaymessage(^dm_default);
 // --------------
