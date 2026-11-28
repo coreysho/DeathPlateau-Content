@@ -140,16 +140,23 @@ allstock=no
 stock1=bronze_arrow,2000,10
 stock2=iron_arrow,1500,15
 stock3=steel_arrow,1000,20
-stock4=bolt,1500,10
-stock5=shortbow,4,100
-stock6=longbow,4,100
-stock7=oak_shortbow,3,200
-stock8=oak_longbow,3,200
-stock9=willow_shortbow,2,200
-stock10=willow_longbow,2,200
-stock11=maple_shortbow,1,100
-stock12=maple_longbow,1,100
-stock13=crossbow,2,400
+// MITHRIL AND ADAMANT, which were missing. The wiki's stock table runs bronze, iron, steel,
+// mithril, adamant and then bronze bolts, and this shop stopped at steel - so two tiers Lowe sells
+// could not be bought here. Quantities and restock times are the table's own: Mithril arrow 800 at
+// 9s, Adamant arrow 600 at 12s. Found while reading the table to check the rows that WERE here
+// (DeathPlateau-Bugs#82).
+stock4=mithril_arrow,800,15
+stock5=adamant_arrow,600,20
+stock6=bolt,1500,10
+stock7=shortbow,4,100
+stock8=longbow,4,100
+stock9=oak_shortbow,3,200
+stock10=oak_longbow,3,200
+stock11=willow_shortbow,2,200
+stock12=willow_longbow,2,200
+stock13=maple_shortbow,1,100
+stock14=maple_longbow,1,100
+stock15=crossbow,2,400
 // THE EIGHT GEM-TIPPED BOLTS THAT USED TO BE HERE ARE GONE (DeathPlateau-Bugs#51, reported as
 // "lowe at varrock sells bolts it shouldn't"). They were a deliberate stopgap, put here with the
 // metal ones at the Ranging Guild and labelled "sold here until they can be smithed and fletched" -
@@ -1362,31 +1369,26 @@ stock24=longbow,20,50
 stock25=oak_longbow,20,60
 stock26=zogre_bow,0,2000
 stock27=willow_longbow,20,70
-// The 2006 crossbows and their metal bolts (skill_combat/configs/ranged/crossbows.obj), put here
-// "until they can be smithed and fletched".
+// THE SEVEN CROSSBOWS AND SIX METAL BOLTS THAT USED TO BE HERE ARE GONE (DeathPlateau-Bugs#82).
 //
-// THAT CONDITION HAS BEEN MET and these rows have not been revisited. Smithing makes every
-// *_bolts_unf (bronze 3, blurite 8, iron 18, steel 33, mithril 53) and Fletching feathers them and
-// cuts every gem tip, so the stopgap is now the only reason any of this is buyable. Its twin at
-// Lowe's - eight gem-tipped bolts, which Old School's Lowe does not sell at all - was removed when
-// a player noticed it (DeathPlateau-Bugs#51).
+// They were a stopgap, added with "until they can be smithed and fletched", and that condition has
+// been met: Smithing makes every *_bolts_unf (bronze 3, blurite 8, iron 18, steel 33, mithril 53)
+// and Fletching feathers all seven - darts.rs2 dispatches them to @make_feathered_bolts and
+// crossbows.dbrow has a row for each. So the rows outlived their reason, exactly as the eight
+// gem-tipped bolts at Lowe's did (DeathPlateau-Bugs#51), and a player noticed this pair too.
 //
-// THIS BLOCK IS LEFT ALONE ON PURPOSE. Taking it out changes where every crossbow in the game comes
-// from, which is an economy decision rather than a bug fix, and the Ranging Guild is not what was
-// reported. It is filed for a decision; see the issue.
-stock28=bronze_crossbow,10,100
-stock29=blurite_crossbow,8,150
-stock30=iron_crossbow,8,150
-stock31=steel_crossbow,6,200
-stock32=mithril_crossbow,5,250
-stock33=adamant_crossbow,3,400
-stock34=rune_crossbow,2,800
-stock35=blurite_bolts,800,30
-stock36=iron_bolts,800,30
-stock37=steel_bolts,600,40
-stock38=mithril_bolts,500,50
-stock39=adamant_bolts,400,60
-stock40=runite_bolts,300,80
+// AND THE RANGING GUILD SELLS NEITHER IN OLD SCHOOL. Its two shops are Dargaud's Bow and Arrows -
+// arrow shafts, the seven arrowheads, the six arrows, the seven brutals and six bows, all of which
+// are the twenty-seven rows above, matched quantity for quantity and restock for restock - and
+// Aaron's Archery Appendages, which is leather armour. Neither lists a crossbow or a bolt of any
+// kind.
+//
+// WHERE A CROSSBOW COMES FROM NOW: Fletching, or another player. That is also Old School's answer.
+// Its only shop source is Hura's in the Dwarven Mine, which lists bronze through rune - every one
+// of them at ZERO in stock, so it supplies none either and only buys them from players. We have no
+// such shop, and adding one would stock nothing; it is noted on the issue rather than built.
+//
+// Metal bolts have no shop source in Old School at all. They are fletched.
 
 [ranging_guild_armourshop]
 scope=shared
