@@ -1073,6 +1073,18 @@ transmit=yes
 [rd_rooms_tempvar2]
 transmit=yes
 
+// Recruitment Drive's DRAW: which five of the seven tests this run is offering, plus rd_progress,
+// the one-step-at-a-time ladder the quest helper follows. A FOURTH varp for this quest because the other three are full
+// to the bit - recruitmentdrive has all 32 claimed (rd_main, rd_room_order, the seven completion
+// bits, falador_spawn, rd_male_at_start, rd_room1_initiated and the seven rd_got_*), and so are
+// both scratch varps - and because the draw has to be PERM: %rd_room1_initiated is perm, so a run
+// survives a logout and which five tests it drew has to survive with it. Transmitted because the
+// quest helper reads %rd_progress to know which test to give instructions for.
+// See quests/quest_rd/configs/quest_rd.constant and DeathPlateau-Bugs#72.
+[rd_draw]
+transmit=yes
+scope=perm
+
 [magic_carpet_var]
 transmit=yes
 
