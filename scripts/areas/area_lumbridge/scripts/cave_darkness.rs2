@@ -19,9 +19,9 @@
 // only part of that square is dark. The same tick check springs the goblin maze's traps
 // (quest_lost_tribe.rs2).
 
-[mapzone,0_49_149] ~darkness_start;
-[mapzone,0_50_149] ~darkness_start;
-[mapzone,0_50_150] ~darkness_start;
+[mapzone,0_49_149] ~darkness_start; @music_playbyregion(coord);
+[mapzone,0_50_149] ~darkness_start; @music_playbyregion(coord);
+[mapzone,0_50_150] ~darkness_start; @music_playbyregion(coord);
 [mapzone,0_51_150] ~darkness_start;
 [mapzoneexit,0_49_149] ~darkness_start;
 [mapzoneexit,0_50_149] ~darkness_start;
