@@ -27,14 +27,21 @@ if (inv_total(inv, chisel) = 0) {
     mes("You need a chisel to be able to craft the rune.");
     return;
 }
+// EITHER ESSENCE WORKS. The quick guide says rune or pure, and a player at the wall with a pack of
+// pure essence was told they had none (DeathPlateau-Bugs#112). Rune essence goes first so the
+// better stock is kept.
+def_namedobj $essence = blankrune;
 if (inv_total(inv, blankrune) = 0) {
+    $essence = blankrune_high;
+}
+if (inv_total(inv, $essence) = 0) {
     mes("You need some rune essence to be able to craft the rune.");
     return;
 }
 // The essence goes whatever happens, so the space check is for the rune that may replace it - and
 // since one leaves as the other arrives, a full pack is only a problem on a success.
 anim(human_leather_crafting, 0);
-inv_del(inv, blankrune, 1);
+inv_del(inv, $essence, 1);
 if (stat_random(crafting, ^slugmenace_craft_low, ^slugmenace_craft_high) = false) {
     mes("You attempt to craft the stone but fail, destroying the essence.");
     return;
