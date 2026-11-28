@@ -229,11 +229,15 @@
 ^enakh_p2_down = 2_48_145_32_52         // 3104,9332
 
 // =========================================================================== requirements
+// Old School asks for four skills and this asked for five, two of them too high. 39 Magic and
+// 43 Prayer, not 43 and 45 - and no Mining requirement at all. The rock is a bespoke step that
+// hands over a block and some experience; nothing about it needs a level, so the 45 Mining was an
+// extra gate on a quest that does not have one, and a player who met every requirement the quest
+// advertises could still be turned away by Lazim.
 ^enakh_req_crafting = 50
 ^enakh_req_firemaking = 45
-^enakh_req_mining = 45
-^enakh_req_magic = 43
-^enakh_req_prayer = 45
+^enakh_req_magic = 39
+^enakh_req_prayer = 43
 
 // ---------------------------------------------------------------------------------- the camels
 // Which camel a shared menu is standing in front of. The opener, the three rude remarks and the

@@ -21,6 +21,11 @@
 
 [opnpc1,fourdiamonds_indiana]
 if (%deserttreasure = ^dt_not_started) {
+    // Every requirement this quest declares, checked before a word is said - the same
+    // quest_requirement row the journal prints.
+    if (~quest_requirements_block("Desert Treasure") = true) {
+        return;
+    }
     ~chatnpc("<p,happy>Hello there. You look like the adventuring sort.");
     def_int $choice = ~p_choice2("What are you doing out here?", 1, "Not interested, thanks.", 2);
     if ($choice = 2) {

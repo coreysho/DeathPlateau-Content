@@ -1,0 +1,198 @@
+// The Slug Menace - the shrine under Witchaven and the temple behind it.
+//
+// THE DUNGEON IS TWO SQUARES AND YOU CANNOT WALK BETWEEN THEM. The entrance chamber is m42_151,
+// under the Witchaven ruins, where the 377 ladder at 2696,3282 already lands - it sends the player
+// to their own tile plus 6400, and 3282 + 6400 = 9682, which is the chamber's own ladder tile, so
+// the way down needed no new script at all. The temple is m42_161, a square of its own, because
+// 474 keeps it in m36_79 and that square is Zulrah's shrine in this build.
+//
+// So the false wall and the passage are a pair of teleports rather than a door that opens. That
+// is not a shortcut: a multiloc's state cannot change what blocks, so even inside one square the
+// wall could not have been made walk-through-able, and here the two sides are 650 tiles apart.
+//
+//     chamber   ladder up 2696,9682        false wall 2701,9688      (m42_151)
+//     temple    passage back 2706,10352    shortcut 2715,10344       (m42_161)
+//               Imposing Doors 2732,10341, clicked from 2733,10342
+
+// =========================================================================== the way out
+// The chamber's ladder. The same loc is also placed in the temple square, in the floorless copy
+// of this chamber that 474 left behind there - no tile of it is standable, so nobody can reach
+// that one, and the coord test says which ladder was clicked rather than assuming.
+[oploc1,slugmenace_temple_exit]
+p_arrivedelay;
+if (loc_coord = ^slugmenace_chamber_ladder) {
+    ~climb_ladder(^slugmenace_ruins_ladder, true);
+    return;
+}
+~mesbox("The rungs are rotted through. This one goes nowhere.");
+
+// =========================================================================== the false wall
+[oploc1,slugmenace_false_wall]
+p_arrivedelay;
+// Before O'Niall sends you down here it is a wall with a draught behind it and nothing more. Old
+// School says exactly this, and it matters: a player who wanders in early should not be able to
+// open the quest's dungeon by leaning on the scenery.
+if (%slugmenace_stage < ^slugmenace_shrine) {
+    ~mesbox("You push the wall. It looks a bit odd, but not immediately interesting.");
+    return;
+}
+// THE ORB IS THE TICKET IN, and it is asked for BEFORE the wall opens. Savant has to see what is
+// through there, and the whole middle of the quest is scans - so without it the player is turned
+// back here rather than three rooms later.
+if (~slugmenace_has_orb_carried = false) {
+    ~chatplayer("<p,neutral>I'd better carry my CommOrb so that Savant can see what's in there.");
+    return;
+}
+// ONE CLICK OPENS IT AND PUTS YOU THROUGH. It used to take two - the first opened the wall and
+// left you standing in front of it - so the quest helper printed "Push Wall." twice in a row and
+// a player who pushed once saw nothing happen at all.
+if (%slugmenace_false_wall = ^slugmenace_off) {
+    %slugmenace_false_wall = ^slugmenace_on;
+    ~mesbox("The wall creaks open to reveal a hidden entrance!");
+}
+p_telejump(^slugmenace_temple_arrive);
+~mesbox("You squeeze through the gap. The air on the other side is colder and tastes of salt.");
+
+// Carried, not banked: a scan reads the orb in the player's hand.
+[proc,slugmenace_has_orb_carried]()(boolean)
+if (inv_total(inv, slug_commorb) > 0) {
+    return(true);
+}
+return(false);
+
+// =========================================================================== the way back
+[oploc1,slugmenace_passage]
+p_arrivedelay;
+p_telejump(^slugmenace_chamber_return);
+~mesbox("You climb back through the gap into the shrine's outer chamber.");
+
+// =========================================================================== the shortcut
+// A STINKY HOLE, says the examine. Agility 30, no experience at all, and failing it costs up to
+// five hitpoints - all three from the wiki, which also gives the success curve: 110/255 at the
+// level requirement rising to 255/255, which is exactly what stat_random(agility, 110, 255) is.
+// Giving it experience would have been the easy thing to invent and it would have been wrong.
+[oploc1,slugmenace_shortcut]
+p_arrivedelay;
+if (stat(agility) < ^slugmenace_shortcut_agility) {
+    ~mesbox("You need an Agility level of <tostring(^slugmenace_shortcut_agility)> to squeeze through there.");
+    return;
+}
+// Which side of the hole the player is on decides which side they come out. The hole is two tiles
+// wide and sits in a wall between two corridors, so the test is the wall's own x.
+def_coord $to = ^slugmenace_shortcut_east;
+if (coordx(coord) > ^slugmenace_shortcut_wall_x) {
+    $to = ^slugmenace_shortcut_west;
+}
+if (stat_random(agility, ^slugmenace_shortcut_low, ^slugmenace_shortcut_high) = false) {
+    anim(human_pickupfloor, 0);
+    ~damage_self(calc(random(^slugmenace_shortcut_damage) + 1));
+    mes("You slip and fail to climb through the hole.");
+    return;
+}
+anim(human_pickupfloor, 0);
+p_telejump($to);
+mes("You squeeze through the hole in the rock.");
+
+// =========================================================================== the chests
+// FIVE OF THEM, three in the chamber and two in the temple, and 474 gives each an Open with
+// nothing behind it. There is nothing in them: the cult has been down here three weeks and the
+// chests are what they brought the mining equipment in. Saying so is better than the game
+// answering "Nothing interesting happens." to a chest.
+[oploc1,loc474_18304]
+p_arrivedelay;
+anim(human_pickupfloor, 0);
+if (%slugmenace_stage < ^slugmenace_shrine) {
+    ~mesbox("Empty, and recently so. Somebody has been carrying things down here.");
+    return;
+}
+~mesbox("Empty. Whatever the Mayor's men brought down here has already been used.");
+
+// =========================================================================== the dead sea slug
+// SAVANT NOTICES IT WHEN YOU PICK IT UP, not when you click it. The first version of this hung her
+// lines on [opheld1] and the quest run said why in one line: the obj has no inventory option at
+// all, so no client could ever have sent that click. Old School contacts you on the pickup, which
+// is also the only moment it is certain the player has one.
+[opobj3,slug_dead_sea_slug]
+if (inv_freespace(inv) = 0) {
+    @pickup_obj;
+}
+obj_del;
+inv_add(inv, slug_dead_sea_slug, 1);
+if (%slugmenace_stage < ^slugmenace_shrine | %slugmenace_slug_scanned = ^slugmenace_on) {
+    return;
+}
+~chatnpc_specific("Savant", wanted_savant, "<p,quiz>Come in, this is Savant. I've detected a sea slug on you. Is everything okay?");
+~chatplayer("<p,neutral>It's okay, Savant. It's dead.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Phew. I was very worried there for a moment.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Hmm. I'm going to take a quick scan of the slug and perform some analysis.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Don't worry, there's nothing you need to do. I'll get back to you when I have something.");
+~chatplayer("<p,happy>Righty ho, Savant. I look forward to your results.");
+%slugmenace_slug_scanned = ^slugmenace_on;
+
+// =========================================================================== the Imposing Doors
+[oploc1,slugmenace_doors]
+p_arrivedelay;
+if (~slugmenace_has_orb_carried = false) {
+    ~chatplayer("<p,neutral>Savant needs to see this. I'd better get my CommOrb.");
+    return;
+}
+// Every rune cut and empowered, and then it is the fight - slugmenace_prince.rs2 owns that.
+if (~slugmenace_all_runes_made = true) {
+    @slugmenace_doors_open;
+}
+// AND THE WAY BACK IN AFTER DYING. The runes are consumed when the door takes them, so a player
+// who was killed by the Prince no longer has them and ~slugmenace_all_runes_made is false - the
+// flags are what remember. Without this branch the doors would have gone back to burning your
+// hand and the fight would have been unreachable.
+if (~slugmenace_runes_were_made = true & %slugmenace_stage < ^slugmenace_told) {
+    @slugmenace_doors_reenter;
+}
+// Before the transcription, the door is what tells the player there is a quest here at all.
+if (%slugmenace_door_scanned = ^slugmenace_off | %slugmenace_stage < ^slugmenace_transcribed) {
+    mes("A flash of light springs from the door, burning your hand.");
+    anim(human_pickupfloor, 0);
+    ~slugmenace_scan_prompt;
+    return;
+}
+mes("A flash of light springs from the door, burning your hand.");
+anim(human_pickupfloor, 0);
+~mesbox("The glyphs are copied and in your pack. Whatever opens this door, it is not your hand.");
+
+[proc,slugmenace_scan_prompt]()
+~chatnpc_specific("Savant", wanted_savant, "<p,quiz>Hold still. There is writing on that, and it is not Saradominist.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Scan it with the orb and I will take a copy.");
+
+// The flags alone: has each rune ever been empowered. The doors want the runes themselves the
+// first time and only this the second.
+[proc,slugmenace_runes_were_made]()(boolean)
+if (%slugmenace_rune_air = ^slugmenace_off | %slugmenace_rune_water = ^slugmenace_off
+        | %slugmenace_rune_earth = ^slugmenace_off | %slugmenace_rune_fire = ^slugmenace_off
+        | %slugmenace_rune_mind = ^slugmenace_off) {
+    return(false);
+}
+return(true);
+
+[proc,slugmenace_all_runes_made]()(boolean)
+if (%slugmenace_rune_air = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_rune_water = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_rune_earth = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_rune_fire = ^slugmenace_off) {
+    return(false);
+}
+if (%slugmenace_rune_mind = ^slugmenace_off) {
+    return(false);
+}
+// AND THEY HAVE TO BE IN HAND, not merely made. The flags say the player once empowered each one;
+// the doors want the runes themselves, which is also how Old School plays it.
+if (inv_total(inv, slug_air_rune) = 0 | inv_total(inv, slug_water_rune) = 0
+        | inv_total(inv, slug_earth_rune) = 0 | inv_total(inv, slug_fire_rune) = 0
+        | inv_total(inv, slug_mind_rune) = 0) {
+    return(false);
+}
+return(true);

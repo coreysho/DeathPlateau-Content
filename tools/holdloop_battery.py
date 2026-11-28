@@ -74,13 +74,14 @@ DELIBERATE = {
         'three locks picked in sequence, bounded at three, and the sequence is the content',
     ('quests/quest_legends/scripts/legends_gate.rs2', 'label,open_legends_gate'):
         'one tick before a guard walks up and starts talking, inside a scripted approach',
-    # THE THREE SELL-ALLS ARE GONE FROM THIS TABLE, and that is the whole point of the entries
-    # above: a baseline that records a deliberate choice has to come out when the choice changes.
-    # Lunderwin's cabbages and Baraek's two furs each held the player one tick per item - twenty-
-    # eight ticks rooted to the spot against a full pack, with every click discarded - because
-    # lunderwin.rs2 had copied RSC's cadence on purpose where Old School has none. Decided for Old
-    # School on 25 November 2026 (DeathPlateau-Bugs#86): all three sell the lot at once, and this
-    # check went red naming each one until the entries were removed.
+    # THE THREE SELL-ALLS ARE NO LONGER HERE, and that is the point of this note.
+    #
+    # Baraek's two fur loops and Lunderwin's cabbages used to sit in this table with a comment
+    # saying they were NOT settled: a tick per item against a full pack is twenty-eight ticks
+    # rooted to the spot with every click of the player's discarded. The owner's call on
+    # DeathPlateau-Bugs#86 was Old School's pacing, so the delays went, and with them the reason
+    # to list them. If a p_delay ever comes back into one of those three loops this check will
+    # fail and name it - which is exactly what it is for.
 }
 
 

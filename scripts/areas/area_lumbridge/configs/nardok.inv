@@ -1,16 +1,33 @@
-// NARDOK'S COUNTER. Old School's own figures: ten bone spears and five bone daggers, restocking
-// every 12 seconds, which is 20 ticks.
+// NARDOK'S BONE WEAPONS - Old School's counter, row for row.
+// Wiki: https://oldschool.runescape.wiki/w/Nardok%27s_Bone_Weapons
 //
-// TWO ROWS AND NOT FOUR. This build also has a bone club and bone bolts, and he sells neither -
-// the club is a drop and the bolts come from elsewhere, exactly as in Old School. A shop that
-// stocks everything sharing a word in its name is how a drop stops being worth getting.
+// Stock numbers and the restock rate are his own: ten clubs, ten spears, five daggers, five
+// crossbows and a thousand bolts, every row restocking in 12 seconds, which is 20 ticks.
 //
-// allstock=no, so an empty counter cannot be used to turn any old item into coins. The prices come
-// from the objs themselves - 600 and 2000, which already match - so nothing is priced twice here.
+// CORRECTED 2026-11-25. This used to stock TWO of the five, with a note saying the club and the
+// bolts were deliberately left out because "the club is a drop and the bolts come from elsewhere,
+// exactly as in Old School". That is not what Old School does: Nardok's is the one shop that sells
+// all five, and the crossbow and the bolts are the reason anybody walks down to him - a bone
+// dagger is a curiosity, and the Dorgeshuun crossbow outranges everything short of rune. Leaving
+// them out made the trip not worth taking and made the clue that points at him point at nothing
+// much.
+//
+// THE DROPS STAY. drop_tables/scripts/cave_goblin_guard.rs2 still gives all five off the guards,
+// which is this build's own addition and not Old School's - a shop existing is no reason to take
+// a drop table away from the players who have been using it.
+//
+// Every price is the obj's own cost=, because the sell multiplier is 1000 per mille, and all five
+// already match Old School's: 600, 600, 2000, 2000, 3. Nothing is priced twice.
+//
+// allstock=no, so an empty counter cannot be used to turn any old item into coins.
+
 [nardok_shop]
 scope=shared
-size=2
+size=10
 restock=yes
 allstock=no
-stock1=cave_goblin_bone_spear,10,20
-stock2=bone_dagger,5,20
+stock1=cave_goblin_bone_club,10,20
+stock2=cave_goblin_bone_spear,10,20
+stock3=bone_dagger,5,20
+stock4=dorgeshuun_crossbow,5,20
+stock5=bone_bolts,1000,20

@@ -116,8 +116,8 @@ switch_int (~p_choice2("What are you building?", 1, "I'd rather not.", 2)) {
 ~chatnpc("<p,neutral>A statue. Commissioned. Paid up front, which in this trade means you do not ask the second question.");
 ~chatplayer("<p,quiz>What's the second question?");
 ~chatnpc("<p,neutral>Who for.");
-if (stat(crafting) < ^enakh_req_crafting | stat(mining) < ^enakh_req_mining) {
-    ~chatnpc("<p,neutral>And you would need to be better with a chisel and a pickaxe than you are. <tostring(^enakh_req_crafting)> Crafting and <tostring(^enakh_req_mining)> Mining, at least.");
+if (stat(crafting) < ^enakh_req_crafting) {
+    ~chatnpc("<p,neutral>And you would need to be better with a chisel than you are. <tostring(^enakh_req_crafting)> Crafting, at least.");
     return;
 }
 if (stat(firemaking) < ^enakh_req_firemaking | stat(magic) < ^enakh_req_magic | stat(prayer) < ^enakh_req_prayer) {

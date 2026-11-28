@@ -159,7 +159,13 @@
 ^wanted_solus_10 = 0_38_48_11_19    // 2443,3091  Castle Wars
 ^wanted_solus_11 = 0_38_54_33_41    // 2465,3497  The Grand Tree
 ^wanted_solus_12 = 0_43_49_41_21    // 2793,3157  Brimhaven pub
-^wanted_solus_13 = 0_51_50_18_15    // 3282,3215  Al Kharid
+^wanted_solus_13 = 0_51_50_41_9     // 3305,3209  Al Kharid, beside Ali Morrisane
+// MOVED 2026-11-24, from 3282,3215 at the other end of the market. The clue for this place is
+// "A false beard. Theatrical glue. Somebody sells these out of a stall in the desert." - and the
+// stall is Ali Morrisane's: the beard is feud_karidian_fakebeard, his. He stands at 3307,3209 and
+// the marker stood 25 tiles west by the gem trader, which is ONE TILE outside ^wanted_scan_radius.
+// So a player who followed the clue exactly got told the orb could not find him, and Solus was
+// twenty-one tiles away behind a market. Reported by a player on the night it was found.
 ^wanted_solus_14 = 0_46_54_11_47    // 2955,3503  Goblin Village
 ^wanted_solus_15 = 0_39_48_59_8     // 2555,3080  Yanille, the Dragon Inn
 ^wanted_solus_16 = 0_41_54_42_50    // 2666,3506  McGrubor's Wood

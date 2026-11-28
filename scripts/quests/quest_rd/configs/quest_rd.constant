@@ -130,10 +130,21 @@
 ^rd_patience_check = 14
 
 // --- Rewards ---
-// From the wiki, minus everything that postdates a 2006 build or has no asset here. Initiate armour
-// does not exist anywhere in this cache - not one obj matches - so the sallet and the armour shop
-// are out, and with them the Gaze of Saradomin respawn option. levelrequire.rs2 ALREADY carries
-// [label,levelrequire_recruitmentdrive_defence] gated on %rd_main, so if initiate armour is ever
-// added it will gate itself with no further work.
+// From the wiki, minus everything that postdates a 2006 build or has no asset here.
+//
+// CORRECTED 2026-11-24. This used to say "Initiate armour does not exist anywhere in this cache -
+// not one obj matches - so the sallet and the armour shop are out". It does exist, and it always
+// did: all.obj carries basic_tk_helm, basic_tk_body and basic_tk_legs, named "Initiate helm",
+// "Initiate platemail" and "Initiate platelegs". The search that came up empty was almost certainly
+// for Old School's names - sallet, hauberk, cuisse - which 377 does not use. The lesson is the one
+// in the obj-name conventions generally: grep the cache for what 2006 called a thing.
+//
+// So the reward now includes the helm, and Tiffy's armoury is built - see
+// temple_knight/configs/temple_knight.constant for the shop and the worn gates. The prediction in
+// the old comment held: levelrequire.rs2's [label,levelrequire_recruitmentdrive_defence] was
+// already there and gated the armour with no further work.
+//
+// Still not built: the Gaze of Saradomin respawn option (Tiffy can move your respawn point to
+// Falador). That is nothing to do with the armour and is simply not done.
 ^rd_reward_coins = 3000
 ^rd_reward_xp = 10005

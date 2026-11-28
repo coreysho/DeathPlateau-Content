@@ -1,0 +1,548 @@
+// Imported from the rev 474 cache by tools/models/importnpc474batch.py: models copied
+// byte-for-byte, chatheads brought across, and one copy of each model shared between
+// every npc that wears it. Combat stats, huntmode and drops are by hand - the cache
+// carries none of them.
+// The Slug Menace. Every villager has two forms - a normal one and a possessed one on
+// slug_possessed_walk - which is the quest: varbit 2610 in 474 swaps them as you work it out.
+
+[slug_oniall]
+// rev 474 npc 4872
+name=Col. O'Niall
+desc=Col. O'Niall.
+model1=npc_slug_oniall_1
+model2=npc_slug_oniall_2
+model3=npc_slug_oniall_3
+model4=npc_slug_oniall_4
+model5=npc_slug_oniall_5
+model6=npc_slug_oniall_6
+model7=npc_slug_oniall_7
+model8=npc_slug_oniall_8
+head1=npc_slug_oniall_head1
+head2=npc_slug_oniall_head2
+head3=npc_slug_oniall_head3
+size=1
+readyanim=slug_oniall_ready
+op1=Talk-to
+recol1s=24075
+recol1d=23018
+recol2s=12610
+recol2d=8495
+recol3s=14724
+recol3d=6381
+
+[slug_oniall_possessed]
+// rev 474 npc 4873
+name=Col. O'Niall
+desc=Col. O'Niall.
+model1=npc_slug_oniall_1
+model2=npc_slug_oniall_2
+model3=npc_slug_oniall_3
+model4=npc_slug_oniall_4
+model5=npc_slug_oniall_5
+model6=npc_slug_oniall_6
+model7=npc_slug_oniall_7
+model8=npc_slug_oniall_8
+head1=npc_slug_oniall_head1
+head2=npc_slug_oniall_possessed_head2
+head3=npc_slug_oniall_possessed_head3
+size=1
+readyanim=slug_oniall_ready
+op1=Talk-to
+recol1s=2340
+recol1d=27475
+recol2s=6273
+recol2d=23220
+recol3s=32755
+recol3d=4265
+recol4s=14724
+recol4d=6381
+recol5s=24075
+recol5d=24235
+
+[slug_hobb]
+// rev 474 npc 4874
+name=Mayor Hobb
+desc=Mayor Hobb.
+model1=npc_slug_hobb_1
+model2=npc_slug_hobb_2
+model3=npc_slug_hobb_3
+model4=npc_slug_hobb_4
+model5=npc_slug_hobb_5
+model6=npc_slug_hobb_6
+model7=npc_slug_hobb_7
+model8=npc_slug_oniall_7
+model9=npc_slug_hobb_9
+model10=npc_slug_hobb_10
+head1=npc_slug_hobb_head1
+head2=npc_slug_hobb_head2
+head3=npc_slug_hobb_head3
+size=1
+readyanim=human_ready
+resizeh=140
+resizev=124
+op1=Talk-to
+recol1s=27467
+recol1d=3141
+recol2s=24298
+recol2d=7368
+recol3s=2340
+recol3d=3141
+recol4s=11456
+recol4d=14799
+recol5s=14724
+recol5d=7368
+recol6s=24075
+recol6d=24235
+
+[slug_hobb_possessed]
+// rev 474 npc 4875
+name=Mayor Hobb
+desc=Mayor Hobb.
+model1=npc_slug_hobb_1
+model2=npc_slug_hobb_2
+model3=npc_slug_hobb_possessed_3
+model4=npc_slug_hobb_4
+model5=npc_slug_hobb_5
+model6=npc_slug_hobb_6
+model7=npc_slug_hobb_7
+model8=npc_slug_oniall_6
+model9=npc_slug_oniall_7
+model10=npc_slug_hobb_9
+model11=npc_slug_hobb_10
+head1=npc_slug_hobb_head1
+head2=npc_slug_hobb_possessed_head2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+resizeh=146
+resizev=120
+op1=Talk-to
+recol1s=27467
+recol1d=3141
+recol2s=24298
+recol2d=7368
+recol3s=2340
+recol3d=3141
+recol4s=11456
+recol4d=14799
+recol5s=14724
+recol5d=7368
+recol6s=24075
+recol6d=24235
+
+[slug_maledict]
+// rev 474 npc 4878
+name=Brother Maledict
+desc=Brother Maledict.
+model1=npc_slug_maledict_1
+model2=npc_slug_maledict_2
+model3=npc_slug_maledict_3
+model4=npc_slug_maledict_4
+model5=npc_slug_maledict_5
+model6=npc_slug_oniall_6
+model7=npc_slug_maledict_7
+model8=npc_slug_maledict_8
+head1=npc_slug_maledict_head1
+head2=npc_slug_hobb_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+recol1s=2340
+recol1d=2251
+recol2s=14724
+recol2d=2251
+recol3s=12610
+recol3d=1057
+recol4s=30560
+recol4d=32767
+recol5s=16738
+recol5d=22197
+recol6s=20966
+recol6d=32767
+
+[slug_maledict_possessed]
+// rev 474 npc 4879
+name=Brother Maledict
+desc=Brother Maledict.
+model1=npc_slug_maledict_1
+model2=npc_slug_maledict_2
+model3=npc_slug_maledict_3
+model4=npc_slug_maledict_4
+model5=npc_slug_maledict_5
+model6=npc_slug_oniall_6
+model7=npc_slug_maledict_7
+model8=npc_slug_maledict_8
+head1=npc_slug_maledict_possessed_head1
+head2=npc_slug_hobb_head3
+size=1
+readyanim=human_ready
+walkanim=slug_possessed_walk
+op1=Talk-to
+recol1s=2340
+recol1d=2251
+recol2s=14724
+recol2d=2251
+recol3s=12610
+recol3d=1057
+recol4s=30560
+recol4d=32767
+recol5s=24075
+recol5d=24235
+recol6s=20966
+recol6d=32767
+
+[slug_villager_man]
+// rev 474 npc 4883
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_man_1
+model2=npc_slug_villager_man_2
+model3=npc_slug_villager_man_3
+model4=npc_slug_villager_man_4
+model5=npc_slug_villager_man_5
+model6=npc_slug_oniall_6
+model7=npc_slug_oniall_7
+model8=npc_slug_villager_man_8
+model9=npc_slug_maledict_8
+model10=npc_slug_villager_man_10
+head1=npc_slug_villager_man_head1
+head2=npc_slug_villager_man_head2
+head3=npc_slug_villager_man_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+recol1s=7298
+recol1d=24075
+recol2s=15856
+recol2d=24075
+recol3s=5317
+recol3d=14826
+
+[slug_villager_man_possessed]
+// rev 474 npc 4884
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_man_1
+model2=npc_slug_villager_man_2
+model3=npc_slug_villager_man_3
+model4=npc_slug_villager_man_4
+model5=npc_slug_villager_man_5
+model6=npc_slug_oniall_6
+model7=npc_slug_oniall_7
+model8=npc_slug_villager_man_8
+model9=npc_slug_maledict_8
+model10=npc_slug_villager_man_10
+head1=npc_slug_villager_man_head1
+head2=npc_slug_villager_man_possessed_head2
+size=1
+readyanim=human_ready
+walkanim=slug_possessed_walk
+op1=Talk-to
+recol1s=7298
+recol1d=24075
+recol2s=15856
+recol2d=24075
+recol3s=24075
+recol3d=24235
+recol4s=20971
+recol4d=22183
+recol5s=18925
+recol5d=16973
+recol6s=5317
+recol6d=14826
+
+[slug_villager_woman]
+// rev 474 npc 4885
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_woman_1
+model2=npc_slug_villager_woman_2
+model3=npc_slug_villager_woman_3
+model4=npc_slug_villager_woman_4
+model5=npc_slug_villager_woman_5
+model6=npc_slug_villager_woman_6
+model7=npc_slug_villager_woman_7
+head1=npc_slug_villager_woman_head1
+head2=npc_slug_villager_woman_head2
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+recol1s=3171
+recol1d=10468
+recol2s=7488
+recol2d=16841
+recol3s=10401
+recol3d=16841
+recol4s=10535
+recol4d=11559
+recol5s=16838
+recol5d=11558
+
+[slug_villager_woman_possessed]
+// rev 474 npc 4886
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_woman_1
+model2=npc_slug_villager_woman_2
+model3=npc_slug_villager_woman_3
+model4=npc_slug_villager_woman_4
+model5=npc_slug_villager_woman_5
+model6=npc_slug_villager_woman_6
+model7=npc_slug_villager_woman_7
+head1=npc_slug_villager_woman_head1
+head2=npc_slug_villager_woman_possessed_head2
+size=1
+readyanim=human_ready
+walkanim=slug_possessed_walk
+op1=Talk-to
+recol1s=24075
+recol1d=24235
+recol2s=3171
+recol2d=10468
+recol3s=7488
+recol3d=16841
+recol4s=10401
+recol4d=16841
+recol5s=10535
+recol5d=11559
+recol6s=16838
+recol6d=11558
+
+[slug_villager_old]
+// rev 474 npc 4887
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_old_1
+model2=npc_slug_villager_old_2
+model3=npc_slug_villager_old_3
+model4=npc_slug_villager_old_4
+model5=npc_slug_villager_old_5
+model6=npc_slug_oniall_7
+model7=npc_slug_villager_old_7
+model8=npc_slug_villager_old_8
+head1=npc_slug_villager_old_head1
+head2=npc_slug_villager_old_head2
+head3=npc_slug_villager_old_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+recol1s=16837
+recol1d=6343
+recol2s=8526
+recol2d=8522
+recol3s=1475
+recol3d=8522
+recol4s=26350
+recol4d=12649
+recol5s=24196
+recol5d=12684
+
+[slug_villager_old_possessed]
+// rev 474 npc 4888
+name=Witchaven villager
+desc=Witchaven villager.
+model1=npc_slug_villager_old_1
+model2=npc_slug_villager_old_2
+model3=npc_slug_villager_old_3
+model4=npc_slug_villager_old_4
+model5=npc_slug_villager_old_5
+model6=npc_slug_oniall_7
+model7=npc_slug_villager_old_7
+model8=npc_slug_villager_old_8
+head1=npc_slug_villager_old_head1
+head2=npc_slug_villager_old_possessed_head2
+head3=npc_slug_villager_old_possessed_head3
+size=1
+readyanim=human_ready
+walkanim=slug_possessed_walk
+op1=Talk-to
+recol1s=24075
+recol1d=24235
+recol2s=16837
+recol2d=6343
+recol3s=8526
+recol3d=8522
+recol4s=1475
+recol4d=8522
+recol5s=26350
+recol5d=12649
+recol6s=24196
+recol6d=12684
+
+[slug_jeb]
+// rev 474 npc 4895
+name=Jeb
+desc=Jeb.
+model1=npc_slug_oniall_1
+model2=npc_slug_jeb_2
+model3=npc_slug_villager_man_2
+model4=npc_slug_villager_man_3
+model5=npc_slug_jeb_5
+model6=npc_slug_oniall_5
+model7=npc_slug_oniall_6
+model8=npc_slug_oniall_7
+model9=npc_slug_jeb_9
+model10=npc_slug_jeb_10
+head1=npc_slug_oniall_head1
+head2=npc_slug_villager_man_head2
+head3=npc_slug_villager_man_head3
+size=1
+readyanim=human_ready
+walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
+op1=Talk-to
+recol1s=32760
+recol1d=10640
+recol2s=14724
+recol2d=24236
+recol3s=12610
+recol3d=24304
+recol4s=16844
+recol4d=12692
+recol5s=12616
+recol5d=12686
+
+[slug_jeb_possessed]
+// rev 474 npc 4896
+name=Jeb
+desc=Jeb.
+model1=npc_slug_oniall_1
+model2=npc_slug_jeb_2
+model3=npc_slug_villager_man_2
+model4=npc_slug_villager_man_3
+model5=npc_slug_jeb_5
+model6=npc_slug_oniall_5
+model7=npc_slug_oniall_6
+model8=npc_slug_oniall_7
+model9=npc_slug_jeb_9
+model10=npc_slug_jeb_10
+head1=npc_slug_oniall_head1
+head2=npc_slug_villager_man_possessed_head2
+size=1
+readyanim=human_ready
+walkanim=slug_jeb_walk
+op1=Talk-to
+recol1s=32760
+recol1d=10640
+recol2s=14724
+recol2d=24236
+recol3s=12610
+recol3d=24304
+recol4s=16844
+recol4d=12692
+recol5s=12616
+recol5d=12686
+recol6s=24075
+recol6d=24235
+
+[slug_mother_mallum]
+// rev 474 npc 4889
+name=Mother Mallum
+desc=An unspeakable horror from the depths of time.
+model1=npc_slug_mother_mallum_1
+model2=npc_slug_mother_mallum_2
+model3=npc_slug_mother_mallum_3
+model4=npc_slug_mother_mallum_4
+head1=npc_slug_mother_mallum_head1
+size=4
+readyanim=slug_mallum_ready
+walkanim=slug_mallum_walk
+resizeh=120
+resizev=120
+
+[slug_prince]
+// rev 474 npc 4890
+name=Slug Prince
+model1=npc_slug_prince_1
+size=2
+readyanim=slug_prince_ready
+walkanim=slug_prince_walk
+op2=Attack
+vislevel=62
+desc=A child of aquatic evil.
+hitpoints=70
+attack=50
+strength=50
+defence=50
+huntmode=aggressive_melee
+huntrange=4
+param=stabdefence,30
+param=slashdefence,30
+param=crushdefence,30
+param=magicdefence,200
+param=rangedefence,200
+param=attackbonus,0
+param=strengthbonus,0
+param=damagetype,^crush_style
+param=attack_anim,slug_prince_attack
+param=defend_anim,slug_prince_block
+param=death_anim,slug_prince_death
+
+// =========================================================================== the shells
+// EVERY VILLAGER HAS TWO FORMS and the quest swaps them as the player works out what is wrong.
+// These are what the map spawns: an op-less, model-less parent whose multivar picks the form. The
+// bits are set by the quest scripts at the stages 474 changes each npc at - see slugmenace.varbit
+// for why they are bits of their own rather than the stage varbit 474 keys them on.
+//
+// A shell carries no wanderrange, so they keep the default and drift as any villager does.
+// O'Niall's does not matter - neither of his forms has a walk.
+
+[witchaven_oniall]
+name=Col. O'Niall
+wanderrange=0
+multivar=slugmenace_oniall_turned
+multinpc=0,slug_oniall
+multinpc=1,slug_oniall_possessed
+
+[witchaven_hobb]
+name=Mayor Hobb
+wanderrange=0
+multivar=slugmenace_hobb_turned
+category=slugmenace_mayor
+multinpc=0,slug_hobb
+multinpc=1,slug_hobb_possessed
+
+[witchaven_maledict]
+name=Brother Maledict
+wanderrange=0
+multivar=slugmenace_maledict_turned
+multinpc=0,slug_maledict
+multinpc=1,slug_maledict_possessed
+
+[witchaven_jeb]
+name=Jeb
+wanderrange=0
+multivar=slugmenace_jeb_turned
+multinpc=0,slug_jeb
+multinpc=1,slug_jeb_possessed
+
+[witchaven_villager_man]
+name=Witchaven villager
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_man
+multinpc=1,slug_villager_man_possessed
+
+[witchaven_villager_woman]
+name=Witchaven villager
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_woman
+multinpc=1,slug_villager_woman_possessed
+
+[witchaven_villager_old]
+name=Witchaven villager
+multivar=slugmenace_villagers_turned
+multinpc=0,slug_villager_old
+multinpc=1,slug_villager_old_possessed
+
+// Jeb sails the boat, so he stands at both ends of it. Two shells over the same two children
+// rather than one shell and a coordinate test in the handler: which side of the water the player
+// is on is the map's business, not a script's.
+[witchaven_jeb_platform]
+name=Jeb
+wanderrange=0
+multivar=slugmenace_jeb_turned
+multinpc=0,slug_jeb
+multinpc=1,slug_jeb_possessed

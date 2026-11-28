@@ -57,16 +57,19 @@ if (last_useitem ! bucket_milk) {
 
 [opheldu,bowl_nettletea]
 if (last_useitem = bucket_milk) {
-    // THE MILK IS CONSUMED AND THE BUCKET COMES BACK EMPTY (DeathPlateau-Bugs#92). It used to
-    // leave the full bucket in the inventory, which made one bucket of milk an unlimited supply -
-    // the same shape as a dupe, found while fixing the crone's cup and left alone at the time
-    // because turning a faucet off is a decision about how the game plays rather than a defect to
-    // overturn quietly. It is off now.
-    //
-    // Two objs in and two out, so this never needs a free slot.
     inv_del(inv, bowl_nettletea, 1);
-    inv_del(inv, bucket_milk, 1);
     inv_add(inv, bowl_nettletea_milky, 1);
+    // THE MILK IS SPENT AND THE BUCKET COMES BACK EMPTY (DeathPlateau-Bugs#92, owner's call:
+    // "consume it"). It used to pour out of a bucket that stayed full, so one bucket milked every
+    // tea in the game for ever.
+    //
+    // bucket_empty AND NOT NOTHING, which is the half the wiki cannot settle - it lists the bucket
+    // only as a material and never says what becomes of it. This repo does say, in the place that
+    // matters most: cakes.rs2 takes a bucket_milk and hands back a bucket_empty, which is the same
+    // recipe shape as this one. So does brewing, so does the glassblowing bucket, so does Demon
+    // Slayer's. The dairy churn is the one that destroys the bucket outright, and it is the
+    // outlier. A bucket is a container the player keeps.
+    inv_del(inv, bucket_milk, 1);
     inv_add(inv, bucket_empty, 1);
     mes("You add milk to the nettle tea.");
     return;
@@ -133,6 +136,9 @@ if (last_useitem ! bucket_milk) {
 }
 inv_del(inv, $tea, 1);
 inv_add(inv, $milky, 1);
+// Same as the bowl above, and for the same reasons - see the note there.
+inv_del(inv, bucket_milk, 1);
+inv_add(inv, bucket_empty, 1);
 mes("You add milk to the nettle tea.");
 
 // ---------------------------------------------------------------- drinking it

@@ -36,10 +36,6 @@ if ($item ! ~pickaxe_checker) {
 @enakh_mine_rock;
 
 [label,enakh_mine_rock]
-if (stat(mining) < ^enakh_req_mining) {
-    mes("You need a Mining level of <tostring(^enakh_req_mining)> to get anything out of this rock.");
-    return;
-}
 if (inv_freespace(inv) = 0) {
     mes("You have no room for any more stone.");
     return;

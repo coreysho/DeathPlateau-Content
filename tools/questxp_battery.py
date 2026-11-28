@@ -42,14 +42,28 @@ SKILLS = set('attack defence strength hitpoints ranged prayer magic cooking wood
 def read(p):
     return open(p, encoding='utf-8', errors='replace').read()
 
-RS2 = [f for f in glob.glob('scripts/**/*.rs2', recursive=True) if '/_unpack/' not in f]
+# EVERY PATH IN FORWARD SLASHES, because everything below reasons about '/scripts/' and
+# '/_unpack/' as substrings. glob hands back os.sep, so on Windows this list came out as
+# 'scripts\quests\quest_100\scripts\quest_100.rs2' and two things went wrong quietly:
+# the '/_unpack/' filter matched nothing, and `f.split('/scripts/')[0]` returned the whole
+# filename instead of the quest's directory - so the scope glob found no files, the pool was
+# empty, and all twenty of Recipe for Disaster's reward lines reported "found nothing".
+#
+# They are paid correctly. This suite passes on CI, which is Linux, and has failed on Windows
+# since it was written - which is the worst way for a check to be wrong, because the twenty
+# failures look like a real and long-standing bug and teach whoever sees them to ignore the file.
+def slashed(pattern):
+    return [f.replace(os.sep, '/') for f in glob.glob(pattern, recursive=True)]
+
+
+RS2 = [f for f in slashed('scripts/**/*.rs2') if '/_unpack/' not in f]
 SRC = {f: read(f) for f in RS2}
 
 # ^name = N, with or without a trailing comment. Requiring end-of-line here is a mistake I made
 # once already: it reads every constant that carries a note as undefined, and then every quest
 # whose reward is a named constant looks like it pays nothing.
 CONST = {}
-for f in glob.glob('scripts/**/*.constant', recursive=True):
+for f in slashed('scripts/**/*.constant'):
     for m in re.finditer(r'^\^(\w+)\s*=\s*(-?\d+)\b', read(f), re.M):
         CONST[m.group(1)] = int(m.group(2))
 
@@ -100,7 +114,7 @@ for f in sorted(RS2):
         # areas/area_ardougne_east. Both of those read as "this quest grants nothing" to a sweep
         # scoped any tighter than this, which is how I first mis-scored them.
         qdir = f.split('/scripts/')[0]
-        scope = set(glob.glob(qdir + '/scripts/*.rs2')) | \
+        scope = set(slashed(qdir + '/scripts/*.rs2')) | \
                 ({g for g in RS2 if 'questlist:%s' % qlist in SRC[g]} if qlist else set())
         pool = ''.join(SRC[g] for g in sorted(scope))
         for line in re.finditer(r'([\d,]+)\s*([A-Za-z]+)\s*(?:XP|xp|Xp|experience)', txts[-1]):

@@ -1,0 +1,207 @@
+// THE REQUIREMENTS BLOCK A QUEST JOURNAL SHOWS BEFORE THE QUEST IS STARTED.
+//
+// Read out of quest_requirement.dbrow, which is generated from the OSRS wiki by
+// tools/genquestreq.py. One source for every quest, so the journal cannot drift from what the
+// quest actually asks for.
+//
+// COLOURED THE WAY THE QUEST LIST IS. A requirement already met is green, one still missing is
+// red - the same red and green the quest list uses for a quest not started and a quest finished,
+// so a player reading the journal is reading a colour they already know the meaning of. A
+// requirement nothing here can check (an access, an item, a fight) is drawn in the journal's
+// ordinary blue, because colouring it either way would be a claim this cannot make.
+
+// SHOWN ONLY WHEN SOMETHING IS MISSING. There is no "has this quest been started" flag to read -
+// ~quest_journal is handed a name and a block of text and nothing else - and there does not need
+// to be one. A player who has started a quest has already met its requirements, so the test "is
+// any checkable requirement unmet" is the same answer with none of the plumbing, and it tells the
+// player the one thing they actually want to know: what is stopping them.
+//
+// Only the CHECKABLE ones decide that. The prose lines are never met as far as this can tell, so
+// letting them vote would print the block on every quest for ever.
+[proc,quest_requirements_text](string $quest_name)(string)
+db_find(quest_requirement:name, $quest_name);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    return("");
+}
+
+def_string $out = "";
+def_int $any = 0;
+def_int $unmet = 0;
+
+// --- quest points
+def_int $need_qp = db_getfield($row, quest_requirement:questpoints, 0);
+if ($need_qp > 0) {
+    $any = 1;
+    if (~questpoints_met($need_qp) = false) {
+        $unmet = add($unmet, 1);
+    }
+    $out = append($out, "|<~quest_req_colour(~questpoints_met($need_qp))>");
+    $out = append($out, "<tostring($need_qp)> Quest Points");
+}
+
+// --- skills
+def_int $skills = db_getfieldcount($row, quest_requirement:skills);
+def_int $i = 0;
+while ($i < $skills) {
+    def_stat $stat;
+    def_int $level;
+    $stat, $level = db_getfield($row, quest_requirement:skills, $i);
+    $any = 1;
+    if (~stat_req_met($stat, $level) = false) {
+        $unmet = add($unmet, 1);
+    }
+    $out = append($out, "|<~quest_req_colour(~stat_req_met($stat, $level))>");
+    $out = append($out, "Level <tostring($level)> <enum(stat, string, stat_names, $stat)>");
+    $i = add($i, 1);
+}
+
+// --- other quests. The name is carried beside the component for exactly this line.
+def_int $quests = db_getfieldcount($row, quest_requirement:quests);
+$i = 0;
+while ($i < $quests) {
+    def_component $other;
+    def_string $name;
+    $other, $name = db_getfield($row, quest_requirement:quests, $i);
+    $any = 1;
+    if (~quest_component_complete($other) = false) {
+        $unmet = add($unmet, 1);
+    }
+    $out = append($out, "|<~quest_req_colour(~quest_component_complete($other))>");
+    $out = append($out, "<$name>");
+    $i = add($i, 1);
+}
+
+// --- everything the wiki states in prose. Never coloured: there is nothing to check it against.
+def_int $other_count = db_getfieldcount($row, quest_requirement:other);
+$i = 0;
+while ($i < $other_count) {
+    $any = 1;
+    $out = append($out, "|@dbl@<db_getfield($row, quest_requirement:other, $i)>");
+    $i = add($i, 1);
+}
+
+if ($any = 0 | $unmet = 0) {
+    return("");
+}
+return(append("||@dbl@To start this quest I still need:", $out));
+
+// Green when it is met, red when it is not - the quest list's own two colours.
+[proc,quest_req_colour](boolean $met)(string)
+if ($met = true) {
+    return("@gre@");
+}
+return("@red@");
+
+[proc,stat_req_met](stat $stat, int $level)(boolean)
+// stat_base, not stat: a requirement is about the level you have trained to, and a player who has
+// been drained below it has still met it. The start gates in the quest scripts read it the same
+// way.
+if (stat_base($stat) >= $level) {
+    return(true);
+}
+return(false);
+
+[proc,questpoints_met](int $need)(boolean)
+if (%qp >= $need) {
+    return(true);
+}
+return(false);
+
+// ================================================================= the gate
+//
+// THE SAME ROW THAT THE JOURNAL PRINTS, USED TO STOP THE PLAYER. Until now the two halves of a
+// requirement lived apart: the journal said what a quest wanted, and whether the quest actually
+// asked for it was a guard clause somebody had written, or had not. Fifty-eight declared
+// requirements across twenty-one quests had no check anywhere - Heroes' Quest's four, Family
+// Crest's four, Ghosts Ahoy's two - so the log named a requirement and the quest let you in
+// regardless.
+//
+// Returns TRUE when something is missing, having already told the player which. A quest calls it
+// as the first thing its start does:
+//
+//     if (~quest_requirements_block("Ghosts Ahoy") = true) {
+//         return;
+//     }
+//
+// ONLY WHAT CAN BE CHECKED. The prose lines are not consulted here for the same reason the
+// journal does not colour them: there is nothing to check them against, and refusing a player
+// over a line this cannot evaluate would make the quest unstartable.
+// WHAT IS MISSING, AS TEXT, AND NOTHING ELSE. This does not talk to the player and does not
+// decide anything, which is the point: ~mesbox PARKS the script it is called from, so a proc that
+// announced the problem could not also return the answer - the return ran after the player clicked
+// Continue, long after the caller had read the stack. The deciding half was untestable and a sim
+// asking "does this gate stop a new character" got false for all 109.
+//
+// Empty string means nothing is missing.
+[proc,quest_requirements_missing](string $quest_name)(string)
+db_find(quest_requirement:name, $quest_name);
+def_dbrow $row = db_findnext;
+if ($row = null) {
+    return("");
+}
+
+def_string $missing = "";
+def_int $n = 0;
+
+// startquestpoints, not questpoints: Recipe for Disaster's 175 is the total you end the quest
+// with, not a toll at the door, and the wiki marks the difference.
+def_int $need_qp = db_getfield($row, quest_requirement:startquestpoints, 0);
+if ($need_qp > 0 & ~questpoints_met($need_qp) = false) {
+    $n = add($n, 1);
+    $missing = append($missing, "|<tostring($need_qp)> Quest Points");
+}
+
+// startskills, NOT skills. The wiki marks each requirement as needed to START or needed later,
+// and almost every skill is "later": Old School lets you begin Between a Rock... without 40
+// Mining and stops you at the rock. Refusing the conversation on every listed skill is stricter
+// than the game being copied - 23 of the 162 are start requirements and the other 139 are not.
+// The journal still lists them all, because they are all requirements; this is only about which
+// of them may turn a player away at the door.
+def_int $skills = db_getfieldcount($row, quest_requirement:startskills);
+def_int $i = 0;
+while ($i < $skills) {
+    def_stat $stat;
+    def_int $level;
+    $stat, $level = db_getfield($row, quest_requirement:startskills, $i);
+    if (~stat_req_met($stat, $level) = false) {
+        $n = add($n, 1);
+        $missing = append($missing, "|Level <tostring($level)> <enum(stat, string, stat_names, $stat)>");
+    }
+    $i = add($i, 1);
+}
+
+def_int $quests = db_getfieldcount($row, quest_requirement:quests);
+$i = 0;
+while ($i < $quests) {
+    def_component $other;
+    def_string $name;
+    $other, $name = db_getfield($row, quest_requirement:quests, $i);
+    if (~quest_component_complete($other) = false) {
+        $n = add($n, 1);
+        $missing = append($missing, "|<$name>");
+    }
+    $i = add($i, 1);
+}
+
+if ($n = 0) {
+    return("");
+}
+return($missing);
+
+// The in-game half: say what is missing, and tell the caller to stop. A quest calls this as the
+// first thing its start does, before any dialogue, so the NPC does not promise something it is
+// about to take back:
+//
+//     if (~quest_requirements_block("Ghosts Ahoy") = true) {
+//         return;
+//     }
+[proc,quest_requirements_block](string $quest_name)(boolean)
+// string_length, not = : RuneScript has no string equality operator, and the build says so -
+// "Operator '=' cannot be applied to 'string', 'string'".
+def_string $missing = ~quest_requirements_missing($quest_name);
+if (string_length($missing) = 0) {
+    return(false);
+}
+~mesbox(append("You need more than you have before you can start <$quest_name>.|You still need:", $missing));
+return(true);

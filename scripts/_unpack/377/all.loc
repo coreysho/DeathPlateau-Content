@@ -72657,6 +72657,11 @@ op1=Pass-through
 bgsound=area474_3131,3
 
 [enakh_fountain_multiloc]
+// A NAME OF ITS OWN (DeathPlateau-Bugs#106, decided 25 November 2026). The engine now falls back
+// to the face's handler when the placed shell claims nothing - but the active loc is still the
+// shell, so `loc_name` inside that handler reads this line. Without it the water source said
+// "You fill the bucket from the null." The name is the face's own.
+name=Fountain
 width=2
 length=2
 active=yes
@@ -72673,6 +72678,11 @@ length=2
 active=yes
 
 [enakh_furnace_multiloc]
+// A NAME OF ITS OWN (DeathPlateau-Bugs#106, decided 25 November 2026). The engine now falls back
+// to the face's handler when the placed shell claims nothing - but the active loc is still the
+// shell, so `loc_name` inside that handler reads this line. Without it the water source said
+// "You fill the bucket from the null." The name is the face's own.
+name=Furnace
 width=2
 length=2
 active=yes
@@ -86765,6 +86775,11 @@ ambient=15
 blockrange=no
 
 [burgh_furnace_multiloc]
+// A NAME OF ITS OWN (DeathPlateau-Bugs#106, decided 25 November 2026). The engine now falls back
+// to the face's handler when the placed shell claims nothing - but the active loc is still the
+// shell, so `loc_name` inside that handler reads this line. Without it the water source said
+// "You fill the bucket from the null." The name is the face's own.
+name=Furnace
 width=2
 length=2
 anim=burgh_furnace_lit

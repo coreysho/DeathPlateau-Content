@@ -13,14 +13,20 @@
 // baby reds and red dragons - the map cut, the exit placed, and drop rows for them in
 // npc_drops.dbrow. Only the door was missing.
 //
-// NO CHARGE ON THE DOOR, and that is a decision rather than an oversight. In Old School, Saniboch
-// stands outside and takes 875 coins every time. THERE IS NO `saniboch` NPC IN THE 377 CACHE - I
-// checked all.npc - so there is nobody to take it, and inventing a toll on a door that never
-// charged one is a change to how the game plays rather than a fix to a dead option. Left open,
-// ANSWERED 25 November 2026: the door stays free. The two log balances and two pipe squeezes in
-// here stay dead for the same kind of reason - neither is in Old School's dungeon at all, the wiki
-// has them as alternative routes rather than the way through, and the dungeon is traversable
-// without them, so there is no level to invent them at. DeathPlateau-Bugs#91.
+// NO CHARGE ON THE DOOR, AND THAT IS SETTLED (DeathPlateau-Bugs#91, 24 Nov 2026: "leave free,
+// leave dead"). In Old School, Saniboch stands outside and takes 875 coins every time. THERE IS NO
+// `saniboch` NPC IN THE 377 CACHE - checked against all.npc - so there is nobody to take it, and
+// inventing a toll on a door that never charged one would be a change to how the game plays rather
+// than a fix to a dead option. The owner's answer was to leave it free. Do not add the 875 here
+// without a new decision; this comment used to say the question was open and it is not.
+//
+// AND THE TWO LOG BALANCES STAY DEAD, by the same decision. karam_dungeon_bamboo_logbalance1 and
+// logbalance3 both advertise op1="Walk-across" and nothing answers either, so they sit in
+// tools/sim/opsweep-baseline.txt as two of its dead options. They are not in Old School's dungeon
+// at all, so there is no published requirement to give them and a made-up level is worse than a
+// dead option that is written down. The wiki has them as an alternative route rather than the way
+// through, and the dungeon is traversable without them: the door, the vines and the two stepping
+// stones are the way across, and tools/sim/brimhaven.ts walks it.
 
 [oploc1,dungeon_tree_closed]
 // p_telejump and not p_teleport: this is a door, so the screen should not fade the way a spell

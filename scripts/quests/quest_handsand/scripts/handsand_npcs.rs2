@@ -61,6 +61,14 @@ inv_add(inv, handsand_scroll_magic, 1);
 ~chatnpc("<p,neutral>Take it to your wizard. I have had it in the house a year and it has never done anything.");
 
 [label,handsand_bert_start]
+// THE QUEST'S TWO REQUIREMENTS, CHECKED WHERE IT STARTS. Neither was enforced anywhere: the
+// Thieving only appeared as a 30 on Sandy's pocket - higher than the quest asks for - and the
+// 49 Crafting was not checked at all, so the journal listed a requirement the quest did not have.
+if (stat(crafting) < ^handsand_req_crafting | stat(thieving) < ^handsand_req_thieving) {
+    ~chatnpc("<p,sad>I have got something in my house and I do not want it in my house. But you are not the one to take it - not yet.");
+    ~chatnpc("<p,neutral>You would want <tostring(^handsand_req_crafting)> Crafting and <tostring(^handsand_req_thieving)> Thieving about you before you go asking questions in Yanille.");
+    return;
+}
 ~chatnpc("<p,sad>I have got something in my house and I do not want it in my house.");
 switch_int (~p_choice2("What is it?", 1, "Then throw it out.", 2)) {
     case 2 :
@@ -225,8 +233,11 @@ inv_add(inv, handsand_orb_recording, 1);
 // "A handful of sand from Sandy's pocket". Nothing else in the quest could produce it.
 [opnpc3,handsand_sandy]
 p_arrivedelay;
-if (stat(thieving) < 30) {
-    mes("You need a Thieving level of 30 to get near his pockets.");
+// 17, which is the quest's own Thieving requirement. This asked for 30: a player who met every
+// requirement The Hand in the Sand advertises could start it, be told by the journal that they
+// had everything, and then be unable to take the sand that the quest cannot be finished without.
+if (stat(thieving) < ^handsand_req_thieving) {
+    mes("You need a Thieving level of <tostring(^handsand_req_thieving)> to get near his pockets.");
     return;
 }
 if (inv_total(inv, handsand_sand) > 0) {

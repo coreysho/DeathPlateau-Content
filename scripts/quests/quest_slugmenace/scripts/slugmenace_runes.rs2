@@ -1,0 +1,146 @@
+// The Slug Menace - cutting the five runes and empowering them.
+//
+// Two stages per rune and both can fail, which is the quest's one real grind and is meant to be:
+// the quick guide says to bring fifteen to twenty essence for five runes and that succeeding with
+// five is very unlikely.
+//
+// THE RATES ARE PICKED TO MATCH THAT NUMBER. stat_random(stat, low, high) succeeds with
+// probability value/256 where value = floor(low*(99-L)/98) + floor(high*(L-1)/98) + 1. At 120 and
+// 220 that is 150/256 at level 30 - the quest's requirement - rising to 221/256 at 99. Two
+// stages at 59% is 2.9 essence a rune and 14.5 for all five, which is the guide's fifteen. At
+// 40/180 it would have been 48 essence and nobody would have finished it.
+//
+// Shaping is Crafting and empowering is Runecraft, because those are two of the four skills the
+// quest asks for and this is the only place either is used.
+
+// =========================================================================== shaping
+// The pages carry the diagrams, so the Shape options are on the pages. Page 1 has earth and air,
+// page 2 fire and water, page 3 mind - the iops are in slugmenace.obj.
+[opheld2,slug_page1] ~slugmenace_shape(slug_blank_earth_rune, "earth");
+[opheld3,slug_page1] ~slugmenace_shape(slug_blank_air_rune, "air");
+[opheld2,slug_page2] ~slugmenace_shape(slug_blank_fire_rune, "fire");
+[opheld3,slug_page2] ~slugmenace_shape(slug_blank_water_rune, "water");
+[opheld2,slug_page3] ~slugmenace_shape(slug_blank_mind_rune, "mind");
+
+[proc,slugmenace_shape](namedobj $blank, string $what)
+if (inv_total(inv, chisel) = 0) {
+    mes("You need a chisel to be able to craft the rune.");
+    return;
+}
+// EITHER ESSENCE WORKS. The quick guide says rune or pure, and a player at the wall with a pack of
+// pure essence was told they had none (DeathPlateau-Bugs#112). Rune essence goes first so the
+// better stock is kept.
+def_namedobj $essence = blankrune;
+if (inv_total(inv, blankrune) = 0) {
+    $essence = blankrune_high;
+}
+if (inv_total(inv, $essence) = 0) {
+    mes("You need some rune essence to be able to craft the rune.");
+    return;
+}
+// The essence goes whatever happens, so the space check is for the rune that may replace it - and
+// since one leaves as the other arrives, a full pack is only a problem on a success.
+anim(human_leather_crafting, 0);
+inv_del(inv, $essence, 1);
+if (stat_random(crafting, ^slugmenace_craft_low, ^slugmenace_craft_high) = false) {
+    mes("You attempt to craft the stone but fail, destroying the essence.");
+    return;
+}
+inv_add(inv, $blank, 1);
+mes("You managed to shape the rune essence into the desired shape.");
+stat_advance(crafting, ^slugmenace_shape_xp);
+
+// =========================================================================== empowering
+// WHICH ALTAR TAKES WHICH RUNE. The four elemental altars each declare their own [oplocu] in
+// skill_runecraft/scripts/runecraft_altars.rs2 and every other altar falls through to the
+// category handler on _rc_altar, so the five cases are added in five places and all of them come
+// here. The proc checks the pairing rather than trusting the trigger, so a mind rune taken to the
+// fire altar is told so instead of quietly working.
+[proc,slugmenace_empower](loc $altar)
+def_namedobj $blank = null;
+def_namedobj $made = null;
+switch_obj (last_useitem) {
+    case slug_blank_air_rune :
+        $blank = slug_blank_air_rune;
+        $made = slug_air_rune;
+        if ($altar ! air_altar) {
+            ~slugmenace_wrong_altar;
+            return;
+        }
+    case slug_blank_water_rune :
+        $blank = slug_blank_water_rune;
+        $made = slug_water_rune;
+        if ($altar ! water_altar) {
+            ~slugmenace_wrong_altar;
+            return;
+        }
+    case slug_blank_earth_rune :
+        $blank = slug_blank_earth_rune;
+        $made = slug_earth_rune;
+        if ($altar ! earth_altar) {
+            ~slugmenace_wrong_altar;
+            return;
+        }
+    case slug_blank_fire_rune :
+        $blank = slug_blank_fire_rune;
+        $made = slug_fire_rune;
+        if ($altar ! fire_altar) {
+            ~slugmenace_wrong_altar;
+            return;
+        }
+    case slug_blank_mind_rune :
+        $blank = slug_blank_mind_rune;
+        $made = slug_mind_rune;
+        if ($altar ! mind_altar) {
+            ~slugmenace_wrong_altar;
+            return;
+        }
+    case default : return;
+}
+anim(human_runecraft, 0);
+inv_del(inv, $blank, 1);
+if (stat_random(runecraft, ^slugmenace_runecraft_low, ^slugmenace_runecraft_high) = false) {
+    mes("You attempt to empower the rune but fail, destroying the essence.");
+    return;
+}
+inv_add(inv, $made, 1);
+mes("You manage to empower the required rune.");
+stat_advance(runecraft, ^slugmenace_empower_xp);
+~slugmenace_mark_rune($made);
+
+[proc,slugmenace_wrong_altar]()
+~mesbox("The carving glows faintly and goes out. This is not the altar it was cut for.");
+
+// The flags are what the Imposing Doors read - "has this rune ever been made" - and they are set
+// here rather than by counting the inventory, because a rune lost between the altar and the door
+// should not read as a step never taken.
+[proc,slugmenace_mark_rune](namedobj $made)
+if ($made = slug_air_rune) {
+    %slugmenace_rune_air = ^slugmenace_on;
+}
+if ($made = slug_water_rune) {
+    %slugmenace_rune_water = ^slugmenace_on;
+}
+if ($made = slug_earth_rune) {
+    %slugmenace_rune_earth = ^slugmenace_on;
+}
+if ($made = slug_fire_rune) {
+    %slugmenace_rune_fire = ^slugmenace_on;
+}
+if ($made = slug_mind_rune) {
+    %slugmenace_rune_mind = ^slugmenace_on;
+}
+
+// =========================================================================== reading the pages
+[opheld1,slug_page1]
+~mesbox("Columns of diagrams, each one a shape cut from a block. Two of them are circled: a spiral, and a square broken open on one side.");
+
+[opheld1,slug_page2]
+~mesbox("More shapes, and two of these are circled as well: a tongue of flame, and three waves.");
+
+[opheld1,slug_page3]
+if (%slugmenace_page3 = ^slugmenace_off) {
+    ~mesbox("Three charred scraps. You can make out part of a diagram across two of them and nothing at all on the third.");
+    return;
+}
+~mesbox("The last shape, and under it a line in the door's own glyphs: an eye, open.");

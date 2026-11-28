@@ -36,6 +36,13 @@ if($op = 2) {
   return;
 }
 ~chatplayer("<p,quiz>I'm a hero. May I apply to join?");
+// The four skill levels Heroes' Quest asks for - 53 Cooking, 53 Fishing, 25 Herblore and 50
+// Mining - were checked nowhere. ~has_hero_quest_requirements covers the quest points and the
+// three quests and has never looked at a skill, so a player with none of them could be sent off
+// after a firebird feather.
+if (~quest_requirements_block("Heroes Quest") = true) {
+    return;
+}
 if (~has_hero_quest_requirements = true) {
   ~chatnpc("<p,neutral>Well, you have a lot of quest points, and you have done|all the required quests, so you may now begin the|tasks to meet the entry requirements for membership in|the Hero's Guild. The three items required");
   ~chatnpc("<p,neutral>for entrance are:|An Entranan Firebird feather,|a Master Thieves' armband,|and a cooked Lava Eel."); // imgur.com/8hiv333

@@ -1,0 +1,1368 @@
+// OSRS locs grafted by tools/models/graftosrsmap.py (osrslocimport.py).
+// Models re-encoded by osrs2ob2.py with the loc recolours baked in.
+
+[osrsloc_439]
+// OSRS loc 439
+model=osrsloc_439
+active=no
+offsety=1
+ambient=35
+contrast=125
+
+[osrsloc_440]
+// OSRS loc 440
+model=osrsloc_440
+active=no
+offsety=1
+ambient=35
+contrast=125
+
+[osrsloc_1521]
+// OSRS loc 1521
+name=Large door
+model=osrsloc_1521
+offsety=1
+ambient=25
+contrast=125
+raiseobject=no
+op1=Open
+category=double_door_open_and_close_left
+param=next_loc_stage,loc_1522
+
+[osrsloc_1524]
+// OSRS loc 1524
+name=Large door
+model=osrsloc_1524
+mirror=yes
+offsety=1
+ambient=25
+contrast=125
+raiseobject=no
+op1=Open
+category=double_door_open_and_close_right
+param=next_loc_stage,loc_1523
+
+[osrsloc_2493]
+// OSRS loc 2493
+name=Mirror
+model=osrsloc_2493
+active=yes
+ambient=25
+
+[osrsloc_2494]
+// OSRS loc 2494
+name=Hanger
+model=osrsloc_2494
+blockwalk=no
+blockrange=no
+active=yes
+ambient=10
+contrast=50
+
+[osrsloc_2729]
+// OSRS loc 2729
+name=Dolls and balls
+model=osrsloc_2729
+blockwalk=no
+blockrange=no
+active=yes
+
+[osrsloc_2782]
+// OSRS loc 2782
+model=osrsloc_2782
+ambient=20
+
+[osrsloc_3211]
+// OSRS loc 3211
+model=osrsloc_3211
+ambient=30
+
+[osrsloc_4493]
+// OSRS loc 4493
+model=osrsloc_4493
+active=no
+ambient=15
+contrast=50
+anim=osrsloc_anim_4126
+
+[osrsloc_4494]
+// OSRS loc 4494
+model=osrsloc_4494
+active=no
+ambient=15
+contrast=50
+anim=osrsloc_anim_4126
+
+[osrsloc_4501]
+// OSRS loc 4501
+model=osrsloc_4501
+active=no
+ambient=60
+
+[osrsloc_4504]
+// OSRS loc 4504
+model=osrsloc_4504
+blockwalk=no
+blockrange=no
+active=no
+ambient=10
+
+[osrsloc_4508]
+// OSRS loc 4508
+model=osrsloc_4508
+blockwalk=no
+blockrange=no
+active=no
+ambient=10
+
+[osrsloc_4510]
+// OSRS loc 4510
+model=osrsloc_4510
+blockwalk=no
+blockrange=no
+active=no
+ambient=10
+
+[osrsloc_4511]
+// OSRS loc 4511
+model=osrsloc_4511
+blockwalk=no
+blockrange=no
+active=no
+ambient=10
+
+[osrsloc_4512]
+// OSRS loc 4512
+model=osrsloc_4512
+blockwalk=no
+blockrange=no
+active=no
+ambient=10
+
+[osrsloc_6809]
+// OSRS loc 6809
+model=osrsloc_6809
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_6810]
+// OSRS loc 6810
+model=osrsloc_6810
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_6811]
+// OSRS loc 6811
+model=osrsloc_6811
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_7167]
+// OSRS loc 7167
+name=Stool
+model=osrsloc_7167
+ambient=25
+
+[osrsloc_7169]
+// OSRS loc 7169
+name=Table
+model=osrsloc_7169
+blockrange=no
+ambient=25
+raiseobject=yes
+
+[osrsloc_7170]
+// OSRS loc 7170
+name=Shelf
+model=osrsloc_7170
+active=yes
+ambient=15
+contrast=75
+
+[osrsloc_7171]
+// OSRS loc 7171
+name=Shelf
+model=osrsloc_7171
+blockwalk=no
+blockrange=no
+ambient=10
+
+[osrsloc_7182]
+// OSRS loc 7182
+name=Chair
+model=osrsloc_7182
+blockrange=no
+ambient=25
+
+[osrsloc_7446]
+// OSRS loc 7446
+name=Smashed table
+model=osrsloc_7446
+
+[osrsloc_7482]
+// OSRS loc 7482
+name=Stool
+model=osrsloc_7482
+
+[osrsloc_10793]
+// OSRS loc 10793
+name=Stones
+model=osrsloc_10793
+blockwalk=no
+blockrange=no
+raiseobject=no
+
+[osrsloc_14042]
+// OSRS loc 14042
+model=osrsloc_14042
+model2=osrsloc_14042_2
+active=no
+
+[osrsloc_14853]
+// OSRS loc 14853
+name=Chair
+model=osrsloc_14853
+
+[osrsloc_16436]
+// OSRS loc 16436
+model=osrsloc_16436
+active=no
+
+[osrsloc_16438]
+// OSRS loc 16438
+model=osrsloc_16438
+active=no
+
+[osrsloc_16446]
+// OSRS loc 16446
+model=osrsloc_16446
+active=no
+
+[osrsloc_16453]
+// OSRS loc 16453
+model=osrsloc_16453
+active=no
+
+[osrsloc_16455]
+// OSRS loc 16455
+model=osrsloc_16455
+active=no
+
+[osrsloc_17229]
+// OSRS loc 17229
+model=osrsloc_17229
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_17230]
+// OSRS loc 17230
+model=osrsloc_17230
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_17231]
+// OSRS loc 17231
+model=osrsloc_17231
+active=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_18160]
+// OSRS loc 18160
+model=osrsloc_18160
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18161]
+// OSRS loc 18161
+model=osrsloc_18161
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18162]
+// OSRS loc 18162
+model=osrsloc_18162
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18163]
+// OSRS loc 18163
+model=osrsloc_18163
+hillskew=yes
+sharelight=yes
+mirror=yes
+ambient=40
+
+[osrsloc_18164]
+// OSRS loc 18164
+model=osrsloc_18164
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18165]
+// OSRS loc 18165
+model=osrsloc_18165
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18166]
+// OSRS loc 18166
+model=osrsloc_18166
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18168]
+// OSRS loc 18168
+name=Door
+model=osrsloc_18168
+active=yes
+ambient=25
+raiseobject=no
+op1=Open
+category=door_open_and_close
+param=next_loc_stage,loc_1532
+
+[osrsloc_18169]
+// OSRS loc 18169
+model=osrsloc_18169
+ambient=25
+
+[osrsloc_18170]
+// OSRS loc 18170
+name=Clay oven
+model=osrsloc_18170
+ambient=10
+
+[osrsloc_18171]
+// OSRS loc 18171
+name=Washbasin
+model=osrsloc_18171
+width=2
+
+[osrsloc_18172]
+// OSRS loc 18172
+name=Hammock
+model=osrsloc_18172
+width=2
+anim=osrsloc_anim_4431
+
+[osrsloc_18173]
+// OSRS loc 18173
+model=osrsloc_18173
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_18174]
+// OSRS loc 18174
+model=osrsloc_18174
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_18175]
+// OSRS loc 18175
+model=osrsloc_18175
+active=no
+ambient=20
+contrast=75
+
+[osrsloc_18176]
+// OSRS loc 18176
+name=Large table
+model=osrsloc_18176
+model2=osrsloc_18176_2
+width=2
+blockrange=no
+
+[osrsloc_18177]
+// OSRS loc 18177
+name=Display table
+model=osrsloc_18177
+model2=osrsloc_18177_2
+width=2
+
+[osrsloc_18178]
+// OSRS loc 18178
+name=Display table
+model=osrsloc_18178
+model2=osrsloc_18178_2
+width=2
+
+[osrsloc_18179]
+// OSRS loc 18179
+name=Broken lobster trap
+model=osrsloc_18179
+ambient=25
+
+[osrsloc_18180]
+// OSRS loc 18180
+model=osrsloc_18180
+ambient=25
+
+[osrsloc_18181]
+// OSRS loc 18181
+model=osrsloc_18181
+ambient=35
+
+[osrsloc_18182]
+// OSRS loc 18182
+name=Barrel
+model=osrsloc_18182
+blockrange=no
+resizex=100
+resizey=100
+resizez=100
+ambient=15
+
+[osrsloc_18183]
+// OSRS loc 18183
+name=Bucket
+model=osrsloc_18183
+
+[osrsloc_18185]
+// OSRS loc 18185
+name=Suit of armour
+model=osrsloc_18185
+width=2
+ambient=15
+contrast=125
+
+[osrsloc_18187]
+// OSRS loc 18187
+name=Rowboat
+model=osrsloc_18187
+model2=osrsloc_18187_2
+width=4
+length=5
+shadow=no
+offsety=-1
+ambient=20
+contrast=100
+anim=osrsloc_anim_3743
+
+[osrsloc_18189]
+// OSRS loc 18189
+name=Broken boat
+model=osrsloc_18189
+width=2
+length=3
+hillskew=yes
+shadow=no
+ambient=20
+contrast=100
+
+[osrsloc_18190]
+// OSRS loc 18190
+name=Broken boat
+model=osrsloc_18190
+width=2
+length=3
+shadow=no
+ambient=20
+contrast=100
+
+[osrsloc_18191]
+// OSRS loc 18191
+name=Broken boat
+model=osrsloc_18191
+width=2
+length=3
+shadow=no
+ambient=20
+contrast=100
+
+[osrsloc_18192]
+// OSRS loc 18192
+name=Broken boat
+model=osrsloc_18192
+width=2
+length=3
+shadow=no
+ambient=20
+contrast=100
+
+[osrsloc_18193]
+// OSRS loc 18193
+model=osrsloc_18193
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_18195]
+// OSRS loc 18195
+model=osrsloc_18195
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_18196]
+// OSRS loc 18196
+model=osrsloc_18196
+hillskew=yes
+sharelight=yes
+mirror=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_18198]
+// OSRS loc 18198
+model=osrsloc_18198
+hillskew=yes
+sharelight=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_18199]
+// OSRS loc 18199
+model=osrsloc_18199
+hillskew=yes
+sharelight=yes
+mirror=yes
+forcedecor=yes
+mapscene=46
+
+[osrsloc_18200]
+// OSRS loc 18200
+model=osrsloc_18200
+blockrange=no
+hillskew=yes
+sharelight=yes
+
+[osrsloc_18201]
+// OSRS loc 18201
+name=A barrel of rainwater
+model=osrsloc_18201
+
+[osrsloc_18202]
+// OSRS loc 18202
+name=Stacked crates
+model=osrsloc_18202
+model2=osrsloc_18202_2
+width=2
+blockrange=no
+
+[osrsloc_18203]
+// OSRS loc 18203
+name=Crates
+model=osrsloc_18203
+blockrange=no
+ambient=25
+
+[osrsloc_18205]
+// OSRS loc 18205
+model=osrsloc_18205
+model2=osrsloc_18205_2
+active=no
+
+[osrsloc_18206]
+// OSRS loc 18206
+model=osrsloc_18206
+ambient=20
+
+[osrsloc_18207]
+// OSRS loc 18207
+model=osrsloc_18207
+ambient=20
+
+[osrsloc_18208]
+// OSRS loc 18208
+name=Barrel
+model=osrsloc_18208
+model2=osrsloc_18208_2
+blockrange=no
+ambient=15
+
+[osrsloc_18210]
+// OSRS loc 18210
+model=osrsloc_18210
+active=no
+ambient=20
+
+[osrsloc_18211]
+// OSRS loc 18211
+name=Life buoy
+model=osrsloc_18211
+ambient=35
+
+[osrsloc_18212]
+// OSRS loc 18212
+model=osrsloc_18212
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18213]
+// OSRS loc 18213
+model=osrsloc_18213
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18214]
+// OSRS loc 18214
+model=osrsloc_18214
+hillskew=yes
+sharelight=yes
+mirror=yes
+ambient=55
+contrast=100
+
+[osrsloc_18215]
+// OSRS loc 18215
+model=osrsloc_18215
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18216]
+// OSRS loc 18216
+model=osrsloc_18216
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18217]
+// OSRS loc 18217
+model=osrsloc_18217
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18218]
+// OSRS loc 18218
+model=osrsloc_18218
+hillskew=yes
+sharelight=yes
+ambient=55
+contrast=100
+
+[osrsloc_18219]
+// OSRS loc 18219
+model=osrsloc_18219
+hillskew=yes
+sharelight=yes
+mirror=yes
+ambient=55
+contrast=100
+
+[osrsloc_18220]
+// OSRS loc 18220
+model=osrsloc_18220
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18221]
+// OSRS loc 18221
+model=osrsloc_18221
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18222]
+// OSRS loc 18222
+model=osrsloc_18222
+hillskew=yes
+sharelight=yes
+ambient=40
+
+[osrsloc_18223]
+// OSRS loc 18223
+name=Pillar
+model=osrsloc_18223
+length=2
+offsety=1
+ambient=10
+contrast=25
+
+[witchaven_study_desk]
+// OSRS loc 18224
+name=Study desk
+model=witchaven_study_desk
+model2=witchaven_study_desk_2
+width=2
+blockrange=no
+op1=Search
+
+[osrsloc_18225]
+// OSRS loc 18225
+name=Painting
+model=osrsloc_18225
+active=yes
+ambient=35
+
+[osrsloc_18226]
+// OSRS loc 18226
+name=Painting
+model=osrsloc_18226
+active=yes
+ambient=35
+
+[osrsloc_18227]
+// OSRS loc 18227
+name=Painting
+model=osrsloc_18227
+active=yes
+ambient=35
+
+[osrsloc_18228]
+// OSRS loc 18228
+name=Sailfish
+model=osrsloc_18228
+width=2
+active=yes
+ambient=25
+
+[osrsloc_18229]
+// OSRS loc 18229
+name=Shark head
+model=osrsloc_18229
+active=yes
+ambient=25
+
+[osrsloc_18231]
+// OSRS loc 18231
+name=Large vase
+model=osrsloc_18231
+ambient=25
+
+[osrsloc_18233]
+// OSRS loc 18233
+name=Vase set
+model=osrsloc_18233
+ambient=25
+
+[osrsloc_18234]
+// OSRS loc 18234
+name=Ladder
+model=osrsloc_18234
+sharelight=yes
+mapscene=7
+forceapproach=north
+op1=Climb-up
+category=ladder_up
+
+[osrsloc_18235]
+// OSRS loc 18235
+name=Ladder
+model=osrsloc_18235
+sharelight=yes
+mapscene=7
+forceapproach=south
+op1=Climb-down
+category=ladder_down
+
+[osrsloc_18237]
+// OSRS loc 18237
+name=Ladder
+model=osrsloc_18237
+sharelight=yes
+mapscene=7
+forceapproach=south
+op1=Climb-down
+category=ladder_down
+
+[osrsloc_18238]
+// OSRS loc 18238
+name=Bench
+model=osrsloc_18238
+
+[osrsloc_18239]
+// OSRS loc 18239
+name=Bookcase
+model=osrsloc_18239
+length=2
+ambient=15
+
+[osrsloc_18240]
+// OSRS loc 18240
+name=Drawers
+model=osrsloc_18240
+ambient=25
+
+[osrsloc_18241]
+// OSRS loc 18241
+name=Wardrobe
+model=osrsloc_18241
+ambient=25
+
+[osrsloc_18242]
+// OSRS loc 18242
+name=Dummy
+model=osrsloc_18242
+
+[osrsloc_18243]
+// OSRS loc 18243
+name=Anchor
+model=osrsloc_18243
+ambient=20
+
+[osrsloc_18244]
+// OSRS loc 18244
+name=Bed
+model=osrsloc_18244
+width=2
+length=2
+resizex=128
+resizey=135
+resizez=128
+ambient=25
+
+[witchaven_lectern]
+// OSRS loc 18245
+name=Lectern
+model=witchaven_lectern
+ambient=20
+
+[osrsloc_18246]
+// OSRS loc 18246
+model=osrsloc_18246
+length=7
+blockwalk=no
+blockrange=no
+active=no
+shadow=no
+ambient=60
+contrast=127
+anim=osrsloc_anim_4782
+
+[osrsloc_18247]
+// OSRS loc 18247
+model=osrsloc_18247
+hillskew=yes
+sharelight=yes
+offsety=1
+ambient=40
+contrast=100
+
+[osrsloc_18248]
+// OSRS loc 18248
+model=osrsloc_18248
+hillskew=yes
+sharelight=yes
+ambient=42
+contrast=100
+
+[osrsloc_18249]
+// OSRS loc 18249
+model=osrsloc_18249
+hillskew=yes
+sharelight=yes
+ambient=42
+contrast=100
+
+[osrsloc_18250]
+// OSRS loc 18250
+model=osrsloc_18250
+hillskew=yes
+sharelight=yes
+mirror=yes
+ambient=42
+contrast=100
+
+[osrsloc_18252]
+// OSRS loc 18252
+model=osrsloc_18252
+hillskew=yes
+sharelight=yes
+offsety=1
+ambient=40
+contrast=100
+
+[osrsloc_18253]
+// OSRS loc 18253
+model=osrsloc_18253
+hillskew=yes
+sharelight=yes
+mirror=yes
+offsety=1
+ambient=40
+contrast=100
+
+[osrsloc_18254]
+// OSRS loc 18254
+model=osrsloc_18254
+hillskew=yes
+sharelight=yes
+offsety=1
+ambient=40
+contrast=100
+
+[osrsloc_18255]
+// OSRS loc 18255
+model=osrsloc_18255
+hillskew=yes
+sharelight=yes
+ambient=42
+contrast=100
+
+[osrsloc_18256]
+// OSRS loc 18256
+model=osrsloc_18256
+ambient=50
+contrast=100
+
+[osrsloc_18257]
+// OSRS loc 18257
+model=osrsloc_18257
+ambient=60
+contrast=100
+
+[witchaven_church_altar]
+// OSRS loc 18258
+name=Altar
+model=witchaven_church_altar
+model2=witchaven_church_altar_2
+length=3
+ambient=40
+contrast=100
+op1=Pray
+category=prayer_altar
+
+[osrsloc_18260]
+// OSRS loc 18260
+name=Steeple
+model=osrsloc_18260
+width=3
+length=3
+ambient=40
+contrast=100
+
+[osrsloc_18266]
+// OSRS loc 18266
+model=osrsloc_18266
+active=no
+ambient=25
+
+[osrsloc_18275]
+// OSRS loc 18275
+model=osrsloc_18275
+blockrange=no
+hillskew=yes
+
+[osrsloc_18276]
+// OSRS loc 18276
+model=osrsloc_18276
+blockrange=no
+hillskew=yes
+
+[osrsloc_18277]
+// OSRS loc 18277
+model=osrsloc_18277
+blockrange=no
+hillskew=yes
+
+[osrsloc_18278]
+// OSRS loc 18278
+model=osrsloc_18278
+blockrange=no
+hillskew=yes
+
+[osrsloc_18279]
+// OSRS loc 18279
+model=osrsloc_18279
+blockrange=no
+hillskew=yes
+
+[osrsloc_18280]
+// OSRS loc 18280
+model=osrsloc_18280
+blockrange=no
+hillskew=yes
+
+[osrsloc_18281]
+// OSRS loc 18281
+model=osrsloc_18281
+blockrange=no
+hillskew=yes
+
+[osrsloc_18282]
+// OSRS loc 18282
+model=osrsloc_18282
+blockrange=no
+hillskew=yes
+
+[osrsloc_18283]
+// OSRS loc 18283
+model=osrsloc_18283
+blockrange=no
+hillskew=yes
+
+[osrsloc_18284]
+// OSRS loc 18284
+model=osrsloc_18284
+blockrange=no
+hillskew=yes
+
+[osrsloc_18285]
+// OSRS loc 18285
+model=osrsloc_18285
+blockrange=no
+hillskew=yes
+
+[osrsloc_18286]
+// OSRS loc 18286
+model=osrsloc_18286
+blockrange=no
+hillskew=yes
+
+[osrsloc_18287]
+// OSRS loc 18287
+model=osrsloc_18287
+blockrange=no
+hillskew=yes
+
+[osrsloc_18288]
+// OSRS loc 18288
+model=osrsloc_18288
+blockrange=no
+hillskew=yes
+
+[osrsloc_18289]
+// OSRS loc 18289
+model=osrsloc_18289
+blockrange=no
+hillskew=yes
+
+[osrsloc_18290]
+// OSRS loc 18290
+model=osrsloc_18290
+blockrange=no
+hillskew=yes
+
+[osrsloc_18291]
+// OSRS loc 18291
+model=osrsloc_18291
+blockrange=no
+hillskew=yes
+
+[osrsloc_18292]
+// OSRS loc 18292
+model=osrsloc_18292
+blockrange=no
+hillskew=yes
+
+[osrsloc_18293]
+// OSRS loc 18293
+model=osrsloc_18293
+blockrange=no
+hillskew=yes
+
+[osrsloc_18294]
+// OSRS loc 18294
+model=osrsloc_18294
+blockrange=no
+hillskew=yes
+
+[osrsloc_18295]
+// OSRS loc 18295
+model=osrsloc_18295
+blockrange=no
+hillskew=yes
+
+[osrsloc_18296]
+// OSRS loc 18296
+model=osrsloc_18296
+blockrange=no
+hillskew=yes
+
+[osrsloc_18297]
+// OSRS loc 18297
+model=osrsloc_18297
+blockrange=no
+hillskew=yes
+
+[osrsloc_18298]
+// OSRS loc 18298
+model=osrsloc_18298
+blockrange=no
+hillskew=yes
+
+[osrsloc_18299]
+// OSRS loc 18299
+model=osrsloc_18299
+blockrange=no
+hillskew=yes
+
+[osrsloc_18300]
+// OSRS loc 18300
+model=osrsloc_18300
+blockrange=no
+hillskew=yes
+
+[osrsloc_18301]
+// OSRS loc 18301
+model=osrsloc_18301
+blockrange=no
+hillskew=yes
+
+[osrsloc_18302]
+// OSRS loc 18302
+model=osrsloc_18302
+blockrange=no
+hillskew=yes
+
+[osrsloc_18303]
+// OSRS loc 18303
+model=osrsloc_18303
+blockrange=no
+hillskew=yes
+
+[osrsloc_18304]
+// OSRS loc 18304
+model=osrsloc_18304
+blockrange=no
+hillskew=yes
+
+[osrsloc_18305]
+// OSRS loc 18305
+model=osrsloc_18305
+blockrange=no
+hillskew=yes
+
+[osrsloc_18306]
+// OSRS loc 18306
+model=osrsloc_18306
+blockrange=no
+hillskew=yes
+
+[osrsloc_18321]
+// OSRS loc 18321
+model=osrsloc_18321
+blockrange=no
+hillskew=yes
+
+[osrsloc_18435]
+// OSRS loc 18435
+model=osrsloc_18435
+sharelight=yes
+ambient=20
+contrast=50
+
+[osrsloc_18442]
+// OSRS loc 18442
+model=osrsloc_18442
+active=no
+
+[osrsloc_18443]
+// OSRS loc 18443
+model=osrsloc_18443
+model2=osrsloc_18443_2
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+anim=osrsloc_anim_3743
+
+[osrsloc_18444]
+// OSRS loc 18444
+model=osrsloc_18444
+model2=osrsloc_18444_2
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+anim=osrsloc_anim_3743
+
+[osrsloc_18445]
+// OSRS loc 18445
+model=osrsloc_18445
+model2=osrsloc_18445_2
+width=2
+length=2
+active=no
+shadow=no
+offsety=-1
+anim=osrsloc_anim_3743
+
+[osrsloc_18446]
+// OSRS loc 18446
+name=Barrel
+model=osrsloc_18446
+shadow=no
+
+[osrsloc_18447]
+// OSRS loc 18447
+name=Wreck
+model=osrsloc_18447
+hillskew=yes
+shadow=no
+
+[osrsloc_18448]
+// OSRS loc 18448
+name=Wreck
+model=osrsloc_18448
+width=2
+length=2
+hillskew=yes
+shadow=no
+
+[osrsloc_18449]
+// OSRS loc 18449
+name=Wreck
+model=osrsloc_18449
+width=2
+length=2
+hillskew=yes
+shadow=no
+
+[osrsloc_18450]
+// OSRS loc 18450
+name=Wreck
+model=osrsloc_18450
+length=2
+hillskew=yes
+shadow=no
+
+[osrsloc_18451]
+// OSRS loc 18451
+name=Wreck
+model=osrsloc_18451
+width=2
+length=2
+hillskew=yes
+shadow=no
+
+[osrsloc_18452]
+// OSRS loc 18452
+name=Wreck
+model=osrsloc_18452
+width=3
+length=2
+hillskew=yes
+shadow=no
+anim=osrsloc_anim_4781
+
+[osrsloc_18454]
+// OSRS loc 18454
+model=osrsloc_18454
+ambient=20
+contrast=25
+
+[osrsloc_18455]
+// OSRS loc 18455
+model=osrsloc_18455
+active=no
+offsety=2
+ambient=35
+
+[osrsloc_18457]
+// OSRS loc 18457
+name=Bed
+model=osrsloc_18457
+width=2
+length=2
+
+[osrsloc_18458]
+// OSRS loc 18458
+name=Child's bed
+model=osrsloc_18458
+width=2
+ambient=20
+
+[osrsloc_18459]
+// OSRS loc 18459
+name=Floats
+model=osrsloc_18459
+ambient=20
+
+[osrsloc_18460]
+// OSRS loc 18460
+name=Broken boat
+model=osrsloc_18460
+width=2
+length=3
+ambient=20
+contrast=100
+
+[osrsloc_18461]
+// OSRS loc 18461
+name=Crow nest
+model=osrsloc_18461
+width=2
+length=5
+shadow=no
+ambient=20
+contrast=100
+anim=osrsloc_anim_4781
+
+[osrsloc_18462]
+// OSRS loc 18462
+name=Crate
+model=osrsloc_18462
+model2=osrsloc_18462_2
+width=2
+length=2
+blockrange=no
+shadow=no
+offsety=-1
+ambient=20
+contrast=50
+anim=osrsloc_anim_3743
+
+[osrsloc_18463]
+// OSRS loc 18463
+name=Crate
+model=osrsloc_18463
+model2=osrsloc_18463_2
+width=2
+length=2
+blockrange=no
+shadow=no
+offsety=-1
+ambient=20
+contrast=50
+anim=osrsloc_anim_3743
+
+[osrsloc_24093]
+// OSRS loc 24093
+model=osrsloc_24093
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+resizey=90
+
+[osrsloc_24094]
+// OSRS loc 24094
+model=osrsloc_24094
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+resizey=90
+
+[osrsloc_24095]
+// OSRS loc 24095
+model=osrsloc_24095
+blockwalk=no
+blockrange=no
+active=no
+sharelight=yes
+resizey=90
+
+[osrsloc_42765]
+// OSRS loc 42765
+model=osrsloc_42765
+forcedecor=yes

@@ -1,8 +1,11 @@
 // Wanted! - Sir Tiffy Cashien.
 //
 // Tiffy is rd_teleporter_guy and already has [opnpc1] in quests/quest_rd/scripts/quest_rd.rs2 - a
-// trigger cannot be declared twice - so this hooks in ahead of Recruitment Drive's handler and
-// hands it straight back the moment this quest has nothing to say.
+// trigger cannot be declared twice - so this quest is reached from there rather than declaring its
+// own. It used to hook in AHEAD of Recruitment Drive's handler and claim the conversation whenever
+// ~wanted_tiffy_wants said yes, which also locked an initiate out of Tiffy's armoury for as long as
+// this quest was open. It is now one option on his post-quest menu, in
+// temple_knight/scripts/temple_knight.rs2, and that menu says the greeting before calling in here.
 
 [proc,wanted_tiffy_wants]()(boolean)
 if (%rd_main ! ^recruitmentdrive_complete) {
@@ -39,7 +42,8 @@ switch_int (%wanted_main) {
 // the players who had done the most. The rest use < for the same reason, against the day a
 // post-quest stage is added above them.
 [label,wanted_tiffy_start]
-~chatplayer("<p,happy>Hello Sir Tiffy.");
+// No greeting here. The shared handler says "Hello Sir Tiffy." and Tiffy's reply before it offers
+// the menu this is reached from, so a greeting of its own would be the second one.
 if (%qp < ^wanted_req_questpoints) {
     ~chatnpc("<p,neutral>Ah. You are an initiate, and I am glad of it, but this one wants somebody with a history.");
     ~mesbox("You need <tostring(^wanted_req_questpoints)> quest points to start Wanted!. You have <tostring(%qp)>.");
@@ -60,7 +64,6 @@ if (%abyssal_miniquest < ^miniquest_abyssal_complete) {
     ~mesbox("You need to have completed Enter the Abyss to start this quest.");
     return;
 }
-~chatnpc("<p,happy>Ah, our newest initiate! Do sit down. Mind the pigeons.");
 ~chatnpc("<p,neutral>Now. You passed the tests, which means you are clever, which means I am going to use you for something unpleasant.");
 switch_int (~p_choice2("Go on.", 1, "I'd rather sit with the pigeons.", 2)) {
     case 2 :

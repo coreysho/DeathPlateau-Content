@@ -15,6 +15,12 @@ switch_int (%devious_main) {
 }
 
 [label,devious_monk_hire]
+// Every requirement this quest declares, checked before a word is said - the
+// same quest_requirement row the journal prints. Nothing here checked them at
+// all, so the log named them and the quest let you in anyway.
+if (~quest_requirements_block("Devious Minds") = true) {
+    return;
+}
 ~chatnpc("<p,neutral>You look like someone who can be discreet.");
 switch_int (~p_choice2("Depends what it pays.", 1, "Not especially.", 2)) {
     case 2 :

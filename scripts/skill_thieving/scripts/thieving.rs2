@@ -57,16 +57,12 @@ mes("You've been stunned!");
 walktrigger(stunned);
 
 [proc,steal_from_stall](dbrow $data, coord $loc_coord, int $loc_angle, locshape $loc_shape)
-// A GUARD PUNISHES THE THEFT; THE OWNER PREVENTS IT (DeathPlateau-Bugs#14, decided 25 November
-// 2026). The guard used to prevent it too, and with six Ardougne guards wandering within five
-// tiles of every stall in the city that refused about seven attempts in ten - see the proc.
-// Being seen costs a fight now, and the loot is rolled either way.
-//
-// The owner is a different thing and is untouched: he is standing at his own stall watching it,
-// and standing under him is the way past that (stallsafespot.ts).
-~stealing_alert_guards($data);
-if (~stealing_check_for_owner($data) = true) {
+// if guard sees (for first time), stop player from stealing.
+// guards proioritize over sellers
+if (~stealing_check_for_guard($data) = true) {
     return;
+} else if (~stealing_check_for_owner($data) = true) {
+   return;
 }
 def_int $experience = db_getfield($data, stealing:experience, 0);
 // osrs is 2x respawn speed, since they removed the scale by playercount

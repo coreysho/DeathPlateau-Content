@@ -1,0 +1,161 @@
+// The Slug Menace - the three pages of Brother Maledict's book.
+//
+// Page 1 is in the Mayor's study desk, page 2 is in Ezekial Lovecraft's drawer (his handler is in
+// slugmenace_witchaven.rs2, beside the rest of the village), and page 3 is three charred
+// fragments Col. O'Niall has been sitting on. The fragments need glue, the obvious glue is wrong,
+// and the right one is a dead sea slug rendered down by a cook on the Fishing Platform.
+//
+// THE JIGSAW IS NOT BUILT. Old School opens an interface here and has the player arrange and
+// rotate three torn pieces. That is a new interface and a new input path, not a script, and the
+// transcript's entire output for solving it is one overhead line - so the glue joins the three
+// fragments directly and says the line. The step is kept: the glue has to be the right glue, and
+// getting it is four conversations and a boat. What is missing is the arranging, and it is missing
+// on purpose rather than by accident.
+
+// =========================================================================== the Mayor's desk
+[oploc1,witchaven_study_desk]
+p_arrivedelay;
+if (%slugmenace_stage < ^slugmenace_pages) {
+    ~mesbox("Ledgers, tide tables and a mayor's correspondence. Nothing worth reading.");
+    return;
+}
+if (%slugmenace_page1 = ^slugmenace_on) {
+    mes("The desk is empty.");
+    return;
+}
+// NO SPACE IS NOT THE SAME AS NO PAGE. Old School says so explicitly here, and inv_add without
+// the check would drop a quest item on a mayor's floor.
+if (inv_freespace(inv) = 0) {
+    mes("You open the locked drawer and find a page of Maledict's holy book.");
+    mes("However, you have no inventory space to store it.");
+    return;
+}
+mes("You open the locked drawer and find a page of Maledict's holy book.");
+inv_add(inv, slug_page1, 1);
+%slugmenace_page1 = ^slugmenace_on;
+// Thieving is one of the quest's four skills and this is the one place it is used for anything -
+// the drawer is locked and the player has no key.
+stat_advance(thieving, ^slugmenace_desk_xp);
+
+// =========================================================================== the wrong glue
+// Swamp paste is the thing a player will reach for, so Savant has to stop them. It is not
+// consumed and the refusal is what tells them what they actually need.
+[opheldu,slug_fragment1] @slugmenace_paste_check;
+[opheldu,slug_fragment2] @slugmenace_paste_check;
+[opheldu,slug_fragment3] @slugmenace_paste_check;
+
+// last_useitem is the OTHER half of the pair - the fragment carried the trigger, so the thing it
+// was used ON is what has to be tested.
+[label,slugmenace_paste_check]
+if (last_useitem = slug_sea_slug_glue) {
+    @slugmenace_glue_pages;
+}
+if (last_useitem ! swamppaste) {
+    ~mesbox("Nothing happens.");
+    return;
+}
+if (~slugmenace_has_orb_carried = false) {
+    ~mesbox("You smear a little paste along the tear. It soaks straight through the parchment and the ink runs. Best stop.");
+    return;
+}
+~chatnpc_specific("Savant", wanted_savant, "<p,angry>Stop!");
+~chatplayer("<p,quiz>What? I'm only trying to glue these pages back together.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Please don't use oil-rich swamp paste on an ancient parchment. It'll ruin it.");
+~chatplayer("<p,quiz>So how do I stick the pages back together?");
+~chatnpc_specific("Savant", wanted_savant, "<p,happy>Well, lucky for you, my preliminary sea slug analysis has just finished.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>It shows that if you render the slug down, it will form a very sticky glue that will dry clear.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>You will need to find someone who has years of experience in aquatic cooking, or it could go horribly wrong.");
+~chatplayer("<p,happy>No problem, Savant. I'll snap to it right away.");
+%slugmenace_paste_refused = ^slugmenace_on;
+
+// =========================================================================== Bailey's glue
+// areas/area_fishing_platform/scripts/bailey.rs2 declares [opnpc1,bailey]; this hooks in ahead.
+[proc,slugmenace_bailey_wants]()(boolean)
+if (%slugmenace_stage ! ^slugmenace_pages) {
+    return(false);
+}
+// NOT GATED ON THE SWAMP PASTE ANY MORE. Requiring Savant to have refused the paste first
+// turned an optional beat into a hard gate: a player who never tried it had no way to learn the
+// glue existed, and Bailey simply would not take the slug. Savant volunteers the same instruction
+// when the fragments are handed over, so there is always a way in.
+if (%slugmenace_page3 = ^slugmenace_on) {
+    return(false);
+}
+if (inv_total(inv, slug_sea_slug_glue) > 0) {
+    return(false);
+}
+return(true);
+
+[label,slugmenace_bailey]
+~chatnpc("<p,sad>Waaaaah!");
+~chatplayer("<p,sad>Arrrgh!");
+~chatnpc("<p,sad>Oh, sorry. I thought you were one of those fishermen.");
+~chatplayer("<p,neutral>N-no problem. It was just a surprise, that's all.");
+~chatnpc("<p,sad>Well, I am scared half to death out here.");
+~chatplayer("<p,happy>I have something that could help you out.");
+~chatnpc("<p,happy>Really, great! What is it?");
+~chatplayer("<p,neutral>I have a page that should tell me how to eliminate what could be the source of the sea slugs.");
+~chatnpc("<p,quiz>Then why haven't you used it?");
+~chatplayer("<p,sad>It's been torn up into three pieces.");
+~chatplayer("<p,neutral>I have it on good authority that you may be able to help me out by rendering a dead sea slug down for glue.");
+~chatnpc("<p,happy>Well, you are in luck. I had been cooking a new batch of gumbo for my dinner. However, I've let it cook too long and it's become very thick and sticky.");
+~chatnpc("<p,happy>It should make the perfect base for your glue.");
+~chatplayer("<p,laugh>Wow. That was good timing, wasn't it.");
+~chatnpc("<p,neutral>Uncanny, really.");
+~chatnpc("<p,quiz>Do you have a dead sea slug I can use?");
+if (inv_total(inv, slug_dead_sea_slug) = 0) {
+    ~chatplayer("<p,sad>Ah. Um. No, not at the moment.");
+    ~chatnpc("<p,neutral>Well, get back to me when you have.");
+    ~chatplayer("<p,neutral>Sure.");
+    return;
+}
+if (inv_freespace(inv) = 0) {
+    ~chatnpc("<p,neutral>You'll want a free hand to carry it in. Shift something first.");
+    return;
+}
+~chatplayer("<p,happy>Yes, here you go.");
+inv_del(inv, slug_dead_sea_slug, 1);
+~chatnpc("<p,neutral>Right, I'll get cooking.");
+inv_add(inv, slug_sea_slug_glue, 1);
+~objbox(slug_sea_slug_glue, "Bailey tips the slug into a pot that has been on too long, stirs it twice, and hands you something that dries clear.", 250, 0, 0);
+~chatnpc("<p,happy>Right, there you go. That should do the trick.");
+~chatplayer("<p,happy>Thanks very much. I'll get right to work on the parchment.");
+~chatnpc("<p,neutral>Good luck.");
+
+// =========================================================================== gluing them
+[label,slugmenace_glue_pages]
+if (inv_total(inv, slug_fragment1) = 0 | inv_total(inv, slug_fragment2) = 0
+        | inv_total(inv, slug_fragment3) = 0) {
+    ~mesbox("You need all three pieces in front of you to line them up.");
+    return;
+}
+inv_del(inv, slug_fragment1, 1);
+inv_del(inv, slug_fragment2, 1);
+inv_del(inv, slug_fragment3, 1);
+inv_del(inv, slug_sea_slug_glue, 1);
+inv_add(inv, slug_page3, 1);
+%slugmenace_page3 = ^slugmenace_on;
+mes("You run the glue along both tears and press the three pieces together. It dries clear.");
+say("That's it, it all makes sense now!");
+~objbox(slug_page3, "The page is whole. Three columns of diagrams, and a line of the door's own glyphs under each.", 250, 0, 0);
+~slugmenace_pages_done_check;
+
+// All three pages, and the runes can be cut. This is the only place the stage advances to it, and
+// it is checked after every page rather than only after the third, because the three can be
+// collected in any order.
+[proc,slugmenace_pages_done_check]()
+if (%slugmenace_page1 = ^slugmenace_off | %slugmenace_page2 = ^slugmenace_off
+        | %slugmenace_page3 = ^slugmenace_off) {
+    return;
+}
+if (%slugmenace_stage >= ^slugmenace_runes) {
+    return;
+}
+%slugmenace_stage = ^slugmenace_runes;
+// O'Niall turns here - 474's stage 9. He has handed over the last thing the quest needed from
+// him and there is no longer any reason to pretend.
+%slugmenace_oniall_turned = ^slugmenace_on;
+~send_quest_progress(questlist:slugmenace, %slugmenace_stage, ^slugmenace_complete);
+~chatnpc_specific("Savant", wanted_savant, "<p,happy>I have all three. Give me a moment.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>They are instructions. Five runes, cut from essence and empowered at the altars - air, water, earth, fire and mind.");
+~chatnpc_specific("Savant", wanted_savant, "<p,neutral>Shape them from the pages themselves; the diagrams are the pattern. You will want a chisel and more essence than you think.");
