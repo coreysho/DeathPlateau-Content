@@ -22,6 +22,11 @@ if (%slayer_target <= 0 | %slayer_count <= 0) {
 if (npc_param(slayer_category) ! %slayer_target) {
     return(false);
 }
+// A task from the One-armed veteran counts only in the Wilderness (slayer_task.rs2), so it only
+// boosts there too - otherwise the mask would favour a monster the kill does not count for.
+if (~slayer_task_counts_here = false) {
+    return(false);
+}
 // THE ITEM SAYS WHAT IT IS. This used to be a list of names, and the list grew by two every time
 // a colour was added - four when the imbues arrived, eight with the red and green recolours, and
 // ten more waiting behind the bosses OSRS recolours from. slayer_headgear is on both masks and

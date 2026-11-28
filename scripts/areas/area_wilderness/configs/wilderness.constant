@@ -37,5 +37,11 @@
 // dangerous, while carrying 800 tokens of other people's bounty on your back.
 ^death_token_set_bonus = 10
 
+// A TASK FROM THE ONE-ARMED VETERAN PAYS MORE TOKENS, per cent, on top of the outfit's bonus. He is
+// this build's Krystilia, and her own reward in Old School is Larran's keys, which drop only on her
+// tasks; tokens are this Wilderness's version of that, so his tasks are where they come fastest.
+// Every other task still pays tokens for Wilderness kills at the plain rate.
+^death_token_veteran_bonus = 25
+
 // A paying kill gives one to this many, so a lucky kill feels like one.
 ^death_token_max = 3

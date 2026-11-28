@@ -36,6 +36,11 @@
 // obj_viking_helmet_manwear - taken for a helmet because of the name. It is not a helmet; it is the
 // short-haired man's head, and tinting it hue 0 sat 1 turned a living man grey. He is a veteran,
 // not a corpse.
+// HE IS A SLAYER MASTER (2026-11-28), this build's Krystilia: Wilderness tasks, kills counting only
+// in the Wilderness, 25 points a task. category=slayer_master is what gives him the Rewards and Trade
+// right-clicks every master has (skill_slayer/scripts/slayer_master.rs2); his Talk-to stays his own,
+// in undertaker.rs2, because [opnpc1,wilderness_veteran] is more specific than the category's. The
+// shop params are Duradel's, so it is the same shared slayershop stock at the same prices.
 [wilderness_veteran]
 name=One-armed veteran
 desc=He has been to the places you are about to go.
@@ -53,3 +58,11 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 vislevel=hide
 wanderrange=0
 op1=Talk-to
+op3=Rewards
+op4=Trade
+category=slayer_master
+param=owned_shop,slayershop
+param=shop_sell_multiplier,1000
+param=shop_buy_multiplier,600
+param=shop_delta,1
+param=shop_title,Slayer Equipment

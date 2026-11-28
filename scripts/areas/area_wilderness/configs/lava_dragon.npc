@@ -20,9 +20,8 @@
 // NO DRAGONFIRE SHIELD CHECK OF ITS OWN: param=fiery is what the build's dragonfire handling reads
 // and every other dragon sets it, so this one does too and behaves like the rest.
 //
-// param=slayer_category IS SET AND NO MASTER ASSIGNS IT - the same deliberate state the Ankou is
-// in. slayer_battery group 11 forbids a task a master gives that nothing counts for, not a
-// category waiting for a master.
+// param=slayer_category is what counts the kill. Only the One-armed veteran, the Wilderness Slayer
+// master, gives lava dragons (since 2026-11-28; Duradel did, behind an unlock, before that).
 [lava_dragon]
 name=Lava dragon
 desc=A dragon with molten rock for skin.

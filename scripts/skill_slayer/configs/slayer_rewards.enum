@@ -123,11 +123,9 @@ val=4,Ring Bling
 val=5,'Shroom Sprayer
 val=6,Seeing Red
 val=7,Watch the Birdie
-// custom (2026-10-13) - the fourth of the same kind, and the deepest. Lava dragons were imported
-// for the Wilderness and nobody assigned them either. The name is in OSRS's register for these
-// (Seeing Red, Watch the Birdie) but is not one of OSRS's: there is no lava dragon unlock there,
-// because Krystilia gives them as a Wilderness task and this build has no Wilderness master.
-val=8,Playing with Fire
+// Row 8 was Playing with Fire (2026-10-13), which put lava dragons on Duradel's list because this
+// build had no Wilderness master. It has one now - the One-armed veteran gives lava dragons to
+// anybody, as Krystilia does - so the row is gone (2026-11-28) and ~slayer_login refunds it.
 
 // The bit each one owns in %slayer_unlocks. NOT the row order: these are the bits the unlocks were
 // first written with (slayer_rewards.rs2 and the monsters that read them), and renumbering them
@@ -149,8 +147,7 @@ val=4,3
 val=5,7
 val=6,8
 val=7,9
-// 11, skipping 10, which the King Black Bonnet below has owned since the Cosmetics tab was written.
-val=8,11
+// Bit 11 was row 8's, Playing with Fire, retired 2026-11-28. It stays reserved (slayer.constant).
 
 [slayer_unlock_cost]
 inputtype=int
@@ -164,10 +161,6 @@ val=4,150
 val=5,80
 val=6,75
 val=7,80
-// The dearest of the four unlock-only task rows, because it is the best of them: a lava dragon is
-// 230 hitpoints of level 252 dragon standing in level 37 Wilderness, and its bones are the reason
-// anybody goes. 100 is a third of a task's points at Duradel's rate.
-val=8,100
 
 [slayer_unlock_desc]
 inputtype=int
@@ -192,8 +185,6 @@ val=18,Red dragons join Duradel's assignment list. He does not
 val=19,give them to anybody who has not bought this.
 val=21,Aviansies join Duradel's assignment list. He does not
 val=22,give them to anybody who has not bought this.
-val=24,Lava dragons join Duradel's assignment list. They live on
-val=25,their island in deep Wilderness, so the task is a trip there.
 
 // The Cosmetics tab: the slayer helmet recolours. OSRS keeps them in a tab of their own and so does
 // this, which is why they are not in slayer_unlock_* above even though they are unlocks like any

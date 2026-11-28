@@ -66,8 +66,9 @@ inv_add(inv, $item, 1);
 mes("You buy <~add_article(lowercase(oc_name($item)))>. <tostring(%slayer_points)> points left.");
 return(true);
 
-// Called after every assignment (slayer_task.rs2). Only Chaeldar and Duradel give extended tasks,
-// as their lengths are what the OSRS ranges are written against.
+// Called after every assignment (slayer_task.rs2). Only Chaeldar, Duradel and the One-armed veteran
+// (master 6) give extended tasks, as their lengths are what the OSRS ranges are written against -
+// Krystilia's table lists the same extended amounts.
 [proc,slayer_apply_extend]
 if (%slayer_task_master < 4) {
     return;

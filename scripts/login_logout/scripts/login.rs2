@@ -79,6 +79,8 @@ queue(macro_event_login, 0, 0);
 ~staffzone_login;
 // planks from the sawmill before 2026-09-21 were a duplicate obj no quest accepts -> real planks
 ~sawmill_old_planks_login;
+// the retired Playing with Fire slayer unlock is refunded (skill_slayer/scripts/slayer_points.rs2)
+~slayer_login;
 // two or more 99s: swap any untrimmed skill capes for trimmed ones
 ~skillcape_login;
 // if player is on a trawler ship, they login at port sarim

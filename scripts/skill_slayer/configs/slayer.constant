@@ -87,12 +87,30 @@
 // an unlock ("Watch the Birdie") rather than giving it out, and so does this build: Duradel's table
 // holds it and validate_slayer_target asks for the bit.
 ^slayer_aviansie = 78
-// custom (2026-10-09) - two monsters imported for the Wilderness that no master assigns yet.
-// slayer_battery group 11 forbids a task a master GIVES that nothing counts for; a category with
-// no task is the other way round and is exactly where these should sit until a Wilderness Slayer
-// master exists.
+// custom (2026-10-09) - two monsters imported for the Wilderness. Ankou are a Duradel row as well
+// as the veteran's; lava dragons are the veteran's alone (see below).
 ^slayer_ankou = 79
 ^slayer_lavadragon = 80
+
+// ---- the One-armed veteran's Wilderness tasks (2026-11-28) ----
+// Krystilia's list from Old School, cut down to the monsters this build has standing in the
+// Wilderness. These seven were all spawned there already and carried no category, because no
+// master gave them; the rest of his list re-uses the categories above.
+^slayer_bandit = 81
+^slayer_chaosdruid = 82
+^slayer_darkwarrior = 83
+^slayer_magicaxe = 84
+^slayer_pirate = 85
+^slayer_rogue = 86
+^slayer_blackknight = 87
+
+// What %slayer_task_master holds for a task the veteran gave. 1-5 are Turael to Duradel
+// (slayer.varp); this is the sixth.
+^slayer_master_veteran = 6
+
+// The points his tasks pay, before the streak multipliers: Krystilia's 25, the highest of any master
+// in Old School, because the work is done where other players can take everything you carry.
+^slayer_veteran_points = 25
 
 // How long a Mogre blown out of the water at Mudskipper Point stays before it sinks back
 // (skill_slayer/scripts/npcs/mogre.rs2). Five minutes: long enough to fight it and long enough to
@@ -121,7 +139,13 @@
 // 11, not 10: bit 10 belongs to the King Black Bonnet on the Cosmetics tab (slayer_rewards.enum's
 // slayer_cosmetic_bit), and both tabs write this one varp. Added 2026-10-13 for the lava dragons,
 // Duradel's third unlock-only row.
+//
+// RETIRED 2026-11-28. Lava dragons are the One-armed veteran's task now, given to anybody, as
+// Krystilia gives them in Old School, so the unlock that put them on Duradel's list has nothing left
+// to do. It is off the Rewards window, and ~slayer_login hands back what anybody paid for it and
+// clears the bit. THE BIT STAYS RESERVED: players held it, so it is never given to anything else.
 ^slayer_unlock_playing_with_fire = 11
+^slayer_playing_with_fire_refund = 100
 
 // Slayer points (skill_slayer/scripts/slayer_points.rs2) - OSRS prices
 ^slayer_cancel_cost = 30

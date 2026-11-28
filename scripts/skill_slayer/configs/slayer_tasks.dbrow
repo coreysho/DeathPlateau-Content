@@ -1205,17 +1205,201 @@ data=weight,5
 data=min_amount,50
 data=max_amount,80
 
-// LAVA DRAGONS ARE UNLOCK-ONLY, behind Playing with Fire - the same way Duradel sells red dragons
-// and aviansies, and for the same reason: there is no Wilderness master in this build to give them
-// the way Krystilia does. Weight 8, which is what his other two unlock rows and his dragon rows
-// weigh.
+// LAVA DRAGONS WERE A DURADEL ROW from 2026-10-13, behind the Playing with Fire unlock, because no
+// Wilderness master existed to give them. The One-armed veteran is that master now, and he gives
+// them to anybody, as Krystilia does - so the row moved to his table (veteran_lavadragons below),
+// and Duradel no longer gives them at all.
+
+// ---- the One-armed veteran (2026-11-28) ----
+// Krystilia's table from Old School (oldschool.runescape.wiki/w/Krystilia): her weights, and her
+// kill ranges except where noted. Only the monsters this build has standing in the Wilderness are
+// here - revenants, ents, mammoths, spiritual creatures and the Wilderness Slayer Cave's dust
+// devils, bloodveld, nechryael, abyssal demons and jellies have nowhere to be fought.
 //
-// 20-40 RATHER THAN OSRS'S 35-60, and the spawns are why: eight lava dragons exist, on one island,
-// at a 60-tick respawn. Sixty kills would be most of an hour of standing in level 37 Wilderness
-// waiting for respawns, which is not difficulty, it is queueing.
-[duradel_lavadragons]
+// FIVE RANGES ARE CUT, for the reason the lava dragons' were on Duradel: the Wilderness here holds
+// only a handful of each, and Old School's numbers are written for a cave full of them. Black
+// demons 3 (OSRS 100-150), fire giants 5 and hellhounds 5 at a 178-tick respawn (75-125), moss
+// giants 3 (100-150), lava dragons 8 on one island (35-60). Black dragons are 2, but Old School
+// already asks for only 8-16.
+
+[veteran_ankou]
+table=slayer_master_task
+data=task,^slayer_ankou
+data=weight,6
+data=min_amount,75
+data=max_amount,125
+
+[veteran_bandits]
+table=slayer_master_task
+data=task,^slayer_bandit
+data=weight,4
+data=min_amount,75
+data=max_amount,125
+
+[veteran_bears]
+table=slayer_master_task
+data=task,^slayer_bear
+data=weight,6
+data=min_amount,65
+data=max_amount,100
+
+[veteran_blackdemons]
+table=slayer_master_task
+data=task,^slayer_blackdemon
+data=weight,7
+data=min_amount,30
+data=max_amount,50
+
+[veteran_blackdragons]
+table=slayer_master_task
+data=task,^slayer_blackdragon
+data=weight,4
+data=min_amount,8
+data=max_amount,16
+
+[veteran_blackknights]
+table=slayer_master_task
+data=task,^slayer_blackknight
+data=weight,3
+data=min_amount,75
+data=max_amount,125
+
+[veteran_chaosdruids]
+table=slayer_master_task
+data=task,^slayer_chaosdruid
+data=weight,5
+data=min_amount,50
+data=max_amount,90
+
+[veteran_darkwarriors]
+table=slayer_master_task
+data=task,^slayer_darkwarrior
+data=weight,4
+data=min_amount,75
+data=max_amount,125
+
+[veteran_earthwarriors]
+table=slayer_master_task
+data=task,^slayer_earthwarrior
+data=weight,6
+data=min_amount,75
+data=max_amount,125
+
+[veteran_firegiants]
+table=slayer_master_task
+data=task,^slayer_firegiant
+data=weight,7
+data=min_amount,40
+data=max_amount,60
+
+[veteran_greaterdemons]
+table=slayer_master_task
+data=task,^slayer_greaterdemon
+data=weight,8
+data=min_amount,100
+data=max_amount,150
+
+[veteran_greendragons]
+table=slayer_master_task
+data=task,^slayer_greendragon
+data=weight,4
+data=min_amount,65
+data=max_amount,100
+
+[veteran_hellhounds]
+table=slayer_master_task
+data=task,^slayer_hellhound
+data=weight,7
+data=min_amount,40
+data=max_amount,60
+
+[veteran_hillgiants]
+table=slayer_master_task
+data=task,^slayer_hillgiant
+data=weight,3
+data=min_amount,75
+data=max_amount,125
+
+[veteran_icegiants]
+table=slayer_master_task
+data=task,^slayer_icegiant
+data=weight,6
+data=min_amount,100
+data=max_amount,150
+
+[veteran_icewarriors]
+table=slayer_master_task
+data=task,^slayer_icewarrior
+data=weight,7
+data=min_amount,100
+data=max_amount,150
+
+[veteran_lavadragons]
 table=slayer_master_task
 data=task,^slayer_lavadragon
-data=weight,8
+data=weight,3
 data=min_amount,20
 data=max_amount,40
+
+[veteran_lesserdemons]
+table=slayer_master_task
+data=task,^slayer_lesserdemon
+data=weight,6
+data=min_amount,80
+data=max_amount,120
+
+[veteran_magicaxes]
+table=slayer_master_task
+data=task,^slayer_magicaxe
+data=weight,7
+data=min_amount,75
+data=max_amount,125
+
+[veteran_mossgiants]
+table=slayer_master_task
+data=task,^slayer_mossgiant
+data=weight,4
+data=min_amount,40
+data=max_amount,60
+
+[veteran_pirates]
+table=slayer_master_task
+data=task,^slayer_pirate
+data=weight,3
+data=min_amount,62
+data=max_amount,75
+
+[veteran_rogues]
+table=slayer_master_task
+data=task,^slayer_rogue
+data=weight,5
+data=min_amount,75
+data=max_amount,125
+
+[veteran_scorpions]
+table=slayer_master_task
+data=task,^slayer_scorpion
+data=weight,6
+data=min_amount,65
+data=max_amount,100
+
+[veteran_skeletons]
+table=slayer_master_task
+data=task,^slayer_skeleton
+data=weight,5
+data=min_amount,65
+data=max_amount,100
+
+[veteran_spiders]
+table=slayer_master_task
+data=task,^slayer_spider
+data=weight,6
+data=min_amount,65
+data=max_amount,100
+
+[veteran_zombies]
+table=slayer_master_task
+data=task,^slayer_zombie
+data=weight,3
+data=min_amount,75
+data=max_amount,125
