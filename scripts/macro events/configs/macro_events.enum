@@ -27,6 +27,8 @@ val=18,macro_mime
 val=19,macro_magneson
 val=20,macro_frog_crier
 val=21,macro_pillory_guard
+// The maze: the Mysterious Old Man brings it, so he is its npc as he is for his gift (4).
+val=22,macro_mage
 
 [general_macro_events_free]
 inputtype=int
@@ -53,6 +55,8 @@ val=18,macro_mime
 val=19,macro_magneson
 val=20,macro_frog_crier
 val=21,macro_pillory_guard
+// The maze: the Mysterious Old Man brings it, so he is its npc as he is for his gift (4).
+val=22,macro_mage
 
 // WHICH EVENTS A WORLD ROLLS, as a list rather than a count. ~macro_event_set_random used to roll
 // 1..enum_getoutputcount over the tables above, which quietly required the ids to run 1..N with no
@@ -83,6 +87,7 @@ val=16,17
 val=17,18
 val=18,19
 val=19,20
+val=20,22
 // 21, the pillory, is NOT in either _pick table: it is a Thieving random and is rolled by
 // [label,macro_randomthieving] instead, beside the watchman. It stays in the npc tables above
 // because ~macro_event_npc still has to be able to answer for it.
@@ -109,6 +114,7 @@ val=14,17
 val=15,18
 val=16,19
 val=17,20
+val=18,22
 
 // WHAT A CERTER MIGHT BE HOLDING. Everyday things with a clear silhouette and an obvious name, so
 // the question is "do you know what that is" rather than "can you tell two kinds of ore apart at
@@ -282,3 +288,17 @@ val=7,^macro_digger_landing
 // The Lost and Found teleport fault, whose target coord is where you were GOING rather than where
 // you were - it intercepts a teleport - so returning a stranded player to it is still right.
 val=8,^macro_laf_landing
+// The maze, map square 45_71.
+val=9,^macro_maze_landing
+
+// WHERE THE MAZE DROPS YOU: one of its four corners (PlagueCityRS 349).
+// Northeast start - https://www.youtube.com/watch?v=KnswRl5He_E
+// Southeast start - https://www.youtube.com/watch?v=pKHsMpdT0oY
+[macro_maze_teleports]
+inputtype=int
+outputtype=coord
+default=null
+val=0,0_45_71_11_53
+val=1,0_45_71_53_53
+val=2,0_45_71_53_11
+val=3,0_45_71_11_11

@@ -95,3 +95,8 @@ protect=no
 // puzzle, and a varp on the wire is a varp a client can read.
 [macro_bob_var]
 protect=no
+
+// THE MAZE's countdown, 100 down to 0 while the player looks for the shrine; what is left scales the
+// reward. 349 kept it in %xplamp, which the genie lamp also uses, so it has its own varp here.
+[macro_maze_percent]
+protect=no
