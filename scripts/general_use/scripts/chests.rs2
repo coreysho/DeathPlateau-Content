@@ -11,12 +11,23 @@ if(map_members = ^true) {
         @riddle_loc_medium_exp001;
     } else if(loc_coord = 1_40_48_33_36) {
         @riddle_loc_medium_exp005;
-    } else {
+    } else if (~trail_loc_clue_search = false) {
         ~open_chest(loc_param(chest_other));
     }
     return;
 }
 ~open_chest(loc_param(chest_other));
+
+// 349: a Treasure Trail key used on its chest opens it too, as the drawers' keys do (drawers.rs2)
+[oplocu,_chest_closed]
+if(map_members = ^true) {
+    if(loc_coord = 0_50_54_56_31 & last_useitem = trail_clue_medium_riddle001_key) {
+        @riddle_loc_medium_exp001;
+    } else if(loc_coord = 1_40_48_33_36 & last_useitem = trail_clue_medium_riddle005_key) {
+        @riddle_loc_medium_exp005;
+    }
+}
+~displaymessage(^dm_default);
 
 [oploc3,_chest_open] 
 if(~is_quest_chest = true) { 
@@ -38,6 +49,9 @@ if(map_members = ^true) {
         ~trail_clue_easy_loc_interact(trail_clue_easy_simple027);
         return;
     }
+}
+if (~trail_loc_clue_search = true) {
+    return;
 }
 if(~is_quest_chest = true) { 
     ~displaymessage(^dm_default);

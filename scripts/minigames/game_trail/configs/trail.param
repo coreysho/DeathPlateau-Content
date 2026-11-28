@@ -30,3 +30,10 @@ default=0
 [trail_tier]
 type=int
 default=0
+
+// 349: a clue solved by searching the loc (crate, drawers, chest, boxes) at its trail_coord, rather
+// than by digging there. ~trail_loc_clue_search (trail_clue_helper.rs2) is the one place it is read.
+[trail_loc]
+type=boolean
+default=false
+

@@ -1,4 +1,8 @@
 [opnpc1,kangai_mau]
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
+}
 switch_int (%totemquest) {
     case ^totem_not_started : @kangai_mau_prequest;
     case ^totem_started, ^totem_crate_marked, ^totem_crate_delivered, ^totem_teleported : @kangai_mau_totem_back;

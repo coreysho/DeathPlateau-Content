@@ -172,8 +172,12 @@
 [mapzone,0_48_53] @music_playbyregion(coord);
 [mapzone,0_48_54] @music_playbyregion(coord);
 [mapzone,0_49_45] @music_playbyregion(coord);
-[mapzone,0_49_46] @music_playbyregion(coord);
-[mapzone,0_49_47] @music_playbyregion(coord);
+[mapzone,0_49_46]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_49_47]
+~start_desertheat_timer;
+@music_playbyregion(coord);
 [mapzone,0_49_48] @music_playbyregion(coord);
 [mapzone,0_49_49] @music_playbyregion(coord);
 [mapzone,0_49_50] @music_playbyregion(coord);
@@ -184,9 +188,15 @@
 [mapzone,0_50_43] @music_playbyregion(coord);
 [mapzone,0_50_44] @music_playbyregion(coord);
 [mapzone,0_50_45] @music_playbyregion(coord);
-[mapzone,0_50_46] @music_playbyregion(coord);
-[mapzone,0_50_47] @music_playbyregion(coord);
-[mapzone,0_50_48] @music_playbyregion(coord);
+[mapzone,0_50_46]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_50_47]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_50_48]
+~start_desertheat_timer;
+@music_playbyregion(coord);
 [mapzone,0_50_49] @music_playbyregion(coord);
 [mapzone,0_50_50] @music_playbyregion(coord);
 [mapzone,0_50_51] @music_playbyregion(coord);
@@ -196,9 +206,16 @@
 [mapzone,0_51_43] @music_playbyregion(coord);
 [mapzone,0_51_44] @music_playbyregion(coord);
 [mapzone,0_51_45] @music_playbyregion(coord);
-[mapzone,0_51_46] @music_playbyregion(coord);
-[mapzone,0_51_47] @music_playbyregion(coord);
-[mapzone,0_51_48] @music_playbyregion(coord);
+[mapzone,0_51_46]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_51_47]
+~start_desertheat_timer;
+settimer(mercenary_check, 25);
+@music_playbyregion(coord);
+[mapzone,0_51_48]
+~start_desertheat_timer;
+@music_playbyregion(coord);
 [mapzone,0_51_49] @music_playbyregion(coord);
 [mapzone,0_51_50] @music_playbyregion(coord);
 [mapzone,0_51_51] @music_playbyregion(coord);
@@ -207,9 +224,15 @@
 [mapzone,0_51_54] @music_playbyregion(coord);
 [mapzone,0_52_44] @music_playbyregion(coord);
 [mapzone,0_52_45] @music_playbyregion(coord);
-[mapzone,0_52_46] @music_playbyregion(coord);
-[mapzone,0_52_47] @music_playbyregion(coord);
-[mapzone,0_52_48] @music_playbyregion(coord);
+[mapzone,0_52_46]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_52_47]
+~start_desertheat_timer;
+@music_playbyregion(coord);
+[mapzone,0_52_48]
+~start_desertheat_timer;
+@music_playbyregion(coord);
 [mapzone,0_52_49] @music_playbyregion(coord);
 [mapzone,0_52_50] @music_playbyregion(coord);
 [mapzone,0_52_51] @music_playbyregion(coord);
@@ -223,16 +246,30 @@
 [mapzone,0_53_49] @music_playbyregion(coord);
 [mapzone,0_53_50] @music_playbyregion(coord);
 [mapzone,0_53_51] @music_playbyregion(coord);
-[mapzone,0_53_52] @music_playbyregion(coord);
-[mapzone,0_53_53] @music_playbyregion(coord);
+
+[mapzone,0_53_52]
+~start_swampdecay_timer; // Mort Myre (349): quest_druidspirit/scripts/swamp_decay.rs2
+@music_playbyregion(coord);
+
+[mapzone,0_53_53]
+~start_swampdecay_timer; // Mort Myre (349): quest_druidspirit/scripts/swamp_decay.rs2
+@music_playbyregion(coord);
+
 [mapzone,0_53_54] @music_playbyregion(coord);
 [mapzone,0_53_55] @music_playbyregion(coord);
 [mapzone,0_54_48] @music_playbyregion(coord);
 [mapzone,0_54_49] @music_playbyregion(coord);
 [mapzone,0_54_50] @music_playbyregion(coord);
 [mapzone,0_54_51] @music_playbyregion(coord);
-[mapzone,0_54_52] @music_playbyregion(coord);
-[mapzone,0_54_53] @music_playbyregion(coord);
+
+[mapzone,0_54_52]
+~start_swampdecay_timer; // Mort Myre (349): quest_druidspirit/scripts/swamp_decay.rs2
+@music_playbyregion(coord);
+
+[mapzone,0_54_53]
+~start_swampdecay_timer; // Mort Myre (349): quest_druidspirit/scripts/swamp_decay.rs2
+@music_playbyregion(coord);
+
 [mapzone,0_54_54] @music_playbyregion(coord);
 [mapzone,0_54_55] @music_playbyregion(coord);
 [mapzone,0_55_49] @music_playbyregion(coord);
@@ -246,3 +283,137 @@
 [mapzone,0_57_46] @music_playbyregion(coord);
 [mapzone,0_57_54] @music_playbyregion(coord);
 [mapzone,0_57_55] @music_playbyregion(coord);
+
+// Music areas from the 349 list that we had no mapzone for (dungeons, Karamja/Kandarin underground,
+// the Underground Pass). The trap and mercenary timers are the ones 349 starts on the same squares.
+[mapzone,0_30_75] @music_playbyregion(coord);
+[mapzone,0_31_73] @music_playbyregion(coord);
+[mapzone,0_31_74] @music_playbyregion(coord);
+[mapzone,0_33_71] @music_playbyregion(coord);
+[mapzone,0_33_72] @music_playbyregion(coord);
+[mapzone,0_33_73] @music_playbyregion(coord);
+[mapzone,0_33_75] @music_playbyregion(coord);
+[mapzone,0_34_75] @music_playbyregion(coord);
+[mapzone,0_35_74] @music_playbyregion(coord);
+[mapzone,0_35_75] @music_playbyregion(coord);
+[mapzone,0_36_153] @music_playbyregion(coord);
+[mapzone,0_36_154] @music_playbyregion(coord);
+[mapzone,0_37_73] @music_playbyregion(coord);
+[mapzone,0_37_75] @music_playbyregion(coord);
+[mapzone,0_37_147] @music_playbyregion(coord);
+[mapzone,0_37_149] @music_playbyregion(coord);
+[mapzone,0_37_150] @music_playbyregion(coord);
+[mapzone,0_37_151]
+settimer(upass_trap, 1);
+@music_playbyregion(coord);
+
+[mapzone,0_37_154] @music_playbyregion(coord);
+[mapzone,0_38_75] @music_playbyregion(coord);
+[mapzone,0_38_150] @music_playbyregion(coord);
+[mapzone,0_38_151]
+settimer(upass_trap, 1);
+@music_playbyregion(coord);
+
+[mapzone,0_38_154] @music_playbyregion(coord);
+[mapzone,0_39_60] @music_playbyregion(coord);
+[mapzone,0_39_72] @music_playbyregion(coord);
+[mapzone,0_39_75] @music_playbyregion(coord);
+[mapzone,0_39_147] @music_playbyregion(coord);
+[mapzone,0_39_150] @music_playbyregion(coord);
+[mapzone,0_39_153] @music_playbyregion(coord);
+[mapzone,0_39_155] @music_playbyregion(coord);
+[mapzone,0_39_156] @music_playbyregion(coord);
+[mapzone,0_40_70] @music_playbyregion(coord);
+[mapzone,0_40_75] @music_playbyregion(coord);
+[mapzone,0_40_147] @music_playbyregion(coord);
+[mapzone,0_40_148] @music_playbyregion(coord);
+[mapzone,0_40_149] @music_playbyregion(coord);
+[mapzone,0_40_150] @music_playbyregion(coord);
+[mapzone,0_40_151] @music_playbyregion(coord);
+[mapzone,0_40_153] @music_playbyregion(coord);
+[mapzone,0_40_154] @music_playbyregion(coord);
+[mapzone,0_41_70] @music_playbyregion(coord);
+[mapzone,0_41_73] @music_playbyregion(coord);
+[mapzone,0_41_75] @music_playbyregion(coord);
+[mapzone,0_41_146] @music_playbyregion(coord);
+[mapzone,0_41_148] @music_playbyregion(coord);
+[mapzone,0_41_149] @music_playbyregion(coord);
+[mapzone,0_41_152] @music_playbyregion(coord);
+[mapzone,0_41_154] @music_playbyregion(coord);
+[mapzone,0_41_156] @music_playbyregion(coord);
+[mapzone,0_41_157] @music_playbyregion(coord);
+[mapzone,0_42_69] @music_playbyregion(coord);
+[mapzone,0_42_70] @music_playbyregion(coord);
+[mapzone,0_42_71] @music_playbyregion(coord);
+[mapzone,0_42_75] @music_playbyregion(coord);
+[mapzone,0_42_147] @music_playbyregion(coord);
+[mapzone,0_42_148] @music_playbyregion(coord);
+[mapzone,0_42_149] @music_playbyregion(coord);
+[mapzone,0_42_151] @music_playbyregion(coord);
+[mapzone,0_42_152] @music_playbyregion(coord);
+[mapzone,0_42_153] @music_playbyregion(coord);
+[mapzone,0_42_154] @music_playbyregion(coord);
+[mapzone,0_43_69] @music_playbyregion(coord);
+[mapzone,0_43_70] @music_playbyregion(coord);
+[mapzone,0_43_71] @music_playbyregion(coord);
+[mapzone,0_43_73] @music_playbyregion(coord);
+[mapzone,0_43_75] @music_playbyregion(coord);
+[mapzone,0_43_145] @music_playbyregion(coord);
+[mapzone,0_43_146] @music_playbyregion(coord);
+[mapzone,0_43_153] @music_playbyregion(coord);
+[mapzone,0_44_75] @music_playbyregion(coord);
+[mapzone,0_44_148] @music_playbyregion(coord);
+[mapzone,0_44_149] @music_playbyregion(coord);
+[mapzone,0_44_150] @music_playbyregion(coord);
+[mapzone,0_44_152] @music_playbyregion(coord);
+[mapzone,0_44_153] @music_playbyregion(coord);
+[mapzone,0_44_154] @music_playbyregion(coord);
+[mapzone,0_44_155] @music_playbyregion(coord);
+[mapzone,0_44_157] @music_playbyregion(coord);
+[mapzone,0_45_71] @music_playbyregion(coord);
+[mapzone,0_45_73] @music_playbyregion(coord);
+[mapzone,0_45_75] @music_playbyregion(coord);
+[mapzone,0_45_145] @music_playbyregion(coord);
+[mapzone,0_45_146] @music_playbyregion(coord);
+[mapzone,0_45_148] @music_playbyregion(coord);
+[mapzone,0_45_151] @music_playbyregion(coord);
+[mapzone,0_45_152] @music_playbyregion(coord);
+[mapzone,0_45_153] @music_playbyregion(coord);
+[mapzone,0_45_154] @music_playbyregion(coord);
+[mapzone,0_45_156] @music_playbyregion(coord);
+[mapzone,0_45_157] @music_playbyregion(coord);
+[mapzone,0_46_149] @music_playbyregion(coord);
+[mapzone,0_46_152] @music_playbyregion(coord);
+[mapzone,0_46_153] @music_playbyregion(coord);
+[mapzone,0_47_149] @music_playbyregion(coord);
+[mapzone,0_47_152] @music_playbyregion(coord);
+[mapzone,0_47_153] @music_playbyregion(coord);
+[mapzone,0_48_148] @music_playbyregion(coord);
+[mapzone,0_48_149] @music_playbyregion(coord);
+[mapzone,0_48_152] @music_playbyregion(coord);
+[mapzone,0_48_153] @music_playbyregion(coord);
+[mapzone,0_48_154] @music_playbyregion(coord);
+// Ape Atoll's dungeon and temple (349's list). The 349 port left these to its own Monkey Madness,
+// whose scripts defined them; this server's Monkey Madness does not, so they are here.
+[mapzone,0_42_142] @music_playbyregion(coord);
+[mapzone,0_43_142] @music_playbyregion(coord);
+[mapzone,0_43_143] @music_playbyregion(coord);
+[mapzone,0_49_148] @music_playbyregion(coord);
+[mapzone,0_49_153] @music_playbyregion(coord);
+[mapzone,0_49_154] @music_playbyregion(coord);
+[mapzone,0_50_152] @music_playbyregion(coord);
+[mapzone,0_50_153] @music_playbyregion(coord);
+[mapzone,0_50_154] @music_playbyregion(coord);
+[mapzone,0_51_147]
+settimer(mercenary_check, 25);
+@music_playbyregion(coord);
+
+[mapzone,0_51_154] @music_playbyregion(coord);
+[mapzone,0_52_152] @music_playbyregion(coord);
+[mapzone,0_52_153] @music_playbyregion(coord);
+[mapzone,0_53_150] @music_playbyregion(coord);
+[mapzone,0_53_152] @music_playbyregion(coord);
+[mapzone,0_53_154] @music_playbyregion(coord);
+[mapzone,0_54_148] @music_playbyregion(coord);
+[mapzone,0_54_151] @music_playbyregion(coord);
+[mapzone,0_54_153] @music_playbyregion(coord);

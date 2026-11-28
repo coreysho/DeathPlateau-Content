@@ -1,4 +1,8 @@
 [opnpc1,gnometrainer]
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
+}
 def_int $rand_value = random(4);
 if($rand_value = 0) {
     ~chatplayer("<p,neutral>Hello how are you?");

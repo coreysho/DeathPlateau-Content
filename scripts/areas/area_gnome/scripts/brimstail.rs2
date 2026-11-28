@@ -1,4 +1,8 @@
 [opnpc1,gnome_brimstail]
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
+}
 ~chatnpc("<p,neutral>Hello adventurer, what can I do for you?");
 if(%runemysteries = ^runemysteries_complete) {
     def_int $option = ~p_choice2("Can you teleport me to the Rune Essence?", 1, "Nothing for now, thanks!", 2);

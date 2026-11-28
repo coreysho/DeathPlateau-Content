@@ -64,3 +64,21 @@ if (~trail_take_refused(obj_type, obj_count) = true) {
     return;
 }
 @pickup_obj;
+
+// 349: a page of one of the three god books, on the common table of every tier.
+[proc,trail_reward_godpage]()(namedobj, int)
+def_int $random = random(12);
+switch_int ($random) {
+    case 0 : return (holy_book_s_page1, 1);
+    case 1 : return (holy_book_s_page2, 1);
+    case 2 : return (holy_book_s_page3, 1);
+    case 3 : return (holy_book_s_page4, 1);
+    case 4 : return (holy_book_z_page1, 1);
+    case 5 : return (holy_book_z_page2, 1);
+    case 6 : return (holy_book_z_page3, 1);
+    case 7 : return (holy_book_z_page4, 1);
+    case 8 : return (holy_book_g_page1, 1);
+    case 9 : return (holy_book_g_page2, 1);
+    case 10 : return (holy_book_g_page3, 1);
+}
+return (holy_book_g_page4, 1);

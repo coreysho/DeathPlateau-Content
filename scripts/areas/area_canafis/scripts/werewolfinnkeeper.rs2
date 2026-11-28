@@ -1,4 +1,8 @@
 [opnpc1,werewolfinnkeeper]
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
+}
 ~chatplayer("<p,happy>Hello there!");
 ~chatnpc("<p,happy>Greetings traveller. Welcome to 'The Hair Of The Dog' Tavern. What can I do you for?");
 // Creature of Fenkenstrain: the pickled brain sits on the bar in a jar of vinegar, and Roavar will

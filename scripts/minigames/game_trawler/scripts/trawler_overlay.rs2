@@ -55,12 +55,13 @@ if_settext(inter_231:com_29, "10 mins");
 
 [label,trawler_mapzone]
 if_openoverlay(inter_231);
+@music_playbyregion(coord);
 
 [label,trawler_mapzoneexit]
 if_openoverlay(null);
 
 [mapzone,0_29_75] @trawler_mapzone;
-// [mapzone,0_30_75] // shipwreck, no mapzone trigger
+// [mapzone,0_30_75] shipwreck: no overlay here, its music trigger is in music/scripts/move.rs2
 [mapzone,0_31_75] @trawler_mapzone;
 
 [mapzoneexit,0_29_75] @trawler_mapzoneexit;
