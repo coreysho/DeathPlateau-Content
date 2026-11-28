@@ -7,6 +7,13 @@
 [opheld1,trail_clue_easy_map003]
 ~full_trail_readclue_map(trail_map06);
 
+// 349's two more easy maps. Its inter_190/inter_192 are our inter_189/inter_191 (same ids).
+[opheld1,trail_clue_easy_map004]
+~full_trail_readclue_map(inter_189);
+
+[opheld1,trail_clue_easy_map005]
+~full_trail_readclue_map(inter_191);
+
 [opheld1,_trail_clue_easy]
 ~full_trail_readclue(oc_param(last_item, trail_desc));
 

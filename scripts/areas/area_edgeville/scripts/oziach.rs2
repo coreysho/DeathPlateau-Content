@@ -1,8 +1,9 @@
 // i used some transcribed dialogue from this. https://web.archive.org/web/20051104084237/http://www.nomadgaming.com/index.php?page=rs2_dragonslayer
 
 [opnpc1,oziach]
-if(map_members = ^true & inv_total(inv, trail_clue_hard_riddle014) > 0) {
-    @trail_oziach;
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
 }
 
 if (%dragonquest = ^quest_dragon_spoken_to_guildmaster) {
@@ -174,24 +175,3 @@ if ($choice = 0) {
     ~openshop_activenpc;
     return;
 }
-
-[label,trail_oziach]
-if(inv_total(inv, trail_clue_hard_riddle014_puzzlebox) > 0) {
-    @puzzle_oziach;
-}
-~chatnpc("<p,neutral>The solving of this puzzle could be the key to your treasure.");
-~give_trail_puzzle(trail_clue_hard_riddle014_puzzlebox, "Oziach has given you a puzzle box!");
-
-[label,puzzle_oziach]
-if(inv_total(inv, trail_clue_hard_riddle014_puzzlebox) = 0) {
-    ~chatplayer("<p,neutral>I don't have the puzzle box with me.");
-    ~chatnpc("<p,angry>That's not much use - go and fetch it!");
-    return;
-}
-if(~trail_puzzle_complete = true) {
-    ~chatnpc("<p,neutral>Well done, traveller.");
-    inv_del(inv, trail_clue_hard_riddle014_puzzlebox, 1);
-    ~progress_clue_hard(trail_clue_hard_riddle014, "Oziach has given you another clue scroll!");
-    return;
-} 
-~chatnpc("<p,neutral>That isn't right, keep trying.");

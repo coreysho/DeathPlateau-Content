@@ -1,6 +1,19 @@
 [opheld1,trail_clue_hard_map001]
 ~full_trail_readclue_map(trail_map05);
 
+// 349's four more hard maps, by interface id (349's inter_N is our inter_N-1).
+[opheld1,trail_clue_hard_map002]
+~full_trail_readclue_map(inter_188);
+
+[opheld1,trail_clue_hard_map003]
+~full_trail_readclue_map(inter_192);
+
+[opheld1,trail_clue_hard_map004]
+~full_trail_readclue_map(inter_179);
+
+[opheld1,trail_clue_hard_map005]
+~full_trail_readclue_map(inter_180);
+
 [opheld1,trail_clue_hard_riddle011]
 ~full_trail_readclue(oc_param(last_item,trail_desc));
 

@@ -64,6 +64,10 @@ return (-1);
 //
 // He is the only pilot_grand_tree on plane 3 - the other one is the crashed glider on Karamja, at
 // ground level - so the plane is the thing to ask about, and it cannot drift.
+// Treasure Trails: the clue this npc answers (minigames/game_trail/scripts/trail_npc_clues.rs2)
+if (~trail_npc_clue = true) {
+    return;
+}
 if(%grandtree = ^grandtree_released_prison & coordy(npc_coord) = 3) {
     ~chatnpc("<p,neutral>Hi, the King said that you need to leave?");
     ~chatplayer("<p,sad>Apparently humans are invading!");

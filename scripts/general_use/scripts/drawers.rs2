@@ -13,6 +13,10 @@ if(map_members = ^true) {
         @riddle_loc_medium_exp003;
     } else if(loc_coord = 0_42_54_21_22) {
         @riddle_loc_medium_exp004;
+    } else if(loc_coord = 1_43_49_57_29) { // 349: Brimhaven, "Shiver me timbers!"
+        @riddle_loc_medium_exp007;
+    } else if(loc_coord = 0_45_55_41_57) { // 349: Burthorpe, Penda's key
+        @riddle_loc_medium_exp008;
     }
 }
 p_arrivedelay;
@@ -29,6 +33,10 @@ if(loc_coord = 1_40_51_14_62 & last_useitem = trail_clue_medium_riddle002_key) {
     @riddle_loc_medium_exp003;
 } else if(loc_coord = 0_42_54_21_22 & last_useitem = trail_clue_medium_riddle004_key) {
     @riddle_loc_medium_exp004;
+} else if(loc_coord = 1_43_49_57_29 & last_useitem = trail_clue_medium_riddle007_key) {
+    @riddle_loc_medium_exp007;
+} else if(loc_coord = 0_45_55_41_57 & last_useitem = trail_clue_medium_riddle008_key) {
+    @riddle_loc_medium_exp008;
 }
 ~displaymessage(^dm_default);
 
@@ -57,6 +65,9 @@ if(map_members = ^true) {
         ~trail_clue_hard_loc_interact(trail_clue_hard_riddle006);
         return;
     }
+}
+if (~trail_loc_clue_search = true) {
+    return;
 }
 if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) { // complete guess
     mes("You search the drawers..."); // guess
