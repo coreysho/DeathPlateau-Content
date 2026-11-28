@@ -1,7 +1,7 @@
 [if_button,questlist:itexam]
 def_string $text;
 
-if (%itexamlevel = ^itexam_not_started) {
+if (%itexam_progress = ^itexam_not_started) {
     $text = "@dbl@I can start this quest by speaking to the @dre@Examiner @dbl@at the @dre@Digsite Exam Centre.|";
 
     $text = append($text, "|@dbl@To complete this quest I need:|");

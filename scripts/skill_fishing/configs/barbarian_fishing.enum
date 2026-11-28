@@ -1,6 +1,12 @@
 // Where the leaping-fish spots stand - the five the OSRS wiki gives for Otto's Grotto
 // (Fishing spot (barbarian): 2504,3497 2520,3518 2506,3493 2500,3506 2500,3512). Three are spawned
 // (maps/m39_54.jm2) and they move among the five like the river spots do.
+//
+// AND THEY KEEP MOVING, decided 25 November 2026 (DeathPlateau-Bugs#96). A player reported random
+// lure and bait spots at this pond; there are none - all three offer Use-rod only and give nothing
+// but leaping trout, salmon and sturgeon - and the one thing here that could read as the report is
+// this movement, since two of the five tiles are a walk away and one is twenty tiles off. That is
+// what the wiki's five locations are for, so pinning them was the alternative and was not taken.
 [fishing_movement_ottos_grotto_enum]
 inputtype=int
 outputtype=coord
