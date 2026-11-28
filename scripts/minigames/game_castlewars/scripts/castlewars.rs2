@@ -238,7 +238,7 @@ set_player_op(null, 5, ^false);
 //     ~castlewars_del_items;
 // }
 
-[mapzone,0_37_148] ~castlewars_mapzone;
+[mapzone,0_37_148] ~castlewars_mapzone; @music_playbyregion(coord);
 
 [mapzoneexit,0_37_48] ~castlewars_mapzoneexit;
 [mapzoneexit,0_37_148] ~castlewars_mapzoneexit;

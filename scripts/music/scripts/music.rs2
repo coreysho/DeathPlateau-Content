@@ -61,6 +61,14 @@ if ($var = 1) {
     %musicmulti_14 = setbit(%musicmulti_14, $bit);
 }
 
+// From PlagueCityRS 349: remembering when the song started and how long it runs is what lets the
+// loop button (musicplayer.rs2) start it again when it ends.
+[proc,music_play](midi $song)
+%currentsong = $song;
+%musicstart = map_clock;
+%musiclength = midi_length($song);
+midi_song(%currentsong);
+
 [proc,music_playbybutton](component $playbutton)
 db_find(music:playbutton, $playbutton);
 def_dbrow $song = db_findnext;
@@ -82,7 +90,7 @@ if ($unlock ! null) {
 %musicplay = 0; // switch to manual mode
 
 if_settext(music:com_177, db_getfield($song, music:name, 0));
-midi_song(db_getfield($song, music:track, 0));
+~music_play(db_getfield($song, music:track, 0));
 
 [label,music_playbyregion](coord $coord)
 // first, search for the song linked to this mapsquare
@@ -109,7 +117,7 @@ if ($unlock ! null) {
 
 if (%musicplay ! 0) {
     if_settext(music:com_177, db_getfield($song, music:name, 0));
-    midi_song(db_getfield($song, music:track, 0));
+    ~music_play(db_getfield($song, music:track, 0));
 }
 
 [label,music_playbyregionplane](coord $coord)
@@ -138,5 +146,5 @@ if ($unlock ! null) {
 
 if (%musicplay ! 0) {
     if_settext(music:com_177, db_getfield($song, music:name, 0));
-    midi_song(db_getfield($song, music:track, 0));
+    ~music_play(db_getfield($song, music:track, 0));
 }

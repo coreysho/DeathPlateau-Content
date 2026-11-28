@@ -177,6 +177,31 @@ while ($slot < inv_size(inv)) {
 }
 return(null);
 
+// 349'S SEARCH CLUES. A clue whose trail_loc param is set is answered by searching the crate,
+// drawers, chest or boxes at its trail_coord; the search triggers in general_use call this after
+// their own coordinate checks and stop if it returns true. Every clue held is looked at, like the
+// dig above, since a player can carry one of each tier.
+[proc,trail_loc_clue_search]()(boolean)
+if (map_members = ^false) {
+    return(false);
+}
+def_int $slot = 0;
+while ($slot < inv_size(inv)) {
+    def_obj $slotobj = inv_getobj(inv, $slot);
+    if ($slotobj ! null) {
+        if (~trail_obj_tier($slotobj) ! -1 & oc_param($slotobj, trail_loc) = true & oc_param($slotobj, trail_coord) = loc_coord) {
+            switch_int (~trail_obj_tier($slotobj)) {
+                case ^trail_tier_medium : ~progress_clue_medium($slotobj, "You've found another clue scroll!");
+                case ^trail_tier_hard : ~progress_clue_hard($slotobj, "You've found another clue scroll!");
+                case default : ~progress_clue_easy($slotobj, "You've found another clue scroll!");
+            }
+            return(true);
+        }
+    }
+    $slot = calc($slot + 1);
+}
+return(false);
+
 [proc,trail_clue_progress](int $tier)
 def_int $lo = calc($tier * ^trail_progress_bits);
 def_int $hi = calc($lo + ^trail_progress_bits - 1);
@@ -311,6 +336,9 @@ return(null);
 ~clear_trail_progress($tier);
 mes("Well done you've completed the Treasure Trail!");
 midi_jingle("treasure hunt win");
+// The loot tracker's casket, named as RuneLite names one. The inv holds this casket and only this
+// casket: ~trail_prepare_rewardinv emptied it before the roll.
+loot_event("Clue scroll (<~trail_tier_name($tier)>)", trail_rewardinv);
 inv_transmit(trail_rewardinv, trail_reward:inv);
 if_openmain(trail_reward);
 queue(trail_give_reward, 0, 0);

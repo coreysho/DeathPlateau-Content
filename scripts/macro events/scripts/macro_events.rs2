@@ -63,6 +63,7 @@ switch_int ($event) {
     case ^macro_quizmaster : ~macro_quiz_spawn;
     case ^macro_frog : ~macro_frog_spawn;
     case ^macro_pillory : ~macro_pillory_spawn;
+    case ^macro_maze : ~macro_maze_spawn;
 }
 
 // this proc is used for random events teleing to follow the player
@@ -134,6 +135,13 @@ return(true);
 [queue,macro_event_login]
 def_int $macro_event = %macro_event;
 %macro_event = 0;
+// THE MAZE IS THE OLD MAN'S, and he follows you on logout - so without this, logging out in the maze
+// would bring him back to send you in again, and he would take the maze as the place to return you
+// to. A player in the maze goes home like any other room event.
+if ($macro_event = ^macro_maze) {
+    ~macro_event_login_return;
+    return;
+}
 def_npc $event_npc = ~macro_event_npc($macro_event);
 if ($event_npc ! null & nc_param($event_npc, follow_player_on_logout) = ^true) {
     ~macro_event_general_spawn($macro_event);

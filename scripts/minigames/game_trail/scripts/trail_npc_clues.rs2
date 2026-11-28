@@ -1,0 +1,93 @@
+// THE NPCS THAT ANSWER A CLUE, in one place. Talk to one of them holding its clue and it hands over
+// the next (an anagram or a "speak to" clue), or - for the hard riddles - a puzzle box, which it
+// takes back solved for the next clue. Each of their Talk-to triggers calls ~trail_npc_clue first
+// and stops if it returns true; the rest of their dialogue lives in their own files.
+//
+// From 349 (werewolfinnkeeper, brimstail, kangai_mau, heckel_funch, gnome_trainer, gnome_glider,
+// sailors), with our Wilough, Bentnoze and Oziach branches moved here beside them.
+
+[proc,trail_npc_clue]()(boolean)
+if (map_members = ^false) {
+    return(false);
+}
+switch_npc (npc_type) {
+    // anagrams and "speak to"
+    case werewolfinnkeeper : // Roavar, https://www.youtube.com/watch?v=rVAET-vkSXg
+        return(~trail_npc_handover(trail_clue_medium_anagram017, "<p,neutral>Here you go!", "Roavar has given you another clue scroll!"));
+    case gnome_brimstail : // https://youtu.be/yOwYUB_bCAE?si=-cIVhPtRRTxmurRu&t=338
+        return(~trail_npc_handover(trail_clue_medium_anagram014, "<p,happy>Well done!", "Brimstail has given you another clue scroll!"));
+    case kangai_mau : // https://www.youtube.com/watch?v=VoMyXl_rV3c
+        return(~trail_npc_handover(trail_clue_medium_anagram019, "<p,neutral>Congrats. Here!", "Kangai Mau has given you another clue scroll!"));
+    case captain_tobias : // https://youtu.be/o3Hvw7cqXv8?si=LqxAoPuaPZNpijxq&t=129
+        return(~trail_npc_handover(trail_clue_easy_vague012, "<p,happy>Well done, matey! Here you go!", "Captain Tobias has given you another clue scroll!"));
+    // puzzle boxes
+    case gnome_heckelfunch : // https://www.youtube.com/watch?v=1OBGZIgwBKA
+        return(~trail_npc_puzzle(trail_clue_hard_riddle025, trail_clue_hard_riddle025_puzzlebox,
+            "<p,angry>So go fetch it, human!", "<p,happy>Well done, human!", "<p,neutral>No, that's wrong I'm afraid.",
+            "<p,neutral>Please do puzzle for me human!", "Heckel Funch has given you a puzzle box!", "Heckel Funch has given you another clue scroll!"));
+    case gnometrainer : // https://www.youtube.com/watch?v=PGE6w5X6_AM
+        return(~trail_npc_puzzle(trail_clue_hard_riddle026, trail_clue_hard_riddle026_puzzlebox,
+            "<p,angry>Go and fetch it before I make you drop and give me 10!", "<p,happy>Excellent work!", "<p,neutral>My baby sister can do puzzles better than that!",
+            "<p,neutral>You're not done yet! Do this for me!", "The gnome trainer has given you a puzzle box!", "The gnome trainer has given you another clue scroll!"));
+    case pilot_grand_tree :
+        // Captain Errdo, the pilot on top of the Grand Tree ("at the peak of his profession"). 349
+        // asked for a gnomepilot standing by ^sindarpos, which is White Wolf Mountain here, so no
+        // pilot anywhere could answer it; the one at the peak is his own npc in this cache.
+        return(~trail_npc_puzzle(trail_clue_hard_riddle021, trail_clue_hard_riddle021_puzzlebox,
+            "<p,angry>That's not much use. Go and fetch it.", "<p,happy>Well done!", "<p,neutral>Please finish the puzzle for me!",
+            "<p,neutral>You must complete this!", "The pilot has given you a puzzle box!", "The pilot has given you another clue scroll!"));
+    case wilough : // https://www.youtube.com/watch?v=fwWnxMS3d_Q
+        return(~trail_npc_puzzle(trail_clue_hard_riddle016, trail_clue_hard_riddle016_puzzlebox,
+            "<p,angry>That's not much use - go and fetch it!", "<p,neutral>Thanks <text_gender("mister!", "miss")>!", "<p,neutral>That not right!",
+            "<p,happy>My brother reckons I can't solve this puzzle. I can't have him laughing at me! Do me a favour and solve it for me.", "Wilough has given you a puzzle box!", "Wilough has given you another clue scroll!"));
+    case general_bentnoze :
+        return(~trail_npc_puzzle(trail_clue_hard_riddle017, trail_clue_hard_riddle017_puzzlebox,
+            "<p,goblinchat>That not much use - human go fetch it!", "<p,goblinchat>Thank you human!", "<p,goblinchat>That not right!",
+            "<p,goblinchat>Human do puzzle for me!", "Bentnoze has given you a puzzle box!", "Bentnoze has given you another clue scroll!"));
+    case oziach :
+        return(~trail_npc_puzzle(trail_clue_hard_riddle014, trail_clue_hard_riddle014_puzzlebox,
+            "<p,angry>That's not much use - go and fetch it!", "<p,neutral>Well done, traveller.", "<p,neutral>That isn't right, keep trying.",
+            "<p,neutral>The solving of this puzzle could be the key to your treasure.", "Oziach has given you a puzzle box!", "Oziach has given you another clue scroll!"));
+}
+return(false);
+
+// An anagram or "speak to" clue: the npc says its line and the trail moves on.
+[proc,trail_npc_handover](namedobj $clue, string $says, string $message)(boolean)
+if (inv_total(inv, $clue) = 0) {
+    return(false);
+}
+~chatnpc($says);
+~progress_clue_easy_medium_hard($clue, $message);
+return(true);
+
+// A hard riddle answered with a puzzle box: the npc gives one, and takes it back solved.
+[proc,trail_npc_puzzle](namedobj $clue, namedobj $box, string $fetch_it, string $solved, string $wrong, string $give, string $given, string $next)(boolean)
+if (inv_total(inv, $clue) = 0) {
+    return(false);
+}
+if (~obj_gettotal($box) > 0) {
+    if (inv_total(inv, $box) = 0) {
+        ~chatplayer("<p,neutral>I don't have the puzzle box with me.");
+        ~chatnpc($fetch_it);
+        return(true);
+    }
+    if (~trail_puzzle_complete = true) {
+        ~chatnpc($solved);
+        inv_del(inv, $box, 1);
+        ~progress_clue_hard($clue, $next);
+        return(true);
+    }
+    ~chatnpc($wrong); // TODO: check mesanim
+    return(true);
+}
+~chatnpc($give);
+~give_trail_puzzle($box, $given);
+return(true);
+
+// whichever tier the clue is
+[proc,progress_clue_easy_medium_hard](obj $clue, string $message)
+switch_int (~trail_obj_tier($clue)) {
+    case ^trail_tier_medium : ~progress_clue_medium($clue, $message);
+    case ^trail_tier_hard : ~progress_clue_hard($clue, $message);
+    case default : ~progress_clue_easy($clue, $message);
+}

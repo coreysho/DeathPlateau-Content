@@ -33,6 +33,9 @@ if(map_members = ^true) {
         return;
     }
 } 
+if (~trail_loc_clue_search = true) {
+    return;
+}
 if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) { // complete guess
     mes("You search the crate..."); // guess
     p_delay(2);
@@ -51,6 +54,9 @@ if (map_members = ^true) {
         ~trail_clue_hard_loc_interact(trail_clue_hard_riddle008);
         return;
     }
+}
+if (~trail_loc_clue_search = true) {
+    return;
 }
 if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) { // complete guess
     mes("You search the crates..."); // guess
@@ -79,6 +85,9 @@ if(map_members = ^true) {
         ~trail_clue_easy_loc_interact(trail_clue_easy_simple029);
         return;
     }
+}
+if (~trail_loc_clue_search = true) {
+    return;
 }
 if (random(^findsomethingnice_chance) = 0 & ~in_tutorial_island(coord) = false) { // complete guess
     mes("You search the boxes...");

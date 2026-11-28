@@ -1,0 +1,180 @@
+// THE MAZE, the Mysterious Old Man's other errand, ported from PlagueCityRS 349 and fitted to this
+// server's random events. He drops you in one of the four corners of the maze (map square 45_71);
+// the counter on the overlay runs down from 100% while you find the shrine in the middle, and what is
+// left of it scales the reward. The chests on the way hold a little each. Touching the shrine sends
+// you back to where he found you.
+//
+// It is a room event like the mime: %macro_event_target_coord holds the way home, the square is in
+// macro_event_rooms so a login inside it sends you home (with a special case in
+// [queue,macro_event_login], because the old man follows on logout), and the teleport spells already
+// refuse to leave it (random_event_maze_zones).
+
+[proc,macro_maze_spawn]
+%npc_macro_event_target = uid;
+%macro_event_target_coord = coord;
+// his warnings and his gift are for the other errand: he says his line and goes
+%npc_int = ^mysterious_old_man_happy;
+npc_settimer(0);
+npc_say("Aha, you'll do <displayname>!"); // No bowing for the maze - https://youtu.be/A0V4NJn11ow?t=11
+npc_queue(6, 0, 1); // waves and goes
+queue(macro_maze_arrive, 0, 1);
+
+[queue,macro_maze_arrive]
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+%macro_maze_percent = 100;
+~p_telejump_safe(enum(int, coord, macro_maze_teleports, random(enum_getoutputcount(macro_maze_teleports))));
+settimer(macro_maze, 5);
+~macro_maze_update_progress;
+if_openoverlay(mazetimer);
+mes("You need to reach the maze centre, then you'll be returned to where you were.");
+~chatnpc_specific("Mysterious Old Man", macro_mage, "<p,neutral>You need to reach the maze centre,|then you'll be returned to where you were."); // Split line as per https://imgur.com/riCliBA
+
+[mapzoneexit,0_45_71]
+~macro_events_varps_reset;
+~macro_maze_cleanup;
+
+[proc,macro_maze_end]
+// read before the way out: leaving the square runs [mapzoneexit,0_45_71], which zeroes it
+def_int $percent = %macro_maze_percent;
+if_openoverlay(null);
+cleartimer(macro_maze);
+midi_jingle("maze centre");
+anim(emote_cheer, 20);
+p_delay(5);
+def_coord $home = %macro_event_target_coord;
+if ($home = null) {
+    $home = ^macro_event_lost_fallback;
+}
+%macro_event = ^no_macro_event;
+spotanim_map(smokepuff, coord, 124, 0);
+sound_synth(smokepuff2, 1, 0);
+~p_telejump_safe($home);
+if ($percent > 0) {
+    ~macro_maze_give_reward(~macro_maze_total_level, $percent);
+}
+
+[proc,macro_maze_update_progress]
+if_settext(mazetimer:com_2, "<tostring(%macro_maze_percent)>%");
+
+[proc,macro_maze_cleanup]
+cleartimer(macro_maze);
+if_openoverlay(null);
+%macro_maze_percent = 0;
+
+[timer,macro_maze]
+if (%macro_maze_percent > 0) {
+    %macro_maze_percent = sub(%macro_maze_percent, 1);
+}
+~macro_maze_update_progress;
+
+[oploc1,macro_maze_wallhigh]
+~mesbox("I can't open that.");
+
+[oploc1,_macro_maze_wall_door]
+p_arrivedelay;
+p_walk(loc_coord);
+def_int $door_entry_side = loc_param(approach_direction);
+def_boolean $player_side = ~check_axis(coord, loc_coord, loc_angle);
+def_boolean $should_open = false;
+
+if ($door_entry_side = 0) {
+    $should_open = true;
+} else if ($door_entry_side = 1 & $player_side = true) {
+    $should_open = true;
+} else if ($door_entry_side = 2 & $player_side = false) {
+    $should_open = true;
+}
+if ($should_open = true) {
+    ~open_and_close_door(macro_maze_wallinactive, $player_side, false);
+} else {
+    ~mesbox("I don't think that's the right way.");
+}
+
+[oploc1,macro_maze_complete] // the shrine in the middle
+if_close;
+if (%macro_event ! ^macro_maze) {
+    mes("Nothing interesting happens.");
+    return;
+}
+~macro_maze_end;
+
+[oploc1,macro_maze_chest]
+p_arrivedelay;
+anim(human_openchest, 0);
+sound_synth(chest_open, 1, 0);
+p_delay(0);
+loc_change(macro_maze_chestempty, ^macro_maze_chest_ticks);
+~macro_maze_chest_loot;
+
+[oploc1,macro_maze_chestempty]
+~mesbox("Awww, it's empty!");
+
+// What the shrine gives: three rolls, each scaled by total level and what is left of the counter.
+// (total level x percent x 10) / (3 x divisor x 100), and never less than one.
+[proc,macro_maze_give_reward](int $total_level, int $percent)
+def_int $i = 0;
+while ($i < 3) {
+    ~macro_maze_reward_roll($total_level, $percent);
+    $i = add($i, 1);
+}
+
+[proc,macro_maze_reward_roll](int $total_level, int $percent)
+def_namedobj $reward_type;
+def_int $divisor;
+switch_int (random(9)) {
+    case 0 : { $reward_type = coins;            $divisor = 1;   }
+    case 1 : { $reward_type = feather;          $divisor = 2;   }
+    case 2 : { $reward_type = iron_arrow;       $divisor = 3;   }
+    case 3 : { $reward_type = chaosrune;        $divisor = 9;   }
+    case 4 : { $reward_type = steel_arrow;      $divisor = 12;  }
+    case 5 : { $reward_type = deathrune;        $divisor = 18;  }
+    case 6 : { $reward_type = cert_coal;        $divisor = 45;  }
+    case 7 : { $reward_type = cert_mithril_ore; $divisor = 162; }
+    case 8 : { $reward_type = naturerune;       $divisor = 180; }
+}
+def_int $qty = divide(multiply(multiply($total_level, $percent), 10), multiply(multiply(3, $divisor), 100));
+if ($qty < 1) {
+    $qty = 1;
+}
+inv_add(inv, $reward_type, $qty);
+
+[proc,macro_maze_total_level]()(int)
+def_int $i = 1;
+def_int $total = 0;
+while ($i <= enum_getoutputcount(stats)) {
+    $total = add($total, stat_base(enum(int, stat, stats, $i)));
+    $i = calc($i + 1);
+}
+return($total);
+
+[proc,macro_maze_chest_loot]
+// https://www.youtube.com/watch?v=0end9ZuL3vI&t=1041s - https://www.youtube.com/watch?v=OdnmdmAXnSs&t=553s
+// https://www.youtube.com/watch?v=yCBpihIGy68
+if (%macro_maze_percent <= 0) {
+    ~mesbox("Awww, it's empty!");
+    return;
+}
+def_int $roll;
+if (map_members = ^false) {
+    $roll = random(8);
+} else {
+    $roll = random(10);
+}
+switch_int ($roll) {
+    case 0 : ~macro_maze_chest_item(airrune, 15, "You've found some air runes!", 0);
+    case 1 : ~macro_maze_chest_item(waterrune, 10, "You've found some water runes!", 0);
+    case 2 : ~macro_maze_chest_item(earthrune, 10, "You've found some earth runes!", 0);
+    case 3 : ~macro_maze_chest_item(firerune, 10, "You've found some fire runes!", 0);
+    case 4 : ~macro_maze_chest_item(bronze_arrow, 20, "You've found some bronze arrows!", 0);
+    case 5 : ~macro_maze_chest_item(bolt, 10, "You've found some bolts!", ^objbox_height);
+    case 6 : ~macro_maze_chest_item(iron_arrow, 15, "You've found some iron arrows!", 0);
+    case 7 : ~macro_maze_chest_item(2dose1strength, 1, "You've found a strength potion!", ^objbox_height);
+    // members only
+    case 8 : ~macro_maze_chest_item(2dose1attack, 1, "You've found an attack potion!", ^objbox_height);
+    case 9 : ~macro_maze_chest_item(2dose1defense, 1, "You've found a defence potion!", ^objbox_height);
+}
+
+[proc,macro_maze_chest_item](namedobj $item, int $qty, string $text, int $y_offset)
+inv_add(inv, $item, $qty);
+~objbox($item, $text, 200, 0, $y_offset);

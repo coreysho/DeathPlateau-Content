@@ -72,6 +72,7 @@ queue(macro_event_login, 0, 0);
 ~gnomeball_login;
 ~wguild_login;
 ~falconry_login; // Hunter: Matthias's glove survives a logout, and its timer restarts
+~cannon_login; // a dwarf multicannon outlives a logout; its decay check starts again
 // logged out inside a house instance that no longer exists -> back to the Rimmington portal
 ~poh_login;
 // ::sz is rank-gated, but ::teleother and a rank taken away are not: anybody below moderator

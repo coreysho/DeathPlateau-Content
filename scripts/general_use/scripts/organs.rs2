@@ -1,9 +1,10 @@
 // Paterdomus Temple
+// Through ~music_play like every other song, so the music tab's LOOP timer knows what is playing.
 [oploc1,smallchurchorgan]
 if(random(2) = 0) {
-    midi_song("church music 1");
+    ~music_play("church music 1");
     if_settext(music:com_177, "");
 } else {
-    midi_song("church music 2");
+    ~music_play("church music 2");
     if_settext(music:com_177, "");
 }

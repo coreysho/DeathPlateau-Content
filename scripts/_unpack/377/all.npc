@@ -26517,6 +26517,8 @@ magic=80
 ranged=1
 param=magicdefence,3
 param=damagetype,^crush_style
+// 349: the ai_timer that sends him away once his player has gone
+timer=20
 
 [duel_monk]
 name=Hamid
@@ -31508,6 +31510,21 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 op2=Attack
 vislevel=108
+// 349: the Saradomin wizard guardian (minigames/game_trail/scripts/hard/saradomin_wizard.rs2)
+wanderrange=3
+attack=100
+defence=80
+strength=80
+hitpoints=120
+magic=80
+timer=20
+attackrange=5
+param=attackbonus,40
+param=strengthbonus,40
+param=magicdefence,30
+param=damagetype,^stab_style
+param=attack_anim,human_ddagger_lunge
+param=defend_anim,human_ddagger_block
 
 [viking_olaf]
 name=Olaf the Bard
