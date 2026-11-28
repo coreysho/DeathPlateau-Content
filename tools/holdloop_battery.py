@@ -74,18 +74,14 @@ DELIBERATE = {
         'three locks picked in sequence, bounded at three, and the sequence is the content',
     ('quests/quest_legends/scripts/legends_gate.rs2', 'label,open_legends_gate'):
         'one tick before a guard walks up and starts talking, inside a scripted approach',
-    # THE THREE SELL-ALLS. These are the awkward ones and they are NOT settled: one tick per item
-    # against a full pack is twenty-eight ticks rooted to the spot with every click discarded.
-    # lunderwin.rs2 says in its own comment that Old School has no delay here and that RSC's was
-    # copied on purpose, so changing it is a decision about how the game should play rather than a
-    # defect to fix, and it is on DeathPlateau-Bugs#85 for Corey. Listed as deliberate because it
-    # demonstrably was; listed with this note so it is not mistaken for settled.
-    ('areas/area_lostcity/scripts/lunderwin.rs2', 'opnpc1,fairy_lunderwin'):
-        'a sell-all paced one item per tick, copied from RSC on purpose - see the note above',
-    ('areas/area_varrock/scripts/baraek.rs2', 'label,baraek_buy_fur'):
-        'a sell-all paced one item per tick, the same idiom as lunderwin - see the note above',
-    ('areas/area_varrock/scripts/baraek.rs2', 'label,baraek_grey_wolf_fur'):
-        'a sell-all paced one item per tick, the same idiom as lunderwin - see the note above',
+    # THE THREE SELL-ALLS ARE NO LONGER HERE, and that is the point of this note.
+    #
+    # Baraek's two fur loops and Lunderwin's cabbages used to sit in this table with a comment
+    # saying they were NOT settled: a tick per item against a full pack is twenty-eight ticks
+    # rooted to the spot with every click of the player's discarded. The owner's call on
+    # DeathPlateau-Bugs#86 was Old School's pacing, so the delays went, and with them the reason
+    # to list them. If a p_delay ever comes back into one of those three loops this check will
+    # fail and name it - which is exactly what it is for.
 }
 
 
