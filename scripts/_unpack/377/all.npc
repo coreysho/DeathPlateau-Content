@@ -805,7 +805,9 @@ param=defend_anim,human_sword_def
 param=attack_sound,hacksword_slash
 param=defend_sound,blade3
 
+// Three spawns, all in the Ardougne market; see the note on ardougne_guard.
 [hero]
+wanderrange=2
 name=Hero
 desc=Heroic!
 model1=idk_man_hair_medium
@@ -917,7 +919,8 @@ op2=Attack
 op3=Pickpocket
 readyanim=human_ready
 vislevel=46
-wanderrange=15
+// 15 put a knight anywhere in the market; see the note on ardougne_guard.
+wanderrange=2
 maxrange=17
 respawnrate=50
 hitpoints=52
@@ -1189,7 +1192,16 @@ walkanim=human_walk_f,human_walk_b,human_walk_l,human_walk_r
 readyanim=human_ready
 moverestrict=indoors
 
+// WANDERRANGE 2, NOT THE DEFAULT 5 (DeathPlateau-Bugs#14). A guard who sees you steal from a
+// market stall refuses the theft - which is Old School's rule - and Old School's way round it is
+// positional: "thieve with the stall between your character and the NPC". The stall really does
+// block line of sight in this engine, so that mitigation is implementable; what defeated it was
+// how far these guards roam. Measured over every tile a guard could wander to, the bakery had
+// ZERO safe approach tiles of 17 at the old wanderrange, and still zero with the guards frozen on
+// their spawns, because the 5-tile hunt radius reached every one of them. Cutting the roam AND the
+// radius to 2 gives every guarded stall a safespot again - see ~stealing_check_for_guard.
 [ardougne_guard]
+wanderrange=2
 name=Guard
 desc=Keeps the peace... kind of.
 model1=npc_ardougne_guard
